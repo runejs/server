@@ -3,8 +3,6 @@ import { PacketSender } from '../../../../net/packet-sender';
 import { Isaac } from '../../../../net/isaac';
 import { PlayerUpdateTask } from './task/player-update-task';
 import { Mob } from '../mob';
-import { PlayerTickTask } from './task/player-tick-task';
-import { PlayerResetTask } from './task/player-reset-task';
 import { UpdateFlags } from './update-flags';
 import { Position } from '../../../position';
 import { Skill, skills } from '../skills/skill';
@@ -27,9 +25,7 @@ export class Player extends Mob {
     private readonly password: string;
     public isLowDetail: boolean;
     private readonly _packetSender: PacketSender;
-    public readonly playerTickTask: PlayerTickTask;
     public readonly playerUpdateTask: PlayerUpdateTask;
-    public readonly playerResetTask: PlayerResetTask;
     public readonly updateFlags: UpdateFlags;
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
@@ -42,9 +38,7 @@ export class Player extends Mob {
         this.password = password;
         this.isLowDetail = isLowDetail;
         this._packetSender = new PacketSender(this);
-        this.playerTickTask = new PlayerTickTask(this);
         this.playerUpdateTask = new PlayerUpdateTask(this);
-        this.playerResetTask = new PlayerResetTask(this);
         this.updateFlags = new UpdateFlags();
     }
 
@@ -70,6 +64,25 @@ export class Player extends Mob {
     public logout(): void {
         this.packetSender.sendLogout();
         world.deregisterPlayer(this);
+    }
+
+    public tick(): Promise<void> {
+        return new Promise<void>(resolve => {
+            this.walkingQueue.process();
+
+            if(this.updateFlags.mapRegionUpdateRequired) {
+                this.packetSender.sendCurrentMapRegion();
+            }
+
+            resolve();
+        });
+    }
+
+    public reset(): Promise<void> {
+        return new Promise<void>(resolve => {
+            this.updateFlags.reset();
+            resolve();
+        });
     }
 
     public get socket() {

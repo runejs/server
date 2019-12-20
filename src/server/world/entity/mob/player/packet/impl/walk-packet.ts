@@ -1,31 +1,29 @@
-import { IncomingPacket } from '../incoming-packet';
+import { Player } from '../../player';
+import { RsBuffer } from '../../../../../../net/rs-buffer';
+import { incomingPacket } from '../incoming-packet';
 
-export class WalkPacket extends IncomingPacket {
+export const walkPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
+    let size = packetSize;
 
-    handle(): void {
-        let size = this.packetSize;
-
-        if(this.packetId === 213) {
-            size -= 14;
-        }
-
-        const totalSteps = Math.floor((size - 5) / 2);
-
-        const firstX = this.packet.readNegativeOffsetShortLE();
-        const runSteps = this.packet.readByte() === 1;
-        const firstY = this.packet.readNegativeOffsetShortLE();
-
-        const walkingQueue = this.player.walkingQueue;
-
-        walkingQueue.clear();
-        walkingQueue.valid = true;
-        walkingQueue.add(firstX, firstY);
-
-        for(let i = 0; i < totalSteps; i++) {
-            const x = this.packet.readByte();
-            const y = this.packet.readNegativeOffsetByte();
-            walkingQueue.add(x + firstX, y + firstY);
-        }
+    if(packetId === 213) {
+        size -= 14;
     }
 
-}
+    const totalSteps = Math.floor((size - 5) / 2);
+
+    const firstX = packet.readNegativeOffsetShortLE();
+    const runSteps = packet.readByte() === 1; // @TODO ?
+    const firstY = packet.readNegativeOffsetShortLE();
+
+    const walkingQueue = player.walkingQueue;
+
+    walkingQueue.clear();
+    walkingQueue.valid = true;
+    walkingQueue.add(firstX, firstY);
+
+    for(let i = 0; i < totalSteps; i++) {
+        const x = packet.readByte();
+        const y = packet.readNegativeOffsetByte();
+        walkingQueue.add(x + firstX, y + firstY);
+    }
+};

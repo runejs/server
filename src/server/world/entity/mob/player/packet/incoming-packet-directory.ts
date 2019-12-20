@@ -1,29 +1,28 @@
 import { Player } from '../player';
-import { IncomingPacket } from './incoming-packet';
-
-import { InterfaceClickPacket } from './impl/interface-click-packet';
-import { ButtonClickPacket } from './impl/button-click-packet';
-import { WalkPacket } from './impl/walk-packet';
-import { CameraTurnPacket } from './impl/camera-turn-packet';
+import { interfaceClickPacket } from './impl/interface-click-packet';
+import { cameraTurnPacket } from './impl/camera-turn-packet';
+import { buttonClickPacket } from './impl/button-click-packet';
+import { walkPacket } from './impl/walk-packet';
+import { RsBuffer } from '../../../../../net/rs-buffer';
 
 const packets = {
-    19:  InterfaceClickPacket,
-    140: CameraTurnPacket,
+    19:  interfaceClickPacket,
+    140: cameraTurnPacket,
 
-    79:  ButtonClickPacket,
+    79:  buttonClickPacket,
 
-    28:  WalkPacket,
-    213: WalkPacket,
-    247: WalkPacket
+    28:  walkPacket,
+    213: walkPacket,
+    247: walkPacket
 };
 
 export function handlePacket(player: Player, packetId: number, packetSize: number, buffer: Buffer): void {
-    const packetClass = packets[packetId];
+    const packetFunction = packets[packetId];
 
-    if(!packetClass) {
+    if(!packetFunction) {
         console.log(`Unknown packet ${packetId} with size ${packetSize} received.`)
         return;
     }
 
-    (new packetClass(player, packetId, packetSize, buffer) as IncomingPacket).handle();
+    packetFunction(player, packetId, packetSize, new RsBuffer(buffer));
 }

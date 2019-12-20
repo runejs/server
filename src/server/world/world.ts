@@ -29,13 +29,11 @@ export class World {
             return Promise.resolve();
         }
 
-        const playerTickTasks = activePlayers.map(player => player.playerTickTask);
         const playerUpdateTasks = activePlayers.map(player => player.playerUpdateTask);
-        const playerResetTasks = activePlayers.map(player => player.playerResetTask);
 
-        await Promise.all(playerTickTasks.map(task => task.execute()));
+        await Promise.all(activePlayers.map(player => player.tick()));
         await Promise.all(playerUpdateTasks.map(task => task.execute()));
-        await Promise.all(playerResetTasks.map(task => task.execute()));
+        await Promise.all(activePlayers.map(player => player.reset()));
 
         return Promise.resolve();
     }
