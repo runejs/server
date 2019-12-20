@@ -27,6 +27,7 @@ export class Player extends Mob {
     private readonly _packetSender: PacketSender;
     public readonly playerUpdateTask: PlayerUpdateTask;
     public readonly updateFlags: UpdateFlags;
+    public readonly trackedPlayers: Player[];
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -40,6 +41,7 @@ export class Player extends Mob {
         this._packetSender = new PacketSender(this);
         this.playerUpdateTask = new PlayerUpdateTask(this);
         this.updateFlags = new UpdateFlags();
+        this.trackedPlayers = [];
     }
 
     public init(): void {
@@ -47,6 +49,7 @@ export class Player extends Mob {
         this.updateFlags.appearanceUpdateRequired = true;
 
         this.position = new Position(3222, 3222);
+        world.chunkManager.getChunkForWorldPosition(this.position).addPlayer(this);
 
         this.packetSender.sendMembershipStatusAndWorldIndex();
         this.packetSender.sendCurrentMapRegion();
@@ -63,7 +66,9 @@ export class Player extends Mob {
 
     public logout(): void {
         this.packetSender.sendLogout();
+        world.chunkManager.getChunkForWorldPosition(this.position).removePlayer(this);
         world.deregisterPlayer(this);
+        console.log(`${this.username} has logged out.`);
     }
 
     public tick(): Promise<void> {
@@ -83,6 +88,10 @@ export class Player extends Mob {
             this.updateFlags.reset();
             resolve();
         });
+    }
+
+    public equals(player: Player): boolean {
+        return this.worldIndex === player.worldIndex && this.username === player.username && this.clientUuid === player.clientUuid;
     }
 
     public get socket() {

@@ -1,4 +1,5 @@
 import { Player } from './entity/mob/player/player';
+import { ChunkManager } from './map/chunk-manager';
 
 /**
  * Controls the game world and all entities within it.
@@ -9,6 +10,7 @@ export class World {
     public static readonly TICK_LENGTH = 600;
 
     public readonly playerList: Player[] = new Array(World.MAX_PLAYERS);
+    public readonly chunkManager: ChunkManager = new ChunkManager();
 
     public constructor() {
         for(let i = 0; i < World.MAX_PLAYERS; i++) {
@@ -36,6 +38,15 @@ export class World {
         await Promise.all(activePlayers.map(player => player.reset()));
 
         return Promise.resolve();
+    }
+
+    public playerExists(player: Player): boolean {
+        const foundPlayer = this.playerList[player.worldIndex];
+        if(!foundPlayer) {
+            return false;
+        }
+
+        return foundPlayer.equals(player);
     }
 
     public registerPlayer(player: Player): boolean {

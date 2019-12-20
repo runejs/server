@@ -54,7 +54,7 @@ export class PacketSender {
     public sendMembershipStatusAndWorldIndex(): void {
         const packet = new Packet(126);
         packet.writeUnsignedByte(1); // @TODO member status
-        packet.writeShortBE(1); // @TODO world index
+        packet.writeShortBE(this.player.worldIndex + 1);
 
         this.send(packet);
     }

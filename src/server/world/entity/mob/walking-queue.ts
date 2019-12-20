@@ -1,6 +1,7 @@
 import { Mob } from './mob';
 import { Position } from '../../position';
 import { Player } from './player/player';
+import { world } from '../../../game-server';
 
 export class WalkingQueue {
 
@@ -116,6 +117,7 @@ export class WalkingQueue {
 
         if(this.canMoveTo(currentPosition, walkPosition)) {
             // @TODO chunk updating
+            const oldChunk = world.chunkManager.getChunkForWorldPosition(currentPosition);
             const lastMapRegionUpdatePosition = this.mob.lastMapRegionUpdatePosition;
 
             const walkDiffX = walkPosition.x - currentPosition.x;
@@ -137,6 +139,13 @@ export class WalkingQueue {
 
             // @TODO NPC map region changing
             if(this.mob instanceof Player) {
+                const newChunk = world.chunkManager.getChunkForWorldPosition(this.mob.position);
+
+                if(!oldChunk.equals(newChunk)) {
+                    oldChunk.removePlayer(this.mob);
+                    newChunk.addPlayer(this.mob);
+                }
+
                 const mapDiffX = this.mob.position.x - (lastMapRegionUpdatePosition.chunkX * 8);
                 const mapDiffY = this.mob.position.y - (lastMapRegionUpdatePosition.chunkY * 8);
                 if(mapDiffX < 16 || mapDiffX > 87 || mapDiffY < 16 || mapDiffY > 87) {

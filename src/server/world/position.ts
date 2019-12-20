@@ -11,6 +11,17 @@ export class Position {
         this.move(x, y, level);
     }
 
+    public withinViewDistance(position: Position): boolean {
+        if(position.level !== this.level) {
+            return false;
+        }
+
+        const offsetX = this.x - position.x;
+        const offsetY = this.y - position.y;
+
+        return offsetX < 16 && offsetY < 16 && offsetX > -16 && offsetY > -16;
+    }
+
     public move(x: number, y: number, level?: number) {
         this._x = x;
         this._y = y;
@@ -49,4 +60,9 @@ export class Position {
     get level(): number {
         return this._level;
     }
+
+    get key(): string {
+        return `${this.x},${this.y},${this.level}`;
+    }
+
 }

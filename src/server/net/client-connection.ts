@@ -51,6 +51,7 @@ export class ClientConnection {
 
     public connectionDestroyed(): void {
         if(this.player) {
+            this.player.logout();
             world.deregisterPlayer(this.player);
         }
     }
