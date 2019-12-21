@@ -1,6 +1,9 @@
 import { Position } from '../position';
 import { Player } from '../entity/mob/player/player';
 
+/**
+ * A single map chunk within the game world that keeps track of the entities within it.
+ */
 export class Chunk {
 
     private readonly _position: Position;

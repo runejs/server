@@ -1,6 +1,7 @@
-import { Player } from '../world/entity/mob/player/player';
+import { Player } from '../player';
 import { Socket } from 'net';
-import { Packet, PacketType } from './packet';
+import { Packet, PacketType } from '../../../../../net/packet';
+import { ItemContainer } from '../../items/item-container';
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -13,6 +14,32 @@ export class PacketSender {
     public constructor(player: Player) {
         this.player = player;
         this.socket = player.socket;
+    }
+
+    public sendUpdateAllInterfaceItems(interfaceId: number, container: ItemContainer): void {
+        const packet = new Packet(206, PacketType.DYNAMIC_LARGE);
+        packet.writeShortBE(interfaceId);
+        packet.writeShortBE(container.size);
+
+        const items = container.items;
+        items.forEach(item => {
+            if(item === null) {
+                // Empty slot
+                packet.writeOffsetShortLE(0);
+                packet.writeByteInverted(0);
+            } else {
+                packet.writeOffsetShortLE(item.itemId + 1); // +1 because 0 means an empty slot
+
+                if(item.amount >= 255) {
+                    packet.writeByteInverted(255);
+                    packet.writeIntBE(item.amount);
+                } else {
+                    packet.writeByteInverted(item.amount);
+                }
+            }
+        });
+
+        this.send(packet);
     }
 
     public sendLogout(): void {

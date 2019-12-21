@@ -3,6 +3,9 @@ import { Position } from '../../position';
 import { Player } from './player/player';
 import { world } from '../../../game-server';
 
+/**
+ * Controls a mobile entity's movement.
+ */
 export class WalkingQueue {
 
     private queue: Position[];

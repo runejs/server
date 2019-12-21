@@ -1,5 +1,6 @@
 import { Entity } from '../entity';
 import { WalkingQueue } from './walking-queue';
+import { ItemContainer } from './items/item-container';
 
 /**
  * Handles a mobile entity within the game world.
@@ -10,39 +11,45 @@ export abstract class Mob extends Entity {
     private readonly _walkingQueue: WalkingQueue;
     private _walkDirection: number;
     private _runDirection: number;
+    private readonly _inventory: ItemContainer;
 
-    public constructor() {
+    protected constructor() {
         super();
         this._walkingQueue = new WalkingQueue(this);
         this._walkDirection = -1;
         this._runDirection = -1;
+        this._inventory = new ItemContainer(28);
     }
 
-    get worldIndex(): number {
+    public get worldIndex(): number {
         return this._worldIndex;
     }
 
-    set worldIndex(value: number) {
+    public set worldIndex(value: number) {
         this._worldIndex = value;
     }
 
-    get walkingQueue(): WalkingQueue {
+    public get walkingQueue(): WalkingQueue {
         return this._walkingQueue;
     }
 
-    get walkDirection(): number {
+    public get walkDirection(): number {
         return this._walkDirection;
     }
 
-    set walkDirection(value: number) {
+    public set walkDirection(value: number) {
         this._walkDirection = value;
     }
 
-    get runDirection(): number {
+    public get runDirection(): number {
         return this._runDirection;
     }
 
-    set runDirection(value: number) {
+    public set runDirection(value: number) {
         this._runDirection = value;
+    }
+
+    public get inventory(): ItemContainer {
+        return this._inventory;
     }
 }

@@ -11,6 +11,10 @@ export class Position {
         this.move(x, y, level);
     }
 
+    /**
+     * Whether or not the specified position is within the game's view distance of this position.
+     * @param position The game world position to check the distance of.
+     */
     public withinViewDistance(position: Position): boolean {
         if(position.level !== this.level) {
             return false;

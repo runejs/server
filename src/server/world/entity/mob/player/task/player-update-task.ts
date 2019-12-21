@@ -54,8 +54,6 @@ export class PlayerUpdateTask extends Task<void> {
                     // Previously tracked player is no longer nearby, remove them from the list.
                     this.player.trackedPlayers.splice(trackedPlayerIndex, 1);
 
-                    console.log(`${this.player.username} - remove ${trackedPlayerIndex}`);
-
                     playerUpdatePacket.writeBits(1, 1);
                     playerUpdatePacket.writeBits(2, 3);
                 }
@@ -91,8 +89,6 @@ export class PlayerUpdateTask extends Task<void> {
 
                 // Notify the client of the new player and their worldIndex
                 playerUpdatePacket.writeBits(11, nearbyPlayer.worldIndex + 1);
-
-                console.log(`${this.player.username} - new player offset ${positionOffsetX},${positionOffsetY}`);
 
                 playerUpdatePacket.writeBits(5, positionOffsetX); // World Position X axis offset relative to the main player
                 playerUpdatePacket.writeBits(1, 1); // Update is required
@@ -157,19 +153,23 @@ export class PlayerUpdateTask extends Task<void> {
             appearanceData.writeShortBE(0x100 + 42); // Boots
             appearanceData.writeShortBE(0x100 + 18); // Facial Hair
 
-            appearanceData.writeByte(0); // Hair Color
-            appearanceData.writeByte(0); // Torso Color
-            appearanceData.writeByte(0); // Leg Color
-            appearanceData.writeByte(0); // Feet Color
-            appearanceData.writeByte(0); // Skin Color
+            [
+                0, // hair
+                0, // torso
+                0, // leg
+                0, // feet
+                0, // skin
+            ].forEach(color => appearanceData.writeByte(color));
 
-            appearanceData.writeShortBE(0x328); // Stand Anim
-            appearanceData.writeShortBE(0x337); // Stand Turn Anim
-            appearanceData.writeShortBE(0x333); // Walk Anim
-            appearanceData.writeShortBE(0x334); // Turn 180 Anim
-            appearanceData.writeShortBE(0x335); // Turn 90 Anim
-            appearanceData.writeShortBE(0x336); // Turn 90 Counter-Clockwise Anim
-            appearanceData.writeShortBE(0x338); // Run Anim
+            [
+                0x328, // stand
+                0x337, // stand turn
+                0x333, // walk
+                0x334, // turn 180
+                0x335, // turn 90
+                0x336, // turn 90 reverse
+                0x338, // run
+            ].forEach(animationId => appearanceData.writeShortBE(animationId));
 
             appearanceData.writeLongBE(stringToLong(player.username)); // Username
             appearanceData.writeByte(3); // Combat Level

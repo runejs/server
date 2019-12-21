@@ -193,6 +193,11 @@ export class RsBuffer {
         this.writeUnsignedByte(value >> 8);
     }
 
+    public writeIntLE(value: number): void {
+        this.buffer.writeInt32LE(value, this.writerIndex);
+        this.writerIndex += 4;
+    }
+
     public writeIntBE(value: number): void {
         this.buffer.writeInt32BE(value, this.writerIndex);
         this.writerIndex += 4;

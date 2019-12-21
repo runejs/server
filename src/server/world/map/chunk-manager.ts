@@ -1,6 +1,9 @@
 import { Chunk } from './chunk';
 import { Position } from '../position';
 
+/**
+ * Controls all of the game world's map chunks.
+ */
 export class ChunkManager {
 
     private readonly chunkMap: Map<string, Chunk>;
