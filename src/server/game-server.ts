@@ -2,12 +2,15 @@ import * as net from 'net';
 import { RsBuffer } from './net/rs-buffer';
 import { World } from './world/world';
 import { ClientConnection } from './net/client-connection';
+import { GameCache } from './cache/game-cache';
 
 const GAME_SERVER_PORT = 43594;
 
 export const world = new World();
 
 export function runGameServer(): void {
+    const gameCache = new GameCache();
+
     net.createServer(socket => {
         console.log('Socket opened');
         // socket.setNoDelay(true);

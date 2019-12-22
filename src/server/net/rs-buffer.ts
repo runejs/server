@@ -242,6 +242,15 @@ export class RsBuffer {
         return this.buffer.slice(this.readerIndex, this.buffer.length + 1);
     }
 
+    public getSlice(position: number, length: number): RsBuffer {
+        return new RsBuffer(this.buffer.slice(position, position + length));
+    }
+
+    public flip(): RsBuffer {
+        this.buffer = this.getData().reverse();
+        return this;
+    }
+
     public getWriterIndex(): number {
         return this.writerIndex;
     }
@@ -252,5 +261,9 @@ export class RsBuffer {
 
     public setWriterIndex(position: number): void {
         this.writerIndex = position;
+    }
+
+    public setReaderIndex(position: number): void {
+        this.readerIndex = position;
     }
 }
