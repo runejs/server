@@ -94,15 +94,16 @@ export class GameCache {
             remainingBytes -= bytesThisCycle;
 
             if(cycles != currentPartId) {
-                throw("Cycle does not match part id.");
+                throw('Cycle does not match part id.');
             }
 
             if(remainingBytes > 0) {
                 if(nextCacheId != cacheId) {
-                    throw("Unexpected next cache id.");
+                    throw('Unexpected next cache id.');
                 }
+                
                 if(nextFileId != fileId) {
-                    throw("Unexpected next file id.");
+                    throw('Unexpected next file id.');
                 }
             }
 
