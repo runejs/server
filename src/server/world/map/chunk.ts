@@ -2,8 +2,7 @@ import { Position } from '../position';
 import { Player } from '../entity/mob/player/player';
 import { CollisionMap } from './collision-map';
 import { LandscapeObject, MapRegionTile } from '../../cache/map-regions/cache-map-regions';
-import { gameCache, world } from '../../game-server';
-import { logger } from '../../util/logger';
+import { gameCache } from '../../game-server';
 import { LandscapeObjectDefinition } from '../../cache/definitions/landscape-object-definitions';
 
 /**

@@ -3,7 +3,6 @@ import { Position } from '../../position';
 import { Player } from './player/player';
 import { world } from '../../../game-server';
 import { Chunk } from '../../map/chunk';
-import { CollisionMap } from '../../map/collision-map';
 import { MapRegionTile } from '../../../cache/map-regions/cache-map-regions';
 import { logger } from '../../../util/logger';
 
