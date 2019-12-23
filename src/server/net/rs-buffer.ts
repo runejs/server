@@ -145,6 +145,15 @@ export class RsBuffer {
         return value;
     }
 
+    public readSmart(): number {
+        const peek = this.buffer.readUInt8(this.readerIndex);
+        if(peek < 128) {
+            return this.readUnsignedByte();
+        } else {
+            return this.readUnsignedShortBE() - 32768;
+        }
+    }
+
     public readString(): string {
         const bytes: number[] = [];
         let b: number;

@@ -31,7 +31,7 @@ export function parseItemDefinitions(indices: DefinitionIndex[], archive: CacheA
         let notedVersionOf: number = -1;
         let teamIndex: number = -1;
 
-        do {
+        while(true) {
             const opcode = buffer.readUnsignedByte();
 
             if(opcode === 0) {
@@ -114,7 +114,7 @@ export function parseItemDefinitions(indices: DefinitionIndex[], archive: CacheA
                     teamIndex = buffer.readUnsignedByte();
                     break;
             }
-        } while(true);
+        };
 
         if(notedVersionOf !== -1) {
             if(itemDefinitions.has(notedVersionOf)) {

@@ -1,9 +1,11 @@
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { join } from 'path';
+import { gunzipSync } from 'zlib';
 import { RsBuffer } from '../net/rs-buffer';
 import { CacheArchive } from './cache-archive';
 import { CacheIndices } from './cache-indices';
 import { ItemDefinition, parseItemDefinitions } from './definitions/item-definitions';
+import { CacheMapRegions } from './map-regions/cache-map-regions';
 
 const INDEX_FILE_COUNT = 5;
 const INDEX_SIZE = 6;
@@ -23,7 +25,9 @@ export class GameCache {
     private indexFiles: RsBuffer[] = [];
     public readonly cacheIndices: CacheIndices;
     public readonly definitionArchive: CacheArchive;
+    public readonly versionListArchive: CacheArchive;
     public readonly itemDefinitions: Map<number, ItemDefinition>;
+    public readonly mapRegions: CacheMapRegions;
 
     public constructor() {
         this.dataFile = new RsBuffer(readFileSync(join(__dirname, '../../../cache/main_file_cache.dat')));
@@ -33,10 +37,21 @@ export class GameCache {
         }
 
         this.definitionArchive = new CacheArchive(this.getCacheFile(0, 2));
-        this.cacheIndices = new CacheIndices(this.definitionArchive);
+        this.versionListArchive = new CacheArchive(this.getCacheFile(0, 5));
+
+        this.cacheIndices = new CacheIndices(this.definitionArchive, this.versionListArchive);
 
         this.itemDefinitions = parseItemDefinitions(this.cacheIndices.itemDefinitionIndices, this.definitionArchive);
-        console.log('items? = ' + JSON.stringify(this.itemDefinitions.get(4151)));
+
+        this.mapRegions = new CacheMapRegions();
+        this.mapRegions.parseMapRegions(this.cacheIndices.mapRegionIndices, this);
+
+        console.info('');
+    }
+
+    public unzip(cacheFile: CacheFile): RsBuffer {
+        const unzippedBuffer = gunzipSync(cacheFile.data.getBuffer());
+        return new RsBuffer(unzippedBuffer);
     }
 
     public getCacheFile(cacheId: number, fileId: number) {
@@ -44,8 +59,8 @@ export class GameCache {
         cacheId++;
 
         const index = indexFile.getSlice(INDEX_SIZE * fileId, INDEX_SIZE);
-        const fileSize = ((index.readByte() & 0xff) << 16) | ((index.readByte() & 0xff) << 8) | (index.readByte() & 0xff);
-        const fileBlock = ((index.readByte() & 0xff) << 16) | ((index.readByte() & 0xff) << 8) | (index.readByte() & 0xff);
+        const fileSize = (index.readUnsignedByte() << 16) | (index.readUnsignedByte() << 8) | index.readUnsignedByte();
+        const fileBlock = (index.readUnsignedByte() << 16) | (index.readUnsignedByte() << 8) | index.readUnsignedByte();
 
         let remainingBytes = fileSize;
         let currentBlock = fileBlock;
@@ -61,10 +76,10 @@ export class GameCache {
             }
 
             const block = this.dataFile.getSlice(currentBlock * DATA_SIZE, size);
-            let nextFileId = block.readShortBE() & 0xFFFF;
-            let currentPartId = block.readShortBE() & 0xFFFF;
-            let nextBlockId = ((block.readByte() & 0xFF) << 16) | ((block.readByte() & 0xFF) << 8) | (block.readByte() & 0xFF);
-            let nextCacheId = block.readByte() & 0xFF;
+            let nextFileId = block.readUnsignedShortBE();
+            let currentPartId = block.readUnsignedShortBE();
+            let nextBlockId = (block.readUnsignedByte() << 16) | (block.readUnsignedByte() << 8) | block.readUnsignedByte();
+            let nextCacheId = block.readUnsignedByte();
 
             size -= 8;
 

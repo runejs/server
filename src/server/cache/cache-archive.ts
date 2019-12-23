@@ -19,13 +19,11 @@ export class CacheArchive {
         let buffer = cacheFile.data;
         buffer.setReaderIndex(0);
 
-        const uncompressed = ((buffer.readByte() & 0xff) << 16) | ((buffer.readByte() & 0xff) << 8) | (buffer.readByte() & 0xff);
-        const compressed = ((buffer.readByte() & 0xff) << 16) | ((buffer.readByte() & 0xff) << 8) | (buffer.readByte() & 0xff);
+        const uncompressed = (buffer.readUnsignedByte() << 16) | (buffer.readUnsignedByte() << 8) | buffer.readUnsignedByte();
+        const compressed = (buffer.readUnsignedByte() << 16) | (buffer.readUnsignedByte() << 8) | buffer.readUnsignedByte();
 
         if(uncompressed !== compressed) {
-            // @TODO validate that this works properly
-            const compressedData = Buffer.alloc(buffer.getBuffer().length - buffer.getReaderIndex());
-            buffer.getBuffer().copy(compressedData, 0, buffer.getReaderIndex());
+            const compressedData = buffer.getUnreadData();
             buffer = this.decompress(new RsBuffer(compressedData));
             this._compressed = true;
         }
@@ -34,11 +32,12 @@ export class CacheArchive {
         let offset = buffer.getReaderIndex() + dataSize * 10;
         for(let i = 0; i < dataSize; i++) {
             const nameHash = buffer.readIntBE();
-            const uncompressedSize = ((buffer.readByte() & 0xFF) << 16) | ((buffer.readByte() & 0xFF) << 8) | (buffer.readByte() & 0xFF);
-            const compressedSize = ((buffer.readByte() & 0xFF) << 16) | ((buffer.readByte() & 0xFF) << 8) | (buffer.readByte() & 0xFF);
+            const uncompressedSize = (buffer.readUnsignedByte() << 16) | (buffer.readUnsignedByte() << 8) | buffer.readUnsignedByte();
+            const compressedSize = (buffer.readUnsignedByte() << 16) | (buffer.readUnsignedByte() << 8) | buffer.readUnsignedByte();
             const archiveFile: ArchiveFile = {
                 nameHash, uncompressedSize, compressedSize, offset
             };
+
             this._namedFiles.set(nameHash, archiveFile);
             offset += compressedSize;
         }
@@ -68,6 +67,10 @@ export class CacheArchive {
             while(hash > INT_MAX) {
                 const diff = hash - INT_MAX;
                 hash = -INT_MAX + diff;
+            }
+            while(hash < -INT_MAX) {
+                const diff = Math.abs(hash) - INT_MAX;
+                hash = INT_MAX - diff;
             }
         }
 
