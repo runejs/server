@@ -7,10 +7,9 @@ import { GameCache } from './cache/game-cache';
 const GAME_SERVER_PORT = 43594;
 
 export const world = new World();
+export const gameCache = new GameCache();
 
 export function runGameServer(): void {
-    const gameCache = new GameCache();
-
     net.createServer(socket => {
         console.log('Socket opened');
         // socket.setNoDelay(true);

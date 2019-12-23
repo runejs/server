@@ -1,7 +1,9 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { RsBuffer } from '../net/rs-buffer';
-import { GameArchive } from './game-archive';
+import { CacheArchive } from './cache-archive';
+import { CacheIndices } from './cache-indices';
+import { ItemDefinition, parseItemDefinitions } from './definitions/item-definitions';
 
 const INDEX_FILE_COUNT = 5;
 const INDEX_SIZE = 6;
@@ -19,6 +21,9 @@ export class GameCache {
 
     private dataFile: RsBuffer;
     private indexFiles: RsBuffer[] = [];
+    public readonly cacheIndices: CacheIndices;
+    public readonly definitionArchive: CacheArchive;
+    public readonly itemDefinitions: Map<number, ItemDefinition>;
 
     public constructor() {
         this.dataFile = new RsBuffer(readFileSync(join(__dirname, '../../../cache/main_file_cache.dat')));
@@ -27,14 +32,11 @@ export class GameCache {
             this.indexFiles.push(new RsBuffer(readFileSync(join(__dirname, `../../../cache/main_file_cache.idx${i}`))));
         }
 
-        const cacheFile = this.getCacheFile(0, 2);
-        console.log('cacheFile = ' + cacheFile.data.getBuffer().length);
+        this.definitionArchive = new CacheArchive(this.getCacheFile(0, 2));
+        this.cacheIndices = new CacheIndices(this.definitionArchive);
 
-        const archive = new GameArchive(cacheFile);
-        const archiveFile = archive.getFile('obj.dat');
-
-        //console.log('archiveFile = ' + archiveFile);
-        writeFileSync(join(__dirname, '../../../cache/obj.txt'), archiveFile);
+        this.itemDefinitions = parseItemDefinitions(this.cacheIndices.itemDefinitionIndices, this.definitionArchive);
+        console.log('items? = ' + JSON.stringify(this.itemDefinitions.get(4151)));
     }
 
     public getCacheFile(cacheId: number, fileId: number) {

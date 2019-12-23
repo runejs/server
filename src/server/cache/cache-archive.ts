@@ -9,22 +9,25 @@ export interface ArchiveFile {
     offset: number;
 }
 
-export class GameArchive {
+export class CacheArchive {
 
     private _compressed: boolean = false;
     private _namedFiles: Map<number, ArchiveFile> = new Map<number, ArchiveFile>();
     private data: RsBuffer;
 
     public constructor(cacheFile: CacheFile) {
-        const buffer = cacheFile.data;
+        let buffer = cacheFile.data;
         buffer.setReaderIndex(0);
 
         const uncompressed = ((buffer.readByte() & 0xff) << 16) | ((buffer.readByte() & 0xff) << 8) | (buffer.readByte() & 0xff);
         const compressed = ((buffer.readByte() & 0xff) << 16) | ((buffer.readByte() & 0xff) << 8) | (buffer.readByte() & 0xff);
 
         if(uncompressed !== compressed) {
-            const compressedData = new RsBuffer(buffer.getUnreadData());
-            // @TODO
+            // @TODO validate that this works properly
+            const compressedData = Buffer.alloc(buffer.getBuffer().length - buffer.getReaderIndex());
+            buffer.getBuffer().copy(compressedData, 0, buffer.getReaderIndex());
+            buffer = this.decompress(new RsBuffer(compressedData));
+            this._compressed = true;
         }
 
         const dataSize = buffer.readShortBE() & 0xffff;
@@ -43,7 +46,7 @@ export class GameArchive {
         this.data = buffer;
     }
 
-    private decompress(data: RsBuffer): any {
+    private decompress(data: RsBuffer): RsBuffer {
         const buffer = Buffer.alloc(data.getBuffer().length + 4);
         data.getBuffer().copy(buffer, 4);
         buffer[0] = 'B'.charCodeAt(0);
@@ -51,7 +54,7 @@ export class GameArchive {
         buffer[2] = 'h'.charCodeAt(0);
         buffer[3] = '1'.charCodeAt(0);
 
-        return seekBzip.decode(buffer);
+        return new RsBuffer(seekBzip.decode(buffer));
     }
 
     private hashFileName(fileName: string): number {
@@ -71,7 +74,7 @@ export class GameArchive {
         return hash;
     }
 
-    public getFile(fileName: string): RsBuffer {
+    public getFileData(fileName: string): RsBuffer {
         const nameHash = this.hashFileName(fileName);
         const archiveFile = this._namedFiles.get(nameHash);
 
@@ -81,6 +84,7 @@ export class GameArchive {
             const data = Buffer.alloc(archiveFile.compressedSize);
             this.data.getBuffer().copy(data, 0, archiveFile.offset);
             const buffer = new RsBuffer(data);
+
             if(this.compressed) {
                 return buffer;
             } else {
