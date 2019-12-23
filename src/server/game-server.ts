@@ -6,8 +6,9 @@ import { GameCache } from './cache/game-cache';
 
 const GAME_SERVER_PORT = 43594;
 
-export const world = new World();
 export const gameCache = new GameCache();
+export const world = new World();
+world.chunkManager.generateCollisionMaps();
 
 export function runGameServer(): void {
     net.createServer(socket => {

@@ -37,6 +37,14 @@ export class Position {
         }
     }
 
+    public equals(position: Position | { x: number, y: number, level: number }): boolean {
+        if(!(position instanceof Position)) {
+            position = new Position(position.x, position.y, position.level);
+        }
+
+        return this._x === position.x && this._y === position.y && this._level === position.level;
+    }
+
     get chunkX(): number {
         return (this._x >> 3) - 6;
     }
@@ -63,6 +71,18 @@ export class Position {
 
     get level(): number {
         return this._level;
+    }
+
+    set x(value: number) {
+        this._x = value;
+    }
+
+    set y(value: number) {
+        this._y = value;
+    }
+
+    set level(value: number) {
+        this._level = value;
     }
 
     get key(): string {

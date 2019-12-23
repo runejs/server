@@ -2,13 +2,6 @@ import { MapRegionIndex } from '../cache-indices';
 import { GameCache } from '../game-cache';
 import { RsBuffer } from '../../net/rs-buffer';
 
-export interface MapRegionTile {
-    x: number;
-    y: number;
-    level: number;
-    flags: number;
-}
-
 export class MapRegionTile {
 
     public bridge: boolean;
@@ -90,8 +83,8 @@ export class CacheMapRegions {
                 objectPositionInfo += objectPositionInfoOffset - 1;
 
                 const x = (objectPositionInfo >> 6 & 0x3f) + mapRegionX;
-                const level = objectPositionInfo & 0x3f;
-                const y = (objectPositionInfo >> 12) + mapRegionY;
+                const y = (objectPositionInfo & 0x3f) + mapRegionY;
+                const level = objectPositionInfo >> 12;
                 const objectMetadata = buffer.readUnsignedByte();
                 const type = objectMetadata >> 2;
                 const rotation = objectMetadata & 3;
