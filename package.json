@@ -1,6 +1,6 @@
 {
     "name": "rune.js",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "description": "",
     "main": "src/server/game-server.ts",
     "scripts": {
@@ -12,9 +12,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/TheBlackParade/rune.js.git"
+        "url": "git+ssh://git@github.com/rune-js/server.git"
     },
-    "author": "Rune.JS",
+    "bugs": {
+        "url": "https://github.com/rune-js/server/issues"
+    },
+    "homepage": "https://github.com/rune-js/server#readme",
+    "author": "TheBlackParade",
     "license": "GPL-3.0",
     "dependencies": {
         "@runejs/cache-parser": "^0.1.2",
