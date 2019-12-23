@@ -37,6 +37,14 @@ export class Position {
         }
     }
 
+    public equalsIgnoreLevel(position: Position | { x: number, y: number }): boolean {
+        if(!(position instanceof Position)) {
+            position = new Position(position.x, position.y);
+        }
+
+        return this._x === position.x && this._y === position.y;
+    }
+
     public equals(position: Position | { x: number, y: number, level: number }): boolean {
         if(!(position instanceof Position)) {
             position = new Position(position.x, position.y, position.level);

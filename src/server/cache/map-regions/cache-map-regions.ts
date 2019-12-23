@@ -16,6 +16,7 @@ export class MapRegionTile {
 }
 
 export interface LandscapeObject {
+    objectId: number;
     x: number;
     y: number;
     level: number;
@@ -42,9 +43,9 @@ export class CacheMapRegions {
             const mapRegionBuffer = gameCache.unzip(gameCache.getCacheFile(4, mapRegionIndex.mapRegionFileId));
             const landscapeBuffer = gameCache.unzip(gameCache.getCacheFile(4, mapRegionIndex.landscapeFileId));
 
-            for(let x = 0; x < 64; x++) {
-                for(let y = 0; y < 64; y++) {
-                    for(let level = 0; level < 4; level++) {
+            for(let level = 0; level < 4; level++) {
+                for(let x = 0; x < 64; x++) {
+                    for(let y = 0; y < 64; y++) {
                         const mapRegionTile = this.parseTile(x + mapRegionX, y + mapRegionY, level, mapRegionBuffer);
 
                         // Map regions with a flag of 0 are left out since there are so many and it's useless to keep track of them.
@@ -91,7 +92,7 @@ export class CacheMapRegions {
                 const type = objectMetadata >> 2;
                 const rotation = objectMetadata & 3;
 
-                this._landscapeObjectList.push({ x, y, level, type, rotation });
+                this._landscapeObjectList.push({ objectId, x, y, level, type, rotation });
             }
         }
     }
@@ -100,7 +101,7 @@ export class CacheMapRegions {
         let flags = 0;
 
         while(true) {
-            const opcode = buffer.readUnsignedByte();
+            const opcode = buffer.readByte() & 0xff;
 
             if(opcode === 0) {
                 return new MapRegionTile(x, y, level, flags);

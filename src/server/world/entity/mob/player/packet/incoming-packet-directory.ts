@@ -4,6 +4,7 @@ import { cameraTurnPacket } from './impl/camera-turn-packet';
 import { buttonClickPacket } from './impl/button-click-packet';
 import { walkPacket } from './impl/walk-packet';
 import { RsBuffer } from '../../../../../net/rs-buffer';
+import { logger } from '../../../../../util/logger';
 
 const packets = {
     19:  interfaceClickPacket,
@@ -20,7 +21,7 @@ export function handlePacket(player: Player, packetId: number, packetSize: numbe
     const packetFunction = packets[packetId];
 
     if(!packetFunction) {
-        console.log(`Unknown packet ${packetId} with size ${packetSize} received.`)
+        logger.info(`Unknown packet ${packetId} with size ${packetSize} received.`);
         return;
     }
 

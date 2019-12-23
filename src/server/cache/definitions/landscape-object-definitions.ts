@@ -26,16 +26,16 @@ export function parseLandscapeObjectDefinitions(indices: DefinitionIndex[], arch
 
         let name: string;
         let description: string;
-        let sizeX: number;
-        let sizeY: number;
+        let sizeX: number = 1;
+        let sizeY: number = 1;
         let solid: boolean = true;
         let walkable: boolean = true;
         let hasOptions: boolean = false;
         let options: string[] = null;
-        let face: number;
-        let translateX: number;
-        let translateY: number;
-        let translateLevel: number;
+        let face: number = 0;
+        let translateX: number = 0;
+        let translateY: number = 0;
+        let translateLevel: number = 0;
 
         while(true) {
             const opcode = buffer.readUnsignedByte();

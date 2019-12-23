@@ -9,20 +9,20 @@ export class CollisionMap {
 
     private sizeX: number;
     private sizeY: number;
-    private insetX: number;
-    private insetY: number;
-    private adjacency: number[][];
+    private _insetX: number;
+    private _insetY: number;
+    private _adjacency: number[][];
     private chunk: Chunk;
     
     public constructor(sizeX: number, sizeY: number, insetX: number, insetY: number, chunk: Chunk) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
-        this.insetX = insetX;
-        this.insetY = insetY;
+        this._insetX = insetX;
+        this._insetY = insetY;
         this.chunk = chunk;
-        this.adjacency = new Array(this.sizeX);
+        this._adjacency = new Array(this.sizeX);
         for(let i = 0; i < this.sizeX; i++) {
-            this.adjacency[i] = new Array(this.sizeY);
+            this._adjacency[i] = new Array(this.sizeY);
         }
         this.reset();
     }
@@ -31,10 +31,10 @@ export class CollisionMap {
         for(let x = 0; x < this.sizeX; x++) {
             for(let y = 0; y < this.sizeY; y++) {
                 if(x == 0 || y == 0 || x == this.sizeX - 1 || y == this.sizeY - 1) {
-                    this.adjacency[x][y] = //0xffffff;
+                    this._adjacency[x][y] = //0xffffff;
                         0;
                 } else {
-                    this.adjacency[x][y] = //0x1000000;
+                    this._adjacency[x][y] = //0x1000000;
                         0;
                 }
             }
@@ -42,8 +42,8 @@ export class CollisionMap {
     }
     
     public markWall(x: number, y: number, type: number, rotation: number, walkable: boolean): void {
-        x -= this.insetX;
-        y -= this.insetY;
+        x -= this._insetX;
+        y -= this._insetY;
         
         if(type == 0) {
             if(rotation == 0) {
@@ -166,8 +166,8 @@ export class CollisionMap {
     }
 
     public unmarkWall(x: number, y: number, position: number, rotation: number, impenetrable: boolean): void {
-        x -= this.insetX;
-        y -= this.insetY;
+        x -= this._insetX;
+        y -= this._insetY;
         if(position == 0) {
             if(rotation == 0) {
                 this.unset(x, y, 128);
@@ -288,37 +288,15 @@ export class CollisionMap {
         }
     }
     
-    // @TODO consolodate with unmarkSolidOccupant via boolean param
-    public markSolidOccupant(occupantX: number, occupantY: number, width: number, height: number, rotation: number, impenetrable: boolean): void {
+    public markSolidOccupant(occupantX: number, occupantY: number, width: number, height: number, rotation: number, walkable: boolean, mark: boolean): void {
         let occupied = 256;
-        if(impenetrable) {
+        if(walkable) {
             occupied += 0x20000;
         }
-        occupantX -= this.insetX;
-        occupantY -= this.insetY;
 
-        if(rotation == 1 || rotation == 3) {
-            let off = width;
-            width = height;
-            height = off;
-        }
-        
-        for(let x = occupantX; x < occupantX + width; x++) {
-            for(let y = occupantY; y < occupantY + height; y++) {
-                this.set(x, y, occupied);
-            }
-        }
-    }
+        occupantX -= this._insetX;
+        occupantY -= this._insetY;
 
-    // @TODO consolodate with markSolidOccupant via boolean param
-    public unmarkSolidOccupant(occupantX: number, occupantY: number, width: number, height: number, rotation: number, impenetrable: boolean): void {
-        let occupied = 256;
-        if(impenetrable) {
-            occupied += 0x20000;
-        }
-        occupantX -= this.insetX;
-        occupantY -= this.insetY;
-        
         if(rotation == 1 || rotation == 3) {
             let off = width;
             width = height;
@@ -327,23 +305,24 @@ export class CollisionMap {
 
         for(let x = occupantX; x < occupantX + width; x++) {
             for(let y = occupantY; y < occupantY + height; y++) {
-                this.unset(x, y, occupied);
+                if(mark) {
+                    this.set(x, y, occupied);
+                } else {
+                    this.unset(x, y, occupied);
+                }
             }
         }
     }
 
-    // @TODO consolodate with unmarkBlocked via boolean param
-    public markBlocked(x: number, y: number): void {
-        x -= this.insetX;
-        y -= this.insetY;
-        this.adjacency[x][y] |= 0x200000;
-    }
+    public markBlocked(x: number, y: number, mark: boolean): void {
+        x -= this._insetX;
+        y -= this._insetY;
 
-    // @TODO consolodate with markBlocked via boolean param
-    public unmarkBlocked(x: number, y: number): void {
-        x -= this.insetX;
-        y -= this.insetY;
-        this.adjacency[x][y] &= 0xdfffff;
+        if(mark) {
+            this._adjacency[x][y] |= 0x200000;
+        } else {
+            this._adjacency[x][y] &= 0xdfffff;
+        }
     }
     
     public set(x: number, y: number, flag: number): void {
@@ -375,7 +354,7 @@ export class CollisionMap {
         }
 
         if(!outOfBounds) {
-            this.adjacency[x][y] |= flag;
+            this._adjacency[x][y] |= flag;
         }
     }
     
@@ -405,8 +384,19 @@ export class CollisionMap {
         }
 
         if(!outOfBounds) {
-            this.adjacency[x][y] &= 0xffffff - flag;
+            this._adjacency[x][y] &= 0xffffff - flag;
         }
     }
-    
+
+    public get insetX(): number {
+        return this._insetX;
+    }
+
+    public get insetY(): number {
+        return this._insetY;
+    }
+
+    public get adjacency(): number[][] {
+        return this._adjacency;
+    }
 }

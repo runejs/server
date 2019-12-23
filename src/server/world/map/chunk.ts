@@ -2,8 +2,9 @@ import { Position } from '../position';
 import { Player } from '../entity/mob/player/player';
 import { CollisionMap } from './collision-map';
 import { LandscapeObject, MapRegionTile } from '../../cache/map-regions/cache-map-regions';
-import { world } from '../../game-server';
+import { gameCache, world } from '../../game-server';
 import { logger } from '../../util/logger';
+import { LandscapeObjectDefinition } from '../../cache/definitions/landscape-object-definitions';
 
 /**
  * A single map chunk within the game world that keeps track of the entities within it.
@@ -30,19 +31,7 @@ export class Chunk {
             this.addTile(tile, objectPosition);
         }
 
-        if(tile.bridge) {
-            if(tile.level > 0) {
-                const bridgeTileLevel = tile.level - 1;
-                const bridgeTilePosition = new Position(tile.x, tile.y, bridgeTileLevel);
-                const bridgeTileChunk = world.chunkManager.getChunkForWorldPosition(bridgeTilePosition);
-                landscapeObject.level = bridgeTileLevel;
-                objectPosition.level = bridgeTileLevel;
-
-                bridgeTileChunk.markOnCollisionMap(landscapeObject, objectPosition, true);
-            }
-        } else {
-            this.markOnCollisionMap(landscapeObject, objectPosition, true);
-        }
+        this.markOnCollisionMap(landscapeObject, objectPosition, true);
     }
 
     public addTile(tile: MapRegionTile, tilePosition: Position): void {
@@ -52,32 +41,16 @@ export class Chunk {
         }
 
         this._tileList.push(tile);
-
-        if(tile.bridge && tile.level > 0) {
-            const bridgeTileLevel = tile.level - 1;
-            const bridgeTilePosition = new Position(tile.x, tile.y, bridgeTileLevel);
-            const bridgeTileChunk = world.chunkManager.getChunkForWorldPosition(bridgeTilePosition);
-            bridgeTileChunk.replaceTile(tile, bridgeTilePosition);
-        }
     }
 
     public getTile(position: Position): MapRegionTile {
         for(const tile of this._tileList) {
-            if(position.equals({ x: tile.x, y: tile.y, level: tile.level })) {
+            if(position.equalsIgnoreLevel({ x: tile.x, y: tile.y })) {
                 return tile;
             }
         }
 
         return null;
-    }
-
-    public replaceTile(tile: MapRegionTile, position: Position): void {
-        const oldTileIndex = this._tileList.findIndex(t => position.equals({ x: t.x, y: t.y, level: t.level }));
-        if(oldTileIndex !== -1) {
-            this._tileList.splice(oldTileIndex, 1);
-        }
-
-        this._tileList.push(tile);
     }
 
     public addPlayer(player: Player): void {
@@ -95,17 +68,26 @@ export class Chunk {
 
     public markOnCollisionMap(landscapeObject: LandscapeObject, position: Position, mark: boolean): void {
         const x: number = position.x;
-        const z: number = position.y;
+        const y: number = position.y;
         const objectType = landscapeObject.type;
         const objectRotation = landscapeObject.rotation;
-        // const CacheGameObject cacheGameObject = landscapeObject.getCacheGameObject();
+        const objectDetails: LandscapeObjectDefinition = gameCache.landscapeObjectDefinitions.get(landscapeObject.objectId);
 
-        if((x == 3240 && z == 3226)/* || (x == 3230 && z == 3225)*/) {
-            logger.debug('chunk ' + this.position.x + ',' + this.position.y);
-            logger.debug('obj is type ' + objectType);
+        if(objectDetails.solid) {
+            if(objectType === 22) {
+                if(objectDetails.hasOptions) {
+                    this.collisionMap.markBlocked(x, y, mark);
+                }
+            } else if(objectType >= 9) {
+                this.collisionMap.markSolidOccupant(x, y, objectDetails.sizeX, objectDetails.sizeY, objectRotation, objectDetails.walkable, mark);
+            } else if(objectType >= 0 && objectType <= 3) {
+                if(mark) {
+                    this.collisionMap.markWall(x, y, objectType, objectRotation, objectDetails.walkable);
+                } else {
+                    this.collisionMap.unmarkWall(x, y, objectType, objectRotation, objectDetails.walkable);
+                }
+            }
         }
-
-        // @TODO read object definitions from cache. needed for object sizing and metadata...
     }
 
     public equals(chunk: Chunk): boolean {

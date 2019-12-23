@@ -7,6 +7,7 @@ import { UpdateFlags } from './update-flags';
 import { Position } from '../../../position';
 import { Skill, skills } from '../skills/skill';
 import { world } from '../../../../game-server';
+import { logger } from '../../../../util/logger';
 
 const DEFAULT_TAB_INTERFACES = [
     2423, 3917, 638, 3213, 1644, 5608, 1151, -1, 5065, 5715, 2449, 904, 147, 962
@@ -50,7 +51,7 @@ export class Player extends Mob {
         this.updateFlags.mapRegionUpdateRequired = true;
         this.updateFlags.appearanceUpdateRequired = true;
 
-        this.position = new Position(3222, 3222);
+        this.position = new Position(3240, 3225);
         world.chunkManager.getChunkForWorldPosition(this.position).addPlayer(this);
 
         this.packetSender.sendMembershipStatusAndWorldIndex();
@@ -80,7 +81,7 @@ export class Player extends Mob {
         world.deregisterPlayer(this);
         this.loggedIn = false;
 
-        console.log(`${this.username} has logged out.`);
+        logger.info(`${this.username} has logged out.`);
     }
 
     public tick(): Promise<void> {
