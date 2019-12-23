@@ -3,8 +3,8 @@ import { Position } from '../../position';
 import { Player } from './player/player';
 import { world } from '../../../game-server';
 import { Chunk } from '../../map/chunk';
-import { MapRegionTile } from '../../../cache/map-regions/cache-map-regions';
 import { logger } from '@runejs/logger';
+import { MapRegionTile } from '@runejs/cache-parser';
 
 /**
  * Controls a mobile entity's movement.
@@ -190,7 +190,7 @@ export class WalkingQueue {
     }
 
     private calculateLocalCornerPosition(cornerX: number, cornerY: number, origin: Position): { localX: number, localY: number, chunk: Chunk } {
-        let cornerPosition: Position = new Position(cornerX, cornerY, origin.level + 1);
+        const cornerPosition: Position = new Position(cornerX, cornerY, origin.level + 1);
         let cornerChunk: Chunk = world.chunkManager.getChunkForWorldPosition(cornerPosition);
         const tileAbove: MapRegionTile = cornerChunk.getTile(cornerPosition);
         if(!tileAbove || !tileAbove.bridge) {
@@ -260,7 +260,7 @@ export class WalkingQueue {
 
             this.mob.position = walkPosition;
 
-            let runDir = -1;
+            const runDir = -1;
 
             // @TODO running
 

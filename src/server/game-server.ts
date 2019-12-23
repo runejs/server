@@ -1,13 +1,14 @@
 import * as net from 'net';
+import { join } from 'path';
 import { RsBuffer } from './net/rs-buffer';
 import { World } from './world/world';
 import { ClientConnection } from './net/client-connection';
-import { GameCache } from './cache/game-cache';
 import { logger } from '@runejs/logger';
+import { GameCache } from '@runejs/cache-parser';
 
 const GAME_SERVER_PORT = 43594;
 
-export const gameCache = new GameCache();
+export const gameCache = new GameCache(join(__dirname, '../../cache'));
 export const world = new World();
 world.chunkManager.generateCollisionMaps();
 

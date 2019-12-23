@@ -17,12 +17,12 @@
     "author": "Rune.JS",
     "license": "GPL-3.0",
     "dependencies": {
+        "@runejs/cache-parser": "^0.1.2",
         "@runejs/logger": "^1.0.0",
         "axios": "^0.19.0",
         "bigi": "^1.4.2",
         "core-js": "^3.4.3",
         "express": "^4.17.1",
-        "seek-bzip": "^1.0.5",
         "ts-node": "^8.4.1",
         "typescript": "^3.7.2",
         "vue": "^2.6.10",

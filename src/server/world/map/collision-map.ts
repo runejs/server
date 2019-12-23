@@ -298,7 +298,7 @@ export class CollisionMap {
         occupantY -= this._insetY;
 
         if(rotation == 1 || rotation == 3) {
-            let off = width;
+            const off = width;
             width = height;
             height = off;
         }
