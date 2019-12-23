@@ -36,5 +36,5 @@ export function runGameServer(): void {
         });
     }).listen(GAME_SERVER_PORT, '127.0.0.1');
 
-    logger.info(`Game Server listening on port ${GAME_SERVER_PORT}`);
+    logger.info(`Game server listening on port ${GAME_SERVER_PORT}.`);
 }

@@ -4,7 +4,7 @@ import { Player } from './world/entity/mob/player/player';
 import { constants } from 'http2';
 import { logger } from './util/logger';
 
-const WEB_SERVER_PORT = 43592;
+const WEB_SERVER_PORT = 8888;
 
 export function runWebServer(): void {
     const webServer = express();
@@ -33,5 +33,5 @@ export function runWebServer(): void {
 
     webServer.get('/', (req, res) => res.send('Rune.JS Web Server'));
 
-    webServer.listen(WEB_SERVER_PORT, () => logger.info(`Web Server listening on port ${WEB_SERVER_PORT}`));
+    webServer.listen(WEB_SERVER_PORT, () => logger.info(`REST service listening on port ${WEB_SERVER_PORT}.`));
 }

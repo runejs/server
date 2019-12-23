@@ -17,17 +17,33 @@ export interface MapRegionIndex {
 export class CacheIndices {
 
     private _itemDefinitionIndices: DefinitionIndex[];
+    private _landscapeObjectDefinitionIndices: DefinitionIndex[];
     private _mapRegionIndices: MapRegionIndex[];
 
     public constructor(private readonly definitionArchive: CacheArchive, private readonly versionListArchive: CacheArchive) {
         this.parseItemDefinitionIndices();
+        this.parseLandscapeObjectDefinitionIndices();
         this.parseMapRegionIndices();
+    }
+
+    private parseLandscapeObjectDefinitionIndices(): void {
+        logger.info('Parsing landscape object definition indices...');
+
+        this._landscapeObjectDefinitionIndices = this.parseDefinitionIndices('loc.idx');
+
+        logger.info(`${this._landscapeObjectDefinitionIndices.length} landscape objects found within the game cache.`);
     }
 
     private parseItemDefinitionIndices(): void {
         logger.info('Parsing item definition indices...');
 
-        const buffer: RsBuffer = this.definitionArchive.getFileData('obj.idx');
+        this._itemDefinitionIndices = this.parseDefinitionIndices('obj.idx');
+
+        logger.info(`${this._itemDefinitionIndices.length} items found within the game cache.`);
+    }
+
+    private parseDefinitionIndices(fileName: string): DefinitionIndex[] {
+        const buffer: RsBuffer = this.definitionArchive.getFileData(fileName);
         const indexCount = buffer.readUnsignedShortBE();
         const indices: DefinitionIndex[] = new Array(indexCount);
         let offset = 2;
@@ -37,9 +53,7 @@ export class CacheIndices {
             offset += buffer.readUnsignedShortBE();
         }
 
-        this._itemDefinitionIndices = indices;
-
-        logger.info(`${indexCount} items found within the game cache.`);
+        return indices;
     }
 
     private parseMapRegionIndices(): void {
@@ -64,6 +78,10 @@ export class CacheIndices {
 
     public get itemDefinitionIndices(): DefinitionIndex[] {
         return this._itemDefinitionIndices;
+    }
+
+    public get landscapeObjectDefinitionIndices(): DefinitionIndex[] {
+        return this._landscapeObjectDefinitionIndices;
     }
 
     public get mapRegionIndices(): MapRegionIndex[] {
