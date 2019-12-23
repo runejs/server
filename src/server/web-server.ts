@@ -2,7 +2,7 @@ import express from 'express';
 import { world } from './game-server';
 import { Player } from './world/entity/mob/player/player';
 import { constants } from 'http2';
-import { logger } from './util/logger';
+import { logger } from '@runejs/logger';
 
 const WEB_SERVER_PORT = 8888;
 

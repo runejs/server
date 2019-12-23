@@ -1,6 +1,6 @@
 import { Player } from './entity/mob/player/player';
 import { ChunkManager } from './map/chunk-manager';
-import { logger } from '../util/logger';
+import { logger } from '@runejs/logger';
 
 /**
  * Controls the game world and all entities within it.

@@ -4,7 +4,7 @@ import { cameraTurnPacket } from './impl/camera-turn-packet';
 import { buttonClickPacket } from './impl/button-click-packet';
 import { walkPacket } from './impl/walk-packet';
 import { RsBuffer } from '../../../../../net/rs-buffer';
-import { logger } from '../../../../../util/logger';
+import { logger } from '@runejs/logger';
 
 const packets = {
     19:  interfaceClickPacket,

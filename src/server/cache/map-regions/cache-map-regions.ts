@@ -1,7 +1,7 @@
 import { MapRegionIndex } from '../cache-indices';
 import { GameCache } from '../game-cache';
 import { RsBuffer } from '../../net/rs-buffer';
-import { logger } from '../../util/logger';
+import { logger } from '@runejs/logger';
 
 export class MapRegionTile {
 

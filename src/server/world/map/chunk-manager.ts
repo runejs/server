@@ -1,7 +1,7 @@
 import { Chunk } from './chunk';
 import { Position } from '../position';
 import { gameCache } from '../../game-server';
-import { logger } from '../../util/logger';
+import { logger } from '@runejs/logger';
 
 /**
  * Controls all of the game world's map chunks.

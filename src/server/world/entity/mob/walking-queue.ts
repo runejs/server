@@ -4,7 +4,7 @@ import { Player } from './player/player';
 import { world } from '../../../game-server';
 import { Chunk } from '../../map/chunk';
 import { MapRegionTile } from '../../../cache/map-regions/cache-map-regions';
-import { logger } from '../../../util/logger';
+import { logger } from '@runejs/logger';
 
 /**
  * Controls a mobile entity's movement.

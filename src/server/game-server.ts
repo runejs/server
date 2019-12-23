@@ -3,7 +3,7 @@ import { RsBuffer } from './net/rs-buffer';
 import { World } from './world/world';
 import { ClientConnection } from './net/client-connection';
 import { GameCache } from './cache/game-cache';
-import { logger } from './util/logger';
+import { logger } from '@runejs/logger';
 
 const GAME_SERVER_PORT = 43594;
 

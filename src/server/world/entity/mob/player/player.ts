@@ -7,7 +7,7 @@ import { UpdateFlags } from './update-flags';
 import { Position } from '../../../position';
 import { Skill, skills } from '../skills/skill';
 import { world } from '../../../../game-server';
-import { logger } from '../../../../util/logger';
+import { logger } from '@runejs/logger';
 
 const DEFAULT_TAB_INTERFACES = [
     2423, 3917, 638, 3213, 1644, 5608, 1151, -1, 5065, 5715, 2449, 904, 147, 962

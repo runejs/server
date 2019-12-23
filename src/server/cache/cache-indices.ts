@@ -1,6 +1,6 @@
 import { CacheArchive } from './cache-archive';
 import { RsBuffer } from '../net/rs-buffer';
-import { logger } from '../util/logger';
+import { logger } from '@runejs/logger';
 
 export interface DefinitionIndex {
     id: number;
