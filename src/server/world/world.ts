@@ -1,5 +1,6 @@
 import { Player } from './entity/mob/player/player';
 import { ChunkManager } from './map/chunk-manager';
+import { logger } from '../util/logger';
 
 /**
  * Controls the game world and all entities within it.
@@ -53,7 +54,7 @@ export class World {
         const index = this.playerList.findIndex(p => p === null);
 
         if(index === -1) {
-            console.log('World full!');
+            logger.warn('World full!');
             return false;
         }
 

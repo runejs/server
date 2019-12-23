@@ -1,6 +1,7 @@
 import { MapRegionIndex } from '../cache-indices';
 import { GameCache } from '../game-cache';
 import { RsBuffer } from '../../net/rs-buffer';
+import { logger } from '../../util/logger';
 
 export class MapRegionTile {
 
@@ -33,7 +34,7 @@ export class CacheMapRegions {
     }
 
     public parseMapRegions(mapRegionIndices: MapRegionIndex[], gameCache: GameCache): void {
-        console.info('Parsing map regions...');
+        logger.info('Parsing map regions...');
 
         mapRegionIndices.forEach(mapRegionIndex => {
             const mapRegionX = ((mapRegionIndex.id >> 8) & 0xff) * 64;
@@ -46,7 +47,8 @@ export class CacheMapRegions {
                     for(let level = 0; level < 4; level++) {
                         const mapRegionTile = this.parseTile(x + mapRegionX, y + mapRegionY, level, mapRegionBuffer);
 
-                        // @TODO do we need tiles with flags of 1? Unsure...
+                        // Map regions with a flag of 0 are left out since there are so many and it's useless to keep track of them.
+                        // We'll let the game work chunks generate those on their own when/if needed for path validation.
                         if(mapRegionTile.flags > 0) {
                             this._mapRegionTileList.push(mapRegionTile);
                         }
@@ -57,7 +59,7 @@ export class CacheMapRegions {
             this.parseLandscape(landscapeBuffer, mapRegionX, mapRegionY);
         });
 
-        console.info(`Parsed ${this._mapRegionTileList.length} map region tiles and ${this._landscapeObjectList.length} landscape objects.`);
+        logger.info(`Parsed ${this._mapRegionTileList.length} map region tiles and ${this._landscapeObjectList.length} landscape objects.`);
     }
 
     private parseLandscape(buffer: RsBuffer, mapRegionX: number, mapRegionY: number): void {

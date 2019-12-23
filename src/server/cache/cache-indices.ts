@@ -1,5 +1,6 @@
 import { CacheArchive } from './cache-archive';
 import { RsBuffer } from '../net/rs-buffer';
+import { logger } from '../util/logger';
 
 export interface DefinitionIndex {
     id: number;
@@ -24,7 +25,7 @@ export class CacheIndices {
     }
 
     private parseItemDefinitionIndices(): void {
-        console.info('Parsing item definition indices...');
+        logger.info('Parsing item definition indices...');
 
         const buffer: RsBuffer = this.definitionArchive.getFileData('obj.idx');
         const indexCount = buffer.readUnsignedShortBE();
@@ -38,11 +39,11 @@ export class CacheIndices {
 
         this._itemDefinitionIndices = indices;
 
-        console.info(`${indexCount} items found within the game cache.`);
+        logger.info(`${indexCount} items found within the game cache.`);
     }
 
     private parseMapRegionIndices(): void {
-        console.info('Parsing map region indices...');
+        logger.info('Parsing map region indices...');
 
         const buffer: RsBuffer = this.versionListArchive.getFileData('map_index');
         const indexCount = Math.floor(buffer.getBuffer().length / 7);
@@ -58,7 +59,7 @@ export class CacheIndices {
 
         this._mapRegionIndices = indices;
 
-        console.info(`${indexCount} map regions found within the game cache.`);
+        logger.info(`${indexCount} map regions found within the game cache.`);
     }
 
     public get itemDefinitionIndices(): DefinitionIndex[] {

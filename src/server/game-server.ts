@@ -3,6 +3,7 @@ import { RsBuffer } from './net/rs-buffer';
 import { World } from './world/world';
 import { ClientConnection } from './net/client-connection';
 import { GameCache } from './cache/game-cache';
+import { logger } from './util/logger';
 
 const GAME_SERVER_PORT = 43594;
 
@@ -12,7 +13,7 @@ world.chunkManager.generateCollisionMaps();
 
 export function runGameServer(): void {
     net.createServer(socket => {
-        console.log('Socket opened');
+        logger.info('Socket opened');
         // socket.setNoDelay(true);
         let clientConnection = new ClientConnection(socket);
 
@@ -31,9 +32,9 @@ export function runGameServer(): void {
 
         socket.on('error', error => {
             socket.destroy();
-            console.error('Socket destroyed due to connection error.');
+            logger.error('Socket destroyed due to connection error.');
         });
     }).listen(GAME_SERVER_PORT, '127.0.0.1');
 
-    console.log(`Game Server listening on port ${GAME_SERVER_PORT}`);
+    logger.info(`Game Server listening on port ${GAME_SERVER_PORT}`);
 }

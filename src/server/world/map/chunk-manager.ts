@@ -1,6 +1,7 @@
 import { Chunk } from './chunk';
 import { Position } from '../position';
 import { gameCache } from '../../game-server';
+import { logger } from '../../util/logger';
 
 /**
  * Controls all of the game world's map chunks.
@@ -14,7 +15,7 @@ export class ChunkManager {
     }
 
     public generateCollisionMaps(): void {
-        console.info('Generating game world collision maps...');
+        logger.info('Generating game world collision maps...');
 
         const tileList = gameCache.mapRegions.mapRegionTileList;
 
@@ -32,8 +33,7 @@ export class ChunkManager {
             chunk.addObjectToCollisionMap(landscapeObject, position);
         }
 
-        console.info('Game world collision maps generated.');
-        console.info('');
+        logger.info('Game world collision maps generated.', true);
     }
 
     public getSurroundingChunks(chunk: Chunk): Chunk[] {

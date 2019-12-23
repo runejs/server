@@ -3,6 +3,7 @@ import { Player } from '../entity/mob/player/player';
 import { CollisionMap } from './collision-map';
 import { LandscapeObject, MapRegionTile } from '../../cache/map-regions/cache-map-regions';
 import { world } from '../../game-server';
+import { logger } from '../../util/logger';
 
 /**
  * A single map chunk within the game world that keeps track of the entities within it.
@@ -100,8 +101,8 @@ export class Chunk {
         // const CacheGameObject cacheGameObject = landscapeObject.getCacheGameObject();
 
         if((x == 3240 && z == 3226)/* || (x == 3230 && z == 3225)*/) {
-            console.log('chunk ' + this.position.x + ',' + this.position.y);
-            console.log('obj is type ' + objectType);
+            logger.debug('chunk ' + this.position.x + ',' + this.position.y);
+            logger.debug('obj is type ' + objectType);
         }
 
         // @TODO read object definitions from cache. needed for object sizing and metadata...
