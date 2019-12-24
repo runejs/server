@@ -237,9 +237,21 @@ export class WalkingQueue {
     }
 
     public process(): void {
+
         if(this.queue.length === 0 || !this.valid) {
             this.resetDirections();
             return;
+        }
+
+        if(this.mob instanceof Player) {
+            if(this.mob.activeGameInterface) {
+                if(!this.mob.activeGameInterface.canWalk) {
+                    this.resetDirections();
+                    return;
+                } else {
+                    this.mob.activeGameInterface = null;
+                }
+            }
         }
 
         const walkPosition = this.queue.shift();

@@ -136,7 +136,7 @@ export class PlayerUpdateTask extends Task<void> {
 
         if(updateFlags.appearanceUpdateRequired || forceUpdate) {
             const appearanceData: RsBuffer = RsBuffer.create();
-            appearanceData.writeByte(0); // Gender
+            appearanceData.writeByte(player.appearance.gender); // Gender
             appearanceData.writeByte(-1); // Skull Icon
             appearanceData.writeByte(-1); // Prayer Icon
 
@@ -151,7 +151,12 @@ export class PlayerUpdateTask extends Task<void> {
             appearanceData.writeShortBE(0x100 + player.appearance.head);
             appearanceData.writeShortBE(0x100 + player.appearance.hands);
             appearanceData.writeShortBE(0x100 + player.appearance.feet);
-            appearanceData.writeShortBE(0x100 + player.appearance.facialHair);
+
+            if(player.appearance.gender === 0) {
+                appearanceData.writeShortBE(0x100 + player.appearance.facialHair);
+            } else {
+                appearanceData.writeByte(0);
+            }
 
             [
                 player.appearance.hairColor,

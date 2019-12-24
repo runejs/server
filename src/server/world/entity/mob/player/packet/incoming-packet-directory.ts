@@ -5,6 +5,7 @@ import { buttonClickPacket } from './impl/button-click-packet';
 import { walkPacket } from './impl/walk-packet';
 import { RsBuffer } from '../../../../../net/rs-buffer';
 import { logger } from '@runejs/logger';
+import { characterDesignPacket } from './impl/character-design-packet';
 
 const packets = {
     19:  interfaceClickPacket,
@@ -14,7 +15,9 @@ const packets = {
 
     28:  walkPacket,
     213: walkPacket,
-    247: walkPacket
+    247: walkPacket,
+
+    163: characterDesignPacket
 };
 
 export function handlePacket(player: Player, packetId: number, packetSize: number, buffer: Buffer): void {

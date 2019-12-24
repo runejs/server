@@ -8,7 +8,14 @@ import { Position } from '../../../position';
 import { Skill, skills } from '../skills/skill';
 import { world } from '../../../../game-server';
 import { logger } from '@runejs/logger';
-import { Appearance, defaultAppearance, loadPlayerSave, PlayerSave, savePlayerData } from './player-data';
+import {
+    Appearance,
+    defaultAppearance,
+    loadPlayerSave,
+    PlayerSave,
+    savePlayerData
+} from './player-data';
+import { ActiveInterface, interfaceIds } from './game-interface';
 
 const DEFAULT_TAB_INTERFACES = [
     2423, 3917, 638, 3213, 1644, 5608, 1151, -1, 5065, 5715, 2449, 904, 147, 962
@@ -32,6 +39,7 @@ export class Player extends Mob {
     public readonly updateFlags: UpdateFlags;
     public readonly trackedPlayers: Player[];
     private _appearance: Appearance;
+    private _activeGameInterface: ActiveInterface;
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -46,12 +54,14 @@ export class Player extends Mob {
         this.playerUpdateTask = new PlayerUpdateTask(this);
         this.updateFlags = new UpdateFlags();
         this.trackedPlayers = [];
+        this._activeGameInterface = null;
     }
 
     public init(): void {
         const playerSave: PlayerSave = loadPlayerSave(this.username);
+        const firstTimePlayer: boolean = playerSave === null;
 
-        if(playerSave) {
+        if(!firstTimePlayer) {
             // Existing player logging in
             this.position = new Position(playerSave.position.x, playerSave.position.y, playerSave.position.level);
             this.inventory.setAll(playerSave.inventory);
@@ -82,6 +92,13 @@ export class Player extends Mob {
         skills.forEach((skill: Skill, index: number) => this.packetSender.sendSkill(index, 1, 0));
 
         this.packetSender.sendUpdateAllInterfaceItems(3214, this.inventory);
+
+        if(firstTimePlayer) {
+            this.activeGameInterface = {
+                interfaceId: interfaceIds.characterDesign,
+                canWalk: false
+            };
+        }
     }
 
     public logout(): void {
@@ -118,6 +135,10 @@ export class Player extends Mob {
         });
     }
 
+    public closeActiveInterface(): void {
+        this.activeGameInterface = null;
+    }
+
     public equals(player: Player): boolean {
         return this.worldIndex === player.worldIndex && this.username === player.username && this.clientUuid === player.clientUuid;
     }
@@ -140,5 +161,23 @@ export class Player extends Mob {
 
     public get appearance(): Appearance {
         return this._appearance;
+    }
+
+    public set appearance(value: Appearance) {
+        this._appearance = value;
+    }
+
+    public get activeGameInterface(): ActiveInterface {
+        return this._activeGameInterface;
+    }
+
+    public set activeGameInterface(value: ActiveInterface) {
+        if(value) {
+            this.packetSender.sendOpenGameInterface(value.interfaceId);
+        } else {
+            this.packetSender.sendCloseActiveGameInterface();
+        }
+
+        this._activeGameInterface = value;
     }
 }

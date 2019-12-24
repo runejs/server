@@ -16,6 +16,17 @@ export class PacketSender {
         this.socket = player.socket;
     }
 
+    public sendCloseActiveGameInterface(): void {
+        this.send(new Packet(29));
+    }
+
+    public sendOpenGameInterface(interfaceId: number): void {
+        const packet = new Packet(159);
+        packet.writeOffsetShortLE(interfaceId);
+
+        this.send(packet);
+    }
+
     public sendUpdateAllInterfaceItems(interfaceId: number, container: ItemContainer): void {
         const packet = new Packet(206, PacketType.DYNAMIC_LARGE);
         packet.writeShortBE(interfaceId);
