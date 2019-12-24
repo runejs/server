@@ -14,6 +14,12 @@ export class ItemContainer {
         }
     }
 
+    public setAll(items: Item[]): void {
+        for(let i = 0; i < this._size; i++) {
+            this._items[i] = items[i];
+        }
+    }
+
     public add(item: Item): void {
         for(let i = 0; i < this._size; i++) {
             if(this._items[i] === null) {

@@ -8,6 +8,7 @@ import { Position } from '../../../position';
 import { Skill, skills } from '../skills/skill';
 import { world } from '../../../../game-server';
 import { logger } from '@runejs/logger';
+import { Appearance, defaultAppearance, loadPlayerSave, PlayerSave, savePlayerData } from './player-data';
 
 const DEFAULT_TAB_INTERFACES = [
     2423, 3917, 638, 3213, 1644, 5608, 1151, -1, 5065, 5715, 2449, 904, 147, 962
@@ -30,6 +31,7 @@ export class Player extends Mob {
     public readonly playerUpdateTask: PlayerUpdateTask;
     public readonly updateFlags: UpdateFlags;
     public readonly trackedPlayers: Player[];
+    private _appearance: Appearance;
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -47,11 +49,24 @@ export class Player extends Mob {
     }
 
     public init(): void {
+        const playerSave: PlayerSave = loadPlayerSave(this.username);
+
+        if(playerSave) {
+            // Existing player logging in
+            this.position = new Position(playerSave.position.x, playerSave.position.y, playerSave.position.level);
+            this.inventory.setAll(playerSave.inventory);
+            this._appearance = playerSave.appearance;
+        } else {
+            // Brand new player logging in
+            this.position = new Position(3222, 3222);
+            this.inventory.add({itemId: 1351, amount: 1});
+            this._appearance = defaultAppearance();
+        }
+
         this.loggedIn = true;
         this.updateFlags.mapRegionUpdateRequired = true;
         this.updateFlags.appearanceUpdateRequired = true;
 
-        this.position = new Position(3240, 3225);
         world.chunkManager.getChunkForWorldPosition(this.position).addPlayer(this);
 
         this.packetSender.sendMembershipStatusAndWorldIndex();
@@ -66,8 +81,6 @@ export class Player extends Mob {
 
         skills.forEach((skill: Skill, index: number) => this.packetSender.sendSkill(index, 1, 0));
 
-        this.inventory.add({ itemId: 1351, amount: 1 });
-
         this.packetSender.sendUpdateAllInterfaceItems(3214, this.inventory);
     }
 
@@ -75,6 +88,8 @@ export class Player extends Mob {
         if(!this.loggedIn) {
             return;
         }
+
+        savePlayerData(this);
 
         this.packetSender.sendLogout();
         world.chunkManager.getChunkForWorldPosition(this.position).removePlayer(this);
@@ -123,4 +138,7 @@ export class Player extends Mob {
         return this._packetSender;
     }
 
+    public get appearance(): Appearance {
+        return this._appearance;
+    }
 }

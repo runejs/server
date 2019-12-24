@@ -144,21 +144,21 @@ export class PlayerUpdateTask extends Task<void> {
                 appearanceData.writeByte(0); // Equipment
             }
 
-            appearanceData.writeShortBE(0x100 + 10); // Chest
+            appearanceData.writeShortBE(0x100 + player.appearance.torso);
             appearanceData.writeByte(0); // Shield
-            appearanceData.writeShortBE(0x100 + 26); // Arms
-            appearanceData.writeShortBE(0x100 + 36); // Legs
-            appearanceData.writeShortBE(0x100 + 0); // Head
-            appearanceData.writeShortBE(0x100 + 33); // Gloves
-            appearanceData.writeShortBE(0x100 + 42); // Boots
-            appearanceData.writeShortBE(0x100 + 18); // Facial Hair
+            appearanceData.writeShortBE(0x100 + player.appearance.arms);
+            appearanceData.writeShortBE(0x100 + player.appearance.legs);
+            appearanceData.writeShortBE(0x100 + player.appearance.head);
+            appearanceData.writeShortBE(0x100 + player.appearance.hands);
+            appearanceData.writeShortBE(0x100 + player.appearance.feet);
+            appearanceData.writeShortBE(0x100 + player.appearance.facialHair);
 
             [
-                0, // hair
-                0, // torso
-                0, // leg
-                0, // feet
-                0, // skin
+                player.appearance.hairColor,
+                player.appearance.torsoColor,
+                player.appearance.legColor,
+                player.appearance.feetColor,
+                player.appearance.skinColor,
             ].forEach(color => appearanceData.writeByte(color));
 
             [
