@@ -7,6 +7,7 @@ Currently the server is set up for the 377 revision of the game. There are not a
 ## Features
 
 - Login & packet handling.
+- Player saving/loading via JSON files.
 - Multiplayer support.
 - Basic item inventory implementation.
 - Player pathing validation via collision and tile maps generated from the game cache.
