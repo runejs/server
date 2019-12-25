@@ -1,6 +1,8 @@
 import { Player } from './entity/mob/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { logger } from '@runejs/logger';
+import { ItemData, parseItemData } from './config/item-data';
+import { gameCache } from '../game-server';
 
 /**
  * Controls the game world and all entities within it.
@@ -12,8 +14,11 @@ export class World {
 
     public readonly playerList: Player[] = new Array(World.MAX_PLAYERS);
     public readonly chunkManager: ChunkManager = new ChunkManager();
+    public readonly itemData: Map<number, ItemData>;
 
     public constructor() {
+        this.itemData = parseItemData(gameCache.itemDefinitions);
+
         for(let i = 0; i < World.MAX_PLAYERS; i++) {
             this.playerList[i] = null;
         }

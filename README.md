@@ -10,6 +10,8 @@ Currently the server is set up for the 377 revision of the game. There are not a
 - Player saving/loading via JSON files.
 - Multiplayer support.
 - Basic item inventory implementation.
+  - Item definition parsing via the game cache
+  - Additional item data loading via JSON.
 - Player pathing validation via collision and tile maps generated from the game cache.
 - A basic REST service for polling logged in users.
 
@@ -31,3 +33,4 @@ Online players can be polled via the REST protocol for web applications. An acco
 ##### API Endpoints:
 
 - `/players` : Returns a list of players currently logged into the game server.
+- `/items?page=x&limit=y` : Returns a list of item metadata loaded by the game server.

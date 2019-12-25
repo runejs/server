@@ -8,7 +8,8 @@ import { GameCache } from '@runejs/cache-parser';
 
 const GAME_SERVER_PORT = 43594;
 
-export const gameCache = new GameCache(join(__dirname, '../../cache'));
+export const serverDir = join(__dirname, '../../');
+export const gameCache = new GameCache(join(serverDir, 'cache'));
 export const world = new World();
 world.chunkManager.generateCollisionMaps();
 
