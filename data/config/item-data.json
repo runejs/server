@@ -1,0 +1,46 @@
+[
+    {
+        "id": 1048,
+        "desc": "white partyhat",
+        "canTrade": true,
+        "weight": 0.056,
+        "alchemy": {
+            "high": 0,
+            "low": 0
+        },
+        "equipmentSlot": "head",
+        "helmetType": "hat"
+    },
+    {
+        "id": 1351,
+        "desc": "bronze axe",
+        "canTrade": true,
+        "weight": 1.35,
+        "alchemy": {
+            "high": 9,
+            "low": 6
+        },
+        "equipmentSlot": "weapon",
+        "equipmentBonuses": {
+            "offencive": {
+                "speed": 5,
+                "stab": -2,
+                "slash": 4,
+                "crush": 2,
+                "magic": 0,
+                "ranged": 0
+            },
+            "defencive": {
+                "stab": 0,
+                "slash": 1,
+                "crush": 0,
+                "magic": 0,
+                "ranged": 0
+            },
+            "skill": {
+                "strength": 5,
+                "prayer": 0
+            }
+        }
+    }
+]
