@@ -118,7 +118,19 @@ export class RsBuffer {
         return value;
     }
 
+    public readShortLE(): number {
+        const value = this.buffer.readInt16LE(this.readerIndex);
+        this.readerIndex += 2;
+        return value;
+    }
+
     public readUnsignedShortBE(): number {
+        const value = this.buffer.readUInt16BE(this.readerIndex);
+        this.readerIndex += 2;
+        return value;
+    }
+
+    public readUnsignedShortLE(): number {
         const value = this.buffer.readUInt16BE(this.readerIndex);
         this.readerIndex += 2;
         return value;
@@ -126,6 +138,15 @@ export class RsBuffer {
 
     public readNegativeOffsetShortLE(): number {
         let value = (this.readByte() - 128 & 0xff) | ((this.readByte() & 0xff) << 8);
+        if(value > 32767) {
+            value -= 0x10000;
+        }
+
+        return value;
+    }
+
+    public readNegativeOffsetShortBE(): number {
+        let value = ((this.readByte() & 0xff) << 8) | (this.readByte() - 128 & 0xff);
         if(value > 32767) {
             value -= 0x10000;
         }

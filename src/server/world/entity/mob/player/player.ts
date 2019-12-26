@@ -16,6 +16,7 @@ import {
     savePlayerData
 } from './player-data';
 import { ActiveInterface, interfaceIds } from './game-interface';
+import { ItemContainer } from '../items/item-container';
 
 const DEFAULT_TAB_INTERFACES = [
     2423, 3917, 638, 3213, 1644, 5608, 1151, -1, 5065, 5715, 2449, 904, 147, 962
@@ -40,6 +41,7 @@ export class Player extends Mob {
     public readonly trackedPlayers: Player[];
     private _appearance: Appearance;
     private _activeGameInterface: ActiveInterface;
+    private readonly _equipment: ItemContainer;
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -55,6 +57,7 @@ export class Player extends Mob {
         this.updateFlags = new UpdateFlags();
         this.trackedPlayers = [];
         this._activeGameInterface = null;
+        this._equipment = new ItemContainer(14);
     }
 
     public init(): void {
@@ -91,7 +94,7 @@ export class Player extends Mob {
 
         skills.forEach((skill: Skill, index: number) => this.packetSender.sendSkill(index, 1, 0));
 
-        this.packetSender.sendUpdateAllInterfaceItems(3214, this.inventory);
+        this.packetSender.sendUpdateAllInterfaceItems(interfaceIds.inventory, this.inventory);
 
         if(firstTimePlayer) {
             this.activeGameInterface = {
@@ -179,5 +182,9 @@ export class Player extends Mob {
         }
 
         this._activeGameInterface = value;
+    }
+
+    public get equipment(): ItemContainer {
+        return this._equipment;
     }
 }

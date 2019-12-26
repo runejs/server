@@ -20,6 +20,10 @@ export class ItemContainer {
         }
     }
 
+    public set(slot: number, item: Item): void {
+        this._items[slot] = item;
+    }
+
     public add(item: Item): void {
         for(let i = 0; i < this._size; i++) {
             if(this._items[i] === null) {
@@ -27,6 +31,10 @@ export class ItemContainer {
                 return;
             }
         }
+    }
+
+    public removeFromSlot(slot: number): void {
+        this._items[slot] = null;
     }
 
     public get size(): number {

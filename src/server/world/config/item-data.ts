@@ -5,9 +5,22 @@ import { join } from 'path';
 import { serverDir } from '../../game-server';
 
 export enum EquipmentSlot {
-    HEAD = 'head',
-    WEAPON = 'weapon'
+    HEAD = 0,
+    BACK = 1,
+    NECK = 2,
+    MAIN_HAND = 3,
+    TORSO = 4,
+    OFF_HAND = 5,
+    LEGS = 7,
+    HANDS = 9,
+    FEET = 10,
+    RING = 12,
+    QUIVER = 13
 }
+
+export const equipmentSlotIndex = (slot: EquipmentSlot): number => {
+    return parseInt(EquipmentSlot[slot], 10);
+};
 
 export enum HelmetType {
     HAT = 'hat'

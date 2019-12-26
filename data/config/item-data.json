@@ -8,7 +8,7 @@
             "high": 0,
             "low": 0
         },
-        "equipmentSlot": "head",
+        "equipmentSlot": "HEAD",
         "helmetType": "hat"
     },
     {
@@ -20,7 +20,7 @@
             "high": 9,
             "low": 6
         },
-        "equipmentSlot": "weapon",
+        "equipmentSlot": "MAIN_HAND",
         "equipmentBonuses": {
             "offencive": {
                 "speed": 5,
