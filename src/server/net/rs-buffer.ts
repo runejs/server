@@ -208,8 +208,18 @@ export class RsBuffer {
         this.buffer.writeUInt8(value, this.writerIndex++);
     }
 
+    public writeUnsignedShortBE(value: number): void {
+        this.buffer.writeUInt16BE(value, this.writerIndex);
+        this.writerIndex += 2;
+    }
+
     public writeShortBE(value: number): void {
         this.buffer.writeInt16BE(value, this.writerIndex);
+        this.writerIndex += 2;
+    }
+
+    public writeShortLE(value: number): void {
+        this.buffer.writeInt16LE(value, this.writerIndex);
         this.writerIndex += 2;
     }
 
@@ -247,6 +257,14 @@ export class RsBuffer {
         }
 
         this.writeByte(10); // end of line
+    }
+
+    public writeSmart(value: number): void {
+        if(value >= 128) {
+            this.writeShortBE(value);
+        } else {
+            this.writeByte(value);
+        }
     }
 
     public getReadable(): number {

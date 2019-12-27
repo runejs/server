@@ -26,12 +26,15 @@ export const equipItemAction = (player: Player, itemId: number, inventorySlot: n
 
         equipment.set(equipmentSlot, itemInInventorySlot);
         inventory.set(inventorySlot, itemInEquipmentSlot);
+
+        player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, inventorySlot, itemInEquipmentSlot);
     } else {
         inventory.removeFromSlot(inventorySlot);
         equipment.set(equipmentSlot, itemInInventorySlot);
+
+        player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, inventorySlot, null);
     }
 
-    // @TODO update only modified slots instead of entire container
-    player.packetSender.sendUpdateAllInterfaceItems(interfaceIds.inventory, inventory);
-    player.packetSender.sendUpdateAllInterfaceItems(interfaceIds.equipment, equipment);
+    player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.equipment, equipmentSlot, itemInInventorySlot);
+    // player.packetSender.showPlayerHintIcon(player);
 };

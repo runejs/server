@@ -102,6 +102,8 @@ export class Player extends Mob {
                 canWalk: false
             };
         }
+
+        logger.info(`${this.username}:${this.worldIndex} has logged in.`);
     }
 
     public logout(): void {
