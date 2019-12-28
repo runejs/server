@@ -11,9 +11,10 @@ export enum EquipmentSlot {
     MAIN_HAND = 3,
     TORSO = 4,
     OFF_HAND = 5,
+    BOTH_HANDS = 6,
     LEGS = 7,
-    HANDS = 9,
-    FEET = 10,
+    GLOVES = 9,
+    BOOTS = 10,
     RING = 12,
     QUIVER = 13
 }
@@ -27,9 +28,14 @@ export enum HelmetType {
     FULL_HELMET = 'FULL_HELMET'
 }
 
+export enum TorsoType {
+    VEST = 'VEST',
+    FULL = 'FULL'
+}
+
 export interface EquipmentBonuses {
     offencive?: {
-        speed: number;
+        speed?: number;
         stab: number;
         slash: number;
         crush: number;
@@ -56,6 +62,7 @@ export interface ItemDetails {
     questItem?: boolean;
     equipmentSlot?: EquipmentSlot;
     helmetType?: HelmetType;
+    torsoType?: TorsoType;
     equipmentBonuses?: EquipmentBonuses;
     weight?: number;
     alchemy?: {

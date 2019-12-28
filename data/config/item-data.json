@@ -12,6 +12,61 @@
         "helmetType": "HAT"
     },
     {
+        "id": 1079,
+        "desc": "rune platelegs",
+        "canTrade": true,
+        "weight": 9.071,
+        "alchemy": {
+            "high": 38400,
+            "low": 25600
+        },
+        "equipmentSlot": "LEGS",
+        "equipmentBonuses": {
+            "offencive": {
+                "stab": 0,
+                "slash": 0,
+                "crush": 0,
+                "magic": -21,
+                "ranged": -7
+            },
+            "defencive": {
+                "stab": 51,
+                "slash": 49,
+                "crush": 47,
+                "magic": -4,
+                "ranged": 49
+            }
+        }
+    },
+    {
+        "id": 1127,
+        "desc": "rune platebody",
+        "canTrade": true,
+        "weight": 9.979,
+        "alchemy": {
+            "high": 39000,
+            "low": 26000
+        },
+        "equipmentSlot": "TORSO",
+        "torsoType": "FULL",
+        "equipmentBonuses": {
+            "offencive": {
+                "stab": 0,
+                "slash": 0,
+                "crush": 0,
+                "magic": -30,
+                "ranged": -10
+            },
+            "defencive": {
+                "stab": 82,
+                "slash": 80,
+                "crush": 72,
+                "magic": -6,
+                "ranged": 80
+            }
+        }
+    },
+    {
         "id": 1351,
         "desc": "bronze axe",
         "canTrade": true,
@@ -56,7 +111,6 @@
         "helmetType": "FULL_HELMET",
         "equipmentBonuses": {
             "offencive": {
-                "speed": 0,
                 "stab": 0,
                 "slash": 0,
                 "crush": 0,

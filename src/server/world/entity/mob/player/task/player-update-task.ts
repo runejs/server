@@ -4,7 +4,7 @@ import { Task } from '../../../../../task/task';
 import { UpdateFlags } from '../update-flags';
 import { Packet, PacketType } from '../../../../../net/packet';
 import { world } from '../../../../../game-server';
-import { EquipmentSlot, HelmetType } from '../../../../config/item-data';
+import { EquipmentSlot, HelmetType, ItemData, TorsoType } from '../../../../config/item-data';
 
 /**
  * Handles the chonky player updating packet.
@@ -152,10 +152,34 @@ export class PlayerUpdateTask extends Task<void> {
                 }
             }
 
-            appearanceData.writeShortBE(0x100 + player.appearance.torso);
-            appearanceData.writeByte(0); // Shield
-            appearanceData.writeShortBE(0x100 + player.appearance.arms);
-            appearanceData.writeShortBE(0x100 + player.appearance.legs);
+            const torsoItem = equipment.items[EquipmentSlot.TORSO];
+            let torsoItemData: ItemData = null;
+            if(torsoItem) {
+                torsoItemData = world.itemData.get(torsoItem.itemId);
+                appearanceData.writeShortBE(0x200 + torsoItem.itemId);
+            } else {
+                appearanceData.writeShortBE(0x100 + player.appearance.torso);
+            }
+
+            const offHandItem = equipment.items[EquipmentSlot.OFF_HAND];
+            if(offHandItem) {
+                appearanceData.writeShortBE(0x200 + offHandItem.itemId);
+            } else {
+                appearanceData.writeByte(0);
+            }
+
+            if(torsoItemData && torsoItemData.torsoType && torsoItemData.torsoType === TorsoType.FULL) {
+                appearanceData.writeShortBE(0x200 + torsoItem.itemId);
+            } else {
+                appearanceData.writeShortBE(0x100 + player.appearance.arms);
+            }
+
+            const legItem = equipment.items[EquipmentSlot.LEGS];
+            if(legItem) {
+                appearanceData.writeShortBE(0x200 + legItem.itemId);
+            } else {
+                appearanceData.writeShortBE(0x100 + player.appearance.legs);
+            }
 
             const headItem = equipment.items[EquipmentSlot.HEAD];
             let headItemType = null;
@@ -175,8 +199,19 @@ export class PlayerUpdateTask extends Task<void> {
                 appearanceData.writeByte(0);
             }
 
-            appearanceData.writeShortBE(0x100 + player.appearance.hands);
-            appearanceData.writeShortBE(0x100 + player.appearance.feet);
+            const gloveItem = equipment.items[EquipmentSlot.GLOVES];
+            if(gloveItem) {
+                appearanceData.writeShortBE(0x200 + gloveItem.itemId);
+            } else {
+                appearanceData.writeShortBE(0x100 + player.appearance.hands);
+            }
+
+            const bootItem = equipment.items[EquipmentSlot.BOOTS];
+            if(bootItem) {
+                appearanceData.writeShortBE(0x200 + bootItem.itemId);
+            } else {
+                appearanceData.writeShortBE(0x100 + player.appearance.feet);
+            }
 
             if(player.appearance.gender === 1 || fullHelmet) {
                 appearanceData.writeByte(0);
