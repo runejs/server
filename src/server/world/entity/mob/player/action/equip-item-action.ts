@@ -23,8 +23,6 @@ export const equipItemAction = (player: Player, itemId: number, inventorySlot: n
     let shouldUnequipOffHand: boolean = false;
     let shouldUnequipMainHand: boolean = false;
 
-    // @TODO unfuck 2h code
-
     if(itemToEquipData && itemToEquipData.equipment) {
         if(itemToEquipData.equipment.weaponType === WeaponType.TWO_HANDED) {
             shouldUnequipOffHand = true;
@@ -53,28 +51,23 @@ export const equipItemAction = (player: Player, itemId: number, inventorySlot: n
 
         equipment.set(equipmentSlot, itemToEquip);
         inventory.set(inventorySlot, itemToUnequip);
-
-        player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, inventorySlot, itemToUnequip);
     } else {
         inventory.remove(inventorySlot);
         equipment.set(equipmentSlot, itemToEquip);
 
-        let clearSlot: boolean = true;
-
-        if(shouldUnequipOffHand && unequipOffhand(player, inventory, equipment)) {
-            clearSlot = false;
+        if(shouldUnequipOffHand) {
+            unequipOffhand(player, inventory, equipment);
         }
 
-        if(shouldUnequipMainHand && unequipMainhand(player, inventory, equipment)) {
-            clearSlot = false;
-        }
-
-        if(clearSlot) {
-            player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, inventorySlot, null);
+        if(shouldUnequipMainHand) {
+            unequipMainhand(player, inventory, equipment);
         }
     }
 
-    player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.equipment, equipmentSlot, itemToEquip);
+    // @TODO change packets to only update modified container slots
+
+    player.packetSender.sendUpdateAllInterfaceItems(interfaceIds.inventory, inventory);
+    player.packetSender.sendUpdateAllInterfaceItems(interfaceIds.equipment, equipment);
     player.updateFlags.appearanceUpdateRequired = true;
 };
 
