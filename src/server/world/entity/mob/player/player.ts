@@ -104,6 +104,7 @@ export class Player extends Mob {
         skills.forEach((skill: Skill, index: number) => this.packetSender.sendSkill(index, 1, 0));
 
         this.packetSender.sendUpdateAllInterfaceItems(interfaceIds.inventory, this.inventory);
+        this.packetSender.sendUpdateAllInterfaceItems(interfaceIds.equipment, this.equipment);
 
         if(firstTimePlayer) {
             this.activeGameInterface = {

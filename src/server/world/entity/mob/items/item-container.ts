@@ -33,8 +33,12 @@ export class ItemContainer {
         }
     }
 
-    public removeFromSlot(slot: number): void {
+    public remove(slot: number): void {
         this._items[slot] = null;
+    }
+
+    public getFirstOpenSlot(): number {
+        return this._items.findIndex(item => item === null);
     }
 
     public get size(): number {

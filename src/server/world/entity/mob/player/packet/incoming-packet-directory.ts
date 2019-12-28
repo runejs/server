@@ -9,6 +9,7 @@ import { interfaceClickPacket } from './impl/interface-click-packet';
 import { cameraTurnPacket } from './impl/camera-turn-packet';
 import { buttonClickPacket } from './impl/button-click-packet';
 import { walkPacket } from './impl/walk-packet';
+import { itemOption1Packet } from './impl/item-option-1-packet';
 
 const packets: { [key: number]: incomingPacket } = {
     19:  interfaceClickPacket,
@@ -22,7 +23,8 @@ const packets: { [key: number]: incomingPacket } = {
 
     163: characterDesignPacket,
 
-    24: itemEquipPacket
+    24: itemEquipPacket,
+    3:  itemOption1Packet
 };
 
 export function handlePacket(player: Player, packetId: number, packetSize: number, buffer: Buffer): void {

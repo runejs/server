@@ -8,8 +8,10 @@
             "high": 0,
             "low": 0
         },
-        "equipmentSlot": "HEAD",
-        "helmetType": "HAT"
+        "equipment": {
+            "slot": "HEAD",
+            "helmetType": "HAT"
+        }
     },
     {
         "id": 1079,
@@ -20,21 +22,23 @@
             "high": 38400,
             "low": 25600
         },
-        "equipmentSlot": "LEGS",
-        "equipmentBonuses": {
-            "offencive": {
-                "stab": 0,
-                "slash": 0,
-                "crush": 0,
-                "magic": -21,
-                "ranged": -7
-            },
-            "defencive": {
-                "stab": 51,
-                "slash": 49,
-                "crush": 47,
-                "magic": -4,
-                "ranged": 49
+        "equipment": {
+            "slot": "LEGS",
+            "bonuses": {
+                "offencive": {
+                    "stab": 0,
+                    "slash": 0,
+                    "crush": 0,
+                    "magic": -21,
+                    "ranged": -7
+                },
+                "defencive": {
+                    "stab": 51,
+                    "slash": 49,
+                    "crush": 47,
+                    "magic": -4,
+                    "ranged": 49
+                }
             }
         }
     },
@@ -47,22 +51,24 @@
             "high": 39000,
             "low": 26000
         },
-        "equipmentSlot": "TORSO",
-        "torsoType": "FULL",
-        "equipmentBonuses": {
-            "offencive": {
-                "stab": 0,
-                "slash": 0,
-                "crush": 0,
-                "magic": -30,
-                "ranged": -10
-            },
-            "defencive": {
-                "stab": 82,
-                "slash": 80,
-                "crush": 72,
-                "magic": -6,
-                "ranged": 80
+        "equipment": {
+            "slot": "TORSO",
+            "torsoType": "FULL",
+            "bonuses": {
+                "offencive": {
+                    "stab": 0,
+                    "slash": 0,
+                    "crush": 0,
+                    "magic": -30,
+                    "ranged": -10
+                },
+                "defencive": {
+                    "stab": 82,
+                    "slash": 80,
+                    "crush": 72,
+                    "magic": -6,
+                    "ranged": 80
+                }
             }
         }
     },
@@ -75,26 +81,28 @@
             "high": 9,
             "low": 6
         },
-        "equipmentSlot": "MAIN_HAND",
-        "equipmentBonuses": {
-            "offencive": {
-                "speed": 5,
-                "stab": -2,
-                "slash": 4,
-                "crush": 2,
-                "magic": 0,
-                "ranged": 0
-            },
-            "defencive": {
-                "stab": 0,
-                "slash": 1,
-                "crush": 0,
-                "magic": 0,
-                "ranged": 0
-            },
-            "skill": {
-                "strength": 5,
-                "prayer": 0
+        "equipment": {
+            "slot": "MAIN_HAND",
+            "bonuses": {
+                "offencive": {
+                    "speed": 5,
+                    "stab": -2,
+                    "slash": 4,
+                    "crush": 2,
+                    "magic": 0,
+                    "ranged": 0
+                },
+                "defencive": {
+                    "stab": 0,
+                    "slash": 1,
+                    "crush": 0,
+                    "magic": 0,
+                    "ranged": 0
+                },
+                "skill": {
+                    "strength": 5,
+                    "prayer": 0
+                }
             }
         }
     },
@@ -107,26 +115,28 @@
             "high": 633,
             "low": 422
         },
-        "equipmentSlot": "HEAD",
-        "helmetType": "FULL_HELMET",
-        "equipmentBonuses": {
-            "offencive": {
-                "stab": 0,
-                "slash": 0,
-                "crush": 0,
-                "magic": -6,
-                "ranged": -2
-            },
-            "defencive": {
-                "stab": 12,
-                "slash": 13,
-                "crush": 10,
-                "magic": -1,
-                "ranged": 12
-            },
-            "skill": {
-                "strength": 0,
-                "prayer": 1
+        "equipment": {
+            "slot": "HEAD",
+            "helmetType": "FULL_HELMET",
+            "bonuses": {
+                "offencive": {
+                    "stab": 0,
+                    "slash": 0,
+                    "crush": 0,
+                    "magic": -6,
+                    "ranged": -2
+                },
+                "defencive": {
+                    "stab": 12,
+                    "slash": 13,
+                    "crush": 10,
+                    "magic": -1,
+                    "ranged": 12
+                },
+                "skill": {
+                    "strength": 0,
+                    "prayer": 1
+                }
             }
         }
     }

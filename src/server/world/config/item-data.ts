@@ -11,7 +11,6 @@ export enum EquipmentSlot {
     MAIN_HAND = 3,
     TORSO = 4,
     OFF_HAND = 5,
-    BOTH_HANDS = 6,
     LEGS = 7,
     GLOVES = 9,
     BOOTS = 10,
@@ -31,6 +30,11 @@ export enum HelmetType {
 export enum TorsoType {
     VEST = 'VEST',
     FULL = 'FULL'
+}
+
+export enum WeaponType {
+    TWO_HANDED = 'TWO_HANDED',
+    ONE_HANDED = 'ONE_HANDED'
 }
 
 export interface EquipmentBonuses {
@@ -60,15 +64,18 @@ export interface ItemDetails {
     desc: string;
     canTrade: boolean;
     questItem?: boolean;
-    equipmentSlot?: EquipmentSlot;
-    helmetType?: HelmetType;
-    torsoType?: TorsoType;
-    equipmentBonuses?: EquipmentBonuses;
     weight?: number;
     alchemy?: {
         high?: number;
         low?: number;
-    }
+    };
+    equipment?: {
+        slot?: EquipmentSlot;
+        helmetType?: HelmetType;
+        torsoType?: TorsoType;
+        weaponType?: WeaponType;
+        bonuses?: EquipmentBonuses;
+    };
 }
 
 export interface ItemData extends ItemDefinition, ItemDetails {

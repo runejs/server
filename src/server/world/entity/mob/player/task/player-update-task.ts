@@ -169,7 +169,7 @@ export class PlayerUpdateTask extends Task<void> {
                 appearanceData.writeByte(0);
             }
 
-            if(torsoItemData && torsoItemData.torsoType && torsoItemData.torsoType === TorsoType.FULL) {
+            if(torsoItemData && torsoItemData.equipment && torsoItemData.equipment.torsoType && torsoItemData.equipment.torsoType === TorsoType.FULL) {
                 appearanceData.writeShortBE(0x200 + torsoItem.itemId);
             } else {
                 appearanceData.writeShortBE(0x100 + player.appearance.arms);
@@ -178,18 +178,22 @@ export class PlayerUpdateTask extends Task<void> {
             this.appendBasicAppearanceItem(appearanceData, equipment, player.appearance.legs, EquipmentSlot.LEGS);
 
             const headItem = equipment.items[EquipmentSlot.HEAD];
-            let headItemType = null;
+            let helmetType = null;
             let fullHelmet = false;
 
             if(headItem) {
-                headItemType = world.itemData.get(equipment.items[EquipmentSlot.HEAD].itemId).helmetType;
+                const headItemData = world.itemData.get(equipment.items[EquipmentSlot.HEAD].itemId);
 
-                if(headItemType === HelmetType.FULL_HELMET) {
-                    fullHelmet = true;
+                if(headItemData && headItemData.equipment && headItemData.equipment.helmetType) {
+                    helmetType = headItemData.equipment.helmetType;
+
+                    if(helmetType === HelmetType.FULL_HELMET) {
+                        fullHelmet = true;
+                    }
                 }
             }
 
-            if(!headItemType || headItemType === HelmetType.HAT) {
+            if(!helmetType || helmetType === HelmetType.HAT) {
                 appearanceData.writeShortBE(0x100 + player.appearance.head);
             } else {
                 appearanceData.writeByte(0);
