@@ -5,22 +5,46 @@ import { join } from 'path';
 import { serverDir } from '../../game-server';
 
 export enum EquipmentSlot {
-    HEAD = 'head',
-    WEAPON = 'weapon'
+    HEAD = 0,
+    BACK = 1,
+    NECK = 2,
+    MAIN_HAND = 3,
+    TORSO = 4,
+    OFF_HAND = 5,
+    LEGS = 7,
+    GLOVES = 9,
+    BOOTS = 10,
+    RING = 12,
+    QUIVER = 13
 }
 
+export const equipmentSlotIndex = (slot: EquipmentSlot): number => {
+    return parseInt(EquipmentSlot[slot], 10);
+};
+
 export enum HelmetType {
-    HAT = 'hat'
+    HAT = 'HAT',
+    FULL_HELMET = 'FULL_HELMET'
+}
+
+export enum TorsoType {
+    VEST = 'VEST',
+    FULL = 'FULL'
+}
+
+export enum WeaponType {
+    TWO_HANDED = 'TWO_HANDED',
+    ONE_HANDED = 'ONE_HANDED'
 }
 
 export interface EquipmentBonuses {
     offencive?: {
-        speed: number;
+        speed?: number;
         stab: number;
         slash: number;
         crush: number;
         magic: number;
-        randed: number;
+        ranged: number;
     },
     defencive?: {
         stab: number;
@@ -40,14 +64,18 @@ export interface ItemDetails {
     desc: string;
     canTrade: boolean;
     questItem?: boolean;
-    equipmentSlot?: EquipmentSlot;
-    helmetType?: HelmetType;
-    equipmentBonuses?: EquipmentBonuses;
     weight?: number;
     alchemy?: {
         high?: number;
         low?: number;
-    }
+    };
+    equipment?: {
+        slot?: EquipmentSlot;
+        helmetType?: HelmetType;
+        torsoType?: TorsoType;
+        weaponType?: WeaponType;
+        bonuses?: EquipmentBonuses;
+    };
 }
 
 export interface ItemData extends ItemDefinition, ItemDetails {

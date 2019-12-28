@@ -20,6 +20,10 @@ export class ItemContainer {
         }
     }
 
+    public set(slot: number, item: Item): void {
+        this._items[slot] = item;
+    }
+
     public add(item: Item): void {
         for(let i = 0; i < this._size; i++) {
             if(this._items[i] === null) {
@@ -27,6 +31,26 @@ export class ItemContainer {
                 return;
             }
         }
+    }
+
+    public remove(slot: number): void {
+        this._items[slot] = null;
+    }
+
+    public getFirstOpenSlot(): number {
+        return this._items.findIndex(item => item === null);
+    }
+
+    public getOpenSlots(count: number): number[] {
+        const slots: number[] = [];
+
+        for(let i = 0; i < this._size; i++) {
+            if(this._items[i] === null) {
+                slots.push(i);
+            }
+        }
+
+        return slots;
     }
 
     public get size(): number {

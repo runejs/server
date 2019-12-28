@@ -29,6 +29,7 @@ export interface PlayerSave {
     };
     appearance: Appearance;
     inventory: Item[];
+    equipment: Item[];
 }
 
 export function defaultAppearance(): Appearance {
@@ -61,7 +62,8 @@ export function savePlayerData(player: Player): boolean {
             level: player.position.level
         },
         appearance: player.appearance,
-        inventory: player.inventory.items
+        inventory: player.inventory.items,
+        equipment: player.equipment.items
     };
 
     try {

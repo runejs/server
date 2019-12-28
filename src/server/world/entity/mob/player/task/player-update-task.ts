@@ -4,6 +4,8 @@ import { Task } from '../../../../../task/task';
 import { UpdateFlags } from '../update-flags';
 import { Packet, PacketType } from '../../../../../net/packet';
 import { world } from '../../../../../game-server';
+import { EquipmentSlot, HelmetType, ItemData, TorsoType } from '../../../../config/item-data';
+import { ItemContainer } from '../../items/item-container';
 
 /**
  * Handles the chonky player updating packet.
@@ -135,27 +137,75 @@ export class PlayerUpdateTask extends Task<void> {
         }
 
         if(updateFlags.appearanceUpdateRequired || forceUpdate) {
+            const equipment = player.equipment;
             const appearanceData: RsBuffer = RsBuffer.create();
             appearanceData.writeByte(player.appearance.gender); // Gender
             appearanceData.writeByte(-1); // Skull Icon
             appearanceData.writeByte(-1); // Prayer Icon
 
             for(let i = 0; i < 4; i++) {
-                appearanceData.writeByte(0); // Equipment
+                const item = equipment.items[i];
+
+                if(item) {
+                    appearanceData.writeShortBE(0x200 + item.itemId);
+                } else {
+                    appearanceData.writeByte(0);
+                }
             }
 
-            appearanceData.writeShortBE(0x100 + player.appearance.torso);
-            appearanceData.writeByte(0); // Shield
-            appearanceData.writeShortBE(0x100 + player.appearance.arms);
-            appearanceData.writeShortBE(0x100 + player.appearance.legs);
-            appearanceData.writeShortBE(0x100 + player.appearance.head);
-            appearanceData.writeShortBE(0x100 + player.appearance.hands);
-            appearanceData.writeShortBE(0x100 + player.appearance.feet);
+            const torsoItem = equipment.items[EquipmentSlot.TORSO];
+            let torsoItemData: ItemData = null;
+            if(torsoItem) {
+                torsoItemData = world.itemData.get(torsoItem.itemId);
+                appearanceData.writeShortBE(0x200 + torsoItem.itemId);
+            } else {
+                appearanceData.writeShortBE(0x100 + player.appearance.torso);
+            }
 
-            if(player.appearance.gender === 0) {
-                appearanceData.writeShortBE(0x100 + player.appearance.facialHair);
+            const offHandItem = equipment.items[EquipmentSlot.OFF_HAND];
+            if(offHandItem) {
+                appearanceData.writeShortBE(0x200 + offHandItem.itemId);
             } else {
                 appearanceData.writeByte(0);
+            }
+
+            if(torsoItemData && torsoItemData.equipment && torsoItemData.equipment.torsoType && torsoItemData.equipment.torsoType === TorsoType.FULL) {
+                appearanceData.writeShortBE(0x200 + torsoItem.itemId);
+            } else {
+                appearanceData.writeShortBE(0x100 + player.appearance.arms);
+            }
+
+            this.appendBasicAppearanceItem(appearanceData, equipment, player.appearance.legs, EquipmentSlot.LEGS);
+
+            const headItem = equipment.items[EquipmentSlot.HEAD];
+            let helmetType = null;
+            let fullHelmet = false;
+
+            if(headItem) {
+                const headItemData = world.itemData.get(equipment.items[EquipmentSlot.HEAD].itemId);
+
+                if(headItemData && headItemData.equipment && headItemData.equipment.helmetType) {
+                    helmetType = headItemData.equipment.helmetType;
+
+                    if(helmetType === HelmetType.FULL_HELMET) {
+                        fullHelmet = true;
+                    }
+                }
+            }
+
+            if(!helmetType || helmetType === HelmetType.HAT) {
+                appearanceData.writeShortBE(0x100 + player.appearance.head);
+            } else {
+                appearanceData.writeByte(0);
+            }
+
+            this.appendBasicAppearanceItem(appearanceData, equipment, player.appearance.hands, EquipmentSlot.GLOVES);
+            this.appendBasicAppearanceItem(appearanceData, equipment, player.appearance.feet, EquipmentSlot.BOOTS);
+
+            if(player.appearance.gender === 1 || fullHelmet) {
+                appearanceData.writeByte(0);
+            } else {
+                appearanceData.writeShortBE(0x100 + player.appearance.facialHair);
             }
 
             [
@@ -184,6 +234,15 @@ export class PlayerUpdateTask extends Task<void> {
 
             updateMaskData.writeByte(appearanceDataSize);
             updateMaskData.writeBytes(appearanceData.getData().reverse());
+        }
+    }
+
+    private appendBasicAppearanceItem(buffer: RsBuffer, equipment: ItemContainer, appearanceInfo: number, equipmentSlot: EquipmentSlot): void {
+        const item = equipment.items[equipmentSlot];
+        if(item) {
+            buffer.writeShortBE(0x200 + item.itemId);
+        } else {
+            buffer.writeShortBE(0x100 + appearanceInfo);
         }
     }
 
