@@ -41,6 +41,18 @@ export class ItemContainer {
         return this._items.findIndex(item => item === null);
     }
 
+    public getOpenSlots(count: number): number[] {
+        const slots: number[] = [];
+
+        for(let i = 0; i < this._size; i++) {
+            if(this._items[i] === null) {
+                slots.push(i);
+            }
+        }
+
+        return slots;
+    }
+
     public get size(): number {
         return this._size;
     }

@@ -82,6 +82,9 @@ export class Player extends Mob {
             this.inventory.add({itemId: 6623, amount: 1});
             this.inventory.add({itemId: 1079, amount: 1});
             this.inventory.add({itemId: 1127, amount: 1});
+            this.inventory.add({itemId: 1303, amount: 1});
+            this.inventory.add({itemId: 1319, amount: 1});
+            this.inventory.add({itemId: 1201, amount: 1});
             this._appearance = defaultAppearance();
         }
 

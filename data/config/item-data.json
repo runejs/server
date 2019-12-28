@@ -73,6 +73,105 @@
         }
     },
     {
+        "id": 1201,
+        "desc": "rune kiteshield",
+        "canTrade": true,
+        "weight": 5.443,
+        "alchemy": {
+            "high": 32640,
+            "low": 21760
+        },
+        "equipment": {
+            "slot": "OFF_HAND",
+            "bonuses": {
+                "offencive": {
+                    "stab": 0,
+                    "slash": 0,
+                    "crush": 0,
+                    "magic": -8,
+                    "ranged": -2
+                },
+                "defencive": {
+                    "stab": 44,
+                    "slash": 48,
+                    "crush": 46,
+                    "magic": -1,
+                    "ranged": 46
+                }
+            }
+        }
+    },
+    {
+        "id": 1303,
+        "desc": "rune longsword",
+        "canTrade": true,
+        "weight": 1.814,
+        "alchemy": {
+            "high": 19200,
+            "low": 12800
+        },
+        "equipment": {
+            "slot": "MAIN_HAND",
+            "weaponType": "ONE_HANDED",
+            "bonuses": {
+                "offencive": {
+                    "speed": 5,
+                    "stab": 38,
+                    "slash": 47,
+                    "crush": -2,
+                    "magic": 0,
+                    "ranged": 0
+                },
+                "defencive": {
+                    "stab": 0,
+                    "slash": 3,
+                    "crush": 2,
+                    "magic": 0,
+                    "ranged": 0
+                },
+                "skill": {
+                    "strength": 49,
+                    "prayer": 0
+                }
+            }
+        }
+    },
+    {
+        "id": 1319,
+        "desc": "rune 2h sword",
+        "canTrade": true,
+        "weight": 3.628,
+        "alchemy": {
+            "high": 38400,
+            "low": 25600
+        },
+        "equipment": {
+            "slot": "MAIN_HAND",
+            "weaponType": "TWO_HANDED",
+            "bonuses": {
+                "offencive": {
+                    "speed": 7,
+                    "stab": -4,
+                    "slash": 69,
+                    "crush": 50,
+                    "magic": -4,
+                    "ranged": 0
+                },
+                "defencive": {
+                    "stab": 0,
+                    "slash": 0,
+                    "crush": 0,
+                    "magic": 0,
+                    "ranged": -1
+                },
+                "skill": {
+                    "strength": 70,
+                    "prayer": 0
+                }
+            }
+        }
+    },
+    {
         "id": 1351,
         "desc": "bronze axe",
         "canTrade": true,
