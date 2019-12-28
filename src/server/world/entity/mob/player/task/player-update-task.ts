@@ -5,6 +5,7 @@ import { UpdateFlags } from '../update-flags';
 import { Packet, PacketType } from '../../../../../net/packet';
 import { world } from '../../../../../game-server';
 import { EquipmentSlot, HelmetType, ItemData, TorsoType } from '../../../../config/item-data';
+import { ItemContainer } from '../../items/item-container';
 
 /**
  * Handles the chonky player updating packet.
@@ -174,12 +175,7 @@ export class PlayerUpdateTask extends Task<void> {
                 appearanceData.writeShortBE(0x100 + player.appearance.arms);
             }
 
-            const legItem = equipment.items[EquipmentSlot.LEGS];
-            if(legItem) {
-                appearanceData.writeShortBE(0x200 + legItem.itemId);
-            } else {
-                appearanceData.writeShortBE(0x100 + player.appearance.legs);
-            }
+            this.appendBasicAppearanceItem(appearanceData, equipment, player.appearance.legs, EquipmentSlot.LEGS);
 
             const headItem = equipment.items[EquipmentSlot.HEAD];
             let headItemType = null;
@@ -199,19 +195,8 @@ export class PlayerUpdateTask extends Task<void> {
                 appearanceData.writeByte(0);
             }
 
-            const gloveItem = equipment.items[EquipmentSlot.GLOVES];
-            if(gloveItem) {
-                appearanceData.writeShortBE(0x200 + gloveItem.itemId);
-            } else {
-                appearanceData.writeShortBE(0x100 + player.appearance.hands);
-            }
-
-            const bootItem = equipment.items[EquipmentSlot.BOOTS];
-            if(bootItem) {
-                appearanceData.writeShortBE(0x200 + bootItem.itemId);
-            } else {
-                appearanceData.writeShortBE(0x100 + player.appearance.feet);
-            }
+            this.appendBasicAppearanceItem(appearanceData, equipment, player.appearance.hands, EquipmentSlot.GLOVES);
+            this.appendBasicAppearanceItem(appearanceData, equipment, player.appearance.feet, EquipmentSlot.BOOTS);
 
             if(player.appearance.gender === 1 || fullHelmet) {
                 appearanceData.writeByte(0);
@@ -245,6 +230,15 @@ export class PlayerUpdateTask extends Task<void> {
 
             updateMaskData.writeByte(appearanceDataSize);
             updateMaskData.writeBytes(appearanceData.getData().reverse());
+        }
+    }
+
+    private appendBasicAppearanceItem(buffer: RsBuffer, equipment: ItemContainer, appearanceInfo: number, equipmentSlot: EquipmentSlot): void {
+        const item = equipment.items[equipmentSlot];
+        if(item) {
+            buffer.writeShortBE(0x200 + item.itemId);
+        } else {
+            buffer.writeShortBE(0x100 + appearanceInfo);
         }
     }
 

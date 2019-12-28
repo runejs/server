@@ -32,6 +32,5 @@ export const itemEquipPacket: incomingPacket = (player: Player, packetId: number
         return;
     }
 
-    console.log(`item equip packet {${interfaceId}, ${itemId}, ${slot}`);
     equipItemAction(player, itemId, slot);
 };
