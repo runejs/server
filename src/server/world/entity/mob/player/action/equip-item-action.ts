@@ -38,11 +38,11 @@ export const equipItemAction = (player: Player, itemId: number, inventorySlot: n
     }
 
     if(itemToUnequip) {
-        if(shouldUnequipOffHand && !unequipOffhand(player, inventory, equipment)) {
+        if(shouldUnequipOffHand && !unequipItem(player, inventory, equipment, EquipmentSlot.OFF_HAND)) {
             return;
         }
 
-        if(shouldUnequipMainHand && !unequipMainhand(player, inventory, equipment)) {
+        if(shouldUnequipMainHand && !unequipItem(player, inventory, equipment, EquipmentSlot.MAIN_HAND)) {
             return;
         }
 
@@ -56,11 +56,11 @@ export const equipItemAction = (player: Player, itemId: number, inventorySlot: n
         equipment.set(equipmentSlot, itemToEquip);
 
         if(shouldUnequipOffHand) {
-            unequipOffhand(player, inventory, equipment);
+            unequipItem(player, inventory, equipment, EquipmentSlot.OFF_HAND);
         }
 
         if(shouldUnequipMainHand) {
-            unequipMainhand(player, inventory, equipment);
+            unequipItem(player, inventory, equipment, EquipmentSlot.MAIN_HAND);
         }
     }
 
@@ -68,49 +68,25 @@ export const equipItemAction = (player: Player, itemId: number, inventorySlot: n
 
     player.packetSender.sendUpdateAllInterfaceItems(interfaceIds.inventory, inventory);
     player.packetSender.sendUpdateAllInterfaceItems(interfaceIds.equipment, equipment);
+    player.updateBonuses();
     player.updateFlags.appearanceUpdateRequired = true;
 };
 
-function unequipMainhand(player: Player, inventory: ItemContainer, equipment: ItemContainer): boolean {
-    const mainHandItemInventorySlot = inventory.getFirstOpenSlot();
+function unequipItem(player: Player, inventory: ItemContainer, equipment: ItemContainer, slot: EquipmentSlot): boolean {
+    const inventorySlot = inventory.getFirstOpenSlot();
 
-    if(mainHandItemInventorySlot === -1) {
+    if(inventorySlot === -1) {
         player.packetSender.sendChatboxMessage(`You don't have enough free space to do that.`);
         return false;
     }
 
-    const mainHandSlot = EquipmentSlot.MAIN_HAND;
-    const mainHandItem = equipment.items[mainHandSlot];
+    const itemInSlot = equipment.items[slot];
 
-    if(!mainHandItem) {
+    if(!itemInSlot) {
         return true;
     }
 
-    equipment.remove(mainHandSlot);
-    inventory.set(mainHandItemInventorySlot, mainHandItem);
-    player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, mainHandItemInventorySlot, mainHandItem);
-    player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.equipment, mainHandSlot, null);
-    return true;
-}
-
-function unequipOffhand(player: Player, inventory: ItemContainer, equipment: ItemContainer): boolean {
-    const offHandItemInventorySlot = inventory.getFirstOpenSlot();
-
-    if(offHandItemInventorySlot === -1) {
-        player.packetSender.sendChatboxMessage(`You don't have enough free space to do that.`);
-        return false;
-    }
-
-    const offHandSlot = EquipmentSlot.OFF_HAND;
-    const offHandItem = equipment.items[offHandSlot];
-
-    if(!offHandItem) {
-        return true;
-    }
-
-    equipment.remove(offHandSlot);
-    inventory.set(offHandItemInventorySlot, offHandItem);
-    player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, offHandItemInventorySlot, offHandItem);
-    player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.equipment, offHandSlot, null);
+    equipment.remove(slot);
+    inventory.set(inventorySlot, itemInSlot);
     return true;
 }

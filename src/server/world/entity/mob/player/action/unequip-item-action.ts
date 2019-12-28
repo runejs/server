@@ -20,6 +20,7 @@ export const unequipItemAction = (player: Player, itemId: number, equipmentSlot:
 
         player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, inventorySlot, itemInEquipmentSlot);
         player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.equipment, equipmentSlot, null);
+        player.updateBonuses();
         player.updateFlags.appearanceUpdateRequired = true;
     }
 };

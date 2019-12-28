@@ -85,6 +85,14 @@ export class PacketSender {
         this.socket = player.socket;
     }
 
+    public updateInterfaceString(interfaceId: number, value: string): void {
+        const packet = new Packet(232, PacketType.DYNAMIC_LARGE);
+        packet.writeOffsetShortLE(interfaceId);
+        packet.writeString(value);
+
+        this.send(packet);
+    }
+
     public showHintIcon(iconType: 2 | 3 | 4 | 5 | 6, position: Position, offset: number = 0): void {
         const packet = new Packet(199);
         packet.writeUnsignedByte(iconType);

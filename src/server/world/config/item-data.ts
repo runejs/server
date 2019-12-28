@@ -44,7 +44,7 @@ export interface EquipmentBonuses {
         slash: number;
         crush: number;
         magic: number;
-        randed: number;
+        ranged: number;
     },
     defencive?: {
         stab: number;

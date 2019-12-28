@@ -17,6 +17,8 @@ import {
 } from './player-data';
 import { ActiveInterface, interfaceIds } from './game-interface';
 import { ItemContainer } from '../items/item-container';
+import { EquipmentBonuses, ItemData } from '../../../config/item-data';
+import { Item } from '../items/item';
 
 const DEFAULT_TAB_INTERFACES = [
     2423, 3917, 638, 3213, 1644, 5608, 1151, -1, 5065, 5715, 2449, 904, 147, 962
@@ -42,6 +44,7 @@ export class Player extends Mob {
     private _appearance: Appearance;
     private _activeGameInterface: ActiveInterface;
     private readonly _equipment: ItemContainer;
+    private _bonuses: EquipmentBonuses;
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -116,6 +119,8 @@ export class Player extends Mob {
             };
         }
 
+        this.updateBonuses();
+
         logger.info(`${this.username}:${this.worldIndex} has logged in.`);
     }
 
@@ -151,6 +156,74 @@ export class Player extends Mob {
             this.updateFlags.reset();
             resolve();
         });
+    }
+
+    public updateBonuses(): void {
+        this.clearBonuses();
+
+        for(const item of this._equipment.items) {
+            if(item === null) {
+                continue;
+            }
+
+            this.addBonuses(item);
+        }
+
+        [
+            { id: 1675, text: 'Stab', value: this._bonuses.offencive.stab },
+            { id: 1676, text: 'Slash', value: this._bonuses.offencive.slash },
+            { id: 1677, text: 'Crush', value: this._bonuses.offencive.crush },
+            { id: 1678, text: 'Magic', value: this._bonuses.offencive.magic },
+            { id: 1679, text: 'Range', value: this._bonuses.offencive.ranged },
+            { id: 1680, text: 'Stab', value: this._bonuses.defencive.stab },
+            { id: 1681, text: 'Slash', value: this._bonuses.defencive.slash },
+            { id: 1682, text: 'Crush', value: this._bonuses.defencive.crush },
+            { id: 1683, text: 'Magic', value: this._bonuses.defencive.magic },
+            { id: 1684, text: 'Range', value: this._bonuses.defencive.ranged },
+            { id: 1686, text: 'Strength', value: this._bonuses.skill.strength },
+            { id: 1687, text: 'Prayer', value: this._bonuses.skill.prayer },
+        ].forEach(bonus => this.updateBonusString(bonus.id, bonus.text, bonus.value));
+    }
+
+    private updateBonusString(interfaceChildId: number, text: string, value: number): void {
+        const s = `${text}: ${value > 0 ? `+${value}` : value}`;
+        this.packetSender.updateInterfaceString(interfaceChildId, s);
+    }
+
+    private addBonuses(item: Item): void {
+        const itemData: ItemData = world.itemData.get(item.itemId);
+
+        if(!itemData || !itemData.equipment || !itemData.equipment.bonuses) {
+            return;
+        }
+
+        const bonuses = itemData.equipment.bonuses;
+
+        if(bonuses.offencive) {
+            [ 'speed', 'stab', 'slash', 'crush', 'magic', 'ranged' ].forEach(bonus => this._bonuses.offencive[bonus] += (!bonuses.offencive.hasOwnProperty(bonus) ? 0 : bonuses.offencive[bonus]));
+        }
+
+        if(bonuses.defencive) {
+            [ 'stab', 'slash', 'crush', 'magic', 'ranged' ].forEach(bonus => this._bonuses.defencive[bonus] += (!bonuses.defencive.hasOwnProperty(bonus) ? 0 : bonuses.defencive[bonus]));
+        }
+
+        if(bonuses.skill) {
+            [ 'strength', 'prayer' ].forEach(bonus => this._bonuses.skill[bonus] += (!bonuses.skill.hasOwnProperty(bonus) ? 0 : bonuses.skill[bonus]));
+        }
+    }
+
+    private clearBonuses(): void {
+        this._bonuses = {
+            offencive: {
+                speed: 0, stab: 0, slash: 0, crush: 0, magic: 0, ranged: 0
+            },
+            defencive: {
+                stab: 0, slash: 0, crush: 0, magic: 0, ranged: 0
+            },
+            skill: {
+                strength: 0, prayer: 0
+            }
+        };
     }
 
     public closeActiveInterface(): void {
