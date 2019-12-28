@@ -4,6 +4,7 @@ import { Task } from '../../../../../task/task';
 import { UpdateFlags } from '../update-flags';
 import { Packet, PacketType } from '../../../../../net/packet';
 import { world } from '../../../../../game-server';
+import { EquipmentSlot, HelmetType } from '../../../../config/item-data';
 
 /**
  * Handles the chonky player updating packet.
@@ -135,27 +136,52 @@ export class PlayerUpdateTask extends Task<void> {
         }
 
         if(updateFlags.appearanceUpdateRequired || forceUpdate) {
+            const equipment = player.equipment;
             const appearanceData: RsBuffer = RsBuffer.create();
             appearanceData.writeByte(player.appearance.gender); // Gender
             appearanceData.writeByte(-1); // Skull Icon
             appearanceData.writeByte(-1); // Prayer Icon
 
             for(let i = 0; i < 4; i++) {
-                appearanceData.writeByte(0); // Equipment
+                const item = equipment.items[i];
+
+                if(item) {
+                    appearanceData.writeShortBE(0x200 + item.itemId);
+                } else {
+                    appearanceData.writeByte(0);
+                }
             }
 
             appearanceData.writeShortBE(0x100 + player.appearance.torso);
             appearanceData.writeByte(0); // Shield
             appearanceData.writeShortBE(0x100 + player.appearance.arms);
             appearanceData.writeShortBE(0x100 + player.appearance.legs);
-            appearanceData.writeShortBE(0x100 + player.appearance.head);
+
+            const headItem = equipment.items[EquipmentSlot.HEAD];
+            let headItemType = null;
+            let fullHelmet = false;
+
+            if(headItem) {
+                headItemType = world.itemData.get(equipment.items[EquipmentSlot.HEAD].itemId).helmetType;
+
+                if(headItemType === HelmetType.FULL_HELMET) {
+                    fullHelmet = true;
+                }
+            }
+
+            if(!headItemType || headItemType === HelmetType.HAT) {
+                appearanceData.writeShortBE(0x100 + player.appearance.head);
+            } else {
+                appearanceData.writeByte(0);
+            }
+
             appearanceData.writeShortBE(0x100 + player.appearance.hands);
             appearanceData.writeShortBE(0x100 + player.appearance.feet);
 
-            if(player.appearance.gender === 0) {
-                appearanceData.writeShortBE(0x100 + player.appearance.facialHair);
-            } else {
+            if(player.appearance.gender === 1 || fullHelmet) {
                 appearanceData.writeByte(0);
+            } else {
+                appearanceData.writeShortBE(0x100 + player.appearance.facialHair);
             }
 
             [

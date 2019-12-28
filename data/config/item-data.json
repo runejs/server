@@ -9,7 +9,7 @@
             "low": 0
         },
         "equipmentSlot": "HEAD",
-        "helmetType": "hat"
+        "helmetType": "HAT"
     },
     {
         "id": 1351,
@@ -40,6 +40,39 @@
             "skill": {
                 "strength": 5,
                 "prayer": 0
+            }
+        }
+    },
+    {
+        "id": 6623,
+        "desc": "white full helm",
+        "canTrade": true,
+        "weight": 2.721,
+        "alchemy": {
+            "high": 633,
+            "low": 422
+        },
+        "equipmentSlot": "HEAD",
+        "helmetType": "FULL_HELMET",
+        "equipmentBonuses": {
+            "offencive": {
+                "speed": 0,
+                "stab": 0,
+                "slash": 0,
+                "crush": 0,
+                "magic": -6,
+                "ranged": -2
+            },
+            "defencive": {
+                "stab": 12,
+                "slash": 13,
+                "crush": 10,
+                "magic": -1,
+                "ranged": 12
+            },
+            "skill": {
+                "strength": 0,
+                "prayer": 1
             }
         }
     }

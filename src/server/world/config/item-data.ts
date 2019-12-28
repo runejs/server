@@ -23,7 +23,8 @@ export const equipmentSlotIndex = (slot: EquipmentSlot): number => {
 };
 
 export enum HelmetType {
-    HAT = 'hat'
+    HAT = 'HAT',
+    FULL_HELMET = 'FULL_HELMET'
 }
 
 export interface EquipmentBonuses {

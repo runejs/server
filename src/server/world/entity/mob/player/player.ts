@@ -67,12 +67,19 @@ export class Player extends Mob {
         if(!firstTimePlayer) {
             // Existing player logging in
             this.position = new Position(playerSave.position.x, playerSave.position.y, playerSave.position.level);
-            this.inventory.setAll(playerSave.inventory);
+            if(playerSave.inventory && playerSave.inventory.length !== 0) {
+                this.inventory.setAll(playerSave.inventory);
+            }
+            if(playerSave.equipment && playerSave.equipment.length !== 0) {
+                this.equipment.setAll(playerSave.equipment);
+            }
             this._appearance = playerSave.appearance;
         } else {
             // Brand new player logging in
             this.position = new Position(3222, 3222);
             this.inventory.add({itemId: 1351, amount: 1});
+            this.inventory.add({itemId: 1048, amount: 1});
+            this.inventory.add({itemId: 6623, amount: 1});
             this._appearance = defaultAppearance();
         }
 

@@ -36,5 +36,6 @@ export const equipItemAction = (player: Player, itemId: number, inventorySlot: n
     }
 
     player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.equipment, equipmentSlot, itemInInventorySlot);
+    player.updateFlags.appearanceUpdateRequired = true;
     // player.packetSender.showPlayerHintIcon(player);
 };
