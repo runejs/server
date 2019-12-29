@@ -179,7 +179,7 @@ export class PacketSender {
         this.send(new Packet(5));
     }
 
-    public sendChatboxMessage(message: string): void {
+    public chatboxMessage(message: string): void {
         const packet = new Packet(63, PacketType.DYNAMIC_SMALL);
         packet.writeString(message);
 
