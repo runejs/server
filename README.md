@@ -9,10 +9,11 @@ Currently the server is set up for the 377 revision of the game. There are not a
 - Login & packet handling.
 - Player saving/loading via JSON files.
 - Multiplayer support.
+- Player pathing validation via collision and tile maps generated from the game cache.
 - Basic item inventory implementation.
   - Item definition parsing via the game cache
   - Additional item data loading via JSON.
-- Player pathing validation via collision and tile maps generated from the game cache.
+- Player equipment with item bonuses.
 - A basic REST service for polling logged in users.
 
 ## Cache Parsing
