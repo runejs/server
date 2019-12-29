@@ -1,3 +1,5 @@
+![Rune.JS](https://i.imgur.com/osF9OSD.png)
+
 # Rune.JS
 
 Rune.JS is a RuneScape game server written entirely using TypeScript and JavaScript. The aim of this project is to create a game server that is both fun and easy to use, while also providing simple content development systems.
@@ -11,10 +13,20 @@ Currently the server is set up for the 377 revision of the game. There are not a
 - Multiplayer support.
 - Player pathing validation via collision and tile maps generated from the game cache.
 - Basic item inventory implementation.
-  - Item definition parsing via the game cache
+  - Item definition parsing via the game cache.
   - Additional item data loading via JSON.
 - Player equipment with item bonuses.
 - A basic REST service for polling logged in users.
+
+## Usage
+
+1. Download and install Node.JS: https://nodejs.org/en/
+2. Clone the Github Repo: https://github.com/rune-js/server
+3. Install dependencies by navigating to the project in your Terminal or command prompt and running the command npm install
+4. Update your server's RSA tokens in the src/server/net/dataparser/client-login-parser.ts file.
+5. Run the game server and REST service by inputting the command npm run server
+
+The game server will spin up and be accessible via port 43594. The REST service can be accessed via port 8888.
 
 ## Cache Parsing
 
@@ -22,10 +34,6 @@ A separate package was created that Rune.JS uses to parse the 377 game cache. Th
 
 - [Github: rune-js/cache-parser](https://github.com/rune-js/cache-parser)
 - [NPM: @runejs/cache-parser](https://www.npmjs.com/package/@runejs/cache-parser)
-
-## Usage
-
-To run the game server and accompanying REST service, first clone the repo and install node dependencies via `npm install`. Once the dependencies are installed, the server can be run via `npm run server`. The game server will spin up and be accessible via port `43594`. The REST service can be accessed via port `8888`.
 
 ## REST API
 
@@ -35,3 +43,19 @@ Online players can be polled via the REST protocol for web applications. An acco
 
 - `/players` : Returns a list of players currently logged into the game server.
 - `/items?page=x&limit=y` : Returns a list of item metadata loaded by the game server.
+
+## Aditional Information
+
+#### Supported 377 Clients
+
+Rune.JS should support any vanilla RuneScape 377 client and game cache, such as:
+
+- [refactored-client-377](https://github.com/Promises/refactored-client-377) by [Promises](https://github.com/Promises)
+- [Runescape 377 Web client](https://github.com/reinismu/runescape-web-client-377) by [reinismu](https://github.com/reinismu)
+- Any old 377 deobfuscated client
+
+#### Update Server
+
+To use Rune.JS, your 377 client's update server will either need to be disabled or you'll have to spin up your own update server alongside Rune.JS, as it does not include an update server of it's own.
+
+We highly recommend using [JagCached](https://github.com/apollo-rsps/jagcached), a RuneScape update server written by [Graham Edgecombe](https://github.com/apollo-rsps/jagcached/commits?author=grahamedgecombe). 
