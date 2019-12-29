@@ -3,6 +3,7 @@ import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { logger } from '@runejs/logger/dist/logger';
 import { Player } from './player';
+import { serverDir } from '../../../../game-server';
 
 export interface Appearance {
     gender: number;
@@ -52,7 +53,7 @@ export function defaultAppearance(): Appearance {
 
 export function savePlayerData(player: Player): boolean {
     const fileName = player.username.toLowerCase() + '.json';
-    const filePath = join(__dirname, '../../../../../../data/saves', fileName);
+    const filePath = join(serverDir, 'data/saves', fileName);
 
     const playerSave: PlayerSave = {
         username: player.username,
@@ -77,7 +78,7 @@ export function savePlayerData(player: Player): boolean {
 
 export function loadPlayerSave(username: string): PlayerSave {
     const fileName = username.toLowerCase() + '.json';
-    const filePath = join(__dirname, '../../../../../../data/saves', fileName);
+    const filePath = join(serverDir, 'data/saves', fileName);
 
     if(!existsSync(filePath)) {
         return null;
