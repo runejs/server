@@ -99,7 +99,7 @@ export class Player extends Mob {
 
         this.packetSender.sendMembershipStatusAndWorldIndex();
         this.packetSender.sendCurrentMapRegion();
-        this.packetSender.sendChatboxMessage('Welcome to RuneScape.');
+        this.packetSender.chatboxMessage('Welcome to RuneScape.');
 
         DEFAULT_TAB_INTERFACES.forEach((interfaceId: number, tabIndex: number) => {
             if(interfaceId !== -1) {

@@ -7,7 +7,7 @@ export const unequipItemAction = (player: Player, itemId: number, equipmentSlot:
     const inventorySlot = inventory.getFirstOpenSlot();
 
     if(inventorySlot === -1) {
-        player.packetSender.sendChatboxMessage(`You don't have enough free space to do that.`);
+        player.packetSender.chatboxMessage(`You don't have enough free space to do that.`);
         return;
     }
 

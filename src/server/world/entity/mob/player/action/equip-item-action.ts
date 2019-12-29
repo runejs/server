@@ -76,7 +76,7 @@ function unequipItem(player: Player, inventory: ItemContainer, equipment: ItemCo
     const inventorySlot = inventory.getFirstOpenSlot();
 
     if(inventorySlot === -1) {
-        player.packetSender.sendChatboxMessage(`You don't have enough free space to do that.`);
+        player.packetSender.chatboxMessage(`You don't have enough free space to do that.`);
         return false;
     }
 
