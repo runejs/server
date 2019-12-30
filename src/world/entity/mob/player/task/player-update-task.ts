@@ -21,6 +21,11 @@ export class PlayerUpdateTask extends Task<void> {
 
     public execute(): Promise<void> {
         return new Promise<void>(resolve => {
+            if(!this.player.outCipher) {
+                resolve();
+                return;
+            }
+
             const updateFlags: UpdateFlags = this.player.updateFlags;
             const playerUpdatePacket: Packet = new Packet(90, PacketType.DYNAMIC_LARGE, 16);
             const currentMapChunk = world.chunkManager.getChunkForWorldPosition(this.player.position);
@@ -44,22 +49,23 @@ export class PlayerUpdateTask extends Task<void> {
             playerUpdatePacket.writeBits(8, this.player.trackedPlayers.length); // Tracked Player Count
 
             const nearbyPlayers = world.chunkManager.getSurroundingChunks(currentMapChunk).map(chunk => chunk.players).flat();
+            const existingTrackedPlayers: Player[] = [];
 
-            for(let trackedPlayerIndex = this.player.trackedPlayers.length - 1; trackedPlayerIndex >= 0; trackedPlayerIndex--) {
+            for(let trackedPlayerIndex = 0; trackedPlayerIndex < this.player.trackedPlayers.length; trackedPlayerIndex++) {
                 const trackedPlayer = this.player.trackedPlayers[trackedPlayerIndex];
 
                 if(world.playerExists(trackedPlayer) && nearbyPlayers.findIndex(p => p.equals(trackedPlayer)) !== -1
-                    && trackedPlayer.position.withinViewDistance(this.player.position)) {
+                        && trackedPlayer.position.withinViewDistance(this.player.position)) {
                     this.appendPlayerMovement(trackedPlayer, playerUpdatePacket);
                     this.appendUpdateMaskData(trackedPlayer, updateMaskData, false);
+                    existingTrackedPlayers.push(trackedPlayer);
                 } else {
-                    // Previously tracked player is no longer nearby, remove them from the list.
-                    this.player.trackedPlayers.splice(trackedPlayerIndex, 1);
-
                     playerUpdatePacket.writeBits(1, 1);
                     playerUpdatePacket.writeBits(2, 3);
                 }
             }
+
+            this.player.trackedPlayers = existingTrackedPlayers;
 
             nearbyPlayers.forEach((nearbyPlayer, nearbyPlayerIndex) => {
                 if(this.player.equals(nearbyPlayer)) {
@@ -97,10 +103,17 @@ export class PlayerUpdateTask extends Task<void> {
                 playerUpdatePacket.writeBits(1, 1); // Discard client walking queues
                 playerUpdatePacket.writeBits(5, positionOffsetY); // World Position Y axis offset relative to the main player
 
+                if(this.player.username.toLowerCase() === 'e') {
+                    // console.log(`${nearbyPlayer.worldIndex + 1} ${positionOffsetX} ${positionOffsetY}`);
+                }
+
                 this.appendUpdateMaskData(nearbyPlayer, updateMaskData, true);
             });
 
             if(updateMaskData.getWriterIndex() !== 0) {
+                if(this.player.username.toLowerCase() === 'e') {
+                    console.log(`write 2047`);
+                }
                 playerUpdatePacket.writeBits(11, 2047);
                 playerUpdatePacket.closeBitChannel();
 

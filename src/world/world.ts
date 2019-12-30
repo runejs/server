@@ -2,7 +2,8 @@ import { Player } from './entity/mob/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { logger } from '@runejs/logger';
 import { ItemData, parseItemData } from './config/item-data';
-import { gameCache } from '../game-server';
+import { gameCache, world } from '../game-server';
+import { Position } from './position';
 
 /**
  * Controls the game world and all entities within it.
@@ -28,6 +29,38 @@ export class World {
 
     public setupWorldTick(): void {
         setInterval(async () => await this.worldTick(), World.TICK_LENGTH);
+    }
+
+    public generateFakePlayers(): void {
+        let x: number = 3222;
+        let y: number = 3222;
+        let xOffset: number = 0;
+        let yOffset: number = 0;
+
+        const spawnChunk = this.chunkManager.getChunkForWorldPosition(new Position(x, y, 0));
+
+        for(let i = 0; i < 80; i++) {
+            const player = new Player(null, null, null, i, `test${i}`, 'abs', true);
+            this.registerPlayer(player);
+            player.activeGameInterface = null;
+
+            xOffset++;
+
+            if(xOffset > 5) {
+                xOffset = 0;
+                yOffset--;
+            }
+
+            player.position = new Position(x + xOffset, y + yOffset, 0);
+            const newChunk = this.chunkManager.getChunkForWorldPosition(player.position);
+
+            if(!spawnChunk.equals(newChunk)) {
+                spawnChunk.removePlayer(player);
+                newChunk.addPlayer(player);
+            }
+
+            player.initiateRandomMovement();
+        }
     }
 
     public async worldTick(): Promise<void> {

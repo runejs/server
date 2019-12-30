@@ -107,7 +107,7 @@ export class WalkingQueue {
         // West
         if(destination.x < initialX && destination.y == initialY) {
             if((destinationAdjacency[destinationLocalX][destinationLocalY] & 0x1280108) != 0) {
-                logger.warn(`Can not move west.`);
+                logger.warn(`${this.mob instanceof Player ? this.mob.username + ' c' : 'C'}an not move west.`);
                 return false;
             }
         }
@@ -115,7 +115,7 @@ export class WalkingQueue {
         // East
         if(destination.x > initialX && destination.y == initialY) {
             if((destinationAdjacency[destinationLocalX][destinationLocalY] & 0x1280180) != 0) {
-                logger.warn(`Can not move east.`);
+                logger.warn(`${this.mob instanceof Player ? this.mob.username + ' c' : 'C'}an not move east.`);
                 return false;
             }
         }
@@ -123,7 +123,7 @@ export class WalkingQueue {
         // South
         if(destination.y < initialY && destination.x == initialX) {
             if((destinationAdjacency[destinationLocalX][destinationLocalY] & 0x1280102) != 0) {
-                logger.warn(`Can not move south.`);
+                logger.warn(`${this.mob instanceof Player ? this.mob.username + ' c' : 'C'}an not move south.`);
                 return false;
             }
         }
@@ -131,7 +131,7 @@ export class WalkingQueue {
         // North
         if(destination.y > initialY && destination.x == initialX) {
             if((destinationAdjacency[destinationLocalX][destinationLocalY] & 0x1280120) != 0) {
-                logger.warn(`Can not move north.`);
+                logger.warn(`${this.mob instanceof Player ? this.mob.username + ' c' : 'C'}an not move north.`);
                 return false;
             }
         }
@@ -140,7 +140,7 @@ export class WalkingQueue {
         if(destination.x < initialX && destination.y < initialY) {
             if(!this.canMoveDiagonally(origin, destinationAdjacency, destinationLocalX, destinationLocalY, initialX, initialY, -1, -1,
                 0x128010e, 0x1280108, 0x1280102)) {
-                logger.warn(`Can not move south-west.`);
+                logger.warn(`${this.mob instanceof Player ? this.mob.username + ' c' : 'C'}an not move south-west.`);
                 return false;
             }
         }
@@ -149,7 +149,7 @@ export class WalkingQueue {
         if(destination.x > initialX && destination.y < initialY) {
             if(!this.canMoveDiagonally(origin, destinationAdjacency, destinationLocalX, destinationLocalY, initialX, initialY, 1, -1,
                 0x1280183, 0x1280180, 0x1280102)) {
-                logger.warn(`Can not move south-east.`);
+                logger.warn(`${this.mob instanceof Player ? this.mob.username + ' c' : 'C'}an not move south-east.`);
                 return false;
             }
         }
@@ -158,7 +158,7 @@ export class WalkingQueue {
         if(destination.x < initialX && destination.y > initialY) {
             if(!this.canMoveDiagonally(origin, destinationAdjacency, destinationLocalX, destinationLocalY, initialX, initialY, -1, 1,
                 0x1280138, 0x1280108, 0x1280120)) {
-                logger.warn(`Can not move north-west.`);
+                logger.warn(`${this.mob instanceof Player ? this.mob.username + ' c' : 'C'}an not move north-west.`);
                 return false;
             }
         }
@@ -167,7 +167,7 @@ export class WalkingQueue {
         if(destination.x > initialX && destination.y > initialY) {
             if(!this.canMoveDiagonally(origin, destinationAdjacency, destinationLocalX, destinationLocalY, initialX, initialY, 1, 1,
                 0x12801e0, 0x1280180, 0x1280120)) {
-                logger.warn(`Can not move north-east.`);
+                logger.warn(`${this.mob instanceof Player ? this.mob.username + ' c' : 'C'}an not move north-east.`);
                 return false;
             }
         }
@@ -237,7 +237,6 @@ export class WalkingQueue {
     }
 
     public process(): void {
-
         if(this.queue.length === 0 || !this.valid) {
             this.resetDirections();
             return;

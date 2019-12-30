@@ -220,6 +220,10 @@ export class PacketSender {
     }
 
     public send(packet: Packet): void {
+        if(!this.socket || this.socket.destroyed) {
+            return;
+        }
+
         this.socket.write(packet.toBuffer(this.player.outCipher));
     }
 

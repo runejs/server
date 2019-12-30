@@ -65,12 +65,20 @@ export class RsBuffer {
         }
     }
 
+    public ensureWritableCapacity(space: number): void {
+        if(this.getWritable() < this.writerIndex + space) {
+            const newBuffer = Buffer.alloc(this.writerIndex + space);
+            this.buffer.copy(newBuffer, 0, 0);
+            this.buffer = newBuffer;
+        }
+    }
+
     public writeBytes(fromBuffer: RsBuffer | Buffer): void {
         if(fromBuffer instanceof RsBuffer) {
             fromBuffer = fromBuffer.getData();
         }
 
-        this.ensureCapacity(this.getWriterIndex() + fromBuffer.length);
+        this.ensureCapacity(this.writerIndex + fromBuffer.length);
         fromBuffer.copy(this.getBuffer(), this.getWriterIndex(), 0);
         this.setWriterIndex(this.getWriterIndex() + fromBuffer.length);
     }
@@ -78,7 +86,7 @@ export class RsBuffer {
     public writeBits(bitCount: number, value: number): void {
         const byteCount: number = Math.ceil(bitCount / 8) + 1;
 
-        this.ensureCapacity(this.writerIndex + byteCount);
+        this.ensureWritableCapacity((this.bitIndex + 7) / 8 + byteCount);
 
         let byteIndex: number = this.bitIndex >> 3;
         let bitOffset: number = 8 - (this.bitIndex & 7);
