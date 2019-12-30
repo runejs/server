@@ -103,17 +103,10 @@ export class PlayerUpdateTask extends Task<void> {
                 playerUpdatePacket.writeBits(1, 1); // Discard client walking queues
                 playerUpdatePacket.writeBits(5, positionOffsetY); // World Position Y axis offset relative to the main player
 
-                if(this.player.username.toLowerCase() === 'e') {
-                    // console.log(`${nearbyPlayer.worldIndex + 1} ${positionOffsetX} ${positionOffsetY}`);
-                }
-
                 this.appendUpdateMaskData(nearbyPlayer, updateMaskData, true);
             });
 
             if(updateMaskData.getWriterIndex() !== 0) {
-                if(this.player.username.toLowerCase() === 'e') {
-                    console.log(`write 2047`);
-                }
                 playerUpdatePacket.writeBits(11, 2047);
                 playerUpdatePacket.closeBitChannel();
 
