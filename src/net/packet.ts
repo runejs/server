@@ -33,7 +33,7 @@ export class Packet extends RsBuffer {
         }
 
         const buffer = RsBuffer.create(bufferSize);
-        buffer.writeUnsignedByte((this.packetId + cipher.rand()) & 0xff);
+        buffer.writeUnsignedByte((this.packetId + (cipher !== null ? cipher.rand() : 0)) & 0xff);
 
         let copyStart = 1;
 

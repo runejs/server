@@ -21,6 +21,51 @@ export abstract class Mob extends Entity {
         this._inventory = new ItemContainer(28);
     }
 
+    public initiateRandomMovement(): void {
+        setInterval(() => {
+            const movementChance = Math.floor(Math.random() * 10);
+
+            if(movementChance < 8) {
+                return;
+            }
+
+            let px = this.position.x;
+            let py = this.position.y;
+
+            const moveXChance = Math.floor(Math.random() * 10);
+
+            if(moveXChance > 6) {
+                const moveXAmount = Math.floor(Math.random() * 5);
+                const moveXMod = Math.floor(Math.random() * 2);
+
+                if(moveXMod === 0) {
+                    px -= moveXAmount;
+                } else {
+                    px += moveXAmount;
+                }
+            }
+
+            const moveYChance = Math.floor(Math.random() * 10);
+
+            if(moveYChance > 6) {
+                const moveYAmount = Math.floor(Math.random() * 5);
+                const moveYMod = Math.floor(Math.random() * 2);
+
+                if(moveYMod === 0) {
+                    py -= moveYAmount;
+                } else {
+                    py += moveYAmount;
+                }
+            }
+
+            if(px !== this.position.x || py !== this.position.y) {
+                this._walkingQueue.clear();
+                this._walkingQueue.valid = true;
+                this._walkingQueue.add(px, py);
+            }
+        }, 1000);
+    }
+
     public get worldIndex(): number {
         return this._worldIndex;
     }

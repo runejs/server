@@ -4,8 +4,9 @@
     "description": "",
     "main": "src/game-server.ts",
     "scripts": {
-        "server": "ts-node src/main.ts",
-        "start": "npm run server"
+        "server": "npm start",
+        "start": "ts-node src/main.ts",
+        "fake-players": "npm start -- --fakePlayers"
     },
     "repository": {
         "type": "git",
@@ -24,10 +25,12 @@
         "express": "^4.17.1",
         "ts-node": "^8.4.1",
         "tslib": "^1.10.0",
-        "typescript": "^3.7.2"
+        "typescript": "^3.7.2",
+        "yargs": "^15.0.2"
     },
     "devDependencies": {
         "@types/express": "^4.17.2",
-        "@types/node": "^12.12.6"
+        "@types/node": "^12.12.6",
+        "@types/yargs": "^13.0.4"
     }
 }

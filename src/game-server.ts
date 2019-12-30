@@ -5,6 +5,7 @@ import { World } from './world/world';
 import { ClientConnection } from './net/client-connection';
 import { logger } from '@runejs/logger';
 import { GameCache } from '@runejs/cache-parser';
+import yargs from 'yargs';
 
 const GAME_SERVER_PORT = 43594;
 
@@ -12,6 +13,10 @@ export const serverDir = join(__dirname, '../');
 export const gameCache = new GameCache(join(serverDir, 'cache'));
 export const world = new World();
 world.chunkManager.generateCollisionMaps();
+
+if(yargs.argv.fakePlayers) {
+    world.generateFakePlayers();
+}
 
 export function runGameServer(): void {
     net.createServer(socket => {

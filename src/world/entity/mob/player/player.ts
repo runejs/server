@@ -40,7 +40,7 @@ export class Player extends Mob {
     private readonly _packetSender: PacketSender;
     public readonly playerUpdateTask: PlayerUpdateTask;
     public readonly updateFlags: UpdateFlags;
-    public readonly trackedPlayers: Player[];
+    public trackedPlayers: Player[];
     private _appearance: Appearance;
     private _activeGameInterface: ActiveInterface;
     private readonly _equipment: ItemContainer;
