@@ -70,6 +70,7 @@ export function runWebServer(): void {
                 username: p.username,
                 lowDetail: p.isLowDetail,
                 clientUUID: p.clientUuid,
+                worldIndex: p.worldIndex,
                 position: {
                     x: p.position.x,
                     y: p.position.y,
@@ -81,8 +82,40 @@ export function runWebServer(): void {
         }));
     });
 
+    webServer.get('/items/:itemId', (req, res) => {
+        const itemId = parseInt(req.params.itemId, 10);
+
+        if(isNaN(itemId) || itemId < 0 || itemId >= world.itemData.size) {
+            res.sendStatus(400);
+            return;
+        }
+
+        res.send(world.itemData.get(itemId));
+    });
+
     webServer.get('/items', (req, res) => {
-        const worldItemList = new Array(...world.itemData.values());
+        let worldItemList = new Array(...world.itemData.values());
+
+        if(req.query) {
+            if(req.query.search) {
+                const searchTerm = req.query.search.toLowerCase().trim();
+
+                if(searchTerm) {
+                    worldItemList = worldItemList.filter(itemData => itemData.name && itemData.name.toLowerCase().indexOf(searchTerm) !== -1);
+                }
+            }
+
+            if(req.query.noted) {
+                const noted = req.query.noted.toLowerCase().trim();
+
+                if(noted === 'false') {
+                    worldItemList = worldItemList.filter(itemData => itemData.notedVersionOf === -1);
+                } else if(noted === 'true') {
+                    worldItemList = worldItemList.filter(itemData => itemData.notedVersionOf !== -1);
+                }
+            }
+        }
+
         const totalResults = worldItemList.length;
 
         const { page, limit } = handlePagination(req, 100, totalResults);

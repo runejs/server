@@ -61,7 +61,7 @@ export interface EquipmentBonuses {
 
 export interface ItemDetails {
     id: number;
-    desc: string;
+    desc?: string;
     canTrade: boolean;
     questItem?: boolean;
     weight?: number;
@@ -104,7 +104,6 @@ export function parseItemData(itemDefinitions: Map<number, ItemDefinition>): Map
             if(!itemDetails) {
                 itemDetails = {
                     id: itemDefinition.id,
-                    desc: itemDefinition.name,
                     canTrade: false
                 };
             }

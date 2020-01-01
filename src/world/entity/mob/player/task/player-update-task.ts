@@ -48,7 +48,7 @@ export class PlayerUpdateTask extends Task<void> {
             this.appendUpdateMaskData(this.player, updateMaskData);
             playerUpdatePacket.writeBits(8, this.player.trackedPlayers.length); // Tracked Player Count
 
-            const nearbyPlayers = world.chunkManager.getSurroundingChunks(currentMapChunk).map(chunk => chunk.players).flat();
+            let nearbyPlayers = world.chunkManager.getSurroundingChunks(currentMapChunk).map(chunk => chunk.players).flat();
             const existingTrackedPlayers: Player[] = [];
 
             for(let trackedPlayerIndex = 0; trackedPlayerIndex < this.player.trackedPlayers.length; trackedPlayerIndex++) {
@@ -67,7 +67,14 @@ export class PlayerUpdateTask extends Task<void> {
 
             this.player.trackedPlayers = existingTrackedPlayers;
 
-            nearbyPlayers.forEach((nearbyPlayer, nearbyPlayerIndex) => {
+            // The client can only handle 80 new players at a time, so we limit each update to a max of 80
+            // Any remaining players will be automatically picked up by subsequent updates 
+            let newPlayers = nearbyPlayers.filter(p1 => !this.player.trackedPlayers.find(p2 => p2.equals(p1)));
+            if(newPlayers.length > 80) {
+                newPlayers = newPlayers.slice(0, 80);
+            }
+
+            newPlayers.forEach((nearbyPlayer, nearbyPlayerIndex) => {
                 if(this.player.equals(nearbyPlayer)) {
                     // Other player is actually this player!
                     return;
@@ -89,6 +96,12 @@ export class PlayerUpdateTask extends Task<void> {
                 if(!nearbyPlayer.position.withinViewDistance(this.player.position)) {
                     // Player is still too far away to be worth rendering
                     // Also - values greater than 15 and less than -15 are too large, or too small, to be sent via 5 bits (max length of 32)
+                    return;
+                }
+
+                // Only 255 players are able to be rendered at a time, so we cut it off it there are more than that
+                // @TODO modify the system to render the closest players FIRST so we don't run into issues here
+                if(this.player.trackedPlayers.length >= 255) {
                     return;
                 }
 
