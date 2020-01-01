@@ -4,6 +4,7 @@ import { logger } from '@runejs/logger';
 import { ItemData, parseItemData } from './config/item-data';
 import { gameCache, world } from '../game-server';
 import { Position } from './position';
+import yargs from 'yargs';
 
 /**
  * Controls the game world and all entities within it.
@@ -39,14 +40,14 @@ export class World {
 
         const spawnChunk = this.chunkManager.getChunkForWorldPosition(new Position(x, y, 0));
 
-        for(let i = 0; i < 80; i++) {
+        for(let i = 0; i < 990; i++) {
             const player = new Player(null, null, null, i, `test${i}`, 'abs', true);
             this.registerPlayer(player);
             player.activeGameInterface = null;
 
             xOffset++;
 
-            if(xOffset > 5) {
+            if(xOffset > 20) {
                 xOffset = 0;
                 yOffset--;
             }
@@ -64,6 +65,8 @@ export class World {
     }
 
     public async worldTick(): Promise<void> {
+        let hrTime = process.hrtime();
+        const startTime = hrTime[0] * 1000000 + hrTime[1] / 1000;
         const activePlayers: Player[] = this.playerList.filter(player => player !== null);
 
         if(activePlayers.length === 0) {
@@ -76,7 +79,14 @@ export class World {
         await Promise.all(playerUpdateTasks.map(task => task.execute()));
         await Promise.all(activePlayers.map(player => player.reset()));
 
-        return Promise.resolve();
+        return Promise.resolve().then(() => {
+            let hrTime = process.hrtime();
+            const endTime = hrTime[0] * 1000000 + hrTime[1] / 1000;
+
+            if(yargs.argv.tickTime) {
+                logger.info(`World tick completed in ${endTime - startTime} microseconds.`);
+            }
+        });
     }
 
     public playerExists(player: Player): boolean {
