@@ -3,6 +3,7 @@ import { ItemDefinition } from '@runejs/cache-parser';
 import { logger } from '@runejs/logger/dist/logger';
 import { join } from 'path';
 import { serverDir } from '../../game-server';
+import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 
 export enum EquipmentSlot {
     HEAD = 0,
@@ -85,16 +86,10 @@ export function parseItemData(itemDefinitions: Map<number, ItemDefinition>): Map
     try {
         logger.info('Parsing additional item data...');
 
-        const fileData = readFileSync(join(serverDir, 'data/config/item-data.json'), 'utf8');
-
-        if(!fileData) {
-            throw 'Unable to read item data.';
-        }
-
-        const itemDetailsList = JSON.parse(fileData) as ItemDetails[];
+        const itemDetailsList = safeLoad(readFileSync(join(serverDir, 'data/config/item-data.yaml'), 'utf8'), { schema: JSON_SCHEMA }) as ItemDetails[];
 
         if(!itemDetailsList || itemDetailsList.length === 0) {
-            throw 'No item details were found.';
+            throw 'Unable to read item data.';
         }
 
         const itemDataMap: Map<number, ItemData> = new Map<number, ItemData>();
