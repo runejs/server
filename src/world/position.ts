@@ -45,6 +45,10 @@ export class Position {
         return this._x === position.x && this._y === position.y;
     }
 
+    public distanceBetween(other: Position): number {
+        return Math.abs(Math.sqrt((this.x - other.x) * (this.x - other.x) + (this.y - other.y) * (this.y - other.y)));
+    }
+
     public equals(position: Position | { x: number, y: number, level: number }): boolean {
         if(!(position instanceof Position)) {
             position = new Position(position.x, position.y, position.level);

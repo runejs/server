@@ -68,10 +68,13 @@ export class PlayerUpdateTask extends Task<void> {
             this.player.trackedPlayers = existingTrackedPlayers;
 
             // The client can only handle 80 new players at a time, so we limit each update to a max of 80
-            // Any remaining players will be automatically picked up by subsequent updates 
+            // Any remaining players will be automatically picked up by subsequent updates
             let newPlayers = nearbyPlayers.filter(p1 => !this.player.trackedPlayers.find(p2 => p2.equals(p1)));
             if(newPlayers.length > 80) {
-                newPlayers = newPlayers.slice(0, 80);
+                // We also sort the list of players here by how close they are to the current player if there are more than 80, so we can render the nearest first
+                newPlayers = newPlayers
+                    .sort((a, b) => this.player.position.distanceBetween(a.position) - this.player.position.distanceBetween(b.position))
+                    .slice(0, 80);
             }
 
             newPlayers.forEach((nearbyPlayer, nearbyPlayerIndex) => {
@@ -100,7 +103,6 @@ export class PlayerUpdateTask extends Task<void> {
                 }
 
                 // Only 255 players are able to be rendered at a time, so we cut it off it there are more than that
-                // @TODO modify the system to render the closest players FIRST so we don't run into issues here
                 if(this.player.trackedPlayers.length >= 255) {
                     return;
                 }
