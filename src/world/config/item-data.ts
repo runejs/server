@@ -1,9 +1,9 @@
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { ItemDefinition } from '@runejs/cache-parser';
 import { logger } from '@runejs/logger/dist/logger';
 import { join } from 'path';
 import { serverDir } from '../../game-server';
-import { JSON_SCHEMA, safeLoad } from 'js-yaml';
+import { JSON_SCHEMA, safeLoad, safeDump } from 'js-yaml';
 
 export enum EquipmentSlot {
     HEAD = 0,
@@ -60,7 +60,7 @@ export interface EquipmentBonuses {
     }
 }
 
-export interface ItemDetails {
+export interface ItemData {
     id: number;
     desc?: string;
     canTrade: boolean;
@@ -79,37 +79,73 @@ export interface ItemDetails {
     };
 }
 
-export interface ItemData extends ItemDefinition, ItemDetails {
+export interface ItemDetails extends ItemDefinition, ItemData {
 }
 
-export function parseItemData(itemDefinitions: Map<number, ItemDefinition>): Map<number, ItemData> {
+function checkField(origin: ItemDetails, destination: ItemData, fieldName: string): void {
+    if(origin[fieldName] !== undefined) {
+        destination[fieldName] = origin[fieldName];
+    }
+}
+
+export function saveItemData(itemDetailsMap: Map<number, ItemDetails>): void {
+    const itemArray = Array.from(itemDetailsMap.values()).filter(itemData => itemData.desc !== undefined && itemData.desc !== null).map(itemDetails => {
+        const itemData: ItemData = {
+            id: itemDetails.id,
+            desc: itemDetails.desc,
+            canTrade: false
+        };
+
+        checkField(itemDetails, itemData, 'canTrade');
+        checkField(itemDetails, itemData, 'questItem');
+        checkField(itemDetails, itemData, 'weight');
+        checkField(itemDetails, itemData, 'alchemy');
+        checkField(itemDetails, itemData, 'equipment');
+
+        return itemData;
+    });
+
+    try {
+        const backupItemData = safeLoad(readFileSync(join(serverDir, 'data/config/item-data.yaml'), 'utf8'), { schema: JSON_SCHEMA }) as ItemData[];
+
+        if(backupItemData && backupItemData.length !== 0) {
+            writeFileSync(join(serverDir, 'data/config/item-data-backup.yaml'), safeDump(backupItemData, { schema: JSON_SCHEMA }), 'utf8');
+        }
+
+        writeFileSync(join(serverDir, 'data/config/item-data.yaml'), safeDump(itemArray, { schema: JSON_SCHEMA }), 'utf8');
+    } catch(error) {
+        logger.error('Error saving game item data: ' + error);
+    }
+}
+
+export function parseItemData(itemDefinitions: Map<number, ItemDefinition>): Map<number, ItemDetails> {
     try {
         logger.info('Parsing additional item data...');
 
-        const itemDetailsList = safeLoad(readFileSync(join(serverDir, 'data/config/item-data.yaml'), 'utf8'), { schema: JSON_SCHEMA }) as ItemDetails[];
+        const itemDataList = safeLoad(readFileSync(join(serverDir, 'data/config/item-data.yaml'), 'utf8'), { schema: JSON_SCHEMA }) as ItemData[];
 
-        if(!itemDetailsList || itemDetailsList.length === 0) {
+        if(!itemDataList || itemDataList.length === 0) {
             throw 'Unable to read item data.';
         }
 
-        const itemDataMap: Map<number, ItemData> = new Map<number, ItemData>();
+        const itemDetailsMap: Map<number, ItemDetails> = new Map<number, ItemDetails>();
         itemDefinitions.forEach(itemDefinition => {
-            let itemDetails = itemDetailsList.find(i => i.id === itemDefinition.id);
+            let itemData = itemDataList.find(i => i.id === itemDefinition.id);
 
-            if(!itemDetails) {
-                itemDetails = {
+            if(!itemData) {
+                itemData = {
                     id: itemDefinition.id,
                     canTrade: false
                 };
             }
 
-            const itemData: ItemData = { ...itemDefinition, ...itemDetails };
-            itemDataMap.set(itemData.id, itemData);
+            const itemDetails: ItemDetails = { ...itemDefinition, ...itemData };
+            itemDetailsMap.set(itemDetails.id, itemDetails);
         });
 
-        logger.info(`Additional info found for ${itemDetailsList.length} items.`);
+        logger.info(`Additional info found for ${itemDataList.length} items.`);
 
-        return itemDataMap;
+        return itemDetailsMap;
     } catch(error) {
         logger.error('Error parsing game item data: ' + error);
         return null;

@@ -1,7 +1,7 @@
 import { Player } from '../player';
 import { world } from '../../../../../game-server';
 import { logger } from '@runejs/logger/dist/logger';
-import { EquipmentSlot, equipmentSlotIndex, ItemData, WeaponType } from '../../../../config/item-data';
+import { EquipmentSlot, equipmentSlotIndex, ItemDetails, WeaponType } from '../../../../config/item-data';
 import { Item } from '../../items/item';
 import { interfaceIds } from '../game-interface';
 import { ItemContainer } from '../../items/item-container';
@@ -29,7 +29,7 @@ export const equipItemAction = (player: Player, itemId: number, inventorySlot: n
         }
 
         if(equipmentSlot === EquipmentSlot.OFF_HAND && equipment.items[EquipmentSlot.MAIN_HAND]) {
-            const mainHandItemData: ItemData = world.itemData.get(equipment.items[EquipmentSlot.MAIN_HAND].itemId);
+            const mainHandItemData: ItemDetails = world.itemData.get(equipment.items[EquipmentSlot.MAIN_HAND].itemId);
 
             if(mainHandItemData && mainHandItemData.equipment && mainHandItemData.equipment.weaponType === WeaponType.TWO_HANDED) {
                 shouldUnequipMainHand = true;

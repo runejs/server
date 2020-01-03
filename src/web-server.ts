@@ -1,8 +1,11 @@
 import express, { Request } from 'express';
-import { world } from './game-server';
+import { gameCache, world } from './game-server';
 import { Player } from './world/entity/mob/player/player';
 import { constants } from 'http2';
 import { logger } from '@runejs/logger';
+import { ItemData, ItemDetails, saveItemData } from './world/config/item-data';
+import * as Joi from '@hapi/joi';
+import bodyParser from 'body-parser';
 
 const WEB_SERVER_PORT = 8888;
 
@@ -57,6 +60,8 @@ interface PaginatedResponse {
 export function runWebServer(): void {
     const webServer = express();
 
+    webServer.use(bodyParser.json());
+
     webServer.get('/players', (req, res) => {
         const worldPlayerList: Player[] = world.playerList.filter(p => p !== null);
 
@@ -80,6 +85,80 @@ export function runWebServer(): void {
                 equipment: p.equipment.items
             };
         }));
+    });
+
+    webServer.put('/items/:itemId', (req, res) => {
+        const itemId = parseInt(req.params.itemId, 10);
+
+        if(isNaN(itemId) || itemId < 0 || itemId >= world.itemData.size || !req.body) {
+            res.sendStatus(400);
+            return;
+        }
+
+        const itemToEdit: ItemDetails = world.itemData.get(itemId);
+
+        if(!itemToEdit) {
+            res.sendStatus(404);
+            return;
+        }
+
+        const schema = Joi.object({
+            id: Joi.number().integer().min(0).required(),
+            desc: Joi.string().min(1).required(),
+            canTrade: Joi.boolean().required(),
+            questItem: Joi.boolean().optional(),
+            weight: Joi.number().min(0).optional(),
+            alchemy: Joi.object({
+                high: Joi.number().integer().optional(),
+                low: Joi.number().integer().optional()
+            }).optional(),
+            equipment: Joi.object({
+                slow: Joi.string().allow('HEAD', 'BACK', 'NECK', 'MAIN_HAND', 'TORSO', 'OFF_HAND', 'LEGS', 'GLOVES', 'BOOTS', 'RING', 'QUIVER').only().optional(),
+                helmetType: Joi.string().allow('HAT', 'FULL_HELMET').only().optional(),
+                torsoType: Joi.string().allow('VEST', 'FULL').only().optional(),
+                weaponType: Joi.string().allow('ONE_HANDED', 'TWO_HANDED').only().optional(),
+                bonuses: Joi.object({
+                    offencive: Joi.object({
+                        speed: Joi.number().min(0).optional(),
+                        stab: Joi.number().required(),
+                        slash: Joi.number().required(),
+                        crush: Joi.number().required(),
+                        magic: Joi.number().required(),
+                        ranged: Joi.number().required()
+                    }).optional(),
+                    defencive: Joi.object({
+                        stab: Joi.number().required(),
+                        slash: Joi.number().required(),
+                        crush: Joi.number().required(),
+                        magic: Joi.number().required(),
+                        ranged: Joi.number().required()
+                    }).optional(),
+                    skill: Joi.object({
+                        strength: Joi.number().required(),
+                        prayer: Joi.number().required()
+                    }).optional()
+                })
+            }).optional()
+        }).required();
+
+        const validationResult = schema.validate(req.body);
+
+        if(validationResult.error) {
+            logger.error(`Schema validation error: ${validationResult.error}`);
+            res.sendStatus(400);
+        } else {
+            if(itemId !== req.body.id) {
+                res.sendStatus(400);
+                return;
+            }
+
+            const itemData = req.body as ItemData;
+            const itemDefinition = gameCache.itemDefinitions.get(itemId);
+            const itemDetails = { ...itemDefinition, ...itemData } as ItemDetails;
+            world.itemData.set(itemId, itemDetails);
+            saveItemData(world.itemData);
+            res.sendStatus(200);
+        }
     });
 
     webServer.get('/items/:itemId', (req, res) => {
