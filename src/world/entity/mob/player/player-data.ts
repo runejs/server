@@ -21,6 +21,18 @@ export interface Appearance {
     skinColor: number;
 }
 
+export interface PlayerSettings {
+    musicVolume: number;
+    soundEffectVolume: number;
+    splitPrivateChatEnabled: boolean;
+    twoMouseButtonsEnabled: boolean;
+    screenBrightness: number;
+    chatEffectsEnabled: boolean;
+    acceptAidEnabled: boolean;
+    runEnabled: boolean;
+    autoRetaliateEnabled: boolean;
+}
+
 export interface PlayerSave {
     username: string;
     position: {
@@ -31,9 +43,10 @@ export interface PlayerSave {
     appearance: Appearance;
     inventory: Item[];
     equipment: Item[];
+    settings: PlayerSettings;
 }
 
-export function defaultAppearance(): Appearance {
+export const defaultAppearance = (): Appearance => {
     return {
         gender: 0,
         head: 0,
@@ -49,7 +62,21 @@ export function defaultAppearance(): Appearance {
         feetColor: 0,
         skinColor: 0
     } as Appearance;
-}
+};
+
+export const defaultSettings = (): PlayerSettings => {
+    return {
+        musicVolume: 0,
+        soundEffectVolume: 0,
+        splitPrivateChatEnabled: false,
+        twoMouseButtonsEnabled: false,
+        screenBrightness: 2,
+        chatEffectsEnabled: true,
+        acceptAidEnabled: true,
+        runEnabled: false,
+        autoRetaliateEnabled: true
+    } as PlayerSettings;
+};
 
 export function savePlayerData(player: Player): boolean {
     const fileName = player.username.toLowerCase() + '.json';
@@ -64,7 +91,8 @@ export function savePlayerData(player: Player): boolean {
         },
         appearance: player.appearance,
         inventory: player.inventory.items,
-        equipment: player.equipment.items
+        equipment: player.equipment.items,
+        settings: player.settings
     };
 
     try {

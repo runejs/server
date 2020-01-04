@@ -85,6 +85,27 @@ export class PacketSender {
         this.socket = player.socket;
     }
 
+    public updateCarryWeight(weight: number): void {
+        const packet = new Packet(174);
+        packet.writeShortBE(weight);
+
+        this.send(packet);
+    }
+
+    public updateInterfaceSetting(settingId: number, value: number): void {
+        let packet: Packet;
+
+        if(value > 255) {
+            // @TODO large settings values - packet 115?
+        } else {
+            packet = new Packet(182);
+            packet.writeOffsetShortBE(settingId);
+            packet.writeNegativeOffsetByte(value);
+        }
+
+        this.send(packet);
+    }
+
     public updateInterfaceString(interfaceId: number, value: string): void {
         const packet = new Packet(232, PacketType.DYNAMIC_LARGE);
         packet.writeOffsetShortLE(interfaceId);
