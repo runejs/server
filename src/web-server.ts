@@ -113,7 +113,7 @@ export function runWebServer(): void {
                 low: Joi.number().integer().optional()
             }).optional(),
             equipment: Joi.object({
-                slow: Joi.string().allow('HEAD', 'BACK', 'NECK', 'MAIN_HAND', 'TORSO', 'OFF_HAND', 'LEGS', 'GLOVES', 'BOOTS', 'RING', 'QUIVER').only().optional(),
+                slot: Joi.string().allow('HEAD', 'BACK', 'NECK', 'MAIN_HAND', 'TORSO', 'OFF_HAND', 'LEGS', 'GLOVES', 'BOOTS', 'RING', 'QUIVER').only().optional(),
                 helmetType: Joi.string().allow('HAT', 'FULL_HELMET').only().optional(),
                 torsoType: Joi.string().allow('VEST', 'FULL').only().optional(),
                 weaponType: Joi.string().allow('ONE_HANDED', 'TWO_HANDED').only().optional(),
@@ -157,7 +157,7 @@ export function runWebServer(): void {
             const itemDetails = { ...itemDefinition, ...itemData } as ItemDetails;
             world.itemData.set(itemId, itemDetails);
             saveItemData(world.itemData);
-            res.sendStatus(200);
+            res.status(200).send(itemData);
         }
     });
 

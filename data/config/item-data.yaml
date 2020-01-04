@@ -155,6 +155,34 @@
       skill:
         strength: 5
         prayer: 0
+- id: 1359
+  desc: rune axe
+  canTrade: true
+  questItem: false
+  weight: 1
+  alchemy:
+    high: 7680
+    low: 5120
+  equipment:
+    bonuses:
+      offencive:
+        speed: 5
+        stab: -2
+        slash: 26
+        crush: 24
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 1
+        crush: 0
+        magic: 0
+        ranged: 0
+      skill:
+        strength: 29
+        prayer: 0
+    weaponType: ONE_HANDED
+    slot: MAIN_HAND
 - id: 6623
   desc: white full helm
   canTrade: true
