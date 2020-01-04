@@ -10,13 +10,13 @@ import { world } from '../../../../game-server';
 import { logger } from '@runejs/logger';
 import {
     Appearance,
-    defaultAppearance,
+    defaultAppearance, defaultSettings,
     loadPlayerSave,
-    PlayerSave,
+    PlayerSave, PlayerSettings,
     savePlayerData
 } from './player-data';
-import { ActiveInterface, interfaceIds } from './game-interface';
-import { ItemContainer } from '../items/item-container';
+import { ActiveInterface, interfaceIds, interfaceSettings } from './game-interface';
+import { ContainerUpdateEvent, ItemContainer } from '../items/item-container';
 import { EquipmentBonuses, ItemDetails } from '../../../config/item-data';
 import { Item } from '../items/item';
 
@@ -45,6 +45,8 @@ export class Player extends Mob {
     private _activeGameInterface: ActiveInterface;
     private readonly _equipment: ItemContainer;
     private _bonuses: EquipmentBonuses;
+    private _carryWeight: number;
+    private _settings: PlayerSettings;
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -60,6 +62,7 @@ export class Player extends Mob {
         this.updateFlags = new UpdateFlags();
         this.trackedPlayers = [];
         this._activeGameInterface = null;
+        this._carryWeight = 0;
         this._equipment = new ItemContainer(14);
     }
 
@@ -77,6 +80,7 @@ export class Player extends Mob {
                 this.equipment.setAll(playerSave.equipment);
             }
             this._appearance = playerSave.appearance;
+            this._settings = playerSave.settings;
         } else {
             // Brand new player logging in
             this.position = new Position(3222, 3222);
@@ -89,6 +93,10 @@ export class Player extends Mob {
             this.inventory.add({itemId: 1319, amount: 1});
             this.inventory.add({itemId: 1201, amount: 1});
             this._appearance = defaultAppearance();
+        }
+
+        if(!this._settings) {
+            this._settings = defaultSettings();
         }
 
         this.loggedIn = true;
@@ -120,6 +128,10 @@ export class Player extends Mob {
         }
 
         this.updateBonuses();
+        this.updateInterfaceSettings();
+        this.updateCarryWeight(true);
+
+        this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
 
         logger.info(`${this.username}:${this.worldIndex} has logged in.`);
     }
@@ -156,6 +168,70 @@ export class Player extends Mob {
             this.updateFlags.reset();
             resolve();
         });
+    }
+
+    private inventoryUpdated(event: ContainerUpdateEvent): void {
+        this.updateCarryWeight();
+    }
+
+    public updateCarryWeight(force: boolean = false): void {
+        const oldWeight = this._carryWeight;
+        this._carryWeight = Math.round(this.inventory.weight() + this.equipment.weight());
+
+        if(oldWeight !== this._carryWeight || force) {
+            this.packetSender.updateCarryWeight(this._carryWeight);
+        }
+    }
+
+    public settingChanged(buttonId: number): void {
+        const settingsMappings = {
+            152: {setting: 'runEnabled', value: false},
+            153: {setting: 'runEnabled', value: true},
+            930: {setting: 'musicVolume', value: 4},
+            931: {setting: 'musicVolume', value: 3},
+            932: {setting: 'musicVolume', value: 2},
+            933: {setting: 'musicVolume', value: 1},
+            934: {setting: 'musicVolume', value: 0},
+            941: {setting: 'soundEffectVolume', value: 4},
+            942: {setting: 'soundEffectVolume', value: 3},
+            943: {setting: 'soundEffectVolume', value: 2},
+            944: {setting: 'soundEffectVolume', value: 1},
+            945: {setting: 'soundEffectVolume', value: 0},
+            957: {setting: 'splitPrivateChatEnabled', value: true},
+            958: {setting: 'splitPrivateChatEnabled', value: false},
+            913: {setting: 'twoMouseButtonsEnabled', value: true},
+            914: {setting: 'twoMouseButtonsEnabled', value: false},
+            906: {setting: 'screenBrightness', value: 1},
+            908: {setting: 'screenBrightness', value: 2},
+            910: {setting: 'screenBrightness', value: 3},
+            912: {setting: 'screenBrightness', value: 4},
+            915: {setting: 'chatEffectsEnabled', value: true},
+            916: {setting: 'chatEffectsEnabled', value: false},
+            12464: {setting: 'acceptAidEnabled', value: true},
+            12465: {setting: 'acceptAidEnabled', value: false},
+            150: {setting: 'autoRetaliateEnabled', value: true},
+            151: {setting: 'autoRetaliateEnabled', value: false}
+        };
+
+        if(!settingsMappings.hasOwnProperty(buttonId)) {
+            return;
+        }
+
+        const config = settingsMappings[buttonId];
+        this.settings[config.setting] = config.value;
+    }
+
+    public updateInterfaceSettings(): void {
+        const settings = this.settings;
+        this.packetSender.updateInterfaceSetting(interfaceSettings.brightness, settings.screenBrightness);
+        this.packetSender.updateInterfaceSetting(interfaceSettings.mouseButtons, settings.twoMouseButtonsEnabled ? 0 : 1);
+        this.packetSender.updateInterfaceSetting(interfaceSettings.splitPrivateChat, settings.splitPrivateChatEnabled ? 1 : 0);
+        this.packetSender.updateInterfaceSetting(interfaceSettings.chatEffects, settings.chatEffectsEnabled ? 0 : 1);
+        this.packetSender.updateInterfaceSetting(interfaceSettings.acceptAid, settings.acceptAidEnabled ? 1 : 0);
+        this.packetSender.updateInterfaceSetting(interfaceSettings.musicVolume, settings.musicVolume);
+        this.packetSender.updateInterfaceSetting(interfaceSettings.soundEffectVolume, settings.soundEffectVolume);
+        this.packetSender.updateInterfaceSetting(interfaceSettings.runMode, settings.runEnabled ? 1 : 0);
+        this.packetSender.updateInterfaceSetting(interfaceSettings.autoRetaliate, settings.autoRetaliateEnabled ? 0 : 1);
     }
 
     public updateBonuses(): void {
@@ -274,5 +350,13 @@ export class Player extends Mob {
 
     public get equipment(): ItemContainer {
         return this._equipment;
+    }
+
+    public get carryWeight(): number {
+        return this._carryWeight;
+    }
+
+    public get settings(): PlayerSettings {
+        return this._settings;
     }
 }

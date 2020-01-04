@@ -160,6 +160,9 @@
   canTrade: true
   questItem: false
   weight: 1
+  alchemy:
+    high: 7680
+    low: 5120
   equipment:
     bonuses:
       offencive:
@@ -180,6 +183,13 @@
         prayer: 0
     weaponType: ONE_HANDED
     slot: MAIN_HAND
+- id: 1511
+  desc: normal logs
+  canTrade: true
+  weight: 2
+  alchemy:
+    high: 2
+    low: 1
 - id: 6623
   desc: white full helm
   canTrade: true

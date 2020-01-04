@@ -46,14 +46,14 @@ export const equipItemAction = (player: Player, itemId: number, inventorySlot: n
             return;
         }
 
-        equipment.remove(equipmentSlot);
-        inventory.remove(inventorySlot);
+        equipment.remove(equipmentSlot, false);
+        inventory.remove(inventorySlot, false);
 
         equipment.set(equipmentSlot, itemToEquip);
         inventory.set(inventorySlot, itemToUnequip);
     } else {
-        inventory.remove(inventorySlot);
         equipment.set(equipmentSlot, itemToEquip);
+        inventory.remove(inventorySlot);
 
         if(shouldUnequipOffHand) {
             unequipItem(player, inventory, equipment, EquipmentSlot.OFF_HAND);
