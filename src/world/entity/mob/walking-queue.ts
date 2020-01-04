@@ -271,11 +271,30 @@ export class WalkingQueue {
 
             this.mob.position = walkPosition;
 
-            const runDir = -1;
+            let runDir = -1;
 
-            // @TODO running
+            // @TODO npc running
+            if(this.mob instanceof Player) {
+                if(this.mob.settings.runEnabled && this.queue.length !== 0) {
+                    const runPosition = this.queue.shift();
+
+                    if(this.canMoveTo(walkPosition, runPosition)) {
+                        const runDiffX = runPosition.x - walkPosition.x;
+                        const runDiffY = runPosition.y - walkPosition.y;
+                        runDir = this.calculateDirection(runDiffX, runDiffY);
+
+                        if(runDir != -1) {
+                            this.mob.position = runPosition;
+                        }
+                    } else {
+                        this.resetDirections();
+                        this.clear();
+                    }
+                }
+            }
 
             this.mob.walkDirection = walkDir;
+            this.mob.runDirection = runDir;
 
             // @TODO NPC map region changing
             if(this.mob instanceof Player) {
