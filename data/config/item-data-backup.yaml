@@ -160,9 +160,6 @@
   canTrade: true
   questItem: false
   weight: 1
-  alchemy:
-    high: 7680
-    low: 5120
   equipment:
     bonuses:
       offencive:

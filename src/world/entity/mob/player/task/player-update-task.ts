@@ -4,7 +4,7 @@ import { Task } from '../../../../../task/task';
 import { UpdateFlags } from '../update-flags';
 import { Packet, PacketType } from '../../../../../net/packet';
 import { world } from '../../../../../game-server';
-import { EquipmentSlot, HelmetType, ItemData, TorsoType } from '../../../../config/item-data';
+import { EquipmentSlot, HelmetType, ItemDetails, TorsoType } from '../../../../config/item-data';
 import { ItemContainer } from '../../items/item-container';
 
 /**
@@ -175,7 +175,7 @@ export class PlayerUpdateTask extends Task<void> {
             }
 
             const torsoItem = equipment.items[EquipmentSlot.TORSO];
-            let torsoItemData: ItemData = null;
+            let torsoItemData: ItemDetails = null;
             if(torsoItem) {
                 torsoItemData = world.itemData.get(torsoItem.itemId);
                 appearanceData.writeShortBE(0x200 + torsoItem.itemId);

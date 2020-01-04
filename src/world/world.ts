@@ -1,7 +1,7 @@
 import { Player } from './entity/mob/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { logger } from '@runejs/logger';
-import { ItemData, parseItemData } from './config/item-data';
+import { ItemDetails, parseItemData } from './config/item-data';
 import { gameCache, world } from '../game-server';
 import { Position } from './position';
 import yargs from 'yargs';
@@ -16,7 +16,7 @@ export class World {
 
     public readonly playerList: Player[] = new Array(World.MAX_PLAYERS);
     public readonly chunkManager: ChunkManager = new ChunkManager();
-    public readonly itemData: Map<number, ItemData>;
+    public readonly itemData: Map<number, ItemDetails>;
 
     public constructor() {
         this.itemData = parseItemData(gameCache.itemDefinitions);

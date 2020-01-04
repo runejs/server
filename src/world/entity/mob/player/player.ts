@@ -17,7 +17,7 @@ import {
 } from './player-data';
 import { ActiveInterface, interfaceIds } from './game-interface';
 import { ItemContainer } from '../items/item-container';
-import { EquipmentBonuses, ItemData } from '../../../config/item-data';
+import { EquipmentBonuses, ItemDetails } from '../../../config/item-data';
 import { Item } from '../items/item';
 
 const DEFAULT_TAB_INTERFACES = [
@@ -191,7 +191,7 @@ export class Player extends Mob {
     }
 
     private addBonuses(item: Item): void {
-        const itemData: ItemData = world.itemData.get(item.itemId);
+        const itemData: ItemDetails = world.itemData.get(item.itemId);
 
         if(!itemData || !itemData.equipment || !itemData.equipment.bonuses) {
             return;
