@@ -143,7 +143,7 @@ export class RsBuffer {
     }
 
     public readUnsignedShortLE(): number {
-        const value = this.buffer.readUInt16BE(this.readerIndex);
+        const value = this.buffer.readUInt16LE(this.readerIndex);
         this.readerIndex += 2;
         return value;
     }
