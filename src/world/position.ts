@@ -1,3 +1,6 @@
+const directionDeltaX = [-1, 0, 1, -1, 1, -1, 0, 1];
+const directionDeltaY = [1, 1, 1, 0, 0, -1, -1, -1];
+
 /**
  * Represents a single position, or coordinate, within the game world.
  */
@@ -47,6 +50,10 @@ export class Position {
 
     public distanceBetween(other: Position): number {
         return Math.abs(Math.sqrt((this.x - other.x) * (this.x - other.x) + (this.y - other.y) * (this.y - other.y)));
+    }
+
+    public fromDirection(direction: number): Position {
+        return new Position(this.x + directionDeltaX[direction], this.y + directionDeltaY[direction], this.level);
     }
 
     public equals(position: Position | { x: number, y: number, level: number }): boolean {

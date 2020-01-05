@@ -11,6 +11,7 @@ export abstract class Mob extends Entity {
     private readonly _walkingQueue: WalkingQueue;
     private _walkDirection: number;
     private _runDirection: number;
+    private _faceDirection: number;
     private readonly _inventory: ItemContainer;
 
     protected constructor() {
@@ -18,6 +19,7 @@ export abstract class Mob extends Entity {
         this._walkingQueue = new WalkingQueue(this);
         this._walkDirection = -1;
         this._runDirection = -1;
+        this._faceDirection = -1;
         this._inventory = new ItemContainer(28);
     }
 
@@ -92,6 +94,14 @@ export abstract class Mob extends Entity {
 
     public set runDirection(value: number) {
         this._runDirection = value;
+    }
+
+    public get faceDirection(): number {
+        return this._faceDirection;
+    }
+
+    public set faceDirection(value: number) {
+        this._faceDirection = value;
     }
 
     public get inventory(): ItemContainer {

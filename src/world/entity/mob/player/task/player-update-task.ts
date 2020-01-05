@@ -148,6 +148,9 @@ export class PlayerUpdateTask extends Task<void> {
         if(updateFlags.appearanceUpdateRequired || forceUpdate) {
             mask |= 0x4;
         }
+        if(updateFlags.facePosition || forceUpdate) {
+            mask |= 0x2;
+        }
 
         if(mask >= 0xff) {
             mask |= 0x20;
@@ -157,6 +160,11 @@ export class PlayerUpdateTask extends Task<void> {
             updateMaskData.writeByte(mask);
         }
 
+        if(updateFlags.facePosition || forceUpdate) {
+            const position = updateFlags.facePosition ? updateFlags.facePosition : player.position.fromDirection(player.faceDirection);
+            updateMaskData.writeShortBE(position.x * 2 + 1);
+            updateMaskData.writeShortBE(position.y * 2 + 1);
+        }
         if(updateFlags.appearanceUpdateRequired || forceUpdate) {
             const equipment = player.equipment;
             const appearanceData: RsBuffer = RsBuffer.create();
