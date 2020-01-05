@@ -77,6 +77,14 @@ export class ItemContainer {
         return slots;
     }
 
+    public swap(fromSlot: number, toSlot: number): void {
+        const fromItem = this._items[fromSlot];
+        const toItem = this._items[toSlot];
+
+        this._items[toSlot] = fromItem;
+        this._items[fromSlot] = toItem;
+    }
+
     public weight(): number {
         let weight = 0;
 
