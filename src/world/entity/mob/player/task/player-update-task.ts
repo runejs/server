@@ -1,11 +1,12 @@
 import { Player } from '../player';
 import { RsBuffer, stringToLong } from '../../../../../net/rs-buffer';
 import { Task } from '../../../../../task/task';
-import { UpdateFlags } from '../update-flags';
+import { UpdateFlags } from '../../update-flags';
 import { Packet, PacketType } from '../../../../../net/packet';
 import { world } from '../../../../../game-server';
 import { EquipmentSlot, HelmetType, ItemDetails, TorsoType } from '../../../../config/item-data';
 import { ItemContainer } from '../../items/item-container';
+import { appendMovement } from './mob-updating';
 
 /**
  * Handles the chonky player updating packet.
@@ -42,7 +43,7 @@ export class PlayerUpdateTask extends Task<void> {
                 playerUpdatePacket.writeBits(7, this.player.position.chunkLocalX); // Player Local Chunk X
                 playerUpdatePacket.writeBits(1, updateFlags.updateBlockRequired ? 1 : 0); // Whether or not an update flag block follows
             } else {
-                this.appendPlayerMovement(this.player, playerUpdatePacket);
+                appendMovement(this.player, playerUpdatePacket);
             }
 
             this.appendUpdateMaskData(this.player, updateMaskData);
@@ -56,7 +57,7 @@ export class PlayerUpdateTask extends Task<void> {
 
                 if(world.playerExists(trackedPlayer) && nearbyPlayers.findIndex(p => p.equals(trackedPlayer)) !== -1
                         && trackedPlayer.position.withinViewDistance(this.player.position)) {
-                    this.appendPlayerMovement(trackedPlayer, playerUpdatePacket);
+                    appendMovement(trackedPlayer, playerUpdatePacket);
                     this.appendUpdateMaskData(trackedPlayer, updateMaskData, false);
                     existingTrackedPlayers.push(trackedPlayer);
                 } else {
@@ -272,34 +273,6 @@ export class PlayerUpdateTask extends Task<void> {
             buffer.writeShortBE(0x200 + item.itemId);
         } else {
             buffer.writeShortBE(0x100 + appearanceInfo);
-        }
-    }
-
-    private appendPlayerMovement(player: Player, packet: RsBuffer): void {
-        if(player.walkDirection !== -1) {
-            // Player is walking/running
-            packet.writeBits(1, 1); // Update required
-
-            if(player.runDirection === -1) {
-                // Player is walking
-                packet.writeBits(2, 1); // Player walking
-                packet.writeBits(3, player.walkDirection);
-            } else {
-                // Player is running
-                packet.writeBits(2, 2); // Player running
-                packet.writeBits(3, player.walkDirection);
-                packet.writeBits(3, player.runDirection);
-            }
-
-            packet.writeBits(1, player.updateFlags.updateBlockRequired ? 1 : 0); // Whether or not an update flag block follows
-        } else {
-            // Did not move
-            if(player.updateFlags.updateBlockRequired) {
-                packet.writeBits(1, 1); // Update required
-                packet.writeBits(2, 0); // Signify the player did not move
-            } else {
-                packet.writeBits(1, 0); // No update required
-            }
         }
     }
 

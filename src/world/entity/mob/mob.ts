@@ -1,6 +1,7 @@
 import { Entity } from '../entity';
 import { WalkingQueue } from './walking-queue';
 import { ItemContainer } from './items/item-container';
+import { UpdateFlags } from './update-flags';
 
 /**
  * Handles a mobile entity within the game world.
@@ -8,6 +9,7 @@ import { ItemContainer } from './items/item-container';
 export abstract class Mob extends Entity {
 
     private _worldIndex: number;
+    public readonly updateFlags: UpdateFlags;
     private readonly _walkingQueue: WalkingQueue;
     private _walkDirection: number;
     private _runDirection: number;
@@ -16,6 +18,7 @@ export abstract class Mob extends Entity {
 
     protected constructor() {
         super();
+        this.updateFlags = new UpdateFlags();
         this._walkingQueue = new WalkingQueue(this);
         this._walkDirection = -1;
         this._runDirection = -1;
