@@ -23,7 +23,7 @@ export const walkPacket: incomingPacket = (player: Player, packetId: number, pac
 
     for(let i = 0; i < totalSteps; i++) {
         const x = packet.readByte();
-        const y = packet.readNegativeOffsetByte();
+        const y = packet.readPreNegativeOffsetByte();
         walkingQueue.add(x + firstX, y + firstY);
     }
 };

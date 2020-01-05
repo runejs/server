@@ -11,6 +11,7 @@ import { buttonClickPacket } from './impl/button-click-packet';
 import { walkPacket } from './impl/walk-packet';
 import { itemOption1Packet } from './impl/item-option-1-packet';
 import { commandPacket } from './impl/command-packet';
+import { itemSwapPacket } from './impl/item-swap-packet';
 
 const packets: { [key: number]: incomingPacket } = {
     19:  interfaceClickPacket,
@@ -24,8 +25,9 @@ const packets: { [key: number]: incomingPacket } = {
 
     163: characterDesignPacket,
 
-    24: itemEquipPacket,
-    3:  itemOption1Packet,
+    24:  itemEquipPacket,
+    3:   itemOption1Packet,
+    123: itemSwapPacket,
 
     56: commandPacket
 };
