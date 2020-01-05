@@ -296,6 +296,12 @@ export class WalkingQueue {
             this.mob.walkDirection = walkDir;
             this.mob.runDirection = runDir;
 
+            if(runDir !== -1) {
+                this.mob.faceDirection = runDir;
+            } else {
+                this.mob.faceDirection = walkDir;
+            }
+
             // @TODO NPC map region changing
             if(this.mob instanceof Player) {
                 const newChunk = world.chunkManager.getChunkForWorldPosition(this.mob.position);
