@@ -71,6 +71,8 @@ export abstract class Mob extends Entity {
         }, 1000);
     }
 
+    public abstract equals(mob: Mob): boolean;
+
     public get worldIndex(): number {
         return this._worldIndex;
     }

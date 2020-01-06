@@ -1,7 +1,7 @@
 import { Socket } from 'net';
 import { PacketSender } from './packet/packet-sender';
 import { Isaac } from '../../../../net/isaac';
-import { PlayerUpdateTask } from './task/player-update-task';
+import { PlayerUpdateTask } from './task/updating/player-update-task';
 import { Mob } from '../mob';
 import { Position } from '../../../position';
 import { Skill, skills } from '../skills/skill';
@@ -19,7 +19,7 @@ import { ContainerUpdateEvent, ItemContainer } from '../items/item-container';
 import { EquipmentBonuses, ItemDetails } from '../../../config/item-data';
 import { Item } from '../items/item';
 import { Npc } from '../npc/npc';
-import { NpcUpdateTask } from './task/npc-update-task';
+import { NpcUpdateTask } from './task/updating/npc-update-task';
 
 const DEFAULT_TAB_INTERFACES = [
     2423, 3917, 638, 3213, 1644, 5608, 1151, -1, 5065, 5715, 2449, 904, 147, 962
