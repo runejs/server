@@ -1,4 +1,4 @@
-import { RsBuffer } from '../rs-buffer';
+import { RsBuffer } from '@server/net/rs-buffer';
 import { DataParser } from './data-parser';
 
 /**

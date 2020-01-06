@@ -1,10 +1,10 @@
 import { Socket } from 'net';
-import { Player } from '../world/entity/mob/player/player';
+import { Player } from '@server/world/mob/player/player';
+import { world } from '@server/game-server';
 import { RsBuffer } from './rs-buffer';
 import { ClientHandshakeParser } from './data-parser/client-handshake-parser';
 import { ClientLoginParser } from './data-parser/client-login-parser';
 import { ClientPacketDataParser } from './data-parser/client-packet-data-parser';
-import { world } from '../game-server';
 import { DataParser } from './data-parser/data-parser';
 
 enum ConnectionStage {

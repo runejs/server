@@ -11,6 +11,9 @@
         "sourceMap": true,
         "baseUrl": ".",
         "allowJs": true,
+        "paths": {
+            "@server/*": ["src/*"]
+        },
         "types": [
             "webpack-env",
             "node"

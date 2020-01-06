@@ -1,9 +1,9 @@
 import { logger } from '@runejs/logger/dist/logger';
 import { JSON_SCHEMA, safeLoad } from 'js-yaml';
-import { readFileSync } from "fs";
-import { join } from "path";
-import { serverDir } from '../../game-server';
-import { Direction } from '../world';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { serverDir } from '@server/game-server';
+import { Direction } from '@server/world/world';
 
 export interface NpcSpawn {
     npcId: number;

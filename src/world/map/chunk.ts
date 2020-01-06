@@ -1,9 +1,9 @@
 import { Position } from '../position';
-import { Player } from '../entity/mob/player/player';
+import { Player } from '../mob/player/player';
 import { CollisionMap } from './collision-map';
 import { gameCache } from '../../game-server';
 import { LandscapeObject, LandscapeObjectDefinition, MapRegionTile } from '@runejs/cache-parser';
-import { Npc } from '../entity/mob/npc/npc';
+import { Npc } from '../mob/npc/npc';
 
 /**
  * A single map chunk within the game world that keeps track of the entities within it.
