@@ -1,7 +1,7 @@
-import { RsBuffer } from '../rs-buffer';
-import { incomingPacketSizes } from '../incoming-packet-sizes';
+import { RsBuffer } from '@server/net/rs-buffer';
+import { incomingPacketSizes } from '@server/net/incoming-packet-sizes';
+import { handlePacket } from '@server/world/mob/player/packet/incoming-packet-directory';
 import { DataParser } from './data-parser';
-import { handlePacket } from '../../world/entity/mob/player/packet/incoming-packet-directory';
 
 /**
  * Parses incoming packet data from the game client once the user is fully authenticated.

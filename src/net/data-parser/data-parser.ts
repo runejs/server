@@ -1,5 +1,5 @@
-import { ClientConnection } from '../client-connection';
-import { RsBuffer } from '../rs-buffer';
+import { ClientConnection } from '@server/net/client-connection';
+import { RsBuffer } from '@server/net/rs-buffer';
 
 export abstract class DataParser {
 

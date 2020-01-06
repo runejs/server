@@ -8,14 +8,19 @@ Currently the server is set up for the 377 revision of the game. There are not a
 
 ## Features
 
-- Login & packet handling.
+- Login & input/output packet handling.
 - Player saving/loading via JSON files.
 - Multiplayer support.
-- Player pathing validation via collision and tile maps generated from the game cache.
-- Basic item inventory implementation.
+- Map region/chunk handling.
+- Item inventory implementation.
   - Item definition parsing via the game cache.
-  - Additional item data loading via JSON.
-- Player equipment with item bonuses.
+  - Additional item data loading via YAML configuration.
+  - Inventory item swapping.
+- Player equipment with item bonuses & weight.
+- NPC spawning and updating.
+  - NPC spawn loading via YAML configuration.
+- Player & NPC pathing validation via collision and tile maps generated from the game cache.
+- Player client settings saving and loading.
 - A basic REST service for polling logged in users.
 
 ## Usage
@@ -41,8 +46,10 @@ Online players can be polled via the REST protocol for web applications. An acco
 
 ##### API Endpoints:
 
-- `/players` : Returns a list of players currently logged into the game server.
-- `/items?page=x&limit=y` : Returns a list of item metadata loaded by the game server.
+- `GET /players` : Returns a list of players currently logged into the game server.
+- `GET /items?page=x&limit=y` : Returns a list of item metadata loaded by the game server.
+- `GET /items/{itemId}` : Returns details about a specific item by id.
+- `PUT /items/{itemId}` : Updates an item's configurable server data.
 
 ## Aditional Information
 

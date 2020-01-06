@@ -1,11 +1,11 @@
 {
     "name": "rune.js",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "",
     "main": "src/game-server.ts",
     "scripts": {
         "server": "npm start",
-        "start": "ts-node src/main.ts",
+        "start": "ts-node -r tsconfig-paths/register src/main.ts",
         "fake-players": "npm start -- --fakePlayers"
     },
     "repository": {
@@ -30,6 +30,7 @@
         "ts-node": "^8.4.1",
         "tslib": "^1.10.0",
         "typescript": "^3.7.2",
+        "uuid": "^3.3.3",
         "yargs": "^15.0.2"
     },
     "devDependencies": {
@@ -38,6 +39,8 @@
         "@types/hapi__joi": "^16.0.6",
         "@types/js-yaml": "^3.12.1",
         "@types/node": "^12.12.6",
-        "@types/yargs": "^13.0.4"
+        "@types/uuid": "^3.4.6",
+        "@types/yargs": "^13.0.4",
+        "tsconfig-paths": "^3.9.0"
     }
 }

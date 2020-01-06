@@ -1,8 +1,8 @@
-import { RsBuffer } from '../rs-buffer';
-import { Player } from '../../world/entity/mob/player/player';
 import BigInteger from 'bigi';
-import { Isaac } from '../isaac';
-import { world } from '../../game-server';
+import { RsBuffer } from '@server/net/rs-buffer';
+import { Player } from '@server/world/mob/player/player';
+import { Isaac } from '@server/net/isaac';
+import { world } from '@server/game-server';
 import { DataParser } from './data-parser';
 
 const rsaModulus = BigInteger('170266381807335046121774073514220583891686029487165562794998484549236036467227923571770256617931840775621072487838687650522710227973331693237285456731778528244126984080232314114323601116304887478969296070648644633713088027922830600712492972687351204275625149978223159432963210789506993409208545916714905193639');
