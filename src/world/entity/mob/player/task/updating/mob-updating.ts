@@ -10,11 +10,11 @@ import { Position } from '../../../../../position';
  * Handles the registration of nearby NPCs or Players for the specified player.
  */
 export function registerNewMobs<T extends Mob>(packet: Packet, player: Player, trackedMobs: T[], nearbyMobs: T[], registerMob: (mob: Mob) => void): void {
-    // The client can only handle 80 new mobs at a time, so we limit each update to a max of 80
-    // Any remaining mobs will be automatically picked up by subsequent updates
+    // The client can only handle 80 new players or npcs at a time, so we limit each update to a max of 80
+    // Any remaining players or npcs will be automatically picked up by subsequent updates
     let newMobs: T[] = nearbyMobs.filter(m1 => !trackedMobs.find(m2 => m2.equals(m1)));
     if(newMobs.length > 80) {
-        // We also sort the list of players here by how close they are to the current player if there are more than 80, so we can render the nearest first
+        // We also sort the list of players or npcs here by how close they are to the current player if there are more than 80, so we can render the nearest first
         newMobs = newMobs
             .sort((a, b) => player.position.distanceBetween(a.position) - player.position.distanceBetween(b.position))
             .slice(0, 80);
@@ -39,17 +39,17 @@ export function registerNewMobs<T extends Mob>(packet: Packet, player: Player, t
         }
 
         if(trackedMobs.findIndex(m => m.equals(nearbyMob)) !== -1) {
-            // Other player is already tracked by this player
+            // Npc or other player is already tracked by this player
             return;
         }
 
         if(!nearbyMob.position.withinViewDistance(player.position)) {
-            // Player is still too far away to be worth rendering
+            // Player or npc is still too far away to be worth rendering
             // Also - values greater than 15 and less than -15 are too large, or too small, to be sent via 5 bits (max length of 32)
             return;
         }
 
-        // Only 255 players are able to be rendered at a time, so we cut it off it there are more than that
+        // Only 255 players or npcs are able to be rendered at a time, so we cut it off it there are more than that
         if(trackedMobs.length >= 255) {
             return;
         }
