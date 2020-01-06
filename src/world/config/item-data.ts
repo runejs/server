@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { ItemDefinition } from '@runejs/cache-parser';
 import { logger } from '@runejs/logger/dist/logger';
 import { join } from 'path';
-import { serverDir } from '../../game-server';
+import { serverDir } from '@server/game-server';
 import { JSON_SCHEMA, safeLoad, safeDump } from 'js-yaml';
 
 export enum EquipmentSlot {
