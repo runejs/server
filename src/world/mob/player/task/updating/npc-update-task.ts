@@ -18,7 +18,7 @@ export class NpcUpdateTask extends Task<void> {
         this.player = player;
     }
 
-    public execute(): Promise<void> {
+    public async execute(): Promise<void> {
         return new Promise<void>(resolve => {
             const npcUpdatePacket: Packet = new Packet(71, PacketType.DYNAMIC_LARGE);
             npcUpdatePacket.openBitChannel();
@@ -26,7 +26,7 @@ export class NpcUpdateTask extends Task<void> {
             const currentMapChunk = world.chunkManager.getChunkForWorldPosition(this.player.position);
             const updateMaskData = RsBuffer.create();
 
-            let nearbyNpcs = world.chunkManager.getSurroundingChunks(currentMapChunk).map(chunk => chunk.npcs).flat();
+            const nearbyNpcs = world.chunkManager.getSurroundingChunks(currentMapChunk).map(chunk => chunk.npcs).flat();
 
             this.player.trackedNpcs = updateTrackedMobs<Npc>(npcUpdatePacket, this.player.position,
                 mob => this.appendUpdateMaskData(mob as Npc, updateMaskData), this.player.trackedNpcs, nearbyNpcs);
@@ -71,7 +71,7 @@ export class NpcUpdateTask extends Task<void> {
             return;
         }
 
-        let mask = 0;
+        const mask = 0;
 
         updateMaskData.writeUnsignedByte(mask);
     }

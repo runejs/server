@@ -52,14 +52,14 @@ export class Npc extends Mob {
         this.initiateRandomMovement();
     }
 
-    public tick(): Promise<void> {
+    public async tick(): Promise<void> {
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
             resolve();
         });
     }
 
-    public reset(): Promise<void> {
+    public async reset(): Promise<void> {
         return new Promise<void>(resolve => {
             this.updateFlags.reset();
             resolve();

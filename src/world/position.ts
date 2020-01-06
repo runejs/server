@@ -29,7 +29,7 @@ export class Position {
         return offsetX < 16 && offsetY < 16 && offsetX > -16 && offsetY > -16;
     }
 
-    public move(x: number, y: number, level?: number) {
+    public move(x: number, y: number, level?: number): void {
         this._x = x;
         this._y = y;
 
@@ -64,47 +64,47 @@ export class Position {
         return this._x === position.x && this._y === position.y && this._level === position.level;
     }
 
-    get chunkX(): number {
+    public get chunkX(): number {
         return (this._x >> 3) - 6;
     }
 
-    get chunkY(): number {
+    public get chunkY(): number {
         return (this._y >> 3) - 6;
     }
 
-    get chunkLocalX(): number {
+    public get chunkLocalX(): number {
         return this._x - 8 * this.chunkX;
     }
 
-    get chunkLocalY(): number {
+    public get chunkLocalY(): number {
         return this._y - 8 * this.chunkY;
     }
 
-    get x(): number {
+    public get x(): number {
         return this._x;
     }
 
-    get y(): number {
+    public get y(): number {
         return this._y;
     }
 
-    get level(): number {
+    public get level(): number {
         return this._level;
     }
 
-    set x(value: number) {
+    public set x(value: number) {
         this._x = value;
     }
 
-    set y(value: number) {
+    public set y(value: number) {
         this._y = value;
     }
 
-    set level(value: number) {
+    public set level(value: number) {
         this._level = value;
     }
 
-    get key(): string {
+    public get key(): string {
         return `${this.x},${this.y},${this.level}`;
     }
 

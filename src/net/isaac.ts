@@ -1,34 +1,34 @@
 export class Isaac {
 
-    private m = Array(256); // internal memory
+    private m: number[] = Array(256); // internal memory
     private acc = 0; // accumulator
     private brs = 0; // last result
     private cnt = 0; // counter
-    private r = Array(256); // result array
+    private r: number[] = Array(256); // result array
     private gnt = 0; // generation counter
 
     public constructor(seed?: number[]) {
         this.seed(seed);
     }
 
-    public getR() {
+    public getR(): number[] {
         return this.r;
     }
 
-    public add(x, y) {
+    public add(x: number, y: number): number {
         const lsb = (x & 0xffff) + (y & 0xffff);
         const msb = (x >>>   16) + (y >>>   16) + (lsb >>> 16);
         return (msb << 16) | (lsb & 0xffff);
     }
 
-    public reset() {
+    public reset(): void {
         this.acc = this.brs = this.cnt = 0;
         for(let i = 0; i < 256; ++i)
             this.m[i] = this.r[i] = 0;
         this.gnt = 0;
     }
 
-    public seed(s: number[]) {
+    public seed(s: number[]): void {
         let a, b, c, d, e, f, g, h, i;
 
         /* seeding the seeds of love */
@@ -84,7 +84,7 @@ export class Isaac {
         this.gnt = 256;  /* prepare to use the first set of results */
     }
 
-    public prng(n?) {
+    public prng(n?: number): void {
         let i, x, y;
 
         n = (n && typeof(n) === 'number')
@@ -108,14 +108,14 @@ export class Isaac {
         }
     }
 
-    public rand() {
+    public rand(): number {
         if(!this.gnt--) {
             this.prng(); this.gnt = 255;
         }
         return this.r[this.gnt];
     }
 
-    public internals() {
+    public internals(): { a: number, b: number, c: number, m: number[], r: number[] } {
         return {a: this.acc, b: this.brs, c: this.cnt, m: this.m, r: this.r};
     }
 }
