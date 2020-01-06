@@ -1,21 +1,21 @@
 const BIT_MASKS: number[] = [];
 
-for(let i = 0; i < 32; i++) {
+for (let i = 0; i < 32; i++) {
     BIT_MASKS.push((1 << i) - 1);
 }
 
 export function stringToLong(s: string): bigint {
     let l: bigint = BigInt(0);
 
-    for(let i = 0; i < s.length && i < 12; i++) {
+    for (let i = 0; i < s.length && i < 12; i++) {
         const c = s.charAt(i);
         const cc = s.charCodeAt(i);
         l *= BigInt(37);
-        if(c >= 'A' && c <= 'Z') l += BigInt((1 + cc) - 65);
-        else if(c >= 'a' && c <= 'z') l += BigInt((1 + cc) - 97);
-        else if(c >= '0' && c <= '9') l += BigInt((27 + cc) - 48);
+        if (c >= 'A' && c <= 'Z') l += BigInt((1 + cc) - 65);
+        else if (c >= 'a' && c <= 'z') l += BigInt((1 + cc) - 97);
+        else if (c >= '0' && c <= '9') l += BigInt((27 + cc) - 48);
     }
-    while(l % BigInt(37) == BigInt(0) && l != BigInt(0)) l /= BigInt(37);
+    while (l % BigInt(37) == BigInt(0) && l != BigInt(0)) l /= BigInt(37);
     return l;
 }
 
@@ -58,7 +58,7 @@ export class RsBuffer {
      * @param remaining The required size remaining.
      */
     public ensureCapacity(remaining: number): void {
-        if(this.getReadable() < remaining) {
+        if (this.getReadable() < remaining) {
             const newBuffer = Buffer.alloc(remaining);
             this.buffer.copy(newBuffer, 0, 0);
             this.buffer = newBuffer;
@@ -66,7 +66,7 @@ export class RsBuffer {
     }
 
     public ensureWritableCapacity(space: number): void {
-        if(this.getWritable() < this.writerIndex + space) {
+        if (this.getWritable() < this.writerIndex + space) {
             const newBuffer = Buffer.alloc(this.writerIndex + space);
             this.buffer.copy(newBuffer, 0, 0);
             this.buffer = newBuffer;
@@ -74,7 +74,7 @@ export class RsBuffer {
     }
 
     public writeBytes(fromBuffer: RsBuffer | Buffer): void {
-        if(fromBuffer instanceof RsBuffer) {
+        if (fromBuffer instanceof RsBuffer) {
             fromBuffer = fromBuffer.getData();
         }
 
@@ -93,13 +93,13 @@ export class RsBuffer {
 
         this.bitIndex += bitCount;
 
-        for(; bitCount > bitOffset; bitOffset = 8) {
+        for (; bitCount > bitOffset; bitOffset = 8) {
             this.buffer[byteIndex] &= ~BIT_MASKS[bitOffset];
             this.buffer[byteIndex++] |= (value >> (bitCount - bitOffset)) & BIT_MASKS[bitOffset];
             bitCount -= bitOffset;
         }
 
-        if(bitCount == bitOffset) {
+        if (bitCount == bitOffset) {
             this.buffer[byteIndex] &= ~BIT_MASKS[bitOffset];
             this.buffer[byteIndex] |= value & BIT_MASKS[bitOffset];
         } else {
@@ -115,6 +115,7 @@ export class RsBuffer {
     public readByte(): number {
         return this.buffer.readInt8(this.readerIndex++);
     }
+
 
     public readPreNegativeOffsetByte(): number {
         return 128 - (this.readByte() & 0xff);
@@ -150,7 +151,7 @@ export class RsBuffer {
 
     public readNegativeOffsetShortLE(): number {
         let value = (this.readByte() - 128 & 0xff) | ((this.readByte() & 0xff) << 8);
-        if(value > 32767) {
+        if (value > 32767) {
             value -= 0x10000;
         }
 
@@ -159,7 +160,7 @@ export class RsBuffer {
 
     public readNegativeOffsetShortBE(): number {
         let value = ((this.readByte() & 0xff) << 8) | (this.readByte() - 128 & 0xff);
-        if(value > 32767) {
+        if (value > 32767) {
             value -= 0x10000;
         }
 
@@ -180,7 +181,7 @@ export class RsBuffer {
 
     public readSmart(): number {
         const peek = this.buffer.readUInt8(this.readerIndex);
-        if(peek < 128) {
+        if (peek < 128) {
             return this.readUnsignedByte();
         } else {
             return this.readUnsignedShortBE() - 32768;
@@ -191,7 +192,7 @@ export class RsBuffer {
         const bytes: number[] = [];
         let b: number;
 
-        while((b = this.readByte()) !== 10) {
+        while ((b = this.readByte()) !== 10) {
             bytes.push(b);
         }
 
@@ -202,6 +203,14 @@ export class RsBuffer {
         const result = this.buffer.slice(this.readerIndex, this.readerIndex + length + 1);
         this.readerIndex += length;
         return result;
+    }
+
+    public readBytesToByteArray(length: number): number[] {
+        const outArr: number[] = new Array(length);
+        for (let i = 0; i <length; i++) {
+            outArr[i] = this.readByte();
+        }
+        return outArr;
     }
 
     public writeByte(value: number): void {
@@ -264,7 +273,7 @@ export class RsBuffer {
         const encoder = new TextEncoder();
         const bytes = encoder.encode(value);
 
-        for(const byte of bytes) {
+        for (const byte of bytes) {
             this.writeByte(byte);
         }
 
@@ -272,7 +281,7 @@ export class RsBuffer {
     }
 
     public writeSmart(value: number): void {
-        if(value >= 128) {
+        if (value >= 128) {
             this.writeShortBE(value);
         } else {
             this.writeByte(value);

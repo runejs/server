@@ -12,12 +12,14 @@ import { walkPacket } from './impl/walk-packet';
 import { itemOption1Packet } from './impl/item-option-1-packet';
 import { commandPacket } from './impl/command-packet';
 import { itemSwapPacket } from './impl/item-swap-packet';
+import {chatMessagePacket} from "./impl/chat-message-packet";
 
 const packets: { [key: number]: incomingPacket } = {
     19:  interfaceClickPacket,
     140: cameraTurnPacket,
 
     79:  buttonClickPacket,
+    49:  chatMessagePacket,
 
     28:  walkPacket,
     213: walkPacket,
