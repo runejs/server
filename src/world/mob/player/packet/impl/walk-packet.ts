@@ -1,5 +1,5 @@
 import { Player } from '../../player';
-import { RsBuffer } from '../../../../../net/rs-buffer';
+import { RsBuffer } from '@server/net/rs-buffer';
 import { incomingPacket } from '../incoming-packet';
 
 export const walkPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {

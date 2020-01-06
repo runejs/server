@@ -1,6 +1,6 @@
 import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../player';
-import { RsBuffer } from '../../../../../net/rs-buffer';
+import { RsBuffer } from '@server/net/rs-buffer';
 
 const ignoreButtons: number[] = [
     3651 // character design accept button

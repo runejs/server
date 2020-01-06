@@ -1,6 +1,6 @@
 import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../player';
-import { RsBuffer } from '../../../../../net/rs-buffer';
+import { RsBuffer } from '@server/net/rs-buffer';
 import { swapItemAction } from '../../action/swap-item-action';
 
 export const itemSwapPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {

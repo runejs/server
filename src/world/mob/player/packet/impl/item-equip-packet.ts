@@ -1,6 +1,6 @@
 import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../player';
-import { RsBuffer } from '../../../../../net/rs-buffer';
+import { RsBuffer } from '@server/net/rs-buffer';
 import { logger } from '@runejs/logger/dist/logger';
 import { interfaceIds } from '../../game-interface';
 import { equipItemAction } from '../../action/equip-item-action';

@@ -1,10 +1,10 @@
 import { incomingPacket } from '../incoming-packet';
-import { RsBuffer } from '../../../../../net/rs-buffer';
+import { RsBuffer } from '@server/net/rs-buffer';
 import { Player } from '../../player';
 import { interfaceIds } from '../../game-interface';
 import { logger } from '@runejs/logger/dist/logger';
 import { unequipItemAction } from '../../action/unequip-item-action';
-import { ItemContainer } from '../../../../items/item-container';
+import { ItemContainer } from '@server/world/items/item-container';
 
 export const itemOption1Packet: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const itemId = packet.readNegativeOffsetShortBE();
