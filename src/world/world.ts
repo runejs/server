@@ -22,8 +22,8 @@ export class World {
     public static readonly MAX_NPCS = 30000;
     public static readonly TICK_LENGTH = 600;
 
-    public readonly playerList: Player[] = new Array(World.MAX_PLAYERS);
-    public readonly npcList: Npc[] = new Array(World.MAX_NPCS);
+    public readonly playerList: Player[] = new Array(World.MAX_PLAYERS).fill(null);
+    public readonly npcList: Npc[] = new Array(World.MAX_NPCS).fill(null);
     public readonly chunkManager: ChunkManager = new ChunkManager();
     public readonly itemData: Map<number, ItemDetails>;
     public readonly npcSpawns: NpcSpawn[];
@@ -31,14 +31,6 @@ export class World {
     public constructor() {
         this.itemData = parseItemData(gameCache.itemDefinitions);
         this.npcSpawns = parseNpcSpawns();
-
-        for(let i = 0; i < World.MAX_PLAYERS; i++) {
-            this.playerList[i] = null;
-        }
-
-        for(let i = 0; i < World.MAX_NPCS; i++) {
-            this.npcList[i] = null;
-        }
 
         this.setupWorldTick();
     }
@@ -61,8 +53,8 @@ export class World {
     }
 
     public generateFakePlayers(): void {
-        let x: number = 3222;
-        let y: number = 3222;
+        const x: number = 3222;
+        const y: number = 3222;
         let xOffset: number = 0;
         let yOffset: number = 0;
 
@@ -93,7 +85,7 @@ export class World {
     }
 
     public async worldTick(): Promise<void> {
-        let hrTime = process.hrtime();
+        const hrTime = process.hrtime();
         const startTime = hrTime[0] * 1000000 + hrTime[1] / 1000;
         const activePlayers: Player[] = this.playerList.filter(player => player !== null);
         const activeNpcs: Npc[] = this.npcList.filter(npc => npc !== null);
@@ -111,7 +103,7 @@ export class World {
         await Promise.all([ ...activePlayers.map(player => player.reset()), ...activeNpcs.map(npc => npc.reset()) ]);
 
         return Promise.resolve().then(() => {
-            let hrTime = process.hrtime();
+            const hrTime = process.hrtime();
             const endTime = hrTime[0] * 1000000 + hrTime[1] / 1000;
 
             if(yargs.argv.tickTime) {

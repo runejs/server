@@ -6,6 +6,7 @@
     "scripts": {
         "server": "npm start",
         "start": "ts-node -r tsconfig-paths/register src/main.ts",
+        "lint": "tslint --project tsconfig.json",
         "fake-players": "npm start -- --fakePlayers"
     },
     "repository": {
@@ -41,6 +42,7 @@
         "@types/node": "^12.12.6",
         "@types/uuid": "^3.4.6",
         "@types/yargs": "^13.0.4",
-        "tsconfig-paths": "^3.9.0"
+        "tsconfig-paths": "^3.9.0",
+        "tslint": "^5.20.1"
     }
 }

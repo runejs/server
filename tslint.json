@@ -1,0 +1,33 @@
+{
+    "rules": {
+        "max-line-length": false,
+        "member-ordering": [
+            true,
+            {
+                "order": [
+                    "public-static-field",
+                    "public-instance-field",
+                    "public-constructor",
+                    "protected-constructor",
+                    "private-constructor",
+                    "public-static-method",
+                    "public-instance-method"
+                ]
+            }
+        ],
+        "no-reference": true,
+        "no-var-requires": true,
+        "promise-function-async": [true, "check-function-declaration", "check-function-expression", "check-arrow-function",
+            "check-method-declaration"],
+        "no-async-without-await": true,
+        "no-var-keyword": true,
+        "prefer-const": true,
+        "quotemark": [true, "single"],
+        "import-spacing": true,
+        "indent": [true, "spaces", 4],
+        "semicolon": true,
+        "whitespace": [true, "check-decl", "check-operator", "check-module", "check-separator", "check-rest-spread",
+            "check-type", "check-typecast", "check-type-operator", "check-preblock"],
+        "typedef": [true, "call-signature", "parameter", "property-declaration"]
+    }
+}

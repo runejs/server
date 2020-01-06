@@ -154,7 +154,7 @@ export class Player extends Mob {
         logger.info(`${this.username} has logged out.`);
     }
 
-    public tick(): Promise<void> {
+    public async tick(): Promise<void> {
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
 
@@ -166,7 +166,7 @@ export class Player extends Mob {
         });
     }
 
-    public reset(): Promise<void> {
+    public async reset(): Promise<void> {
         return new Promise<void>(resolve => {
             this.updateFlags.reset();
             resolve();
@@ -313,19 +313,19 @@ export class Player extends Mob {
         return this.worldIndex === player.worldIndex && this.username === player.username && this.clientUuid === player.clientUuid;
     }
 
-    public get socket() {
+    public get socket(): Socket {
         return this._socket;
     }
 
-    public get inCipher() {
+    public get inCipher(): Isaac {
         return this._inCipher;
     }
 
-    public get outCipher() {
+    public get outCipher(): Isaac {
         return this._outCipher;
     }
 
-    public get packetSender() {
+    public get packetSender(): PacketSender {
         return this._packetSender;
     }
 

@@ -46,18 +46,18 @@ export interface EquipmentBonuses {
         crush: number;
         magic: number;
         ranged: number;
-    },
+    };
     defencive?: {
         stab: number;
         slash: number;
         crush: number;
         magic: number;
         ranged: number;
-    },
+    };
     skill?: {
         strength: number;
         prayer: number;
-    }
+    };
 }
 
 export interface ItemData {

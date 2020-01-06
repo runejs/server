@@ -20,7 +20,7 @@ export class PlayerUpdateTask extends Task<void> {
         this.player = player;
     }
 
-    public execute(): Promise<void> {
+    public async execute(): Promise<void> {
         return new Promise<void>(resolve => {
             if(!this.player.outCipher) {
                 resolve();
@@ -48,7 +48,7 @@ export class PlayerUpdateTask extends Task<void> {
 
             this.appendUpdateMaskData(this.player, updateMaskData);
 
-            let nearbyPlayers = world.chunkManager.getSurroundingChunks(currentMapChunk).map(chunk => chunk.players).flat();
+            const nearbyPlayers = world.chunkManager.getSurroundingChunks(currentMapChunk).map(chunk => chunk.players).flat();
 
             this.player.trackedPlayers = updateTrackedMobs<Player>(playerUpdatePacket, this.player.position,
                 mob => this.appendUpdateMaskData(mob as Player, updateMaskData), this.player.trackedPlayers, nearbyPlayers);

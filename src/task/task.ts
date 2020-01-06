@@ -1,5 +1,5 @@
 export abstract class Task<T> {
 
-    public abstract execute(): Promise<T>;
+    public abstract async execute(): Promise<T>;
 
 }

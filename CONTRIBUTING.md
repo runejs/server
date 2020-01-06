@@ -12,7 +12,7 @@ Ultimately if you're looking to contribute, it's best to check in with us on Dis
     
 ## Code Style
 
-We do have a few coding styles we'd like all contributors to adhere to:
+We do have a few coding styles and lint rules we'd like all contributors to adhere to. **Please run the linter via `npm run lint` before submitting any Pull Requests**:
 
 - 4 space indentation 
 - Spaces between TS/ES6 import/export braces
