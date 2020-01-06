@@ -26,6 +26,7 @@ export class Npc extends Mob {
     private _animations: NpcAnimations;
     private _movementRadius: number = 0;
     private _initialFaceDirection: Direction = 'NORTH';
+    public readonly initialPosition: Position;
 
     public constructor(npcSpawn: NpcSpawn, cacheData: NpcDefinition) {
         super();
@@ -35,6 +36,7 @@ export class Npc extends Mob {
         this._combatLevel = cacheData.combatLevel;
         this._animations = cacheData.animations as NpcAnimations;
         this.position = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
+        this.initialPosition = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
 
         if(npcSpawn.radius) {
             this._movementRadius = npcSpawn.radius;
@@ -47,6 +49,14 @@ export class Npc extends Mob {
 
     public init(): void {
         world.chunkManager.getChunkForWorldPosition(this.position).addNpc(this);
+        this.initiateRandomMovement();
+    }
+
+    public tick(): Promise<void> {
+        return new Promise<void>(resolve => {
+            this.walkingQueue.process();
+            resolve();
+        });
     }
 
     public reset(): Promise<void> {

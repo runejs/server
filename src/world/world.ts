@@ -105,11 +105,10 @@ export class World {
         const playerUpdateTasks = activePlayers.map(player => player.playerUpdateTask);
         const npcUpdateTasks = activePlayers.map(player => player.npcUpdateTask);
 
-        await Promise.all(activePlayers.map(player => player.tick()));
+        await Promise.all([ ...activePlayers.map(player => player.tick()), ...activeNpcs.map(npc => npc.tick()) ]);
         await Promise.all(playerUpdateTasks.map(task => task.execute()));
         await Promise.all(npcUpdateTasks.map(task => task.execute()));
-        await Promise.all(activePlayers.map(player => player.reset()));
-        await Promise.all(activeNpcs.map(npc => npc.reset()));
+        await Promise.all([ ...activePlayers.map(player => player.reset()), ...activeNpcs.map(npc => npc.reset()) ]);
 
         return Promise.resolve().then(() => {
             let hrTime = process.hrtime();

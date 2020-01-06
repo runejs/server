@@ -5,6 +5,7 @@ import { world } from '../../../game-server';
 import { Chunk } from '../../map/chunk';
 import { logger } from '@runejs/logger';
 import { MapRegionTile } from '@runejs/cache-parser';
+import { Npc } from './npc/npc';
 
 /**
  * Controls a mobile entity's movement.
@@ -302,15 +303,19 @@ export class WalkingQueue {
                 this.mob.faceDirection = walkDir;
             }
 
-            // @TODO NPC map region changing
-            if(this.mob instanceof Player) {
-                const newChunk = world.chunkManager.getChunkForWorldPosition(this.mob.position);
+            const newChunk = world.chunkManager.getChunkForWorldPosition(this.mob.position);
 
-                if(!oldChunk.equals(newChunk)) {
+            if(!oldChunk.equals(newChunk)) {
+                if(this.mob instanceof Player) {
                     oldChunk.removePlayer(this.mob);
                     newChunk.addPlayer(this.mob);
+                } else if(this.mob instanceof Npc) {
+                    oldChunk.removeNpc(this.mob);
+                    newChunk.addNpc(this.mob);
                 }
+            }
 
+            if(this.mob instanceof Player) {
                 const mapDiffX = this.mob.position.x - (lastMapRegionUpdatePosition.chunkX * 8);
                 const mapDiffY = this.mob.position.y - (lastMapRegionUpdatePosition.chunkY * 8);
                 if(mapDiffX < 16 || mapDiffX > 87 || mapDiffY < 16 || mapDiffY > 87) {
