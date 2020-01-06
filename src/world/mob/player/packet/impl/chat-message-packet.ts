@@ -24,6 +24,6 @@ export const chatMessagePacket: incomingPacket = (player: Player, packetId: numb
 
     let recompressed: number[] = new Array(length);
     ChatEncoder.compress(uncompressed,recompressed);
-    return new PublicChatMessage(uncompressed, recompressed, color, effects);
+    // return new PublicChatMessage(uncompressed, recompressed, color, effects);
 
 }
