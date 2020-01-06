@@ -46,8 +46,10 @@ Online players can be polled via the REST protocol for web applications. An acco
 
 ##### API Endpoints:
 
-- `/players` : Returns a list of players currently logged into the game server.
-- `/items?page=x&limit=y` : Returns a list of item metadata loaded by the game server.
+- `GET /players` : Returns a list of players currently logged into the game server.
+- `GET /items?page=x&limit=y` : Returns a list of item metadata loaded by the game server.
+- `GET /items/{itemId}` : Returns details about a specific item by id.
+- `PUT /items/{itemId}` : Updates an item's configurable server data.
 
 ## Aditional Information
 
