@@ -12,7 +12,7 @@ const GAME_SERVER_PORT = 43594;
 export const serverDir = join(__dirname, '../');
 export const gameCache = new GameCache(join(serverDir, 'cache'));
 export const world = new World();
-world.chunkManager.generateCollisionMaps();
+world.init();
 
 if(yargs.argv.fakePlayers) {
     world.generateFakePlayers();

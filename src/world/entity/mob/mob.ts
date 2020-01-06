@@ -1,6 +1,8 @@
 import { Entity } from '../entity';
 import { WalkingQueue } from './walking-queue';
 import { ItemContainer } from './items/item-container';
+import { UpdateFlags } from './update-flags';
+import { Npc } from './npc/npc';
 
 /**
  * Handles a mobile entity within the game world.
@@ -8,6 +10,7 @@ import { ItemContainer } from './items/item-container';
 export abstract class Mob extends Entity {
 
     private _worldIndex: number;
+    public readonly updateFlags: UpdateFlags;
     private readonly _walkingQueue: WalkingQueue;
     private _walkDirection: number;
     private _runDirection: number;
@@ -16,6 +19,7 @@ export abstract class Mob extends Entity {
 
     protected constructor() {
         super();
+        this.updateFlags = new UpdateFlags();
         this._walkingQueue = new WalkingQueue(this);
         this._walkDirection = -1;
         this._runDirection = -1;
@@ -27,37 +31,56 @@ export abstract class Mob extends Entity {
         setInterval(() => {
             const movementChance = Math.floor(Math.random() * 10);
 
-            if(movementChance < 8) {
+            if(movementChance < 7) {
                 return;
             }
 
-            let px = this.position.x;
-            let py = this.position.y;
+            let px: number;
+            let py: number;
+            let movementAllowed = false;
 
-            const moveXChance = Math.floor(Math.random() * 10);
+            while(!movementAllowed) {
+                px = this.position.x;
+                py = this.position.y;
 
-            if(moveXChance > 6) {
-                const moveXAmount = Math.floor(Math.random() * 5);
-                const moveXMod = Math.floor(Math.random() * 2);
+                const moveXChance = Math.floor(Math.random() * 10);
 
-                if(moveXMod === 0) {
-                    px -= moveXAmount;
-                } else {
-                    px += moveXAmount;
+                if(moveXChance > 6) {
+                    const moveXAmount = Math.floor(Math.random() * 5);
+                    const moveXMod = Math.floor(Math.random() * 2);
+
+                    if(moveXMod === 0) {
+                        px -= moveXAmount;
+                    } else {
+                        px += moveXAmount;
+                    }
                 }
-            }
 
-            const moveYChance = Math.floor(Math.random() * 10);
+                const moveYChance = Math.floor(Math.random() * 10);
 
-            if(moveYChance > 6) {
-                const moveYAmount = Math.floor(Math.random() * 5);
-                const moveYMod = Math.floor(Math.random() * 2);
+                if(moveYChance > 6) {
+                    const moveYAmount = Math.floor(Math.random() * 5);
+                    const moveYMod = Math.floor(Math.random() * 2);
 
-                if(moveYMod === 0) {
-                    py -= moveYAmount;
-                } else {
-                    py += moveYAmount;
+                    if(moveYMod === 0) {
+                        py -= moveYAmount;
+                    } else {
+                        py += moveYAmount;
+                    }
                 }
+
+                let valid = true;
+
+                if(this instanceof Npc && (this as Npc).movementRadius) {
+                    const npc = this as Npc;
+
+                    if(px > npc.initialPosition.x + npc.movementRadius || px < npc.initialPosition.x - npc.movementRadius
+                        || py > npc.initialPosition.y + npc.movementRadius || py < npc.initialPosition.y - npc.movementRadius) {
+                        valid = false;
+                    }
+                }
+
+                movementAllowed = valid;
             }
 
             if(px !== this.position.x || py !== this.position.y) {
@@ -67,6 +90,8 @@ export abstract class Mob extends Entity {
             }
         }, 1000);
     }
+
+    public abstract equals(mob: Mob): boolean;
 
     public get worldIndex(): number {
         return this._worldIndex;

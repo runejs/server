@@ -1,11 +1,12 @@
-import { Player } from '../player';
-import { RsBuffer, stringToLong } from '../../../../../net/rs-buffer';
-import { Task } from '../../../../../task/task';
-import { UpdateFlags } from '../update-flags';
-import { Packet, PacketType } from '../../../../../net/packet';
-import { world } from '../../../../../game-server';
-import { EquipmentSlot, HelmetType, ItemDetails, TorsoType } from '../../../../config/item-data';
-import { ItemContainer } from '../../items/item-container';
+import { Player } from '../../player';
+import { RsBuffer, stringToLong } from '../../../../../../net/rs-buffer';
+import { Task } from '../../../../../../task/task';
+import { UpdateFlags } from '../../../update-flags';
+import { Packet, PacketType } from '../../../../../../net/packet';
+import { world } from '../../../../../../game-server';
+import { EquipmentSlot, HelmetType, ItemDetails, TorsoType } from '../../../../../config/item-data';
+import { ItemContainer } from '../../../items/item-container';
+import { appendMovement, updateTrackedMobs, registerNewMobs } from './mob-updating';
 
 /**
  * Handles the chonky player updating packet.
@@ -42,83 +43,33 @@ export class PlayerUpdateTask extends Task<void> {
                 playerUpdatePacket.writeBits(7, this.player.position.chunkLocalX); // Player Local Chunk X
                 playerUpdatePacket.writeBits(1, updateFlags.updateBlockRequired ? 1 : 0); // Whether or not an update flag block follows
             } else {
-                this.appendPlayerMovement(this.player, playerUpdatePacket);
+                appendMovement(this.player, playerUpdatePacket);
             }
 
             this.appendUpdateMaskData(this.player, updateMaskData);
-            playerUpdatePacket.writeBits(8, this.player.trackedPlayers.length); // Tracked Player Count
 
             let nearbyPlayers = world.chunkManager.getSurroundingChunks(currentMapChunk).map(chunk => chunk.players).flat();
-            const existingTrackedPlayers: Player[] = [];
 
-            for(let trackedPlayerIndex = 0; trackedPlayerIndex < this.player.trackedPlayers.length; trackedPlayerIndex++) {
-                const trackedPlayer = this.player.trackedPlayers[trackedPlayerIndex];
+            this.player.trackedPlayers = updateTrackedMobs<Player>(playerUpdatePacket, this.player.position,
+                mob => this.appendUpdateMaskData(mob as Player, updateMaskData), this.player.trackedPlayers, nearbyPlayers);
 
-                if(world.playerExists(trackedPlayer) && nearbyPlayers.findIndex(p => p.equals(trackedPlayer)) !== -1
-                        && trackedPlayer.position.withinViewDistance(this.player.position)) {
-                    this.appendPlayerMovement(trackedPlayer, playerUpdatePacket);
-                    this.appendUpdateMaskData(trackedPlayer, updateMaskData, false);
-                    existingTrackedPlayers.push(trackedPlayer);
-                } else {
-                    playerUpdatePacket.writeBits(1, 1);
-                    playerUpdatePacket.writeBits(2, 3);
-                }
-            }
-
-            this.player.trackedPlayers = existingTrackedPlayers;
-
-            // The client can only handle 80 new players at a time, so we limit each update to a max of 80
-            // Any remaining players will be automatically picked up by subsequent updates
-            let newPlayers = nearbyPlayers.filter(p1 => !this.player.trackedPlayers.find(p2 => p2.equals(p1)));
-            if(newPlayers.length > 80) {
-                // We also sort the list of players here by how close they are to the current player if there are more than 80, so we can render the nearest first
-                newPlayers = newPlayers
-                    .sort((a, b) => this.player.position.distanceBetween(a.position) - this.player.position.distanceBetween(b.position))
-                    .slice(0, 80);
-            }
-
-            newPlayers.forEach((nearbyPlayer, nearbyPlayerIndex) => {
-                if(this.player.equals(nearbyPlayer)) {
-                    // Other player is actually this player!
-                    return;
-                }
-
-                if(!world.playerExists(nearbyPlayer)) {
-                    // Other player is no longer in the game world
-                    return;
-                }
-
-                if(this.player.trackedPlayers.findIndex(p => p.equals(nearbyPlayer)) !== -1) {
-                    // Other player is already tracked by this player
-                    return;
-                }
-
-                const positionOffsetX = nearbyPlayer.position.x - this.player.position.x;
-                const positionOffsetY = nearbyPlayer.position.y - this.player.position.y;
-
-                if(!nearbyPlayer.position.withinViewDistance(this.player.position)) {
-                    // Player is still too far away to be worth rendering
-                    // Also - values greater than 15 and less than -15 are too large, or too small, to be sent via 5 bits (max length of 32)
-                    return;
-                }
-
-                // Only 255 players are able to be rendered at a time, so we cut it off it there are more than that
-                if(this.player.trackedPlayers.length >= 255) {
-                    return;
-                }
+            registerNewMobs<Player>(playerUpdatePacket, this.player, this.player.trackedPlayers, nearbyPlayers, mob => {
+                const newPlayer = mob as Player;
+                const positionOffsetX = newPlayer.position.x - this.player.position.x;
+                const positionOffsetY = newPlayer.position.y - this.player.position.y;
 
                 // Add other player to this player's list of tracked players
-                this.player.trackedPlayers.push(nearbyPlayer);
+                this.player.trackedPlayers.push(newPlayer);
 
                 // Notify the client of the new player and their worldIndex
-                playerUpdatePacket.writeBits(11, nearbyPlayer.worldIndex + 1);
+                playerUpdatePacket.writeBits(11, newPlayer.worldIndex + 1);
 
                 playerUpdatePacket.writeBits(5, positionOffsetX); // World Position X axis offset relative to the main player
                 playerUpdatePacket.writeBits(1, 1); // Update is required
                 playerUpdatePacket.writeBits(1, 1); // Discard client walking queues
                 playerUpdatePacket.writeBits(5, positionOffsetY); // World Position Y axis offset relative to the main player
 
-                this.appendUpdateMaskData(nearbyPlayer, updateMaskData, true);
+                this.appendUpdateMaskData(newPlayer, updateMaskData, true);
             });
 
             if(updateMaskData.getWriterIndex() !== 0) {
@@ -272,34 +223,6 @@ export class PlayerUpdateTask extends Task<void> {
             buffer.writeShortBE(0x200 + item.itemId);
         } else {
             buffer.writeShortBE(0x100 + appearanceInfo);
-        }
-    }
-
-    private appendPlayerMovement(player: Player, packet: RsBuffer): void {
-        if(player.walkDirection !== -1) {
-            // Player is walking/running
-            packet.writeBits(1, 1); // Update required
-
-            if(player.runDirection === -1) {
-                // Player is walking
-                packet.writeBits(2, 1); // Player walking
-                packet.writeBits(3, player.walkDirection);
-            } else {
-                // Player is running
-                packet.writeBits(2, 2); // Player running
-                packet.writeBits(3, player.walkDirection);
-                packet.writeBits(3, player.runDirection);
-            }
-
-            packet.writeBits(1, player.updateFlags.updateBlockRequired ? 1 : 0); // Whether or not an update flag block follows
-        } else {
-            // Did not move
-            if(player.updateFlags.updateBlockRequired) {
-                packet.writeBits(1, 1); // Update required
-                packet.writeBits(2, 0); // Signify the player did not move
-            } else {
-                packet.writeBits(1, 0); // No update required
-            }
         }
     }
 

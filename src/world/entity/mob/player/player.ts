@@ -1,9 +1,8 @@
 import { Socket } from 'net';
 import { PacketSender } from './packet/packet-sender';
 import { Isaac } from '../../../../net/isaac';
-import { PlayerUpdateTask } from './task/player-update-task';
+import { PlayerUpdateTask } from './task/updating/player-update-task';
 import { Mob } from '../mob';
-import { UpdateFlags } from './update-flags';
 import { Position } from '../../../position';
 import { Skill, skills } from '../skills/skill';
 import { world } from '../../../../game-server';
@@ -19,6 +18,8 @@ import { ActiveInterface, interfaceIds, interfaceSettings } from './game-interfa
 import { ContainerUpdateEvent, ItemContainer } from '../items/item-container';
 import { EquipmentBonuses, ItemDetails } from '../../../config/item-data';
 import { Item } from '../items/item';
+import { Npc } from '../npc/npc';
+import { NpcUpdateTask } from './task/updating/npc-update-task';
 
 const DEFAULT_TAB_INTERFACES = [
     2423, 3917, 638, 3213, 1644, 5608, 1151, -1, 5065, 5715, 2449, 904, 147, 962
@@ -39,8 +40,9 @@ export class Player extends Mob {
     public isLowDetail: boolean;
     private readonly _packetSender: PacketSender;
     public readonly playerUpdateTask: PlayerUpdateTask;
-    public readonly updateFlags: UpdateFlags;
+    public readonly npcUpdateTask: NpcUpdateTask;
     public trackedPlayers: Player[];
+    public trackedNpcs: Npc[];
     private _appearance: Appearance;
     private _activeGameInterface: ActiveInterface;
     private readonly _equipment: ItemContainer;
@@ -59,8 +61,9 @@ export class Player extends Mob {
         this.isLowDetail = isLowDetail;
         this._packetSender = new PacketSender(this);
         this.playerUpdateTask = new PlayerUpdateTask(this);
-        this.updateFlags = new UpdateFlags();
+        this.npcUpdateTask = new NpcUpdateTask(this);
         this.trackedPlayers = [];
+        this.trackedNpcs = [];
         this._activeGameInterface = null;
         this._carryWeight = 0;
         this._equipment = new ItemContainer(14);
