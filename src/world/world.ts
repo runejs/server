@@ -7,6 +7,8 @@ import { Position } from './position';
 import yargs from 'yargs';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './mob/npc/npc';
+import { map } from 'bluebird';
+import { PlayerUpdateTask } from '@server/world/mob/player/task/updating/player-update-task';
 
 /**
  * A direction within the world.
@@ -85,8 +87,7 @@ export class World {
     }
 
     public async worldTick(): Promise<void> {
-        const hrTime = process.hrtime();
-        const startTime = hrTime[0] * 1000000 + hrTime[1] / 1000;
+        const hrStart = process.hrtime();
         const activePlayers: Player[] = this.playerList.filter(player => player !== null);
         const activeNpcs: Npc[] = this.npcList.filter(npc => npc !== null);
 
@@ -98,18 +99,18 @@ export class World {
         const npcUpdateTasks = activePlayers.map(player => player.npcUpdateTask);
 
         await Promise.all([ ...activePlayers.map(player => player.tick()), ...activeNpcs.map(npc => npc.tick()) ]);
-        await Promise.all(playerUpdateTasks.map(task => task.execute()));
-        await Promise.all(npcUpdateTasks.map(task => task.execute()));
+        await Promise.all([ ...playerUpdateTasks.map(task => task.execute()), ...npcUpdateTasks.map(task => task.execute()) ]);
+
+        // await map(playerUpdateTasks, (task: PlayerUpdateTask) => task.execute(), { concurrency: 20 });
+
         await Promise.all([ ...activePlayers.map(player => player.reset()), ...activeNpcs.map(npc => npc.reset()) ]);
 
-        return Promise.resolve().then(() => {
-            const hrTime = process.hrtime();
-            const endTime = hrTime[0] * 1000000 + hrTime[1] / 1000;
+        if(yargs.argv.tickTime) {
+            const hrEnd = process.hrtime(hrStart);
+            logger.info(`World tick completed in ${hrEnd[1] / 1000000} ms.`);
+        }
 
-            if(yargs.argv.tickTime) {
-                logger.info(`World tick completed in ${endTime - startTime} microseconds.`);
-            }
-        });
+        return Promise.resolve();
     }
 
     public playerExists(player: Player): boolean {

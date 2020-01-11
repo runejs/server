@@ -22,11 +22,6 @@ export class PlayerUpdateTask extends Task<void> {
 
     public async execute(): Promise<void> {
         return new Promise<void>(resolve => {
-            if(!this.player.outCipher) {
-                resolve();
-                return;
-            }
-
             const updateFlags: UpdateFlags = this.player.updateFlags;
             const playerUpdatePacket: Packet = new Packet(90, PacketType.DYNAMIC_LARGE, 16);
             const currentMapChunk = world.chunkManager.getChunkForWorldPosition(this.player.position);
