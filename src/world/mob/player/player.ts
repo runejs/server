@@ -109,7 +109,7 @@ export class Player extends Mob {
         world.chunkManager.getChunkForWorldPosition(this.position).addPlayer(this);
 
         this.packetSender.sendMembershipStatusAndWorldIndex();
-        this.packetSender.sendCurrentMapRegion();
+        this.packetSender.updateCurrentMapChunk();
         this.packetSender.chatboxMessage('Welcome to RuneScape.');
 
         DEFAULT_TAB_INTERFACES.forEach((interfaceId: number, tabIndex: number) => {
@@ -159,7 +159,7 @@ export class Player extends Mob {
             this.walkingQueue.process();
 
             if(this.updateFlags.mapRegionUpdateRequired) {
-                this.packetSender.sendCurrentMapRegion();
+                this.packetSender.updateCurrentMapChunk();
             }
 
             resolve();

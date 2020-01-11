@@ -85,6 +85,17 @@ export class PacketSender {
         this.socket = player.socket;
     }
 
+    /**
+     * Clears the player's current map chunk of all ground items and spawned/modified landscape objects.
+     */
+    public clearMapChunk(): void {
+        const packet = new Packet(40);
+        packet.writeNegativeOffsetByte(this.player.position.chunkY + 6); // Map Chunk Y
+        packet.writeByteInverted(this.player.position.chunkX + 6); // Map Chunk X
+
+        this.send(packet);
+    }
+
     public updateCarryWeight(weight: number): void {
         const packet = new Packet(174);
         packet.writeShortBE(weight);
@@ -224,10 +235,10 @@ export class PacketSender {
         this.send(packet);
     }
 
-    public sendCurrentMapRegion(): void {
+    public updateCurrentMapChunk(): void {
         const packet = new Packet(222);
-        packet.writeShortBE(this.player.position.chunkY + 6); // map region y
-        packet.writeOffsetShortLE(this.player.position.chunkX + 6); // map region x
+        packet.writeShortBE(this.player.position.chunkY + 6); // Map Chunk Y
+        packet.writeOffsetShortLE(this.player.position.chunkX + 6); // Map Chunk X
 
         this.send(packet);
     }

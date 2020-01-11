@@ -37,7 +37,7 @@ const commands: { [key: string]: commandHandler } = {
         if(!oldChunk.equals(newChunk)) {
             oldChunk.removePlayer(player);
             newChunk.addPlayer(player);
-            player.packetSender.sendCurrentMapRegion();
+            player.packetSender.updateCurrentMapChunk();
         }
 
         player.updateFlags.mapRegionUpdateRequired = true;

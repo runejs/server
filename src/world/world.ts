@@ -90,7 +90,9 @@ export class World {
         const activeNpcs: Npc[] = this.npcList.filter(npc => npc !== null);
 
         if(activePlayers.length === 0) {
-            return Promise.resolve();
+            return Promise.resolve().then(() => {
+                setTimeout(async () => await this.worldTick(), World.TICK_LENGTH);
+            });
         }
 
         const playerUpdateTasks = activePlayers.map(player => player.playerUpdateTask);
