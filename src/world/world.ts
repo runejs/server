@@ -49,7 +49,7 @@ export class World {
     }
 
     public setupWorldTick(): void {
-        setInterval(async () => await this.worldTick(), World.TICK_LENGTH);
+        setTimeout(async () => await this.worldTick(), World.TICK_LENGTH);
     }
 
     public generateFakePlayers(): void {
@@ -98,15 +98,25 @@ export class World {
 
         await Promise.all([ ...activePlayers.map(player => player.tick()), ...activeNpcs.map(npc => npc.tick()) ]);
         await Promise.all([ ...playerUpdateTasks.map(task => task.execute()), ...npcUpdateTasks.map(task => task.execute()) ]);
-        
+
         await Promise.all([ ...activePlayers.map(player => player.reset()), ...activeNpcs.map(npc => npc.reset()) ]);
 
-        if(yargs.argv.tickTime) {
-            const hrEnd = process.hrtime(hrStart);
-            logger.info(`World tick completed in ${hrEnd[1] / 1000000} ms.`);
-        }
+        const hrEnd = process.hrtime(hrStart);
+        const tickTime = hrEnd[1] / 1000000;
 
-        return Promise.resolve();
+        return Promise.resolve()
+            .then(() => {
+                let delay = World.TICK_LENGTH - tickTime;
+                if(delay < 0) {
+                    delay = 0;
+                }
+
+                if(yargs.argv.tickTime) {
+                    logger.info(`World tick completed in ${tickTime} ms, next tick in ${delay} ms.`);
+                }
+
+                setTimeout(async () => await this.worldTick(), delay);
+            });
     }
 
     public playerExists(player: Player): boolean {
