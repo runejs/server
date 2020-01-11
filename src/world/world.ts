@@ -7,8 +7,6 @@ import { Position } from './position';
 import yargs from 'yargs';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './mob/npc/npc';
-import { map } from 'bluebird';
-import { PlayerUpdateTask } from '@server/world/mob/player/task/updating/player-update-task';
 
 /**
  * A direction within the world.
@@ -100,9 +98,7 @@ export class World {
 
         await Promise.all([ ...activePlayers.map(player => player.tick()), ...activeNpcs.map(npc => npc.tick()) ]);
         await Promise.all([ ...playerUpdateTasks.map(task => task.execute()), ...npcUpdateTasks.map(task => task.execute()) ]);
-
-        // await map(playerUpdateTasks, (task: PlayerUpdateTask) => task.execute(), { concurrency: 20 });
-
+        
         await Promise.all([ ...activePlayers.map(player => player.reset()), ...activeNpcs.map(npc => npc.reset()) ]);
 
         if(yargs.argv.tickTime) {
