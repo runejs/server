@@ -1,7 +1,7 @@
 import { Player } from '../player';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
-import { interfaceIds } from '../game-interface';
+import { ChatEmotes, interfaceIds } from '../game-interface';
 
 type commandHandler = (player: Player, args?: string[]) => void;
 
@@ -65,6 +65,14 @@ const commands: { [key: string]: commandHandler } = {
         player.inventory.add(item);
         player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, inventorySlot, item);
         player.packetSender.chatboxMessage(`Adding 1x ${world.itemData.get(itemId).name} to inventory.`);
+    },
+
+    chat: (player: Player) => {
+        player.packetSender.setInterfaceModel2(4883, 0);
+        player.packetSender.playInterfaceAnimation(4883, ChatEmotes.CALM_TALK_1);
+        player.packetSender.updateInterfaceString(4884, "Hans");
+        player.packetSender.updateInterfaceString(4885, "Welcome to RuneScape!");
+        player.packetSender.showChatboxInterface(4882);
     }
 
 };

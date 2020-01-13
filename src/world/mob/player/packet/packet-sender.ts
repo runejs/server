@@ -13,6 +13,7 @@ import { Position } from '@server/world/position';
  *
  * 220 = play song
  * 249 = play overlay song?
+ * 41  = play sound at position
  *
  * 61  = reset X reference coordinate
  * 75  = update reference position
@@ -20,6 +21,11 @@ import { Position } from '@server/world/position';
  * 53  = construct map region
  * 222 = send current map region
  * 183 = update map region ground items and objects
+ * 88  = remove landscape object
+ * 208 = remove ground item
+ * 152 = set landscape object
+ * 121 = update ground item amount
+ * 107 = set ground item
  *
  * 135 = private message received
  * 190 = system update notification
@@ -33,8 +39,10 @@ import { Position } from '@server/world/position';
  * 157 = add player option
  * 126 = update member status and player index
  *
- * 10  = send tab interface
+ * 59  = show graphics at position
+ *
  * 29  = close all interfaces
+ * 10  = show tab interface
  * 76  = show welcome interface
  * 159 = show standalone game interface
  * 50  = show walkable game interface
@@ -58,6 +66,7 @@ import { Position } from '@server/world/position';
  * 174 = update carry weight
  * 49  = update player skill
  * 78  = send friend info
+ * 251 = update friend list status
  * 226 = update ignore list
  *
  * 186 = set interface model rotation and zoom
@@ -83,6 +92,35 @@ export class PacketSender {
     public constructor(player: Player) {
         this.player = player;
         this.socket = player.socket;
+    }
+
+    public playInterfaceAnimation(interfaceId: number, animationId: number): void {
+        const packet = new Packet(2);
+        packet.writeNegativeOffsetShortLE(interfaceId);
+        packet.writeNegativeOffsetShortBE(animationId);
+
+        this.send(packet);
+    }
+
+    // NPC dialogs = 4882, 4887, 4893, 4900
+    // Player dialogs = 968, 973, 979, 986
+    // Text dialogs = 356, 359, 363, 368, 374
+    // Item dialogs = 306, 310, 315, 321
+    // Statements (no click to continue) = 12788, 12790, 12793, 12797, 6179
+    // Options = 2459, 2469, 2480, 2492
+    public showChatboxInterface(interfaceId: number): void {
+        const packet = new Packet(109);
+        packet.writeShortBE(interfaceId);
+
+        this.send(packet);
+    }
+
+    public setInterfaceModel2(interfaceId: number, modelId: number): void {
+        const packet = new Packet(162);
+        packet.writeNegativeOffsetShortBE(modelId);
+        packet.writeShortLE(interfaceId);
+
+        this.send(packet);
     }
 
     /**
