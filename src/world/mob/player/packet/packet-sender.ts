@@ -186,7 +186,7 @@ export class PacketSender {
         this.send(packet);
     }
 
-    public sendCloseActiveGameInterface(): void {
+    public closeActiveInterfaces(): void {
         this.send(new Packet(29));
     }
 

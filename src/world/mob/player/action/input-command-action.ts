@@ -1,7 +1,8 @@
 import { Player } from '../player';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
-import { ChatEmotes, interfaceIds } from '../game-interface';
+import { interfaceIds } from '../game-interface';
+import { closeDialogue, dialogueAction, DialogueEmote } from '@server/world/mob/player/action/dialogue/dialogue-action';
 
 type commandHandler = (player: Player, args?: string[]) => void;
 
@@ -68,11 +69,9 @@ const commands: { [key: string]: commandHandler } = {
     },
 
     chat: (player: Player) => {
-        player.packetSender.setInterfaceModel2(4883, 0);
-        player.packetSender.playInterfaceAnimation(4883, ChatEmotes.CALM_TALK_1);
-        player.packetSender.updateInterfaceString(4884, "Hans");
-        player.packetSender.updateInterfaceString(4885, "Welcome to RuneScape!");
-        player.packetSender.showChatboxInterface(4882);
+        dialogueAction(player, { type: 'NPC', emote: DialogueEmote.CALM_TALK_1, npc: 0, lines: [ 'Welcome to RuneScape!' ] })
+            .then(() => dialogueAction(player, { type: 'NPC', emote: DialogueEmote.CALM_TALK_2, npc: 0, lines: [ 'How do you feel about Rune.JS so far?', 'Let us know what you think!' ] }))
+            .then(() => closeDialogue(player));
     }
 
 };

@@ -20,6 +20,7 @@ import { EquipmentBonuses, ItemDetails } from '../../config/item-data';
 import { Item } from '../../items/item';
 import { Npc } from '../npc/npc';
 import { NpcUpdateTask } from './task/updating/npc-update-task';
+import { Subject } from 'rxjs';
 
 const DEFAULT_TAB_INTERFACES = [
     2423, 3917, 638, 3213, 1644, 5608, 1151, -1, 5065, 5715, 2449, 904, 147, 962
@@ -49,6 +50,7 @@ export class Player extends Mob {
     private _bonuses: EquipmentBonuses;
     private _carryWeight: number;
     private _settings: PlayerSettings;
+    public readonly dialogueInteractionEvent: Subject<number>;
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -67,6 +69,7 @@ export class Player extends Mob {
         this._activeGameInterface = null;
         this._carryWeight = 0;
         this._equipment = new ItemContainer(14);
+        this.dialogueInteractionEvent = new Subject<number>();
     }
 
     public init(): void {
@@ -345,7 +348,7 @@ export class Player extends Mob {
         if(value) {
             this.packetSender.sendOpenGameInterface(value.interfaceId);
         } else {
-            this.packetSender.sendCloseActiveGameInterface();
+            this.packetSender.closeActiveInterfaces();
         }
 
         this._activeGameInterface = value;

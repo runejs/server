@@ -12,12 +12,14 @@ import { walkPacket } from './impl/walk-packet';
 import { itemOption1Packet } from './impl/item-option-1-packet';
 import { commandPacket } from './impl/command-packet';
 import { itemSwapPacket } from './impl/item-swap-packet';
+import { dialogueInteractionPacket } from '@server/world/mob/player/packet/impl/dialogue-interaction-packet';
 
 const packets: { [key: number]: incomingPacket } = {
     19:  interfaceClickPacket,
     140: cameraTurnPacket,
 
     79:  buttonClickPacket,
+    226: dialogueInteractionPacket,
 
     28:  walkPacket,
     213: walkPacket,
@@ -29,7 +31,7 @@ const packets: { [key: number]: incomingPacket } = {
     3:   itemOption1Packet,
     123: itemSwapPacket,
 
-    56: commandPacket
+    56:  commandPacket
 };
 
 export function handlePacket(player: Player, packetId: number, packetSize: number, buffer: Buffer): void {
