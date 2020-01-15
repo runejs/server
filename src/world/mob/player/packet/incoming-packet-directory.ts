@@ -13,6 +13,7 @@ import { itemOption1Packet } from './impl/item-option-1-packet';
 import { commandPacket } from './impl/command-packet';
 import { itemSwapPacket } from './impl/item-swap-packet';
 import { dialogueInteractionPacket } from '@server/world/mob/player/packet/impl/dialogue-interaction-packet';
+import { npcInteractionPacket } from '@server/world/mob/player/packet/impl/npc-interaction-packet';
 
 const packets: { [key: number]: incomingPacket } = {
     19:  interfaceClickPacket,
@@ -20,6 +21,8 @@ const packets: { [key: number]: incomingPacket } = {
 
     79:  buttonClickPacket,
     226: dialogueInteractionPacket,
+
+    112: npcInteractionPacket,
 
     28:  walkPacket,
     213: walkPacket,

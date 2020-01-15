@@ -123,6 +123,13 @@ export class PacketSender {
         this.send(packet);
     }
 
+    public setInterfacePlayerHead(interfaceId: number): void {
+        const packet = new Packet(255);
+        packet.writeNegativeOffsetShortLE(interfaceId);
+
+        this.send(packet);
+    }
+
     /**
      * Clears the player's current map chunk of all ground items and spawned/modified landscape objects.
      */

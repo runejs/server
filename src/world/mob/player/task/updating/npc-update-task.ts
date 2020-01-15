@@ -40,7 +40,7 @@ export class NpcUpdateTask extends Task<void> {
                 this.player.trackedNpcs.push(newNpc);
 
                 // Notify the client of the new npc and their worldIndex
-                npcUpdatePacket.writeBits(14, newNpc.worldIndex + 1);
+                npcUpdatePacket.writeBits(14, newNpc.worldIndex);
                 npcUpdatePacket.writeBits(1, newNpc.updateFlags.updateBlockRequired ? 1 : 0); // Update is required
                 npcUpdatePacket.writeBits(5, positionOffsetY); // World Position Y axis offset relative to the player
                 npcUpdatePacket.writeBits(5, positionOffsetX); // World Position X axis offset relative to the player

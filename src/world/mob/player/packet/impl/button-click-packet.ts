@@ -18,6 +18,13 @@ const settingButtons: number[] = [
     150, 151, // auto retaliate
 ];
 
+const dialogueActions: { [key: number]: number } = {
+    2494: 1, 2495: 2, 2496: 3, 2497: 4, 2498: 5,
+    2482: 1, 2483: 2, 2484: 3, 2485: 4,
+    2471: 1, 2472: 2, 2473: 3,
+    2461: 1, 2462: 2
+};
+
 export const buttonClickPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const buttonId = packet.readShortBE();
 
@@ -25,6 +32,8 @@ export const buttonClickPacket: incomingPacket = (player: Player, packetId: numb
         player.logout();
     } else if(settingButtons.indexOf(buttonId) !== -1) {
         player.settingChanged(buttonId);
+    } else if(dialogueActions.hasOwnProperty(buttonId)) {
+        player.dialogueInteractionEvent.next(dialogueActions[buttonId]);
     } else if(ignoreButtons.indexOf(buttonId) === -1) {
         console.log(`Unhandled button ${buttonId} clicked.`);
     }
