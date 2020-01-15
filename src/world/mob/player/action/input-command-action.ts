@@ -2,7 +2,7 @@ import { Player } from '../player';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
 import { interfaceIds } from '../game-interface';
-import { closeDialogue, dialogueAction, DialogueEmote } from '@server/world/mob/player/action/dialogue/dialogue-action';
+import { npcAction } from '@server/world/mob/player/action/npc-action';
 
 type commandHandler = (player: Player, args?: string[]) => void;
 
@@ -69,9 +69,21 @@ const commands: { [key: string]: commandHandler } = {
     },
 
     chat: (player: Player) => {
-        dialogueAction(player, { type: 'NPC', emote: DialogueEmote.CALM_TALK_1, npc: 0, lines: [ 'Welcome to RuneScape!' ] })
-            .then(() => dialogueAction(player, { type: 'NPC', emote: DialogueEmote.CALM_TALK_2, npc: 0, lines: [ 'How do you feel about Rune.JS so far?', 'Let us know what you think!' ] }))
-            .then(() => closeDialogue(player));
+        npcAction(player, world.npcList[0]);
+    },
+
+    chati: (player: Player, args: string[]) => {
+        if(args.length !== 1) {
+            throw `chati interfaceId`;
+        }
+
+        const interfaceId: number = parseInt(args[0]);
+
+        if(isNaN(interfaceId)) {
+            throw `chati interfaceId`;
+        }
+
+        player.packetSender.showChatboxInterface(interfaceId);
     }
 
 };
