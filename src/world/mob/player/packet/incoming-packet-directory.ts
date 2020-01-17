@@ -45,5 +45,8 @@ export function handlePacket(player: Player, packetId: number, packetSize: numbe
         return;
     }
 
-    packetFunction(player, packetId, packetSize, new RsBuffer(buffer));
+    new Promise(resolve => {
+        packetFunction(player, packetId, packetSize, new RsBuffer(buffer));
+        resolve();
+    });
 }
