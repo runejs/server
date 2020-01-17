@@ -212,6 +212,10 @@ export class RsBuffer {
         this.writeByte(-value);
     }
 
+    public writeOffsetByte(value: number): void {
+        this.writeUnsignedByte(value + 128);
+    }
+
     public writeNegativeOffsetByte(value: number): void {
         this.writeUnsignedByte(128 - value);
     }

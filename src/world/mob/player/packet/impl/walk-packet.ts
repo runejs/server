@@ -17,6 +17,7 @@ export const walkPacket: incomingPacket = (player: Player, packetId: number, pac
 
     const walkingQueue = player.walkingQueue;
 
+    player.walkingTo = null;
     walkingQueue.clear();
     walkingQueue.valid = true;
     walkingQueue.add(firstX, firstY);

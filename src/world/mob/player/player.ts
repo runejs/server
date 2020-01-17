@@ -51,6 +51,7 @@ export class Player extends Mob {
     private _carryWeight: number;
     private _settings: PlayerSettings;
     public readonly dialogueInteractionEvent: Subject<number>;
+    private _walkingTo: Position;
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -364,5 +365,13 @@ export class Player extends Mob {
 
     public get settings(): PlayerSettings {
         return this._settings;
+    }
+
+    public get walkingTo(): Position {
+        return this._walkingTo;
+    }
+
+    public set walkingTo(value: Position) {
+        this._walkingTo = value;
     }
 }

@@ -19,6 +19,10 @@ export class WalkingQueue {
         this._valid = false;
     }
 
+    public moving(): boolean {
+        return this.queue.length !== 0;
+    }
+
     public clear(): void {
         this.queue = [];
     }

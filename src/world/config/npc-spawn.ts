@@ -3,7 +3,7 @@ import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { serverDir } from '@server/game-server';
-import { Direction } from '@server/world/world';
+import { Direction } from '@server/world/direction';
 
 export interface NpcSpawn {
     npcId: number;

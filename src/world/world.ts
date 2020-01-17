@@ -2,16 +2,11 @@ import { Player } from './mob/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { logger } from '@runejs/logger';
 import { ItemDetails, parseItemData } from './config/item-data';
-import { gameCache, world } from '@server/game-server';
+import { gameCache } from '@server/game-server';
 import { Position } from './position';
 import yargs from 'yargs';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './mob/npc/npc';
-
-/**
- * A direction within the world.
- */
-export type Direction = 'NORTH' | 'SOUTH' | 'EAST' | 'WEST' | 'NORTHEAST' | 'NORTHWEST' | 'SOUTHEAST' | 'SOUTHWEST';
 
 /**
  * Controls the game world and all entities within it.

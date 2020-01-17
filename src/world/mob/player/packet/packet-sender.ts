@@ -4,6 +4,7 @@ import { Packet, PacketType } from '@server/net/packet';
 import { ItemContainer } from '@server/world/items/item-container';
 import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
+import { LandscapeObject } from '@runejs/cache-parser';
 
 /**
  * 6   = set chatbox input type to 2
@@ -92,6 +93,38 @@ export class PacketSender {
     public constructor(player: Player) {
         this.player = player;
         this.socket = player.socket;
+    }
+
+    public setLandscapeObject(landscapeObject: LandscapeObject, position: Position, offset: number = 0): void {
+        this.updateReferencePosition(position);
+
+        const packet = new Packet(152);
+        packet.writeByteInverted((landscapeObject.type << 2) + (landscapeObject.rotation & 3));
+        packet.writeOffsetShortLE(landscapeObject.objectId);
+        packet.writeOffsetByte(offset);
+
+        this.send(packet);
+    }
+
+    public removeLandscapeObject(landscapeObject: LandscapeObject, position: Position, offset: number = 0): void {
+        this.updateReferencePosition(position);
+
+        const packet = new Packet(88);
+        packet.writeNegativeOffsetByte(offset);
+        packet.writeNegativeOffsetByte((landscapeObject.type << 2) + (landscapeObject.rotation & 3));
+
+        this.send(packet);
+    }
+
+    public updateReferencePosition(position: Position): void {
+        const offsetX = position.x - (this.player.lastMapRegionUpdatePosition.chunkX * 8);
+        const offsetY = position.y - (this.player.lastMapRegionUpdatePosition.chunkY * 8);
+
+        const packet = new Packet(75);
+        packet.writeByteInverted(offsetX);
+        packet.writeOffsetByte(offsetY);
+
+        this.send(packet);
     }
 
     public playInterfaceAnimation(interfaceId: number, animationId: number): void {

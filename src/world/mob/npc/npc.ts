@@ -3,8 +3,8 @@ import { NpcSpawn } from '@server/world/config/npc-spawn';
 import { NpcDefinition } from '@runejs/cache-parser';
 import uuidv4 from 'uuid/v4';
 import { Position } from '@server/world/position';
-import { Direction } from '@server/world/world';
 import { world } from '@server/game-server';
+import { Direction } from '@server/world/direction';
 
 interface NpcAnimations {
     walk: number;
