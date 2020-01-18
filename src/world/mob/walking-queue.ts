@@ -312,6 +312,7 @@ export class WalkingQueue {
                 if(this.mob instanceof Player) {
                     oldChunk.removePlayer(this.mob);
                     newChunk.addPlayer(this.mob);
+                    this.mob.chunkChanged(newChunk);
                 } else if(this.mob instanceof Npc) {
                     oldChunk.removeNpc(this.mob);
                     newChunk.addNpc(this.mob);

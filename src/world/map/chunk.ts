@@ -5,6 +5,11 @@ import { gameCache } from '../../game-server';
 import { LandscapeObject, LandscapeObjectDefinition, MapRegionTile } from '@runejs/cache-parser';
 import { Npc } from '../mob/npc/npc';
 
+export interface ChunkUpdateItem {
+    object: LandscapeObject,
+    type: 'ADD' | 'REMOVE'
+}
+
 /**
  * A single map chunk within the game world that keeps track of the entities within it.
  */

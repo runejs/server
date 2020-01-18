@@ -15,6 +15,21 @@ export class ChunkManager {
         this.chunkMap = new Map<string, Chunk>();
     }
 
+    public toggleObjects(newObject: LandscapeObject, oldObject: LandscapeObject, newPosition: Position, oldPosition: Position,
+                         newChunk: Chunk, oldChunk: Chunk, newObjectInCache: boolean): void {
+        if(newObjectInCache) {
+            this.deleteRemovedObjectMarker(newObject, newPosition, newChunk);
+            this.deleteAddedObjectMarker(oldObject, oldPosition, oldChunk);
+        }
+
+        this.addLandscapeObject(newObject, newPosition);
+        this.removeLandscapeObject(oldObject, oldPosition);
+    }
+
+    public deleteAddedObjectMarker(object: LandscapeObject, position: Position, chunk: Chunk): void {
+        chunk.addedLandscapeObjects.delete(`${position.x},${position.y},${object.objectId}`);
+    }
+
     public deleteRemovedObjectMarker(object: LandscapeObject, position: Position, chunk: Chunk): void {
         chunk.removedLandscapeObjects.delete(`${position.x},${position.y},${object.objectId}`);
     }

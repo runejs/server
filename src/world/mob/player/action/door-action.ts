@@ -3,7 +3,7 @@ import { LandscapeObject } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
 import { Direction, directionData, WNES } from '@server/world/direction';
 import { world } from '@server/game-server';
-import { ModifiedLandscapeObject } from '@server/world/landscape/modified-landscape-object';
+import { ModifiedLandscapeObject } from '@server/world/map/landscape-object';
 import { Chunk } from '@server/world/map/chunk';
 
 const leftHinge = [1516, 1536, 1533];
@@ -66,10 +66,5 @@ export const doorAction = (player: Player, door: LandscapeObject, position: Posi
 
     const newDoorChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
 
-    world.chunkManager.addLandscapeObject(newDoor, newPosition);
-    world.chunkManager.removeLandscapeObject(door, position);
-
-    if(!cacheOriginal) {
-        world.chunkManager.deleteRemovedObjectMarker(newDoor, newPosition, newDoorChunk);
-    }
+    world.chunkManager.toggleObjects(newDoor, door, newPosition, position, newDoorChunk, originalDoorChunk, !cacheOriginal);
 };

@@ -5,6 +5,7 @@ import { ItemContainer } from '@server/world/items/item-container';
 import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
 import { LandscapeObject } from '@runejs/cache-parser';
+import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 
 /**
  * 6   = set chatbox input type to 2
@@ -93,6 +94,56 @@ export class PacketSender {
     public constructor(player: Player) {
         this.player = player;
         this.socket = player.socket;
+    }
+
+    private getChunkPositionOffset(x: number, y: number, chunk: Chunk): number {
+        const offsetX = x - ((chunk.position.x + 6) * 8);
+        const offsetY = y - ((chunk.position.y + 6) * 8);
+        return (offsetX * 16 + offsetY);
+    }
+
+    private getChunkOffset(chunk: Chunk): { offsetX: number, offsetY: number } {
+        let offsetX = (chunk.position.x + 6) * 8;
+        let offsetY = (chunk.position.y + 6) * 8;
+        offsetX -= (this.player.lastMapRegionUpdatePosition.chunkX * 8);
+        offsetY -= (this.player.lastMapRegionUpdatePosition.chunkY * 8);
+
+        return { offsetX, offsetY };
+    }
+
+    public updateChunk(chunk: Chunk, chunkUpdates: ChunkUpdateItem[]): void {
+        const { offsetX, offsetY } = this.getChunkOffset(chunk);
+
+        const packet = new Packet(183, PacketType.DYNAMIC_LARGE);
+        packet.writeUnsignedByte(offsetX);
+        packet.writeOffsetByte(offsetY);
+
+        chunkUpdates.forEach(update => {
+            const offset = this.getChunkPositionOffset(update.object.x, update.object.y, chunk);
+
+            if(update.type === 'ADD') {
+                packet.writeUnsignedByte(152);
+                packet.writeByteInverted((update.object.type << 2) + (update.object.rotation & 3));
+                packet.writeOffsetShortLE(update.object.objectId);
+                packet.writeOffsetByte(offset);
+            } else if(update.type === 'REMOVE') {
+                packet.writeUnsignedByte(88);
+                packet.writeNegativeOffsetByte(offset);
+                packet.writeNegativeOffsetByte((update.object.type << 2) + (update.object.rotation & 3));
+            }
+        });
+
+        this.send(packet);
+    }
+
+    public clearChunk(chunk: Chunk): void {
+        const { offsetX, offsetY } = this.getChunkOffset(chunk);
+
+        const packet = new Packet(40);
+        packet.writeNegativeOffsetByte(offsetY);
+        packet.writeByteInverted(offsetX);
+
+        this.send(packet);
     }
 
     public setLandscapeObject(landscapeObject: LandscapeObject, position: Position, offset: number = 0): void {
