@@ -57,8 +57,6 @@ export const doorAction = (player: Player, door: LandscapeObject, position: Posi
                 'originalObject': door
             }
         };
-
-        player.packetSender.chatboxMessage(`Door | Original direction ${originalDirection}, new direction ${newDirection}`);
     } else {
         newPosition = (door as ModifiedLandscapeObject).metadata['originalPosition'];
         newDoor = (door as ModifiedLandscapeObject).metadata['originalObject'];
