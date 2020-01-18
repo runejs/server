@@ -2,6 +2,7 @@ import { Chunk } from './chunk';
 import { Position } from '../position';
 import { gameCache } from '../../game-server';
 import { logger } from '@runejs/logger';
+import { LandscapeObject } from '@runejs/cache-parser';
 
 /**
  * Controls all of the game world's map chunks.
@@ -12,6 +13,55 @@ export class ChunkManager {
 
     public constructor() {
         this.chunkMap = new Map<string, Chunk>();
+    }
+
+    public toggleObjects(newObject: LandscapeObject, oldObject: LandscapeObject, newPosition: Position, oldPosition: Position,
+                         newChunk: Chunk, oldChunk: Chunk, newObjectInCache: boolean): void {
+        if(newObjectInCache) {
+            this.deleteRemovedObjectMarker(newObject, newPosition, newChunk);
+            this.deleteAddedObjectMarker(oldObject, oldPosition, oldChunk);
+        }
+
+        this.addLandscapeObject(newObject, newPosition);
+        this.removeLandscapeObject(oldObject, oldPosition);
+    }
+
+    public deleteAddedObjectMarker(object: LandscapeObject, position: Position, chunk: Chunk): void {
+        chunk.addedLandscapeObjects.delete(`${position.x},${position.y},${object.objectId}`);
+    }
+
+    public deleteRemovedObjectMarker(object: LandscapeObject, position: Position, chunk: Chunk): void {
+        chunk.removedLandscapeObjects.delete(`${position.x},${position.y},${object.objectId}`);
+    }
+
+    public removeLandscapeObject(object: LandscapeObject, position: Position): Promise<void> {
+        const chunk = this.getChunkForWorldPosition(position);
+        chunk.removeObject(object, position);
+
+        return new Promise(resolve => {
+            const nearbyPlayers = this.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
+
+            nearbyPlayers.forEach(player => {
+                player.packetSender.removeLandscapeObject(object, position);
+            });
+
+            resolve();
+        });
+    }
+
+    public addLandscapeObject(object: LandscapeObject, position: Position): Promise<void> {
+        const chunk = this.getChunkForWorldPosition(position);
+        chunk.addObject(object, position);
+
+        return new Promise(resolve => {
+            const nearbyPlayers = this.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
+
+            nearbyPlayers.forEach(player => {
+                player.packetSender.setLandscapeObject(object, position);
+            });
+
+            resolve();
+        });
     }
 
     public generateCollisionMaps(): void {
@@ -30,7 +80,7 @@ export class ChunkManager {
         for(const landscapeObject of objectList) {
             const position = new Position(landscapeObject.x, landscapeObject.y, landscapeObject.level);
             const chunk = this.getChunkForWorldPosition(position);
-            chunk.addObjectToCollisionMap(landscapeObject, position);
+            chunk.setCacheLandscapeObject(landscapeObject, position);
         }
 
         logger.info('Game world collision maps generated.', true);

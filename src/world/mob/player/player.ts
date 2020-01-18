@@ -21,6 +21,7 @@ import { Item } from '../../items/item';
 import { Npc } from '../npc/npc';
 import { NpcUpdateTask } from './task/updating/npc-update-task';
 import { Subject } from 'rxjs';
+import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 
 const DEFAULT_TAB_INTERFACES = [
     2423, 3917, 638, 3213, 1644, 5608, 1151, -1, 5065, 5715, 2449, 904, 147, 962
@@ -51,6 +52,8 @@ export class Player extends Mob {
     private _carryWeight: number;
     private _settings: PlayerSettings;
     public readonly dialogueInteractionEvent: Subject<number>;
+    private _walkingTo: Position;
+    private _nearbyChunks: Chunk[];
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -70,6 +73,7 @@ export class Player extends Mob {
         this._carryWeight = 0;
         this._equipment = new ItemContainer(14);
         this.dialogueInteractionEvent = new Subject<number>();
+        this._nearbyChunks = [];
     }
 
     public init(): void {
@@ -109,10 +113,12 @@ export class Player extends Mob {
         this.updateFlags.mapRegionUpdateRequired = true;
         this.updateFlags.appearanceUpdateRequired = true;
 
-        world.chunkManager.getChunkForWorldPosition(this.position).addPlayer(this);
+        const playerChunk = world.chunkManager.getChunkForWorldPosition(this.position);
+        playerChunk.addPlayer(this);
 
         this.packetSender.sendMembershipStatusAndWorldIndex();
         this.packetSender.updateCurrentMapChunk();
+        this.chunkChanged(playerChunk);
         this.packetSender.chatboxMessage('Welcome to RuneScape.');
 
         DEFAULT_TAB_INTERFACES.forEach((interfaceId: number, tabIndex: number) => {
@@ -155,6 +161,48 @@ export class Player extends Mob {
         this.loggedIn = false;
 
         logger.info(`${this.username} has logged out.`);
+    }
+
+    /**
+     * Should be fired whenever the player's chunk changes. This will fire off chunk updates for all chunks not
+     * already tracked by the player - all the new chunks that are coming into view.
+     * @param chunk The player's new active map chunk.
+     */
+    public chunkChanged(chunk: Chunk): void {
+        const nearbyChunks = world.chunkManager.getSurroundingChunks(chunk);
+        if(this._nearbyChunks.length === 0) {
+            this.sendChunkUpdates(nearbyChunks);
+        } else {
+            const newChunks = nearbyChunks.filter(c1 => this._nearbyChunks.findIndex(c2 => c1.equals(c2)) === -1);
+            this.sendChunkUpdates(newChunks);
+        }
+
+        this._nearbyChunks = nearbyChunks;
+    }
+
+    /**
+     * Sends chunk updates to notify the client of added & removed landscape objects
+     * @TODO ground items
+     * @param chunks The chunks to update.
+     */
+    private sendChunkUpdates(chunks: Chunk[]): void {
+        chunks.forEach(chunk => {
+            this.packetSender.clearChunk(chunk);
+
+            const chunkUpdateItems: ChunkUpdateItem[] = [];
+
+            if(chunk.addedLandscapeObjects.size !== 0) {
+                chunk.addedLandscapeObjects.forEach(object => chunkUpdateItems.push({ object, type: 'ADD' }));
+            }
+
+            if(chunk.removedLandscapeObjects.size !== 0) {
+                chunk.removedLandscapeObjects.forEach(object => chunkUpdateItems.push({ object, type: 'REMOVE' }));
+            }
+
+            if(chunkUpdateItems.length !== 0) {
+                this.packetSender.updateChunk(chunk, chunkUpdateItems);
+            }
+        });
     }
 
     public async tick(): Promise<void> {
@@ -364,5 +412,17 @@ export class Player extends Mob {
 
     public get settings(): PlayerSettings {
         return this._settings;
+    }
+
+    public get walkingTo(): Position {
+        return this._walkingTo;
+    }
+
+    public set walkingTo(value: Position) {
+        this._walkingTo = value;
+    }
+
+    public get nearbyChunks(): Chunk[] {
+        return this._nearbyChunks;
     }
 }

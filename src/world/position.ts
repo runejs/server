@@ -1,3 +1,5 @@
+import { Direction, directionData } from '@server/world/direction';
+
 const directionDeltaX = [-1, 0, 1, -1, 1, -1, 0, 1];
 const directionDeltaY = [1, 1, 1, 0, 0, -1, -1, -1];
 
@@ -54,6 +56,10 @@ export class Position {
 
     public fromDirection(direction: number): Position {
         return new Position(this.x + directionDeltaX[direction], this.y + directionDeltaY[direction], this.level);
+    }
+
+    public step(steps: number, direction: Direction): Position {
+        return new Position(this.x + (steps * directionData[direction].deltaX), this.y + (steps * directionData[direction].deltaY), this.level);
     }
 
     public equals(position: Position | { x: number, y: number, level: number }): boolean {

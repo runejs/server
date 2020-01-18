@@ -5,6 +5,11 @@ import { gameCache } from '../../game-server';
 import { LandscapeObject, LandscapeObjectDefinition, MapRegionTile } from '@runejs/cache-parser';
 import { Npc } from '../mob/npc/npc';
 
+export interface ChunkUpdateItem {
+    object: LandscapeObject,
+    type: 'ADD' | 'REMOVE'
+}
+
 /**
  * A single map chunk within the game world that keeps track of the entities within it.
  */
@@ -15,6 +20,9 @@ export class Chunk {
     private readonly _npcs: Npc[];
     private readonly _collisionMap: CollisionMap;
     private readonly _tileList: MapRegionTile[];
+    private readonly _cacheLandscapeObjects: Map<string, LandscapeObject>;
+    private readonly _addedLandscapeObjects: Map<string, LandscapeObject>;
+    private readonly _removedLandscapeObjects: Map<string, LandscapeObject>;
 
     public constructor(position: Position) {
         this._position = position;
@@ -22,9 +30,12 @@ export class Chunk {
         this._npcs = [];
         this._collisionMap = new CollisionMap(8, 8, (position.x + 6) * 8, (position.y + 6) * 8, this);
         this._tileList = [];
+        this._cacheLandscapeObjects = new Map<string, LandscapeObject>();
+        this._addedLandscapeObjects = new Map<string, LandscapeObject>();
+        this._removedLandscapeObjects = new Map<string, LandscapeObject>();
     }
 
-    public addObjectToCollisionMap(landscapeObject: LandscapeObject, objectPosition: Position): void {
+    public setCacheLandscapeObject(landscapeObject: LandscapeObject, objectPosition: Position): void {
         let tile = this.getTile(objectPosition);
 
         if(!tile) {
@@ -33,6 +44,7 @@ export class Chunk {
         }
 
         this.markOnCollisionMap(landscapeObject, objectPosition, true);
+        this._cacheLandscapeObjects.set(`${objectPosition.x},${objectPosition.y},${landscapeObject.objectId}`, landscapeObject);
     }
 
     public addTile(tile: MapRegionTile, tilePosition: Position): void {
@@ -104,6 +116,37 @@ export class Chunk {
         }
     }
 
+    public removeObject(object: LandscapeObject, position: Position): void {
+        if(this.getCacheObject(object.objectId, position)) {
+            // Only add this as an "removed" object if it's from the cache, as that's all we care about
+            this.removedLandscapeObjects.set(`${position.x},${position.y},${object.objectId}`, object);
+        }
+
+        this.markOnCollisionMap(object, position, false);
+    }
+
+    public addObject(object: LandscapeObject, position: Position): void {
+        if(!this.getCacheObject(object.objectId, position)) {
+            // Only add this as an "added" object if there's not a cache object with the same id and position
+            // This becomes a "custom" added object
+            this.addedLandscapeObjects.set(`${position.x},${position.y},${object.objectId}`, object);
+        }
+
+        this.markOnCollisionMap(object, position, true);
+    }
+
+    public getCacheObject(objectId: number, position: Position): LandscapeObject {
+        return this.cacheLandscapeObjects.get(`${position.x},${position.y},${objectId}`);
+    }
+
+    public getAddedObject(objectId: number, position: Position): LandscapeObject {
+        return this.addedLandscapeObjects.get(`${position.x},${position.y},${objectId}`);
+    }
+
+    public getRemovedObject(objectId: number, position: Position): LandscapeObject {
+        return this.removedLandscapeObjects.get(`${position.x},${position.y},${objectId}`);
+    }
+
     public equals(chunk: Chunk): boolean {
         return this.position.x === chunk.position.x && this.position.y === chunk.position.y && this.position.level === chunk.position.level;
     }
@@ -126,5 +169,17 @@ export class Chunk {
 
     public get tileList(): MapRegionTile[] {
         return this._tileList;
+    }
+
+    public get cacheLandscapeObjects(): Map<string, LandscapeObject> {
+        return this._cacheLandscapeObjects;
+    }
+
+    public get addedLandscapeObjects(): Map<string, LandscapeObject> {
+        return this._addedLandscapeObjects;
+    }
+
+    public get removedLandscapeObjects(): Map<string, LandscapeObject> {
+        return this._removedLandscapeObjects;
     }
 }
