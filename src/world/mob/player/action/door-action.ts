@@ -6,7 +6,7 @@ import { world } from '@server/game-server';
 import { ModifiedLandscapeObject } from '@server/world/map/landscape-object';
 import { Chunk } from '@server/world/map/chunk';
 
-const leftHinge = [1516, 1536, 1533];
+const leftHinge = [1516, 1536, 1533, 12348];
 const rightHinge = [1519, 1530, 4465, 4467, 3014, 3017, 3018, 3019, 1531];
 const preOpened = [1531, 1534];
 

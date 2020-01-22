@@ -308,6 +308,15 @@ export class WalkingQueue {
 
             const newChunk = world.chunkManager.getChunkForWorldPosition(this.mob.position);
 
+            if(this.mob instanceof Player) {
+                const mapDiffX = this.mob.position.x - (lastMapRegionUpdatePosition.chunkX * 8);
+                const mapDiffY = this.mob.position.y - (lastMapRegionUpdatePosition.chunkY * 8);
+                if(mapDiffX < 16 || mapDiffX > 87 || mapDiffY < 16 || mapDiffY > 87) {
+                    this.mob.updateFlags.mapRegionUpdateRequired = true;
+                    this.mob.lastMapRegionUpdatePosition = this.mob.position;
+                }
+            }
+
             if(!oldChunk.equals(newChunk)) {
                 if(this.mob instanceof Player) {
                     oldChunk.removePlayer(this.mob);
@@ -316,15 +325,6 @@ export class WalkingQueue {
                 } else if(this.mob instanceof Npc) {
                     oldChunk.removeNpc(this.mob);
                     newChunk.addNpc(this.mob);
-                }
-            }
-
-            if(this.mob instanceof Player) {
-                const mapDiffX = this.mob.position.x - (lastMapRegionUpdatePosition.chunkX * 8);
-                const mapDiffY = this.mob.position.y - (lastMapRegionUpdatePosition.chunkY * 8);
-                if(mapDiffX < 16 || mapDiffX > 87 || mapDiffY < 16 || mapDiffY > 87) {
-                    this.mob.updateFlags.mapRegionUpdateRequired = true;
-                    this.mob.lastMapRegionUpdatePosition = this.mob.position;
                 }
             }
         } else {

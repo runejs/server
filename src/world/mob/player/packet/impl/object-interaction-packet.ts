@@ -6,7 +6,7 @@ import { world } from '@server/game-server';
 import { doorAction } from '@server/world/mob/player/action/door-action';
 import { walkToAction } from '@server/world/mob/player/action/action';
 
-const doors = [1519, 1530, 4465, 4467, 3014, 3017, 3018, 3019, 1516, 1536, 1533, 1531, 1534];
+const doors = [1519, 1530, 4465, 4467, 3014, 3017, 3018, 3019, 1516, 1536, 1533, 1531, 1534, 12348];
 
 export const objectInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const x = packet.readNegativeOffsetShortBE();

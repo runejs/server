@@ -6,7 +6,7 @@ export const walkToAction = (player: Player, position: Position): Promise<void> 
         player.walkingTo = position;
 
         const inter = setInterval(() => {
-            if(!player.walkingTo) {
+            if(!player.walkingTo || !player.walkingTo.equals(position)) {
                 clearInterval(inter);
                 reject();
                 return;
