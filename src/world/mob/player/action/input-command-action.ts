@@ -89,26 +89,26 @@ const commands: { [key: string]: commandHandler } = {
 
     sound: (player: Player, args: string[]) => {
         if(args.length !== 1 && args.length !== 2) {
-            throw `sound soundId [type?]`;
+            throw `sound soundId [volume?]`;
         }
 
         const soundId: number = parseInt(args[0]);
 
         if(isNaN(soundId)) {
-            throw `sound soundId [type?]`;
+            throw `sound soundId [volume?]`;
         }
 
-        let type: number = 0;
+        let volume: number = 0;
 
         if(args.length === 2) {
-            type = parseInt(args[1]);
+            volume = parseInt(args[1]);
 
-            if(isNaN(type)) {
-                throw `sound soundId type`;
+            if(isNaN(volume)) {
+                throw `sound soundId volume`;
             }
         }
 
-        player.packetSender.playSound(soundId, type);
+        player.packetSender.playSound(soundId, volume);
     }
 
 };

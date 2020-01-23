@@ -96,10 +96,10 @@ export class PacketSender {
         this.socket = player.socket;
     }
 
-    public playSound(soundId: number, type: number, delay: number = 0): void {
+    public playSound(soundId: number, volume: number, delay: number = 0): void {
         const packet = new Packet(26);
         packet.writeShortBE(soundId);
-        packet.writeByte(type);
+        packet.writeByte(volume);
         packet.writeShortBE(delay);
 
         this.send(packet);

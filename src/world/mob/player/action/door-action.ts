@@ -69,5 +69,5 @@ export const doorAction = (player: Player, door: LandscapeObject, position: Posi
     const newDoorChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
 
     world.chunkManager.toggleObjects(newDoor, door, newPosition, position, newDoorChunk, originalDoorChunk, !cacheOriginal);
-    player.packetSender.playSound(opening ? 328 : 326, 0);
+    player.packetSender.playSound(opening ? 328 : 326, 7);
 };
