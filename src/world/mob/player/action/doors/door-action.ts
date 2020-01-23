@@ -5,9 +5,10 @@ import { Direction, directionData, WNES } from '@server/world/direction';
 import { world } from '@server/game-server';
 import { ModifiedLandscapeObject } from '@server/world/map/landscape-object';
 import { Chunk } from '@server/world/map/chunk';
+import { logger } from '@runejs/logger/dist/logger';
 
-const leftHinge = [1516, 1536, 1533, 12348];
-const rightHinge = [1519, 1530, 4465, 4467, 3014, 3017, 3018, 3019, 1531];
+const leftHinge = [1516, 1536, 1533, 12348, 12349];
+const rightHinge = [1519, 1530, 4465, 4467, 3014, 3017, 3018, 3019, 1531, 12350];
 const preOpened = [1531, 1534];
 
 export const doorAction = (player: Player, door: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
@@ -39,8 +40,11 @@ export const doorAction = (player: Player, door: LandscapeObject, position: Posi
         let hinge: 'RIGHT' | 'LEFT';
         if(leftHinge.indexOf(door.objectId) !== -1) {
             hinge = alreadyOpen ? 'RIGHT' : 'LEFT';
-        } else {
+        } else if(rightHinge.indexOf(door.objectId) !== -1) {
             hinge = alreadyOpen ? 'LEFT' : 'RIGHT';
+        } else {
+            logger.error('Improperly handled double door at ' + door.x + ',' + door.y + ',' + door.level);
+            return;
         }
 
         const originalDirection = WNES[door.rotation];
