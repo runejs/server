@@ -96,6 +96,15 @@ export class PacketSender {
         this.socket = player.socket;
     }
 
+    public playSound(soundId: number, type: number, delay: number = 0): void {
+        const packet = new Packet(26);
+        packet.writeShortBE(soundId);
+        packet.writeByte(type);
+        packet.writeShortBE(delay);
+
+        this.send(packet);
+    }
+
     private getChunkPositionOffset(x: number, y: number, chunk: Chunk): number {
         const offsetX = x - ((chunk.position.x + 6) * 8);
         const offsetY = y - ((chunk.position.y + 6) * 8);

@@ -14,6 +14,7 @@ export const doorAction = (player: Player, door: LandscapeObject, position: Posi
     let newDoor: ModifiedLandscapeObject;
     let newPosition: Position;
     const originalDoorChunk: Chunk = world.chunkManager.getChunkForWorldPosition(position);
+    let opening: boolean = true;
 
     if(cacheOriginal) {
         let leftHingeDirections: { [key: string]: string } = {
@@ -32,6 +33,7 @@ export const doorAction = (player: Player, door: LandscapeObject, position: Posi
 
         if(preOpened.indexOf(door.objectId) !== -1) {
             alreadyOpen = true;
+            opening = false;
         }
 
         let hinge: 'RIGHT' | 'LEFT';
@@ -54,15 +56,18 @@ export const doorAction = (player: Player, door: LandscapeObject, position: Posi
             rotation: directionData[newDirection].rotation,
             metadata: {
                 'originalPosition': position,
-                'originalObject': door
+                'originalObject': door,
+                'state': opening ? 'OPEN' : 'CLOSED'
             }
         };
     } else {
         newPosition = (door as ModifiedLandscapeObject).metadata['originalPosition'];
         newDoor = (door as ModifiedLandscapeObject).metadata['originalObject'];
+        opening = (door as ModifiedLandscapeObject).metadata['state'] !== 'OPEN';
     }
 
     const newDoorChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
 
     world.chunkManager.toggleObjects(newDoor, door, newPosition, position, newDoorChunk, originalDoorChunk, !cacheOriginal);
+    player.packetSender.playSound(opening ? 328 : 326, 0);
 };

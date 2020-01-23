@@ -85,6 +85,30 @@ const commands: { [key: string]: commandHandler } = {
         }
 
         player.packetSender.showChatboxInterface(interfaceId);
+    },
+
+    sound: (player: Player, args: string[]) => {
+        if(args.length !== 1 && args.length !== 2) {
+            throw `sound soundId [type?]`;
+        }
+
+        const soundId: number = parseInt(args[0]);
+
+        if(isNaN(soundId)) {
+            throw `sound soundId [type?]`;
+        }
+
+        let type: number = 0;
+
+        if(args.length === 2) {
+            type = parseInt(args[1]);
+
+            if(isNaN(type)) {
+                throw `sound soundId type`;
+            }
+        }
+
+        player.packetSender.playSound(soundId, type);
     }
 
 };
