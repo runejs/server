@@ -1,77 +1,88 @@
 import { Player } from '@server/world/mob/player/player';
 import { LandscapeObject } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
-import { Direction, directionData, WNES } from '@server/world/direction';
+import { directionData, WNES } from '@server/world/direction';
 import { world } from '@server/game-server';
-import { ModifiedLandscapeObject } from '@server/world/map/landscape-object';
 import { Chunk } from '@server/world/map/chunk';
-import { logger } from '@runejs/logger/dist/logger';
 
-const leftHinge = [1516, 1536, 1533, 12348, 12349];
-const rightHinge = [1519, 1530, 4465, 4467, 3014, 3017, 3018, 3019, 1531, 12350];
-const preOpened = [1531, 1534];
+// @TODO move to yaml config
+const doors = [
+    {
+        closed: 1530,
+        open: 1531,
+        hinge: 'RIGHT'
+    },
+    {
+        closed: 1533,
+        open: 1534,
+        hinge: 'RIGHT'
+    },
+    {
+        closed: 1516,
+        open: 1517,
+        hinge: 'LEFT'
+    },
+    {
+        closed: 1519,
+        open: 1520,
+        hinge: 'RIGHT'
+    },
+    {
+        closed: 1536,
+        open: 1537,
+        hinge: 'LEFT'
+    }
+];
+
+const leftHingeDir: { [key: string]: string } = {
+    'NORTH': 'WEST',
+    'SOUTH': 'EAST',
+    'WEST': 'SOUTH',
+    'EAST': 'NORTH'
+};
+const rightHingeDir: { [key: string]: string } = {
+    'NORTH': 'EAST',
+    'SOUTH': 'WEST',
+    'WEST': 'NORTH',
+    'EAST': 'SOUTH'
+};
 
 export const doorAction = (player: Player, door: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
-    let newDoor: ModifiedLandscapeObject;
-    let newPosition: Position;
-    const originalDoorChunk: Chunk = world.chunkManager.getChunkForWorldPosition(position);
-    let opening: boolean = true;
-
-    if(cacheOriginal) {
-        let leftHingeDirections: { [key: string]: string } = {
-            'NORTH': 'WEST',
-            'SOUTH': 'EAST',
-            'WEST': 'SOUTH',
-            'EAST': 'NORTH'
-        };
-        let rightHingeDirections: { [key: string]: string } = {
-            'NORTH': 'EAST',
-            'SOUTH': 'WEST',
-            'WEST': 'NORTH',
-            'EAST': 'SOUTH'
-        };
-        let alreadyOpen = false;
-
-        if(preOpened.indexOf(door.objectId) !== -1) {
-            alreadyOpen = true;
-            opening = false;
-        }
-
-        let hinge: 'RIGHT' | 'LEFT';
-        if(leftHinge.indexOf(door.objectId) !== -1) {
-            hinge = alreadyOpen ? 'RIGHT' : 'LEFT';
-        } else if(rightHinge.indexOf(door.objectId) !== -1) {
-            hinge = alreadyOpen ? 'LEFT' : 'RIGHT';
-        } else {
-            logger.error('Improperly handled double door at ' + door.x + ',' + door.y + ',' + door.level);
+    player.packetSender.chatboxMessage(`door ${door.objectId}`);
+    let opening = true;
+    let doorConfig = doors.find(d => d.closed === door.objectId);
+    let hingeConfig;
+    let replacementDoorId: number;
+    if(!doorConfig) {
+        doorConfig = doors.find(d => d.open === door.objectId);
+        if(!doorConfig) {
             return;
         }
 
-        const originalDirection = WNES[door.rotation];
-        const newDirection = hinge === 'LEFT' ? leftHingeDirections[originalDirection] : rightHingeDirections[originalDirection];
-        newPosition = position.step(alreadyOpen ? -1 : 1, alreadyOpen ? newDirection as Direction : originalDirection);
-
-        newDoor = {
-            objectId: door.objectId,
-            x: newPosition.x,
-            y: newPosition.y,
-            level: position.level,
-            type: door.type,
-            rotation: directionData[newDirection].rotation,
-            metadata: {
-                'originalPosition': position,
-                'originalObject': door,
-                'state': opening ? 'OPEN' : 'CLOSED'
-            }
-        };
+        opening = false;
+        hingeConfig = doorConfig.hinge === 'LEFT' ? rightHingeDir : leftHingeDir;
+        replacementDoorId = doorConfig.closed;
     } else {
-        newPosition = (door as ModifiedLandscapeObject).metadata['originalPosition'];
-        newDoor = (door as ModifiedLandscapeObject).metadata['originalObject'];
-        opening = (door as ModifiedLandscapeObject).metadata['state'] !== 'OPEN';
+        hingeConfig = doorConfig.hinge === 'LEFT' ? leftHingeDir : rightHingeDir;
+        replacementDoorId = doorConfig.open;
     }
 
-    const newDoorChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
+    const startDoorChunk: Chunk = world.chunkManager.getChunkForWorldPosition(position);
+    const startDir = WNES[door.rotation];
+    const endDir = hingeConfig[startDir];
+    const endPosition = position.step(opening ? 1 : -1, opening? startDir : endDir);
 
-    world.chunkManager.toggleObjects(newDoor, door, newPosition, position, newDoorChunk, originalDoorChunk, !cacheOriginal);
+    const replacementDoor = {
+        objectId: replacementDoorId,
+        x: endPosition.x,
+        y: endPosition.y,
+        level: position.level,
+        type: door.type,
+        rotation: directionData[endDir].rotation
+    };
+
+    const replacementDoorChunk = world.chunkManager.getChunkForWorldPosition(endPosition);
+
+    world.chunkManager.toggleObjects(replacementDoor, door, endPosition, position, replacementDoorChunk, startDoorChunk, !cacheOriginal);
     player.packetSender.playSound(opening ? 328 : 326, 7);
 };

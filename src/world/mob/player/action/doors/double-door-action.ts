@@ -6,18 +6,18 @@ import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
 import { doorAction } from '@server/world/mob/player/action/doors/door-action';
 
-const leftHinge = [12349, 1516];
-const rightHinge = [12350, 1519];
+const leftHinge = [1516, 1517];
+const rightHinge = [1519, 1520];
+const open = [1517, 1520];
 
 export const doubleDoorAction = (player: Player, door: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
     const direction = WNES[door.rotation];
     let deltaX = 0;
     let deltaY = 0;
     let otherDoorId: number;
-
-    // @TODO already open double doors - are there any that can be closed?...
-
-    if(!cacheOriginal) {
+    const opening = open.indexOf(door.objectId) === -1;
+    
+    if(!opening) {
         switch(direction) {
             case 'WEST':
                 deltaX++;
@@ -32,45 +32,47 @@ export const doubleDoorAction = (player: Player, door: LandscapeObject, position
                 deltaY++;
                 break;
         }
+    } else {
+        if(leftHinge.indexOf(door.objectId) !== -1) {
+            if(opening) {
+                switch(direction) {
+                    case 'WEST':
+                        deltaY++;
+                        break;
+                    case 'EAST':
+                        deltaY--;
+                        break;
+                    case 'NORTH':
+                        deltaX++;
+                        break;
+                    case 'SOUTH':
+                        deltaX--;
+                        break;
+                }
+            }
+        } else if(rightHinge.indexOf(door.objectId) !== -1) {
+            if(opening) {
+                switch(direction) {
+                    case 'WEST':
+                        deltaY--;
+                        break;
+                    case 'EAST':
+                        deltaY++;
+                        break;
+                    case 'NORTH':
+                        deltaX--;
+                        break;
+                    case 'SOUTH':
+                        deltaX++;
+                        break;
+                }
+            }
+        }
     }
 
     if(leftHinge.indexOf(door.objectId) !== -1) {
-        if(cacheOriginal) {
-            switch(direction) {
-                case 'WEST':
-                    deltaY++;
-                    break;
-                case 'EAST':
-                    deltaY--;
-                    break;
-                case 'NORTH':
-                    deltaX++;
-                    break;
-                case 'SOUTH':
-                    deltaX--;
-                    break;
-            }
-        }
-
         otherDoorId = rightHinge[leftHinge.indexOf(door.objectId)];
     } else if(rightHinge.indexOf(door.objectId) !== -1) {
-        if(cacheOriginal) {
-            switch(direction) {
-                case 'WEST':
-                    deltaY--;
-                    break;
-                case 'EAST':
-                    deltaY++;
-                    break;
-                case 'NORTH':
-                    deltaX--;
-                    break;
-                case 'SOUTH':
-                    deltaX++;
-                    break;
-            }
-        }
-
         otherDoorId = leftHinge[rightHinge.indexOf(door.objectId)];
     }
 
