@@ -161,7 +161,7 @@ export const gateAction = (player: Player, gate: LandscapeObject, position: Posi
         const newSecondChunk = world.chunkManager.getChunkForWorldPosition(newSecondPosition);
 
         const newHinge = {
-            objectId: gate.objectId,
+            objectId: gate.objectId + 1,
             x: newPosition.x,
             y: newPosition.y,
             level: newPosition.level,
@@ -169,7 +169,7 @@ export const gateAction = (player: Player, gate: LandscapeObject, position: Posi
             rotation: directionData[newDirection].rotation
         } as ModifiedLandscapeObject;
         const newSecond = {
-            objectId: details.secondary,
+            objectId: details.secondary + 1,
             x: newSecondPosition.x,
             y: newSecondPosition.y,
             level: newSecondPosition.level,

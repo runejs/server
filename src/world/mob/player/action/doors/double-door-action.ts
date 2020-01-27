@@ -16,7 +16,7 @@ export const doubleDoorAction = (player: Player, door: LandscapeObject, position
     let deltaY = 0;
     let otherDoorId: number;
     const opening = open.indexOf(door.objectId) === -1;
-    
+
     if(!opening) {
         switch(direction) {
             case 'WEST':

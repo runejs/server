@@ -10,7 +10,7 @@ import { gateAction } from '@server/world/mob/player/action/doors/gate-action';
 
 const doors = [1530, 4465, 4467, 3014, 3017, 3018, 3019, 1536, 1537, 1533, 1531, 1534, 12348];
 const doubleDoors = [1519, 1516, 1517, 1520];
-const gates = [1551, 1553];
+const gates = [1551, 1553, 1552, 1554];
 
 export const objectInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const x = packet.readNegativeOffsetShortBE();
