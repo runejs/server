@@ -6,74 +6,65 @@ import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
 import { doorAction } from '@server/world/mob/player/action/doors/door-action';
 
-const leftHinge = [1516, 1517];
-const rightHinge = [1519, 1520];
-const open = [1517, 1520];
+const doubleDoors = [
+    {
+        closed: [ 1516, 1519 ],
+        open: [ 1517, 1520 ]
+    }
+];
+
+const closingDelta = {
+    'WEST': { x: 1, y: 0 },
+    'EAST': { x: -1, y: 0 },
+    'NORTH': { x: 0, y: -1 },
+    'SOUTH': { x: 0, y: 1 }
+};
+
+const openingDelta = {
+    'LEFT': {
+        'WEST': { x: 0, y: 1 },
+        'EAST': { x: 0, y: -1 },
+        'NORTH': { x: 1, y: 0 },
+        'SOUTH': { x: -1, y: 0 }
+    },
+    'RIGHT': {
+        'WEST': { x: 0, y: -1 },
+        'EAST': { x: 0, y: 1 },
+        'NORTH': { x: -1, y: 0 },
+        'SOUTH': { x: 1, y: 0 }
+    }
+};
 
 export const doubleDoorAction = (player: Player, door: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
+    let doorConfig = doubleDoors.find(d => d.closed.indexOf(door.objectId) !== -1);
+    let doorIds: number[];
+    let opening = true;
+    if(!doorConfig) {
+        doorConfig = doubleDoors.find(d => d.open.indexOf(door.objectId) !== -1);
+        if(!doorConfig) {
+            return;
+        }
+
+        opening = false;
+        doorIds = doorConfig.open;
+    } else {
+        doorIds = doorConfig.closed;
+    }
+
+    const leftDoorId = doorIds[0];
+    const rightDoorId = doorIds[1];
+    const hinge = leftDoorId === door.objectId ? 'LEFT' : 'RIGHT';
     const direction = WNES[door.rotation];
     let deltaX = 0;
     let deltaY = 0;
-    let otherDoorId: number;
-    const opening = open.indexOf(door.objectId) === -1;
+    const otherDoorId = hinge === 'LEFT' ? rightDoorId : leftDoorId;
 
     if(!opening) {
-        switch(direction) {
-            case 'WEST':
-                deltaX++;
-                break;
-            case 'EAST':
-                deltaX--;
-                break;
-            case 'NORTH':
-                deltaY--;
-                break;
-            case 'SOUTH':
-                deltaY++;
-                break;
-        }
+        deltaX += closingDelta[direction].x;
+        deltaY += closingDelta[direction].y;
     } else {
-        if(leftHinge.indexOf(door.objectId) !== -1) {
-            if(opening) {
-                switch(direction) {
-                    case 'WEST':
-                        deltaY++;
-                        break;
-                    case 'EAST':
-                        deltaY--;
-                        break;
-                    case 'NORTH':
-                        deltaX++;
-                        break;
-                    case 'SOUTH':
-                        deltaX--;
-                        break;
-                }
-            }
-        } else if(rightHinge.indexOf(door.objectId) !== -1) {
-            if(opening) {
-                switch(direction) {
-                    case 'WEST':
-                        deltaY--;
-                        break;
-                    case 'EAST':
-                        deltaY++;
-                        break;
-                    case 'NORTH':
-                        deltaX--;
-                        break;
-                    case 'SOUTH':
-                        deltaX++;
-                        break;
-                }
-            }
-        }
-    }
-
-    if(leftHinge.indexOf(door.objectId) !== -1) {
-        otherDoorId = rightHinge[leftHinge.indexOf(door.objectId)];
-    } else if(rightHinge.indexOf(door.objectId) !== -1) {
-        otherDoorId = leftHinge[rightHinge.indexOf(door.objectId)];
+        deltaX += openingDelta[hinge][direction].x;
+        deltaY += openingDelta[hinge][direction].y;
     }
 
     if(!otherDoorId || (deltaX === 0 && deltaY === 0)) {
