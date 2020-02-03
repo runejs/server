@@ -20,6 +20,7 @@ export const gateAction = (player: Player, gate: LandscapeObject, position: Posi
 
         world.chunkManager.toggleObjects(metadata.originalMain, metadata.main, metadata.originalMainPosition, metadata.mainPosition, metadata.originalMainChunk, metadata.mainChunk, true);
         world.chunkManager.toggleObjects(metadata.originalSecond, metadata.second, metadata.originalSecondPosition, metadata.secondPosition, metadata.originalSecondChunk, metadata.secondChunk, true);
+        player.packetSender.playSound(327, 7); // @TODO find correct gate closing sound
     } else {
         let details = gates.find(g => g.main === gate.objectId);
         let clickedSecondary = false;
@@ -96,11 +97,11 @@ export const gateAction = (player: Player, gate: LandscapeObject, position: Posi
                     break;
                 case 'NORTH':
                     deltaX++;
-                    newY--;
+                    newY++;
                     break;
                 case 'SOUTH':
                     deltaX--;
-                    newY++;
+                    newY--;
                     break;
             }
         } else if(hinge === 'RIGHT') {
@@ -115,14 +116,16 @@ export const gateAction = (player: Player, gate: LandscapeObject, position: Posi
                     break;
                 case 'NORTH':
                     deltaX--;
-                    newY++;
+                    newY--;
                     break;
                 case 'SOUTH':
                     deltaX++;
-                    newY--;
+                    newY++;
                     break;
             }
         }
+
+        player.packetSender.chatboxMessage(hinge + ' ' + direction);
 
         let leftHingeDirections: { [key: string]: string } = {
             'NORTH': 'WEST',
@@ -197,5 +200,6 @@ export const gateAction = (player: Player, gate: LandscapeObject, position: Posi
 
         world.chunkManager.toggleObjects(newHinge, gate, newPosition, position, newHingeChunk, hingeChunk, !cacheOriginal);
         world.chunkManager.toggleObjects(newSecond, secondGate, newSecondPosition, gateSecondPosition, newSecondChunk, gateSecondChunk, !cacheOriginal);
+        player.packetSender.playSound(328, 7); // @TODO find correct gate opening sound
     }
 };
