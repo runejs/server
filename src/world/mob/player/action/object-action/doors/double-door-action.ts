@@ -4,7 +4,10 @@ import { Position } from '@server/world/position';
 import { WNES } from '@server/world/direction';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
-import { doorAction } from '@server/world/mob/player/action/doors/door-action';
+import { action as doorAction } from '@server/world/mob/player/action/object-action/doors/door-action';
+import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action/object-action';
+
+const objectIds = [1519, 1516, 1517, 1520];
 
 const doubleDoors = [
     {
@@ -35,7 +38,7 @@ const openingDelta = {
     }
 };
 
-export const doubleDoorAction = (player: Player, door: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
+const action: objectAction = (player: Player, door: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
     let doorConfig = doubleDoors.find(d => d.closed.indexOf(door.objectId) !== -1);
     let doorIds: number[];
     let opening = true;
@@ -92,3 +95,5 @@ export const doubleDoorAction = (player: Player, door: LandscapeObject, position
     doorAction(player, door, position, cacheOriginal);
     doorAction(player, otherDoor, otherDoorPosition, cacheOriginal);
 };
+
+export default { objectIds, action, walkTo: true } as ObjectActionPlugin;

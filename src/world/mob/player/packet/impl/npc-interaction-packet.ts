@@ -4,6 +4,7 @@ import { RsBuffer } from '@server/net/rs-buffer';
 import { world } from '@server/game-server';
 import { World } from '@server/world/world';
 import { npcAction } from '@server/world/mob/player/action/npc-action';
+import { walkToAction } from '@server/world/mob/player/action/action';
 
 export const npcInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const npcIndex = packet.readUnsignedShortLE();
@@ -26,7 +27,6 @@ export const npcInteractionPacket: incomingPacket = (player: Player, packetId: n
     if(distance === 1) {
         npcAction(player, npc);
     } else {
-        // @TODO wait for the player to finish walking to their target
-        npcAction(player, npc);
+        walkToAction(player, npc.position).then(() => npcAction(player, npc));
     }
 };

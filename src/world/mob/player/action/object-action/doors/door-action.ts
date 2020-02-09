@@ -4,6 +4,9 @@ import { Position } from '@server/world/position';
 import { directionData, WNES } from '@server/world/direction';
 import { world } from '@server/game-server';
 import { Chunk } from '@server/world/map/chunk';
+import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action/object-action';
+
+const objectIds = [1530, 4465, 4467, 3014, 3017, 3018, 3019, 1536, 1537, 1533, 1531, 1534, 12348];
 
 // @TODO move to yaml config
 const doors = [
@@ -47,7 +50,7 @@ const rightHingeDir: { [key: string]: string } = {
     'EAST': 'SOUTH'
 };
 
-export const doorAction = (player: Player, door: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
+export const action: objectAction = (player: Player, door: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
     player.packetSender.chatboxMessage(`door ${door.objectId}`);
     let opening = true;
     let doorConfig = doors.find(d => d.closed === door.objectId);
@@ -86,3 +89,5 @@ export const doorAction = (player: Player, door: LandscapeObject, position: Posi
     world.chunkManager.toggleObjects(replacementDoor, door, endPosition, position, replacementDoorChunk, startDoorChunk, !cacheOriginal);
     player.packetSender.playSound(opening ? 318 : 326, 7);
 };
+
+export default { objectIds, action, walkTo: true } as ObjectActionPlugin;

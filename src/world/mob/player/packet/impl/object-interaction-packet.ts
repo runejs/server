@@ -3,14 +3,7 @@ import { Player } from '../../player';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { Position } from '@server/world/position';
 import { world } from '@server/game-server';
-import { doorAction } from '@server/world/mob/player/action/doors/door-action';
-import { walkToAction } from '@server/world/mob/player/action/action';
-import { doubleDoorAction } from '@server/world/mob/player/action/doors/double-door-action';
-import { gateAction } from '@server/world/mob/player/action/doors/gate-action';
-
-const doors = [1530, 4465, 4467, 3014, 3017, 3018, 3019, 1536, 1537, 1533, 1531, 1534, 12348];
-const doubleDoors = [1519, 1516, 1517, 1520];
-const gates = [1551, 1553, 1552, 1554];
+import { objectAction } from '@server/world/mob/player/action/object-action/object-action';
 
 export const objectInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const x = packet.readNegativeOffsetShortBE();
@@ -35,13 +28,5 @@ export const objectInteractionPacket: incomingPacket = (player: Player, packetId
         return;
     }
 
-    if(doors.indexOf(objectId) !== -1) {
-        walkToAction(player, objectPosition).then(() => doorAction(player, chunkObject, objectPosition, cacheOriginal));
-    } else if(doubleDoors.indexOf(objectId) !== -1) {
-        walkToAction(player, objectPosition).then(() => doubleDoorAction(player, chunkObject, objectPosition, cacheOriginal));
-    } else if(gates.indexOf(objectId) !== -1) {
-        walkToAction(player, objectPosition).then(() => gateAction(player, chunkObject, objectPosition, cacheOriginal));
-    } else {
-        player.packetSender.chatboxMessage(`Unhandled object interaction: ${objectId} @ ${x},${y}`);
-    }
+    objectAction(player, chunkObject, objectPosition, cacheOriginal);
 };

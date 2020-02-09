@@ -5,6 +5,9 @@ import { directionData, WNES } from '@server/world/direction';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
 import { ModifiedLandscapeObject } from '@server/world/map/landscape-object';
+import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action/object-action';
+
+const objectIds = [1551, 1553, 1552, 1554];
 
 const gates = [
     {
@@ -14,7 +17,8 @@ const gates = [
     }
 ];
 
-export const gateAction = (player: Player, gate: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
+// @TODO clean up this disgusting code
+const action: objectAction = (player: Player, gate: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
     if((gate as ModifiedLandscapeObject).metadata) {
         const metadata = (gate as ModifiedLandscapeObject).metadata;
 
@@ -203,3 +207,5 @@ export const gateAction = (player: Player, gate: LandscapeObject, position: Posi
         player.packetSender.playSound(328, 7); // @TODO find correct gate opening sound
     }
 };
+
+export default { objectIds, action, walkTo: true } as ObjectActionPlugin;
