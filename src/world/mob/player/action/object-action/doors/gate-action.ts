@@ -5,6 +5,9 @@ import { directionData, WNES } from '@server/world/direction';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
 import { ModifiedLandscapeObject } from '@server/world/map/landscape-object';
+import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action/object-action';
+
+const objectIds = [1551, 1553, 1552, 1554];
 
 const gates = [
     {
@@ -14,12 +17,14 @@ const gates = [
     }
 ];
 
-export const gateAction = (player: Player, gate: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
+// @TODO clean up this disgusting code
+const action: objectAction = (player: Player, gate: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
     if((gate as ModifiedLandscapeObject).metadata) {
         const metadata = (gate as ModifiedLandscapeObject).metadata;
 
         world.chunkManager.toggleObjects(metadata.originalMain, metadata.main, metadata.originalMainPosition, metadata.mainPosition, metadata.originalMainChunk, metadata.mainChunk, true);
         world.chunkManager.toggleObjects(metadata.originalSecond, metadata.second, metadata.originalSecondPosition, metadata.secondPosition, metadata.originalSecondChunk, metadata.secondChunk, true);
+        player.packetSender.playSound(327, 7); // @TODO find correct gate closing sound
     } else {
         let details = gates.find(g => g.main === gate.objectId);
         let clickedSecondary = false;
@@ -96,11 +101,11 @@ export const gateAction = (player: Player, gate: LandscapeObject, position: Posi
                     break;
                 case 'NORTH':
                     deltaX++;
-                    newY--;
+                    newY++;
                     break;
                 case 'SOUTH':
                     deltaX--;
-                    newY++;
+                    newY--;
                     break;
             }
         } else if(hinge === 'RIGHT') {
@@ -115,14 +120,16 @@ export const gateAction = (player: Player, gate: LandscapeObject, position: Posi
                     break;
                 case 'NORTH':
                     deltaX--;
-                    newY++;
+                    newY--;
                     break;
                 case 'SOUTH':
                     deltaX++;
-                    newY--;
+                    newY++;
                     break;
             }
         }
+
+        player.packetSender.chatboxMessage(hinge + ' ' + direction);
 
         let leftHingeDirections: { [key: string]: string } = {
             'NORTH': 'WEST',
@@ -197,5 +204,8 @@ export const gateAction = (player: Player, gate: LandscapeObject, position: Posi
 
         world.chunkManager.toggleObjects(newHinge, gate, newPosition, position, newHingeChunk, hingeChunk, !cacheOriginal);
         world.chunkManager.toggleObjects(newSecond, secondGate, newSecondPosition, gateSecondPosition, newSecondChunk, gateSecondChunk, !cacheOriginal);
+        player.packetSender.playSound(328, 7); // @TODO find correct gate opening sound
     }
 };
+
+export default { objectIds, action, walkTo: true } as ObjectActionPlugin;

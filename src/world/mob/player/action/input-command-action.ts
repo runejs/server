@@ -35,14 +35,15 @@ const commands: { [key: string]: commandHandler } = {
 
         const newChunk = world.chunkManager.getChunkForWorldPosition(player.position);
 
+        player.updateFlags.mapRegionUpdateRequired = true;
+        player.lastMapRegionUpdatePosition = player.position;
+
         if(!oldChunk.equals(newChunk)) {
             oldChunk.removePlayer(player);
             newChunk.addPlayer(player);
             player.chunkChanged(newChunk);
             player.packetSender.updateCurrentMapChunk();
         }
-
-        player.updateFlags.mapRegionUpdateRequired = true;
     },
 
     give: (player: Player, args: string[]) => {
