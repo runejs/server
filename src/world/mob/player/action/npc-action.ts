@@ -25,7 +25,7 @@ let npcInteractions: NpcActionPlugin[] = [
 ];
 
 /**
- * Sets the list of NPC interaction plugins. Only to be called on server startup!
+ * Sets the list of NPC interaction plugins.
  * @param plugins The plugin list.
  */
 export const setNpcPlugins = (plugins: NpcActionPlugin[]): void => {

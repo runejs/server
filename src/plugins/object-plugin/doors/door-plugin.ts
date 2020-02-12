@@ -51,8 +51,8 @@ const rightHingeDir: { [key: string]: string } = {
 };
 
 export const action: objectAction = (player: Player, door: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
-    player.packetSender.chatboxMessage(`door ${door.objectId}`);
     let opening = true;
+
     let doorConfig = doors.find(d => d.closed === door.objectId);
     let hingeConfig;
     let replacementDoorId: number;

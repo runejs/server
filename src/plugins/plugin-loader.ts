@@ -2,7 +2,7 @@ export async function loadPlugins<T>(prefix: string, pluginList: string[]): Prom
     const plugins: T[] = [];
 
     for(const pluginPath of pluginList) {
-        const plugin = await import(`@server/plugins/${prefix}/${pluginPath}`);
+        const plugin = await import(`./${prefix}/${pluginPath}`);
         plugins.push(plugin.default as T);
     }
 

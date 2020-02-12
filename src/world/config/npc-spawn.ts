@@ -1,8 +1,6 @@
 import { logger } from '@runejs/logger/dist/logger';
 import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 import { readFileSync } from 'fs';
-import { join } from 'path';
-import { serverDir } from '@server/game-server';
 import { Direction } from '@server/world/direction';
 
 export interface NpcSpawn {
@@ -18,7 +16,7 @@ export function parseNpcSpawns(): NpcSpawn[] {
     try {
         logger.info('Parsing npc spawns...');
 
-        const npcSpawns = safeLoad(readFileSync(join(serverDir, 'data/config/npc-spawns.yaml'), 'utf8'), { schema: JSON_SCHEMA }) as NpcSpawn[];
+        const npcSpawns = safeLoad(readFileSync('data/config/npc-spawns.yaml', 'utf8'), { schema: JSON_SCHEMA }) as NpcSpawn[];
 
         if(!npcSpawns || npcSpawns.length === 0) {
             throw 'Unable to read npc spawns.';

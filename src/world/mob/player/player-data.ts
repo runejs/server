@@ -1,5 +1,4 @@
 import { Item } from '@server/world/items/item';
-import { serverDir } from '@server/game-server';
 import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { logger } from '@runejs/logger/dist/logger';
@@ -80,7 +79,7 @@ export const defaultSettings = (): PlayerSettings => {
 
 export function savePlayerData(player: Player): boolean {
     const fileName = player.username.toLowerCase() + '.json';
-    const filePath = join(serverDir, 'data/saves', fileName);
+    const filePath = join('data/saves', fileName);
 
     const playerSave: PlayerSave = {
         username: player.username,
@@ -106,7 +105,7 @@ export function savePlayerData(player: Player): boolean {
 
 export function loadPlayerSave(username: string): PlayerSave {
     const fileName = username.toLowerCase() + '.json';
-    const filePath = join(serverDir, 'data/saves', fileName);
+    const filePath = join('data/saves', fileName);
 
     if(!existsSync(filePath)) {
         return null;

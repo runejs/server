@@ -24,7 +24,7 @@ export interface ObjectActionPlugin {
 let objectInteractions: ObjectActionPlugin[] = [];
 
 /**
- * Sets the list of object interaction plugins. Only to be called on server startup!
+ * Sets the list of object interaction plugins.
  * @param plugins The plugin list.
  */
 export const setObjectPlugins = (plugins: ObjectActionPlugin[]): void => {

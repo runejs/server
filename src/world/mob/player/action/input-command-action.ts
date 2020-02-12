@@ -1,6 +1,6 @@
 import { Player } from '../player';
 import { logger } from '@runejs/logger/dist/logger';
-import { world } from '@server/game-server';
+import { injectPlugins, world } from '@server/game-server';
 import { interfaceIds } from '../game-interface';
 import { npcAction } from '@server/world/mob/player/action/npc-action';
 
@@ -88,7 +88,7 @@ const commands: { [key: string]: commandHandler } = {
         player.packetSender.showChatboxInterface(interfaceId);
     },
 
-    sound: (player: Player, args: string[]) => {
+    sound: (player, args) => {
         if(args.length !== 1 && args.length !== 2) {
             throw `sound soundId [volume?]`;
         }
@@ -110,6 +110,14 @@ const commands: { [key: string]: commandHandler } = {
         }
 
         player.packetSender.playSound(soundId, volume);
+    },
+
+    plugins: player => {
+        player.packetSender.chatboxMessage('Reloading plugins...');
+
+        injectPlugins()
+            .then(() => player.packetSender.chatboxMessage('Plugins reloaded.'))
+            .catch(() => player.packetSender.chatboxMessage('Error reloading plugins.'));
     }
 
 };
