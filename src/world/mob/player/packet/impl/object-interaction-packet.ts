@@ -3,7 +3,7 @@ import { Player } from '../../player';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { Position } from '@server/world/position';
 import { world } from '@server/game-server';
-import { objectAction } from '@server/world/mob/player/action/object-action/object-action';
+import { objectAction } from '@server/world/mob/player/action/object-action';
 
 export const objectInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const x = packet.readNegativeOffsetShortBE();

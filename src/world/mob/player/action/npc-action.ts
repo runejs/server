@@ -3,8 +3,6 @@ import { Npc } from '@server/world/mob/npc/npc';
 import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/mob/player/action/action';
 
-import hansAction from './hans/hans-actions';
-
 /**
  * The definition for an NPC action function.
  */
@@ -22,15 +20,22 @@ export interface NpcActionPlugin {
 
 /**
  * A directory of all NPC interaction plugins.
- * When making a new NPC interaction, it needs to follow the same format and be listed here.
  */
-export const npcInteractions: NpcActionPlugin[] = [
-    hansAction
+let npcInteractions: NpcActionPlugin[] = [
 ];
+
+/**
+ * Sets the list of NPC interaction plugins. Only to be called on server startup!
+ * @param plugins The plugin list.
+ */
+export const setNpcPlugins = (plugins: NpcActionPlugin[]): void => {
+    npcInteractions = plugins;
+};
 
 // @TODO priority and cancelling other (lower priority) actions
 export const npcAction = (player: Player, npc: Npc, position: Position): void => {
     // Find all object action plugins that reference this landscape object
+    console.log(JSON.stringify(npcInteractions));
     const interactionPlugins = npcInteractions.filter(plugin => plugin.npcIds.indexOf(npc.id) !== -1);
 
     if(interactionPlugins.length === 0) {

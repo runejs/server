@@ -5,7 +5,7 @@ import { directionData, WNES } from '@server/world/direction';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
 import { ModifiedLandscapeObject } from '@server/world/map/landscape-object';
-import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action/object-action';
+import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
 
 const objectIds = [1551, 1553, 1552, 1554];
 

@@ -2,7 +2,7 @@ import { Player } from '../player';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
 import { interfaceIds } from '../game-interface';
-import { npcAction } from '@server/world/mob/player/action/npc-action/npc-action';
+import { npcAction } from '@server/world/mob/player/action/npc-action';
 
 type commandHandler = (player: Player, args?: string[]) => void;
 

@@ -3,10 +3,6 @@ import { LandscapeObject } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/mob/player/action/action';
 
-import doorAction from './doors/door-action';
-import doubleDoorAction from './doors/double-door-action';
-import gateAction from './doors/gate-action';
-
 /**
  * The definition for an object action function.
  */
@@ -24,13 +20,16 @@ export interface ObjectActionPlugin {
 
 /**
  * A directory of all object interaction plugins.
- * When making a new object interaction, it needs to follow the same format and be listed here.
  */
-export const objectInteractions: ObjectActionPlugin[] = [
-    doorAction,
-    doubleDoorAction,
-    gateAction
-];
+let objectInteractions: ObjectActionPlugin[] = [];
+
+/**
+ * Sets the list of object interaction plugins. Only to be called on server startup!
+ * @param plugins The plugin list.
+ */
+export const setObjectPlugins = (plugins: ObjectActionPlugin[]): void => {
+    objectInteractions = plugins;
+};
 
 // @TODO priority and cancelling other (lower priority) actions
 export const objectAction = (player: Player, landscapeObject: LandscapeObject, position: Position, cacheOriginal: boolean): void => {

@@ -4,8 +4,8 @@ import { Position } from '@server/world/position';
 import { WNES } from '@server/world/direction';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
-import { action as doorAction } from '@server/world/mob/player/action/object-action/doors/door-action';
-import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action/object-action';
+import { action as doorAction } from '@server/plugins/object-plugin/doors/door-plugin';
+import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
 
 const objectIds = [1519, 1516, 1517, 1520];
 

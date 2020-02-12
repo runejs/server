@@ -3,7 +3,7 @@ import { Player } from '../../player';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { world } from '@server/game-server';
 import { World } from '@server/world/world';
-import { npcAction } from '@server/world/mob/player/action/npc-action/npc-action';
+import { npcAction } from '@server/world/mob/player/action/npc-action';
 
 export const npcInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const npcIndex = packet.readUnsignedShortLE();

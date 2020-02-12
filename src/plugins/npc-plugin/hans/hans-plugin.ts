@@ -1,4 +1,4 @@
-import { npcAction, NpcActionPlugin } from '@server/world/mob/player/action/npc-action/npc-action';
+import { npcAction, NpcActionPlugin } from '@server/world/mob/player/action/npc-action';
 import { dialogueAction, DialogueEmote } from '@server/world/mob/player/action/dialogue/dialogue-action';
 
 const npcIds: number[] = [ 0 ];
