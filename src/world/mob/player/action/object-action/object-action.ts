@@ -1,11 +1,11 @@
 import { Player } from '@server/world/mob/player/player';
 import { LandscapeObject } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
-
-import doorAction from '@server/world/mob/player/action/object-action/doors/door-action';
-import doubleDoorAction from '@server/world/mob/player/action/object-action/doors/double-door-action';
-import gateAction from '@server/world/mob/player/action/object-action/doors/gate-action';
 import { walkToAction } from '@server/world/mob/player/action/action';
+
+import doorAction from './doors/door-action';
+import doubleDoorAction from './doors/double-door-action';
+import gateAction from './doors/gate-action';
 
 /**
  * The definition for an object action function.

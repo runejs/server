@@ -3,8 +3,7 @@ import { Player } from '../../player';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { world } from '@server/game-server';
 import { World } from '@server/world/world';
-import { npcAction } from '@server/world/mob/player/action/npc-action';
-import { walkToAction } from '@server/world/mob/player/action/action';
+import { npcAction } from '@server/world/mob/player/action/npc-action/npc-action';
 
 export const npcInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const npcIndex = packet.readUnsignedShortLE();
@@ -18,15 +17,13 @@ export const npcInteractionPacket: incomingPacket = (player: Player, packetId: n
         return;
     }
 
-    const distance = Math.floor(npc.position.distanceBetween(player.position));
+    const position = npc.position;
+    const distance = Math.floor(position.distanceBetween(player.position));
 
+    // Too far away
     if(distance > 16) {
         return;
     }
 
-    if(distance === 1) {
-        npcAction(player, npc);
-    } else {
-        walkToAction(player, npc.position).then(() => npcAction(player, npc));
-    }
+    npcAction(player, npc, position);
 };
