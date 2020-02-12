@@ -1,44 +1,59 @@
 import { Player } from '@server/world/mob/player/player';
 import { Npc } from '@server/world/mob/npc/npc';
-import { dialogueAction, DialogueEmote } from '@server/world/mob/player/action/dialogue/dialogue-action';
+import { Position } from '@server/world/position';
+import { walkToAction } from '@server/world/mob/player/action/action';
 
-export const npcAction = (player: Player, npc: Npc): void => {
-    if(npc.id === 0) {
-        dialogueAction(player, { type: 'NPC', emote: DialogueEmote.CALM_TALK_1, npc: 0, lines: [ 'Welcome to RuneScape!' ] })
-            .then(d => d.npc(npc, DialogueEmote.CALM_TALK_2, [ 'How do you feel about Rune.JS so far?', 'Please take a moment to let us know what you think!' ]))
-            .then(d => d.options('Thoughts?', [ 'Love it!', 'Kind of cool.', `Eh, I don't know...`, `Not my cup of tea, honestly.`, `It's literally the worst.` ]))
-            .then(d => {
-                switch(d.action) {
-                    case 1:
-                        return d.player(DialogueEmote.JOYFUL, [ 'Loving it so far, thanks for asking!' ])
-                            .then(d => d.npc(npc, DialogueEmote.JOYFUL,  [ `You're very welcome! Glad to hear it.` ]));
-                    case 2:
-                        return d.player(DialogueEmote.DEFAULT, [ `It's kind of cool, I guess.`, 'Bit of a weird gimmick.' ])
-                            .then(d => d.npc(npc, DialogueEmote.DEFAULT,  [ `Please let us know if you have any suggestions.` ]));
-                    case 3:
-                        return d.player(DialogueEmote.NOT_INTERESTED, [ `Ehhh... I don't know...` ])
-                            .then(d => d.npc(npc, DialogueEmote.CALM_TALK_1, [ `We're always open to feedback or`, `Pull Requests anytime you like.` ]))
-                            .then(d => d.player(DialogueEmote.CALM_TALK_1, [ `I'll keep that in mind, thanks.` ]));
-                    case 4:
-                        return d.player(DialogueEmote.CALM_TALK_2, [ `Not really my cup of tea, but keep at it.` ])
-                            .then(d => d.npc(npc, DialogueEmote.JOYFUL, [ `Thanks for the support!` ]));
-                    case 5:
-                        return d.player(DialogueEmote.ANGRY_1, [ `Literally the worst thing I've ever seen.`, 'You disgust me on a personal level.' ])
-                            .then(d => d.npc(npc, DialogueEmote.SAD_3, [ `I-is that so?...`, `Well I'm... I'm sorry to hear that.` ]))
-                            .then(d => {
-                                d.action = 1;
-                                return d;
-                            });
-                }
-            })
-            .then(d => {
-                d.close();
+/**
+ * The definition for an NPC action function.
+ */
+export type npcAction = (player: Player, npc: Npc, position?: Position) => void;
 
-                if(d.action === 1) {
-                    player.packetSender.chatboxMessage('Hans wanders off rather dejectedly.');
-                } else {
-                    player.packetSender.chatboxMessage('Hans wanders off aimlessly through the courtyard.');
-                }
-            });
+/**
+ * Defines an NPC interaction plugin.
+ * A list of NPC ids that apply to the plugin, the action to be performed, and whether or not the player must first walk to the NPC.
+ */
+export interface NpcActionPlugin {
+    npcIds: number[];
+    action: npcAction;
+    walkTo: boolean;
+}
+
+/**
+ * A directory of all NPC interaction plugins.
+ */
+let npcInteractions: NpcActionPlugin[] = [
+];
+
+/**
+ * Sets the list of NPC interaction plugins. Only to be called on server startup!
+ * @param plugins The plugin list.
+ */
+export const setNpcPlugins = (plugins: NpcActionPlugin[]): void => {
+    npcInteractions = plugins;
+};
+
+// @TODO priority and cancelling other (lower priority) actions
+export const npcAction = (player: Player, npc: Npc, position: Position): void => {
+    // Find all object action plugins that reference this landscape object
+    console.log(JSON.stringify(npcInteractions));
+    const interactionPlugins = npcInteractions.filter(plugin => plugin.npcIds.indexOf(npc.id) !== -1);
+
+    if(interactionPlugins.length === 0) {
+        player.packetSender.chatboxMessage(`Unhandled NPC interaction: ${npc.id} @ ${position.x},${position.y},${position.level}`);
+        return;
+    }
+
+    // Separate out walk-to actions from immediate actions
+    const walkToPlugins = interactionPlugins.filter(plugin => plugin.walkTo);
+    const immediatePlugins = interactionPlugins.filter(plugin => !plugin.walkTo);
+
+    // Make sure we walk to the NPC before running any of the walk-to plugins
+    if(walkToPlugins.length !== 0) {
+        walkToAction(player, position).then(() => walkToPlugins.forEach(plugin => plugin.action(player, npc, position)));
+    }
+
+    // Immediately run any non-walk-to plugins
+    if(immediatePlugins.length !== 0) {
+        immediatePlugins.forEach(plugin => plugin.action(player, npc, position));
     }
 };

@@ -4,7 +4,7 @@ import { Position } from '@server/world/position';
 import { directionData, WNES } from '@server/world/direction';
 import { world } from '@server/game-server';
 import { Chunk } from '@server/world/map/chunk';
-import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action/object-action';
+import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
 
 const objectIds = [1530, 4465, 4467, 3014, 3017, 3018, 3019, 1536, 1537, 1533, 1531, 1534, 12348];
 

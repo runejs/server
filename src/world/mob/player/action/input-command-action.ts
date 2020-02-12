@@ -70,8 +70,8 @@ const commands: { [key: string]: commandHandler } = {
         player.packetSender.chatboxMessage(`Adding 1x ${world.itemData.get(itemId).name} to inventory.`);
     },
 
-    chat: (player: Player) => {
-        npcAction(player, world.npcList[0]);
+    npcaction: (player: Player) => {
+        npcAction(player, world.npcList[0], world.npcList[0].position);
     },
 
     chati: (player: Player, args: string[]) => {

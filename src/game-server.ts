@@ -1,11 +1,17 @@
 import * as net from 'net';
 import { join } from 'path';
+import yargs from 'yargs';
+
 import { RsBuffer } from './net/rs-buffer';
 import { World } from './world/world';
 import { ClientConnection } from './net/client-connection';
 import { logger } from '@runejs/logger';
 import { GameCache } from '@runejs/cache-parser';
-import yargs from 'yargs';
+import { loadPlugins } from '@server/plugins/plugin-loader';
+import { NpcActionPlugin, setNpcPlugins } from '@server/world/mob/player/action/npc-action';
+import { plugins as npcPlugins } from '@server/plugins/npc-plugin/npc-plugins';
+import { ObjectActionPlugin, setObjectPlugins } from '@server/world/mob/player/action/object-action';
+import { plugins as objectPlugins } from '@server/plugins/object-plugin/object-plugins';
 
 const GAME_SERVER_PORT = 43594;
 
@@ -13,6 +19,9 @@ export const serverDir = join(__dirname, '../');
 export const gameCache = new GameCache(join(serverDir, 'cache'));
 export const world = new World();
 world.init();
+
+loadPlugins<NpcActionPlugin>('npc-plugin', npcPlugins).then(plugins => setNpcPlugins(plugins));
+loadPlugins<ObjectActionPlugin>('object-plugin', objectPlugins).then(plugins => setObjectPlugins(plugins));
 
 if(yargs.argv.fakePlayers) {
     world.generateFakePlayers();
