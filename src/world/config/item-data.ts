@@ -1,8 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { ItemDefinition } from '@runejs/cache-parser';
 import { logger } from '@runejs/logger/dist/logger';
-import { join } from 'path';
-import { serverDir } from '@server/game-server';
 import { JSON_SCHEMA, safeLoad, safeDump } from 'js-yaml';
 
 export enum EquipmentSlot {
@@ -106,13 +104,13 @@ export function saveItemData(itemDetailsMap: Map<number, ItemDetails>): void {
     });
 
     try {
-        const backupItemData = safeLoad(readFileSync(join(serverDir, 'data/config/item-data.yaml'), 'utf8'), { schema: JSON_SCHEMA }) as ItemData[];
+        const backupItemData = safeLoad(readFileSync('data/config/item-data.yaml', 'utf8'), { schema: JSON_SCHEMA }) as ItemData[];
 
         if(backupItemData && backupItemData.length !== 0) {
-            writeFileSync(join(serverDir, 'data/config/item-data-backup.yaml'), safeDump(backupItemData, { schema: JSON_SCHEMA }), 'utf8');
+            writeFileSync('data/config/item-data-backup.yaml', safeDump(backupItemData, { schema: JSON_SCHEMA }), 'utf8');
         }
 
-        writeFileSync(join(serverDir, 'data/config/item-data.yaml'), safeDump(itemArray, { schema: JSON_SCHEMA }), 'utf8');
+        writeFileSync('data/config/item-data.yaml', safeDump(itemArray, { schema: JSON_SCHEMA }), 'utf8');
     } catch(error) {
         logger.error('Error saving game item data: ' + error);
     }
@@ -122,7 +120,7 @@ export function parseItemData(itemDefinitions: Map<number, ItemDefinition>): Map
     try {
         logger.info('Parsing additional item data...');
 
-        const itemDataList = safeLoad(readFileSync(join(serverDir, 'data/config/item-data.yaml'), 'utf8'), { schema: JSON_SCHEMA }) as ItemData[];
+        const itemDataList = safeLoad(readFileSync('data/config/item-data.yaml', 'utf8'), { schema: JSON_SCHEMA }) as ItemData[];
 
         if(!itemDataList || itemDataList.length === 0) {
             throw 'Unable to read item data.';

@@ -11,11 +11,11 @@
         "sourceMap": true,
         "baseUrl": ".",
         "allowJs": true,
+        "outDir": "./dist/",
         "paths": {
             "@server/*": ["src/*"]
         },
         "types": [
-            "webpack-env",
             "node"
         ],
         "lib": [
