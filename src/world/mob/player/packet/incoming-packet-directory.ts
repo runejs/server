@@ -15,6 +15,7 @@ import { itemSwapPacket } from './impl/item-swap-packet';
 import { dialogueInteractionPacket } from '@server/world/mob/player/packet/impl/dialogue-interaction-packet';
 import { npcInteractionPacket } from '@server/world/mob/player/packet/impl/npc-interaction-packet';
 import { objectInteractionPacket } from '@server/world/mob/player/packet/impl/object-interaction-packet';
+import { dropItemPacket } from '@server/world/mob/player/packet/impl/drop-item-packet';
 
 const packets: { [key: number]: incomingPacket } = {
     19:  interfaceClickPacket,
@@ -35,6 +36,7 @@ const packets: { [key: number]: incomingPacket } = {
     24:  itemEquipPacket,
     3:   itemOption1Packet,
     123: itemSwapPacket,
+    4:   dropItemPacket,
 
     56:  commandPacket
 };

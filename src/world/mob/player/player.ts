@@ -182,7 +182,6 @@ export class Player extends Mob {
 
     /**
      * Sends chunk updates to notify the client of added & removed landscape objects
-     * @TODO ground items
      * @param chunks The chunks to update.
      */
     private sendChunkUpdates(chunks: Chunk[]): void {
@@ -197,6 +196,18 @@ export class Player extends Mob {
 
             if(chunk.removedLandscapeObjects.size !== 0) {
                 chunk.removedLandscapeObjects.forEach(object => chunkUpdateItems.push({ object, type: 'REMOVE' }));
+            }
+
+            if(chunk.worldItems.size !== 0) {
+                chunk.worldItems.forEach(worldItemList => {
+                    if(worldItemList && worldItemList.length !== 0) {
+                        worldItemList.forEach(worldItem => {
+                            if(!worldItem.initiallyVisibleTo || worldItem.initiallyVisibleTo.equals(this)) {
+                                chunkUpdateItems.push({worldItem, type: 'ADD'});
+                            }
+                        });
+                    }
+                });
             }
 
             if(chunkUpdateItems.length !== 0) {
