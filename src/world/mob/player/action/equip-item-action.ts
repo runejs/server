@@ -65,7 +65,6 @@ export const equipItemAction = (player: Player, itemId: number, inventorySlot: n
     }
 
     // @TODO change packets to only update modified container slots
-
     player.packetSender.sendUpdateAllInterfaceItems(interfaceIds.inventory, inventory);
     player.packetSender.sendUpdateAllInterfaceItems(interfaceIds.equipment, equipment);
     player.updateBonuses();

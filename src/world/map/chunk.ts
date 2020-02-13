@@ -4,9 +4,11 @@ import { CollisionMap } from './collision-map';
 import { gameCache } from '../../game-server';
 import { LandscapeObject, LandscapeObjectDefinition, MapRegionTile } from '@runejs/cache-parser';
 import { Npc } from '../mob/npc/npc';
+import { WorldItem } from '@server/world/items/world-item';
 
 export interface ChunkUpdateItem {
-    object: LandscapeObject,
+    object?: LandscapeObject,
+    worldItem?: WorldItem,
     type: 'ADD' | 'REMOVE'
 }
 
@@ -23,6 +25,7 @@ export class Chunk {
     private readonly _cacheLandscapeObjects: Map<string, LandscapeObject>;
     private readonly _addedLandscapeObjects: Map<string, LandscapeObject>;
     private readonly _removedLandscapeObjects: Map<string, LandscapeObject>;
+    private readonly _worldItems: Map<string, WorldItem[]>;
 
     public constructor(position: Position) {
         this._position = position;
@@ -33,6 +36,29 @@ export class Chunk {
         this._cacheLandscapeObjects = new Map<string, LandscapeObject>();
         this._addedLandscapeObjects = new Map<string, LandscapeObject>();
         this._removedLandscapeObjects = new Map<string, LandscapeObject>();
+        this._worldItems = new Map<string, WorldItem[]>();
+    }
+
+    public addWorldItem(worldItem: WorldItem): void {
+        const key = worldItem.position.key;
+
+        if(this._worldItems.has(key)) {
+            const list = this._worldItems.get(key);
+            list.push(worldItem);
+            this._worldItems.set(key, list);
+        } else {
+            this._worldItems.set(worldItem.position.key, [worldItem]);
+        }
+    }
+
+    public removeWorldItem(worldItem: WorldItem): void {
+        const key = worldItem.position.key;
+
+        if(this._worldItems.has(key)) {
+            let list = this._worldItems.get(key);
+            list = list.splice(list.indexOf(worldItem), 1);
+            this._worldItems.set(key, list);
+        }
     }
 
     public setCacheLandscapeObject(landscapeObject: LandscapeObject, objectPosition: Position): void {
@@ -181,5 +207,9 @@ export class Chunk {
 
     public get removedLandscapeObjects(): Map<string, LandscapeObject> {
         return this._removedLandscapeObjects;
+    }
+
+    public get worldItems(): Map<string, WorldItem[]> {
+        return this._worldItems;
     }
 }

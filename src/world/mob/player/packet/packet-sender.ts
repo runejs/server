@@ -6,6 +6,7 @@ import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
 import { LandscapeObject } from '@runejs/cache-parser';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
+import { WorldItem } from '@server/world/items/world-item';
 
 /**
  * 6   = set chatbox input type to 2
@@ -128,14 +129,22 @@ export class PacketSender {
         packet.writeOffsetByte(offsetY);
 
         chunkUpdates.forEach(update => {
-            const offset = this.getChunkPositionOffset(update.object.x, update.object.y, chunk);
-
             if(update.type === 'ADD') {
-                packet.writeUnsignedByte(152);
-                packet.writeByteInverted((update.object.type << 2) + (update.object.rotation & 3));
-                packet.writeOffsetShortLE(update.object.objectId);
-                packet.writeOffsetByte(offset);
+                if(update.object) {
+                    const offset = this.getChunkPositionOffset(update.object.x, update.object.y, chunk);
+                    packet.writeUnsignedByte(152);
+                    packet.writeByteInverted((update.object.type << 2) + (update.object.rotation & 3));
+                    packet.writeOffsetShortLE(update.object.objectId);
+                    packet.writeOffsetByte(offset);
+                } else if(update.worldItem) {
+                    const offset = this.getChunkPositionOffset(update.worldItem.position.x, update.worldItem.position.y, chunk);
+                    packet.writeUnsignedByte(107);
+                    packet.writeShortBE(update.worldItem.itemId);
+                    packet.writeByteInverted(offset);
+                    packet.writeNegativeOffsetShortBE(update.worldItem.amount);
+                }
             } else if(update.type === 'REMOVE') {
+                const offset = this.getChunkPositionOffset(update.object.x, update.object.y, chunk);
                 packet.writeUnsignedByte(88);
                 packet.writeNegativeOffsetByte(offset);
                 packet.writeNegativeOffsetByte((update.object.type << 2) + (update.object.rotation & 3));
@@ -151,6 +160,27 @@ export class PacketSender {
         const packet = new Packet(40);
         packet.writeNegativeOffsetByte(offsetY);
         packet.writeByteInverted(offsetX);
+
+        this.send(packet);
+    }
+
+    public setWorldItem(worldItem: WorldItem, position: Position, offset: number = 0): void {
+        this.updateReferencePosition(position);
+
+        const packet = new Packet(107);
+        packet.writeShortBE(worldItem.itemId);
+        packet.writeByteInverted(offset);
+        packet.writeNegativeOffsetShortBE(worldItem.amount);
+
+        this.send(packet);
+    }
+
+    public removeWorldItem(worldItem: WorldItem, position: Position, offset: number = 0): void {
+        this.updateReferencePosition(position);
+
+        const packet = new Packet(208);
+        packet.writeNegativeOffsetShortBE(worldItem.itemId);
+        packet.writeOffsetByte(offset);
 
         this.send(packet);
     }
