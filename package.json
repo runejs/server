@@ -5,7 +5,7 @@
     "main": "src/game-server.ts",
     "scripts": {
         "server": "npm start",
-        "start": "npm run build && concurrently \"npm run watch-plugins\" \"node dist/main.js\"",
+        "start": "rm -rf dist/ && npm run build && concurrently \"npm run watch-plugins\" \"node dist/main.js\"",
         "lint": "tslint --project tsconfig.json",
         "fake-players": "npm start -- --fakePlayers",
         "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
