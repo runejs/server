@@ -6,7 +6,7 @@ import { Position } from '../position';
 export interface ChatMessage {
     color: number;
     effects: number;
-    data: number[];
+    data: Buffer;
 }
 
 /**
@@ -16,22 +16,30 @@ export class UpdateFlags {
 
     private _mapRegionUpdateRequired: boolean;
     private _appearanceUpdateRequired: boolean;
-    private _chatMessage: ChatMessage;
+    private _chatMessages: ChatMessage[];
     private _facePosition: Position;
 
     public constructor() {
+        this._chatMessages = [];
         this.reset();
     }
 
     public reset(): void {
         this._mapRegionUpdateRequired = false;
         this._appearanceUpdateRequired = false;
-        this._chatMessage = null;
         this._facePosition = null;
+
+        if(this._chatMessages.length !== 0) {
+            this._chatMessages.shift();
+        }
+    }
+
+    public addChatMessage(chatMessage: ChatMessage): void {
+        this._chatMessages.push(chatMessage);
     }
 
     public get updateBlockRequired(): boolean {
-        return this._appearanceUpdateRequired || this._chatMessage !== null || this._facePosition !== null;
+        return this._appearanceUpdateRequired || this._chatMessages !== null || this._facePosition !== null;
     }
 
     public get mapRegionUpdateRequired(): boolean {
@@ -50,12 +58,12 @@ export class UpdateFlags {
         this._appearanceUpdateRequired = value;
     }
 
-    public get chatMessage(): ChatMessage {
-        return this._chatMessage;
+    public get chatMessages(): ChatMessage[] {
+        return this._chatMessages;
     }
 
-    public set chatMessage(value: ChatMessage) {
-        this._chatMessage = value;
+    public set chatMessages(value: ChatMessage[]) {
+        this._chatMessages = value;
     }
 
     public get facePosition(): Position {
