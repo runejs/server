@@ -41,7 +41,31 @@ export class ItemContainer {
         }
     }
 
+    public find(item: Item): number {
+        for(let i = 0; i < this._size; i++) {
+            if (this._items[i] !== null &&
+                this._items[i].itemId === item.itemId &&
+                this._items[i].amount >= item.amount) {
+                return i;
+            }
+        }
+        return null;
+    }
+
     public add(item: Item, fireEvent: boolean = true): void {
+        const findItem = this.find({itemId: item.itemId, amount: 1});
+        if (findItem !== null) {
+            const cacheItem = world.itemData.get(item.itemId);
+            if (cacheItem.stackable) {
+                this.set(findItem, {
+                    itemId: item.itemId,
+                    amount: this._items[findItem].amount += item.amount
+                }, true);
+                this._containerUpdated.next({type: 'UPDATE_ALL', slot: findItem, item})
+                return;
+            }
+        }
+
         for(let i = 0; i < this._size; i++) {
             if(this._items[i] === null) {
                 this._items[i] = item;
