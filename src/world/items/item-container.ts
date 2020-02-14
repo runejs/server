@@ -5,7 +5,7 @@ import { world } from '@server/game-server';
 export interface ContainerUpdateEvent {
     slot?: number;
     item?: Item;
-    type: 'ADD' | 'REMOVE' | 'SWAP' | 'SET' | 'SET_ALL';
+    type: 'ADD' | 'REMOVE' | 'SWAP' | 'SET' | 'SET_ALL' | 'UPDATE_ALL';
 }
 
 export class ItemContainer {
@@ -61,7 +61,7 @@ export class ItemContainer {
                     itemId: item.itemId,
                     amount: this._items[findItem].amount += item.amount
                 }, true);
-                this._containerUpdated.next({type: 'UPDATE_ALL', slot: findItem, item})
+                this._containerUpdated.next({type: 'UPDATE_ALL', slot: findItem, item});
                 return;
             }
         }
