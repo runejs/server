@@ -35,6 +35,10 @@ export class UpdateFlags {
     }
 
     public addChatMessage(chatMessage: ChatMessage): void {
+        if(this._chatMessages.length > 4) {
+            return;
+        }
+
         this._chatMessages.push(chatMessage);
     }
 
