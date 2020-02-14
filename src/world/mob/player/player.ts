@@ -47,6 +47,7 @@ export class Player extends Mob {
     private _rights: Rights;
     private loggedIn: boolean;
     public isLowDetail: boolean;
+    private firstTimePlayer: boolean;
     private readonly _packetSender: PacketSender;
     public readonly playerUpdateTask: PlayerUpdateTask;
     public readonly npcUpdateTask: NpcUpdateTask;
@@ -82,11 +83,14 @@ export class Player extends Mob {
         this._equipment = new ItemContainer(14);
         this.dialogueInteractionEvent = new Subject<number>();
         this._nearbyChunks = [];
+
+        this.loadSaveData();
     }
 
-    public init(): void {
+    private loadSaveData(): void {
         const playerSave: PlayerSave = loadPlayerSave(this.username);
         const firstTimePlayer: boolean = playerSave === null;
+        this.firstTimePlayer = firstTimePlayer;
 
         if(!firstTimePlayer) {
             // Existing player logging in
@@ -99,6 +103,7 @@ export class Player extends Mob {
             }
             this._appearance = playerSave.appearance;
             this._settings = playerSave.settings;
+            this._rights = playerSave.rights || Rights.USER;
         } else {
             // Brand new player logging in
             this.position = new Position(3222, 3222);
@@ -111,12 +116,15 @@ export class Player extends Mob {
             this.inventory.add({itemId: 1319, amount: 1});
             this.inventory.add({itemId: 1201, amount: 1});
             this._appearance = defaultAppearance();
+            this._rights = Rights.USER;
         }
 
         if(!this._settings) {
             this._settings = defaultSettings();
         }
+    }
 
+    public init(): void {
         this.loggedIn = true;
         this.updateFlags.mapRegionUpdateRequired = true;
         this.updateFlags.appearanceUpdateRequired = true;
@@ -140,7 +148,7 @@ export class Player extends Mob {
         this.packetSender.sendUpdateAllInterfaceItems(interfaceIds.inventory, this.inventory);
         this.packetSender.sendUpdateAllInterfaceItems(interfaceIds.equipment, this.equipment);
 
-        if(firstTimePlayer) {
+        if(this.firstTimePlayer) {
             this.activeGameInterface = {
                 interfaceId: interfaceIds.characterDesign,
                 canWalk: false
