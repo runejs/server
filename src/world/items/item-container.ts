@@ -61,7 +61,9 @@ export class ItemContainer {
                     itemId: item.itemId,
                     amount: this._items[findItem].amount += item.amount
                 }, true);
-                this._containerUpdated.next({type: 'UPDATE_ALL', slot: findItem, item});
+                if (fireEvent) {
+                    this._containerUpdated.next({type: 'UPDATE_ALL', slot: findItem, item});
+                }
                 return;
             }
         }
