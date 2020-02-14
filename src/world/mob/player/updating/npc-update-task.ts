@@ -1,5 +1,5 @@
 import { Task } from '@server/task/task';
-import { Player } from '../../player';
+import { Player } from '../player';
 import { Packet, PacketType } from '@server/net/packet';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { Npc } from '@server/world/mob/npc/npc';

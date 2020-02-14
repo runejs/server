@@ -1,7 +1,7 @@
 import { Socket } from 'net';
 import { PacketSender } from './packet/packet-sender';
 import { Isaac } from '@server/net/isaac';
-import { PlayerUpdateTask } from './task/updating/player-update-task';
+import { PlayerUpdateTask } from './updating/player-update-task';
 import { Mob } from '../mob';
 import { Position } from '@server/world/position';
 import { Skill, skills } from '../skills/skill';
@@ -19,13 +19,19 @@ import { ContainerUpdateEvent, ItemContainer } from '../../items/item-container'
 import { EquipmentBonuses, ItemDetails } from '../../config/item-data';
 import { Item } from '../../items/item';
 import { Npc } from '../npc/npc';
-import { NpcUpdateTask } from './task/updating/npc-update-task';
+import { NpcUpdateTask } from './updating/npc-update-task';
 import { Subject } from 'rxjs';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 
 const DEFAULT_TAB_INTERFACES = [
     2423, 3917, 638, 3213, 1644, 5608, 1151, -1, 5065, 5715, 2449, 904, 147, 962
 ];
+
+export enum Rights {
+    ADMIN = 2,
+    MOD = 1,
+    USER = 0
+}
 
 /**
  * A player character within the game world.
@@ -38,6 +44,7 @@ export class Player extends Mob {
     public readonly clientUuid: number;
     public readonly username: string;
     private readonly password: string;
+    private _rights: Rights;
     private loggedIn: boolean;
     public isLowDetail: boolean;
     private readonly _packetSender: PacketSender;
@@ -63,6 +70,7 @@ export class Player extends Mob {
         this.clientUuid = clientUuid;
         this.username = username;
         this.password = password;
+        this._rights = Rights.ADMIN;
         this.isLowDetail = isLowDetail;
         this._packetSender = new PacketSender(this);
         this.playerUpdateTask = new PlayerUpdateTask(this);
@@ -389,6 +397,10 @@ export class Player extends Mob {
 
     public get packetSender(): PacketSender {
         return this._packetSender;
+    }
+
+    public get rights(): Rights {
+        return this._rights;
     }
 
     public get appearance(): Appearance {

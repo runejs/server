@@ -3,7 +3,7 @@ import { Mob } from '@server/world/mob/mob';
 import { world } from '@server/game-server';
 import { Packet } from '@server/net/packet';
 import { Npc } from '@server/world/mob/npc/npc';
-import { Player } from '../../player';
+import { Player } from '../player';
 import { Position } from '@server/world/position';
 
 /**

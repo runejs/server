@@ -1,4 +1,4 @@
-import { Player } from '../../player';
+import { Player } from '../player';
 import { RsBuffer, stringToLong } from '@server/net/rs-buffer';
 import { Task } from '@server/task/task';
 import { UpdateFlags } from '@server/world/mob/update-flags';
@@ -41,7 +41,7 @@ export class PlayerUpdateTask extends Task<void> {
                 appendMovement(this.player, playerUpdatePacket);
             }
 
-            this.appendUpdateMaskData(this.player, updateMaskData);
+            this.appendUpdateMaskData(this.player, updateMaskData, false, true);
 
             const nearbyPlayers = world.chunkManager.getSurroundingChunks(currentMapChunk).map(chunk => chunk.players).flat();
 
@@ -82,7 +82,7 @@ export class PlayerUpdateTask extends Task<void> {
         });
     }
 
-    private appendUpdateMaskData(player: Player, updateMaskData: RsBuffer, forceUpdate?: boolean): void {
+    private appendUpdateMaskData(player: Player, updateMaskData: RsBuffer, forceUpdate?: boolean, currentPlayer?: boolean): void {
         const updateFlags = player.updateFlags;
 
         if(!updateFlags.updateBlockRequired && !forceUpdate) {
@@ -97,6 +97,9 @@ export class PlayerUpdateTask extends Task<void> {
         if(updateFlags.facePosition || forceUpdate) {
             mask |= 0x2;
         }
+        if(updateFlags.chatMessages.length !== 0 && !currentPlayer) {
+            mask |= 0x40;
+        }
 
         if(mask >= 0xff) {
             mask |= 0x20;
@@ -106,6 +109,15 @@ export class PlayerUpdateTask extends Task<void> {
             updateMaskData.writeByte(mask);
         }
 
+        if(updateFlags.chatMessages.length !== 0 && !currentPlayer) {
+            const message = updateFlags.chatMessages[0];
+            updateMaskData.writeUnsignedShortBE(((message.color & 0xFF) << 8) + (message.effects & 0xFF));
+            updateMaskData.writeByteInverted(2);
+            updateMaskData.writeOffsetByte(message.data.length);
+            for(let i = 0; i < message.data.length; i++) {
+                updateMaskData.writeOffsetByte(message.data.readInt8(i));
+            }
+        }
         if(updateFlags.facePosition || forceUpdate) {
             const position = updateFlags.facePosition ? updateFlags.facePosition : player.position.fromDirection(player.faceDirection);
             updateMaskData.writeShortBE(position.x * 2 + 1);

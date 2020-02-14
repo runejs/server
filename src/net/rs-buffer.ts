@@ -116,6 +116,10 @@ export class RsBuffer {
         return this.buffer.readInt8(this.readerIndex++);
     }
 
+    public readByteInverted(): number {
+        return -this.buffer.readUInt8(this.readerIndex++);
+    }
+
     public readPreNegativeOffsetByte(): number {
         return 128 - (this.readByte() & 0xff);
     }
