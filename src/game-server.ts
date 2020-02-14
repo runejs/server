@@ -8,9 +8,7 @@ import { ClientConnection } from './net/client-connection';
 import { logger } from '@runejs/logger';
 import { GameCache } from '@runejs/cache-parser';
 import { NpcActionPlugin, setNpcPlugins } from '@server/world/mob/player/action/npc-action';
-import { plugins as npcPlugins } from '@server/plugins/npc-plugin/npc-plugins';
 import { ObjectActionPlugin, setObjectPlugins } from '@server/world/mob/player/action/object-action';
-import { plugins as objectPlugins } from '@server/plugins/object-plugin/object-plugins';
 import { loadPlugins } from '@server/plugins/plugin-loader';
 
 const GAME_SERVER_PORT = 43594;
@@ -18,8 +16,8 @@ export let gameCache;
 export let world;
 
 export async function injectPlugins(): Promise<void> {
-    await loadPlugins<NpcActionPlugin>('npc-plugin', npcPlugins).then(plugins => setNpcPlugins(plugins));
-    await loadPlugins<ObjectActionPlugin>('object-plugin', objectPlugins).then(plugins => setObjectPlugins(plugins));
+    await loadPlugins<NpcActionPlugin>('npc-plugin').then(plugins => setNpcPlugins(plugins));
+    await loadPlugins<ObjectActionPlugin>('object-plugin').then(plugins => setObjectPlugins(plugins));
 }
 
 export function runGameServer(): void {
