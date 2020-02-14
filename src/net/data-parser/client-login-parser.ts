@@ -94,7 +94,7 @@ export class ClientLoginParser extends DataParser {
 
         const outputBuffer = RsBuffer.create();
         outputBuffer.writeByte(2); // login response code
-        outputBuffer.writeByte(2); // Player rights (user, mod, staff)
+        outputBuffer.writeByte(player.rights.valueOf());
         outputBuffer.writeByte(0); // ???
         this.clientConnection.socket.write(outputBuffer.getData());
 

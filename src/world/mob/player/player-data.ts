@@ -34,6 +34,7 @@ export interface PlayerSettings {
 
 export interface PlayerSave {
     username: string;
+    rights: number;
     position: {
         x: number;
         y: number;
@@ -88,6 +89,7 @@ export function savePlayerData(player: Player): boolean {
             y: player.position.y,
             level: player.position.level
         },
+        rights: player.rights.valueOf(),
         appearance: player.appearance,
         inventory: player.inventory.items,
         equipment: player.equipment.items,
