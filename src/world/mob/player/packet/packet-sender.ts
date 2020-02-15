@@ -97,6 +97,21 @@ export class PacketSender {
         this.socket = player.socket;
     }
 
+    public playSong(songId: number): void {
+        const packet = new Packet(220);
+        packet.writeOffsetShortLE(songId);
+
+        this.send(packet);
+    }
+
+    public playQuickSong(songId: number, previousSongId: number): void {
+        const packet = new Packet(249);
+        packet.writeShortLE(songId);
+        packet.writeMediumME(previousSongId);
+
+        this.send(packet);
+    }
+
     public playSound(soundId: number, volume: number, delay: number = 0): void {
         const packet = new Packet(26);
         packet.writeShortBE(soundId);

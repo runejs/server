@@ -10,6 +10,15 @@ export interface ChatMessage {
 }
 
 /**
+ * A graphic.
+ */
+export interface Graphic {
+    id: number;
+    height: number;
+    delay: number;
+}
+
+/**
  * Various player updating flags.
  */
 export class UpdateFlags {
@@ -18,6 +27,7 @@ export class UpdateFlags {
     private _appearanceUpdateRequired: boolean;
     private _chatMessages: ChatMessage[];
     private _facePosition: Position;
+    private _graphics: Graphic;
 
     public constructor() {
         this._chatMessages = [];
@@ -28,6 +38,7 @@ export class UpdateFlags {
         this._mapRegionUpdateRequired = false;
         this._appearanceUpdateRequired = false;
         this._facePosition = null;
+        this._graphics = null;
 
         if(this._chatMessages.length !== 0) {
             this._chatMessages.shift();
@@ -43,7 +54,7 @@ export class UpdateFlags {
     }
 
     public get updateBlockRequired(): boolean {
-        return this._appearanceUpdateRequired || this._chatMessages !== null || this._facePosition !== null;
+        return this._appearanceUpdateRequired || this._chatMessages !== null || this._facePosition !== null || this._graphics !== null;
     }
 
     public get mapRegionUpdateRequired(): boolean {
@@ -76,5 +87,13 @@ export class UpdateFlags {
 
     public set facePosition(value: Position) {
         this._facePosition = value;
+    }
+
+    public get graphics(): Graphic {
+        return this._graphics;
+    }
+
+    public set graphics(value: Graphic) {
+        this._graphics = value;
     }
 }
