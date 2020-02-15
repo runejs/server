@@ -1,8 +1,6 @@
 import { npcAction, NpcActionPlugin } from '@server/world/mob/player/action/npc-action';
 import { dialogueAction, DialogueEmote } from '@server/world/mob/player/action/dialogue/dialogue-action';
 
-const npcIds: number[] = [ 0 ];
-
 const action: npcAction = (player, npc) => {
     dialogueAction(player)
         .then(d => d.npc(npc, DialogueEmote.CALM_TALK_1, [ 'Welcome to RuneScape!' ]))
@@ -43,4 +41,4 @@ const action: npcAction = (player, npc) => {
         });
 };
 
-export default { npcIds, action, walkTo: true } as NpcActionPlugin;
+export default { npcIds: 0, options: 'talk-to', walkTo: true, action } as NpcActionPlugin;

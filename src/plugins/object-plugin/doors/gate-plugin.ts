@@ -1,13 +1,9 @@
-import { Player } from '@server/world/mob/player/player';
-import { LandscapeObject } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
 import { directionData, WNES } from '@server/world/direction';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
 import { ModifiedLandscapeObject } from '@server/world/map/landscape-object';
 import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
-
-const objectIds = [1551, 1553, 1552, 1554];
 
 const gates = [
     {
@@ -18,7 +14,7 @@ const gates = [
 ];
 
 // @TODO clean up this disgusting code
-const action: objectAction = (player: Player, gate: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
+const action: objectAction = (player, gate, cacheDefinition, position, cacheOriginal): void => {
     if((gate as ModifiedLandscapeObject).metadata) {
         const metadata = (gate as ModifiedLandscapeObject).metadata;
 
@@ -208,4 +204,4 @@ const action: objectAction = (player: Player, gate: LandscapeObject, position: P
     }
 };
 
-export default { objectIds, action, walkTo: true } as ObjectActionPlugin;
+export default { objectIds: [1551, 1553, 1552, 1554], options: [ 'open', 'close' ], walkTo: true, action } as ObjectActionPlugin;

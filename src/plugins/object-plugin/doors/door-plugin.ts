@@ -1,12 +1,7 @@
-import { Player } from '@server/world/mob/player/player';
-import { LandscapeObject } from '@runejs/cache-parser';
-import { Position } from '@server/world/position';
 import { directionData, WNES } from '@server/world/direction';
 import { world } from '@server/game-server';
 import { Chunk } from '@server/world/map/chunk';
 import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
-
-const objectIds = [1530, 4465, 4467, 3014, 3017, 3018, 3019, 1536, 1537, 1533, 1531, 1534, 12348];
 
 // @TODO move to yaml config
 const doors = [
@@ -50,7 +45,7 @@ const rightHingeDir: { [key: string]: string } = {
     'EAST': 'SOUTH'
 };
 
-export const action: objectAction = (player: Player, door: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
+export const action: objectAction = (player, door, cacheDefinition, position, cacheOriginal): void => {
     let opening = true;
 
     let doorConfig = doors.find(d => d.closed === door.objectId);
@@ -90,4 +85,5 @@ export const action: objectAction = (player: Player, door: LandscapeObject, posi
     player.packetSender.playSound(opening ? 318 : 326, 7);
 };
 
-export default { objectIds, action, walkTo: true } as ObjectActionPlugin;
+export default { objectIds: [1530, 4465, 4467, 3014, 3017, 3018, 3019, 1536, 1537, 1533, 1531, 1534, 12348], options: [ 'open', 'close' ],
+    walkTo: true, action } as ObjectActionPlugin;

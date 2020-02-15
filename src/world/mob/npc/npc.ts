@@ -24,6 +24,7 @@ export class Npc extends Mob {
     private _name: string;
     private _combatLevel: number;
     private _animations: NpcAnimations;
+    public readonly options: string[];
     private _movementRadius: number = 0;
     private _initialFaceDirection: Direction = 'NORTH';
     public readonly initialPosition: Position;
@@ -35,6 +36,7 @@ export class Npc extends Mob {
         this._name = cacheData.name;
         this._combatLevel = cacheData.combatLevel;
         this._animations = cacheData.animations as NpcAnimations;
+        this.options = cacheData.actions;
         this.position = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
         this.initialPosition = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
 

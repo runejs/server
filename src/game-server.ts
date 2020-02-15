@@ -12,8 +12,8 @@ import { ObjectActionPlugin, setObjectPlugins } from '@server/world/mob/player/a
 import { loadPlugins } from '@server/plugins/plugin-loader';
 
 const GAME_SERVER_PORT = 43594;
-export let gameCache;
-export let world;
+export let gameCache: GameCache;
+export let world: World;
 
 export async function injectPlugins(): Promise<void> {
     await loadPlugins<NpcActionPlugin>('npc-plugin').then(plugins => setNpcPlugins(plugins));

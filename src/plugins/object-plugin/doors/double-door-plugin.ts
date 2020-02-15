@@ -1,13 +1,9 @@
-import { Player } from '@server/world/mob/player/player';
-import { LandscapeObject } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
 import { WNES } from '@server/world/direction';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
 import { action as doorAction } from '@server/plugins/object-plugin/doors/door-plugin';
 import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
-
-const objectIds = [1519, 1516, 1517, 1520];
 
 const doubleDoors = [
     {
@@ -38,7 +34,7 @@ const openingDelta = {
     }
 };
 
-const action: objectAction = (player: Player, door: LandscapeObject, position: Position, cacheOriginal: boolean): void => {
+const action: objectAction = (player, door, cacheDefinition, position, cacheOriginal): void => {
     let doorConfig = doubleDoors.find(d => d.closed.indexOf(door.objectId) !== -1);
     let doorIds: number[];
     let opening = true;
@@ -92,8 +88,8 @@ const action: objectAction = (player: Player, door: LandscapeObject, position: P
         return;
     }
 
-    doorAction(player, door, position, cacheOriginal);
-    doorAction(player, otherDoor, otherDoorPosition, cacheOriginal);
+    doorAction(player, door, null, position, cacheOriginal);
+    doorAction(player, otherDoor, null, otherDoorPosition, cacheOriginal);
 };
 
-export default { objectIds, action, walkTo: true } as ObjectActionPlugin;
+export default { objectIds: [1519, 1516, 1517, 1520], options: [ 'open', 'close' ], walkTo: true, action } as ObjectActionPlugin;
