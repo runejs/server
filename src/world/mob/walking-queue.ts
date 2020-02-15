@@ -247,12 +247,17 @@ export class WalkingQueue {
         }
 
         if(this.mob instanceof Player) {
-            if(this.mob.activeGameInterface) {
-                if(!this.mob.activeGameInterface.canWalk) {
+            const activeInterface = this.mob.activeInterface;
+            if(activeInterface) {
+                if(activeInterface.disablePlayerMovement) {
                     this.resetDirections();
                     return;
-                } else {
-                    this.mob.activeGameInterface = null;
+                } else if(activeInterface.closeOnWalk) {
+                    if(activeInterface.forceClosed !== undefined) {
+                        activeInterface.forceClosed();
+                    }
+
+                    this.mob.activeInterface = null;
                 }
             }
         }

@@ -20,6 +20,8 @@ export const interfaceSettings = {
 
 export interface ActiveInterface {
     interfaceId: number;
-    canWalk: boolean;
+    type: 'SCREEN' | 'CHAT';
+    disablePlayerMovement?: boolean;
     closeOnWalk?: boolean;
+    forceClosed?: Function;
 }

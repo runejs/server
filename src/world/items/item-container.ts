@@ -5,7 +5,7 @@ import { world } from '@server/game-server';
 export interface ContainerUpdateEvent {
     slot?: number;
     item?: Item;
-    type: 'ADD' | 'REMOVE' | 'SWAP' | 'SET' | 'SET_ALL' | 'UPDATE_ALL';
+    type: 'ADD' | 'REMOVE' | 'SWAP' | 'SET' | 'SET_ALL' | 'UPDATE_AMOUNT';
 }
 
 export class ItemContainer {
@@ -22,6 +22,15 @@ export class ItemContainer {
         for(let i = 0; i < size; i++) {
             this._items[i] = null;
         }
+    }
+
+    public has(item: number | Item): boolean {
+        return this.findIndex(item) !== -1;
+    }
+
+    public findIndex(item: number | Item): number {
+        const itemId = (typeof item === 'number') ? item : item.itemId;
+        return this._items.findIndex(i => i !== null && i.itemId === itemId);
     }
 
     public setAll(items: Item[], fireEvent: boolean = true): void {
@@ -62,7 +71,7 @@ export class ItemContainer {
                     amount: this._items[findItem].amount += item.amount
                 }, true);
                 if (fireEvent) {
-                    this._containerUpdated.next({type: 'UPDATE_ALL', slot: findItem, item});
+                    this._containerUpdated.next({type: 'UPDATE_AMOUNT', slot: findItem, item});
                 }
                 return;
             }

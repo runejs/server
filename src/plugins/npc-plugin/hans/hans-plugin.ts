@@ -1,5 +1,5 @@
 import { npcAction, NpcActionPlugin } from '@server/world/mob/player/action/npc-action';
-import { dialogueAction, DialogueEmote } from '@server/world/mob/player/action/dialogue/dialogue-action';
+import { dialogueAction, DialogueEmote } from '@server/world/mob/player/action/dialogue-action';
 
 const action: npcAction = (player, npc) => {
     dialogueAction(player)

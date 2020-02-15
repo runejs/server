@@ -1,6 +1,6 @@
 import { Mob } from '@server/world/mob/mob';
 import { Player } from '@server/world/mob/player/player';
-import { dialogueAction } from '@server/world/mob/player/action/dialogue/dialogue-action';
+import { dialogueAction } from '@server/world/mob/player/action/dialogue-action';
 
 export enum Skill {
     ATTACK,

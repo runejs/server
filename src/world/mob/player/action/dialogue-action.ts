@@ -137,13 +137,18 @@ export class DialogueAction {
             this.p.packetSender.updateInterfaceString(interfaceId + textOffset + i, options.lines[i]);
         }
 
-        this.p.packetSender.showChatboxInterface(interfaceId);
+        return new Promise<DialogueAction>((resolve, reject) => {
+            this.p.activeInterface = {
+                interfaceId,
+                type: 'CHAT',
+                closeOnWalk: true,
+                forceClosed: () => reject('INTERFACE_CLOSED')
+            };
 
-        return new Promise<DialogueAction>(resolve => {
             this.p.dialogueInteractionEvent.subscribe(action => {
                 this._action = action;
                 resolve(this);
-            })
+            });
         });
     }
 
