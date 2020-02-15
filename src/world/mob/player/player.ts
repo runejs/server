@@ -62,6 +62,7 @@ export class Player extends Mob {
     public readonly dialogueInteractionEvent: Subject<number>;
     private _walkingTo: Position;
     private _nearbyChunks: Chunk[];
+    public readonly actionsCancelled: Subject<void>;
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -83,6 +84,7 @@ export class Player extends Mob {
         this._equipment = new ItemContainer(14);
         this.dialogueInteractionEvent = new Subject<number>();
         this._nearbyChunks = [];
+        this.actionsCancelled = new Subject<void>();
 
         this.loadSaveData();
     }

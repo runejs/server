@@ -7,8 +7,18 @@ import { pluginFilter } from '@server/plugins/plugin-loader';
 /**
  * The definition for an object action function.
  */
-export type objectAction = (player: Player, landscapeObject: LandscapeObject, landscapeObjectDefinition: LandscapeObjectDefinition,
-                            position: Position, cacheOriginal: boolean) => void;
+export type objectAction = (details: ObjectActionDetails) => void;
+
+/**
+ * Details about an object being interacted with.
+ */
+export interface ObjectActionDetails {
+    player: Player;
+    object: LandscapeObject;
+    objectDefinition: LandscapeObjectDefinition;
+    position: Position;
+    cacheOriginal: boolean;
+}
 
 /**
  * Defines an object interaction plugin.
@@ -47,6 +57,8 @@ export const objectAction = (player: Player, landscapeObject: LandscapeObject, l
         return;
     }
 
+    player.actionsCancelled.next();
+
     // Separate out walk-to actions from immediate actions
     const walkToPlugins = interactionPlugins.filter(plugin => plugin.walkTo);
     const immediatePlugins = interactionPlugins.filter(plugin => !plugin.walkTo);
@@ -54,12 +66,12 @@ export const objectAction = (player: Player, landscapeObject: LandscapeObject, l
     // Make sure we walk to the object before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
         walkToAction(player, position).then(() => walkToPlugins.forEach(plugin =>
-            plugin.action(player, landscapeObject, landscapeObjectDefinition, position, cacheOriginal)));
+            plugin.action({ player, object: landscapeObject, objectDefinition: landscapeObjectDefinition, position, cacheOriginal })));
     }
 
     // Immediately run any non-walk-to plugins
     if(immediatePlugins.length !== 0) {
         immediatePlugins.forEach(plugin =>
-            plugin.action(player, landscapeObject, landscapeObjectDefinition, position, cacheOriginal));
+            plugin.action({ player, object: landscapeObject, objectDefinition: landscapeObjectDefinition, position, cacheOriginal }));
     }
 };
