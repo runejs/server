@@ -255,6 +255,15 @@ export class Player extends Mob {
         });
     }
 
+    public giveItem(item: number | Item): boolean {
+        const addedItem = this.inventory.add(item);
+        if(addedItem === null) {
+            return false;
+        }
+
+        this.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, addedItem.slot, addedItem.item);
+    }
+
     public hasItemInEquipment(item: number | Item): boolean {
         return this._equipment.has(item);
     }

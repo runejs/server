@@ -66,8 +66,7 @@ const commands: { [key: string]: commandHandler } = {
         }
 
         const item = { itemId, amount: 1 };
-        player.inventory.add(item);
-        player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, inventorySlot, item);
+        player.giveItem(item);
         player.packetSender.chatboxMessage(`Adding 1x ${world.itemData.get(itemId).name} to inventory.`);
     },
 

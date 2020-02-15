@@ -31,6 +31,14 @@ export abstract class Mob extends Entity {
         this.skills = new Skills(this);
     }
 
+    public hasSkillLevel(skillId: number, level: number): boolean {
+        return this.skills.values[skillId].level >= level;
+    }
+
+    public giveItem(item: number | Item): boolean {
+        return this._inventory.add(item) !== null;
+    }
+
     public hasItemInInventory(item: number | Item): boolean {
         return this._inventory.has(item);
     }
