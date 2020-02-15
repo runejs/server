@@ -3,6 +3,7 @@ import { logger } from '@runejs/logger/dist/logger';
 import { injectPlugins, world } from '@server/game-server';
 import { interfaceIds } from '../game-interface';
 import { npcAction } from '@server/world/mob/player/action/npc-action';
+import { Skill } from '@server/world/mob/skills';
 
 type commandHandler = (player: Player, args?: string[]) => void;
 
@@ -118,6 +119,48 @@ const commands: { [key: string]: commandHandler } = {
         injectPlugins()
             .then(() => player.packetSender.chatboxMessage('Plugins reloaded.'))
             .catch(() => player.packetSender.chatboxMessage('Error reloading plugins.'));
+    },
+
+    exptest: player => {
+        player.skills.addExp(Skill.WOODCUTTING, 420);
+    },
+
+    song: (player, args) => {
+        if(args.length !== 1) {
+            throw `song songId`;
+        }
+
+        const songId: number = parseInt(args[0]);
+
+        if(isNaN(songId)) {
+            throw `song songId`;
+        }
+
+        player.packetSender.playSong(songId);
+    },
+
+    quicksong: (player, args) => {
+        if(args.length !== 1 && args.length !== 2) {
+            throw `quicksong songId [previousSongId?]`;
+        }
+
+        const songId: number = parseInt(args[0]);
+
+        if(isNaN(songId)) {
+            throw `quicksong songId [previousSongId?]`;
+        }
+
+        let previousSongId: number = 76;
+
+        if(args.length === 2) {
+            previousSongId = parseInt(args[1]);
+
+            if(isNaN(previousSongId)) {
+                throw `quicksong songId [previousSongId?]`;
+            }
+        }
+
+        player.packetSender.playQuickSong(songId, previousSongId);
     }
 
 };

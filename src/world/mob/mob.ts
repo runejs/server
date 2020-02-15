@@ -3,6 +3,7 @@ import { ItemContainer } from '../items/item-container';
 import { UpdateFlags } from './update-flags';
 import { Npc } from './npc/npc';
 import { Entity } from '../entity';
+import { Skills } from '@server/world/mob/skills';
 
 /**
  * Handles a mobile entity within the game world.
@@ -16,6 +17,7 @@ export abstract class Mob extends Entity {
     private _runDirection: number;
     private _faceDirection: number;
     private readonly _inventory: ItemContainer;
+    public readonly skills: Skills;
 
     protected constructor() {
         super();
@@ -25,6 +27,7 @@ export abstract class Mob extends Entity {
         this._runDirection = -1;
         this._faceDirection = -1;
         this._inventory = new ItemContainer(28);
+        this.skills = new Skills(this);
     }
 
     public initiateRandomMovement(): void {

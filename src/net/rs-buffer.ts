@@ -263,6 +263,12 @@ export class RsBuffer {
         this.writeUnsignedByte(value >> 8);
     }
 
+    public writeMediumME(value: number): void {
+        this.writeUnsignedByte(value >> 8);
+        this.writeUnsignedByte(value >> 16);
+        this.writeUnsignedByte(value);
+    }
+
     public writeIntLE(value: number): void {
         this.buffer.writeInt32LE(value, this.writerIndex);
         this.writerIndex += 4;
@@ -271,6 +277,13 @@ export class RsBuffer {
     public writeIntBE(value: number): void {
         this.buffer.writeInt32BE(value, this.writerIndex);
         this.writerIndex += 4;
+    }
+
+    public writeIntME1(value: number): void {
+        this.writeUnsignedByte((value >> 8) & 0xff);
+        this.writeUnsignedByte(value & 0xff);
+        this.writeUnsignedByte((value >> 24) & 0xff);
+        this.writeUnsignedByte((value >> 16) & 0xff);
     }
 
     public writeLongBE(value: bigint): void {

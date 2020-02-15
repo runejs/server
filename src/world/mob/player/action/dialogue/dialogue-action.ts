@@ -1,6 +1,7 @@
 import { Player } from '@server/world/mob/player/player';
 import { gameCache } from '@server/game-server';
 import { Npc } from '@server/world/mob/npc/npc';
+import { skillDetails } from '@server/world/mob/skills';
 
 const interfaceIds = {
     PLAYER: [ 968, 973, 979, 986 ],
@@ -11,7 +12,8 @@ const interfaceIds = {
 const lineConstraints = {
     PLAYER: [ 1, 4 ],
     NPC: [ 1, 4 ],
-    OPTIONS: [ 2, 5 ]
+    OPTIONS: [ 2, 5 ],
+    LEVEL_UP: [ 2, 2 ]
 };
 
 export enum DialogueEmote {
@@ -47,13 +49,14 @@ export enum DialogueEmote {
     ANGRY_4 = 617
 }
 
-export type DialogueType = 'PLAYER' | 'NPC' | 'OPTIONS';
+export type DialogueType = 'PLAYER' | 'NPC' | 'OPTIONS' | 'LEVEL_UP';
 
 export interface DialogueOptions {
     type: DialogueType;
     npc?: number;
     emote?: DialogueEmote;
     title?: string;
+    skillId?: number;
     lines: string[];
 }
 
@@ -85,6 +88,10 @@ export class DialogueAction {
             throw 'NPC not supplied.';
         }
 
+        if(options.type === 'LEVEL_UP' && options.skillId === undefined) {
+            throw 'Skill ID not supplied.';
+        }
+
         this._action = null;
 
         let interfaceIndex = options.lines.length - 1;
@@ -92,7 +99,18 @@ export class DialogueAction {
             interfaceIndex--;
         }
 
-        const interfaceId = interfaceIds[options.type][interfaceIndex];
+        let interfaceId = -1;
+
+        if(options.type === 'LEVEL_UP') {
+            interfaceId = skillDetails.map(skill => skill.advancementInterfaceId === undefined ? -1 : skill.advancementInterfaceId)[options.skillId];
+        } else {
+            interfaceId = interfaceIds[options.type][interfaceIndex];
+        }
+
+        if(interfaceId === undefined || interfaceId === null || interfaceId === -1) {
+            return Promise.resolve(this);
+        }
+
         let textOffset = 1;
 
         if(options.type === 'PLAYER' || options.type === 'NPC') {

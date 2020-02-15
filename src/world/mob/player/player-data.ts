@@ -3,6 +3,7 @@ import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { logger } from '@runejs/logger/dist/logger';
 import { Player } from './player';
+import { SkillValue } from '@server/world/mob/skills';
 
 export interface Appearance {
     gender: number;
@@ -43,6 +44,7 @@ export interface PlayerSave {
     appearance: Appearance;
     inventory: Item[];
     equipment: Item[];
+    skills: SkillValue[];
     settings: PlayerSettings;
 }
 
@@ -93,6 +95,7 @@ export function savePlayerData(player: Player): boolean {
         appearance: player.appearance,
         inventory: player.inventory.items,
         equipment: player.equipment.items,
+        skills: player.skills.values,
         settings: player.settings
     };
 

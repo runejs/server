@@ -4,7 +4,7 @@ import { Isaac } from '@server/net/isaac';
 import { PlayerUpdateTask } from './updating/player-update-task';
 import { Mob } from '../mob';
 import { Position } from '@server/world/position';
-import { Skill, skills } from '../skills/skill';
+import { Skill, skillDetails } from '../skills';
 import { world } from '@server/game-server';
 import { logger } from '@runejs/logger';
 import {
@@ -101,6 +101,9 @@ export class Player extends Mob {
             if(playerSave.equipment && playerSave.equipment.length !== 0) {
                 this.equipment.setAll(playerSave.equipment);
             }
+            if(playerSave.skills && playerSave.skills.length !== 0) {
+                this.skills.values = playerSave.skills;
+            }
             this._appearance = playerSave.appearance;
             this._settings = playerSave.settings;
             this._rights = playerSave.rights || Rights.USER;
@@ -143,7 +146,7 @@ export class Player extends Mob {
             }
         });
 
-        skills.forEach((skill: Skill, index: number) => this.packetSender.sendSkill(index, 1, 0));
+        this.skills.values.forEach((skill, index) => this.packetSender.sendSkill(index, skill.level, skill.exp));
 
         this.packetSender.sendUpdateAllInterfaceItems(interfaceIds.inventory, this.inventory);
         this.packetSender.sendUpdateAllInterfaceItems(interfaceIds.equipment, this.equipment);

@@ -100,6 +100,9 @@ export class PlayerUpdateTask extends Task<void> {
         if(updateFlags.chatMessages.length !== 0 && !currentPlayer) {
             mask |= 0x40;
         }
+        if(updateFlags.graphics) {
+            mask |= 0x200;
+        }
 
         if(mask >= 0xff) {
             mask |= 0x20;
@@ -118,11 +121,18 @@ export class PlayerUpdateTask extends Task<void> {
                 updateMaskData.writeOffsetByte(message.data.readInt8(i));
             }
         }
+
         if(updateFlags.facePosition || forceUpdate) {
             const position = updateFlags.facePosition ? updateFlags.facePosition : player.position.fromDirection(player.faceDirection);
             updateMaskData.writeShortBE(position.x * 2 + 1);
             updateMaskData.writeShortBE(position.y * 2 + 1);
         }
+
+        if(updateFlags.graphics) {
+            updateMaskData.writeOffsetShortBE(updateFlags.graphics.id);
+            updateMaskData.writeIntME1(updateFlags.graphics.height << 16 | updateFlags.graphics.delay & 0xffff);
+        }
+
         if(updateFlags.appearanceUpdateRequired || forceUpdate) {
             const equipment = player.equipment;
             const appearanceData: RsBuffer = RsBuffer.create();
