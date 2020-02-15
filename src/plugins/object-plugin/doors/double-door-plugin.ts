@@ -34,7 +34,8 @@ const openingDelta = {
     }
 };
 
-const action: objectAction = (player, door, cacheDefinition, position, cacheOriginal): void => {
+const action: objectAction = (details) => {
+    let { player, object: door, position, cacheOriginal } = details;
     let doorConfig = doubleDoors.find(d => d.closed.indexOf(door.objectId) !== -1);
     let doorIds: number[];
     let opening = true;
@@ -88,8 +89,8 @@ const action: objectAction = (player, door, cacheDefinition, position, cacheOrig
         return;
     }
 
-    doorAction(player, door, null, position, cacheOriginal);
-    doorAction(player, otherDoor, null, otherDoorPosition, cacheOriginal);
+    doorAction({ player, object: door, objectDefinition: null, position, cacheOriginal });
+    doorAction({ player, object: otherDoor, objectDefinition: null, position: otherDoorPosition, cacheOriginal });
 };
 
 export default { objectIds: [1519, 1516, 1517, 1520], options: [ 'open', 'close' ], walkTo: true, action } as ObjectActionPlugin;

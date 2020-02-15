@@ -45,9 +45,9 @@ const rightHingeDir: { [key: string]: string } = {
     'EAST': 'SOUTH'
 };
 
-export const action: objectAction = (player, door, cacheDefinition, position, cacheOriginal): void => {
+export const action: objectAction = (details): void => {
+    let { player, object: door, position, cacheOriginal } = details;
     let opening = true;
-
     let doorConfig = doors.find(d => d.closed === door.objectId);
     let hingeConfig;
     let replacementDoorId: number;

@@ -1,7 +1,9 @@
 import { npcAction, NpcActionPlugin } from '@server/world/mob/player/action/npc-action';
 import { dialogueAction, DialogueEmote } from '@server/world/mob/player/action/dialogue-action';
 
-const action: npcAction = (player, npc) => {
+const action: npcAction = (details) => {
+    const { player, npc } = details;
+
     dialogueAction(player)
         .then(d => d.npc(npc, DialogueEmote.CALM_TALK_1, [ 'Welcome to RuneScape!' ]))
         .then(d => d.npc(npc, DialogueEmote.CALM_TALK_2, [ 'How do you feel about Rune.JS so far?', 'Please take a moment to let us know what you think!' ]))

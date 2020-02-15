@@ -7,7 +7,16 @@ import { pluginFilter } from '@server/plugins/plugin-loader';
 /**
  * The definition for an NPC action function.
  */
-export type npcAction = (player: Player, npc: Npc, position?: Position) => void;
+export type npcAction = (details: NpcActionDetails) => void;
+
+/**
+ * Details about an NPC being interacted with.
+ */
+export interface NpcActionDetails {
+    player: Player;
+    npc: Npc;
+    position: Position;
+}
 
 /**
  * Defines an NPC interaction plugin.
@@ -45,17 +54,19 @@ export const npcAction = (player: Player, npc: Npc, position: Position, option: 
         return;
     }
 
+    player.actionsCancelled.next();
+
     // Separate out walk-to actions from immediate actions
     const walkToPlugins = interactionPlugins.filter(plugin => plugin.walkTo);
     const immediatePlugins = interactionPlugins.filter(plugin => !plugin.walkTo);
 
     // Make sure we walk to the NPC before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
-        walkToAction(player, position).then(() => walkToPlugins.forEach(plugin => plugin.action(player, npc, position)));
+        walkToAction(player, position).then(() => walkToPlugins.forEach(plugin => plugin.action({ player, npc, position })));
     }
 
     // Immediately run any non-walk-to plugins
     if(immediatePlugins.length !== 0) {
-        immediatePlugins.forEach(plugin => plugin.action(player, npc, position));
+        immediatePlugins.forEach(plugin => plugin.action({ player, npc, position }));
     }
 };

@@ -247,6 +247,8 @@ export class WalkingQueue {
         }
 
         if(this.mob instanceof Player) {
+            this.mob.actionsCancelled.next();
+
             const activeInterface = this.mob.activeInterface;
             if(activeInterface) {
                 if(activeInterface.disablePlayerMovement) {

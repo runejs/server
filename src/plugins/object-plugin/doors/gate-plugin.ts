@@ -14,7 +14,9 @@ const gates = [
 ];
 
 // @TODO clean up this disgusting code
-const action: objectAction = (player, gate, cacheDefinition, position, cacheOriginal): void => {
+const action: objectAction = (details) => {
+    let { object: gate, position, player, cacheOriginal } = details;
+
     if((gate as ModifiedLandscapeObject).metadata) {
         const metadata = (gate as ModifiedLandscapeObject).metadata;
 
