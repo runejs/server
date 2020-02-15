@@ -26,7 +26,16 @@ const packets: { [key: number]: incomingPacket } = {
     226: dialogueInteractionPacket,
 
     112: npcInteractionPacket,
+    13:  npcInteractionPacket,
+    42:  npcInteractionPacket,
+    8:   npcInteractionPacket,
+    67:  npcInteractionPacket,
+
     181: objectInteractionPacket,
+    241: objectInteractionPacket,
+    50:  objectInteractionPacket,
+    136: objectInteractionPacket,
+    55:  objectInteractionPacket,
 
     28:  walkPacket,
     213: walkPacket,

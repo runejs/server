@@ -2,3 +2,15 @@
   x: 3222
   y: 3222
   radius: 10
+- npcId: 1
+  x: 3222
+  y: 3218
+  radius: 12
+- npcId: 7
+  x: 3218
+  y: 3218
+  radius: 7
+- npcId: 11
+  x: 3222
+  y: 3220
+  radius: 4

@@ -2,6 +2,7 @@ import { Player } from '@server/world/mob/player/player';
 import { Npc } from '@server/world/mob/npc/npc';
 import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/mob/player/action/action';
+import { pluginFilter } from '@server/plugins/plugin-loader';
 
 /**
  * The definition for an NPC action function.
@@ -10,12 +11,14 @@ export type npcAction = (player: Player, npc: Npc, position?: Position) => void;
 
 /**
  * Defines an NPC interaction plugin.
- * A list of NPC ids that apply to the plugin, the action to be performed, and whether or not the player must first walk to the NPC.
+ * A list of NPC ids that apply to the plugin, the option selected, the action to be performed,
+ * and whether or not the player must first walk to the NPC.
  */
 export interface NpcActionPlugin {
-    npcIds: number[];
-    action: npcAction;
+    npcIds: number | number[];
+    options: string | string[];
     walkTo: boolean;
+    action: npcAction;
 }
 
 /**
@@ -33,12 +36,12 @@ export const setNpcPlugins = (plugins: NpcActionPlugin[]): void => {
 };
 
 // @TODO priority and cancelling other (lower priority) actions
-export const npcAction = (player: Player, npc: Npc, position: Position): void => {
+export const npcAction = (player: Player, npc: Npc, position: Position, option: string): void => {
     // Find all object action plugins that reference this landscape object
-    const interactionPlugins = npcInteractions.filter(plugin => plugin.npcIds.indexOf(npc.id) !== -1);
+    const interactionPlugins = npcInteractions.filter(plugin => pluginFilter(plugin.npcIds, npc.id, plugin.options, option));
 
     if(interactionPlugins.length === 0) {
-        player.packetSender.chatboxMessage(`Unhandled NPC interaction: ${npc.id} @ ${position.x},${position.y},${position.level}`);
+        player.packetSender.chatboxMessage(`Unhandled NPC interaction: ${option} ${npc.name} (id-${npc.id}) @ ${position.x},${position.y},${position.level}`);
         return;
     }
 

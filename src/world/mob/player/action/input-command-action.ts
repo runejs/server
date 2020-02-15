@@ -72,7 +72,7 @@ const commands: { [key: string]: commandHandler } = {
     },
 
     npcaction: (player: Player) => {
-        npcAction(player, world.npcList[0], world.npcList[0].position);
+        npcAction(player, world.npcList[0], world.npcList[0].position, 'talk-to');
     },
 
     chati: (player: Player, args: string[]) => {

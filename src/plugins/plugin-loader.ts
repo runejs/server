@@ -1,6 +1,24 @@
 import * as fs from 'fs';
 
-const getAllFiles = function(dirPath: string, arrayOfFiles = []) {
+export const pluginFilter = (ids: number | number[], id: number, options: string | string[], option: string): boolean => {
+    if(Array.isArray(ids)) {
+        if(ids.indexOf(id) === -1) {
+            return false;
+        }
+    } else {
+        if(ids !== id) {
+            return false;
+        }
+    }
+
+    if(Array.isArray(options)) {
+        return options.indexOf(option) !== -1;
+    } else {
+        return options === option;
+    }
+};
+
+const getAllFiles = (dirPath: string, arrayOfFiles = []) => {
     const files = fs.readdirSync(dirPath);
 
     files.forEach(file => {
