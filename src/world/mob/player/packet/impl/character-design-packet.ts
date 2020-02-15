@@ -4,7 +4,7 @@ import { RsBuffer } from '@server/net/rs-buffer';
 import { interfaceIds } from '../../game-interface';
 
 export const characterDesignPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
-    if(!player.activeGameInterface || player.activeGameInterface.interfaceId !== interfaceIds.characterDesign) {
+    if(!player.activeInterface || player.activeInterface.interfaceId !== interfaceIds.characterDesign) {
         return;
     }
 

@@ -30,6 +30,15 @@ export function runGameServer(): void {
         world.generateFakePlayers();
     }
 
+    process.on('unhandledRejection', (err, promise) => {
+        if(err === 'INTERFACE_CLOSED') {
+            return;
+        }
+
+        console.error('Unhandled rejection (promise: ', promise, ', reason: ', err, ').');
+        throw err;
+    });
+
     net.createServer(socket => {
         logger.info('Socket opened');
         // socket.setNoDelay(true);

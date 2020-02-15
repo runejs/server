@@ -335,7 +335,7 @@ export class PacketSender {
         this.send(new Packet(29));
     }
 
-    public sendOpenGameInterface(interfaceId: number): void {
+    public showScreenInterface(interfaceId: number): void {
         const packet = new Packet(159);
         packet.writeOffsetShortLE(interfaceId);
 

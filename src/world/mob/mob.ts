@@ -4,6 +4,7 @@ import { UpdateFlags } from './update-flags';
 import { Npc } from './npc/npc';
 import { Entity } from '../entity';
 import { Skills } from '@server/world/mob/skills';
+import { Item } from '@server/world/items/item';
 
 /**
  * Handles a mobile entity within the game world.
@@ -28,6 +29,14 @@ export abstract class Mob extends Entity {
         this._faceDirection = -1;
         this._inventory = new ItemContainer(28);
         this.skills = new Skills(this);
+    }
+
+    public hasItemInInventory(item: number | Item): boolean {
+        return this._inventory.has(item);
+    }
+
+    public hasItemOnPerson(item: number | Item): boolean {
+        return this.hasItemInInventory(item);
     }
 
     public initiateRandomMovement(): void {

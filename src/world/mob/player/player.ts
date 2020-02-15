@@ -54,7 +54,7 @@ export class Player extends Mob {
     public trackedPlayers: Player[];
     public trackedNpcs: Npc[];
     private _appearance: Appearance;
-    private _activeGameInterface: ActiveInterface;
+    private _activeInterface: ActiveInterface;
     private readonly _equipment: ItemContainer;
     private _bonuses: EquipmentBonuses;
     private _carryWeight: number;
@@ -78,7 +78,7 @@ export class Player extends Mob {
         this.npcUpdateTask = new NpcUpdateTask(this);
         this.trackedPlayers = [];
         this.trackedNpcs = [];
-        this._activeGameInterface = null;
+        this._activeInterface = null;
         this._carryWeight = 0;
         this._equipment = new ItemContainer(14);
         this.dialogueInteractionEvent = new Subject<number>();
@@ -152,9 +152,10 @@ export class Player extends Mob {
         this.packetSender.sendUpdateAllInterfaceItems(interfaceIds.equipment, this.equipment);
 
         if(this.firstTimePlayer) {
-            this.activeGameInterface = {
+            this.activeInterface = {
                 interfaceId: interfaceIds.characterDesign,
-                canWalk: false
+                type: 'SCREEN',
+                disablePlayerMovement: true
             };
         }
 
@@ -252,6 +253,14 @@ export class Player extends Mob {
             this.updateFlags.reset();
             resolve();
         });
+    }
+
+    public hasItemInEquipment(item: number | Item): boolean {
+        return this._equipment.has(item);
+    }
+
+    public hasItemOnPerson(item: number | Item): boolean {
+        return this.hasItemInInventory(item) || this.hasItemInEquipment(item);
     }
 
     private inventoryUpdated(event: ContainerUpdateEvent): void {
@@ -387,7 +396,7 @@ export class Player extends Mob {
     }
 
     public closeActiveInterface(): void {
-        this.activeGameInterface = null;
+        this.activeInterface = null;
     }
 
     public equals(player: Player): boolean {
@@ -422,18 +431,22 @@ export class Player extends Mob {
         this._appearance = value;
     }
 
-    public get activeGameInterface(): ActiveInterface {
-        return this._activeGameInterface;
+    public get activeInterface(): ActiveInterface {
+        return this._activeInterface;
     }
 
-    public set activeGameInterface(value: ActiveInterface) {
-        if(value) {
-            this.packetSender.sendOpenGameInterface(value.interfaceId);
+    public set activeInterface(value: ActiveInterface) {
+        if(value !== null) {
+            if(value.type === 'SCREEN') {
+                this.packetSender.showScreenInterface(value.interfaceId);
+            } else if(value.type === 'CHAT') {
+                this.packetSender.showChatboxInterface(value.interfaceId);
+            }
         } else {
             this.packetSender.closeActiveInterfaces();
         }
 
-        this._activeGameInterface = value;
+        this._activeInterface = value;
     }
 
     public get equipment(): ItemContainer {
