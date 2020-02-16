@@ -18,6 +18,7 @@ export interface ObjectActionDetails {
     objectDefinition: LandscapeObjectDefinition;
     position: Position;
     cacheOriginal: boolean;
+    option: string;
 }
 
 /**
@@ -66,12 +67,26 @@ export const objectAction = (player: Player, landscapeObject: LandscapeObject, l
     // Make sure we walk to the object before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
         walkToAction(player, position).then(() => walkToPlugins.forEach(plugin =>
-            plugin.action({ player, object: landscapeObject, objectDefinition: landscapeObjectDefinition, position, cacheOriginal })));
+            plugin.action({
+                player,
+                object: landscapeObject,
+                objectDefinition: landscapeObjectDefinition,
+                option,
+                position,
+                cacheOriginal
+            })));
     }
 
     // Immediately run any non-walk-to plugins
     if(immediatePlugins.length !== 0) {
         immediatePlugins.forEach(plugin =>
-            plugin.action({ player, object: landscapeObject, objectDefinition: landscapeObjectDefinition, position, cacheOriginal }));
+            plugin.action({
+                player,
+                object: landscapeObject,
+                objectDefinition: landscapeObjectDefinition,
+                option,
+                position,
+                cacheOriginal
+            }));
     }
 };
