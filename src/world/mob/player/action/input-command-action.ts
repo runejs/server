@@ -159,7 +159,21 @@ const commands: { [key: string]: commandHandler } = {
         }
 
         player.packetSender.playQuickSong(songId, previousSongId);
-    }
+    },
+
+    anim: (player, args) => {
+        if(args.length !== 1) {
+            throw `anim animationId`;
+        }
+
+        const animationId: number = parseInt(args[0]);
+
+        if(isNaN(animationId)) {
+            throw `anim animationId`;
+        }
+
+        player.playAnimation(animationId);
+    },
 
 };
 

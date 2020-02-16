@@ -11,6 +11,7 @@ import { NpcActionPlugin, setNpcPlugins } from '@server/world/mob/player/action/
 import { ObjectActionPlugin, setObjectPlugins } from '@server/world/mob/player/action/object-action';
 import { loadPlugins } from '@server/plugins/plugin-loader';
 import { ItemOnItemActionPlugin, setItemOnItemPlugins } from '@server/world/mob/player/action/item-on-item-action';
+import { ButtonActionPlugin, setButtonPlugins } from '@server/world/mob/player/action/button-action';
 
 const GAME_SERVER_PORT = 43594;
 export let gameCache: GameCache;
@@ -20,6 +21,7 @@ export async function injectPlugins(): Promise<void> {
     await loadPlugins<NpcActionPlugin>('npc').then(plugins => setNpcPlugins(plugins));
     await loadPlugins<ObjectActionPlugin>('object').then(plugins => setObjectPlugins(plugins));
     await loadPlugins<ItemOnItemActionPlugin>('item-on-item').then(plugins => setItemOnItemPlugins(plugins));
+    await loadPlugins<ButtonActionPlugin>('buttons').then(plugins => setButtonPlugins(plugins));
 }
 
 export function runGameServer(): void {

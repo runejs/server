@@ -1,20 +1,24 @@
 import * as fs from 'fs';
 
-export const pluginFilter = (ids: number | number[], id: number, options: string | string[], option: string): boolean => {
-    if(Array.isArray(ids)) {
-        if(ids.indexOf(id) === -1) {
+export const pluginFilter = (pluginIds: number | number[], searchId: number, pluginOptions?: string | string[], searchOption?: string): boolean => {
+    if(Array.isArray(pluginIds)) {
+        if(pluginIds.indexOf(searchId) === -1) {
             return false;
         }
     } else {
-        if(ids !== id) {
+        if(pluginIds !== searchId) {
             return false;
         }
     }
 
-    if(Array.isArray(options)) {
-        return options.indexOf(option) !== -1;
+    if(pluginOptions !== undefined && searchOption !== undefined) {
+        if(Array.isArray(pluginOptions)) {
+            return pluginOptions.indexOf(searchOption) !== -1;
+        } else {
+            return pluginOptions === searchOption;
+        }
     } else {
-        return options === option;
+        return true;
     }
 };
 
