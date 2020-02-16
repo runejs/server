@@ -74,6 +74,8 @@ export class ChunkManager {
     }
 
     private deleteWorldItemForPlayers(worldItem: WorldItem, chunk: Chunk): Promise<void> {
+        worldItem.removed = true;
+
         return new Promise(resolve => {
             const nearbyPlayers = this.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
@@ -102,6 +104,17 @@ export class ChunkManager {
 
     public deleteRemovedObjectMarker(object: LandscapeObject, position: Position, chunk: Chunk): void {
         chunk.removedLandscapeObjects.delete(`${position.x},${position.y},${object.objectId}`);
+    }
+
+    public addTemporaryLandscapeObject(object: LandscapeObject, position: Position, expireTicks: number): Promise<void> {
+        return new Promise(resolve => {
+            this.addLandscapeObject(object, position);
+
+            setTimeout(() => {
+                this.removeLandscapeObject(object, position);
+                resolve();
+            }, expireTicks * World.TICK_LENGTH);
+        });
     }
 
     public removeLandscapeObject(object: LandscapeObject, position: Position): Promise<void> {

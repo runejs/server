@@ -14,13 +14,11 @@ export const loopingAction = (player: Player, ticks?: number, delayTicks?: numbe
     const actionCancelled = player.actionsCancelled.subscribe(() => {
         subscription.unsubscribe();
         actionCancelled.unsubscribe();
-        player.packetSender.chatboxMessage('Unsubscribed');
     });
 
     return { event, cancel: () => {
         subscription.unsubscribe();
         actionCancelled.unsubscribe();
-        player.packetSender.chatboxMessage('Completed');
     } };
 };
 
