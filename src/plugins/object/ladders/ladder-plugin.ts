@@ -26,7 +26,6 @@ export const action: objectAction = (details) => {
                         `Climb down the ${details.objectDefinition.name.toLowerCase()}.`
                     ]))
                 .then(d => {
-                    logger.info(`${d.action}`);
                     d.close();
                     switch(d.action) {
                         case 1:
