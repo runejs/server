@@ -11,6 +11,7 @@ export class Position {
     private _x: number;
     private _y: number;
     private _level: number;
+    public metadata: { [key: string]: any } = {};
 
     public constructor(x: number, y: number, level?: number) {
         this.move(x, y, level);

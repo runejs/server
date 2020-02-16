@@ -5,6 +5,7 @@ import { Npc } from './npc/npc';
 import { Entity } from '../entity';
 import { Skills } from '@server/world/mob/skills';
 import { Item } from '@server/world/items/item';
+import { Position } from '@server/world/position';
 
 /**
  * Handles a mobile entity within the game world.
@@ -29,6 +30,11 @@ export abstract class Mob extends Entity {
         this._faceDirection = -1;
         this._inventory = new ItemContainer(28);
         this.skills = new Skills(this);
+    }
+
+    // @TODO facing other mobs
+    public face(position: Position): void {
+        this.updateFlags.facePosition = position;
     }
 
     public playAnimation(animation: number | Animation): void {

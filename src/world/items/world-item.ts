@@ -7,4 +7,5 @@ export interface WorldItem {
     position: Position;
     initiallyVisibleTo?: Player;
     expires?: number;
+    removed?: boolean;
 }

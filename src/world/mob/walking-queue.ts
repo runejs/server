@@ -35,7 +35,7 @@ export class WalkingQueue {
         }
     }
 
-    public add(x: number, y: number): void {
+    public add(x: number, y: number, positionMetadata?: { [key: string ]: any}): void {
         let lastPosition = this.getLastPosition();
 
         let lastX = lastPosition.x;
@@ -61,6 +61,7 @@ export class WalkingQueue {
 
             if(this.canMoveTo(lastPosition, newPosition)) {
                 lastPosition = newPosition;
+                newPosition.metadata = positionMetadata;
                 this.queue.push(newPosition);
             } else {
                 this.valid = false;
@@ -72,11 +73,26 @@ export class WalkingQueue {
             const newPosition = new Position(x, y);
 
             if(this.canMoveTo(lastPosition, newPosition)) {
+                newPosition.metadata = positionMetadata;
                 this.queue.push(newPosition);
             } else {
                 this.valid = false;
             }
         }
+    }
+
+    public moveIfAble(xDiff: number, yDiff: number): boolean {
+        const position = this.mob.position;
+        const newPosition = new Position(position.x + xDiff, position.y + yDiff, position.level);
+
+        if(this.canMoveTo(position, newPosition)) {
+            this.clear();
+            this.valid = true;
+            this.add(newPosition.x, newPosition.y, { ignoreInterfaces: true });
+            return true;
+        }
+
+        return false;
     }
 
     public canMoveTo(origin: Position, destination: Position): boolean {
@@ -246,11 +262,13 @@ export class WalkingQueue {
             return;
         }
 
+        const walkPosition = this.queue.shift();
+
         if(this.mob instanceof Player) {
-            this.mob.actionsCancelled.next();
+            this.mob.actionsCancelled.next(true);
 
             const activeInterface = this.mob.activeInterface;
-            if(activeInterface) {
+            if(activeInterface && (!walkPosition.metadata || !walkPosition.metadata.ignoreInterfaces)) {
                 if(activeInterface.disablePlayerMovement) {
                     this.resetDirections();
                     return;
@@ -264,7 +282,6 @@ export class WalkingQueue {
             }
         }
 
-        const walkPosition = this.queue.shift();
         const currentPosition = this.mob.position;
 
         if(this.canMoveTo(currentPosition, walkPosition)) {
