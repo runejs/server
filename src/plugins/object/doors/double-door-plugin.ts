@@ -89,8 +89,21 @@ const action: objectAction = (details) => {
         return;
     }
 
-    doorAction({ player, object: door, objectDefinition: null, position, cacheOriginal });
-    doorAction({ player, object: otherDoor, objectDefinition: null, position: otherDoorPosition, cacheOriginal });
+    doorAction({
+        player,
+        object: door,
+        objectDefinition: null,
+        position, cacheOriginal,
+        option: opening ? 'open' : 'close'
+    });
+    doorAction({
+        player,
+        object: otherDoor,
+        objectDefinition: null,
+        position: otherDoorPosition,
+        cacheOriginal,
+        option: opening ? 'open' : 'close'
+    });
 };
 
 export default { objectIds: [1519, 1516, 1517, 1520], options: [ 'open', 'close' ], walkTo: true, action } as ObjectActionPlugin;
