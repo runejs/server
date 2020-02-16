@@ -2,17 +2,20 @@ import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/actio
 import { world } from "@server/game-server";
 import { dialogueAction } from "@server/world/mob/player/action/dialogue-action";
 import { logger } from "@runejs/logger/dist/logger";
+import { World } from "@server/world/world";
 
 
 export const action: objectAction = (details) => {
-    const oldChunk = world.chunkManager.getChunkForWorldPosition(details.player.position);
     const playerPosition = details.player.position;
+    let newLevel: number = playerPosition.level;
     switch (details.option) {
         case 'climb-up':
-            playerPosition.move(playerPosition.x, playerPosition.y, playerPosition.level + 1);
+            details.player.playAnimation(828);
+            newLevel++;
             break;
         case 'climb-down':
-            playerPosition.move(playerPosition.x, playerPosition.y, playerPosition.level - 1);
+            details.player.playAnimation(827);
+            newLevel--;
             break;
         case 'climb':
             dialogueAction(details.player)
@@ -50,19 +53,23 @@ export const action: objectAction = (details) => {
                 });
             return;
     }
+    details.player.packetSender.chatboxMessage(`You climb ${details.option.slice(6)} the ${details.objectDefinition.name.toLowerCase()}.`);
+    setTimeout(() => {
+        const oldChunk = world.chunkManager.getChunkForWorldPosition(details.player.position);
+        playerPosition.move(playerPosition.x, playerPosition.y, newLevel);
+        const newChunk = world.chunkManager.getChunkForWorldPosition(details.player.position);
 
-    const newChunk = world.chunkManager.getChunkForWorldPosition(details.player.position);
+        details.player.updateFlags.mapRegionUpdateRequired = true;
+        details.player.lastMapRegionUpdatePosition = details.player.position;
 
-    details.player.updateFlags.mapRegionUpdateRequired = true;
-    details.player.lastMapRegionUpdatePosition = details.player.position;
+        if (!oldChunk.equals(newChunk)) {
+            oldChunk.removePlayer(details.player);
+            newChunk.addPlayer(details.player);
+            details.player.chunkChanged(newChunk);
+            details.player.packetSender.updateCurrentMapChunk();
+        }
+    }, World.TICK_LENGTH);
 
-    if (!oldChunk.equals(newChunk)) {
-        oldChunk.removePlayer(details.player);
-        newChunk.addPlayer(details.player);
-        details.player.chunkChanged(newChunk);
-        details.player.packetSender.updateCurrentMapChunk();
-    }
-    details.player.packetSender.chatboxMessage(`You climb ${details.option.slice(6)} the ${details.objectDefinition.name.toLowerCase()}.`)
 };
 
-export default {objectIds: [12964, 12965, 12966], options: ['climb', 'climb-up', 'climb-down'], walkTo: true, action} as ObjectActionPlugin;
+export default {objectIds: [1738, 1746, 1747, 1748, 12964, 12965, 12966], options: ['climb', 'climb-up', 'climb-down'], walkTo: true, action} as ObjectActionPlugin;
