@@ -1,3 +1,10 @@
+- id: 590
+  desc: tinderbox
+  canTrade: true
+  weight: 0.035
+  alchemy:
+    high: 0
+    low: 0
 - id: 1048
   desc: white partyhat
   canTrade: true

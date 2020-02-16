@@ -46,7 +46,7 @@ export const setNpcPlugins = (plugins: NpcActionPlugin[]): void => {
 
 // @TODO priority and cancelling other (lower priority) actions
 export const npcAction = (player: Player, npc: Npc, position: Position, option: string): void => {
-    // Find all object action plugins that reference this landscape object
+    // Find all NPC action plugins that reference this NPC
     const interactionPlugins = npcInteractions.filter(plugin => pluginFilter(plugin.npcIds, npc.id, plugin.options, option));
 
     if(interactionPlugins.length === 0) {

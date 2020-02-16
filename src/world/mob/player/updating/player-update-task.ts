@@ -103,6 +103,9 @@ export class PlayerUpdateTask extends Task<void> {
         if(updateFlags.graphics) {
             mask |= 0x200;
         }
+        if(updateFlags.animation) {
+            mask |= 0x8;
+        }
 
         if(mask >= 0xff) {
             mask |= 0x20;
@@ -110,6 +113,12 @@ export class PlayerUpdateTask extends Task<void> {
             updateMaskData.writeByte(mask >> 8);
         } else {
             updateMaskData.writeByte(mask);
+        }
+
+        if(updateFlags.animation) {
+            const delay = updateFlags.animation.delay || 0;
+            updateMaskData.writeShortBE(updateFlags.animation.id);
+            updateMaskData.writeNegativeOffsetByte(delay);
         }
 
         if(updateFlags.chatMessages.length !== 0 && !currentPlayer) {
@@ -129,8 +138,9 @@ export class PlayerUpdateTask extends Task<void> {
         }
 
         if(updateFlags.graphics) {
+            const delay = updateFlags.graphics.delay || 0;
             updateMaskData.writeOffsetShortBE(updateFlags.graphics.id);
-            updateMaskData.writeIntME1(updateFlags.graphics.height << 16 | updateFlags.graphics.delay & 0xffff);
+            updateMaskData.writeIntME1(updateFlags.graphics.height << 16 | delay & 0xffff);
         }
 
         if(updateFlags.appearanceUpdateRequired || forceUpdate) {

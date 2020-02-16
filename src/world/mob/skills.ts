@@ -43,7 +43,7 @@ export const skillDetails: SkillDetail[] = [
     { name: 'Woodcutting', advancementInterfaceId: 4272 },
     { name: 'Fletching' },
     { name: 'Fishing' },
-    { name: 'Firemaking' },
+    { name: 'Firemaking', advancementInterfaceId: 4282 },
     { name: 'Crafting' },
     { name: 'Smithing' },
     { name: 'Mining' },
@@ -116,7 +116,7 @@ export class Skills {
 
         if(currentLevel !== finalLevel) {
             this.setLevel(skillId, finalLevel);
-            this.mob.updateFlags.graphics = { id: 199, delay: 0, height: 125 };
+            this.mob.playGraphics({ id: 199, delay: 0, height: 125 });
 
             if(this.mob instanceof Player) {
                 const achievementDetails = skillDetails[skillId];

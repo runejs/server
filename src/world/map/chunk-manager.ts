@@ -19,7 +19,13 @@ export class ChunkManager {
         this.chunkMap = new Map<string, Chunk>();
     }
 
-    public spawnWorldItem(item: Item, position: Position, initiallyVisibleTo?: Player, expires?: number): void {
+    public removeWorldItem(worldItem: WorldItem): void {
+        const chunk = this.getChunkForWorldPosition(worldItem.position);
+        chunk.removeWorldItem(worldItem);
+        this.deleteWorldItemForPlayers(worldItem, chunk);
+    }
+
+    public spawnWorldItem(item: Item, position: Position, initiallyVisibleTo?: Player, expires?: number): WorldItem {
         const chunk = this.getChunkForWorldPosition(position);
         const worldItem: WorldItem = {
             itemId: item.itemId,
@@ -47,6 +53,8 @@ export class ChunkManager {
                 this.deleteWorldItemForPlayers(worldItem, chunk);
             }, expires * World.TICK_LENGTH);
         }
+
+        return worldItem;
     }
 
     private spawnWorldItemForPlayers(worldItem: WorldItem, chunk: Chunk, excludePlayer?: Player): Promise<void> {

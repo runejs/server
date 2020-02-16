@@ -2,7 +2,7 @@ import { Position } from '@server/world/position';
 import { WNES } from '@server/world/direction';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
-import { action as doorAction } from '@server/plugins/object-plugin/doors/door-plugin';
+import { action as doorAction } from '@server/plugins/object/doors/door-plugin';
 import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
 
 const doubleDoors = [
