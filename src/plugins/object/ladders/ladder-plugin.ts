@@ -49,7 +49,7 @@ export const action: objectAction = (details) => {
                             });
                             return;
                     }
-                });
+                }).catch(error => console.error(error));
             return;
     }
     details.player.packetSender.chatboxMessage(`You climb ${details.option.slice(6)} the ${details.objectDefinition.name.toLowerCase()}.`);
