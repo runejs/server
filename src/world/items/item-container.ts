@@ -102,6 +102,21 @@ export class ItemContainer {
         }
     }
 
+    public removeFirst(item: number | Item, fireEvent: boolean = true): number {
+        const slot = this.findIndex(item);
+        if(slot === -1) {
+            return -1;
+        }
+
+        this._items[slot] = null;
+
+        if(fireEvent) {
+            this._containerUpdated.next({type: 'REMOVE', slot});
+        }
+
+        return slot;
+    }
+
     public remove(slot: number, fireEvent: boolean = true): void {
         this._items[slot] = null;
 
