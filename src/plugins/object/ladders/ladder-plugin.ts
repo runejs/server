@@ -5,6 +5,7 @@ import { world } from "@server/game-server";
 export const action: objectAction = (details) => {
     const oldChunk = world.chunkManager.getChunkForWorldPosition(details.player.position);
     const playerPosition = details.player.position;
+    let direction: string = '';
     switch (details.option) {
         case 'climb-up':
             playerPosition.move(playerPosition.x, playerPosition.y, playerPosition.level + 1);
@@ -25,6 +26,7 @@ export const action: objectAction = (details) => {
         details.player.chunkChanged(newChunk);
         details.player.packetSender.updateCurrentMapChunk();
     }
+    details.player.packetSender.chatboxMessage(`You climb ${details.option.slice(6)} the ${details.objectDefinition.name}.`)
 };
 
 export default {objectIds: [12964, 12965, 12966], options: ['climb-up', 'climb-down'], walkTo: true, action} as ObjectActionPlugin;
