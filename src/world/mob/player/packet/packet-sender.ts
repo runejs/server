@@ -300,6 +300,15 @@ export class PacketSender {
         this.send(packet);
     }
 
+    public updateInterfaceItemModel(interfaceId: number, itemId: number, scale?: number): void {
+        const packet = new Packet(21);
+        packet.writeShortBE(scale);
+        packet.writeShortLE(itemId);
+        packet.writeOffsetShortLE(interfaceId);
+
+        this.send(packet);
+    }
+
     public updateInterfaceString(interfaceId: number, value: string): void {
         const packet = new Packet(232, PacketType.DYNAMIC_LARGE);
         packet.writeOffsetShortLE(interfaceId);
@@ -384,6 +393,25 @@ export class PacketSender {
                 } else {
                     packet.writeByteInverted(item.amount);
                 }
+            }
+        });
+
+        this.send(packet);
+    }
+
+    public sendUpdateAllInterfaceItemsById(interfaceId: number, itemIds: number[]): void {
+        const packet = new Packet(206, PacketType.DYNAMIC_LARGE);
+        packet.writeShortBE(interfaceId);
+        packet.writeShortBE(itemIds.length);
+
+        itemIds.forEach(itemId => {
+            if(!itemId) {
+                // Empty slot
+                packet.writeOffsetShortLE(0);
+                packet.writeByteInverted(0);
+            } else {
+                packet.writeOffsetShortLE(itemId + 1); // +1 because 0 means an empty slot
+                packet.writeByteInverted(1);
             }
         });
 

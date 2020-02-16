@@ -265,6 +265,17 @@ export class Player extends Mob {
         });
     }
 
+    public removeFirstItem(item: number | Item): number {
+        const slot = this.inventory.removeFirst(item);
+
+        if(slot === -1) {
+            return -1;
+        }
+
+        this.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, slot, null);
+        return slot;
+    }
+
     public removeItem(slot: number): void {
         this.inventory.remove(slot);
 
