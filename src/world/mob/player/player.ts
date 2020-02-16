@@ -62,7 +62,7 @@ export class Player extends Mob {
     public readonly dialogueInteractionEvent: Subject<number>;
     private _walkingTo: Position;
     private _nearbyChunks: Chunk[];
-    public readonly actionsCancelled: Subject<void>;
+    public readonly actionsCancelled: Subject<boolean>;
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -84,7 +84,7 @@ export class Player extends Mob {
         this._equipment = new ItemContainer(14);
         this.dialogueInteractionEvent = new Subject<number>();
         this._nearbyChunks = [];
-        this.actionsCancelled = new Subject<void>();
+        this.actionsCancelled = new Subject<boolean>();
 
         this.loadSaveData();
     }
@@ -166,6 +166,13 @@ export class Player extends Mob {
         this.updateCarryWeight(true);
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
+
+        this.actionsCancelled.subscribe(doNotCloseInterfaces => {
+            if(!doNotCloseInterfaces) {
+                this.packetSender.closeActiveInterfaces();
+                this._activeInterface = null;
+            }
+        });
 
         logger.info(`${this.username}:${this.worldIndex} has logged in.`);
     }
@@ -255,6 +262,12 @@ export class Player extends Mob {
             this.updateFlags.reset();
             resolve();
         });
+    }
+
+    public removeItem(slot: number): void {
+        this.inventory.remove(slot);
+
+        this.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, slot, null);
     }
 
     public giveItem(item: number | Item): boolean {
@@ -457,6 +470,7 @@ export class Player extends Mob {
             this.packetSender.closeActiveInterfaces();
         }
 
+        this.actionsCancelled.next(true);
         this._activeInterface = value;
     }
 

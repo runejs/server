@@ -6,7 +6,8 @@ import { World } from '@server/world/world';
 export const loopingAction = (player: Player, ticks?: number, delayTicks?: number) => {
     const event: Subject<void> = new Subject<void>();
 
-    const subscription = timer(delayTicks === undefined ? 0 : (delayTicks * World.TICK_LENGTH), ticks === undefined ? World.TICK_LENGTH : (ticks * World.TICK_LENGTH)).subscribe(() => {
+    const subscription = timer(delayTicks === undefined ? 0 : (delayTicks * World.TICK_LENGTH),
+        ticks === undefined ? World.TICK_LENGTH : (ticks * World.TICK_LENGTH)).subscribe(() => {
         event.next();
     });
 

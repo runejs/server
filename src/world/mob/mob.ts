@@ -1,6 +1,6 @@
 import { WalkingQueue } from './walking-queue';
 import { ItemContainer } from '../items/item-container';
-import { UpdateFlags } from './update-flags';
+import { Animation, Graphic, UpdateFlags } from './update-flags';
 import { Npc } from './npc/npc';
 import { Entity } from '../entity';
 import { Skills } from '@server/world/mob/skills';
@@ -29,6 +29,26 @@ export abstract class Mob extends Entity {
         this._faceDirection = -1;
         this._inventory = new ItemContainer(28);
         this.skills = new Skills(this);
+    }
+
+    public playAnimation(animation: number | Animation): void {
+        if(typeof animation === 'number') {
+            animation = { id: animation, delay: 0 };
+        }
+
+        this.updateFlags.animation = animation;
+    }
+
+    public playGraphics(graphics: number | Graphic): void {
+        if(typeof graphics === 'number') {
+            graphics = { id: graphics, delay: 0, height: 120 };
+        }
+
+        this.updateFlags.graphics = graphics;
+    }
+
+    public removeItem(slot: number): void {
+        this._inventory.remove(slot);
     }
 
     public giveItem(item: number | Item): boolean {

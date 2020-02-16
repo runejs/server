@@ -1,7 +1,6 @@
 import { Player } from '../player';
 import { logger } from '@runejs/logger/dist/logger';
 import { injectPlugins, world } from '@server/game-server';
-import { interfaceIds } from '../game-interface';
 import { npcAction } from '@server/world/mob/player/action/npc-action';
 import { Skill } from '@server/world/mob/skills';
 
