@@ -34,7 +34,7 @@ let itemOnItemInteractions: ItemOnItemActionPlugin[] = [
 ];
 
 /**
- * Sets the list of NPC interaction plugins.
+ * Sets the list of item on item interaction plugins.
  * @param plugins The plugin list.
  */
 export const setItemOnItemPlugins = (plugins: ItemOnItemActionPlugin[]): void => {
@@ -56,7 +56,7 @@ export const itemOnItemAction = (player: Player,
 
     player.actionsCancelled.next();
 
-    // Immediately the plugins
+    // Immediately run the plugins
     interactionPlugins.forEach(plugin => plugin.action({ player, usedItem, usedWithItem, usedSlot, usedWithSlot,
         usedInterfaceId, usedWithInterfaceId }));
 };
