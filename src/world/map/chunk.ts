@@ -56,7 +56,7 @@ export class Chunk {
 
         if(this._worldItems.has(key)) {
             let list = this._worldItems.get(key);
-            list = list.splice(list.indexOf(worldItem), 1);
+            list.splice(list.indexOf(worldItem), 1);
             this._worldItems.set(key, list);
         }
     }
@@ -142,8 +142,8 @@ export class Chunk {
         }
     }
 
-    public removeObject(object: LandscapeObject, position: Position): void {
-        if(this.getCacheObject(object.objectId, position)) {
+    public removeObject(object: LandscapeObject, position: Position, markRemoved: boolean = true): void {
+        if(markRemoved && this.getCacheObject(object.objectId, position)) {
             // Only add this as an "removed" object if it's from the cache, as that's all we care about
             this.removedLandscapeObjects.set(`${position.x},${position.y},${object.objectId}`, object);
         }

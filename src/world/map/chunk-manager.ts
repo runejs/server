@@ -22,6 +22,7 @@ export class ChunkManager {
     public removeWorldItem(worldItem: WorldItem): void {
         const chunk = this.getChunkForWorldPosition(worldItem.position);
         chunk.removeWorldItem(worldItem);
+        worldItem.removed = true;
         this.deleteWorldItemForPlayers(worldItem, chunk);
     }
 
@@ -40,6 +41,10 @@ export class ChunkManager {
         if(initiallyVisibleTo) {
             initiallyVisibleTo.packetSender.setWorldItem(worldItem, worldItem.position);
             setTimeout(() => {
+                if(worldItem.removed) {
+                    return;
+                }
+
                 this.spawnWorldItemForPlayers(worldItem, chunk, initiallyVisibleTo);
                 worldItem.initiallyVisibleTo = undefined;
             }, 100 * World.TICK_LENGTH);
@@ -49,8 +54,11 @@ export class ChunkManager {
 
         if(expires) {
             setTimeout(() => {
-                chunk.removeWorldItem(worldItem);
-                this.deleteWorldItemForPlayers(worldItem, chunk);
+                if(worldItem.removed) {
+                    return;
+                }
+
+                this.removeWorldItem(worldItem);
             }, expires * World.TICK_LENGTH);
         }
 
@@ -74,8 +82,6 @@ export class ChunkManager {
     }
 
     private deleteWorldItemForPlayers(worldItem: WorldItem, chunk: Chunk): Promise<void> {
-        worldItem.removed = true;
-
         return new Promise(resolve => {
             const nearbyPlayers = this.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
@@ -111,7 +117,8 @@ export class ChunkManager {
             this.addLandscapeObject(object, position);
 
             setTimeout(() => {
-                this.removeLandscapeObject(object, position);
+                this.removeLandscapeObject(object, position, false)
+                    .then(chunk => this.deleteAddedObjectMarker(object, position, chunk));
                 resolve();
             }, expireTicks * World.TICK_LENGTH);
         });
@@ -136,9 +143,9 @@ export class ChunkManager {
         });
     }
 
-    public removeLandscapeObject(object: LandscapeObject, position: Position): Promise<void> {
+    public removeLandscapeObject(object: LandscapeObject, position: Position, markRemoved: boolean = true): Promise<Chunk> {
         const chunk = this.getChunkForWorldPosition(position);
-        chunk.removeObject(object, position);
+        chunk.removeObject(object, position, markRemoved);
 
         return new Promise(resolve => {
             const nearbyPlayers = this.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
@@ -147,7 +154,7 @@ export class ChunkManager {
                 player.packetSender.removeLandscapeObject(object, position);
             });
 
-            resolve();
+            resolve(chunk);
         });
     }
 

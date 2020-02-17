@@ -86,7 +86,7 @@ const action: itemOnItemAction = (details) => {
     // @TODO check firemaking level
 
     player.removeItem(removeFromSlot);
-    const worldItemLog = world.chunkManager.spawnWorldItem(log, player.position, player);
+    const worldItemLog = world.chunkManager.spawnWorldItem(log, player.position, player, 300);
 
     if(player.metadata['lastFire'] && Date.now() - player.metadata['lastFire'] < 1200 && canChain(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level)) {
         lightFire(player, position, worldItemLog, skillInfo.burnExp);
