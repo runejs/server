@@ -1,0 +1,11 @@
+- id: 8654
+  name: Attack
+  subGuides:
+    - name: Weaponry
+      lines:
+        - itemId: 1205
+          text: Bronze Weapons
+          level: 1
+        - itemId: 1203
+          text: Iron Weapons
+          level: 1
