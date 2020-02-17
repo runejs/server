@@ -25,14 +25,17 @@ Currently the server is set up for the 377 revision of the game. There are not a
 - Player & NPC pathing validation via collision and tile maps generated from the game cache.
 - Player client settings saving and loading.
 - A basic REST service for polling logged in users.
+- A diverse TypeScript plugin system for easily writing new content based off of in-game actions.
 
 ## Usage
 
 1. Download and install Node.JS **version 12 or higher**: https://nodejs.org/en/
 2. Clone the Github Repo: https://github.com/rune-js/server
 3. Install dependencies by navigating to the project in your Terminal or command prompt and running the command npm install
-4. Update your server's RSA tokens in the src/server/net/dataparser/client-login-parser.ts file.
-5. Run the game server and REST service by inputting the command npm run server
+4. Copy the `data/config/server-config-default.yaml` and paste it into the same folder using the name `server-config.yaml`. 
+5. Go into your new `server-config.yaml` file and modify your RSA modulus and exponent with the ones matching your game client.
+  - You may also modify the server's port and host address from this configuration file.
+6. Run the game server and REST service by inputting the command npm run server
 
 The game server will spin up and be accessible via port 43594. The REST service can be accessed via port 8888.
 
