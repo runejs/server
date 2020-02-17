@@ -1,48 +1,111 @@
 import { buttonAction, ButtonActionPlugin } from '@server/world/mob/player/action/button-action';
+import { logger } from '@runejs/logger/dist/logger';
+import { JSON_SCHEMA, safeLoad } from 'js-yaml';
+import { readFileSync } from "fs";
 
-const attackGuide: any[] = [
-    {
-        itemId: 1205,
-        text: 'Bronze Weapons',
-        level: 1
-    },
-    {
-        itemId: 1203,
-        text: 'Iron Weapons',
-        level: 1
+interface SkillSubGuide {
+    name: string;
+    lines: {
+        itemId: number;
+        text: string;
+        level: number;
+    }[];
+}
+
+interface SkillGuide {
+    id: number;
+    name: string;
+    subGuides: SkillSubGuide[];
+}
+
+function parseSkillGuides(): SkillGuide[] {
+    try {
+        logger.info('Parsing skill guides...');
+
+        const skillGuides = safeLoad(readFileSync('data/config/skill-guides.yaml', 'utf8'), { schema: JSON_SCHEMA }) as SkillGuide[];
+
+        if(!skillGuides || skillGuides.length === 0) {
+            throw 'Unable to read skill guides.';
+        }
+
+        logger.info(`${skillGuides.length} skill guides found.`);
+
+        return skillGuides;
+    } catch(error) {
+        logger.error('Error parsing skill guides: ' + error);
+        return null;
     }
-];
+}
 
-const guides = {
-    8654: attackGuide,
-    //8668 firemaking
-};
+const guides = parseSkillGuides();
 
-const buttonIds = Object.keys(guides).map(Number);
+const sidebarTextIds = [8846,8823,8824,8827,8837,8840,8843,8859,8862,8865,15303,15306,15309];
+const sidebarIds = [8844,8813,-1,8825,8828,8838,8841,8850,8860,8863,15294,15304,15307];
+const buttonIds = guides.map(g => g.id).concat(sidebarTextIds);
 
 export const action: buttonAction = (details) => {
-    const { player, buttonId } = details;
+    let { player, buttonId } = details;
+    let guide: SkillGuide = guides.find(g => g.id === buttonId);
+    let subGuideIndex = 0;
+    let refreshSidebar = true;
 
-    const sidebarIds = [8849,8846,8823,8824,8827,8837,8840,8843,8859,8862,8865,15303,15306,15309];
-    sidebarIds.forEach(i => player.packetSender.updateInterfaceString(i, ''));
+    if(!guide) {
+        const activeSkillGuide = player.metadata['activeSkillGuide'];
+        if(!activeSkillGuide) {
+            return;
+        }
 
-    const guide: any[] = guides[buttonId];
-    const itemIds: number[] = guide.map(g => g.itemId);
+        guide = guides.find(g => g.id === activeSkillGuide);
+        subGuideIndex = sidebarTextIds.indexOf(buttonId);
+
+        if(subGuideIndex >= guide.subGuides.length) {
+            return;
+        }
+
+        buttonId = activeSkillGuide;
+        refreshSidebar = false;
+    }
+
+    if(refreshSidebar) {
+        player.packetSender.updateInterfaceString(sidebarTextIds[0], guide.subGuides[0].name);
+
+        for(let i = 1; i < sidebarTextIds.length; i++) {
+            const sidebarId = sidebarIds[i];
+            let hide: boolean = true;
+
+            if(i >= guide.subGuides.length) {
+                player.packetSender.updateInterfaceString(sidebarTextIds[i], '');
+                hide = true;
+            } else {
+                player.packetSender.updateInterfaceString(sidebarTextIds[i], guide.subGuides[i].name);
+                hide = false;
+            }
+
+            if(sidebarId !== -1) {
+                // Apparently you can never have only TWO subguides...
+                // Because 8813 deletes both options 2 AND 3. So, good thing there are no guides with only 2 sections, I guess?...
+                // Verified this in an interface editor, and they are indeed grouped in a single layer for some reason...
+                player.packetSender.toggleInterfaceVisibility(sidebarIds[i] as number, hide);
+            }
+        }
+    }
+
+    const subGuide: SkillSubGuide = guide.subGuides[subGuideIndex];
+
+    const itemIds: number[] = subGuide.lines.map(g => g.itemId).concat(new Array(30 - subGuide.lines.length).fill(null));
     player.packetSender.sendUpdateAllInterfaceItemsById(8847, itemIds);
 
-    player.packetSender.updateInterfaceString(8716, 'Attack');
+    player.packetSender.updateInterfaceString(8716, guide.name + ' Guide');
+    player.packetSender.updateInterfaceString(8849, subGuide.name);
 
-    const levels: string[] = guide.map(g => g.level.toString());
-    levels.forEach((level, i) => player.packetSender.updateInterfaceString(8720 + i, level));
-
-    const texts: string[] = guide.map(g => g.text);
-    texts.forEach((text, i) => player.packetSender.updateInterfaceString(8760 + i, text));
-
-    for(let i = levels.length; i < 30; i++) {
-        player.packetSender.updateInterfaceString(8720 + i, '');
-    }
-    for(let i = texts.length; i < 30; i++) {
-        player.packetSender.updateInterfaceString(8760 + i, '');
+    for(let i = 0; i < 30; i++) {
+        if(subGuide.lines.length <= i) {
+            player.packetSender.updateInterfaceString(8720 + i, '');
+            player.packetSender.updateInterfaceString(8760 + i, '');
+        } else {
+            player.packetSender.updateInterfaceString(8720 + i, subGuide.lines[i].level.toString());
+            player.packetSender.updateInterfaceString(8760 + i, subGuide.lines[i].text);
+        }
     }
 
     player.activeInterface = {
@@ -50,6 +113,7 @@ export const action: buttonAction = (details) => {
         type: 'SCREEN',
         closeOnWalk: false
     };
+    player.metadata['activeSkillGuide'] = buttonId;
 };
 
 export default { buttonIds, action } as ButtonActionPlugin;

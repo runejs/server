@@ -429,6 +429,14 @@ export class PacketSender {
         this.send(packet);
     }
 
+    public toggleInterfaceVisibility(interfaceId: number, hidden: boolean): void {
+        const packet = new Packet(82);
+        packet.writeUnsignedByte(hidden ? 1 : 0);
+        packet.writeShortBE(interfaceId);
+
+        this.send(packet);
+    }
+
     public sendTabInterface(tabIndex: number, interfaceId: number): void {
         const packet = new Packet(10);
         packet.writeNegativeOffsetByte(tabIndex);
