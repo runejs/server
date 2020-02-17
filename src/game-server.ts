@@ -12,8 +12,9 @@ import { ObjectActionPlugin, setObjectPlugins } from '@server/world/mob/player/a
 import { loadPlugins } from '@server/plugins/plugin-loader';
 import { ItemOnItemActionPlugin, setItemOnItemPlugins } from '@server/world/mob/player/action/item-on-item-action';
 import { ButtonActionPlugin, setButtonPlugins } from '@server/world/mob/player/action/button-action';
+import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
 
-const GAME_SERVER_PORT = 43594;
+export let serverConfig: ServerConfig;
 export let gameCache: GameCache;
 export let world: World;
 
@@ -25,6 +26,13 @@ export async function injectPlugins(): Promise<void> {
 }
 
 export function runGameServer(): void {
+    serverConfig = parseServerConfig();
+
+    if(!serverConfig) {
+        logger.error('Unable to start server due to missing or invalid server configuration.');
+        return;
+    }
+
     gameCache = new GameCache('cache');
     world = new World();
     world.init();
@@ -65,9 +73,9 @@ export function runGameServer(): void {
             socket.destroy();
             logger.error('Socket destroyed due to connection error.');
         });
-    }).listen(GAME_SERVER_PORT, '127.0.0.1');
+    }).listen(serverConfig.port, serverConfig.host);
 
-    logger.info(`Game server listening on port ${GAME_SERVER_PORT}.`);
+    logger.info(`Game server listening on port ${serverConfig.port}.`);
 
     const watcher = watch('dist/plugins/');
     watcher.on('ready', function() {
