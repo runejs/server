@@ -4,10 +4,10 @@ import { World } from '@server/world/world';
 
 
 export const action: objectAction = (details) => {
-    if(details.player.busy) {
+    if(details.player.metadata['busy']) {
         return;
     }
-    details.player.busy = true;
+    details.player.metadata['busy'] = true;
     details.player.playAnimation(827);
     let itemId: number = 1965;
     let prefix = 'some';
@@ -38,7 +38,7 @@ export const action: objectAction = (details) => {
             world.chunkManager.removeLandscapeObjectTemporarily(details.object, details.position, 30);
         }
         details.player.giveItem(pickedItem.id);
-        details.player.busy = false;
+        details.player.metadata['busy'] = false;
     }, World.TICK_LENGTH);
 };
 

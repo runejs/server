@@ -63,7 +63,6 @@ export class Player extends Mob {
     private _nearbyChunks: Chunk[];
     public readonly actionsCancelled: Subject<boolean>;
     public readonly metadata: { [key: string]: any } = {};
-    public busy: boolean = false;
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
