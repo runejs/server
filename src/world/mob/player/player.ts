@@ -289,6 +289,7 @@ export class Player extends Mob {
         }
 
         this.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, addedItem.slot, addedItem.item);
+        return true;
     }
 
     public hasItemInEquipment(item: number | Item): boolean {

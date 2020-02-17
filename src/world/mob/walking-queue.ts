@@ -57,7 +57,7 @@ export class WalkingQueue {
             lastX = x - diffX;
             lastY = y - diffY;
 
-            const newPosition = new Position(lastX, lastY);
+            const newPosition = new Position(lastX, lastY, this.mob.position.level);
 
             if(this.canMoveTo(lastPosition, newPosition)) {
                 lastPosition = newPosition;
@@ -70,7 +70,7 @@ export class WalkingQueue {
         }
 
         if(lastX !== x || lastY !== y && this.valid) {
-            const newPosition = new Position(x, y);
+            const newPosition = new Position(x, y, this.mob.position.level);
 
             if(this.canMoveTo(lastPosition, newPosition)) {
                 newPosition.metadata = positionMetadata;

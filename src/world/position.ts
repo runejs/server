@@ -1,4 +1,6 @@
 import { Direction, directionData } from '@server/world/direction';
+import { LandscapeObject } from '@runejs/cache-parser';
+import { gameCache } from '@server/game-server';
 
 const directionDeltaX = [-1, 0, 1, -1, 1, -1, 0, 1];
 const directionDeltaY = [1, 1, 1, 0, 0, -1, -1, -1];
@@ -15,6 +17,42 @@ export class Position {
 
     public constructor(x: number, y: number, level?: number) {
         this.move(x, y, level);
+    }
+
+    public withinInteractionDistance(landscapeObject: LandscapeObject): boolean {
+        const definition = gameCache.landscapeObjectDefinitions.get(landscapeObject.objectId);
+        const occupantX = landscapeObject.x;
+        const occupantY = landscapeObject.y;
+
+        if(definition.solid) {
+            if(landscapeObject.type === 22) {
+                if(this.distanceBetween(new Position(occupantX, occupantY, landscapeObject.level)) <= 1) {
+                    return true;
+                }
+            } else if(landscapeObject.type >= 9) {
+                let width = definition.sizeX;
+                let height = definition.sizeY;
+                if(landscapeObject.rotation == 1 || landscapeObject.rotation == 3) {
+                    const off = width;
+                    width = height;
+                    height = off;
+                }
+
+                for(let x = occupantX; x < occupantX + width; x++) {
+                    for(let y = occupantY; y < occupantY + height; y++) {
+                        if(this.distanceBetween(new Position(x, y, landscapeObject.level)) <= 1) {
+                            return true;
+                        }
+                    }
+                }
+            } else if(landscapeObject.type >= 0 && landscapeObject.type <= 3) {
+                if(this.distanceBetween(new Position(occupantX, occupantY, landscapeObject.level)) <= 1) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

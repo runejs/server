@@ -1,6 +1,6 @@
 import { Player } from '../player';
 import { logger } from '@runejs/logger/dist/logger';
-import { injectPlugins, world } from '@server/game-server';
+import { gameCache, injectPlugins, world } from '@server/game-server';
 import { npcAction } from '@server/world/mob/player/action/npc-action';
 import { Skill } from '@server/world/mob/skills';
 
@@ -47,8 +47,8 @@ const commands: { [key: string]: commandHandler } = {
     },
 
     give: (player: Player, args: string[]) => {
-        if(args.length !== 1) {
-            throw `give itemId`;
+        if(args.length < 1) {
+            throw `give itemId [amount?]`;
         }
 
         const inventorySlot = player.inventory.getFirstOpenSlot();
@@ -61,12 +61,40 @@ const commands: { [key: string]: commandHandler } = {
         const itemId: number = parseInt(args[0]);
 
         if(isNaN(itemId)) {
-            throw `give itemId`;
+            throw `give itemId [amount?]`;
         }
 
-        const item = { itemId, amount: 1 };
-        player.giveItem(item);
-        player.packetSender.chatboxMessage(`Adding 1x ${world.itemData.get(itemId).name} to inventory.`);
+        let amount = 1;
+        if(args.length === 2) {
+            amount = parseInt(args[1]);
+            if(isNaN(amount) || amount < 1 || amount > 5000) {
+                amount = 1;
+            }
+        }
+
+        const itemDefinition = gameCache.itemDefinitions.get(itemId);
+        if(!itemDefinition) {
+            player.packetSender.chatboxMessage(`Item ID ${itemId} not found!`);
+            return;
+        }
+
+        player.packetSender.chatboxMessage(`amount = ${amount}`);
+        let actualAmount = 0;
+        if(itemDefinition.stackable) {
+            const item = { itemId, amount };
+            player.giveItem(item);
+            actualAmount = amount;
+        } else {
+            for(let i = 0; i < amount; i++) {
+                if(player.giveItem({ itemId, amount: 1 })) {
+                    actualAmount++;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        player.packetSender.chatboxMessage(`Added ${actualAmount}x ${itemDefinition.name} to inventory.`);
     },
 
     npcaction: (player: Player) => {
