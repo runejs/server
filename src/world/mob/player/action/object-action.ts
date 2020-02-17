@@ -3,6 +3,7 @@ import { LandscapeObject, LandscapeObjectDefinition } from '@runejs/cache-parser
 import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/mob/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
+import { logger } from '@runejs/logger/dist/logger';
 
 /**
  * The definition for an object action function.
@@ -66,15 +67,17 @@ export const objectAction = (player: Player, landscapeObject: LandscapeObject, l
 
     // Make sure we walk to the object before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
-        walkToAction(player, position).then(() => walkToPlugins.forEach(plugin =>
-            plugin.action({
-                player,
-                object: landscapeObject,
-                objectDefinition: landscapeObjectDefinition,
-                option,
-                position,
-                cacheOriginal
-            })));
+        walkToAction(player, position, { interactingObject: landscapeObject })
+            .then(() => walkToPlugins.forEach(plugin =>
+                plugin.action({
+                    player,
+                    object: landscapeObject,
+                    objectDefinition: landscapeObjectDefinition,
+                    option,
+                    position,
+                    cacheOriginal
+                })))
+            .catch(() => logger.warn(`Unable to complete walk-to action.`));
     }
 
     // Immediately run any non-walk-to plugins

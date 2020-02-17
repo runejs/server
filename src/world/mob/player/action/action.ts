@@ -2,6 +2,12 @@ import { Player } from '@server/world/mob/player/player';
 import { Position } from '@server/world/position';
 import { Subject, timer } from 'rxjs';
 import { World } from '@server/world/world';
+import { LandscapeObject } from '@runejs/cache-parser';
+import { gameCache } from '@server/game-server';
+
+export interface InteractingAction {
+    interactingObject?: LandscapeObject;
+}
 
 export const loopingAction = (player: Player, ticks?: number, delayTicks?: number) => {
     const event: Subject<void> = new Subject<void>();
@@ -22,22 +28,33 @@ export const loopingAction = (player: Player, ticks?: number, delayTicks?: numbe
     } };
 };
 
-export const walkToAction = (player: Player, position: Position): Promise<void> => {
+export const walkToAction = (player: Player, position: Position, interactingAction?: InteractingAction): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
         player.walkingTo = position;
 
         const inter = setInterval(() => {
             if(!player.walkingTo || !player.walkingTo.equals(position)) {
-                clearInterval(inter);
                 reject();
+                clearInterval(inter);
                 return;
             }
 
             if(!player.walkingQueue.moving()) {
-                if(player.position.distanceBetween(position) > 1) {
-                    reject();
+                if(!interactingAction) {
+                    if(player.position.distanceBetween(position) > 1) {
+                        reject();
+                    } else {
+                        resolve();
+                    }
                 } else {
-                    resolve();
+                    if(interactingAction.interactingObject) {
+                        const landscapeObject = interactingAction.interactingObject;
+                        if(player.position.withinInteractionDistance(landscapeObject)) {
+                            resolve();
+                        } else {
+                            reject();
+                        }
+                    }
                 }
 
                 clearInterval(inter);

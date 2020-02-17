@@ -3,6 +3,7 @@ import { Npc } from '@server/world/mob/npc/npc';
 import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/mob/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
+import { logger } from '@runejs/logger/dist/logger';
 
 /**
  * The definition for an NPC action function.
@@ -62,7 +63,9 @@ export const npcAction = (player: Player, npc: Npc, position: Position, option: 
 
     // Make sure we walk to the NPC before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
-        walkToAction(player, position).then(() => walkToPlugins.forEach(plugin => plugin.action({ player, npc, position })));
+        walkToAction(player, position)
+            .then(() => walkToPlugins.forEach(plugin => plugin.action({ player, npc, position })))
+            .catch(() => logger.warn(`Unable to complete walk-to action.`));
     }
 
     // Immediately run any non-walk-to plugins
