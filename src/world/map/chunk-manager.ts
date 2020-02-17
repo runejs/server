@@ -117,6 +117,25 @@ export class ChunkManager {
         });
     }
 
+    public removeLandscapeObjectTemporarily(object: LandscapeObject, position: Position, expireTicks: number): Promise<void> {
+        const chunk = this.getChunkForWorldPosition(position);
+        chunk.removeObject(object, position);
+
+        return new Promise(resolve => {
+            const nearbyPlayers = this.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
+
+            nearbyPlayers.forEach(player => {
+                player.packetSender.removeLandscapeObject(object, position);
+            });
+
+            setTimeout(() => {
+                this.deleteRemovedObjectMarker(object, position, chunk);
+                this.addLandscapeObject(object, position);
+                resolve();
+            }, expireTicks * World.TICK_LENGTH);
+        });
+    }
+
     public removeLandscapeObject(object: LandscapeObject, position: Position): Promise<void> {
         const chunk = this.getChunkForWorldPosition(position);
         chunk.removeObject(object, position);
