@@ -1,3 +1,6 @@
+[![RuneJS Discord Server](https://img.shields.io/discord/678751302297059336?label=RuneJS%20Discord&logo=discord)](https://discord.gg/phHTDp)
+
+
 ![Rune.JS](https://i.imgur.com/osF9OSD.png)
 
 # Rune.JS
