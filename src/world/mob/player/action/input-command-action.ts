@@ -3,6 +3,7 @@ import { logger } from '@runejs/logger/dist/logger';
 import { gameCache, injectPlugins, world } from '@server/game-server';
 import { npcAction } from '@server/world/mob/player/action/npc-action';
 import { Skill } from '@server/world/mob/skills';
+import { Position } from '@server/world/position';
 
 type commandHandler = (player: Player, args?: string[]) => void;
 
@@ -29,21 +30,7 @@ const commands: { [key: string]: commandHandler } = {
             throw `move x y [level]`;
         }
 
-        const oldChunk = world.chunkManager.getChunkForWorldPosition(player.position);
-
-        player.position.move(x, y, level);
-
-        const newChunk = world.chunkManager.getChunkForWorldPosition(player.position);
-
-        player.updateFlags.mapRegionUpdateRequired = true;
-        player.lastMapRegionUpdatePosition = player.position;
-
-        if(!oldChunk.equals(newChunk)) {
-            oldChunk.removePlayer(player);
-            newChunk.addPlayer(player);
-            player.chunkChanged(newChunk);
-            player.packetSender.updateCurrentMapChunk();
-        }
+        player.teleport(new Position(x, y, level));
     },
 
     give: (player: Player, args: string[]) => {
