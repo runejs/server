@@ -23,31 +23,30 @@ export class Position {
         const definition = gameCache.landscapeObjectDefinitions.get(landscapeObject.objectId);
         const occupantX = landscapeObject.x;
         const occupantY = landscapeObject.y;
+        let width = definition.sizeX;
+        let height = definition.sizeY;
 
-        if(definition.solid) {
-            if(landscapeObject.type === 22) {
-                if(this.distanceBetween(new Position(occupantX, occupantY, landscapeObject.level)) <= 1) {
-                    return true;
-                }
-            } else if(landscapeObject.type >= 9) {
-                let width = definition.sizeX;
-                let height = definition.sizeY;
-                if(landscapeObject.rotation == 1 || landscapeObject.rotation == 3) {
-                    const off = width;
-                    width = height;
-                    height = off;
-                }
+        if(width === undefined || width === null || width < 1) {
+            width = 1;
+        }
+        if(height === undefined || height === null || height < 1) {
+            height = 1;
+        }
 
-                for(let x = occupantX; x < occupantX + width; x++) {
-                    for(let y = occupantY; y < occupantY + height; y++) {
-                        if(this.distanceBetween(new Position(x, y, landscapeObject.level)) <= 1) {
-                            return true;
-                        }
+        if(width === 1 && height === 1) {
+            return this.distanceBetween(new Position(occupantX, occupantY, landscapeObject.level)) <= 1;
+        } else {
+            if(landscapeObject.rotation == 1 || landscapeObject.rotation == 3) {
+                const off = width;
+                width = height;
+                height = off;
+            }
+
+            for(let x = occupantX; x < occupantX + width; x++) {
+                for(let y = occupantY; y < occupantY + height; y++) {
+                    if(this.distanceBetween(new Position(x, y, landscapeObject.level)) <= 1) {
+                        return true;
                     }
-                }
-            } else if(landscapeObject.type >= 0 && landscapeObject.type <= 3) {
-                if(this.distanceBetween(new Position(occupantX, occupantY, landscapeObject.level)) <= 1) {
-                    return true;
                 }
             }
         }
