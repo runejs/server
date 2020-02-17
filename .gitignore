@@ -3,6 +3,7 @@ node_modules
 /dist
 /data/dump
 /data/saves/*.json
+/data/config/server-config.yaml
 
 # local env files
 .env.local

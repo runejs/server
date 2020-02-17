@@ -2,16 +2,16 @@ import BigInteger from 'bigi';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { Player } from '@server/world/mob/player/player';
 import { Isaac } from '@server/net/isaac';
-import { world } from '@server/game-server';
+import { serverConfig, world } from '@server/game-server';
 import { DataParser } from './data-parser';
-
-const rsaModulus = BigInteger('119568088839203297999728368933573315070738693395974011872885408638642676871679245723887367232256427712869170521351089799352546294030059890127723509653145359924771433131004387212857375068629466435244653901851504845054452735390701003613803443469723435116497545687393297329052988014281948392136928774011011998343');
-const rsaExponent = BigInteger('12747337179295870166838611986189126026507945904720545965726999254744592875817063488911622974072289858092633084100280214658532446654378876853112046049506789703022033047774294965255097838909779899992870910011426403494610880634275141204442441976355383839981584149269550057129306515912021704593400378690444280161');
 
 /**
  * Parses the login packet from the game client.
  */
 export class ClientLoginParser extends DataParser {
+
+    private readonly rsaModulus = BigInteger(serverConfig.rsaMod);
+    private readonly rsaExponent = BigInteger(serverConfig.rsaExp);
 
     public parse(buffer?: RsBuffer): void {
         if(!buffer) {
@@ -58,7 +58,7 @@ export class ClientLoginParser extends DataParser {
 
         const encryptedBytes: Buffer = Buffer.alloc(loginEncryptedSize);
         buffer.getBuffer().copy(encryptedBytes, 0, buffer.getReaderIndex());
-        const decrypted: RsBuffer = new RsBuffer(BigInteger.fromBuffer(encryptedBytes).modPow(rsaExponent, rsaModulus).toBuffer());
+        const decrypted: RsBuffer = new RsBuffer(BigInteger.fromBuffer(encryptedBytes).modPow(this.rsaExponent, this.rsaModulus).toBuffer());
 
         const blockId = decrypted.readByte();
 

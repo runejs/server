@@ -1,7 +1,7 @@
 import { buttonAction, ButtonActionPlugin } from '@server/world/mob/player/action/button-action';
 import { logger } from '@runejs/logger/dist/logger';
 import { JSON_SCHEMA, safeLoad } from 'js-yaml';
-import { readFileSync } from "fs";
+import { readFileSync } from 'fs';
 
 interface SkillSubGuide {
     name: string;
