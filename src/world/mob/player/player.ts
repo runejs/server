@@ -4,7 +4,6 @@ import { Isaac } from '@server/net/isaac';
 import { PlayerUpdateTask } from './updating/player-update-task';
 import { Mob } from '../mob';
 import { Position } from '@server/world/position';
-import { Skill, skillDetails } from '../skills';
 import { world } from '@server/game-server';
 import { logger } from '@runejs/logger';
 import {
@@ -222,6 +221,7 @@ export class Player extends Mob {
 
             if(chunk.addedLandscapeObjects.size !== 0) {
                 chunk.addedLandscapeObjects.forEach(object => chunkUpdateItems.push({ object, type: 'ADD' }));
+                console.log('add');
             }
 
             if(chunk.removedLandscapeObjects.size !== 0) {
@@ -261,8 +261,32 @@ export class Player extends Mob {
     public async reset(): Promise<void> {
         return new Promise<void>(resolve => {
             this.updateFlags.reset();
+
+            if(this.metadata['updateChunk']) {
+                const { newChunk, oldChunk } = this.metadata['updateChunk'];
+                oldChunk.removePlayer(this);
+                newChunk.addPlayer(this);
+                this.chunkChanged(newChunk);
+                this.packetSender.updateCurrentMapChunk();
+                this.metadata['updateChunk'] = null;
+            }
+
             resolve();
         });
+    }
+
+    public teleport(newPosition: Position): void {
+        const oldChunk = world.chunkManager.getChunkForWorldPosition(this.position);
+        const newChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
+
+        this.position.move(newPosition.x, newPosition.y, newPosition.level);
+
+        this.updateFlags.mapRegionUpdateRequired = true;
+        this.lastMapRegionUpdatePosition = newPosition;
+
+        if(!oldChunk.equals(newChunk)) {
+            this.metadata['updateChunk'] = { newChunk, oldChunk };
+        }
     }
 
     public removeFirstItem(item: number | Item): number {
