@@ -221,7 +221,6 @@ export class Player extends Mob {
 
             if(chunk.addedLandscapeObjects.size !== 0) {
                 chunk.addedLandscapeObjects.forEach(object => chunkUpdateItems.push({ object, type: 'ADD' }));
-                console.log('add');
             }
 
             if(chunk.removedLandscapeObjects.size !== 0) {
