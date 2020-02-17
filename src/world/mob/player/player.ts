@@ -219,12 +219,12 @@ export class Player extends Mob {
 
             const chunkUpdateItems: ChunkUpdateItem[] = [];
 
-            if(chunk.addedLandscapeObjects.size !== 0) {
-                chunk.addedLandscapeObjects.forEach(object => chunkUpdateItems.push({ object, type: 'ADD' }));
-            }
-
             if(chunk.removedLandscapeObjects.size !== 0) {
                 chunk.removedLandscapeObjects.forEach(object => chunkUpdateItems.push({ object, type: 'REMOVE' }));
+            }
+
+            if(chunk.addedLandscapeObjects.size !== 0) {
+                chunk.addedLandscapeObjects.forEach(object => chunkUpdateItems.push({ object, type: 'ADD' }));
             }
 
             if(chunk.worldItems.size !== 0) {
@@ -266,7 +266,6 @@ export class Player extends Mob {
                 oldChunk.removePlayer(this);
                 newChunk.addPlayer(this);
                 this.chunkChanged(newChunk);
-                this.packetSender.updateCurrentMapChunk();
                 this.metadata['updateChunk'] = null;
             }
 
@@ -278,7 +277,8 @@ export class Player extends Mob {
         const oldChunk = world.chunkManager.getChunkForWorldPosition(this.position);
         const newChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
 
-        this.position.move(newPosition.x, newPosition.y, newPosition.level);
+        this.walkingQueue.clear();
+        this.position = newPosition;
 
         this.updateFlags.mapRegionUpdateRequired = true;
         this.lastMapRegionUpdatePosition = newPosition;
