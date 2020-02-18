@@ -3,7 +3,7 @@ import { dialogueAction } from '@server/world/mob/player/action/dialogue-action'
 import { World } from '@server/world/world';
 import { Position } from '@server/world/position';
 
-
+//TODO: prevent user from no-clipping.
 export const action: objectAction = (details) => {
     const playerPosition = details.player.position;
     let newLevel: number = playerPosition.level;
@@ -28,24 +28,9 @@ export const action: objectAction = (details) => {
                     d.close();
                     switch(d.action) {
                         case 1:
-                            action({
-                                player: details.player,
-                                object: details.object,
-                                objectDefinition: details.objectDefinition,
-                                position: details.position,
-                                cacheOriginal: details.cacheOriginal,
-                                option: 'climb-up'
-                            });
-                            return;
                         case 2:
-                            action({
-                                player: details.player,
-                                object: details.object,
-                                objectDefinition: details.objectDefinition,
-                                position: details.position,
-                                cacheOriginal: details.cacheOriginal,
-                                option: 'climb-down'
-                            });
+                            const direction = d.action === 1 ? 'up' : 'down';
+                            action({...details, option: `climb-${direction}`});
                             return;
                     }
                 }).catch(error => console.error(error));
