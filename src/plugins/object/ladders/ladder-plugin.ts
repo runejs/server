@@ -3,6 +3,9 @@ import { dialogueAction } from '@server/world/mob/player/action/dialogue-action'
 import { World } from '@server/world/world';
 import { Position } from '@server/world/position';
 
+const planes = { min: 0, max: 3 };
+const validate: (level: Number) => boolean = (level) => { return planes.min <= level && level <= planes.max };
+
 //TODO: prevent user from no-clipping.
 export const action: objectAction = (details) => {
     const {player, option} = details;
@@ -31,6 +34,8 @@ export const action: objectAction = (details) => {
     const up = option === 'climb-up';
     const {position} = player;
     const level = position.level + (up ? 1 : -1);
+    
+    if (!validate(level)) return;
     
     player.playAnimation(up ? 828 : 827);
     player.packetSender.chatboxMessage(`You climb ${option.slice(6)} the ${details.objectDefinition.name.toLowerCase()}.`);
