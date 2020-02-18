@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as util from 'util';
 
 export const pluginFilter = (pluginIds: number | number[], searchId: number, pluginOptions?: string | string[], searchOption?: string): boolean => {
     if(Array.isArray(pluginIds)) {
@@ -22,29 +23,41 @@ export const pluginFilter = (pluginIds: number | number[], searchId: number, plu
     }
 };
 
-const getAllFiles = (dirPath: string, arrayOfFiles = []) => {
-    const files = fs.readdirSync(dirPath);
+const readdir = util.promisify(fs.readdir);
+const stat = util.promisify(fs.stat);
+const blacklist = ['.map', 'plugin-loader.js'];
 
-    files.forEach(file => {
-        if(fs.statSync(dirPath + '/' + file).isDirectory()) {
-            arrayOfFiles = getAllFiles(dirPath + '/' + file, arrayOfFiles);
-        } else {
-            if(!file.endsWith('.map') && !file.endsWith('plugin-loader.js')) {
-                const fileName = './' + dirPath.replace('./dist/plugins/', '') + '/' + file.replace('.js', '');
-                arrayOfFiles.push(fileName);
-            }
+async function* getFiles(directory: string): AsyncGenerator<string> {
+    const files = await readdir(directory);
+
+    for (const file of files) {
+        const invalid = blacklist.some(component => file.endsWith(component));
+
+        if (invalid) {
+            continue;
         }
-    });
 
-    return arrayOfFiles;
-};
+        const path = directory + '/' + file;
+        const statistics = await stat(path);
 
-export async function loadPlugins<T>(prefix: string): Promise<T[]> {
-    const pluginFiles = getAllFiles('./dist/plugins/' + prefix);
+        if (statistics.isDirectory()) {
+            for await (const child of getFiles(path)) {
+                yield child;
+            }
+        } else {
+            yield path;
+        }
+    }
+}
+
+export const BASE_PLUGIN_DIRECTORY = '/dist/plugins';
+
+export async function loadPlugins<T>(directory: string): Promise<T[]> {
     const plugins: T[] = [];
 
-    for(const pluginPath of pluginFiles) {
-        const plugin = await import(pluginPath);
+    for await (const path of getFiles(directory)) {
+        const location = '.' + path.substring(directory.indexOf(BASE_PLUGIN_DIRECTORY) + BASE_PLUGIN_DIRECTORY.length).replace('.js', '');
+        const plugin = await import(location);
         plugins.push(plugin.default as T);
     }
 
