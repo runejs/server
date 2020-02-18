@@ -3,21 +3,14 @@ import { dialogueAction } from '@server/world/mob/player/action/dialogue-action'
 import { World } from '@server/world/world';
 import { Position } from '@server/world/position';
 
+const planes = { min: 0, max: 3 };
+const validate: (level: number) => boolean = (level) => { return planes.min <= level && level <= planes.max }; //TODO: prevent no-clipping.
 
 export const action: objectAction = (details) => {
-    const playerPosition = details.player.position;
-    let newLevel: number = playerPosition.level;
-    switch (details.option) {
-        case 'climb-up':
-            details.player.playAnimation(828);
-            newLevel++;
-            break;
-        case 'climb-down':
-            details.player.playAnimation(827);
-            newLevel--;
-            break;
-        case 'climb':
-            dialogueAction(details.player)
+    const {player, option} = details;
+    
+    if (option === 'climb') {
+        dialogueAction(player)
                 .then(d => d.options(
                     `Climb up or down the ${details.objectDefinition.name.toLowerCase()}?`,
                     [
@@ -28,32 +21,25 @@ export const action: objectAction = (details) => {
                     d.close();
                     switch(d.action) {
                         case 1:
-                            action({
-                                player: details.player,
-                                object: details.object,
-                                objectDefinition: details.objectDefinition,
-                                position: details.position,
-                                cacheOriginal: details.cacheOriginal,
-                                option: 'climb-up'
-                            });
-                            return;
                         case 2:
-                            action({
-                                player: details.player,
-                                object: details.object,
-                                objectDefinition: details.objectDefinition,
-                                position: details.position,
-                                cacheOriginal: details.cacheOriginal,
-                                option: 'climb-down'
-                            });
+                            const direction = d.action === 1 ? 'up' : 'down';
+                            action({...details, option: `climb-${direction}`});
                             return;
                     }
                 }).catch(error => console.error(error));
-            return;
+        return;
     }
-    details.player.packetSender.chatboxMessage(`You climb ${details.option.slice(6)} the ${details.objectDefinition.name.toLowerCase()}.`);
+    
+    const up = option === 'climb-up';
+    const {position} = player;
+    const level = position.level + (up ? 1 : -1);
+    
+    if (!validate(level)) return;
+    
+    player.playAnimation(up ? 828 : 827);
+    player.packetSender.chatboxMessage(`You climb ${option.slice(6)} the ${details.objectDefinition.name.toLowerCase()}.`);
     setTimeout(() => {
-        details.player.teleport(new Position(playerPosition.x, playerPosition.y, newLevel));
+        details.player.teleport(new Position(position.x, position.y, level));
     }, World.TICK_LENGTH);
 
 };
