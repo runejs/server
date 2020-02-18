@@ -1,11 +1,56 @@
 - id: 8654
   name: Attack
   subGuides:
-    - name: Weaponry
+    - name: Weapons
       lines:
         - itemId: 1205
-          text: Bronze Weapons
+          text: "Bronze"
           level: 1
         - itemId: 1203
-          text: Iron Weapons
+          text: "Iron"
           level: 1
+        - itemId: 1207
+          text: "Steel"
+          level: 5
+        - itemId: 1217
+          text: "Black"
+          level: 10
+        - itemId: 6591
+          text: "Members: White"
+          level: 10
+        - itemId: 1209
+          text: "Mithril"
+          level: 20
+        - itemId: 1211
+          text: "Adamant"
+          level: 30
+        - itemId: 1391
+          text: "Members: Battlestaves (with 30 Magic)"
+          level: 30
+        - itemId: 1213
+          text: "Rune"
+          level: 40
+        - itemId: 4153
+          text: "Members: Granite Maul"
+          level: 50
+        - itemId: 1215
+          text: "Members: Dragon"
+          level: 60
+        - itemId: 6523
+          text: "Members: Obsidian weapons"
+          level: 60
+        - itemId: 4151
+          text: "Members: Abyssal Whip"
+          level: 70
+        - itemId: 4718
+          text: "Members: Dharok's greataxe"
+          level: 70
+        - itemId: 4747
+          text: "Members: Torag's hammers"
+          level: 70
+        - itemId: 4755
+          text: "Members: Verac's flail"
+          level: 70
+        - itemId: 4726
+          text: "Members: Guthan's warspear"
+          level: 70
