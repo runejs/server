@@ -5,6 +5,7 @@ import { Position } from '@server/world/position';
 
 export const action: objectAction = (details) => {
     const { player, option, objectDefinition, object } = details;
+    player.face(details.position);
     const emptyBucketItem = gameCache.itemDefinitions.get(1925);
     const milkBucketItem = gameCache.itemDefinitions.get(1927);
 

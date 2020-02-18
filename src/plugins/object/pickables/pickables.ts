@@ -8,6 +8,7 @@ export const action: objectAction = (details) => {
         return;
     }
     details.player.metadata['busy'] = true;
+    details.player.face(details.position);
     details.player.playAnimation(827);
     let itemId: number = 1965;
     let prefix = 'some';

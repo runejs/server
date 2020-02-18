@@ -9,6 +9,8 @@ export const action: objectAction = (details) => {
     if (details.player.metadata['busy']) {
         return;
     }
+    details.player.face(details.position);
+
     if ((details.player.metadata['flour'] && details.player.metadata['flour'] === 30) ||
         (details.player.metadata['flour'] && details.player.metadata['grain'] &&
             details.player.metadata['flour'] + details.player.metadata['grain'] >= 30)) {
