@@ -4,7 +4,7 @@ import { World } from '@server/world/world';
 import { Position } from '@server/world/position';
 
 const planes = { min: 0, max: 3 };
-const validate: (level: Number) => boolean = (level) => { return planes.min <= level && level <= planes.max }; //TODO: prevent no-clipping.
+const validate: (level: number) => boolean = (level) => { return planes.min <= level && level <= planes.max }; //TODO: prevent no-clipping.
 
 export const action: objectAction = (details) => {
     const {player, option} = details;
