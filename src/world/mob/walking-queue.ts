@@ -223,7 +223,7 @@ export class WalkingQueue {
         return { localX, localY, chunk: cornerChunk };
     }
 
-    private resetDirections(): void {
+    public resetDirections(): void {
         this.mob.walkDirection = -1;
         this.mob.runDirection = -1;
     }
@@ -281,6 +281,8 @@ export class WalkingQueue {
                 }
             }
         }
+
+        this.mob.clearFaceMob();
 
         const currentPosition = this.mob.position;
 

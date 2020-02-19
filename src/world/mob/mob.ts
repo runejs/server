@@ -20,6 +20,7 @@ export abstract class Mob extends Entity {
     private _faceDirection: number;
     private readonly _inventory: ItemContainer;
     public readonly skills: Skills;
+    public readonly metadata: { [key: string]: any } = {};
 
     protected constructor() {
         super();
@@ -32,9 +33,29 @@ export abstract class Mob extends Entity {
         this.skills = new Skills(this);
     }
 
-    // @TODO facing other mobs
-    public face(position: Position): void {
-        this.updateFlags.facePosition = position;
+    public face(face: Position | Mob, autoClear: boolean = true): void {
+        if(face instanceof Position) {
+            this.updateFlags.facePosition = face;
+        } else if(face instanceof Mob) {
+            this.updateFlags.faceMob = face;
+            this.metadata['faceMob'] = face;
+
+            if(autoClear) {
+                setTimeout(() => {
+                    this.clearFaceMob();
+                }, 20000);
+            }
+        }
+
+        this.walkingQueue.clear();
+        this.walkingQueue.valid = false;
+    }
+
+    public clearFaceMob(): void {
+        if(this.metadata['faceMob']) {
+            this.updateFlags.faceMob = null;
+            this.metadata['faceMob'] = undefined;
+        }
     }
 
     public playAnimation(animation: number | Animation): void {
@@ -69,8 +90,16 @@ export abstract class Mob extends Entity {
         return this.hasItemInInventory(item);
     }
 
+    public canMove(): boolean {
+        return true;
+    }
+
     public initiateRandomMovement(): void {
         setInterval(() => {
+            if(!this.canMove()) {
+                return;
+            }
+
             const movementChance = Math.floor(Math.random() * 10);
 
             if(movementChance < 7) {
@@ -113,11 +142,9 @@ export abstract class Mob extends Entity {
 
                 let valid = true;
 
-                if(this instanceof Npc && (this as Npc).movementRadius) {
-                    const npc = this as Npc;
-
-                    if(px > npc.initialPosition.x + npc.movementRadius || px < npc.initialPosition.x - npc.movementRadius
-                        || py > npc.initialPosition.y + npc.movementRadius || py < npc.initialPosition.y - npc.movementRadius) {
+                if(this instanceof Npc) {
+                    if(px > this.initialPosition.x + this.movementRadius || px < this.initialPosition.x - this.movementRadius
+                        || py > this.initialPosition.y + this.movementRadius || py < this.initialPosition.y - this.movementRadius) {
                         valid = false;
                     }
                 }
@@ -126,9 +153,9 @@ export abstract class Mob extends Entity {
             }
 
             if(px !== this.position.x || py !== this.position.y) {
-                this._walkingQueue.clear();
-                this._walkingQueue.valid = true;
-                this._walkingQueue.add(px, py);
+                this.walkingQueue.clear();
+                this.walkingQueue.valid = true;
+                this.walkingQueue.add(px, py);
             }
         }, 1000);
     }

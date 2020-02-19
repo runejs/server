@@ -243,6 +243,11 @@ export class RsBuffer {
         this.writerIndex += 2;
     }
 
+    public writeUnsignedShortLE(value: number): void {
+        this.buffer.writeUInt16LE(value, this.writerIndex);
+        this.writerIndex += 2;
+    }
+
     public writeOffsetShortBE(value: number): void {
         this.writeUnsignedByte(value >> 8);
         this.writeUnsignedByte(value + 128 & 0xff);

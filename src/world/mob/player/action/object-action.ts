@@ -68,15 +68,19 @@ export const objectAction = (player: Player, landscapeObject: LandscapeObject, l
     // Make sure we walk to the object before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
         walkToAction(player, position, { interactingObject: landscapeObject })
-            .then(() => walkToPlugins.forEach(plugin =>
-                plugin.action({
-                    player,
-                    object: landscapeObject,
-                    objectDefinition: landscapeObjectDefinition,
-                    option,
-                    position,
-                    cacheOriginal
-                })))
+            .then(() => {
+                player.face(position);
+
+                walkToPlugins.forEach(plugin =>
+                    plugin.action({
+                        player,
+                        object: landscapeObject,
+                        objectDefinition: landscapeObjectDefinition,
+                        option,
+                        position,
+                        cacheOriginal
+                    }))
+            })
             .catch(() => logger.warn(`Unable to complete walk-to action.`));
     }
 

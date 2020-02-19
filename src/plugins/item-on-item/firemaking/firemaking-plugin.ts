@@ -49,7 +49,7 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
         world.chunkManager.spawnWorldItem({ itemId: 592, amount: 1 }, position, null, 300);
     });
     player.packetSender.playSound(240, 7);
-    player.playAnimation(-1);
+    player.playAnimation(null);
     player.packetSender.chatboxMessage(`The fire catches and the logs begin to burn.`);
     player.skills.addExp(Skill.FIREMAKING, burnExp);
 
