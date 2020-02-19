@@ -7,6 +7,7 @@ export interface ServerConfig {
     rsaExp: string;
     host: string;
     port: number;
+    showWelcome: boolean;
 }
 
 export function parseServerConfig(useDefault?: boolean): ServerConfig {

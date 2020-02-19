@@ -4,7 +4,7 @@ import { Isaac } from '@server/net/isaac';
 import { PlayerUpdateTask } from './updating/player-update-task';
 import { Mob } from '../mob';
 import { Position } from '@server/world/position';
-import { world } from '@server/game-server';
+import { serverConfig, world } from '@server/game-server';
 import { logger } from '@runejs/logger';
 import {
     Appearance,
@@ -169,7 +169,7 @@ export class Player extends Mob {
                 type: 'SCREEN',
                 disablePlayerMovement: true
             };
-        } else {
+        } else if(serverConfig.showWelcome) {
             this.packetSender.updateWelcomeScreenInfo(widgetIds.welcomeScreenChildren.question, this.loginDate, this.lastAddress);
 
             this.activeWidget = {
