@@ -16,7 +16,7 @@ const logs = [
     }
 ];
 
-const failedToLight = (logLevel: number, playerLevel: number): boolean => {
+const canLight = (logLevel: number, playerLevel: number): boolean => {
     playerLevel++;
     const hostRatio = Math.random() * logLevel;
     const clientRatio = Math.random() * ((playerLevel - logLevel) * (1 + (logLevel * 0.01)));
@@ -61,7 +61,7 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
         }
     }
 
-    player.face(position);
+    player.face(position, false);
     player.metadata['lastFire'] = Date.now();
 };
 
@@ -111,7 +111,7 @@ const action: itemOnItemAction = (details) => {
                 player.packetSender.playSound(375, 7, 1);
             }
 
-            const canLightFire = elapsedTicks > 0 && !failedToLight(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level);
+            const canLightFire = elapsedTicks > 0 && canLight(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level);
 
             if(canLightFire) {
                 loop.cancel();

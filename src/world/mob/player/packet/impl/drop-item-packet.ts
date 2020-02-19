@@ -2,16 +2,16 @@ import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../player';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { logger } from '@runejs/logger/dist/logger';
-import { interfaceIds } from '../../game-interface';
+import { widgetIds } from '../../widget';
 import { dropItemAction } from '@server/world/mob/player/action/drop-item-action';
 
 export const dropItemPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const slot = packet.readShortLE();
     const itemId = packet.readNegativeOffsetShortLE();
-    const interfaceId = packet.readNegativeOffsetShortLE();
+    const widgetId = packet.readNegativeOffsetShortLE();
 
-    if(interfaceId !== interfaceIds.inventory) {
-        logger.warn(`${player.username} attempted to drop item from incorrect interface id ${interfaceId}.`);
+    if(widgetId !== widgetIds.inventory) {
+        logger.warn(`${player.username} attempted to drop item from incorrect widget id ${widgetId}.`);
         return;
     }
 

@@ -12,5 +12,7 @@ export const buttonClickPacket: incomingPacket = (player: Player, packetId: numb
 
     if(ignoreButtons.indexOf(buttonId) === -1) {
         buttonAction(player, buttonId);
+    } else {
+        console.log('ignore');
     }
 };

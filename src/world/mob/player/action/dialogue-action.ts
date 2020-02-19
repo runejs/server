@@ -3,7 +3,7 @@ import { gameCache } from '@server/game-server';
 import { Npc } from '@server/world/mob/npc/npc';
 import { skillDetails } from '@server/world/mob/skills';
 
-const interfaceIds = {
+const widgetIds = {
     PLAYER: [ 968, 973, 979, 986 ],
     NPC: [ 4882, 4887, 4893, 4900 ],
     OPTIONS: [ 2459, 2469, 2480, 2492 ]
@@ -94,20 +94,20 @@ export class DialogueAction {
 
         this._action = null;
 
-        let interfaceIndex = options.lines.length - 1;
+        let widgetIndex = options.lines.length - 1;
         if(options.type === 'OPTIONS') {
-            interfaceIndex--;
+            widgetIndex--;
         }
 
-        let interfaceId = -1;
+        let widgetId = -1;
 
         if(options.type === 'LEVEL_UP') {
-            interfaceId = skillDetails.map(skill => skill.advancementInterfaceId === undefined ? -1 : skill.advancementInterfaceId)[options.skillId];
+            widgetId = skillDetails.map(skill => skill.advancementWidgetId === undefined ? -1 : skill.advancementWidgetId)[options.skillId];
         } else {
-            interfaceId = interfaceIds[options.type][interfaceIndex];
+            widgetId = widgetIds[options.type][widgetIndex];
         }
 
-        if(interfaceId === undefined || interfaceId === null || interfaceId === -1) {
+        if(widgetId === undefined || widgetId === null || widgetId === -1) {
             return Promise.resolve(this);
         }
 
@@ -119,30 +119,30 @@ export class DialogueAction {
             }
 
             if(options.type === 'NPC') {
-                this.p.packetSender.setInterfaceModel2(interfaceId + 1, options.npc);
-                this.p.packetSender.updateInterfaceString(interfaceId + 2, gameCache.npcDefinitions.get(options.npc).name);
+                this.p.packetSender.setWidgetModel2(widgetId + 1, options.npc);
+                this.p.packetSender.updateWidgetString(widgetId + 2, gameCache.npcDefinitions.get(options.npc).name);
             } else if(options.type === 'PLAYER') {
-                this.p.packetSender.setInterfacePlayerHead(interfaceId + 1);
-                this.p.packetSender.updateInterfaceString(interfaceId + 2, this.p.username);
+                this.p.packetSender.setWidgetPlayerHead(widgetId + 1);
+                this.p.packetSender.updateWidgetString(widgetId + 2, this.p.username);
             }
 
-            this.p.packetSender.playInterfaceAnimation(interfaceId + 1, options.emote);
+            this.p.packetSender.playWidgetAnimation(widgetId + 1, options.emote);
             textOffset += 2;
         } else if(options.type === 'OPTIONS') {
-            this.p.packetSender.updateInterfaceString(interfaceId + 1, options.title);
+            this.p.packetSender.updateWidgetString(widgetId + 1, options.title);
             textOffset += 1;
         }
 
         for(let i = 0; i < options.lines.length; i++) {
-            this.p.packetSender.updateInterfaceString(interfaceId + textOffset + i, options.lines[i]);
+            this.p.packetSender.updateWidgetString(widgetId + textOffset + i, options.lines[i]);
         }
 
         return new Promise<DialogueAction>((resolve, reject) => {
-            this.p.activeInterface = {
-                interfaceId,
+            this.p.activeWidget = {
+                widgetId: widgetId,
                 type: 'CHAT',
                 closeOnWalk: true,
-                forceClosed: () => reject('INTERFACE_CLOSED')
+                forceClosed: () => reject('WIDGET_CLOSED')
             };
 
             this.p.dialogueInteractionEvent.subscribe(action => {
@@ -153,7 +153,7 @@ export class DialogueAction {
     }
 
     public close(): void {
-        this.p.packetSender.closeActiveInterfaces();
+        this.p.packetSender.closeActiveWidgets();
     }
 
     public get action(): number {

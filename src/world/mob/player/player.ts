@@ -1,4 +1,4 @@
-import { Socket } from 'net';
+import { AddressInfo, Socket } from 'net';
 import { PacketSender } from './packet/packet-sender';
 import { Isaac } from '@server/net/isaac';
 import { PlayerUpdateTask } from './updating/player-update-task';
@@ -13,7 +13,7 @@ import {
     PlayerSave, PlayerSettings,
     savePlayerData
 } from './player-data';
-import { ActiveInterface, interfaceIds, interfaceSettings } from './game-interface';
+import { ActiveWidget, widgetIds, widgetSettings } from './widget';
 import { ContainerUpdateEvent, ItemContainer } from '../../items/item-container';
 import { EquipmentBonuses, ItemDetails } from '../../config/item-data';
 import { Item } from '../../items/item';
@@ -22,7 +22,7 @@ import { NpcUpdateTask } from './updating/npc-update-task';
 import { Subject } from 'rxjs';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 
-const DEFAULT_TAB_INTERFACES = [
+const DEFAULT_TAB_WIDGET_IDS = [
     2423, 3917, 638, 3213, 1644, 5608, 1151, -1, 5065, 5715, 2449, 904, 147, 962
 ];
 
@@ -45,6 +45,8 @@ export class Player extends Mob {
     private readonly password: string;
     private _rights: Rights;
     private loggedIn: boolean;
+    private _loginDate: Date;
+    private _lastAddress: string;
     public isLowDetail: boolean;
     private firstTimePlayer: boolean;
     private readonly _packetSender: PacketSender;
@@ -53,7 +55,7 @@ export class Player extends Mob {
     public trackedPlayers: Player[];
     public trackedNpcs: Npc[];
     private _appearance: Appearance;
-    private _activeInterface: ActiveInterface;
+    private _activeWidget: ActiveWidget;
     private readonly _equipment: ItemContainer;
     private _bonuses: EquipmentBonuses;
     private _carryWeight: number;
@@ -78,7 +80,7 @@ export class Player extends Mob {
         this.npcUpdateTask = new NpcUpdateTask(this);
         this.trackedPlayers = [];
         this.trackedNpcs = [];
-        this._activeInterface = null;
+        this._activeWidget = null;
         this._carryWeight = 0;
         this._equipment = new ItemContainer(14);
         this.dialogueInteractionEvent = new Subject<number>();
@@ -108,6 +110,15 @@ export class Player extends Mob {
             this._appearance = playerSave.appearance;
             this._settings = playerSave.settings;
             this._rights = playerSave.rights || Rights.USER;
+
+            const lastLogin = playerSave.lastLogin?.date;
+            if(!lastLogin) {
+                this._loginDate = new Date();
+            } else {
+                this._loginDate = new Date(lastLogin);
+            }
+
+            this._lastAddress = playerSave.lastLogin?.address || (this._socket.address() as AddressInfo).address;
         } else {
             // Brand new player logging in
             this.position = new Position(3222, 3222);
@@ -141,37 +152,48 @@ export class Player extends Mob {
         this.chunkChanged(playerChunk);
         this.packetSender.chatboxMessage('Welcome to RuneScape.');
 
-        DEFAULT_TAB_INTERFACES.forEach((interfaceId: number, tabIndex: number) => {
-            if(interfaceId !== -1) {
-                this.packetSender.sendTabInterface(tabIndex, interfaceId);
+        DEFAULT_TAB_WIDGET_IDS.forEach((widgetId: number, tabIndex: number) => {
+            if(widgetId !== -1) {
+                this.packetSender.sendTabWidget(tabIndex, widgetId);
             }
         });
 
         this.skills.values.forEach((skill, index) => this.packetSender.sendSkill(index, skill.level, skill.exp));
 
-        this.packetSender.sendUpdateAllInterfaceItems(interfaceIds.inventory, this.inventory);
-        this.packetSender.sendUpdateAllInterfaceItems(interfaceIds.equipment, this.equipment);
+        this.packetSender.sendUpdateAllWidgetItems(widgetIds.inventory, this.inventory);
+        this.packetSender.sendUpdateAllWidgetItems(widgetIds.equipment, this.equipment);
 
         if(this.firstTimePlayer) {
-            this.activeInterface = {
-                interfaceId: interfaceIds.characterDesign,
+            this.activeWidget = {
+                widgetId: widgetIds.characterDesign,
                 type: 'SCREEN',
                 disablePlayerMovement: true
+            };
+        } else {
+            this.packetSender.updateWelcomeScreenInfo(widgetIds.welcomeScreenChildren.question, this.loginDate, this.lastAddress);
+
+            this.activeWidget = {
+                widgetId: widgetIds.welcomeScreen,
+                childWidgetId: widgetIds.welcomeScreenChildren.question,
+                type: 'FULLSCREEN'
             };
         }
 
         this.updateBonuses();
-        this.updateInterfaceSettings();
+        this.updateWidgetSettings();
         this.updateCarryWeight(true);
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
 
-        this.actionsCancelled.subscribe(doNotCloseInterfaces => {
-            if(!doNotCloseInterfaces) {
-                this.packetSender.closeActiveInterfaces();
-                this._activeInterface = null;
+        this.actionsCancelled.subscribe(doNotCloseWidgets => {
+            if(!doNotCloseWidgets) {
+                this.packetSender.closeActiveWidgets();
+                this._activeWidget = null;
             }
         });
+
+        this._loginDate = new Date();
+        this._lastAddress = (this._socket.address() as AddressInfo).address;
 
         logger.info(`${this.username}:${this.worldIndex} has logged in.`);
     }
@@ -303,14 +325,14 @@ export class Player extends Mob {
             return -1;
         }
 
-        this.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, slot, null);
+        this.packetSender.sendUpdateSingleWidgetItem(widgetIds.inventory, slot, null);
         return slot;
     }
 
     public removeItem(slot: number): void {
         this.inventory.remove(slot);
 
-        this.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, slot, null);
+        this.packetSender.sendUpdateSingleWidgetItem(widgetIds.inventory, slot, null);
     }
 
     public giveItem(item: number | Item): boolean {
@@ -319,7 +341,7 @@ export class Player extends Mob {
             return false;
         }
 
-        this.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, addedItem.slot, addedItem.item);
+        this.packetSender.sendUpdateSingleWidgetItem(widgetIds.inventory, addedItem.slot, addedItem.item);
         return true;
     }
 
@@ -382,17 +404,17 @@ export class Player extends Mob {
         this.settings[config.setting] = config.value;
     }
 
-    public updateInterfaceSettings(): void {
+    public updateWidgetSettings(): void {
         const settings = this.settings;
-        this.packetSender.updateInterfaceSetting(interfaceSettings.brightness, settings.screenBrightness);
-        this.packetSender.updateInterfaceSetting(interfaceSettings.mouseButtons, settings.twoMouseButtonsEnabled ? 0 : 1);
-        this.packetSender.updateInterfaceSetting(interfaceSettings.splitPrivateChat, settings.splitPrivateChatEnabled ? 1 : 0);
-        this.packetSender.updateInterfaceSetting(interfaceSettings.chatEffects, settings.chatEffectsEnabled ? 0 : 1);
-        this.packetSender.updateInterfaceSetting(interfaceSettings.acceptAid, settings.acceptAidEnabled ? 1 : 0);
-        this.packetSender.updateInterfaceSetting(interfaceSettings.musicVolume, settings.musicVolume);
-        this.packetSender.updateInterfaceSetting(interfaceSettings.soundEffectVolume, settings.soundEffectVolume);
-        this.packetSender.updateInterfaceSetting(interfaceSettings.runMode, settings.runEnabled ? 1 : 0);
-        this.packetSender.updateInterfaceSetting(interfaceSettings.autoRetaliate, settings.autoRetaliateEnabled ? 0 : 1);
+        this.packetSender.updateWidgetSetting(widgetSettings.brightness, settings.screenBrightness);
+        this.packetSender.updateWidgetSetting(widgetSettings.mouseButtons, settings.twoMouseButtonsEnabled ? 0 : 1);
+        this.packetSender.updateWidgetSetting(widgetSettings.splitPrivateChat, settings.splitPrivateChatEnabled ? 1 : 0);
+        this.packetSender.updateWidgetSetting(widgetSettings.chatEffects, settings.chatEffectsEnabled ? 0 : 1);
+        this.packetSender.updateWidgetSetting(widgetSettings.acceptAid, settings.acceptAidEnabled ? 1 : 0);
+        this.packetSender.updateWidgetSetting(widgetSettings.musicVolume, settings.musicVolume);
+        this.packetSender.updateWidgetSetting(widgetSettings.soundEffectVolume, settings.soundEffectVolume);
+        this.packetSender.updateWidgetSetting(widgetSettings.runMode, settings.runEnabled ? 1 : 0);
+        this.packetSender.updateWidgetSetting(widgetSettings.autoRetaliate, settings.autoRetaliateEnabled ? 0 : 1);
     }
 
     public updateBonuses(): void {
@@ -422,9 +444,9 @@ export class Player extends Mob {
         ].forEach(bonus => this.updateBonusString(bonus.id, bonus.text, bonus.value));
     }
 
-    private updateBonusString(interfaceChildId: number, text: string, value: number): void {
+    private updateBonusString(widgetChildId: number, text: string, value: number): void {
         const s = `${text}: ${value > 0 ? `+${value}` : value}`;
-        this.packetSender.updateInterfaceString(interfaceChildId, s);
+        this.packetSender.updateWidgetString(widgetChildId, s);
     }
 
     private addBonuses(item: Item): void {
@@ -463,8 +485,8 @@ export class Player extends Mob {
         };
     }
 
-    public closeActiveInterface(): void {
-        this.activeInterface = null;
+    public closeActiveWidget(): void {
+        this.activeWidget = null;
     }
 
     public equals(player: Player): boolean {
@@ -487,6 +509,14 @@ export class Player extends Mob {
         return this._packetSender;
     }
 
+    public get loginDate(): Date {
+        return this._loginDate;
+    }
+
+    public get lastAddress(): string {
+        return this._lastAddress;
+    }
+
     public get rights(): Rights {
         return this._rights;
     }
@@ -499,23 +529,25 @@ export class Player extends Mob {
         this._appearance = value;
     }
 
-    public get activeInterface(): ActiveInterface {
-        return this._activeInterface;
+    public get activeWidget(): ActiveWidget {
+        return this._activeWidget;
     }
 
-    public set activeInterface(value: ActiveInterface) {
+    public set activeWidget(value: ActiveWidget) {
         if(value !== null) {
             if(value.type === 'SCREEN') {
-                this.packetSender.showScreenInterface(value.interfaceId);
+                this.packetSender.showScreenWidget(value.widgetId);
             } else if(value.type === 'CHAT') {
-                this.packetSender.showChatboxInterface(value.interfaceId);
+                this.packetSender.showChatboxWidget(value.widgetId);
+            } else if(value.type === 'FULLSCREEN') {
+                this.packetSender.showFullscreenWidget(value.widgetId, value.childWidgetId);
             }
         } else {
-            this.packetSender.closeActiveInterfaces();
+            this.packetSender.closeActiveWidgets();
         }
 
         this.actionsCancelled.next(true);
-        this._activeInterface = value;
+        this._activeWidget = value;
     }
 
     public get equipment(): ItemContainer {

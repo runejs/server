@@ -1,6 +1,6 @@
 import { Player } from '../player';
 import { Item } from '@server/world/items/item';
-import { interfaceIds } from '../game-interface';
+import { widgetIds } from '../widget';
 
 export const unequipItemAction = (player: Player, itemId: number, equipmentSlot: number) => {
     const inventory = player.inventory;
@@ -18,8 +18,8 @@ export const unequipItemAction = (player: Player, itemId: number, equipmentSlot:
         equipment.remove(equipmentSlot);
         inventory.set(inventorySlot, itemInEquipmentSlot);
 
-        player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.inventory, inventorySlot, itemInEquipmentSlot);
-        player.packetSender.sendUpdateSingleInterfaceItem(interfaceIds.equipment, equipmentSlot, null);
+        player.packetSender.sendUpdateSingleWidgetItem(widgetIds.inventory, inventorySlot, itemInEquipmentSlot);
+        player.packetSender.sendUpdateSingleWidgetItem(widgetIds.equipment, equipmentSlot, null);
         player.updateBonuses();
         player.updateFlags.appearanceUpdateRequired = true;
     }

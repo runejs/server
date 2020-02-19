@@ -90,16 +90,16 @@ const commands: { [key: string]: commandHandler } = {
 
     chati: (player: Player, args: string[]) => {
         if(args.length !== 1) {
-            throw `chati interfaceId`;
+            throw `chati widgetId`;
         }
 
-        const interfaceId: number = parseInt(args[0]);
+        const widgetId: number = parseInt(args[0]);
 
-        if(isNaN(interfaceId)) {
-            throw `chati interfaceId`;
+        if(isNaN(widgetId)) {
+            throw `chati widgetId`;
         }
 
-        player.packetSender.showChatboxInterface(interfaceId);
+        player.packetSender.showChatboxWidget(widgetId);
     },
 
     sound: (player, args) => {
