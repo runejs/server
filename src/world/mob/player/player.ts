@@ -62,7 +62,6 @@ export class Player extends Mob {
     private _walkingTo: Position;
     private _nearbyChunks: Chunk[];
     public readonly actionsCancelled: Subject<boolean>;
-    public readonly metadata: { [key: string]: any } = {};
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -269,6 +268,10 @@ export class Player extends Mob {
                 this.metadata['updateChunk'] = null;
             }
 
+            if(this.metadata['teleporting']) {
+                this.metadata['teleporting'] = null;
+            }
+
             resolve();
         });
     }
@@ -282,10 +285,15 @@ export class Player extends Mob {
 
         this.updateFlags.mapRegionUpdateRequired = true;
         this.lastMapRegionUpdatePosition = newPosition;
+        this.metadata['teleporting'] = true;
 
         if(!oldChunk.equals(newChunk)) {
             this.metadata['updateChunk'] = { newChunk, oldChunk };
         }
+    }
+
+    public canMove(): boolean {
+        return true;
     }
 
     public removeFirstItem(item: number | Item): number {

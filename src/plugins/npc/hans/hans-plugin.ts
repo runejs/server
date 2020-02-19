@@ -35,7 +35,12 @@ const action: npcAction = (details) => {
         .then(d => {
             d.close();
 
+            npc.clearFaceMob();
+            player.clearFaceMob();
+
             if(d.action === 1) {
+                npc.updateFlags.animation = { id: 860 };
+                npc.updateFlags.addChatMessage({ message: 'Jerk!' });
                 player.packetSender.chatboxMessage('Hans wanders off rather dejectedly.');
             } else {
                 player.packetSender.chatboxMessage('Hans wanders off aimlessly through the courtyard.');

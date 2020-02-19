@@ -71,9 +71,72 @@ export class NpcUpdateTask extends Task<void> {
             return;
         }
 
-        const mask = 0;
+        let mask = 0;
+
+        if(updateFlags.faceMob !== undefined) {
+            mask |= 0x40;
+        }
+        if(updateFlags.chatMessages.length !== 0) {
+            mask |= 0x20;
+        }
+        if(updateFlags.facePosition) {
+            mask |= 0x8;
+        }
+        if(updateFlags.animation) {
+            mask |= 0x2;
+        }
 
         updateMaskData.writeUnsignedByte(mask);
+
+        if(updateFlags.faceMob !== undefined) {
+            const mob = updateFlags.faceMob;
+
+            if(mob === null) {
+                // Reset faced mob
+                updateMaskData.writeUnsignedShortLE(65535);
+            } else {
+                let mobIndex = mob.worldIndex;
+
+                if(mob instanceof Player) {
+                    // Client checks if index is less than 32768.
+                    // If it is, it looks for an NPC.
+                    // If it isn't, it looks for a player (subtracting 32768 to find the index).
+                    mobIndex += 32768;
+                }
+
+                updateMaskData.writeUnsignedShortLE(mobIndex);
+            }
+        }
+
+        if(updateFlags.chatMessages.length !== 0) {
+            const message = updateFlags.chatMessages[0];
+
+            if(message.message) {
+                updateMaskData.writeString(message.message);
+            } else {
+                updateMaskData.writeString('Undefined Message');
+            }
+        }
+
+        if(updateFlags.facePosition) {
+            const position = updateFlags.facePosition;
+            updateMaskData.writeOffsetShortLE(position.x * 2 + 1);
+            updateMaskData.writeShortLE(position.y * 2 + 1);
+        }
+
+        if(updateFlags.animation) {
+            const animation = updateFlags.animation;
+
+            if(animation === null || animation.id === -1) {
+                // Reset animation
+                updateMaskData.writeShortBE(-1);
+                updateMaskData.writeNegativeOffsetByte(0);
+            } else {
+                const delay = updateFlags.animation.delay || 0;
+                updateMaskData.writeShortBE(animation.id);
+                updateMaskData.writeNegativeOffsetByte(delay);
+            }
+        }
     }
 
 }
