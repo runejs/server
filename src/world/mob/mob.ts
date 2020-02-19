@@ -33,7 +33,7 @@ export abstract class Mob extends Entity {
         this.skills = new Skills(this);
     }
 
-    public face(face: Position | Mob, autoClear: boolean = true): void {
+    public face(face: Position | Mob, clearWalkingQueue: boolean = true, autoClear: boolean = true): void {
         if(face instanceof Position) {
             this.updateFlags.facePosition = face;
         } else if(face instanceof Mob) {
@@ -47,8 +47,10 @@ export abstract class Mob extends Entity {
             }
         }
 
-        this.walkingQueue.clear();
-        this.walkingQueue.valid = false;
+        if(clearWalkingQueue) {
+            this.walkingQueue.clear();
+            this.walkingQueue.valid = false;
+        }
     }
 
     public clearFaceMob(): void {

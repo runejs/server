@@ -15,8 +15,8 @@ export interface ItemOnItemActionDetails {
     usedWithItem: Item;
     usedSlot: number;
     usedWithSlot: number;
-    usedInterfaceId: number;
-    usedWithInterfaceId: number;
+    usedWidgetId: number;
+    usedWithWidgetId: number;
 }
 
 /**
@@ -42,8 +42,8 @@ export const setItemOnItemPlugins = (plugins: ItemOnItemActionPlugin[]): void =>
 };
 
 export const itemOnItemAction = (player: Player,
-                                 usedItem: Item, usedSlot: number, usedInterfaceId: number,
-                                 usedWithItem: Item, usedWithSlot: number, usedWithInterfaceId: number): void => {
+                                 usedItem: Item, usedSlot: number, usedWidgetId: number,
+                                 usedWithItem: Item, usedWithSlot: number, usedWithWidgetId: number): void => {
     // Find all item on item action plugins that match this action
     const interactionPlugins = itemOnItemInteractions.filter(plugin =>
         plugin.items.findIndex(i => i.item1 === usedItem.itemId && i.item2 === usedWithItem.itemId) !== -1 ||
@@ -58,5 +58,5 @@ export const itemOnItemAction = (player: Player,
 
     // Immediately run the plugins
     interactionPlugins.forEach(plugin => plugin.action({ player, usedItem, usedWithItem, usedSlot, usedWithSlot,
-        usedInterfaceId, usedWithInterfaceId }));
+        usedWidgetId: usedWidgetId, usedWithWidgetId: usedWithWidgetId }));
 };

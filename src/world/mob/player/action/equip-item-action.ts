@@ -3,7 +3,7 @@ import { world } from '@server/game-server';
 import { logger } from '@runejs/logger/dist/logger';
 import { EquipmentSlot, equipmentSlotIndex, ItemDetails, WeaponType } from '@server/world/config/item-data';
 import { Item } from '@server/world/items/item';
-import { interfaceIds } from '../game-interface';
+import { widgetIds } from '../widget';
 import { ItemContainer } from '@server/world/items/item-container';
 
 export const equipItemAction = (player: Player, itemId: number, inventorySlot: number) => {
@@ -65,8 +65,8 @@ export const equipItemAction = (player: Player, itemId: number, inventorySlot: n
     }
 
     // @TODO change packets to only update modified container slots
-    player.packetSender.sendUpdateAllInterfaceItems(interfaceIds.inventory, inventory);
-    player.packetSender.sendUpdateAllInterfaceItems(interfaceIds.equipment, equipment);
+    player.packetSender.sendUpdateAllWidgetItems(widgetIds.inventory, inventory);
+    player.packetSender.sendUpdateAllWidgetItems(widgetIds.equipment, equipment);
     player.updateBonuses();
     player.updateFlags.appearanceUpdateRequired = true;
 };

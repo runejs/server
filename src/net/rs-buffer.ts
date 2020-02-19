@@ -253,6 +253,11 @@ export class RsBuffer {
         this.writeUnsignedByte(value + 128 & 0xff);
     }
 
+    public writeUnsignedOffsetShortBE(value: number): void {
+        this.writeUnsignedByte((value >> 8) & 0xff);
+        this.writeUnsignedByte(value + 128 & 0xff);
+    }
+
     public writeNegativeOffsetShortBE(value: number): void {
         this.writeUnsignedByte(value >> 8);
         this.writeUnsignedByte(value - 128 & 0xff);
@@ -261,6 +266,11 @@ export class RsBuffer {
     public writeOffsetShortLE(value: number): void {
         this.writeUnsignedByte(value + 128 & 0xff);
         this.writeUnsignedByte(value >> 8);
+    }
+
+    public writeUnsignedOffsetShortLE(value: number): void {
+        this.writeUnsignedByte(value + 128 & 0xff);
+        this.writeUnsignedByte((value >> 8) & 0xff);
     }
 
     public writeNegativeOffsetShortLE(value: number): void {

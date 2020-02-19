@@ -88,7 +88,7 @@ export class WalkingQueue {
         if(this.canMoveTo(position, newPosition)) {
             this.clear();
             this.valid = true;
-            this.add(newPosition.x, newPosition.y, { ignoreInterfaces: true });
+            this.add(newPosition.x, newPosition.y, { ignoreWidgets: true });
             return true;
         }
 
@@ -267,17 +267,17 @@ export class WalkingQueue {
         if(this.mob instanceof Player) {
             this.mob.actionsCancelled.next(true);
 
-            const activeInterface = this.mob.activeInterface;
-            if(activeInterface && (!walkPosition.metadata || !walkPosition.metadata.ignoreInterfaces)) {
-                if(activeInterface.disablePlayerMovement) {
+            const activeWidget = this.mob.activeWidget;
+            if(activeWidget && (!walkPosition.metadata || !walkPosition.metadata.ignoreWidgets)) {
+                if(activeWidget.disablePlayerMovement) {
                     this.resetDirections();
                     return;
-                } else if(activeInterface.closeOnWalk) {
-                    if(activeInterface.forceClosed !== undefined) {
-                        activeInterface.forceClosed();
+                } else if(activeWidget.closeOnWalk) {
+                    if(activeWidget.forceClosed !== undefined) {
+                        activeWidget.forceClosed();
                     }
 
-                    this.mob.activeInterface = null;
+                    this.mob.activeWidget = null;
                 }
             }
         }
