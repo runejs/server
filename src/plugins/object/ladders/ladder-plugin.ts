@@ -10,7 +10,6 @@ const validate: (level: number) => boolean = (level) => {
 
 export const action: objectAction = (details) => {
     const {player, option} = details;
-    player.face(details.position);
 
     if (option === 'climb') {
         dialogueAction(player)
