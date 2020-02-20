@@ -360,6 +360,25 @@ export class PacketSender {
         this.send(packet);
     }
 
+    public sendUpdateAllWidgetItemsById(widgetId: number, itemIds: number[]): void {
+        const packet = new Packet(206, PacketType.DYNAMIC_LARGE);
+        packet.writeShortBE(widgetId);
+        packet.writeShortBE(itemIds.length);
+
+        itemIds.forEach(itemId => {
+            if(!itemId) {
+                // Empty slot
+                packet.writeOffsetShortLE(0);
+                packet.writeByteInverted(0);
+            } else {
+                packet.writeOffsetShortLE(itemId + 1); // +1 because 0 means an empty slot
+                packet.writeByteInverted(1);
+            }
+        });
+
+        this.send(packet);
+    }
+
     public toggleWidgetVisibility(widgetId: number, hidden: boolean): void {
         const packet = new Packet(82);
         packet.writeUnsignedByte(hidden ? 1 : 0);
