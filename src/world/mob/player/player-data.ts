@@ -41,6 +41,10 @@ export interface PlayerSave {
         y: number;
         level: number;
     };
+    lastLogin: {
+        date: Date;
+        address: string;
+    };
     appearance: Appearance;
     inventory: Item[];
     equipment: Item[];
@@ -90,6 +94,10 @@ export function savePlayerData(player: Player): boolean {
             x: player.position.x,
             y: player.position.y,
             level: player.position.level
+        },
+        lastLogin: {
+            date: player.loginDate,
+            address: player.lastAddress
         },
         rights: player.rights.valueOf(),
         appearance: player.appearance,

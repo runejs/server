@@ -2,16 +2,16 @@ import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../player';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { logger } from '@runejs/logger/dist/logger';
-import { interfaceIds } from '../../game-interface';
+import { widgetIds } from '../../widget';
 import { equipItemAction } from '../../action/equip-item-action';
 
 export const itemEquipPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
-    const interfaceId = packet.readShortLE();
+    const widgetId = packet.readShortLE();
     const itemId = packet.readShortLE();
     const slot = packet.readNegativeOffsetShortBE();
 
-    if(interfaceId !== interfaceIds.inventory) {
-        logger.warn(`${player.username} attempted to equip item from incorrect interface id ${interfaceId}.`);
+    if(widgetId !== widgetIds.inventory) {
+        logger.warn(`${player.username} attempted to equip item from incorrect widget id ${widgetId}.`);
         return;
     }
 

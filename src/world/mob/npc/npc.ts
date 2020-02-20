@@ -68,6 +68,10 @@ export class Npc extends Mob {
         });
     }
 
+    public canMove(): boolean {
+        return this.updateFlags.faceMob === undefined && this.updateFlags.animation === undefined;
+    }
+
     public equals(other: Npc): boolean {
         if(!other) {
             return false;

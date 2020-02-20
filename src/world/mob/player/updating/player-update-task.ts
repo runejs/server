@@ -32,7 +32,7 @@ export class PlayerUpdateTask extends Task<void> {
             if(updateFlags.mapRegionUpdateRequired) {
                 playerUpdatePacket.writeBits(1, 1); // Update Required
                 playerUpdatePacket.writeBits(2, 3); // Map Region changed
-                playerUpdatePacket.writeBits(1, 0); // Whether or not the client should discard the current walking queue (1 if teleporting, 0 if not)
+                playerUpdatePacket.writeBits(1, this.player.metadata['teleporting'] ? 1 : 0); // Whether or not the client should discard the current walking queue (1 if teleporting, 0 if not)
                 playerUpdatePacket.writeBits(2, this.player.position.level); // Player Height
                 playerUpdatePacket.writeBits(7, this.player.position.chunkLocalY); // Player Local Chunk Y
                 playerUpdatePacket.writeBits(7, this.player.position.chunkLocalX); // Player Local Chunk X
@@ -57,7 +57,7 @@ export class PlayerUpdateTask extends Task<void> {
                 this.player.trackedPlayers.push(newPlayer);
 
                 // Notify the client of the new player and their worldIndex
-                playerUpdatePacket.writeBits(11, newPlayer.worldIndex + 1);
+                playerUpdatePacket.writeBits(11, newPlayer.worldIndex);
 
                 playerUpdatePacket.writeBits(5, positionOffsetX); // World Position X axis offset relative to the main player
                 playerUpdatePacket.writeBits(1, 1); // Update is required
@@ -94,6 +94,9 @@ export class PlayerUpdateTask extends Task<void> {
         if(updateFlags.appearanceUpdateRequired || forceUpdate) {
             mask |= 0x4;
         }
+        if(updateFlags.faceMob !== undefined) {
+            mask |= 0x1;
+        }
         if(updateFlags.facePosition || forceUpdate) {
             mask |= 0x2;
         }
@@ -103,7 +106,7 @@ export class PlayerUpdateTask extends Task<void> {
         if(updateFlags.graphics) {
             mask |= 0x200;
         }
-        if(updateFlags.animation) {
+        if(updateFlags.animation !== undefined) {
             mask |= 0x8;
         }
 
@@ -115,10 +118,18 @@ export class PlayerUpdateTask extends Task<void> {
             updateMaskData.writeByte(mask);
         }
 
-        if(updateFlags.animation) {
-            const delay = updateFlags.animation.delay || 0;
-            updateMaskData.writeShortBE(updateFlags.animation.id);
-            updateMaskData.writeNegativeOffsetByte(delay);
+        if(updateFlags.animation !== undefined) {
+            const animation = updateFlags.animation;
+
+            if(animation === null || animation.id === -1) {
+                // Reset animation
+                updateMaskData.writeShortBE(-1);
+                updateMaskData.writeNegativeOffsetByte(0);
+            } else {
+                const delay = updateFlags.animation.delay || 0;
+                updateMaskData.writeShortBE(updateFlags.animation.id);
+                updateMaskData.writeNegativeOffsetByte(delay);
+            }
         }
 
         if(updateFlags.chatMessages.length !== 0 && !currentPlayer) {
@@ -131,10 +142,36 @@ export class PlayerUpdateTask extends Task<void> {
             }
         }
 
+        if(updateFlags.faceMob !== undefined) {
+            const mob = updateFlags.faceMob;
+
+            if(mob === null) {
+                // Reset faced mob
+                updateMaskData.writeOffsetShortBE(65535);
+            } else {
+                let mobIndex = mob.worldIndex;
+
+                if(mob instanceof Player) {
+                    // Client checks if index is less than 32768.
+                    // If it is, it looks for an NPC.
+                    // If it isn't, it looks for a player (subtracting 32768 to find the index).
+                    mobIndex += 32768;
+                }
+
+                updateMaskData.writeOffsetShortBE(mobIndex);
+            }
+        }
+
         if(updateFlags.facePosition || forceUpdate) {
-            const position = updateFlags.facePosition ? updateFlags.facePosition : player.position.fromDirection(player.faceDirection);
-            updateMaskData.writeShortBE(position.x * 2 + 1);
-            updateMaskData.writeShortBE(position.y * 2 + 1);
+            if(forceUpdate) {
+                const position = player.position.fromDirection(player.faceDirection);
+                updateMaskData.writeShortBE(position.x * 2 + 1);
+                updateMaskData.writeShortBE(position.y * 2 + 1);
+            } else {
+                const position = updateFlags.facePosition;
+                updateMaskData.writeShortBE(position.x * 2 + 1);
+                updateMaskData.writeShortBE(position.y * 2 + 1);
+            }
         }
 
         if(updateFlags.graphics) {

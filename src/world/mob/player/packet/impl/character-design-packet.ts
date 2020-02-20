@@ -1,10 +1,10 @@
 import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../player';
 import { RsBuffer } from '@server/net/rs-buffer';
-import { interfaceIds } from '../../game-interface';
+import { widgetIds } from '../../widget';
 
 export const characterDesignPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
-    if(!player.activeInterface || player.activeInterface.interfaceId !== interfaceIds.characterDesign) {
+    if(!player.activeWidget || player.activeWidget.widgetId !== widgetIds.characterDesign) {
         return;
     }
 
@@ -39,5 +39,5 @@ export const characterDesignPacket: incomingPacket = (player: Player, packetId: 
     };
 
     player.updateFlags.appearanceUpdateRequired = true;
-    player.closeActiveInterface();
+    player.closeActiveWidget();
 };

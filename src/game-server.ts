@@ -9,7 +9,7 @@ import { logger } from '@runejs/logger';
 import { GameCache } from '@runejs/cache-parser';
 import { NpcActionPlugin, setNpcPlugins } from '@server/world/mob/player/action/npc-action';
 import { ObjectActionPlugin, setObjectPlugins } from '@server/world/mob/player/action/object-action';
-import { loadPlugins } from '@server/plugins/plugin-loader';
+import { BASE_PLUGIN_DIRECTORY, loadPlugins } from '@server/plugins/plugin-loader';
 import { ItemOnItemActionPlugin, setItemOnItemPlugins } from '@server/world/mob/player/action/item-on-item-action';
 import { ButtonActionPlugin, setButtonPlugins } from '@server/world/mob/player/action/button-action';
 import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
@@ -19,10 +19,18 @@ export let gameCache: GameCache;
 export let world: World;
 
 export async function injectPlugins(): Promise<void> {
-    await loadPlugins<NpcActionPlugin>('npc').then(plugins => setNpcPlugins(plugins));
-    await loadPlugins<ObjectActionPlugin>('object').then(plugins => setObjectPlugins(plugins));
-    await loadPlugins<ItemOnItemActionPlugin>('item-on-item').then(plugins => setItemOnItemPlugins(plugins));
-    await loadPlugins<ButtonActionPlugin>('buttons').then(plugins => setButtonPlugins(plugins));
+    async function inject<T>(path: string): Promise<T[]> {
+        return await loadPlugins('.' + BASE_PLUGIN_DIRECTORY + '/' + path);
+    }
+
+    const promises = [
+        inject<NpcActionPlugin>('npc').then(setNpcPlugins),
+        inject<ObjectActionPlugin>('object').then(setObjectPlugins),
+        inject<ItemOnItemActionPlugin>('item-on-item').then(setItemOnItemPlugins),
+        inject<ButtonActionPlugin>('buttons').then(setButtonPlugins)
+    ];
+
+    await Promise.all(promises);
 }
 
 export function runGameServer(): void {
@@ -43,7 +51,7 @@ export function runGameServer(): void {
     }
 
     process.on('unhandledRejection', (err, promise) => {
-        if(err === 'INTERFACE_CLOSED') {
+        if(err === 'WIDGET_CLOSED') {
             return;
         }
 
