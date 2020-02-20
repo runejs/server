@@ -314,20 +314,20 @@ export class PacketSender {
 
     public sendUpdateSingleWidgetItem(widgetId: number, slot: number, item: Item): void {
         const packet = new Packet(134, PacketType.DYNAMIC_LARGE);
-        packet.writeShortBE(widgetId);
+        packet.writeUnsignedShortBE(widgetId);
         packet.writeSmart(slot);
 
         if(!item) {
-            packet.writeShortBE(0);
-            packet.writeByte(0);
+            packet.writeUnsignedShortBE(0);
+            packet.writeUnsignedByte(0);
         } else {
-            packet.writeShortBE(item.itemId + 1); // +1 because 0 means an empty slot
+            packet.writeUnsignedShortBE(item.itemId + 1); // +1 because 0 means an empty slot
 
             if(item.amount >= 255) {
-                packet.writeByte(255);
+                packet.writeUnsignedByte(255);
                 packet.writeIntBE(item.amount);
             } else {
-                packet.writeByte(item.amount);
+                packet.writeUnsignedByte(item.amount);
             }
         }
 
@@ -344,35 +344,16 @@ export class PacketSender {
             if(!item) {
                 // Empty slot
                 packet.writeOffsetShortLE(0);
-                packet.writeByteInverted(0);
+                packet.writeUnsignedByteInverted(-1);
             } else {
                 packet.writeOffsetShortLE(item.itemId + 1); // +1 because 0 means an empty slot
 
                 if(item.amount >= 255) {
-                    packet.writeByteInverted(255);
-                    packet.writeIntBE(item.amount);
+                    packet.writeUnsignedByteInverted(254);
+                    packet.writeIntLE(item.amount);
                 } else {
-                    packet.writeByteInverted(item.amount);
+                    packet.writeUnsignedByteInverted(item.amount - 1);
                 }
-            }
-        });
-
-        this.send(packet);
-    }
-
-    public sendUpdateAllWidgetItemsById(widgetId: number, itemIds: number[]): void {
-        const packet = new Packet(206, PacketType.DYNAMIC_LARGE);
-        packet.writeShortBE(widgetId);
-        packet.writeShortBE(itemIds.length);
-
-        itemIds.forEach(itemId => {
-            if(!itemId) {
-                // Empty slot
-                packet.writeOffsetShortLE(0);
-                packet.writeByteInverted(0);
-            } else {
-                packet.writeOffsetShortLE(itemId + 1); // +1 because 0 means an empty slot
-                packet.writeByteInverted(1);
             }
         });
 
