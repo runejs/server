@@ -1,7 +1,8 @@
 export const interfaceIds = {
     characterDesign: 3559,
     inventory: 3214,
-    equipment: 1688
+    equipment: 1688,
+    shop: 3900
 };
 
 export const interfaceSettings = {

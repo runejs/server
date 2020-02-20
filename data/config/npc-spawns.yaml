@@ -14,3 +14,11 @@
   x: 3222
   y: 3220
   radius: 4
+- npcId: 520
+  x: 3211
+  y: 3247
+  radius: 1
+- npcId: 519
+  x: 3230
+  y: 3203
+  radius: 1

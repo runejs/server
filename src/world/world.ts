@@ -7,6 +7,7 @@ import { Position } from './position';
 import yargs from 'yargs';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './mob/npc/npc';
+import { parseShops, Shop } from '@server/world/config/shops';
 
 /**
  * Controls the game world and all entities within it.
@@ -22,10 +23,12 @@ export class World {
     public readonly chunkManager: ChunkManager = new ChunkManager();
     public readonly itemData: Map<number, ItemDetails>;
     public readonly npcSpawns: NpcSpawn[];
+    public readonly shops: Shop[];
 
     public constructor() {
         this.itemData = parseItemData(gameCache.itemDefinitions);
         this.npcSpawns = parseNpcSpawns();
+        this.shops = parseShops();
 
         this.setupWorldTick();
     }

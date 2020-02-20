@@ -59,7 +59,7 @@ export class ItemContainer {
             }
         }
 
-        return -1;
+        return undefined;
     }
 
     public add(item: number | Item, fireEvent: boolean = true): { item: Item, slot: number} {
@@ -100,6 +100,10 @@ export class ItemContainer {
             // Item added to inventory
             return { item, slot: newItemIndex };
         }
+    }
+
+    public amountInStack(index: number): number {
+        return this._items[index].amount;
     }
 
     public removeFirst(item: number | Item, fireEvent: boolean = true): number {
