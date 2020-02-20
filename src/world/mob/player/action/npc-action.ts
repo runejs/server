@@ -4,6 +4,7 @@ import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/mob/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/logger/dist/logger';
+import { ActionPlugin } from '@server/plugins/plugin';
 
 /**
  * The definition for an NPC action function.
@@ -24,7 +25,7 @@ export interface NpcActionDetails {
  * A list of NPC ids that apply to the plugin, the option selected, the action to be performed,
  * and whether or not the player must first walk to the NPC.
  */
-export interface NpcActionPlugin {
+export interface NpcActionPlugin extends ActionPlugin {
     npcIds: number | number[];
     options: string | string[];
     walkTo: boolean;
@@ -41,8 +42,8 @@ let npcInteractions: NpcActionPlugin[] = [
  * Sets the list of NPC interaction plugins.
  * @param plugins The plugin list.
  */
-export const setNpcPlugins = (plugins: NpcActionPlugin[]): void => {
-    npcInteractions = plugins;
+export const setNpcPlugins = (plugins: ActionPlugin[]): void => {
+    npcInteractions = plugins as NpcActionPlugin[];
 };
 
 // @TODO priority and cancelling other (lower priority) actions

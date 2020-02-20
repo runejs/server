@@ -1,7 +1,8 @@
-import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
+import { objectAction } from '@server/world/mob/player/action/object-action';
 import { dialogueAction } from '@server/world/mob/player/action/dialogue-action';
 import { World } from '@server/world/world';
 import { Position } from '@server/world/position';
+import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 const planes = {min: 0, max: 3};
 const validate: (level: number) => boolean = (level) => {
@@ -47,9 +48,10 @@ export const action: objectAction = (details) => {
 
 };
 
-export default {
+export default new RunePlugin({
+    type: ActionType.OBJECT_ACTION,
     objectIds: [1738, 1739, 1740, 1746, 1747, 1748, 12964, 12965, 12966],
     options: ['climb', 'climb-up', 'climb-down'],
     walkTo: true,
     action
-} as ObjectActionPlugin;
+});

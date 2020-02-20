@@ -1,4 +1,4 @@
-import { itemOnItemAction, ItemOnItemActionPlugin } from '@server/world/mob/player/action/item-on-item-action';
+import { itemOnItemAction } from '@server/world/mob/player/action/item-on-item-action';
 import { world } from '@server/game-server';
 import { Skill } from '@server/world/mob/skills';
 import { loopingAction } from '@server/world/mob/player/action/action';
@@ -7,6 +7,7 @@ import { Player } from '@server/world/mob/player/player';
 import { WorldItem } from '@server/world/items/world-item';
 import { Position } from '@server/world/position';
 import { randomBetween } from '@server/util/num';
+import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 const logs = [
     {
@@ -123,4 +124,4 @@ const action: itemOnItemAction = (details) => {
     }
 };
 
-export default { items: [ { item1: 590, item2: 1511 } ], action } as ItemOnItemActionPlugin;
+export default new RunePlugin({ type: ActionType.ITEM_ON_ITEM, items: [ { item1: 590, item2: 1511 } ], action });

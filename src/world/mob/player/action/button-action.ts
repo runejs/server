@@ -1,5 +1,6 @@
 import { Player } from '@server/world/mob/player/player';
 import { pluginFilter } from '@server/plugins/plugin-loader';
+import { ActionPlugin } from '@server/plugins/plugin';
 
 /**
  * The definition for a button action function.
@@ -17,7 +18,7 @@ export interface ButtonActionDetails {
 /**
  * Defines a button interaction plugin.
  */
-export interface ButtonActionPlugin {
+export interface ButtonActionPlugin extends ActionPlugin {
     buttonIds: number | number[];
     action: buttonAction;
     cancelActions?: boolean;
@@ -33,8 +34,8 @@ let buttonInteractions: ButtonActionPlugin[] = [
  * Sets the list of button interaction plugins.
  * @param plugins The plugin list.
  */
-export const setButtonPlugins = (plugins: ButtonActionPlugin[]): void => {
-    buttonInteractions = plugins;
+export const setButtonPlugins = (plugins: ActionPlugin[]): void => {
+    buttonInteractions = plugins as ButtonActionPlugin[];
 };
 
 export const buttonAction = (player: Player, buttonId: number): void => {
