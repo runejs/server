@@ -6,15 +6,26 @@ export const buyItemAction = (player: Player, itemId: number, amount: number, sl
 
     const purchasedItem = gameCache.itemDefinitions.get(itemId);
     const coinsInInventoryIndex = player.inventory.findIndex(995);
+
+    if(coinsInInventoryIndex === -1) {
+        // @TODO not enough money message
+        return;
+    }
+
     const amountInStack = player.inventory.amountInStack(coinsInInventoryIndex);
     const amountLeftAfterPurchase = amountInStack - (purchasedItem.value * amount);
+
+    if(amountLeftAfterPurchase < 0) {
+        // @TODO not enough money message
+        return;
+    }
 
     // Take the money.
     player.inventory.set(player.inventory.findIndex(itemId), { itemId, amount: amount});
     player.inventory.set(coinsInInventoryIndex, {itemId: 995, amount: amountLeftAfterPurchase});
 
     // Add the purchased item(s) to the inventory.
-    if (amount > 1) {
+    if(amount > 1) {
         for (let i = 0; i < amount; i++) {
             player.inventory.add(itemId);
         }

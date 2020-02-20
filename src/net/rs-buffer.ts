@@ -182,10 +182,6 @@ export class RsBuffer {
         return value;
     }
 
-    public writeUnsignedByteInverted(value: number): void {
-        this.writeUnsignedByte(~value & 0xff);
-    }
-
     public readSmart(): number {
         const peek = this.buffer.readUInt8(this.readerIndex);
         if(peek < 128) {
