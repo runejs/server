@@ -1,7 +1,8 @@
 import { directionData, WNES } from '@server/world/direction';
 import { world } from '@server/game-server';
 import { Chunk } from '@server/world/map/chunk';
-import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
+import { objectAction } from '@server/world/mob/player/action/object-action';
+import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 // @TODO move to yaml config
 const doors = [
@@ -85,5 +86,5 @@ export const action: objectAction = (details): void => {
     player.packetSender.playSound(opening ? 318 : 326, 7);
 };
 
-export default { objectIds: [1530, 4465, 4467, 3014, 3017, 3018, 3019, 1536, 1537, 1533, 1531, 1534, 12348], options: [ 'open', 'close' ],
-    walkTo: true, action } as ObjectActionPlugin;
+export default new RunePlugin({ type: ActionType.OBJECT_ACTION, objectIds: [1530, 4465, 4467, 3014, 3017, 3018,
+        3019, 1536, 1537, 1533, 1531, 1534, 12348], options: [ 'open', 'close' ], walkTo: true, action });

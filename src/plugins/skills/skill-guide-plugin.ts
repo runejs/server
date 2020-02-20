@@ -1,7 +1,8 @@
-import { buttonAction, ButtonActionPlugin } from '@server/world/mob/player/action/button-action';
+import { buttonAction } from '@server/world/mob/player/action/button-action';
 import { logger } from '@runejs/logger/dist/logger';
 import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 import { readFileSync } from 'fs';
+import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 interface SkillSubGuide {
     name: string;
@@ -116,4 +117,4 @@ export const action: buttonAction = (details) => {
     player.metadata['activeSkillGuide'] = buttonId;
 };
 
-export default { buttonIds, action } as ButtonActionPlugin;
+export default new RunePlugin({ type: ActionType.BUTTON, buttonIds, action });
