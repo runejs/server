@@ -15,14 +15,14 @@ export function registerNewMobs(packet: Packet, player: Player, trackedMobs: Mob
         return;
     }
 
-    // The client can only handle 80 new players or npcs at a time, so we limit each update to a max of 80
+    // We only want to send about 20 new mobs at a time, to help save some memory and computing time
     // Any remaining players or npcs will be automatically picked up by subsequent updates
     let newMobs: QuadtreeKey[] = nearbyMobs.filter(m1 => !trackedMobs.includes(m1.mob));
-    if(newMobs.length > 20) {
+    if(newMobs.length > 50) {
         // We also sort the list of players or npcs here by how close they are to the current player if there are more than 80, so we can render the nearest first
         newMobs = newMobs
             .sort((a, b) => player.position.distanceBetween(a.mob.position) - player.position.distanceBetween(b.mob.position))
-            .slice(0, 20);
+            .slice(0, 50);
     }
 
     for(const newMob of newMobs) {
