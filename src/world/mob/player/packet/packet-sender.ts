@@ -499,7 +499,7 @@ export class PacketSender {
     public sendMembershipStatusAndWorldIndex(): void {
         const packet = new Packet(126);
         packet.writeUnsignedByte(1); // @TODO member status
-        packet.writeShortLE(this.player.worldIndex);
+        packet.writeShortLE(this.player.worldIndex + 1);
 
         this.send(packet);
     }

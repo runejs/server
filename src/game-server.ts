@@ -46,7 +46,7 @@ export function runGameServer(): void {
     world.init();
     injectPlugins();
 
-    if(yargs.argv.fakePlayers) {
+    if(process.argv.indexOf('-fakePlayers') !== -1) {
         world.generateFakePlayers();
     }
 
