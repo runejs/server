@@ -6,6 +6,7 @@ import { gameCache } from '@server/game-server';
 import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './mob/npc/npc';
+import { parseShops, Shop } from '@server/world/config/shops';
 import Quadtree from 'quadtree-lib';
 import { timer } from 'rxjs';
 import { Mob } from '@server/world/mob/mob';
@@ -30,12 +31,14 @@ export class World {
     public readonly chunkManager: ChunkManager = new ChunkManager();
     public readonly itemData: Map<number, ItemDetails>;
     public readonly npcSpawns: NpcSpawn[];
+    public readonly shops: Shop[];
     public readonly playerTree: Quadtree<any>;
     public readonly npcTree: Quadtree<any>;
 
     public constructor() {
         this.itemData = parseItemData(gameCache.itemDefinitions);
         this.npcSpawns = parseNpcSpawns();
+        this.shops = parseShops();
         this.playerTree = new Quadtree<any>({
             width: 10000,
             height: 10000
