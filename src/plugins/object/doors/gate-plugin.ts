@@ -8,8 +8,10 @@ import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/actio
 const gates = [
     {
         main: 1551,
+        mainOpen: 1552,
         hinge: 'LEFT',
-        secondary: 1553
+        secondary: 1553,
+        secondaryOpen: 1556
     }
 ];
 
@@ -166,7 +168,7 @@ const action: objectAction = (details) => {
         const newSecondChunk = world.chunkManager.getChunkForWorldPosition(newSecondPosition);
 
         const newHinge = {
-            objectId: gate.objectId + 1,
+            objectId: details.mainOpen,
             x: newPosition.x,
             y: newPosition.y,
             level: newPosition.level,
@@ -174,7 +176,7 @@ const action: objectAction = (details) => {
             rotation: directionData[newDirection].rotation
         } as ModifiedLandscapeObject;
         const newSecond = {
-            objectId: details.secondary + 1,
+            objectId: details.secondaryOpen,
             x: newSecondPosition.x,
             y: newSecondPosition.y,
             level: newSecondPosition.level,
@@ -206,4 +208,4 @@ const action: objectAction = (details) => {
     }
 };
 
-export default { objectIds: [1551, 1553, 1552, 1554], options: [ 'open', 'close' ], walkTo: true, action } as ObjectActionPlugin;
+export default { objectIds: [1551, 1552, 1553, 1556], options: [ 'open', 'close' ], walkTo: true, action } as ObjectActionPlugin;
