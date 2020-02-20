@@ -1,5 +1,6 @@
 import { Player } from '@server/world/mob/player/player';
 import { gameCache } from '@server/game-server';
+import { widgetIds } from '@server/world/mob/player/widget';
 
 export const buyItemAction = (player: Player, itemId: number, amount: number, slot: number, interfaceId: number) => {
 
@@ -7,9 +8,23 @@ export const buyItemAction = (player: Player, itemId: number, amount: number, sl
     const coinsInInventoryIndex = player.inventory.findIndex(995);
     const amountInStack = player.inventory.amountInStack(coinsInInventoryIndex);
     const amountLeftAfterPurchase = amountInStack - (purchasedItem.value * amount);
+    
+    // Take the money.
+    player.inventory.set(player.inventory.findIndex(itemId), { itemId, amount: amount});
+    player.inventory.set(coinsInInventoryIndex, {itemId: 995, amount: amountLeftAfterPurchase});
 
-    // player.inventory.removeFirst(995);
-    player.inventory.add({itemId: 995, amount: amountLeftAfterPurchase});
-    player.inventory.add({itemId: itemId, amount: amount});
+    // Add the purchased item(s) to the inventory.
+    if (amount > 1) {
+        for (let i = 0; i < amount; i++) {
+            player.inventory.add(itemId);
+        }
+    }
+
+    if(amount === 1) {
+        player.inventory.add(itemId);
+    }
+
+    // Update the inventory items.
+    player.packetSender.sendUpdateAllWidgetItems(widgetIds.inventory, player.inventory);
 
 };
