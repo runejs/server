@@ -1,24 +1,24 @@
 import { incomingPacket } from '../incoming-packet';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { Player } from '../../player';
-import { interfaceIds } from '../../game-interface';
+import { widgetIds } from '../../widget';
 import { logger } from '@runejs/logger/dist/logger';
 import { unequipItemAction } from '../../action/unequip-item-action';
 import { ItemContainer } from '@server/world/items/item-container';
 
 export const itemOption1Packet: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const itemId = packet.readNegativeOffsetShortBE();
-    const interfaceId = packet.readShortBE();
+    const widgetId = packet.readShortBE();
     const slot = packet.readShortBE();
 
     let container: ItemContainer = null;
 
-    if(interfaceId === interfaceIds.equipment) {
+    if(widgetId === widgetIds.equipment) {
         container = player.equipment;
     }
 
     if(!container) {
-        logger.info(`Unhandled item option 1: ${interfaceId}, ${slot}, ${itemId}`);
+        logger.info(`Unhandled item option 1: ${widgetId}, ${slot}, ${itemId}`);
         return;
     }
 
@@ -39,7 +39,7 @@ export const itemOption1Packet: incomingPacket = (player: Player, packetId: numb
         return;
     }
 
-    if(interfaceId === interfaceIds.equipment) {
+    if(widgetId === widgetIds.equipment) {
         unequipItemAction(player, itemId, slot);
     }
 };

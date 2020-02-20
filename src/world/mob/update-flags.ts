@@ -1,12 +1,14 @@
 import { Position } from '../position';
+import { Mob } from '@server/world/mob/mob';
 
 /**
  * A specific chat message.
  */
 export interface ChatMessage {
-    color: number;
-    effects: number;
-    data: Buffer;
+    color?: number;
+    effects?: number;
+    data?: Buffer;
+    message?: string;
 }
 
 /**
@@ -35,6 +37,7 @@ export class UpdateFlags {
     private _appearanceUpdateRequired: boolean;
     private _chatMessages: ChatMessage[];
     private _facePosition: Position;
+    private _faceMob: Mob;
     private _graphics: Graphic;
     private _animation: Animation;
 
@@ -47,8 +50,9 @@ export class UpdateFlags {
         this._mapRegionUpdateRequired = false;
         this._appearanceUpdateRequired = false;
         this._facePosition = null;
+        this._faceMob = undefined;
         this._graphics = null;
-        this._animation = null;
+        this._animation = undefined;
 
         if(this._chatMessages.length !== 0) {
             this._chatMessages.shift();
@@ -65,7 +69,7 @@ export class UpdateFlags {
 
     public get updateBlockRequired(): boolean {
         return this._appearanceUpdateRequired || this._chatMessages !== null || this._facePosition !== null ||
-            this._graphics !== null || this._animation !== null;
+            this._graphics !== null || this._animation !== undefined || this._faceMob !== undefined;
     }
 
     public get mapRegionUpdateRequired(): boolean {
@@ -98,6 +102,14 @@ export class UpdateFlags {
 
     public set facePosition(value: Position) {
         this._facePosition = value;
+    }
+
+    public get faceMob(): Mob {
+        return this._faceMob;
+    }
+
+    public set faceMob(value: Mob) {
+        this._faceMob = value;
     }
 
     public get graphics(): Graphic {

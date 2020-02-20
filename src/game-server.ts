@@ -51,7 +51,7 @@ export function runGameServer(): void {
     }
 
     process.on('unhandledRejection', (err, promise) => {
-        if(err === 'INTERFACE_CLOSED') {
+        if(err === 'WIDGET_CLOSED') {
             return;
         }
 

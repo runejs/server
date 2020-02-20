@@ -67,17 +67,17 @@ export const action: buttonAction = (details) => {
     }
 
     if(refreshSidebar) {
-        player.packetSender.updateInterfaceString(sidebarTextIds[0], guide.subGuides[0].name);
+        player.packetSender.updateWidgetString(sidebarTextIds[0], guide.subGuides[0].name);
 
         for(let i = 1; i < sidebarTextIds.length; i++) {
             const sidebarId = sidebarIds[i];
             let hide: boolean = true;
 
             if(i >= guide.subGuides.length) {
-                player.packetSender.updateInterfaceString(sidebarTextIds[i], '');
+                player.packetSender.updateWidgetString(sidebarTextIds[i], '');
                 hide = true;
             } else {
-                player.packetSender.updateInterfaceString(sidebarTextIds[i], guide.subGuides[i].name);
+                player.packetSender.updateWidgetString(sidebarTextIds[i], guide.subGuides[i].name);
                 hide = false;
             }
 
@@ -85,7 +85,7 @@ export const action: buttonAction = (details) => {
                 // Apparently you can never have only TWO subguides...
                 // Because 8813 deletes both options 2 AND 3. So, good thing there are no guides with only 2 sections, I guess?...
                 // Verified this in an interface editor, and they are indeed grouped in a single layer for some reason...
-                player.packetSender.toggleInterfaceVisibility(sidebarIds[i] as number, hide);
+                player.packetSender.toggleWidgetVisibility(sidebarIds[i] as number, hide);
             }
         }
     }
@@ -93,23 +93,23 @@ export const action: buttonAction = (details) => {
     const subGuide: SkillSubGuide = guide.subGuides[subGuideIndex];
 
     const itemIds: number[] = subGuide.lines.map(g => g.itemId).concat(new Array(30 - subGuide.lines.length).fill(null));
-    player.packetSender.sendUpdateAllInterfaceItemsById(8847, itemIds);
+    player.packetSender.sendUpdateAllWidgetItemsById(8847, itemIds);
 
-    player.packetSender.updateInterfaceString(8716, guide.name + ' Guide');
-    player.packetSender.updateInterfaceString(8849, subGuide.name);
+    player.packetSender.updateWidgetString(8716, guide.name + ' Guide');
+    player.packetSender.updateWidgetString(8849, subGuide.name);
 
     for(let i = 0; i < 30; i++) {
         if(subGuide.lines.length <= i) {
-            player.packetSender.updateInterfaceString(8720 + i, '');
-            player.packetSender.updateInterfaceString(8760 + i, '');
+            player.packetSender.updateWidgetString(8720 + i, '');
+            player.packetSender.updateWidgetString(8760 + i, '');
         } else {
-            player.packetSender.updateInterfaceString(8720 + i, subGuide.lines[i].level.toString());
-            player.packetSender.updateInterfaceString(8760 + i, subGuide.lines[i].text);
+            player.packetSender.updateWidgetString(8720 + i, subGuide.lines[i].level.toString());
+            player.packetSender.updateWidgetString(8760 + i, subGuide.lines[i].text);
         }
     }
 
-    player.activeInterface = {
-        interfaceId: 8714,
+    player.activeWidget = {
+        widgetId: 8714,
         type: 'SCREEN',
         closeOnWalk: false
     };

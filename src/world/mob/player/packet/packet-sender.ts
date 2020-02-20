@@ -7,6 +7,8 @@ import { Position } from '@server/world/position';
 import { LandscapeObject } from '@runejs/cache-parser';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { WorldItem } from '@server/world/items/world-item';
+import { rsTime } from '@server/util/time';
+import { addressToInt } from '@server/util/address';
 
 /**
  * 6   = set chatbox input type to 2
@@ -44,27 +46,27 @@ import { WorldItem } from '@server/world/items/world-item';
  *
  * 59  = show graphics at position
  *
- * 29  = close all interfaces
- * 10  = show tab interface
- * 76  = show welcome interface
- * 159 = show standalone game interface
- * 50  = show walkable game interface
- * 246 = show standalone sidebar tab interface
- * 128 = show game and sidebar tab interface together (for banking and such)
- * 109 = show standalone chatbox interface
+ * 29  = close all widgets
+ * 10  = show tab widget
+ * 76  = show welcome widget
+ * 159 = show standalone game widget
+ * 50  = show walkable game widget
+ * 246 = show standalone sidebar tab widget
+ * 128 = show game and sidebar tab widget together (for banking and such)
+ * 109 = show standalone chatbox widget
  * 252 = force open sidebar tab
  *
- * 2   = show interface animation
- * 218 = update interface color
- * 232 = send interface string
+ * 2   = show widget animation
+ * 218 = update widget color
+ * 232 = send widget string
  * 238 = flash sidebar tab icon
- * 200 = set interface scroll position
- * 166 = set interface position
- * 82  = set interface hidden until hovered state
+ * 200 = set widget scroll position
+ * 166 = set widget position
+ * 82  = set widget hidden until hovered state
  *
- * 206 = update interface items
- * 134 = update specific interface items
- * 219 = clear interface items
+ * 206 = update widget items
+ * 134 = update specific widget items
+ * 219 = clear widget items
  * 125 = send player run energy
  * 174 = update carry weight
  * 49  = update player skill
@@ -72,16 +74,16 @@ import { WorldItem } from '@server/world/items/world-item';
  * 251 = update friend list status
  * 226 = update ignore list
  *
- * 186 = set interface model rotation and zoom
- * 21  = show item model on interface
- * 216 = show interface media type 1
- * 162 = show npc head on interface? - @TODO COME BACK TO THIS
- * 255 = show player head on interface
+ * 186 = set widget model rotation and zoom
+ * 21  = show item model on widget
+ * 216 = show widget media type 1
+ * 162 = show npc head on widget? - @TODO COME BACK TO THIS
+ * 255 = show player head on widget
  *
  * 201 = update chat settings
- * 113 = reset interface settings
- * 115 = update large interface setting value
- * 182 = update small interface setting value
+ * 113 = reset widget settings
+ * 115 = update large widget setting value
+ * 182 = update small widget setting value
  */
 
 /**
@@ -232,9 +234,9 @@ export class PacketSender {
         this.send(packet);
     }
 
-    public playInterfaceAnimation(interfaceId: number, animationId: number): void {
+    public playWidgetAnimation(widgetId: number, animationId: number): void {
         const packet = new Packet(2);
-        packet.writeNegativeOffsetShortLE(interfaceId);
+        packet.writeNegativeOffsetShortLE(widgetId);
         packet.writeNegativeOffsetShortBE(animationId);
 
         this.send(packet);
@@ -246,24 +248,181 @@ export class PacketSender {
     // Item dialogs = 306, 310, 315, 321
     // Statements (no click to continue) = 12788, 12790, 12793, 12797, 6179
     // Options = 2459, 2469, 2480, 2492
-    public showChatboxInterface(interfaceId: number): void {
+    public showChatboxWidget(widgetId: number): void {
         const packet = new Packet(109);
-        packet.writeShortBE(interfaceId);
+        packet.writeShortBE(widgetId);
 
         this.send(packet);
     }
 
-    public setInterfaceModel2(interfaceId: number, modelId: number): void {
+    public setWidgetModel2(widgetId: number, modelId: number): void {
         const packet = new Packet(162);
         packet.writeNegativeOffsetShortBE(modelId);
-        packet.writeShortLE(interfaceId);
+        packet.writeShortLE(widgetId);
 
         this.send(packet);
     }
 
-    public setInterfacePlayerHead(interfaceId: number): void {
+    public setWidgetPlayerHead(widgetId: number): void {
         const packet = new Packet(255);
-        packet.writeNegativeOffsetShortLE(interfaceId);
+        packet.writeNegativeOffsetShortLE(widgetId);
+
+        this.send(packet);
+    }
+
+    public updateWidgetSetting(settingId: number, value: number): void {
+        let packet: Packet;
+
+        if(value > 255) {
+            // @TODO large settings values - packet 115?
+        } else {
+            packet = new Packet(182);
+            packet.writeOffsetShortBE(settingId);
+            packet.writeNegativeOffsetByte(value);
+        }
+
+        this.send(packet);
+    }
+
+    public updateWidgetItemModel(widgetId: number, itemId: number, scale?: number): void {
+        const packet = new Packet(21);
+        packet.writeShortBE(scale);
+        packet.writeShortLE(itemId);
+        packet.writeOffsetShortLE(widgetId);
+
+        this.send(packet);
+    }
+
+    public updateWidgetString(widgetId: number, value: string): void {
+        const packet = new Packet(232, PacketType.DYNAMIC_LARGE);
+        packet.writeOffsetShortLE(widgetId);
+        packet.writeString(value);
+
+        this.send(packet);
+    }
+
+    public closeActiveWidgets(): void {
+        this.send(new Packet(29));
+    }
+
+    public showScreenWidget(widgetId: number): void {
+        const packet = new Packet(159);
+        packet.writeOffsetShortLE(widgetId);
+
+        this.send(packet);
+    }
+
+    public sendUpdateSingleWidgetItem(widgetId: number, slot: number, item: Item): void {
+        const packet = new Packet(134, PacketType.DYNAMIC_LARGE);
+        packet.writeShortBE(widgetId);
+        packet.writeSmart(slot);
+
+        if(!item) {
+            packet.writeShortBE(0);
+            packet.writeByte(0);
+        } else {
+            packet.writeShortBE(item.itemId + 1); // +1 because 0 means an empty slot
+
+            if(item.amount >= 255) {
+                packet.writeByte(255);
+                packet.writeIntBE(item.amount);
+            } else {
+                packet.writeByte(item.amount);
+            }
+        }
+
+        this.send(packet);
+    }
+
+    public sendUpdateAllWidgetItems(widgetId: number, container: ItemContainer): void {
+        const packet = new Packet(206, PacketType.DYNAMIC_LARGE);
+        packet.writeShortBE(widgetId);
+        packet.writeShortBE(container.size);
+
+        const items = container.items;
+        items.forEach(item => {
+            if(!item) {
+                // Empty slot
+                packet.writeOffsetShortLE(0);
+                packet.writeByteInverted(0);
+            } else {
+                packet.writeOffsetShortLE(item.itemId + 1); // +1 because 0 means an empty slot
+
+                if(item.amount >= 255) {
+                    packet.writeByteInverted(255);
+                    packet.writeIntBE(item.amount);
+                } else {
+                    packet.writeByteInverted(item.amount);
+                }
+            }
+        });
+
+        this.send(packet);
+    }
+
+    public sendUpdateAllWidgetItemsById(widgetId: number, itemIds: number[]): void {
+        const packet = new Packet(206, PacketType.DYNAMIC_LARGE);
+        packet.writeShortBE(widgetId);
+        packet.writeShortBE(itemIds.length);
+
+        itemIds.forEach(itemId => {
+            if(!itemId) {
+                // Empty slot
+                packet.writeOffsetShortLE(0);
+                packet.writeByteInverted(0);
+            } else {
+                packet.writeOffsetShortLE(itemId + 1); // +1 because 0 means an empty slot
+                packet.writeByteInverted(1);
+            }
+        });
+
+        this.send(packet);
+    }
+
+    public toggleWidgetVisibility(widgetId: number, hidden: boolean): void {
+        const packet = new Packet(82);
+        packet.writeUnsignedByte(hidden ? 1 : 0);
+        packet.writeShortBE(widgetId);
+
+        this.send(packet);
+    }
+
+    public sendTabWidget(tabIndex: number, widgetId: number): void {
+        const packet = new Packet(10);
+        packet.writeNegativeOffsetByte(tabIndex);
+        packet.writeOffsetShortBE(widgetId);
+
+        this.send(packet);
+    }
+
+    public showFullscreenWidget(widgetId: number, childWidgetId: number): void {
+        const packet = new Packet(253);
+        packet.writeUnsignedShortLE(childWidgetId);
+        packet.writeOffsetShortBE(widgetId);
+
+        this.send(packet);
+    }
+
+    public updateWelcomeScreenInfo(childId: number, lastLogin: Date, lastAddress: string): void {
+        const currentTime = rsTime(new Date());
+
+        this.updateWidgetString(15270, `\\nYou do not have a Bank PIN.\\nPlease visit a bank if you would like one.`);
+        this.updateWidgetString(childId + 2, `Interested in helping RuneJS improve?`);
+        this.updateWidgetString(childId + 3, `Send us a Pull Request over on Github!`);
+        // @TODO reminder that welcome screen models can be changed :)
+
+        const packet = new Packet(76);
+        packet.writeUnsignedShortLE(0); // last password change time
+        packet.writeOffsetShortLE(3); // junk
+        packet.writeShortBE(4); // junk
+        packet.writeShortBE(5); // junk
+        packet.writeUnsignedShortLE(currentTime); // long screen display time
+        packet.writeOffsetShortBE(0); // unread website message count
+        packet.writeUnsignedOffsetShortBE(lastLogin === undefined || lastLogin === null ? currentTime : rsTime(lastLogin)); // last login time
+        packet.writeShortBE(42); // membership credit days remaining
+        packet.writeIntLE(addressToInt(lastAddress)); // last login IP/address
+        packet.writeOffsetShortLE(0); // recovery question set time
+        packet.writeOffsetByte(12); // junk
 
         this.send(packet);
     }
@@ -282,37 +441,6 @@ export class PacketSender {
     public updateCarryWeight(weight: number): void {
         const packet = new Packet(174);
         packet.writeShortBE(weight);
-
-        this.send(packet);
-    }
-
-    public updateInterfaceSetting(settingId: number, value: number): void {
-        let packet: Packet;
-
-        if(value > 255) {
-            // @TODO large settings values - packet 115?
-        } else {
-            packet = new Packet(182);
-            packet.writeOffsetShortBE(settingId);
-            packet.writeNegativeOffsetByte(value);
-        }
-
-        this.send(packet);
-    }
-
-    public updateInterfaceItemModel(interfaceId: number, itemId: number, scale?: number): void {
-        const packet = new Packet(21);
-        packet.writeShortBE(scale);
-        packet.writeShortLE(itemId);
-        packet.writeOffsetShortLE(interfaceId);
-
-        this.send(packet);
-    }
-
-    public updateInterfaceString(interfaceId: number, value: string): void {
-        const packet = new Packet(232, PacketType.DYNAMIC_LARGE);
-        packet.writeOffsetShortLE(interfaceId);
-        packet.writeString(value);
 
         this.send(packet);
     }
@@ -340,84 +468,6 @@ export class PacketSender {
         this.send(packet);
     }
 
-    public closeActiveInterfaces(): void {
-        this.send(new Packet(29));
-    }
-
-    public showScreenInterface(interfaceId: number): void {
-        const packet = new Packet(159);
-        packet.writeOffsetShortLE(interfaceId);
-
-        this.send(packet);
-    }
-
-    public sendUpdateSingleInterfaceItem(interfaceId: number, slot: number, item: Item): void {
-        const packet = new Packet(134, PacketType.DYNAMIC_LARGE);
-        packet.writeShortBE(interfaceId);
-        packet.writeSmart(slot);
-
-        if(!item) {
-            packet.writeShortBE(0);
-            packet.writeByte(0);
-        } else {
-            packet.writeShortBE(item.itemId + 1); // +1 because 0 means an empty slot
-
-            if(item.amount >= 255) {
-                packet.writeByte(255);
-                packet.writeIntBE(item.amount);
-            } else {
-                packet.writeByte(item.amount);
-            }
-        }
-
-        this.send(packet);
-    }
-
-    public sendUpdateAllInterfaceItems(interfaceId: number, container: ItemContainer): void {
-        const packet = new Packet(206, PacketType.DYNAMIC_LARGE);
-        packet.writeShortBE(interfaceId);
-        packet.writeShortBE(container.size);
-
-        const items = container.items;
-        items.forEach(item => {
-            if(!item) {
-                // Empty slot
-                packet.writeOffsetShortLE(0);
-                packet.writeByteInverted(0);
-            } else {
-                packet.writeOffsetShortLE(item.itemId + 1); // +1 because 0 means an empty slot
-
-                if(item.amount >= 255) {
-                    packet.writeByteInverted(255);
-                    packet.writeIntBE(item.amount);
-                } else {
-                    packet.writeByteInverted(item.amount);
-                }
-            }
-        });
-
-        this.send(packet);
-    }
-
-    public sendUpdateAllInterfaceItemsById(interfaceId: number, itemIds: number[]): void {
-        const packet = new Packet(206, PacketType.DYNAMIC_LARGE);
-        packet.writeShortBE(interfaceId);
-        packet.writeShortBE(itemIds.length);
-
-        itemIds.forEach(itemId => {
-            if(!itemId) {
-                // Empty slot
-                packet.writeOffsetShortLE(0);
-                packet.writeByteInverted(0);
-            } else {
-                packet.writeOffsetShortLE(itemId + 1); // +1 because 0 means an empty slot
-                packet.writeByteInverted(1);
-            }
-        });
-
-        this.send(packet);
-    }
-
     public sendLogout(): void {
         this.send(new Packet(5));
     }
@@ -425,22 +475,6 @@ export class PacketSender {
     public chatboxMessage(message: string): void {
         const packet = new Packet(63, PacketType.DYNAMIC_SMALL);
         packet.writeString(message);
-
-        this.send(packet);
-    }
-
-    public toggleInterfaceVisibility(interfaceId: number, hidden: boolean): void {
-        const packet = new Packet(82);
-        packet.writeUnsignedByte(hidden ? 1 : 0);
-        packet.writeShortBE(interfaceId);
-
-        this.send(packet);
-    }
-
-    public sendTabInterface(tabIndex: number, interfaceId: number): void {
-        const packet = new Packet(10);
-        packet.writeNegativeOffsetByte(tabIndex);
-        packet.writeOffsetShortBE(interfaceId);
 
         this.send(packet);
     }
@@ -465,7 +499,7 @@ export class PacketSender {
     public sendMembershipStatusAndWorldIndex(): void {
         const packet = new Packet(126);
         packet.writeUnsignedByte(1); // @TODO member status
-        packet.writeShortLE(this.player.worldIndex + 1);
+        packet.writeShortLE(this.player.worldIndex);
 
         this.send(packet);
     }

@@ -61,7 +61,7 @@ export class World {
         for(let i = 0; i < 990; i++) {
             const player = new Player(null, null, null, i, `test${i}`, 'abs', true);
             this.registerPlayer(player);
-            player.activeInterface = null;
+            player.activeWidget = null;
 
             xOffset++;
 

@@ -28,7 +28,7 @@ export enum Skill {
 
 export interface SkillDetail {
     readonly name: string;
-    readonly advancementInterfaceId?: number;
+    readonly advancementWidgetId?: number;
 }
 
 export const skillDetails: SkillDetail[] = [
@@ -40,10 +40,10 @@ export const skillDetails: SkillDetail[] = [
     { name: 'Prayer' },
     { name: 'Magic' },
     { name: 'Cooking' },
-    { name: 'Woodcutting', advancementInterfaceId: 4272 },
+    { name: 'Woodcutting', advancementWidgetId: 4272 },
     { name: 'Fletching' },
     { name: 'Fishing' },
-    { name: 'Firemaking', advancementInterfaceId: 4282 },
+    { name: 'Firemaking', advancementWidgetId: 4282 },
     { name: 'Crafting' },
     { name: 'Smithing' },
     { name: 'Mining' },
@@ -120,13 +120,12 @@ export class Skills {
 
             if(this.mob instanceof Player) {
                 const achievementDetails = skillDetails[skillId];
-                this.mob.packetSender.chatboxMessage(`Congratulations, you've just advanced a ${achievementDetails.name} level. ` +
-                    `You are now level ${finalLevel}.`);
+                this.mob.packetSender.chatboxMessage(`Congratulations, you just advanced a ${achievementDetails.name.toLowerCase()} level.`);
 
-                if(achievementDetails.advancementInterfaceId) {
+                if(achievementDetails.advancementWidgetId) {
                     dialogueAction(this.mob, { type: 'LEVEL_UP', skillId, lines: [
-                        `@dbl@Congratulations, you've just advanced a ${achievementDetails.name} level.`,
-                            `Your ${achievementDetails.name} level is now ${finalLevel}.` ] }).then(d => d.close());
+                        `@dbl@Congratulations, you just advanced a ${achievementDetails.name.toLowerCase()} level.`,
+                            `Your ${achievementDetails.name.toLowerCase()} level is now ${finalLevel}.` ] }).then(d => d.close());
                     // @TODO sounds
                 }
             }
