@@ -3,7 +3,8 @@ import { WNES } from '@server/world/direction';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
 import { action as doorAction } from '@server/plugins/object/doors/door-plugin';
-import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
+import { objectAction } from '@server/world/mob/player/action/object-action';
+import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 const doubleDoors = [
     {
@@ -106,4 +107,5 @@ const action: objectAction = (details) => {
     });
 };
 
-export default { objectIds: [1519, 1516, 1517, 1520], options: [ 'open', 'close' ], walkTo: true, action } as ObjectActionPlugin;
+export default new RunePlugin({ type: ActionType.OBJECT_ACTION, objectIds: [1519, 1516, 1517, 1520],
+    options: [ 'open', 'close' ], walkTo: true, action });

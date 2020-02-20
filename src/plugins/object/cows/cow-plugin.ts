@@ -1,6 +1,7 @@
-import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
+import { objectAction } from '@server/world/mob/player/action/object-action';
 import { gameCache } from "@server/game-server";
 import { Position } from '@server/world/position';
+import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 
 export const action: objectAction = (details) => {
@@ -19,4 +20,4 @@ export const action: objectAction = (details) => {
     }
 };
 
-export default {objectIds: [8689], options: ['milk'], walkTo: true, action} as ObjectActionPlugin;
+export default new RunePlugin({ type: ActionType.OBJECT_ACTION, objectIds: [8689], options: ['milk'], walkTo: true, action });

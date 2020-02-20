@@ -1,5 +1,6 @@
 import { Player } from '@server/world/mob/player/player';
 import { Item } from '@server/world/items/item';
+import { ActionPlugin } from '@server/plugins/plugin';
 
 /**
  * The definition for an item on item action function.
@@ -22,7 +23,7 @@ export interface ItemOnItemActionDetails {
 /**
  * Defines an item on item interaction plugin.
  */
-export interface ItemOnItemActionPlugin {
+export interface ItemOnItemActionPlugin extends ActionPlugin {
     items: { item1: number, item2: number }[];
     action: itemOnItemAction;
 }
@@ -37,8 +38,8 @@ let itemOnItemInteractions: ItemOnItemActionPlugin[] = [
  * Sets the list of item on item interaction plugins.
  * @param plugins The plugin list.
  */
-export const setItemOnItemPlugins = (plugins: ItemOnItemActionPlugin[]): void => {
-    itemOnItemInteractions = plugins;
+export const setItemOnItemPlugins = (plugins: ActionPlugin[]): void => {
+    itemOnItemInteractions = plugins as ItemOnItemActionPlugin[];
 };
 
 export const itemOnItemAction = (player: Player,

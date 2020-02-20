@@ -3,7 +3,8 @@ import { directionData, WNES } from '@server/world/direction';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
 import { ModifiedLandscapeObject } from '@server/world/map/landscape-object';
-import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
+import { objectAction } from '@server/world/mob/player/action/object-action';
+import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 const gates = [
     {
@@ -208,4 +209,5 @@ const action: objectAction = (details) => {
     }
 };
 
-export default { objectIds: [1551, 1552, 1553, 1556], options: [ 'open', 'close' ], walkTo: true, action } as ObjectActionPlugin;
+export default new RunePlugin({ type: ActionType.OBJECT_ACTION, objectIds: [1551, 1552, 1553, 1556],
+    options: [ 'open', 'close' ], walkTo: true, action });

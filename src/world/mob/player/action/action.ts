@@ -3,7 +3,6 @@ import { Position } from '@server/world/position';
 import { Subject, timer } from 'rxjs';
 import { World } from '@server/world/world';
 import { LandscapeObject } from '@runejs/cache-parser';
-import { gameCache } from '@server/game-server';
 
 export interface InteractingAction {
     interactingObject?: LandscapeObject;

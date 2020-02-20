@@ -1,5 +1,6 @@
-import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
+import { objectAction } from '@server/world/mob/player/action/object-action';
 import { loopingAction } from '@server/world/mob/player/action/action';
+import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 const cycle = (player, i) => {
     player.packetSender.chatboxMessage(`i = ${i}`);
@@ -17,4 +18,4 @@ export const action: objectAction = (details) => {
     });
 };
 
-export default { objectIds: [1278], options: [ 'chop down' ], walkTo: true, action } as ObjectActionPlugin;
+export default new RunePlugin({ type: ActionType.OBJECT_ACTION, objectIds: [1278], options: [ 'chop down' ], walkTo: true, action });
