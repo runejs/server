@@ -2,6 +2,7 @@ export const widgetIds = {
     characterDesign: 3559,
     inventory: 3214,
     equipment: 1688,
+    shop: 3900,
     welcomeScreen: 15244,
     welcomeScreenChildren: {
         question: 17511,
