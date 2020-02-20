@@ -26,12 +26,17 @@ export class NpcUpdateTask extends Task<void> {
             const currentMapChunk = world.chunkManager.getChunkForWorldPosition(this.player.position);
             const updateMaskData = RsBuffer.create();
 
-            const nearbyNpcs = world.chunkManager.getSurroundingChunks(currentMapChunk).map(chunk => chunk.npcs).flat();
+            const nearbyNpcs = world.npcTree.colliding({
+                x: this.player.position.x - 15,
+                y: this.player.position.y - 15,
+                width: 32,
+                height: 32
+            });
 
-            this.player.trackedNpcs = updateTrackedMobs<Npc>(npcUpdatePacket, this.player.position,
-                mob => this.appendUpdateMaskData(mob as Npc, updateMaskData), this.player.trackedNpcs, nearbyNpcs);
+            this.player.trackedNpcs = updateTrackedMobs(npcUpdatePacket, this.player.position,
+                mob => this.appendUpdateMaskData(mob as Npc, updateMaskData), this.player.trackedNpcs, nearbyNpcs) as Npc[];
 
-            registerNewMobs<Npc>(npcUpdatePacket, this.player, this.player.trackedNpcs, nearbyNpcs, mob => {
+            registerNewMobs(npcUpdatePacket, this.player, this.player.trackedNpcs, nearbyNpcs, mob => {
                 const newNpc = mob as Npc;
                 const positionOffsetX = newNpc.position.x - this.player.position.x;
                 const positionOffsetY = newNpc.position.y - this.player.position.y;
@@ -60,7 +65,11 @@ export class NpcUpdateTask extends Task<void> {
                 npcUpdatePacket.closeBitChannel();
             }
 
-            this.player.packetSender.send(npcUpdatePacket);
+            new Promise(resolve => {
+                this.player.packetSender.send(npcUpdatePacket);
+                resolve();
+            });
+
             resolve();
         });
     }
@@ -101,7 +110,7 @@ export class NpcUpdateTask extends Task<void> {
                     // Client checks if index is less than 32768.
                     // If it is, it looks for an NPC.
                     // If it isn't, it looks for a player (subtracting 32768 to find the index).
-                    mobIndex += 32768;
+                    mobIndex += 32768 + 1;
                 }
 
                 updateMaskData.writeUnsignedShortLE(mobIndex);

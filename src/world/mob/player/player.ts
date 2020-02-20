@@ -21,6 +21,7 @@ import { Npc } from '../npc/npc';
 import { NpcUpdateTask } from './updating/npc-update-task';
 import { Subject } from 'rxjs';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
+import { QuadtreeKey } from '@server/world/world';
 
 const DEFAULT_TAB_WIDGET_IDS = [
     2423, 3917, 638, 3213, 1644, 5608, 1151, -1, 5065, 5715, 2449, 904, 147, 962
@@ -64,6 +65,7 @@ export class Player extends Mob {
     private _walkingTo: Position;
     private _nearbyChunks: Chunk[];
     public readonly actionsCancelled: Subject<boolean>;
+    private quadtreeKey: QuadtreeKey = null;
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -118,7 +120,7 @@ export class Player extends Mob {
                 this._loginDate = new Date(lastLogin);
             }
 
-            this._lastAddress = playerSave.lastLogin?.address || (this._socket.address() as AddressInfo).address;
+            this._lastAddress = playerSave.lastLogin?.address || (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
         } else {
             // Brand new player logging in
             this.position = new Position(3222, 3222);
@@ -193,7 +195,7 @@ export class Player extends Mob {
         });
 
         this._loginDate = new Date();
-        this._lastAddress = (this._socket.address() as AddressInfo).address;
+        this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
 
         logger.info(`${this.username}:${this.worldIndex} has logged in.`);
     }
@@ -203,6 +205,7 @@ export class Player extends Mob {
             return;
         }
 
+        world.playerTree.remove(this.quadtreeKey);
         savePlayerData(this);
 
         this.packetSender.sendLogout();
@@ -487,6 +490,21 @@ export class Player extends Mob {
 
     public closeActiveWidget(): void {
         this.activeWidget = null;
+    }
+
+    public set position(position: Position) {
+        super.position = position;
+
+        if(this.quadtreeKey !== null) {
+            world.playerTree.remove(this.quadtreeKey);
+        }
+
+        this.quadtreeKey = { x: position.x, y: position.y, mob: this };
+        world.playerTree.push(this.quadtreeKey);
+    }
+
+    public get position(): Position {
+        return super.position;
     }
 
     public equals(player: Player): boolean {

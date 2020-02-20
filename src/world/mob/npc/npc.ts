@@ -5,6 +5,7 @@ import uuidv4 from 'uuid/v4';
 import { Position } from '@server/world/position';
 import { world } from '@server/game-server';
 import { Direction } from '@server/world/direction';
+import { QuadtreeKey } from '@server/world/world';
 
 interface NpcAnimations {
     walk: number;
@@ -28,6 +29,7 @@ export class Npc extends Mob {
     private _movementRadius: number = 0;
     private _initialFaceDirection: Direction = 'NORTH';
     public readonly initialPosition: Position;
+    private quadtreeKey: QuadtreeKey = null;
 
     public constructor(npcSpawn: NpcSpawn, cacheData: NpcDefinition) {
         super();
@@ -78,6 +80,21 @@ export class Npc extends Mob {
         }
 
         return other.id === this.id && other.uuid === this.uuid;
+    }
+
+    public set position(position: Position) {
+        super.position = position;
+
+        if(this.quadtreeKey !== null) {
+            world.npcTree.remove(this.quadtreeKey);
+        }
+
+        this.quadtreeKey = { x: position.x, y: position.y, mob: this };
+        world.npcTree.push(this.quadtreeKey);
+    }
+
+    public get position(): Position {
+        return super.position;
     }
 
     public get name(): string {

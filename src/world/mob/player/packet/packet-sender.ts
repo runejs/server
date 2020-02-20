@@ -344,7 +344,7 @@ export class PacketSender {
             if(!item) {
                 // Empty slot
                 packet.writeOffsetShortLE(0);
-                packet.writeUnsignedByteInverted(0 - 1);
+                packet.writeUnsignedByteInverted(-1);
             } else {
                 packet.writeOffsetShortLE(item.itemId + 1); // +1 because 0 means an empty slot
 
@@ -499,7 +499,7 @@ export class PacketSender {
     public sendMembershipStatusAndWorldIndex(): void {
         const packet = new Packet(126);
         packet.writeUnsignedByte(1); // @TODO member status
-        packet.writeShortLE(this.player.worldIndex);
+        packet.writeShortLE(this.player.worldIndex + 1);
 
         this.send(packet);
     }

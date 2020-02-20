@@ -232,6 +232,10 @@ export class RsBuffer {
         this.buffer.writeUInt8(value, this.writerIndex++);
     }
 
+    public writeUnsignedByteInverted(value: number): void {
+        this.writeUnsignedByte(~value & 0xff);
+    }
+
     public writeUnsignedShortBE(value: number): void {
         this.buffer.writeUInt16BE(value, this.writerIndex);
         this.writerIndex += 2;

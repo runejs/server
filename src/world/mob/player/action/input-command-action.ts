@@ -190,6 +190,25 @@ const commands: { [key: string]: commandHandler } = {
         player.playAnimation(animationId);
     },
 
+    quadtree: player => {
+        // console.log(world.playerTree);
+        const values = world.playerTree.colliding({
+            x: player.position.x - 2,
+            y: player.position.y - 2,
+            width: 5,
+            height: 5
+        });
+        console.log(values);
+    },
+
+    trackedplayers: player => {
+        player.packetSender.chatboxMessage(`Tracked players: ${player.trackedPlayers.length}`);
+    },
+
+    trackednpcs: player => {
+        player.packetSender.chatboxMessage(`Tracked Npcs: ${player.trackedNpcs.length}`);
+    },
+
 };
 
 export const inputCommandAction = (player: Player, command: string, args: string[]): void => {

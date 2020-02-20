@@ -59,7 +59,7 @@ export class ItemContainer {
             }
         }
 
-        return undefined;
+        return -1;
     }
 
     public add(item: number | Item, fireEvent: boolean = true): { item: Item, slot: number} {

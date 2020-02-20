@@ -8,7 +8,7 @@ export const buyItemAction = (player: Player, itemId: number, amount: number, sl
     const coinsInInventoryIndex = player.inventory.findIndex(995);
     const amountInStack = player.inventory.amountInStack(coinsInInventoryIndex);
     const amountLeftAfterPurchase = amountInStack - (purchasedItem.value * amount);
-    
+
     // Take the money.
     player.inventory.set(player.inventory.findIndex(itemId), { itemId, amount: amount});
     player.inventory.set(coinsInInventoryIndex, {itemId: 995, amount: amountLeftAfterPurchase});
