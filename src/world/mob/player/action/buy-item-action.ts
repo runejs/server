@@ -8,7 +8,7 @@ export const buyItemAction = (player: Player, itemId: number, amount: number, sl
     const coinsInInventoryIndex = player.inventory.findIndex(995);
 
     if(coinsInInventoryIndex === -1) {
-        // @TODO not enough money message
+        player.packetSender.chatboxMessage(`You don't have enough coins.`);
         return;
     }
 
@@ -16,7 +16,7 @@ export const buyItemAction = (player: Player, itemId: number, amount: number, sl
     const amountLeftAfterPurchase = amountInStack - (purchasedItem.value * amount);
 
     if(amountLeftAfterPurchase < 0) {
-        // @TODO not enough money message
+        player.packetSender.chatboxMessage(`You don't have enough coins.`);
         return;
     }
 
