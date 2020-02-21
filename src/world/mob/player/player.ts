@@ -176,7 +176,7 @@ export class Player extends Mob {
 
             this.activeWidget = {
                 widgetId: widgetIds.welcomeScreen,
-                childWidgetId: widgetIds.welcomeScreenChildren.question,
+                secondaryWidgetId: widgetIds.welcomeScreenChildren.question,
                 type: 'FULLSCREEN'
             };
         }
@@ -558,7 +558,9 @@ export class Player extends Mob {
             } else if(value.type === 'CHAT') {
                 this.packetSender.showChatboxWidget(value.widgetId);
             } else if(value.type === 'FULLSCREEN') {
-                this.packetSender.showFullscreenWidget(value.widgetId, value.childWidgetId);
+                this.packetSender.showFullscreenWidget(value.widgetId, value.secondaryWidgetId);
+            } else if(value.type === 'SCREEN_AND_TAB') {
+                this.packetSender.showScreenAndTabWidgets(value.widgetId, value.secondaryWidgetId);
             }
         } else {
             this.packetSender.closeActiveWidgets();
