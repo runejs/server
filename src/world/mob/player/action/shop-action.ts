@@ -43,7 +43,7 @@ export function openShop(player: Player, identification: string, closeOnWalk: bo
         };
       
         player.packetSender.sendUpdateAllWidgetItems(widgetIds.inventory, player.inventory);
-        player.packetSender.showWidgetAndSidebar(widgetIds.shop.shopScreen, widgetIds.shop.playerTab);
+        player.packetSender.showScreenAndTabWidgets(widgetIds.shop.shopScreen, widgetIds.shop.playerTab);
         for(let i = 0; i < player.inventory.items.length; i++) {
             if(player.inventory.items[i] !== null) {
                 player.packetSender.sendUpdateSingleWidgetItem(widgetIds.shop.playerInventory, i, {
