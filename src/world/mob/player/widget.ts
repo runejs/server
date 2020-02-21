@@ -2,7 +2,13 @@ export const widgetIds = {
     characterDesign: 3559,
     inventory: 3214,
     equipment: 1688,
-    shop: 3900,
+    shop: {
+        inventory_container: 3823,
+        inventory_sidebar: 3822,
+        shop_window: 3824,
+        shop_container: 3900,
+        shop_name: 3901
+    },
     welcomeScreen: 15244,
     welcomeScreenChildren: {
         question: 17511,
