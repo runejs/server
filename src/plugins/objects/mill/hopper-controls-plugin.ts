@@ -1,8 +1,9 @@
-import { objectAction, ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
+import { objectAction } from '@server/world/mob/player/action/object-action';
 import { World } from '@server/world/world';
 import { world } from '@server/game-server';
 import { Position } from '@server/world/position';
 import { LandscapeObject } from '@runejs/cache-parser';
+import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 
 export const action: objectAction = (details) => {
@@ -38,4 +39,4 @@ export const action: objectAction = (details) => {
 
 };
 
-export default {objectIds: [2718], options: ['operate'], walkTo: true, action} as ObjectActionPlugin;
+export default new RunePlugin({ type: ActionType.OBJECT_ACTION, objectIds: [2718], options: ['operate'], walkTo: true, action });

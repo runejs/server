@@ -5,9 +5,10 @@
     "main": "src/game-server.ts",
     "scripts": {
         "server": "npm start",
-        "start": "rm -rf dist/ && npm run build && concurrently \"npm run watch-plugins\" \"node dist/main.js\"",
+        "start": "rm -rf dist/ && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js\"",
         "lint": "tslint --project tsconfig.json",
-        "fake-players": "npm start -- --fakePlayers",
+        "fake-players": "rm -rf dist/ && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers\"",
+        "fake-players-tick": "rm -rf dist/ && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers -tickTime\"",
         "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
         "watch-plugins": "nodemon --watch src/plugins/ --exec \"npm run build\" -e ts"
     },
@@ -29,6 +30,7 @@
         "body-parser": "^1.19.0",
         "express": "^4.17.1",
         "js-yaml": "^3.13.1",
+        "quadtree-lib": "^1.0.9",
         "rxjs": "^6.5.4",
         "ts-node": "^8.4.1",
         "tslib": "^1.10.0",

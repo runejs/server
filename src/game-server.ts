@@ -1,5 +1,4 @@
 import * as net from 'net';
-import yargs from 'yargs';
 import { watch } from 'chokidar';
 
 import { RsBuffer } from './net/rs-buffer';
@@ -7,30 +6,36 @@ import { World } from './world/world';
 import { ClientConnection } from './net/client-connection';
 import { logger } from '@runejs/logger';
 import { GameCache } from '@runejs/cache-parser';
-import { NpcActionPlugin, setNpcPlugins } from '@server/world/mob/player/action/npc-action';
-import { ObjectActionPlugin, setObjectPlugins } from '@server/world/mob/player/action/object-action';
-import { BASE_PLUGIN_DIRECTORY, loadPlugins } from '@server/plugins/plugin-loader';
-import { ItemOnItemActionPlugin, setItemOnItemPlugins } from '@server/world/mob/player/action/item-on-item-action';
-import { ButtonActionPlugin, setButtonPlugins } from '@server/world/mob/player/action/button-action';
+import { setNpcPlugins } from '@server/world/mob/player/action/npc-action';
+import { setObjectPlugins } from '@server/world/mob/player/action/object-action';
+import { loadPlugins } from '@server/plugins/plugin-loader';
+import { setItemOnItemPlugins } from '@server/world/mob/player/action/item-on-item-action';
+import { setButtonPlugins } from '@server/world/mob/player/action/button-action';
 import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
+import { ActionPlugin, ActionType } from '@server/plugins/plugin';
+import { setCommandPlugins } from '@server/world/mob/player/action/input-command-action';
 
 export let serverConfig: ServerConfig;
 export let gameCache: GameCache;
 export let world: World;
 
 export async function injectPlugins(): Promise<void> {
-    async function inject<T>(path: string): Promise<T[]> {
-        return await loadPlugins('.' + BASE_PLUGIN_DIRECTORY + '/' + path);
-    }
+    const actionTypes: { [key: string]: ActionPlugin[] } = {};
+    const plugins = await loadPlugins();
 
-    const promises = [
-        inject<NpcActionPlugin>('npc').then(setNpcPlugins),
-        inject<ObjectActionPlugin>('object').then(setObjectPlugins),
-        inject<ItemOnItemActionPlugin>('item-on-item').then(setItemOnItemPlugins),
-        inject<ButtonActionPlugin>('buttons').then(setButtonPlugins)
-    ];
+    plugins.map(plugin => plugin.actions).reduce((a, b) => a.concat(b)).forEach(action => {
+        if(!actionTypes.hasOwnProperty(action.type)) {
+            actionTypes[action.type] = [];
+        }
 
-    await Promise.all(promises);
+        actionTypes[action.type].push(action);
+    });
+
+    setButtonPlugins(actionTypes[ActionType.BUTTON]);
+    setNpcPlugins(actionTypes[ActionType.NPC_ACTION]);
+    setObjectPlugins(actionTypes[ActionType.OBJECT_ACTION]);
+    setItemOnItemPlugins(actionTypes[ActionType.ITEM_ON_ITEM]);
+    setCommandPlugins(actionTypes[ActionType.COMMAND]);
 }
 
 export function runGameServer(): void {
@@ -46,7 +51,7 @@ export function runGameServer(): void {
     world.init();
     injectPlugins();
 
-    if(yargs.argv.fakePlayers) {
+    if(process.argv.indexOf('-fakePlayers') !== -1) {
         world.generateFakePlayers();
     }
 

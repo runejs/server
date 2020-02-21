@@ -255,6 +255,13 @@ export class PacketSender {
         this.send(packet);
     }
 
+    public showScreenAndTabWidgets(widgetId: number, sidebarId: number) : void {
+        const packet = new Packet(128);
+        packet.writeNegativeOffsetShortBE(widgetId);
+        packet.writeNegativeOffsetShortLE(sidebarId);
+        this.send(packet);
+    }
+
     public setWidgetModel2(widgetId: number, modelId: number): void {
         const packet = new Packet(162);
         packet.writeNegativeOffsetShortBE(modelId);
@@ -499,7 +506,7 @@ export class PacketSender {
     public sendMembershipStatusAndWorldIndex(): void {
         const packet = new Packet(126);
         packet.writeUnsignedByte(1); // @TODO member status
-        packet.writeShortLE(this.player.worldIndex);
+        packet.writeShortLE(this.player.worldIndex + 1);
 
         this.send(packet);
     }

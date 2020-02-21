@@ -18,6 +18,7 @@ import { objectInteractionPacket } from '@server/world/mob/player/packet/impl/ob
 import { chatPacket } from '@server/world/mob/player/packet/impl/chat-packet';
 import { dropItemPacket } from '@server/world/mob/player/packet/impl/drop-item-packet';
 import { itemOnItemPacket } from '@server/world/mob/player/packet/impl/item-on-item-packet';
+import { buyItemPacket } from '@server/world/mob/player/packet/impl/buy-item-packet';
 
 const packets: { [key: number]: incomingPacket } = {
     19:  interfaceClickPacket,
@@ -51,7 +52,11 @@ const packets: { [key: number]: incomingPacket } = {
     1:   itemOnItemPacket,
 
     49:  chatPacket,
-    56:  commandPacket
+    56:  commandPacket,
+
+    177: buyItemPacket,
+    91: buyItemPacket,
+    231: buyItemPacket
 };
 
 export function handlePacket(player: Player, packetId: number, packetSize: number, buffer: Buffer): void {

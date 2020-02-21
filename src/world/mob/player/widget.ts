@@ -1,7 +1,14 @@
-export const widgetIds = {
+export const widgetIds: any = {
     characterDesign: 3559,
     inventory: 3214,
     equipment: 1688,
+    shop: {
+        shopInventory: 3900,
+        shopScreen: 3824,
+        playerInventory: 3823,
+        playerTab: 3822,
+        shopTitle: 3901
+    },
     welcomeScreen: 15244,
     welcomeScreenChildren: {
         question: 17511,
@@ -30,8 +37,8 @@ export const widgetSettings = {
 
 export interface ActiveWidget {
     widgetId: number;
-    childWidgetId?: number;
-    type: 'SCREEN' | 'CHAT' | 'FULLSCREEN';
+    secondaryWidgetId?: number;
+    type: 'SCREEN' | 'CHAT' | 'FULLSCREEN' | 'SCREEN_AND_TAB';
     disablePlayerMovement?: boolean;
     closeOnWalk?: boolean;
     forceClosed?: Function;

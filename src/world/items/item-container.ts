@@ -102,6 +102,10 @@ export class ItemContainer {
         }
     }
 
+    public amountInStack(index: number): number {
+        return this._items[index].amount;
+    }
+
     public removeFirst(item: number | Item, fireEvent: boolean = true): number {
         const slot = this.findIndex(item);
         if(slot === -1) {

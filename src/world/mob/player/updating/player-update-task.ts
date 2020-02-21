@@ -43,12 +43,27 @@ export class PlayerUpdateTask extends Task<void> {
 
             this.appendUpdateMaskData(this.player, updateMaskData, false, true);
 
-            const nearbyPlayers = world.chunkManager.getSurroundingChunks(currentMapChunk).map(chunk => chunk.players).flat();
+            //const nearbyPlayers = world.chunkManager.getSurroundingChunks(currentMapChunk).map(chunk => chunk.players).flat();
+            let nearbyPlayers = world.playerTree.colliding({
+                x: this.player.position.x - 15,
+                y: this.player.position.y - 15,
+                width: 32,
+                height: 32
+            });
 
-            this.player.trackedPlayers = updateTrackedMobs<Player>(playerUpdatePacket, this.player.position,
-                mob => this.appendUpdateMaskData(mob as Player, updateMaskData), this.player.trackedPlayers, nearbyPlayers);
+            if(nearbyPlayers.length > 200) {
+                nearbyPlayers = world.playerTree.colliding({
+                    x: this.player.position.x - 7,
+                    y: this.player.position.y - 7,
+                    width: 16,
+                    height: 16
+                });
+            }
 
-            registerNewMobs<Player>(playerUpdatePacket, this.player, this.player.trackedPlayers, nearbyPlayers, mob => {
+            this.player.trackedPlayers = updateTrackedMobs(playerUpdatePacket, this.player.position,
+                mob => this.appendUpdateMaskData(mob as Player, updateMaskData), this.player.trackedPlayers, nearbyPlayers) as Player[];
+
+            registerNewMobs(playerUpdatePacket, this.player, this.player.trackedPlayers, nearbyPlayers, mob => {
                 const newPlayer = mob as Player;
                 const positionOffsetX = newPlayer.position.x - this.player.position.x;
                 const positionOffsetY = newPlayer.position.y - this.player.position.y;
@@ -57,7 +72,7 @@ export class PlayerUpdateTask extends Task<void> {
                 this.player.trackedPlayers.push(newPlayer);
 
                 // Notify the client of the new player and their worldIndex
-                playerUpdatePacket.writeBits(11, newPlayer.worldIndex);
+                playerUpdatePacket.writeBits(11, newPlayer.worldIndex + 1);
 
                 playerUpdatePacket.writeBits(5, positionOffsetX); // World Position X axis offset relative to the main player
                 playerUpdatePacket.writeBits(1, 1); // Update is required
@@ -77,7 +92,11 @@ export class PlayerUpdateTask extends Task<void> {
                 playerUpdatePacket.closeBitChannel();
             }
 
-            this.player.packetSender.send(playerUpdatePacket);
+            new Promise(resolve => {
+                this.player.packetSender.send(playerUpdatePacket);
+                resolve();
+            });
+
             resolve();
         });
     }
@@ -155,7 +174,7 @@ export class PlayerUpdateTask extends Task<void> {
                     // Client checks if index is less than 32768.
                     // If it is, it looks for an NPC.
                     // If it isn't, it looks for a player (subtracting 32768 to find the index).
-                    mobIndex += 32768;
+                    mobIndex += 32768 + 1;
                 }
 
                 updateMaskData.writeOffsetShortBE(mobIndex);

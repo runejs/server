@@ -4,9 +4,18 @@ import { logger } from '@runejs/logger';
 import { ItemDetails, parseItemData } from './config/item-data';
 import { gameCache } from '@server/game-server';
 import { Position } from './position';
-import yargs from 'yargs';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './mob/npc/npc';
+import { parseShops, Shop } from '@server/world/config/shops';
+import Quadtree from 'quadtree-lib';
+import { timer } from 'rxjs';
+import { Mob } from '@server/world/mob/mob';
+
+export interface QuadtreeKey {
+    x: number;
+    y: number;
+    mob: Mob;
+}
 
 /**
  * Controls the game world and all entities within it.
@@ -16,16 +25,29 @@ export class World {
     public static readonly MAX_PLAYERS = 1000;
     public static readonly MAX_NPCS = 30000;
     public static readonly TICK_LENGTH = 600;
+    private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
 
     public readonly playerList: Player[] = new Array(World.MAX_PLAYERS).fill(null);
     public readonly npcList: Npc[] = new Array(World.MAX_NPCS).fill(null);
     public readonly chunkManager: ChunkManager = new ChunkManager();
     public readonly itemData: Map<number, ItemDetails>;
     public readonly npcSpawns: NpcSpawn[];
+    public readonly shops: Shop[];
+    public readonly playerTree: Quadtree<any>;
+    public readonly npcTree: Quadtree<any>;
 
     public constructor() {
         this.itemData = parseItemData(gameCache.itemDefinitions);
         this.npcSpawns = parseNpcSpawns();
+        this.shops = parseShops();
+        this.playerTree = new Quadtree<any>({
+            width: 10000,
+            height: 10000
+        });
+        this.npcTree = new Quadtree<any>({
+            width: 10000,
+            height: 10000
+        });
 
         this.setupWorldTick();
     }
@@ -44,12 +66,12 @@ export class World {
     }
 
     public setupWorldTick(): void {
-        setTimeout(async () => await this.worldTick(), World.TICK_LENGTH);
+        timer(World.TICK_LENGTH).toPromise().then(() => this.worldTick());
     }
 
     public generateFakePlayers(): void {
-        const x: number = 3222;
-        const y: number = 3222;
+        let x: number = 3222;
+        let y: number = 3222;
         let xOffset: number = 0;
         let yOffset: number = 0;
 
@@ -80,40 +102,35 @@ export class World {
     }
 
     public async worldTick(): Promise<void> {
-        const hrStart = process.hrtime();
+        const hrStart = Date.now();
         const activePlayers: Player[] = this.playerList.filter(player => player !== null);
-        const activeNpcs: Npc[] = this.npcList.filter(npc => npc !== null);
-
+        
         if(activePlayers.length === 0) {
             return Promise.resolve().then(() => {
-                setTimeout(async () => await this.worldTick(), World.TICK_LENGTH);
+                setTimeout(() => this.worldTick(), World.TICK_LENGTH); //TODO: subtract processing time
             });
         }
-
-        const playerUpdateTasks = activePlayers.map(player => player.playerUpdateTask);
-        const npcUpdateTasks = activePlayers.map(player => player.npcUpdateTask);
+        
+        const activeNpcs: Npc[] = this.npcList.filter(npc => npc !== null);
 
         await Promise.all([ ...activePlayers.map(player => player.tick()), ...activeNpcs.map(npc => npc.tick()) ]);
-        await Promise.all([ ...playerUpdateTasks.map(task => task.execute()), ...npcUpdateTasks.map(task => task.execute()) ]);
 
+        const playerUpdateTasks = activePlayers.map(player => player.playerUpdateTask.execute());
+        const npcUpdateTasks = activePlayers.map(player => player.npcUpdateTask.execute());
+
+        await Promise.all([ ...playerUpdateTasks, ...npcUpdateTasks ]);
         await Promise.all([ ...activePlayers.map(player => player.reset()), ...activeNpcs.map(npc => npc.reset()) ]);
 
-        const hrEnd = process.hrtime(hrStart);
-        const tickTime = hrEnd[1] / 1000000;
+        const hrEnd = Date.now();
+        const duration = hrEnd - hrStart;
+        const delay = Math.max(World.TICK_LENGTH - duration, 0);
 
-        return Promise.resolve()
-            .then(() => {
-                let delay = World.TICK_LENGTH - tickTime;
-                if(delay < 0) {
-                    delay = 0;
-                }
+        if(this.debugCycleDuration) {
+            logger.info(`World tick completed in ${duration} ms, next tick in ${delay} ms.`);
+        }
 
-                if(yargs.argv.tickTime) {
-                    logger.info(`World tick completed in ${tickTime} ms, next tick in ${delay} ms.`);
-                }
-
-                setTimeout(async () => await this.worldTick(), delay);
-            });
+        setTimeout(() => this.worldTick(), delay);
+        return Promise.resolve();
     }
 
     public playerExists(player: Player): boolean {

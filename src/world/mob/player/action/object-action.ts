@@ -4,6 +4,7 @@ import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/mob/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/logger/dist/logger';
+import { ActionPlugin } from '@server/plugins/plugin';
 
 /**
  * The definition for an object action function.
@@ -27,7 +28,7 @@ export interface ObjectActionDetails {
  * A list of object ids that apply to the plugin, the options for the object, the action to be performed,
  * and whether or not the player must first walk to the object.
  */
-export interface ObjectActionPlugin {
+export interface ObjectActionPlugin extends ActionPlugin {
     objectIds: number | number[];
     options: string | string[];
     walkTo: boolean;
@@ -43,8 +44,8 @@ let objectInteractions: ObjectActionPlugin[] = [];
  * Sets the list of object interaction plugins.
  * @param plugins The plugin list.
  */
-export const setObjectPlugins = (plugins: ObjectActionPlugin[]): void => {
-    objectInteractions = plugins;
+export const setObjectPlugins = (plugins: ActionPlugin[]): void => {
+    objectInteractions = plugins as ObjectActionPlugin[];
 };
 
 // @TODO priority and cancelling other (lower priority) actions

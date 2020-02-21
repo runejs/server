@@ -1,0 +1,40 @@
+import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { commandAction } from '@server/world/mob/player/action/input-command-action';
+import { world } from '@server/game-server';
+
+const quadtreeAction: commandAction = (details) => {
+    const { player } = details;
+
+    const values = world.playerTree.colliding({
+        x: player.position.x - 2,
+        y: player.position.y - 2,
+        width: 5,
+        height: 5
+    });
+
+    console.log(values);
+};
+
+const trackedPlayersAction: commandAction = (details) => {
+    const { player } = details;
+    player.packetSender.chatboxMessage(`Tracked players: ${player.trackedPlayers.length}`);
+};
+
+const trackedNpcsAction: commandAction = (details) => {
+    const { player } = details;
+    player.packetSender.chatboxMessage(`Tracked npcs: ${player.trackedNpcs.length}`);
+};
+
+export default new RunePlugin([{
+    type: ActionType.COMMAND,
+    commands: 'quadtree',
+    action: quadtreeAction
+}, {
+    type: ActionType.COMMAND,
+    commands: 'trackedplayers',
+    action: trackedPlayersAction
+}, {
+    type: ActionType.COMMAND,
+    commands: 'trackednpcs',
+    action: trackedNpcsAction
+}]);
