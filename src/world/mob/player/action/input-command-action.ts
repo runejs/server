@@ -4,6 +4,8 @@ import { gameCache, injectPlugins, world } from '@server/game-server';
 import { npcAction } from '@server/world/mob/player/action/npc-action';
 import { Skill } from '@server/world/mob/skills';
 import { Position } from '@server/world/position';
+import { ActionPlugin } from '@server/plugins/plugin';
+import { pluginFilter } from '@server/plugins/plugin-loader';
 
 type commandHandler = (player: Player, args?: string[]) => void;
 
@@ -211,14 +213,100 @@ const commands: { [key: string]: commandHandler } = {
 
 };
 
-export const inputCommandAction = (player: Player, command: string, args: string[]): void => {
-    if(commands.hasOwnProperty(command)) {
-        try {
-            commands[command](player, args);
-        } catch(invalidSyntaxError) {
-            player.packetSender.chatboxMessage(`Invalid command syntax, try ::${invalidSyntaxError}`);
+/**
+ * The definition for a command action function.
+ */
+export type commandAction = (details: CommandActionDetails) => void;
+
+/**
+ * Details about a command action.
+ */
+export interface CommandActionDetails {
+    player: Player;
+    command: string;
+    args: { [key: string]: number | string };
+}
+
+/**
+ * Defines a command interaction plugin.
+ */
+export interface CommandActionPlugin extends ActionPlugin {
+    commands: string | string[];
+    args?: {
+        name: string;
+        type: 'number' | 'string';
+        defaultValue?: number | string;
+    }[];
+    action: commandAction;
+}
+
+/**
+ * A directory of all command interaction plugins.
+ */
+let commandInteractions: CommandActionPlugin[] = [
+];
+
+/**
+ * Sets the list of command interaction plugins.
+ * @param plugins The plugin list.
+ */
+export const setCommandPlugins = (plugins: ActionPlugin[]): void => {
+    commandInteractions = plugins as CommandActionPlugin[];
+};
+
+export const inputCommandAction = (player: Player, command: string, inputArgs: string[]): void => {
+    const plugins = commandInteractions.filter(plugin => {
+        if(Array.isArray(plugin.commands)) {
+            return plugin.commands.indexOf(command) !== -1;
+        } else {
+            return plugin.commands === command;
         }
-    } else {
-        logger.info(`Unhandled command ${command} with arguments ${JSON.stringify(args)}.`);
+    });
+
+    if(plugins.length === 0) {
+        player.packetSender.chatboxMessage(`Unhandled command: ${command}`);
+        return;
     }
+
+    plugins.forEach(plugin => {
+        if(plugin.args) {
+            const pluginArgs = plugin.args;
+            let syntaxError = `Syntax error. Try ::${command}`;
+
+            pluginArgs.forEach(pluginArg => {
+                syntaxError += ` ${pluginArg.name}:${pluginArg.type}${pluginArg.defaultValue === undefined ? '?' : ''}`
+            });
+
+            const requiredArgLength = plugin.args.map(arg => arg.defaultValue !== undefined).length;
+            if(requiredArgLength !== inputArgs.length) {
+                player.packetSender.chatboxMessage(syntaxError);
+                return;
+            }
+
+            const actionArgs = {};
+
+            for(let i = 0; i < inputArgs.length; i++) {
+                let argValue: string | number = inputArgs[i];
+                const pluginArg = plugin.args[i];
+
+                if(pluginArg.type === 'number') {
+                    argValue = parseInt(argValue);
+                    if(isNaN(argValue) || argValue < 1) {
+                        player.packetSender.chatboxMessage(syntaxError);
+                        return;
+                    }
+                } else {
+                    if(!argValue || argValue.trim() === '') {
+                        player.packetSender.chatboxMessage(syntaxError);
+                        return;
+                    }
+                }
+
+                actionArgs[pluginArg.name] = argValue;
+                plugin.action({ player, command, args: actionArgs });
+            }
+        } else {
+            plugin.action({ player, command, args: {} });
+        }
+    });
 };
