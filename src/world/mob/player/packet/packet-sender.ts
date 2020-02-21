@@ -403,6 +403,14 @@ export class PacketSender {
         this.send(packet);
     }
 
+    public showScreenAndTabWidgets(screenWidgetId: number, tabWidgetId: number): void {
+        const packet = new Packet(128);
+        packet.writeNegativeOffsetShortBE(screenWidgetId);
+        packet.writeNegativeOffsetShortLE(tabWidgetId);
+
+        this.send(packet);
+    }
+
     public updateWelcomeScreenInfo(childId: number, lastLogin: Date, lastAddress: string): void {
         const currentTime = rsTime(new Date());
 

@@ -31,8 +31,8 @@ export const widgetSettings = {
 
 export interface ActiveWidget {
     widgetId: number;
-    childWidgetId?: number;
-    type: 'SCREEN' | 'CHAT' | 'FULLSCREEN';
+    secondaryWidgetId?: number;
+    type: 'SCREEN' | 'CHAT' | 'FULLSCREEN' | 'SCREEN_AND_TAB';
     disablePlayerMovement?: boolean;
     closeOnWalk?: boolean;
     forceClosed?: Function;
