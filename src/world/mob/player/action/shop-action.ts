@@ -36,6 +36,18 @@ export function openShop(player: Player, identification: string, closeOnWalk: bo
             type: 'SCREEN',
             closeOnWalk: closeOnWalk
         };
+
+        player.packetSender.showWidgetAndSidebar(3824, 3822);
+        for(let i = 0; i < player.inventory.items.length; i++) {
+            if(player.inventory.items[i] !== null) {
+                player.packetSender.sendUpdateSingleWidgetItem(3823, i, {
+                    itemId: player.inventory.items[i].itemId, amount: player.inventory.items[i].amount
+                });
+            }
+        }
+
+
+
     } catch (error) {
         logger.error(`Error opening shop ${identification}: ` + error);
     }
