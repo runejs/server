@@ -255,6 +255,13 @@ export class PacketSender {
         this.send(packet);
     }
 
+    public showWidgetAndSidebar(widgetId: number, sidebarId: number) : void {
+        const packet = new Packet(128);
+        packet.writeNegativeOffsetShortBE(widgetId);
+        packet.writeNegativeOffsetShortLE(sidebarId);
+        this.send(packet);
+    }
+
     public setWidgetModel2(widgetId: number, modelId: number): void {
         const packet = new Packet(162);
         packet.writeNegativeOffsetShortBE(modelId);
