@@ -12,6 +12,10 @@ export const buyItemAction = (player: Player, itemId: number, amount: number, sl
         return;
     }
 
+    if(interfaceId !== widgetIds.shop) {
+        return;
+    }
+
     const amountInStack = player.inventory.amountInStack(coinsInInventoryIndex);
     const amountLeftAfterPurchase = amountInStack - (purchasedItem.value * amount);
 
