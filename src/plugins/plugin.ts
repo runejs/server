@@ -2,6 +2,7 @@ import { NpcActionPlugin } from '@server/world/mob/player/action/npc-action';
 import { ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
 import { ButtonActionPlugin } from '@server/world/mob/player/action/button-action';
 import { ItemOnItemActionPlugin } from '@server/world/mob/player/action/item-on-item-action';
+import { CommandActionPlugin } from '@server/world/mob/player/action/input-command-action';
 
 export enum ActionType {
     BUTTON = 'button',
@@ -17,10 +18,10 @@ export interface ActionPlugin {
 
 export class RunePlugin {
 
-    public actions: (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin)[];
+    public actions: (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | CommandActionPlugin)[];
 
-    public constructor(actions: NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin |
-        (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin)[]) {
+    public constructor(actions: NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | CommandActionPlugin |
+        (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | CommandActionPlugin)[]) {
         if(!Array.isArray(actions)) {
             this.actions = [actions];
         } else {

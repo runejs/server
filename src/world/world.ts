@@ -25,6 +25,7 @@ export class World {
     public static readonly MAX_PLAYERS = 1000;
     public static readonly MAX_NPCS = 30000;
     public static readonly TICK_LENGTH = 600;
+    private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
 
     public readonly playerList: Player[] = new Array(World.MAX_PLAYERS).fill(null);
     public readonly npcList: Npc[] = new Array(World.MAX_NPCS).fill(null);
@@ -65,7 +66,7 @@ export class World {
     }
 
     public setupWorldTick(): void {
-        timer(World.TICK_LENGTH).toPromise().then(this.worldTick);
+        timer(World.TICK_LENGTH).toPromise().then(() => this.worldTick());
     }
 
     public generateFakePlayers(): void {
@@ -99,8 +100,6 @@ export class World {
             player.initiateRandomMovement();
         }
     }
-    
-    private const debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
 
     public async worldTick(): Promise<void> {
         const hrStart = Date.now();
@@ -108,7 +107,7 @@ export class World {
         
         if(activePlayers.length === 0) {
             return Promise.resolve().then(() => {
-                setTimeout(this.worldTick, World.TICK_LENGTH); //TODO: subtract processing time
+                setTimeout(() => this.worldTick(), World.TICK_LENGTH); //TODO: subtract processing time
             });
         }
         
@@ -126,11 +125,11 @@ export class World {
         const duration = hrEnd - hrStart;
         const delay = Math.max(World.TICK_LENGTH - duration, 0);
 
-        if (debugCycleDuration) {
+        if(this.debugCycleDuration) {
             logger.info(`World tick completed in ${duration} ms, next tick in ${delay} ms.`);
         }
 
-        setTimeout(this.worldTick, delay);
+        setTimeout(() => this.worldTick(), delay);
         return Promise.resolve();
     }
 
