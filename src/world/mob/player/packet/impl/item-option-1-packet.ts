@@ -5,6 +5,7 @@ import { widgetIds } from '../../widget';
 import { logger } from '@runejs/logger/dist/logger';
 import { unequipItemAction } from '../../action/unequip-item-action';
 import { ItemContainer } from '@server/world/items/item-container';
+import { itemValueAction } from '@server/world/mob/player/action/item-value-action';
 
 export const itemOption1Packet: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const itemId = packet.readNegativeOffsetShortBE();
@@ -15,6 +16,12 @@ export const itemOption1Packet: incomingPacket = (player: Player, packetId: numb
 
     if(widgetId === widgetIds.equipment) {
         container = player.equipment;
+    }
+
+    // Handles the value option in shops.
+    if(widgetId === widgetIds.shop) {
+        itemValueAction(player, itemId, slot);
+        return;
     }
 
     if(!container) {
