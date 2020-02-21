@@ -20,7 +20,7 @@ export class RunePlugin {
 
     public actions: (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | CommandActionPlugin)[];
 
-    public constructor(actions: NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin |
+    public constructor(actions: NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | CommandActionPlugin |
         (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | CommandActionPlugin)[]) {
         if(!Array.isArray(actions)) {
             this.actions = [actions];

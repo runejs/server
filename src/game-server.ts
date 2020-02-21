@@ -13,6 +13,7 @@ import { setItemOnItemPlugins } from '@server/world/mob/player/action/item-on-it
 import { setButtonPlugins } from '@server/world/mob/player/action/button-action';
 import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
 import { ActionPlugin, ActionType } from '@server/plugins/plugin';
+import { setCommandPlugins } from '@server/world/mob/player/action/input-command-action';
 
 export let serverConfig: ServerConfig;
 export let gameCache: GameCache;
@@ -34,6 +35,7 @@ export async function injectPlugins(): Promise<void> {
     setNpcPlugins(actionTypes[ActionType.NPC_ACTION]);
     setObjectPlugins(actionTypes[ActionType.OBJECT_ACTION]);
     setItemOnItemPlugins(actionTypes[ActionType.ITEM_ON_ITEM]);
+    setCommandPlugins(actionTypes[ActionType.COMMAND]);
 }
 
 export function runGameServer(): void {
