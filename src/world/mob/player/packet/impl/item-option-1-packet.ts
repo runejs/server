@@ -19,7 +19,7 @@ export const itemOption1Packet: incomingPacket = (player: Player, packetId: numb
     }
 
     // Handles the value option in shops.
-    if(widgetId === widgetIds.shop) {
+    if(widgetId === widgetIds.shop.shopInventory) {
         itemValueAction(player, itemId, slot);
         return;
     }
