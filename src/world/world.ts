@@ -25,6 +25,7 @@ export class World {
     public static readonly MAX_PLAYERS = 1000;
     public static readonly MAX_NPCS = 30000;
     public static readonly TICK_LENGTH = 600;
+    private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
 
     public readonly playerList: Player[] = new Array(World.MAX_PLAYERS).fill(null);
     public readonly npcList: Npc[] = new Array(World.MAX_NPCS).fill(null);
@@ -103,13 +104,14 @@ export class World {
     public async worldTick(): Promise<void> {
         const hrStart = Date.now();
         const activePlayers: Player[] = this.playerList.filter(player => player !== null);
-        const activeNpcs: Npc[] = this.npcList.filter(npc => npc !== null);
-
+        
         if(activePlayers.length === 0) {
             return Promise.resolve().then(() => {
-                setTimeout(() => this.worldTick(), World.TICK_LENGTH);
+                setTimeout(() => this.worldTick(), World.TICK_LENGTH); //TODO: subtract processing time
             });
         }
+        
+        const activeNpcs: Npc[] = this.npcList.filter(npc => npc !== null);
 
         await Promise.all([ ...activePlayers.map(player => player.tick()), ...activeNpcs.map(npc => npc.tick()) ]);
 
@@ -120,18 +122,14 @@ export class World {
         await Promise.all([ ...activePlayers.map(player => player.reset()), ...activeNpcs.map(npc => npc.reset()) ]);
 
         const hrEnd = Date.now();
-        const tickTime = hrEnd - hrStart;
+        const duration = hrEnd - hrStart;
+        const delay = Math.max(World.TICK_LENGTH - duration, 0);
 
-        let tickDelay = World.TICK_LENGTH - tickTime;
-        if(tickDelay < 0) {
-            tickDelay = 0;
+        if(this.debugCycleDuration) {
+            logger.info(`World tick completed in ${duration} ms, next tick in ${delay} ms.`);
         }
 
-        if(process.argv.indexOf('-tickTime') !== -1) {
-            logger.info(`World tick completed in ${tickTime} ms, next tick in ${tickDelay} ms.`);
-        }
-
-        setTimeout(() => this.worldTick(), tickDelay);
+        setTimeout(() => this.worldTick(), delay);
         return Promise.resolve();
     }
 

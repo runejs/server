@@ -17,40 +17,42 @@ export function openShop(player: Player, identification: string, closeOnWalk: bo
         if(openedShop === undefined) {
             throw `Unable to find the shop with identification of: ${identification}`;
         }
-        player.packetSender.updateWidgetString(widgetIds.shop.shop_name, openedShop.name);
+        player.packetSender.updateWidgetString(widgetIds.shop.shopTitle, openedShop.name);
         for(let i = 0; i < 30; i++) {
             if(openedShop.items.length <= i) {
-                player.packetSender.sendUpdateSingleWidgetItem(widgetIds.shop.shop_container, i, null);
+                player.packetSender.sendUpdateSingleWidgetItem(widgetIds.shop.shopInventory, i, null);
             } else {
-                player.packetSender.sendUpdateSingleWidgetItem(widgetIds.shop.shop_container, i, {
+                player.packetSender.sendUpdateSingleWidgetItem(widgetIds.shop.shopInventory, i, {
                     itemId: openedShop.items[i].id, amount: openedShop.items[i].amountInStock
                 });
             }
         }
         for(let i = 0; i < openedShop.items.length; i++) {
-            player.packetSender.sendUpdateSingleWidgetItem(widgetIds.shop.shop_container, i, {
+            player.packetSender.sendUpdateSingleWidgetItem(widgetIds.shop.shopInventory, i, {
                 itemId: openedShop.items[i].id, amount: openedShop.items[i].amountInStock
             });
         }
+
+        player.packetSender.sendUpdateAllWidgetItems(widgetIds.shop.playerInventory, player.inventory);
+
         player.activeWidget = {
-            widgetId: 3824,
-            type: 'SCREEN',
+            widgetId: widgetIds.shop.shopScreen,
+            secondaryWidgetId: widgetIds.shop.playerTab,
+            type: 'SCREEN_AND_TAB',
             closeOnWalk: closeOnWalk
         };
-
+      
         player.packetSender.sendUpdateAllWidgetItems(widgetIds.inventory, player.inventory);
-        player.packetSender.showWidgetAndSidebar(widgetIds.shop.shop_window, widgetIds.shop.inventory_sidebar);
+        player.packetSender.showWidgetAndSidebar(widgetIds.shop.shopScreen, widgetIds.shop.playerTab);
         for(let i = 0; i < player.inventory.items.length; i++) {
             if(player.inventory.items[i] !== null) {
-                player.packetSender.sendUpdateSingleWidgetItem(widgetIds.shop.inventory_container, i, {
+                player.packetSender.sendUpdateSingleWidgetItem(widgetIds.shop.playerInventory, i, {
                     itemId: player.inventory.items[i].itemId, amount: player.inventory.items[i].amount
                 });
             } else {
-                player.packetSender.sendUpdateSingleWidgetItem(widgetIds.shop.inventory_container, i, null);
+                player.packetSender.sendUpdateSingleWidgetItem(widgetIds.shop.playerInventory, i, null);
             }
         }
-
-
 
     } catch (error) {
         logger.error(`Error opening shop ${identification}: ` + error);

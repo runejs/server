@@ -255,7 +255,7 @@ export class PacketSender {
         this.send(packet);
     }
 
-    public showWidgetAndSidebar(widgetId: number, sidebarId: number) : void {
+    public showScreenAndTabWidgets(widgetId: number, sidebarId: number) : void {
         const packet = new Packet(128);
         packet.writeNegativeOffsetShortBE(widgetId);
         packet.writeNegativeOffsetShortLE(sidebarId);
