@@ -255,7 +255,7 @@ export class PacketSender {
         this.send(packet);
     }
 
-    public showWidgetAndSidebar(widgetId: number, sidebarId: number) : void {
+    public showScreenAndTabWidgets(widgetId: number, sidebarId: number) : void {
         const packet = new Packet(128);
         packet.writeNegativeOffsetShortBE(widgetId);
         packet.writeNegativeOffsetShortLE(sidebarId);
@@ -406,14 +406,6 @@ export class PacketSender {
         const packet = new Packet(253);
         packet.writeUnsignedShortLE(childWidgetId);
         packet.writeOffsetShortBE(widgetId);
-
-        this.send(packet);
-    }
-
-    public showScreenAndTabWidgets(screenWidgetId: number, tabWidgetId: number): void {
-        const packet = new Packet(128);
-        packet.writeNegativeOffsetShortBE(screenWidgetId);
-        packet.writeNegativeOffsetShortLE(tabWidgetId);
 
         this.send(packet);
     }

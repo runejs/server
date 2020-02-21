@@ -7,7 +7,7 @@ const action: commandAction = (details) => {
     const widgetId: number = args.widgetId as number;
     const secondaryWidgetId: number = args.secondaryWidgetId as number;
 
-    if(!secondaryWidgetId) {
+    if(secondaryWidgetId === 1) {
         player.activeWidget = {
             type: 'SCREEN',
             widgetId,
@@ -34,7 +34,7 @@ export default new RunePlugin({
         {
             name: 'secondaryWidgetId',
             type: 'number',
-            defaultValue: -1
+            defaultValue: 1
         }
     ],
     action

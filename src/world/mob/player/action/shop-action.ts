@@ -2,6 +2,7 @@ import { world } from '@server/game-server';
 import { Player } from '@server/world/mob/player/player';
 import { logger } from '@runejs/logger/dist/logger';
 import { Shop } from '@server/world/config/shops';
+import { widgetIds } from '@server/world/mob/player/widget';
 
 function findShop(identification: string): Shop {
     for(let i = 0; i <= world.shops.length; i++) {
@@ -16,38 +17,30 @@ export function openShop(player: Player, identification: string, closeOnWalk: bo
         if(openedShop === undefined) {
             throw `Unable to find the shop with identification of: ${identification}`;
         }
-        player.packetSender.updateWidgetString(3901, openedShop.name);
+        player.packetSender.updateWidgetString(widgetIds.shop.shopTitle, openedShop.name);
         for(let i = 0; i < 30; i++) {
             if(openedShop.items.length <= i) {
-                player.packetSender.sendUpdateSingleWidgetItem(3900, i, null);
+                player.packetSender.sendUpdateSingleWidgetItem(widgetIds.shop.shopInventory, i, null);
             } else {
-                player.packetSender.sendUpdateSingleWidgetItem(3900, i, {
+                player.packetSender.sendUpdateSingleWidgetItem(widgetIds.shop.shopInventory, i, {
                     itemId: openedShop.items[i].id, amount: openedShop.items[i].amountInStock
                 });
             }
         }
         for(let i = 0; i < openedShop.items.length; i++) {
-            player.packetSender.sendUpdateSingleWidgetItem(3900, i, {
+            player.packetSender.sendUpdateSingleWidgetItem(widgetIds.shop.shopInventory, i, {
                 itemId: openedShop.items[i].id, amount: openedShop.items[i].amountInStock
             });
         }
+
+        player.packetSender.sendUpdateAllWidgetItems(widgetIds.shop.playerInventory, player.inventory);
+
         player.activeWidget = {
-            widgetId: 3824,
-            type: 'SCREEN',
+            widgetId: widgetIds.shop.shopScreen,
+            secondaryWidgetId: widgetIds.shop.playerTab,
+            type: 'SCREEN_AND_TAB',
             closeOnWalk: closeOnWalk
         };
-
-        player.packetSender.showWidgetAndSidebar(3824, 3822);
-        for(let i = 0; i < player.inventory.items.length; i++) {
-            if(player.inventory.items[i] !== null) {
-                player.packetSender.sendUpdateSingleWidgetItem(3823, i, {
-                    itemId: player.inventory.items[i].itemId, amount: player.inventory.items[i].amount
-                });
-            }
-        }
-
-
-
     } catch (error) {
         logger.error(`Error opening shop ${identification}: ` + error);
     }
