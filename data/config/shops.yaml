@@ -68,3 +68,38 @@
       text: Mithril battleaxe
       price: 1690
       amountInStock: 1
+- identification: ALKHARID_GEM_TRADER
+  name: Gem Trader
+  items:
+   - id: 1623
+     text: Uncut sapphire
+     price: 25
+     amountInStock: 1
+   - id: 1621
+     text: Uncut emerald
+     price: 50
+     amountInStock: 1
+   - id: 1619
+     text: Uncut ruby
+     price: 100
+     amountInStock: 0
+   - id: 1617
+     text: Uncut diamond
+     price: 200
+     amountInStock: 0
+   - id: 1607
+     text: Sapphire
+     price: 250
+     amountInStock: 1
+   - id: 1605
+     text: Emerald
+     price: 500
+     amountInStock: 1
+   - id: 1603
+     text: Ruby
+     price: 1000
+     amountInStock: 0
+   - id: 1601
+     text: Diamond
+     price: 2000
+     amountInStock: 0
