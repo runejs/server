@@ -211,3 +211,66 @@
         - itemId: 6516
           text: "Iorwerth southern shortcut"
           level: 84
+- id: 8671
+  name: Woodcutting
+  subGuides:
+    - name: Trees
+      lines:
+        - itemId: 1511
+          text: Normal trees
+          level: 1
+        - itemId: 2862
+          text: Achey trees
+          level: 1
+        - itemId: 1521
+          text: Oak trees
+          level: 15
+        - itemId: 1519
+          text: Willow trees
+          level: 30
+        - itemId: 6333
+          text: Teak trees
+          level: 35
+        - itemId: 1517
+          text: Maple trees
+          level: 45
+        - itemId: 6332
+          text: Mahogany trees
+          level: 50
+        - itemId: 1515
+          text: Yew trees
+          level: 60
+        - itemId: 1513
+          text: Magic trees
+          level: 75
+    - name: Axes
+      lines:
+        - itemId: 1351
+          text: Bronze axe
+          level: 1
+        - itemId: 1349
+          text: Iron axe
+          level: 1
+        - itemId: 1353
+          text: Steel axe
+          level: 6
+        - itemId: 1361
+          text: Black axe
+          level: 11
+        - itemId: 1355
+          text: Mithril axe
+          level: 21
+        - itemId: 1357
+          text: Adamant axe
+          level: 31
+        - itemId: 1359
+          text: Rune axe
+          level: 41
+        - itemId: 6739
+          text: Dragon axe
+          level: 61
+    - name: Other
+      lines:
+        - itemId: 0
+          text: Missing content
+          level: 1
