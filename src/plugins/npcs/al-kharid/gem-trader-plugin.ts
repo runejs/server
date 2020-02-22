@@ -24,7 +24,11 @@ const talkToAction : npcAction = (details) => {
                         });
                 case 2:
                     return d.player(DialogueEmote.CALM_TALK_1, ['No, thank you.'])
-                        .then(d => d.npc(npc, DialogueEmote.ANNOYED, ['Eh, suit yourself.']));
+                        .then(d => d.npc(npc, DialogueEmote.ANNOYED, ['Eh, suit yourself.']))
+                        .then(d => {
+                            d.close();
+                            return d;
+                        });
 
             }
         });
