@@ -1,7 +1,13 @@
 export const widgetIds: any = {
     characterDesign: 3559,
-    inventory: 3214,
-    equipment: 1688,
+    inventory: {
+        widgetId: 149,
+        containerId: 0
+    },
+    equipment: {
+        widgetId: 387,
+        containerId: 25
+    },
     shop: {
         shopInventory: 3900,
         shopScreen: 3824,

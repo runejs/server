@@ -111,7 +111,7 @@ export class ClientLoginParser extends DataParser {
         outputBuffer.writeByte(2); // login response code
         outputBuffer.writeByte(player.rights.valueOf());
         outputBuffer.writeByte(0); // ???
-        outputBuffer.writeShortBE(player.worldIndex);
+        outputBuffer.writeShortBE(player.worldIndex + 1);
         outputBuffer.writeByte(0); // ???
         this.clientConnection.socket.write(outputBuffer.getData());
 

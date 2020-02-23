@@ -151,7 +151,7 @@ export class Player extends Mob {
 
         this.packetSender.updateCurrentMapChunk();
         this.chunkChanged(playerChunk);
-        this.packetSender.chatboxMessage('Welcome to RuneScape.');
+        this.packetSender.chatboxMessage('Welcome to RuneJS.');
 
         DEFAULT_TAB_WIDGET_IDS.forEach((widgetId: number, tabIndex: number) => {
             if(widgetId !== -1) {
@@ -161,8 +161,8 @@ export class Player extends Mob {
 
         this.skills.values.forEach((skill, index) => this.packetSender.sendSkill(index, skill.level, skill.exp));
 
-        //this.packetSender.sendUpdateAllWidgetItems(widgetIds.inventory, this.inventory);
-        //this.packetSender.sendUpdateAllWidgetItems(widgetIds.equipment, this.equipment);
+        this.packetSender.sendUpdateAllWidgetItems(widgetIds.inventory, this.inventory);
+        this.packetSender.sendUpdateAllWidgetItems(widgetIds.equipment, this.equipment);
 
         /*if(this.firstTimePlayer) {
             this.activeWidget = {

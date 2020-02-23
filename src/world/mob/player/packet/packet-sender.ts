@@ -341,26 +341,26 @@ export class PacketSender {
         this.send(packet);
     }
 
-    public sendUpdateAllWidgetItems(widgetId: number, container: ItemContainer): void {
-        const packet = new Packet(206, PacketType.DYNAMIC_LARGE);
-        packet.writeShortBE(widgetId);
+    public sendUpdateAllWidgetItems(widget: { widgetId: number, containerId: number }, container: ItemContainer): void {
+        const packet = new Packet(12, PacketType.DYNAMIC_LARGE);
+        packet.writeIntBE(widget.widgetId << 16 | widget.containerId);
         packet.writeShortBE(container.size);
 
         const items = container.items;
         items.forEach(item => {
             if(!item) {
                 // Empty slot
-                packet.writeOffsetShortLE(0);
-                packet.writeUnsignedByteInverted(-1);
+                packet.writeOffsetByte(0);
+                packet.writeOffsetShortBE(0);
             } else {
-                packet.writeOffsetShortLE(item.itemId + 1); // +1 because 0 means an empty slot
-
                 if(item.amount >= 255) {
-                    packet.writeUnsignedByteInverted(254);
-                    packet.writeIntLE(item.amount);
+                    packet.writeOffsetByte(255);
+                    packet.writeIntBE(item.amount);
                 } else {
-                    packet.writeUnsignedByteInverted(item.amount - 1);
+                    packet.writeOffsetByte(item.amount);
                 }
+
+                packet.writeOffsetShortBE(item.itemId + 1); // +1 because 0 means an empty slot
             }
         });
 

@@ -21,7 +21,7 @@ import { itemOnItemPacket } from '@server/world/mob/player/packet/impl/item-on-i
 import { buyItemPacket } from '@server/world/mob/player/packet/impl/buy-item-packet';
 
 const packets: { [key: number]: incomingPacket } = {
-    19:  interfaceClickPacket,
+    /*19:  interfaceClickPacket,
     140: cameraTurnPacket,
 
     79:  buttonClickPacket,
@@ -56,7 +56,7 @@ const packets: { [key: number]: incomingPacket } = {
 
     177: buyItemPacket,
     91:  buyItemPacket,
-    231: buyItemPacket
+    231: buyItemPacket*/
 };
 
 export function handlePacket(player: Player, packetId: number, packetSize: number, buffer: Buffer): void {

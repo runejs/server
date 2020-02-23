@@ -23,27 +23,25 @@ export class PlayerUpdateTask extends Task<void> {
     public async execute(): Promise<void> {
         return new Promise<void>(resolve => {
             const updateFlags: UpdateFlags = this.player.updateFlags;
-            const playerUpdatePacket: Packet = new Packet(90, PacketType.DYNAMIC_LARGE, 16);
-            const currentMapChunk = world.chunkManager.getChunkForWorldPosition(this.player.position);
+            const playerUpdatePacket: Packet = new Packet(92, PacketType.DYNAMIC_LARGE);
             playerUpdatePacket.openBitChannel();
 
             const updateMaskData = RsBuffer.create();
 
-            if(updateFlags.mapRegionUpdateRequired) {
+            if(updateFlags.mapRegionUpdateRequired || this.player.metadata['teleporting']) {
                 playerUpdatePacket.writeBits(1, 1); // Update Required
                 playerUpdatePacket.writeBits(2, 3); // Map Region changed
                 playerUpdatePacket.writeBits(1, this.player.metadata['teleporting'] ? 1 : 0); // Whether or not the client should discard the current walking queue (1 if teleporting, 0 if not)
                 playerUpdatePacket.writeBits(2, this.player.position.level); // Player Height
-                playerUpdatePacket.writeBits(7, this.player.position.chunkLocalY); // Player Local Chunk Y
-                playerUpdatePacket.writeBits(7, this.player.position.chunkLocalX); // Player Local Chunk X
                 playerUpdatePacket.writeBits(1, updateFlags.updateBlockRequired ? 1 : 0); // Whether or not an update flag block follows
+                playerUpdatePacket.writeBits(7, this.player.position.chunkLocalX); // Player Local Chunk X
+                playerUpdatePacket.writeBits(7, this.player.position.chunkLocalY); // Player Local Chunk Y
             } else {
                 appendMovement(this.player, playerUpdatePacket);
             }
 
             this.appendUpdateMaskData(this.player, updateMaskData, false, true);
 
-            //const nearbyPlayers = world.chunkManager.getSurroundingChunks(currentMapChunk).map(chunk => chunk.players).flat();
             let nearbyPlayers = world.playerTree.colliding({
                 x: this.player.position.x - 15,
                 y: this.player.position.y - 15,
@@ -74,10 +72,11 @@ export class PlayerUpdateTask extends Task<void> {
                 // Notify the client of the new player and their worldIndex
                 playerUpdatePacket.writeBits(11, newPlayer.worldIndex + 1);
 
+                playerUpdatePacket.writeBits(5, positionOffsetY); // World Position Y axis offset relative to the main player
                 playerUpdatePacket.writeBits(5, positionOffsetX); // World Position X axis offset relative to the main player
+                playerUpdatePacket.writeBits(3, 0); // @TODO Default face direction
                 playerUpdatePacket.writeBits(1, 1); // Update is required
                 playerUpdatePacket.writeBits(1, 1); // Discard client walking queues
-                playerUpdatePacket.writeBits(5, positionOffsetY); // World Position Y axis offset relative to the main player
 
                 this.appendUpdateMaskData(newPlayer, updateMaskData, true);
             });
@@ -111,33 +110,33 @@ export class PlayerUpdateTask extends Task<void> {
         let mask: number = 0;
 
         if(updateFlags.appearanceUpdateRequired || forceUpdate) {
-            mask |= 0x4;
+            mask |= 0x20;
         }
-        if(updateFlags.faceMob !== undefined) {
+        if(updateFlags.chatMessages.length !== 0 && !currentPlayer) {
+            mask |= 0x8;
+        }
+        /*if(updateFlags.faceMob !== undefined) {
             mask |= 0x1;
         }
         if(updateFlags.facePosition || forceUpdate) {
             mask |= 0x2;
-        }
-        if(updateFlags.chatMessages.length !== 0 && !currentPlayer) {
-            mask |= 0x40;
         }
         if(updateFlags.graphics) {
             mask |= 0x200;
         }
         if(updateFlags.animation !== undefined) {
             mask |= 0x8;
-        }
+        }*/
 
-        if(mask >= 0xff) {
-            mask |= 0x20;
+        if(mask >= 0x100) {
+            mask |= 0x2;
             updateMaskData.writeByte(mask & 0xff);
             updateMaskData.writeByte(mask >> 8);
         } else {
             updateMaskData.writeByte(mask);
         }
 
-        if(updateFlags.animation !== undefined) {
+        /*if(updateFlags.animation !== undefined) {
             const animation = updateFlags.animation;
 
             if(animation === null || animation.id === -1) {
@@ -149,19 +148,19 @@ export class PlayerUpdateTask extends Task<void> {
                 updateMaskData.writeShortBE(updateFlags.animation.id);
                 updateMaskData.writeNegativeOffsetByte(delay);
             }
-        }
+        }*/
 
         if(updateFlags.chatMessages.length !== 0 && !currentPlayer) {
             const message = updateFlags.chatMessages[0];
             updateMaskData.writeUnsignedShortBE(((message.color & 0xFF) << 8) + (message.effects & 0xFF));
-            updateMaskData.writeByteInverted(player.rights.valueOf());
-            updateMaskData.writeOffsetByte(message.data.length);
+            updateMaskData.writeOffsetByte(player.rights.valueOf());
+            updateMaskData.writeByteInverted(message.data.length);
             for(let i = 0; i < message.data.length; i++) {
                 updateMaskData.writeOffsetByte(message.data.readInt8(i));
             }
         }
 
-        if(updateFlags.faceMob !== undefined) {
+        /*if(updateFlags.faceMob !== undefined) {
             const mob = updateFlags.faceMob;
 
             if(mob === null) {
@@ -197,7 +196,7 @@ export class PlayerUpdateTask extends Task<void> {
             const delay = updateFlags.graphics.delay || 0;
             updateMaskData.writeOffsetShortBE(updateFlags.graphics.id);
             updateMaskData.writeIntME1(updateFlags.graphics.height << 16 | delay & 0xffff);
-        }
+        }*/
 
         if(updateFlags.appearanceUpdateRequired || forceUpdate) {
             const equipment = player.equipment;
@@ -294,9 +293,10 @@ export class PlayerUpdateTask extends Task<void> {
             appearanceData.writeShortBE(0); // Skill Level (Total Level)
 
             const appearanceDataSize = appearanceData.getWriterIndex();
+            console.log(appearanceDataSize);
 
             updateMaskData.writeByte(appearanceDataSize);
-            updateMaskData.writeBytes(appearanceData.getData().reverse());
+            updateMaskData.writeBytes(appearanceData.getData());
         }
     }
 
