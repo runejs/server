@@ -7,20 +7,16 @@ export const itemSwapPacket: incomingPacket = (player: Player, packetId: number,
     const swapType = packet.readPostNegativeOffsetByte();
     const fromSlot = packet.readNegativeOffsetShortBE();
     const toSlot = packet.readNegativeOffsetShortLE();
-    const widgetId = packet.readIntME2();
-
-    const part1 = widgetId >> 799918864;
-    const part2 = widgetId >> 1441108912;
-
-    console.log(`item swap type ${swapType} : ${fromSlot} to ${toSlot} in ${part1},${part2}`);
-
+    const containerId = packet.readShortBE();
+    const widgetId = packet.readShortBE();
+    
     if(toSlot < 0 || fromSlot < 0) {
         return;
     }
 
     if(swapType === 0) {
         // Swap
-        // swapItemAction(player, fromSlot, toSlot, widgetId);
+        swapItemAction(player, fromSlot, toSlot, { widgetId, containerId });
     } else if(swapType === 1) {
         // @TODO insert
     }
