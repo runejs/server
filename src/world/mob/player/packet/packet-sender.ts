@@ -496,17 +496,20 @@ export class PacketSender {
     }
 
     public updateCurrentMapChunk(): void {
-        const packet = new Packet(222);
-        packet.writeShortBE(this.player.position.chunkY + 6); // Map Chunk Y
-        packet.writeOffsetShortLE(this.player.position.chunkX + 6); // Map Chunk X
+        const packet = new Packet(166, PacketType.DYNAMIC_LARGE);
+        packet.writeShortBE(this.player.position.chunkLocalY);
+        packet.writeShortLE(this.player.position.chunkX + 6);
+        packet.writeOffsetShortBE(this.player.position.chunkLocalX);
+        packet.writeOffsetShortLE(this.player.position.chunkY + 6);
+        packet.writeByteInverted(this.player.position.level);
 
-        this.send(packet);
-    }
-
-    public sendMembershipStatusAndWorldIndex(): void {
-        const packet = new Packet(126);
-        packet.writeUnsignedByte(1); // @TODO member status
-        packet.writeShortLE(this.player.worldIndex + 1);
+        for(let xCalc = Math.floor(this.player.position.chunkX / 8); xCalc <= Math.floor((this.player.position.chunkX + 12) / 8); xCalc++) {
+            for(let yCalc = Math.floor(this.player.position.chunkY / 8); yCalc <= Math.floor((this.player.position.chunkY + 12) / 8); yCalc++) {
+                for(let seeds = 0; seeds < 4; seeds++){
+                    packet.writeIntME1(0);
+                }
+            }
+        }
 
         this.send(packet);
     }

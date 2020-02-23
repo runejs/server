@@ -4,6 +4,26 @@ import { Player } from '@server/world/mob/player/player';
 import { Isaac } from '@server/net/isaac';
 import { serverConfig, world } from '@server/game-server';
 import { DataParser } from './data-parser';
+import { logger } from '@runejs/logger/dist/logger';
+
+const VALID_CHARS = ['_', 'a', 'b', 'c', 'd',
+    'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
+    'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3',
+    '4', '5', '6', '7', '8', '9', '!', '@', '#', '$', '%', '^', '&',
+    '*', '(', ')', '-', '+', '=', ':', ';', '.', '>', '<', ',', '"',
+    '[', ']', '|', '?', '/', '`'];
+
+function longToName(nameLong: BigInt) {
+    let i = 0;
+    let ac: string = '';
+    while(nameLong !== BigInt(0)) {
+        let l1 = nameLong;
+        nameLong = BigInt(nameLong) / BigInt(37);
+        ac += VALID_CHARS[parseInt(l1.toString()) - parseInt(nameLong.toString()) * 37];
+    }
+
+    return ac;
+}
 
 /**
  * Parses the login packet from the game client.
@@ -30,33 +50,23 @@ export class ClientLoginParser extends DataParser {
             throw ('Invalid login packet length ' + loginEncryptedSize);
         }
 
-        const packetId = buffer.readUnsignedByte();
+        const gameVersion = buffer.readIntBE();
 
-        if(packetId !== 255) {
-            throw ('Invalid login packet id ' + packetId);
-        }
-
-        const gameVersion = buffer.readUnsignedShortBE();
-
-        if(gameVersion !== 377) {
+        if(gameVersion !== 435) {
             throw ('Invalid game version ' + gameVersion);
         }
 
         const isLowDetail: boolean = buffer.readByte() === 1;
 
-        for(let i = 0; i < 9; i++) {
+        for(let i = 0; i < 13; i++) {
             buffer.readIntBE(); // Cache indices
         }
 
         loginEncryptedSize--;
 
-        const reportedSize = buffer.readUnsignedByte();
+        const rsaBytes = buffer.readUnsignedByte();
 
-        if(loginEncryptedSize !== reportedSize) {
-            throw (`Packet size mismatch - ${loginEncryptedSize} vs ${reportedSize}`);
-        }
-
-        const encryptedBytes: Buffer = Buffer.alloc(loginEncryptedSize);
+        const encryptedBytes: Buffer = Buffer.alloc(rsaBytes);
         buffer.getBuffer().copy(encryptedBytes, 0, buffer.getReaderIndex());
         const decrypted: RsBuffer = new RsBuffer(BigInteger.fromBuffer(encryptedBytes).modPow(this.rsaExponent, this.rsaModulus).toBuffer());
 
@@ -75,8 +85,10 @@ export class ClientLoginParser extends DataParser {
         }
 
         const clientUuid = decrypted.readIntBE();
-        const username = decrypted.readString();
-        const password = decrypted.readString();
+        const username = longToName(decrypted.readLongBE());
+        const password = decrypted.readNewString();
+
+        logger.info(`Login request: ${username}/${password}`);
 
         const sessionKey: number[] = [
             Number(clientKey1), Number(clientKey2), Number(this.clientConnection.serverKey >> BigInt(32)), Number(this.clientConnection.serverKey)
@@ -92,13 +104,17 @@ export class ClientLoginParser extends DataParser {
 
         const player = new Player(this.clientConnection.socket, inCipher, outCipher, clientUuid, username, password, isLowDetail);
 
+        world.registerPlayer(player);
+
         const outputBuffer = RsBuffer.create();
         outputBuffer.writeByte(2); // login response code
         outputBuffer.writeByte(player.rights.valueOf());
         outputBuffer.writeByte(0); // ???
+        outputBuffer.writeShortBE(player.worldIndex);
+        outputBuffer.writeByte(0); // ???
         this.clientConnection.socket.write(outputBuffer.getData());
 
-        world.registerPlayer(player);
+        player.init();
 
         this.clientConnection.clientKey1 = BigInt(clientKey1);
         this.clientConnection.clientKey2 = BigInt(clientKey2);

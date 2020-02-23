@@ -202,6 +202,17 @@ export class RsBuffer {
         return Buffer.from(bytes).toString();
     }
 
+    public readNewString(): string {
+        const bytes: number[] = [];
+        let b: number;
+
+        while((b = this.readByte()) !== 0) {
+            bytes.push(b);
+        }
+
+        return Buffer.from(bytes).toString();
+    }
+
     public readBytes(length: number): Buffer {
         const result = this.buffer.slice(this.readerIndex, this.readerIndex + length + 1);
         this.readerIndex += length;
@@ -303,6 +314,13 @@ export class RsBuffer {
         this.writeUnsignedByte(value & 0xff);
         this.writeUnsignedByte((value >> 24) & 0xff);
         this.writeUnsignedByte((value >> 16) & 0xff);
+    }
+
+    public writeIntME2(value: number): void {
+        this.writeUnsignedByte((value >> 16) & 0xff);
+        this.writeUnsignedByte((value >> 24) & 0xff);
+        this.writeUnsignedByte(value & 0xff);
+        this.writeUnsignedByte((value >> 8) & 0xff);
     }
 
     public writeLongBE(value: bigint): void {
