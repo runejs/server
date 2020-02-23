@@ -527,3 +527,142 @@
        - itemId: 1985
          text: Cheese
          level: 48
+
+- id: 8668
+  name: Firemaking
+  subGuides:
+    - name: Burning
+      lines:
+        - itemId: 1511
+          text: Normal logs
+          level: 1
+        - itemId: 2862
+          text: 'Members: Achey logs'
+          level: 1
+        - itemId: 3438
+          text: 'Members: Pyre logs'
+          level: 5
+        - itemId: 1521
+          text: Oak logs
+          level: 15
+        - itemId: 3440
+          text: 'Members: Oak pyre logs'
+          level: 20
+        - itemId: 1519
+          text: Willow logs
+          level: 30
+        - itemId: 6333
+          text: 'Members: Teak logs'
+          level: 35
+        - itemId: 3442
+          text: 'Members: Willow pyre logs'
+          level: 35
+        - itemId: 6211
+          text: 'Members: Teak pyre logs'
+          level: 40
+        - itemId: 1517
+          text: Maple logs
+          level: 45
+        - itemId: 6332
+          text: 'Members: Mahogany logs'
+          level: 50
+        - itemId: 3444
+          text: 'Members: Maple pyre logs'
+          level: 50
+        - itemId: 6213
+          text: 'Members: Mahogany pyre logs'
+          level: 55
+        - itemId: 1515
+          text: Yew logs
+          level: 60
+        - itemId: 3446
+          text: 'Members: Yew pyre logs'
+          level: 65
+        - itemId: 1513
+          text: 'Members: Magic logs'
+          level: 75
+        - itemId: 3448
+          text: 'Members: Magic pyre logs'
+          level: 80
+    - name: Barbarian
+      lines:
+        - itemId: 3438
+          text: Normal Pyre Ships (with 11 Crafting)
+          level: 11
+        - itemId: 1511
+          text: Normal Logs
+          level: 21
+        - itemId: 2862
+          text: Achey Logs
+          level: 21
+        - itemId: 3440
+          text: Oak Pyre Ships (with 25 Crafting)
+          level: 25
+        - itemId: 1521
+          text: Oak Logs
+          level: 35
+        - itemId: 3442
+          text: Willow Pyre Ships (with 40 Crafting)
+          level: 40
+        - itemId: 6211
+          text: Teak Pyre Ships (with 45 Crafting)
+          level: 45
+        - itemId: 1519
+          text: Willow Logs
+          level: 50
+        - itemId: 6333
+          text: Teak Logs
+          level: 55
+        - itemId: 3444
+          text: Maple Pyre Ships (with 55 Crafting)
+          level: 55
+        - itemId: 6213
+          text: Mahogany Pyre Ships (with 60 Crafting)
+          level: 60
+        - itemId: 1517
+          text: Maple Logs
+          level: 65
+        - itemId: 3446
+          text: Yew Pyre Ships (with 70 Crafting)
+          level: 70
+        - itemId: 6332
+          text: Mahogany Logs
+          level: 70
+        - itemId: 1515
+          text: Yew Logs
+          level: 80
+        - itemId: 3448
+          text: Magic Pyre Ships
+          level: 85
+        - itemId: 1513
+          text: Magic Logs
+          level: 95
+    - name: Equipment
+      lines:
+        - itemId: 36
+          text: Candle
+          level: 1
+        - itemId: 4527
+          text: Candle lanterns
+          level: 4
+        - itemId: 4522
+          text: Oil lamps
+          level: 12
+        - itemId: 7225
+          text: 'Members: Iron spits'
+          level: 20
+        - itemId: 4535
+          text: Oil lanterns
+          level: 26
+        - itemId: 7051
+          text: Harpie bug lanterns (not a light source)
+          level: 33
+        - itemId: 4544
+          text: Bullseye lanterns
+          level: 49
+        - itemId: 4700
+          text: Sapphire lanterns
+          level: 49
+        - itemId: 4700
+          text: Sapphire lanterns
+          level: 49
