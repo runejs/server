@@ -8,9 +8,9 @@ const ignoreButtons: number[] = [
 ];
 
 export const buttonClickPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
-    const buttonId = packet.readShortBE();
+    const buttonId = packet.readIntBE();
 
-    if(ignoreButtons.indexOf(buttonId) === -1) {
+    if (ignoreButtons.indexOf(buttonId) === -1) {
         buttonAction(player, buttonId);
     }
 };
