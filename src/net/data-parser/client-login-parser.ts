@@ -22,7 +22,7 @@ function longToName(nameLong: BigInt) {
         ac += VALID_CHARS[parseInt(l1.toString()) - parseInt(nameLong.toString()) * 37];
     }
 
-    return ac;
+    return ac.split('').reverse().join('');
 }
 
 /**
@@ -85,7 +85,8 @@ export class ClientLoginParser extends DataParser {
         }
 
         const clientUuid = decrypted.readIntBE();
-        const username = longToName(decrypted.readLongBE());
+        const usernameLong = decrypted.readLongBE();
+        const username = longToName(usernameLong);
         const password = decrypted.readNewString();
 
         logger.info(`Login request: ${username}/${password}`);
