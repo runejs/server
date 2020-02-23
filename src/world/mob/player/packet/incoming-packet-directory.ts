@@ -55,7 +55,7 @@ const packets: { [key: number]: incomingPacket } = {
     56:  commandPacket,
 
     177: buyItemPacket,
-    91: buyItemPacket,
+    91:  buyItemPacket,
     231: buyItemPacket
 };
 
