@@ -24,7 +24,7 @@ import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { QuadtreeKey } from '@server/world/world';
 
 const DEFAULT_TAB_WIDGET_IDS = [
-    2423, 3917, 638, 3213, 1644, 5608, 1151, -1, 5065, 5715, 2449, 904, 147, 962
+    92, 320, 274, 149, 387, 271, 192, -1, 131, 148, 182, 261, 464, 239
 ];
 
 export enum Rights {
@@ -143,8 +143,7 @@ export class Player extends Mob {
 
     public init(): void {
         this.loggedIn = true;
-        this.packetSender.updateCurrentMapChunk();
-        /*this.updateFlags.mapRegionUpdateRequired = true;
+        this.updateFlags.mapRegionUpdateRequired = true;
         this.updateFlags.appearanceUpdateRequired = true;
 
         const playerChunk = world.chunkManager.getChunkForWorldPosition(this.position);
@@ -165,7 +164,7 @@ export class Player extends Mob {
         this.packetSender.sendUpdateAllWidgetItems(widgetIds.inventory, this.inventory);
         this.packetSender.sendUpdateAllWidgetItems(widgetIds.equipment, this.equipment);
 
-        if(this.firstTimePlayer) {
+        /*if(this.firstTimePlayer) {
             this.activeWidget = {
                 widgetId: widgetIds.characterDesign,
                 type: 'SCREEN',
@@ -222,7 +221,7 @@ export class Player extends Mob {
      * @param chunk The player's new active map chunk.
      */
     public chunkChanged(chunk: Chunk): void {
-        const nearbyChunks = world.chunkManager.getSurroundingChunks(chunk);
+        /*const nearbyChunks = world.chunkManager.getSurroundingChunks(chunk);
         if(this._nearbyChunks.length === 0) {
             this.sendChunkUpdates(nearbyChunks);
         } else {
@@ -230,7 +229,7 @@ export class Player extends Mob {
             this.sendChunkUpdates(newChunks);
         }
 
-        this._nearbyChunks = nearbyChunks;
+        this._nearbyChunks = nearbyChunks;*/
     }
 
     /**

@@ -328,6 +328,7 @@ export class RsBuffer {
         this.writerIndex += 8;
     }
 
+    // Old format string (300-era)
     public writeString(value: string): void {
         const encoder = new TextEncoder();
         const bytes = encoder.encode(value);
@@ -337,6 +338,18 @@ export class RsBuffer {
         }
 
         this.writeByte(10); // end of line
+    }
+
+    // New format string (400-era)
+    public writeNewString(value: string): void {
+        const encoder = new TextEncoder();
+        const bytes = encoder.encode(value);
+
+        for(const byte of bytes) {
+            this.writeByte(byte);
+        }
+
+        this.writeByte(0); // end of line
     }
 
     public writeSmart(value: number): void {

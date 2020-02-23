@@ -395,9 +395,9 @@ export class PacketSender {
     }
 
     public sendTabWidget(tabIndex: number, widgetId: number): void {
-        const packet = new Packet(10);
-        packet.writeNegativeOffsetByte(tabIndex);
-        packet.writeOffsetShortBE(widgetId);
+        const packet = new Packet(140);
+        packet.writeShortBE(widgetId);
+        packet.writeByte(tabIndex);
 
         this.send(packet);
     }
@@ -480,17 +480,17 @@ export class PacketSender {
     }
 
     public chatboxMessage(message: string): void {
-        const packet = new Packet(63, PacketType.DYNAMIC_SMALL);
-        packet.writeString(message);
+        const packet = new Packet(82, PacketType.DYNAMIC_SMALL);
+        packet.writeNewString(message);
 
         this.send(packet);
     }
 
     public sendSkill(skillId: number, level: number, exp: number): void {
-        const packet = new Packet(49);
-        packet.writeByteInverted(skillId);
-        packet.writeUnsignedByte(level);
-        packet.writeIntBE(exp);
+        const packet = new Packet(34);
+        packet.writeOffsetByte(level);
+        packet.writeByte(skillId);
+        packet.writeIntME2(exp);
 
         this.send(packet);
     }
