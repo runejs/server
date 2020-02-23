@@ -161,8 +161,8 @@ export class Player extends Mob {
 
         this.skills.values.forEach((skill, index) => this.packetSender.sendSkill(index, skill.level, skill.exp));
 
-        this.packetSender.sendUpdateAllWidgetItems(widgetIds.inventory, this.inventory);
-        this.packetSender.sendUpdateAllWidgetItems(widgetIds.equipment, this.equipment);
+        //this.packetSender.sendUpdateAllWidgetItems(widgetIds.inventory, this.inventory);
+        //this.packetSender.sendUpdateAllWidgetItems(widgetIds.equipment, this.equipment);
 
         /*if(this.firstTimePlayer) {
             this.activeWidget = {
