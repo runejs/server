@@ -2,7 +2,7 @@ import { buttonAction } from '@server/world/mob/player/action/button-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 const buttonIds: number[] = [
-    152, 153, // walk/run
+    17104896, // walk/run
     930, 931, 932, 933, 934, // music volume
     941, 942, 943, 944, 945, // sound effect volume
     957, 958, // split private chat

@@ -29,6 +29,8 @@ const packets: { [key: number]: incomingPacket } = {
     73:  walkPacket,
     236: walkPacket,
     89:  walkPacket,
+    64:  buttonClickPacket,
+
 
     /*19:  interfaceClickPacket,
     140: cameraTurnPacket,

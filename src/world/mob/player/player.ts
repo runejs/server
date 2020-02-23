@@ -370,8 +370,7 @@ export class Player extends Mob {
 
     public settingChanged(buttonId: number): void {
         const settingsMappings = {
-            152: {setting: 'runEnabled', value: false},
-            153: {setting: 'runEnabled', value: true},
+            17104896: {setting: 'runEnabled', value: !this.settings['runEnabled']},
             930: {setting: 'musicVolume', value: 4},
             931: {setting: 'musicVolume', value: 3},
             932: {setting: 'musicVolume', value: 2},
