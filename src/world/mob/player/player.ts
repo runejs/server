@@ -143,13 +143,13 @@ export class Player extends Mob {
 
     public init(): void {
         this.loggedIn = true;
-        this.updateFlags.mapRegionUpdateRequired = true;
+        this.packetSender.updateCurrentMapChunk();
+        /*this.updateFlags.mapRegionUpdateRequired = true;
         this.updateFlags.appearanceUpdateRequired = true;
 
         const playerChunk = world.chunkManager.getChunkForWorldPosition(this.position);
         playerChunk.addPlayer(this);
 
-        this.packetSender.sendMembershipStatusAndWorldIndex();
         this.packetSender.updateCurrentMapChunk();
         this.chunkChanged(playerChunk);
         this.packetSender.chatboxMessage('Welcome to RuneScape.');
@@ -195,7 +195,7 @@ export class Player extends Mob {
         });
 
         this._loginDate = new Date();
-        this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
+        this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';*/
 
         logger.info(`${this.username}:${this.worldIndex} has logged in.`);
     }

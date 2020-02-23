@@ -2,13 +2,17 @@ import { Socket } from 'net';
 import { Player } from '@server/world/mob/player/player';
 import { world } from '@server/game-server';
 import { RsBuffer } from './rs-buffer';
-import { ClientHandshakeParser } from './data-parser/client-handshake-parser';
+import { LoginHandshakeParser } from './data-parser/login-handshake-parser';
 import { ClientLoginParser } from './data-parser/client-login-parser';
 import { ClientPacketDataParser } from './data-parser/client-packet-data-parser';
 import { DataParser } from './data-parser/data-parser';
+import { VersionHandshakeParser } from '@server/net/data-parser/version-handshake-parser';
+import { VersionListParser } from '@server/net/data-parser/version-list-parser';
 
 enum ConnectionStage {
-    HANDSHAKE = 'HANDSHAKE',
+    VERSION_HANDSHAKE = 'VERSION_HANDSHAKE',
+    VERSION_LIST = 'VERSION_LIST',
+    LOGIN_HANDSHAKE = 'LOGIN_HANDSHAKE',
     LOGIN = 'LOGIN',
     LOGGED_IN = 'LOGGED_IN'
 }
@@ -19,7 +23,7 @@ enum ConnectionStage {
 export class ClientConnection {
 
     public readonly socket: Socket;
-    private _connectionStage: ConnectionStage = ConnectionStage.HANDSHAKE;
+    private _connectionStage: ConnectionStage = null;
     private dataParser: DataParser;
     private _serverKey: bigint;
     private _clientKey1: bigint;
@@ -28,14 +32,32 @@ export class ClientConnection {
 
     public constructor(socket: Socket) {
         this.socket = socket;
-        this.dataParser = new ClientHandshakeParser(this);
+        this.dataParser = null;
     }
 
     public parseIncomingData(buffer?: RsBuffer): void {
         try {
-            this.dataParser.parse(buffer);
+            if(!this.connectionStage) {
+                const packetId = buffer.readUnsignedByte();
+                console.log('packetId = ' + packetId);
 
-            if(this.connectionStage === ConnectionStage.HANDSHAKE) {
+                if(packetId === 15) {
+                    this.connectionStage = ConnectionStage.VERSION_HANDSHAKE;
+                    this.dataParser = new VersionHandshakeParser(this);
+                } else if(packetId === 14) {
+                    this.connectionStage = ConnectionStage.LOGIN_HANDSHAKE;
+                    this.dataParser = new LoginHandshakeParser(this);
+                }
+
+                this.dataParser.parse(buffer, packetId);
+            } else {
+                this.dataParser.parse(buffer);
+            }
+
+            if(this.connectionStage === ConnectionStage.VERSION_HANDSHAKE) {
+                this.connectionStage = ConnectionStage.VERSION_LIST;
+                this.dataParser = new VersionListParser(this);
+            } else if(this.connectionStage === ConnectionStage.LOGIN_HANDSHAKE) {
                 this.connectionStage = ConnectionStage.LOGIN;
                 this.dataParser = new ClientLoginParser(this);
             } else if(this.connectionStage === ConnectionStage.LOGIN) {
