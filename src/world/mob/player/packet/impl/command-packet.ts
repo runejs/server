@@ -4,7 +4,7 @@ import { RsBuffer } from '@server/net/rs-buffer';
 import { inputCommandAction } from '../../action/input-command-action';
 
 export const commandPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
-    const input = packet.readString();
+    const input = packet.readNewString();
 
     if(!input || input.trim().length === 0) {
         return;

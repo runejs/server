@@ -53,12 +53,14 @@ export class ClientPacketDataParser extends DataParser {
         }
 
         // Packet has no set size
+        let clearBuffer = false;
         if(this.activePacketSize === -3) {
             if(this.activeBuffer.getReadable() < 1) {
                 return;
             }
 
             this.activePacketSize = this.activeBuffer.getReadable();
+            clearBuffer = true;
         }
 
         if(this.activeBuffer.getReadable() < this.activePacketSize) {
@@ -71,12 +73,16 @@ export class ClientPacketDataParser extends DataParser {
             // read packet data
             const packetData = this.activeBuffer.readBytes(this.activePacketSize);
             handlePacket(this.clientConnection.player, this.activePacketId, this.activePacketSize, packetData);
+
+            if(clearBuffer) {
+                this.activeBuffer = null;
+            }
         }
 
         this.activePacketId = null;
         this.activePacketSize = null;
 
-        if(this.activeBuffer.getReadable() > 0) {
+        if(this.activeBuffer !== null && this.activeBuffer.getReadable() > 0) {
             this.parse();
         }
     }

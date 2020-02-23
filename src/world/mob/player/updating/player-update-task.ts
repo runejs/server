@@ -112,7 +112,7 @@ export class PlayerUpdateTask extends Task<void> {
         if(updateFlags.appearanceUpdateRequired || forceUpdate) {
             mask |= 0x20;
         }
-        if(updateFlags.chatMessages.length !== 0 && !currentPlayer) {
+        if(updateFlags.chatMessages.length !== 0) {
             mask |= 0x8;
         }
         /*if(updateFlags.faceMob !== undefined) {
@@ -150,7 +150,7 @@ export class PlayerUpdateTask extends Task<void> {
             }
         }*/
 
-        if(updateFlags.chatMessages.length !== 0 && !currentPlayer) {
+        if(updateFlags.chatMessages.length !== 0) {
             const message = updateFlags.chatMessages[0];
             updateMaskData.writeUnsignedShortBE(((message.color & 0xFF) << 8) + (message.effects & 0xFF));
             updateMaskData.writeOffsetByte(player.rights.valueOf());

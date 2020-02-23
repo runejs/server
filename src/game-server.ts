@@ -49,7 +49,7 @@ export function runGameServer(): void {
     gameCache = new GameCache('cache/377');
     world = new World();
     world.init();
-    // injectPlugins();
+    injectPlugins();
 
     if(process.argv.indexOf('-fakePlayers') !== -1) {
         world.generateFakePlayers();

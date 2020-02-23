@@ -21,6 +21,13 @@ import { itemOnItemPacket } from '@server/world/mob/player/packet/impl/item-on-i
 import { buyItemPacket } from '@server/world/mob/player/packet/impl/buy-item-packet';
 
 const packets: { [key: number]: incomingPacket } = {
+    75:  chatPacket,
+    248: commandPacket,
+
+    73:  walkPacket,
+    236: walkPacket,
+    89:  walkPacket,
+
     /*19:  interfaceClickPacket,
     140: cameraTurnPacket,
 

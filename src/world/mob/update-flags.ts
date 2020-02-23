@@ -68,7 +68,7 @@ export class UpdateFlags {
     }
 
     public get updateBlockRequired(): boolean {
-        return this._appearanceUpdateRequired/* || this._chatMessages !== null || this._facePosition !== null ||
+        return this._appearanceUpdateRequired || this._chatMessages !== null/* || this._facePosition !== null ||
             this._graphics !== null || this._animation !== undefined || this._faceMob !== undefined*/;
     }
 
