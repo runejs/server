@@ -100,8 +100,8 @@ export class PacketSender {
     }
 
     public playSong(songId: number): void {
-        const packet = new Packet(220);
-        packet.writeOffsetShortLE(songId);
+        const packet = new Packet(217);
+        packet.writeShortLE(songId);
 
         this.send(packet);
     }
