@@ -174,6 +174,15 @@ export class RsBuffer {
         return value;
     }
 
+    public readIntME2(): number {
+        let value = ((this.readByte() & 0xff) << 8) | (this.readByte() & 0xff) | ((this.readByte() & 0xff) << 24) | ((this.readByte() & 0xff) << 16);
+        if(value > 32767) {
+            value -= 0x10000;
+        }
+
+        return value;
+    }
+
     public readIntBE(): number {
         const value = this.buffer.readInt32BE(this.readerIndex);
         this.readerIndex += 4;
