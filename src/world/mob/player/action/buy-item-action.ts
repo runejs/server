@@ -12,7 +12,7 @@ export const buyItemAction = (player: Player, itemId: number, amount: number, sl
         return;
     }
 
-    if(interfaceId !== widgetIds.shop) {
+    if(interfaceId !== widgetIds.shop.shopInventory) {
         return;
     }
 
@@ -37,6 +37,11 @@ export const buyItemAction = (player: Player, itemId: number, amount: number, sl
 
     if(amount === 1) {
         player.inventory.add(itemId);
+    }
+
+    if(interfaceId === widgetIds.shop.shopInventory) {
+        console.log(interfaceId, widgetIds.shop.shopInventory);
+        player.packetSender.sendUpdateAllWidgetItems(widgetIds.shop.playerInventory, player.inventory);
     }
 
     // Update the inventory items.

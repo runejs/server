@@ -211,3 +211,319 @@
         - itemId: 6516
           text: "Iorwerth southern shortcut"
           level: 84
+- id: 8671
+  name: Woodcutting
+  subGuides:
+    - name: Trees
+      lines:
+        - itemId: 1511
+          text: Normal trees
+          level: 1
+        - itemId: 2862
+          text: Achey trees
+          level: 1
+        - itemId: 1521
+          text: Oak trees
+          level: 15
+        - itemId: 1519
+          text: Willow trees
+          level: 30
+        - itemId: 6333
+          text: Teak trees
+          level: 35
+        - itemId: 1517
+          text: Maple trees
+          level: 45
+        - itemId: 6332
+          text: Mahogany trees
+          level: 50
+        - itemId: 1515
+          text: Yew trees
+          level: 60
+        - itemId: 1513
+          text: Magic trees
+          level: 75
+    - name: Axes
+      lines:
+        - itemId: 1351
+          text: Bronze axe
+          level: 1
+        - itemId: 1349
+          text: Iron axe
+          level: 1
+        - itemId: 1353
+          text: Steel axe
+          level: 6
+        - itemId: 1361
+          text: Black axe
+          level: 11
+        - itemId: 1355
+          text: Mithril axe
+          level: 21
+        - itemId: 1357
+          text: Adamant axe
+          level: 31
+        - itemId: 1359
+          text: Rune axe
+          level: 41
+        - itemId: 6739
+          text: Dragon axe
+          level: 61
+    - name: Other
+      lines:
+        - itemId: 0
+          text: Missing content
+          level: 1
+- id: 8665
+  name: Cooking
+  subGuides:
+    - name: Meats
+      lines:
+        - itemId: 2142
+          text: Meat
+          level: 1
+        - itemId: 315
+          text: Shrimp
+          level: 1
+        - itemId: 2140
+          text: Chicken
+          level: 1
+        - itemId: 319
+          text: Anchovies
+          level: 1
+        - itemId: 325
+          text: Sardine
+          level: 1
+        - itemId: 3142
+          text: 'Members: Karambwan'
+          level: 1
+        - itemId: 1883
+          text: Ugthanki kebab
+          level: 1
+        - itemId: 345
+          text: Herring
+          level: 5
+        - itemId: 353
+          text: Mackerel
+          level: 10
+        - itemId: 3369
+          text: 'Members: Thin snail'
+          level: 12
+        - itemId: 335
+          text: Trout
+          level: 15
+        - itemId: 3371
+          text: 'Members: Lean snail'
+          level: 17
+        - itemId: 339
+          text: 'Members: Cod'
+          level: 18
+        - itemId: 351
+          text: Pike
+          level: 20
+        - itemId: 329
+          text: Salmon
+          level: 25
+        - itemId: 361
+          text: Tuna
+          level: 30
+        - itemId: 7228
+          text: 'Members: Roasted chompy'
+          level: 30
+        - itemId: 7530
+          text: 'Members: Fishcakes'
+          level: 31
+        - itemId: 5003
+          text: 'Members: Cave eel'
+          level: 38
+        - itemId: 379
+          text: Lobster
+          level: 40
+        - itemId: 397
+          text: 'Members: Jubbly'
+          level: 41
+        - itemId: 365
+          text: 'Members: Bass'
+          level: 43
+        - itemId: 373
+          text: Swordfish
+          level: 45
+        - itemId: 2149
+          text: 'Members: Lava eel'
+          level: 53
+        - itemId: 385
+          text: 'Members: Shark'
+          level: 80
+        - itemId: 397
+          text: 'Members: Sea turtle'
+          level: 82
+        - itemId: 391
+          text: 'Members: Manta ray'
+          level: 90
+    - name: Bread
+      lines:
+        - itemId: 2309
+          text: Bread
+          level: 1
+        - itemId: 1865
+          text: 'Members: Pitta bread'
+          level: 58
+    - name: Pies
+      lines:
+        - itemId: 2325
+          text: Redberry pie
+          level: 10
+        - itemId: 2327
+          text: Meat pie
+          level: 20
+        - itemId: 7170
+          text: 'Members: Mud pie'
+          level: 29
+        - itemId: 2323
+          text: Apple pie
+          level: 30
+        - itemId: 7178
+          text: 'Members: Garden pie'
+          level: 34
+        - itemId: 7188
+          text: 'Members: Fish pie'
+          level: 47
+        - itemId: 7198
+          text: 'Members: Admiral pie'
+          level: 70
+        - itemId: 7208
+          text: 'Members: Wild pie'
+          level: 85
+        - itemId: 7218
+          text: 'Members: Summer pie'
+          level: 95
+    - name: Stews
+      lines:
+        - itemId: 2003
+          text: Stew
+          level: 25
+        - itemId: 4016
+          text: Banana stew
+          level: 25
+        - itemId: 7479
+          text: Spicy stew
+          level: 25
+    - name: Pizzas
+      lines:
+        - itemId: 2289
+          text: Plain pizza
+          level: 35
+        - itemId: 2293
+          text: Meat pizza
+          level: 45
+        - itemId: 2297
+          text: Anchovy pizza
+          level: 55
+        - itemId: 2301
+          text: 'Members: Pineapple pizza'
+          level: 65
+    - name: Cakes
+      lines:
+        - itemId: 1891
+          text: Cake
+          level: 40
+        - itemId: 1897
+          text: Chocolate cake
+          level: 50
+    - name: Wine
+      lines:
+        - itemId: 1993
+          text: Wine
+          level: 35
+        - itemId: 245
+          text: 'Members: Wine of Zamorak'
+          level: 65
+    - name: Hot drinks
+      lines:
+        - itemId: 4239
+          text: Nettle tea
+          level: 20
+    - name: Brewing
+      lines:
+        - itemId: 5763
+          text: Cider (4 Apple mush)
+          level: 14
+        - itemId: 1913
+          text: Dwarven Stout (4 Hammerstone hops)
+          level: 19
+        - itemId: 1905
+          text: Asgarnian Ale (4 Asgarnian hops)
+          level: 24
+        - itemId: 7746
+          text: Greenman's Ale (4 Harralander leaves)
+          level: 29
+        - itemId: 1907
+          text: Wizard's Mind Bomb (4 Yinillian hops)
+          level: 34
+        - itemId: 1911
+          text: Dragon Bitter (4 Krandorian hops)
+          level: 39
+        - itemId: 2955
+          text: Moonlight Mead (4 Bittercap mushrooms)
+          level: 44
+        - itemId: 5751
+          text: Axeman's Folly (1 Oak root)
+          level: 49
+        - itemId: 5755
+          text: Chef's Delight (4 Portions of chocolate dust)
+          level: 54
+        - itemId: 5759
+          text: Slayer's Respite (4 Wildblood hops)
+          level: 54
+    - name: Vegetable
+      lines:
+       - itemId: 6701
+         text: Baked potato
+         level: 7
+       - itemId: 7072
+         text: Spicy sauce (topping ingredient)
+         level: 9
+       - itemId: 7078
+         text: Scrambled egg (topping ingredient)
+         level: 13
+       - itemId: 7064
+         text: Scrambled egg and tomato (topping)
+         level: 23
+       - itemId: 7088
+         text: Sweetcorn
+         level: 28
+       - itemId: 6703
+         text: Baked potato with butter
+         level: 39
+       - itemId: 7084
+         text: Fried onion (topping ingredient)
+         level: 42
+       - itemId: 7082
+         text: Fried mushroom (topping ingredient)
+         level: 46
+       - itemId: 6705
+         text: Baked potato with butter and cheese
+         level: 47
+       - itemId: 7056
+         text: Baked potato with egg and tomato
+         level: 51
+       - itemId: 7066
+         text: Fried mushroom and onion (topping)
+         level: 57
+       - itemId: 7058
+         text: Baked potato with mushroom and onion
+         level: 64
+       - itemId: 7068
+         text: Tuna and sweetcorn (topping)
+         level: 67
+       - itemId: 7060
+         text: Baked potato with tuna and sweetcorn
+         level: 68
+    - name: Diary
+      lines:
+       - itemId: 6697
+         text: Butter
+         level: 38
+       - itemId: 1985
+         text: Cheese
+         level: 48
