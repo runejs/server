@@ -1,261 +1,28 @@
-export const incomingPacketSizes: number[] = new Array(256);
-
-for(let i = 0; i < incomingPacketSizes.length; i++) {
-    incomingPacketSizes[i] = 0;
-}
-incomingPacketSizes[0] = 0;
-incomingPacketSizes[1] = 15;
-incomingPacketSizes[2] = 6;
-incomingPacketSizes[3] = 8;
-incomingPacketSizes[4] = 0;
-incomingPacketSizes[5] = 0;
-incomingPacketSizes[6] = 1;
-incomingPacketSizes[7] = 0;
-incomingPacketSizes[8] = 0;
-incomingPacketSizes[9] = 5;
-incomingPacketSizes[10] = 0;
-incomingPacketSizes[11] = 0;
-incomingPacketSizes[12] = -2;
-incomingPacketSizes[13] = 0;
-incomingPacketSizes[14] = 0;
-incomingPacketSizes[15] = 0;
-incomingPacketSizes[16] = 0;
-incomingPacketSizes[17] = 0;
-incomingPacketSizes[18] = 1;
-incomingPacketSizes[19] = 7;
-incomingPacketSizes[20] = 0;
-incomingPacketSizes[21] = 0;
-incomingPacketSizes[22] = 0;
-incomingPacketSizes[23] = -2;
-incomingPacketSizes[24] = 6;
-incomingPacketSizes[25] = 0;
-incomingPacketSizes[26] = 0;
-incomingPacketSizes[27] = 0;
-incomingPacketSizes[28] = 0;
-incomingPacketSizes[29] = 0;
-incomingPacketSizes[30] = 0;
-incomingPacketSizes[31] = 0;
-incomingPacketSizes[32] = 0;
-incomingPacketSizes[33] = 0;
-incomingPacketSizes[34] = 6;
-incomingPacketSizes[35] = 0;
-incomingPacketSizes[36] = 0;
-incomingPacketSizes[37] = 0;
-incomingPacketSizes[38] = 0;
-incomingPacketSizes[39] = 0;
-incomingPacketSizes[40] = 5;
-incomingPacketSizes[41] = 0;
-incomingPacketSizes[42] = 0;
-incomingPacketSizes[43] = 0;
-incomingPacketSizes[44] = 0;
-incomingPacketSizes[45] = 0;
-incomingPacketSizes[46] = 0;
-incomingPacketSizes[47] = 0;
-incomingPacketSizes[48] = 1;
-incomingPacketSizes[49] = 4;
-incomingPacketSizes[50] = 0;
-incomingPacketSizes[51] = -1;
-incomingPacketSizes[52] = 0;
-incomingPacketSizes[53] = 0;
-incomingPacketSizes[54] = 0;
-incomingPacketSizes[55] = 0;
-incomingPacketSizes[56] = 2;
-incomingPacketSizes[57] = 0;
-incomingPacketSizes[58] = 4;
-incomingPacketSizes[59] = 0;
-incomingPacketSizes[60] = 0;
-incomingPacketSizes[61] = 0;
-incomingPacketSizes[62] = 0;
-incomingPacketSizes[63] = -2;
-incomingPacketSizes[64] = 2;
-incomingPacketSizes[65] = 0;
-incomingPacketSizes[66] = 0;
-incomingPacketSizes[67] = 0;
-incomingPacketSizes[68] = 0;
-incomingPacketSizes[69] = 0;
-incomingPacketSizes[70] = 1;
-incomingPacketSizes[71] = -1;
-incomingPacketSizes[72] = 0;
-incomingPacketSizes[73] = 0;
-incomingPacketSizes[74] = 3;
-incomingPacketSizes[75] = 0;
-incomingPacketSizes[76] = 0;
-incomingPacketSizes[77] = 0;
-incomingPacketSizes[78] = 0;
-incomingPacketSizes[79] = 0;
-incomingPacketSizes[80] = 0;
-incomingPacketSizes[81] = 0;
-incomingPacketSizes[82] = -1;
-incomingPacketSizes[83] = 0;
-incomingPacketSizes[84] = 4;
-incomingPacketSizes[85] = 0;
-incomingPacketSizes[86] = 0;
-incomingPacketSizes[87] = 0;
-incomingPacketSizes[88] = 1;
-incomingPacketSizes[89] = 0;
-incomingPacketSizes[90] = 0;
-incomingPacketSizes[91] = 0;
-incomingPacketSizes[92] = -2;
-incomingPacketSizes[93] = 0;
-incomingPacketSizes[94] = 0;
-incomingPacketSizes[95] = 0;
-incomingPacketSizes[96] = 0;
-incomingPacketSizes[97] = 0;
-incomingPacketSizes[98] = 0;
-incomingPacketSizes[99] = 7;
-incomingPacketSizes[100] = 0;
-incomingPacketSizes[101] = 0;
-incomingPacketSizes[102] = 0;
-incomingPacketSizes[103] = 0;
-incomingPacketSizes[104] = 0;
-incomingPacketSizes[105] = 0;
-incomingPacketSizes[106] = 0;
-incomingPacketSizes[107] = 0;
-incomingPacketSizes[108] = 0;
-incomingPacketSizes[109] = 0;
-incomingPacketSizes[110] = -2;
-incomingPacketSizes[111] = 0;
-incomingPacketSizes[112] = 0;
-incomingPacketSizes[113] = 0;
-incomingPacketSizes[114] = 0;
-incomingPacketSizes[115] = 5;
-incomingPacketSizes[116] = 2;
-incomingPacketSizes[117] = 8;
-incomingPacketSizes[118] = 2;
-incomingPacketSizes[119] = 0;
-incomingPacketSizes[120] = 8;
-incomingPacketSizes[121] = 0;
-incomingPacketSizes[122] = 0;
-incomingPacketSizes[123] = 0;
-incomingPacketSizes[124] = 0;
-incomingPacketSizes[125] = 0;
-incomingPacketSizes[126] = 0;
-incomingPacketSizes[127] = 0;
-incomingPacketSizes[128] = -2;
-incomingPacketSizes[129] = 3;
-incomingPacketSizes[130] = 2;
-incomingPacketSizes[131] = 5;
-incomingPacketSizes[132] = 0;
-incomingPacketSizes[133] = 0;
-incomingPacketSizes[134] = 0;
-incomingPacketSizes[135] = 0;
-incomingPacketSizes[136] = 0;
-incomingPacketSizes[137] = 0;
-incomingPacketSizes[138] = 0;
-incomingPacketSizes[139] = 0;
-incomingPacketSizes[140] = 3;
-incomingPacketSizes[141] = 0;
-incomingPacketSizes[142] = 10;
-incomingPacketSizes[143] = 2;
-incomingPacketSizes[144] = 0;
-incomingPacketSizes[145] = 0;
-incomingPacketSizes[146] = 0;
-incomingPacketSizes[147] = 0;
-incomingPacketSizes[148] = 0;
-incomingPacketSizes[149] = 0;
-incomingPacketSizes[150] = 0;
-incomingPacketSizes[151] = 0;
-incomingPacketSizes[152] = 0;
-incomingPacketSizes[153] = 0;
-incomingPacketSizes[154] = 0;
-incomingPacketSizes[155] = 0;
-incomingPacketSizes[156] = 10;
-incomingPacketSizes[157] = 0;
-incomingPacketSizes[158] = 0;
-incomingPacketSizes[159] = 0;
-incomingPacketSizes[160] = 6;
-incomingPacketSizes[161] = 0;
-incomingPacketSizes[162] = 0;
-incomingPacketSizes[163] = 0;
-incomingPacketSizes[164] = 0;
-incomingPacketSizes[165] = 0;
-incomingPacketSizes[166] = -2;
-incomingPacketSizes[167] = 0;
-incomingPacketSizes[168] = 0;
-incomingPacketSizes[169] = 0;
-incomingPacketSizes[170] = 0;
-incomingPacketSizes[171] = 2;
-incomingPacketSizes[172] = 0;
-incomingPacketSizes[173] = 0;
-incomingPacketSizes[174] = 4;
-incomingPacketSizes[175] = 5;
-incomingPacketSizes[176] = 0;
-incomingPacketSizes[177] = 0;
-incomingPacketSizes[178] = 0;
-incomingPacketSizes[179] = 0;
-incomingPacketSizes[180] = 0;
-incomingPacketSizes[181] = 0;
-incomingPacketSizes[182] = 6;
-incomingPacketSizes[183] = 0;
-incomingPacketSizes[184] = 0;
-incomingPacketSizes[185] = 2;
-incomingPacketSizes[186] = 6;
-incomingPacketSizes[187] = 0;
-incomingPacketSizes[188] = 0;
-incomingPacketSizes[189] = 0;
-incomingPacketSizes[190] = 0;
-incomingPacketSizes[191] = 0;
-incomingPacketSizes[192] = 0;
-incomingPacketSizes[193] = 0;
-incomingPacketSizes[194] = 6;
-incomingPacketSizes[195] = 4;
-incomingPacketSizes[196] = 3;
-incomingPacketSizes[197] = 0;
-incomingPacketSizes[198] = 0;
-incomingPacketSizes[199] = 0;
-incomingPacketSizes[200] = 0;
-incomingPacketSizes[201] = 0;
-incomingPacketSizes[202] = 6;
-incomingPacketSizes[203] = 0;
-incomingPacketSizes[204] = 0;
-incomingPacketSizes[205] = 0;
-incomingPacketSizes[206] = 0;
-incomingPacketSizes[207] = 0;
-incomingPacketSizes[208] = 2;
-incomingPacketSizes[209] = 0;
-incomingPacketSizes[210] = 4;
-incomingPacketSizes[211] = -2;
-incomingPacketSizes[212] = 0;
-incomingPacketSizes[213] = 0;
-incomingPacketSizes[214] = -2;
-incomingPacketSizes[215] = 0;
-incomingPacketSizes[216] = 0;
-incomingPacketSizes[217] = 2;
-incomingPacketSizes[218] = 0;
-incomingPacketSizes[219] = 0;
-incomingPacketSizes[220] = 0;
-incomingPacketSizes[221] = 0;
-incomingPacketSizes[222] = 3;
-incomingPacketSizes[223] = -1;
-incomingPacketSizes[224] = 0;
-incomingPacketSizes[225] = 0;
-incomingPacketSizes[226] = 0;
-incomingPacketSizes[227] = 0;
-incomingPacketSizes[228] = 0;
-incomingPacketSizes[229] = 14;
-incomingPacketSizes[230] = 0;
-incomingPacketSizes[231] = 6;
-incomingPacketSizes[232] = 0;
-incomingPacketSizes[233] = 0;
-incomingPacketSizes[234] = 6;
-incomingPacketSizes[235] = 1;
-incomingPacketSizes[236] = 0;
-incomingPacketSizes[237] = 2;
-incomingPacketSizes[238] = 0;
-incomingPacketSizes[239] = 0;
-incomingPacketSizes[240] = -2;
-incomingPacketSizes[241] = 4;
-incomingPacketSizes[242] = 0;
-incomingPacketSizes[243] = 0;
-incomingPacketSizes[244] = 0;
-incomingPacketSizes[245] = 0;
-incomingPacketSizes[246] = 0;
-incomingPacketSizes[247] = 0;
-incomingPacketSizes[248] = 0;
-incomingPacketSizes[249] = 0;
-incomingPacketSizes[250] = 6;
-incomingPacketSizes[251] = 0;
-incomingPacketSizes[252] = 0;
-incomingPacketSizes[253] = 6;
-incomingPacketSizes[254] = 2;
-incomingPacketSizes[255] = 4;
+export const incomingPacketSizes: number[] = [
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //0
+    -3, -3, -3, 0, -3, -3, -3, -3, -3, -3, //10
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //20
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //30
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //40
+    -3, -3, -3, -3, -3, -3, -3, -3, 4, -3, //50
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //60
+    -3, -3, -3, -1, -3, -3, -3, -3, -3, -3, //70
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -1, //80
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //90
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //100
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //110
+    -3, 4, -3, -3, -3, -3, -3, -3, -3, -3, //120
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //130
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //140
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //150
+    1, -3, -3, -3, -3, -3, -3, -3, -3, -3, //160
+    -3, -3, -3, -3, -3, -3, -3, -3, 0, -3, //170
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //180
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //190
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //200
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //210
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //220
+    -3, -3, -3, -3, 4, -3, -1, -3, -3, -3, //230
+    -3, -3, -3, -3, -3, -3, -3, -3, -1, -3,	//240
+    -3, -3, -3, -3, -3, -3, -3            	//250
+];

@@ -43,17 +43,27 @@ export class ClientPacketDataParser extends DataParser {
             this.activePacketSize = incomingPacketSizes[this.activePacketId];
         }
 
+        // Packet will provide the size
         if(this.activePacketSize === -1) {
             if(this.activeBuffer.getReadable() < 1) {
                 return;
             }
 
-            this.activePacketSize = this.activeBuffer.readByte() & 0xff;
+            this.activePacketSize = this.activeBuffer.readUnsignedByte();
+        }
+
+        // Packet has no set size
+        if(this.activePacketSize === -3) {
+            if(this.activeBuffer.getReadable() < 1) {
+                return;
+            }
+
+            this.activePacketSize = this.activeBuffer.getReadable();
         }
 
         if(this.activeBuffer.getReadable() < this.activePacketSize) {
-            console.error('Not enough readable data for packet ' + this.activePacketId + ' with size ' + this.activePacketSize + ', but only ' +
-                this.activeBuffer.getReadable() + ' data is left of ' + this.activeBuffer.getBuffer().length);
+            //console.error('Not enough readable data for packet ' + this.activePacketId + ' with size ' + this.activePacketSize + ', but only ' +
+            //    this.activeBuffer.getReadable() + ' data is left of ' + this.activeBuffer.getBuffer().length);
             return;
         }
 

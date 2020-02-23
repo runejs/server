@@ -293,7 +293,6 @@ export class PlayerUpdateTask extends Task<void> {
             appearanceData.writeShortBE(0); // Skill Level (Total Level)
 
             const appearanceDataSize = appearanceData.getWriterIndex();
-            console.log(appearanceDataSize);
 
             updateMaskData.writeByte(appearanceDataSize);
             updateMaskData.writeBytes(appearanceData.getData());
