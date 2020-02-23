@@ -20,6 +20,8 @@ import { dropItemPacket } from '@server/world/mob/player/packet/impl/drop-item-p
 import { itemOnItemPacket } from '@server/world/mob/player/packet/impl/item-on-item-packet';
 import { buyItemPacket } from '@server/world/mob/player/packet/impl/buy-item-packet';
 
+const ignore = [ 234, 160, 58 /* camera move */ ];
+
 const packets: { [key: number]: incomingPacket } = {
     75:  chatPacket,
     248: commandPacket,
@@ -67,6 +69,10 @@ const packets: { [key: number]: incomingPacket } = {
 };
 
 export function handlePacket(player: Player, packetId: number, packetSize: number, buffer: Buffer): void {
+    if(ignore.indexOf(packetId) !== -1) {
+        return;
+    }
+
     const packetFunction = packets[packetId];
 
     if(!packetFunction) {

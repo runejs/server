@@ -365,7 +365,11 @@ export class RsBuffer {
     }
 
     public getReadable(): number {
-        return (this.buffer.length - 1) - this.readerIndex;
+        if(this.buffer.length === 0) {
+            return 0;
+        }
+
+        return this.buffer.length - this.readerIndex;
     }
 
     public getWritable(): number {

@@ -39,7 +39,6 @@ export class ClientConnection {
         try {
             if(!this.connectionStage) {
                 const packetId = buffer.readUnsignedByte();
-                console.log('packetId = ' + packetId);
 
                 if(packetId === 15) {
                     this.connectionStage = ConnectionStage.VERSION_HANDSHAKE;
