@@ -79,7 +79,7 @@ export class NpcUpdateTask extends Task<void> {
         if(!updateFlags.updateBlockRequired) {
             return;
         }
-        
+
         let mask = 0;
 
         if(updateFlags.faceMob !== undefined) {

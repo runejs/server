@@ -447,7 +447,7 @@ export class Player extends Mob {
 
     private updateBonusString(widgetChildId: number, text: string, value: number): void {
         const s = `${text}: ${value > 0 ? `+${value}` : value}`;
-        this.packetSender.updateWidgetString(widgetChildId, s);
+        // this.packetSender.updateWidgetString(widgetChildId, s);
     }
 
     private addBonuses(item: Item): void {

@@ -8,11 +8,11 @@ import { logger } from '@runejs/logger/dist/logger';
 
 export const npcInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const methods = {
-        67: 'readNegativeOffsetShortBE',
-        112: 'readUnsignedShortLE',
+        63: 'readNegativeOffsetShortLE',
+        /*112: 'readUnsignedShortLE',
         13: 'readNegativeOffsetShortLE',
         42: 'readUnsignedShortLE',
-        8: 'readUnsignedShortLE'
+        8: 'readUnsignedShortLE'*/
     };
     const npcIndex = packet[methods[packetId]]();
 
@@ -34,11 +34,11 @@ export const npcInteractionPacket: incomingPacket = (player: Player, packetId: n
     }
 
     const actions = {
-        112: 0, // Usually the Talk-to option
-        67: 1, // Usually the Attack option
+        63: 0, // Usually the Talk-to option
+        /*67: 1, // Usually the Attack option
         13: 2, // Usually the Pickpocket option
         42: 3,
-        8: 4
+        8: 4*/
     };
 
     const actionIdx = actions[packetId];

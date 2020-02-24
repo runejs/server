@@ -68,17 +68,17 @@ export const action: buttonAction = (details) => {
     }
 
     if(refreshSidebar) {
-        player.packetSender.updateWidgetString(sidebarTextIds[0], guide.subGuides[0].name);
+        // player.packetSender.updateWidgetString(sidebarTextIds[0], guide.subGuides[0].name);
 
         for(let i = 1; i < sidebarTextIds.length; i++) {
             const sidebarId = sidebarIds[i];
             let hide: boolean = true;
 
             if(i >= guide.subGuides.length) {
-                player.packetSender.updateWidgetString(sidebarTextIds[i], '');
+                // player.packetSender.updateWidgetString(sidebarTextIds[i], '');
                 hide = true;
             } else {
-                player.packetSender.updateWidgetString(sidebarTextIds[i], guide.subGuides[i].name);
+                // player.packetSender.updateWidgetString(sidebarTextIds[i], guide.subGuides[i].name);
                 hide = false;
             }
 
@@ -96,16 +96,16 @@ export const action: buttonAction = (details) => {
     const itemIds: number[] = subGuide.lines.map(g => g.itemId).concat(new Array(30 - subGuide.lines.length).fill(null));
     player.packetSender.sendUpdateAllWidgetItemsById({ widgetId: 8847, containerId: 0 }, itemIds);
 
-    player.packetSender.updateWidgetString(8716, guide.name + ' Guide');
-    player.packetSender.updateWidgetString(8849, subGuide.name);
+    // player.packetSender.updateWidgetString(8716, guide.name + ' Guide');
+    // player.packetSender.updateWidgetString(8849, subGuide.name);
 
     for(let i = 0; i < 30; i++) {
         if(subGuide.lines.length <= i) {
-            player.packetSender.updateWidgetString(8720 + i, '');
-            player.packetSender.updateWidgetString(8760 + i, '');
+            // player.packetSender.updateWidgetString(8720 + i, '');
+            // player.packetSender.updateWidgetString(8760 + i, '');
         } else {
-            player.packetSender.updateWidgetString(8720 + i, subGuide.lines[i].level.toString());
-            player.packetSender.updateWidgetString(8760 + i, subGuide.lines[i].text);
+            // player.packetSender.updateWidgetString(8720 + i, subGuide.lines[i].level.toString());
+            // player.packetSender.updateWidgetString(8760 + i, subGuide.lines[i].text);
         }
     }
 

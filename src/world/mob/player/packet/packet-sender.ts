@@ -234,23 +234,35 @@ export class PacketSender {
         this.send(packet);
     }
 
-    public playWidgetAnimation(widgetId: number, animationId: number): void {
-        const packet = new Packet(2);
-        packet.writeNegativeOffsetShortLE(widgetId);
-        packet.writeNegativeOffsetShortBE(animationId);
+    // Text dialogs = 356, 359, 363, 368, 374
+    // Item dialogs = 519
+    // Statements (no click to continue) = 210, 211, 212, 213, 214
+    public showChatboxWidget(widgetId: number): void {
+        const packet = new Packet(208);
+        packet.writeUnsignedOffsetShortBE(widgetId);
 
         this.send(packet);
     }
 
-    // NPC dialogs = 4882, 4887, 4893, 4900
-    // Player dialogs = 968, 973, 979, 986
-    // Text dialogs = 356, 359, 363, 368, 374
-    // Item dialogs = 306, 310, 315, 321
-    // Statements (no click to continue) = 12788, 12790, 12793, 12797, 6179
-    // Options = 2459, 2469, 2480, 2492
-    public showChatboxWidget(widgetId: number): void {
-        const packet = new Packet(109);
-        packet.writeShortBE(widgetId);
+    public setWidgetNpcHead(widgetId: number, childId: number, modelId: number): void {
+        const packet = new Packet(160);
+        packet.writeUnsignedShortLE(modelId);
+        packet.writeIntLE(widgetId << 16 | childId);
+
+        this.send(packet);
+    }
+
+    public setWidgetPlayerHead(widgetId: number, childId: number): void {
+        const packet = new Packet(210);
+        packet.writeIntLE(widgetId << 16 | childId);
+
+        this.send(packet);
+    }
+
+    public playWidgetAnimation(widgetId: number, childId: number, animationId: number): void {
+        const packet = new Packet(24);
+        packet.writeShortBE(animationId);
+        packet.writeIntBE(widgetId << 16 | childId);
 
         this.send(packet);
     }
@@ -259,21 +271,6 @@ export class PacketSender {
         const packet = new Packet(128);
         packet.writeNegativeOffsetShortBE(widgetId);
         packet.writeNegativeOffsetShortLE(sidebarId);
-        this.send(packet);
-    }
-
-    public setWidgetModel2(widgetId: number, modelId: number): void {
-        const packet = new Packet(162);
-        packet.writeNegativeOffsetShortBE(modelId);
-        packet.writeShortLE(widgetId);
-
-        this.send(packet);
-    }
-
-    public setWidgetPlayerHead(widgetId: number): void {
-        const packet = new Packet(255);
-        packet.writeNegativeOffsetShortLE(widgetId);
-
         this.send(packet);
     }
 
@@ -300,16 +297,16 @@ export class PacketSender {
         this.send(packet);
     }
 
-    public updateWidgetString(widgetId: number, value: string): void {
-        const packet = new Packet(232, PacketType.DYNAMIC_LARGE);
-        packet.writeOffsetShortLE(widgetId);
-        packet.writeString(value);
+    public updateWidgetString(widgetId: number, childId: number, value: string): void {
+        const packet = new Packet(110, PacketType.DYNAMIC_LARGE);
+        packet.writeIntLE(widgetId << 16 | childId);
+        packet.writeNewString(value);
 
         this.send(packet);
     }
 
     public closeActiveWidgets(): void {
-        this.send(new Packet(29));
+        this.send(new Packet(180));
     }
 
     public showScreenWidget(widgetId: number): void {
@@ -413,9 +410,9 @@ export class PacketSender {
     public updateWelcomeScreenInfo(childId: number, lastLogin: Date, lastAddress: string): void {
         const currentTime = rsTime(new Date());
 
-        this.updateWidgetString(15270, `\\nYou do not have a Bank PIN.\\nPlease visit a bank if you would like one.`);
-        this.updateWidgetString(childId + 2, `Interested in helping RuneJS improve?`);
-        this.updateWidgetString(childId + 3, `Send us a Pull Request over on Github!`);
+        // this.updateWidgetString(15270, `\\nYou do not have a Bank PIN.\\nPlease visit a bank if you would like one.`);
+        // this.updateWidgetString(childId + 2, `Interested in helping RuneJS improve?`);
+        // this.updateWidgetString(childId + 3, `Send us a Pull Request over on Github!`);
         // @TODO reminder that welcome screen models can be changed :)
 
         const packet = new Packet(76);

@@ -17,7 +17,7 @@ export function openShop(player: Player, identification: string, closeOnWalk: bo
         if(openedShop === undefined) {
             throw `Unable to find the shop with identification of: ${identification}`;
         }
-        player.packetSender.updateWidgetString(widgetIds.shop.shopTitle, openedShop.name);
+        // player.packetSender.updateWidgetString(widgetIds.shop.shopTitle, openedShop.name);
         for(let i = 0; i < 30; i++) {
             if(openedShop.items.length <= i) {
                 player.packetSender.sendUpdateSingleWidgetItem(widgetIds.shop.shopInventory, i, null);

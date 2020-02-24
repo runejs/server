@@ -4,9 +4,9 @@ import { Npc } from '@server/world/mob/npc/npc';
 import { skillDetails } from '@server/world/mob/skills';
 
 const widgetIds = {
-    PLAYER: [ 968, 973, 979, 986 ],
-    NPC: [ 4882, 4887, 4893, 4900 ],
-    OPTIONS: [ 2459, 2469, 2480, 2492 ]
+    PLAYER: [ 64, 65, 66, 67 ],
+    NPC: [ 241, 242, 243, 244 ],
+    OPTIONS: [ 228, 230, 232, 234 ]
 };
 
 const lineConstraints = {
@@ -111,7 +111,7 @@ export class DialogueAction {
             return Promise.resolve(this);
         }
 
-        let textOffset = 1;
+        let textOffset = 0;
 
         if(options.type === 'PLAYER' || options.type === 'NPC') {
             if(!options.emote) {
@@ -119,22 +119,22 @@ export class DialogueAction {
             }
 
             if(options.type === 'NPC') {
-                this.p.packetSender.setWidgetModel2(widgetId + 1, options.npc);
-                this.p.packetSender.updateWidgetString(widgetId + 2, gameCache.npcDefinitions.get(options.npc).name);
+                this.p.packetSender.setWidgetNpcHead(widgetId, 0, options.npc);
+                this.p.packetSender.updateWidgetString(widgetId, 1, gameCache.npcDefinitions.get(options.npc).name);
             } else if(options.type === 'PLAYER') {
-                this.p.packetSender.setWidgetPlayerHead(widgetId + 1);
-                this.p.packetSender.updateWidgetString(widgetId + 2, this.p.username);
+                this.p.packetSender.setWidgetPlayerHead(widgetId, 0);
+                this.p.packetSender.updateWidgetString(widgetId, 1, this.p.username);
             }
 
-            this.p.packetSender.playWidgetAnimation(widgetId + 1, options.emote);
-            textOffset += 2;
+            this.p.packetSender.playWidgetAnimation(widgetId, 0, options.emote);
+            textOffset = 2;
         } else if(options.type === 'OPTIONS') {
-            this.p.packetSender.updateWidgetString(widgetId + 1, options.title);
-            textOffset += 1;
+            this.p.packetSender.updateWidgetString(widgetId, 0, options.title);
+            textOffset = 1;
         }
 
         for(let i = 0; i < options.lines.length; i++) {
-            this.p.packetSender.updateWidgetString(widgetId + textOffset + i, options.lines[i]);
+            this.p.packetSender.updateWidgetString(widgetId, textOffset + i, options.lines[i]);
         }
 
         return new Promise<DialogueAction>((resolve, reject) => {
