@@ -115,18 +115,18 @@ export class PlayerUpdateTask extends Task<void> {
         if(updateFlags.chatMessages.length !== 0) {
             mask |= 0x8;
         }
-        /*if(updateFlags.faceMob !== undefined) {
-            mask |= 0x1;
+        if(updateFlags.faceMob !== undefined) {
+            mask |= 0x4;
         }
         if(updateFlags.facePosition) {
-            mask |= 0x2;
+            mask |= 0x10;
         }
         if(updateFlags.graphics) {
             mask |= 0x200;
         }
         if(updateFlags.animation !== undefined) {
-            mask |= 0x8;
-        }*/
+            mask |= 0x1;
+        }
 
         if(mask >= 0x100) {
             mask |= 0x2;
@@ -136,19 +136,19 @@ export class PlayerUpdateTask extends Task<void> {
             updateMaskData.writeByte(mask);
         }
 
-        /*if(updateFlags.animation !== undefined) {
+        if(updateFlags.animation !== undefined) {
             const animation = updateFlags.animation;
 
             if(animation === null || animation.id === -1) {
                 // Reset animation
-                updateMaskData.writeShortBE(-1);
-                updateMaskData.writeNegativeOffsetByte(0);
+                updateMaskData.writeUnsignedShortLE(-1);
+                updateMaskData.writeUnsignedByteInverted(0);
             } else {
                 const delay = updateFlags.animation.delay || 0;
-                updateMaskData.writeShortBE(updateFlags.animation.id);
-                updateMaskData.writeNegativeOffsetByte(delay);
+                updateMaskData.writeUnsignedShortLE(updateFlags.animation.id);
+                updateMaskData.writeUnsignedByteInverted(delay);
             }
-        }*/
+        }
 
         if(updateFlags.chatMessages.length !== 0) {
             const message = updateFlags.chatMessages[0];
@@ -160,7 +160,7 @@ export class PlayerUpdateTask extends Task<void> {
             }
         }
 
-        /*if(updateFlags.faceMob !== undefined) {
+        if(updateFlags.faceMob !== undefined) {
             const mob = updateFlags.faceMob;
 
             if(mob === null) {
@@ -182,15 +182,15 @@ export class PlayerUpdateTask extends Task<void> {
 
         if(updateFlags.facePosition) {
             const position = updateFlags.facePosition;
-            updateMaskData.writeShortBE(position.x * 2 + 1);
-            updateMaskData.writeShortBE(position.y * 2 + 1);
+            updateMaskData.writeUnsignedShortBE(position.x * 2 + 1);
+            updateMaskData.writeUnsignedShortLE(position.y * 2 + 1);
         }
 
         if(updateFlags.graphics) {
             const delay = updateFlags.graphics.delay || 0;
-            updateMaskData.writeOffsetShortBE(updateFlags.graphics.id);
-            updateMaskData.writeIntME1(updateFlags.graphics.height << 16 | delay & 0xffff);
-        }*/
+            updateMaskData.writeUnsignedShortLE(updateFlags.graphics.id);
+            updateMaskData.writeIntME2(updateFlags.graphics.height << 16 | delay & 0xffff);
+        }
 
         if(updateFlags.appearanceUpdateRequired || forceUpdate) {
             const equipment = player.equipment;
