@@ -151,7 +151,7 @@ export class Player extends Mob {
 
         this.packetSender.updateCurrentMapChunk();
         this.chunkChanged(playerChunk);
-        this.packetSender.chatboxMessage('Welcome to RuneJS.');
+        this.packetSender.chatboxMessage('Welcome to RuneJS #435.');
 
         DEFAULT_TAB_WIDGET_IDS.forEach((widgetId: number, tabIndex: number) => {
             if(widgetId !== -1) {

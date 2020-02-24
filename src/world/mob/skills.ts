@@ -23,7 +23,8 @@ export enum Skill {
     THIEVING,
     SLAYER,
     FARMING,
-    RUNECRAFTING
+    RUNECRAFTING,
+    CONSTRUCTION = 21
 }
 
 export interface SkillDetail {
@@ -52,7 +53,8 @@ export const skillDetails: SkillDetail[] = [
     { name: 'Thieving' },
     { name: 'Slayer' },
     { name: 'Farming' },
-    { name: 'Runecrafting' }
+    { name: 'Runecrafting' },
+    { name: 'Construction' }
 ];
 
 export interface SkillValue {

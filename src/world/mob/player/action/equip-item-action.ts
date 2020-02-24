@@ -67,7 +67,7 @@ export const equipItemAction = (player: Player, itemId: number, inventorySlot: n
     // @TODO change packets to only update modified container slots
     player.packetSender.sendUpdateAllWidgetItems(widgetIds.inventory, inventory);
     player.packetSender.sendUpdateAllWidgetItems(widgetIds.equipment, equipment);
-    player.updateBonuses();
+    // player.updateBonuses(); @TODO move this to when the equipment widget gets opened
     player.updateFlags.appearanceUpdateRequired = true;
 };
 

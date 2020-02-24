@@ -94,7 +94,7 @@ export const action: buttonAction = (details) => {
     const subGuide: SkillSubGuide = guide.subGuides[subGuideIndex];
 
     const itemIds: number[] = subGuide.lines.map(g => g.itemId).concat(new Array(30 - subGuide.lines.length).fill(null));
-    player.packetSender.sendUpdateAllWidgetItemsById(8847, itemIds);
+    player.packetSender.sendUpdateAllWidgetItemsById({ widgetId: 8847, containerId: 0 }, itemIds);
 
     player.packetSender.updateWidgetString(8716, guide.name + ' Guide');
     player.packetSender.updateWidgetString(8849, subGuide.name);

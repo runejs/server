@@ -40,7 +40,7 @@ export class PlayerUpdateTask extends Task<void> {
                 appendMovement(this.player, playerUpdatePacket);
             }
 
-            this.appendUpdateMaskData(this.player, updateMaskData, false, true);
+            this.appendUpdateMaskData(this.player, updateMaskData, false);
 
             let nearbyPlayers = world.playerTree.colliding({
                 x: this.player.position.x - 15,
@@ -74,7 +74,7 @@ export class PlayerUpdateTask extends Task<void> {
 
                 playerUpdatePacket.writeBits(5, positionOffsetY); // World Position Y axis offset relative to the main player
                 playerUpdatePacket.writeBits(5, positionOffsetX); // World Position X axis offset relative to the main player
-                playerUpdatePacket.writeBits(3, 0); // @TODO Default face direction
+                playerUpdatePacket.writeBits(3, 0); // @TODO default face direction
                 playerUpdatePacket.writeBits(1, 1); // Update is required
                 playerUpdatePacket.writeBits(1, 1); // Discard client walking queues
 
@@ -100,7 +100,7 @@ export class PlayerUpdateTask extends Task<void> {
         });
     }
 
-    private appendUpdateMaskData(player: Player, updateMaskData: RsBuffer, forceUpdate?: boolean, currentPlayer?: boolean): void {
+    private appendUpdateMaskData(player: Player, updateMaskData: RsBuffer, forceUpdate?: boolean): void {
         const updateFlags = player.updateFlags;
 
         if(!updateFlags.updateBlockRequired && !forceUpdate) {
@@ -118,7 +118,7 @@ export class PlayerUpdateTask extends Task<void> {
         /*if(updateFlags.faceMob !== undefined) {
             mask |= 0x1;
         }
-        if(updateFlags.facePosition || forceUpdate) {
+        if(updateFlags.facePosition) {
             mask |= 0x2;
         }
         if(updateFlags.graphics) {
@@ -180,16 +180,10 @@ export class PlayerUpdateTask extends Task<void> {
             }
         }
 
-        if(updateFlags.facePosition || forceUpdate) {
-            if(forceUpdate) {
-                const position = player.position.fromDirection(player.faceDirection);
-                updateMaskData.writeShortBE(position.x * 2 + 1);
-                updateMaskData.writeShortBE(position.y * 2 + 1);
-            } else {
-                const position = updateFlags.facePosition;
-                updateMaskData.writeShortBE(position.x * 2 + 1);
-                updateMaskData.writeShortBE(position.y * 2 + 1);
-            }
+        if(updateFlags.facePosition) {
+            const position = updateFlags.facePosition;
+            updateMaskData.writeShortBE(position.x * 2 + 1);
+            updateMaskData.writeShortBE(position.y * 2 + 1);
         }
 
         if(updateFlags.graphics) {

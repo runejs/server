@@ -20,7 +20,7 @@ export const unequipItemAction = (player: Player, itemId: number, equipmentSlot:
 
         player.packetSender.sendUpdateSingleWidgetItem(widgetIds.inventory, inventorySlot, itemInEquipmentSlot);
         player.packetSender.sendUpdateSingleWidgetItem(widgetIds.equipment, equipmentSlot, null);
-        player.updateBonuses();
+        // player.updateBonuses(); @TODO move to when the equipment widget is opened
         player.updateFlags.appearanceUpdateRequired = true;
     }
 };

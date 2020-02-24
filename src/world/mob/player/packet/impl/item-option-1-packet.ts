@@ -10,14 +10,9 @@ import { sellItemValueAction } from '@server/world/mob/player/action/sell-item-v
 
 export const itemOption1Packet: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const itemId = packet.readNegativeOffsetShortBE();
-    const widgetId = packet.readShortBE();
-    const slot = packet.readShortBE();
-
-    let container: ItemContainer = null;
-
-    if(widgetId === widgetIds.equipment) {
-        container = player.equipment;
-    }
+    const slot = packet.readShortLE();
+    const widgetId = packet.readShortLE();
+    const containerId = packet.readShortLE();
 
     // Handles the value option in shops.
     if(widgetId === widgetIds.shop.shopInventory) {
@@ -29,6 +24,12 @@ export const itemOption1Packet: incomingPacket = (player: Player, packetId: numb
     if(widgetId === widgetIds.shop.playerInventory) {
         sellItemValueAction(player, itemId, slot);
         return;
+    }
+
+    let container: ItemContainer = null;
+
+    if(widgetId === widgetIds.equipment.widgetId && containerId === widgetIds.equipment.containerId) {
+        container = player.equipment;
     }
 
     if(!container) {
@@ -53,7 +54,7 @@ export const itemOption1Packet: incomingPacket = (player: Player, packetId: numb
         return;
     }
 
-    if(widgetId === widgetIds.equipment) {
+    if(widgetId === widgetIds.equipment.widgetId && containerId === widgetIds.equipment.containerId) {
         unequipItemAction(player, itemId, slot);
     }
 };

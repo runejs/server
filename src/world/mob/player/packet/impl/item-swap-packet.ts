@@ -9,7 +9,7 @@ export const itemSwapPacket: incomingPacket = (player: Player, packetId: number,
     const toSlot = packet.readNegativeOffsetShortLE();
     const containerId = packet.readShortBE();
     const widgetId = packet.readShortBE();
-    
+
     if(toSlot < 0 || fromSlot < 0) {
         return;
     }

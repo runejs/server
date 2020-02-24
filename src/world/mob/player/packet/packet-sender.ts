@@ -319,14 +319,14 @@ export class PacketSender {
         this.send(packet);
     }
 
-    public sendUpdateSingleWidgetItem(widgetId: number, slot: number, item: Item): void {
-        const packet = new Packet(134, PacketType.DYNAMIC_LARGE);
-        packet.writeUnsignedShortBE(widgetId);
+    // @TODO this can support multiple items/slots !!!
+    public sendUpdateSingleWidgetItem(widget: { widgetId: number, containerId: number }, slot: number, item: Item): void {
+        const packet = new Packet(214, PacketType.DYNAMIC_LARGE);
+        packet.writeIntBE(widget.widgetId << 16 | widget.containerId);
         packet.writeSmart(slot);
 
         if(!item) {
             packet.writeUnsignedShortBE(0);
-            packet.writeUnsignedByte(0);
         } else {
             packet.writeUnsignedShortBE(item.itemId + 1); // +1 because 0 means an empty slot
 
@@ -367,19 +367,19 @@ export class PacketSender {
         this.send(packet);
     }
 
-    public sendUpdateAllWidgetItemsById(widgetId: number, itemIds: number[]): void {
-        const packet = new Packet(206, PacketType.DYNAMIC_LARGE);
-        packet.writeShortBE(widgetId);
+    public sendUpdateAllWidgetItemsById(widget: { widgetId: number, containerId: number }, itemIds: number[]): void {
+        const packet = new Packet(12, PacketType.DYNAMIC_LARGE);
+        packet.writeIntBE(widget.widgetId << 16 | widget.containerId);
         packet.writeShortBE(itemIds.length);
 
         itemIds.forEach(itemId => {
             if(!itemId) {
                 // Empty slot
-                packet.writeOffsetShortLE(0);
-                packet.writeByteInverted(0);
+                packet.writeOffsetByte(0);
+                packet.writeOffsetShortBE(0);
             } else {
-                packet.writeOffsetShortLE(itemId + 1); // +1 because 0 means an empty slot
-                packet.writeByteInverted(1);
+                packet.writeOffsetByte(1);
+                packet.writeOffsetShortBE(itemId + 1); // +1 because 0 means an empty slot
             }
         });
 

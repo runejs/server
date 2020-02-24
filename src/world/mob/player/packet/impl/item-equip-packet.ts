@@ -6,12 +6,13 @@ import { widgetIds } from '../../widget';
 import { equipItemAction } from '../../action/equip-item-action';
 
 export const itemEquipPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
+    const containerId = packet.readShortLE();
     const widgetId = packet.readShortLE();
-    const itemId = packet.readShortLE();
-    const slot = packet.readNegativeOffsetShortBE();
+    const slot = packet.readNegativeOffsetShortLE();
+    const itemId = packet.readShortBE();
 
-    if(widgetId !== widgetIds.inventory) {
-        logger.warn(`${player.username} attempted to equip item from incorrect widget id ${widgetId}.`);
+    if(widgetId !== widgetIds.inventory.widgetId || containerId !== widgetIds.inventory.containerId) {
+        logger.warn(`${player.username} attempted to equip item from incorrect widget ${widgetId}:${containerId}.`);
         return;
     }
 

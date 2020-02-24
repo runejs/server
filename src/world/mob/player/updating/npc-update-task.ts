@@ -20,10 +20,9 @@ export class NpcUpdateTask extends Task<void> {
 
     public async execute(): Promise<void> {
         return new Promise<void>(resolve => {
-            const npcUpdatePacket: Packet = new Packet(71, PacketType.DYNAMIC_LARGE);
+            const npcUpdatePacket: Packet = new Packet(128, PacketType.DYNAMIC_LARGE);
             npcUpdatePacket.openBitChannel();
 
-            const currentMapChunk = world.chunkManager.getChunkForWorldPosition(this.player.position);
             const updateMaskData = RsBuffer.create();
 
             const nearbyNpcs = world.npcTree.colliding({
@@ -45,10 +44,11 @@ export class NpcUpdateTask extends Task<void> {
                 this.player.trackedNpcs.push(newNpc);
 
                 // Notify the client of the new npc and their worldIndex
-                npcUpdatePacket.writeBits(14, newNpc.worldIndex);
-                npcUpdatePacket.writeBits(1, newNpc.updateFlags.updateBlockRequired ? 1 : 0); // Update is required
-                npcUpdatePacket.writeBits(5, positionOffsetY); // World Position Y axis offset relative to the player
+                npcUpdatePacket.writeBits(15, newNpc.worldIndex);
+                npcUpdatePacket.writeBits(3, 0); // @TODO default face direction
                 npcUpdatePacket.writeBits(5, positionOffsetX); // World Position X axis offset relative to the player
+                npcUpdatePacket.writeBits(5, positionOffsetY); // World Position Y axis offset relative to the player
+                npcUpdatePacket.writeBits(1, newNpc.updateFlags.updateBlockRequired ? 1 : 0); // Update is required
                 npcUpdatePacket.writeBits(1, 1); // Discard client walking queues
                 npcUpdatePacket.writeBits(13, newNpc.id);
 
@@ -56,7 +56,7 @@ export class NpcUpdateTask extends Task<void> {
             });
 
             if(updateMaskData.getWriterIndex() !== 0) {
-                npcUpdatePacket.writeBits(14, 16383);
+                npcUpdatePacket.writeBits(15, 32767);
                 npcUpdatePacket.closeBitChannel();
 
                 npcUpdatePacket.writeBytes(updateMaskData);
@@ -83,26 +83,26 @@ export class NpcUpdateTask extends Task<void> {
         let mask = 0;
 
         if(updateFlags.faceMob !== undefined) {
-            mask |= 0x40;
+            mask |= 0x4;
         }
         if(updateFlags.chatMessages.length !== 0) {
-            mask |= 0x20;
+            mask |= 0x40;
         }
         if(updateFlags.facePosition) {
             mask |= 0x8;
         }
         if(updateFlags.animation) {
-            mask |= 0x2;
+            mask |= 0x10;
         }
 
-        updateMaskData.writeUnsignedByte(mask);
+        updateMaskData.writeByte(mask);
 
         if(updateFlags.faceMob !== undefined) {
             const mob = updateFlags.faceMob;
 
             if(mob === null) {
                 // Reset faced mob
-                updateMaskData.writeUnsignedShortLE(65535);
+                updateMaskData.writeUnsignedOffsetShortBE(65535);
             } else {
                 let mobIndex = mob.worldIndex;
 
@@ -113,7 +113,7 @@ export class NpcUpdateTask extends Task<void> {
                     mobIndex += 32768 + 1;
                 }
 
-                updateMaskData.writeUnsignedShortLE(mobIndex);
+                updateMaskData.writeUnsignedOffsetShortBE(mobIndex);
             }
         }
 
@@ -121,15 +121,15 @@ export class NpcUpdateTask extends Task<void> {
             const message = updateFlags.chatMessages[0];
 
             if(message.message) {
-                updateMaskData.writeString(message.message);
+                updateMaskData.writeNewString(message.message);
             } else {
-                updateMaskData.writeString('Undefined Message');
+                updateMaskData.writeNewString('Undefined Message');
             }
         }
 
         if(updateFlags.facePosition) {
             const position = updateFlags.facePosition;
-            updateMaskData.writeOffsetShortLE(position.x * 2 + 1);
+            updateMaskData.writeOffsetShortBE(position.x * 2 + 1);
             updateMaskData.writeShortLE(position.y * 2 + 1);
         }
 
@@ -138,12 +138,12 @@ export class NpcUpdateTask extends Task<void> {
 
             if(animation === null || animation.id === -1) {
                 // Reset animation
-                updateMaskData.writeShortBE(-1);
-                updateMaskData.writeNegativeOffsetByte(0);
+                updateMaskData.writeOffsetShortBE(-1);
+                updateMaskData.writeByteInverted(0);
             } else {
                 const delay = updateFlags.animation.delay || 0;
-                updateMaskData.writeShortBE(animation.id);
-                updateMaskData.writeNegativeOffsetByte(delay);
+                updateMaskData.writeOffsetShortBE(animation.id);
+                updateMaskData.writeByteInverted(delay);
             }
         }
     }

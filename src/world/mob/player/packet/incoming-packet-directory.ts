@@ -33,6 +33,8 @@ const packets: { [key: number]: incomingPacket } = {
     64:  buttonClickPacket,
 
     83:  itemSwapPacket,
+    102: itemEquipPacket,
+    38:  itemOption1Packet,
 
     /*19:  interfaceClickPacket,
     140: cameraTurnPacket,
