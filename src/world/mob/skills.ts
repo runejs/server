@@ -1,6 +1,7 @@
 import { Mob } from '@server/world/mob/mob';
 import { Player } from '@server/world/mob/player/player';
 import { dialogueAction } from '@server/world/mob/player/action/dialogue-action';
+import { startsWithVowel } from '@server/util/strings';
 
 export enum Skill {
     ATTACK,
@@ -126,7 +127,8 @@ export class Skills {
 
                 if(achievementDetails.advancementWidgetId) {
                     dialogueAction(this.mob, { type: 'LEVEL_UP', skillId, lines: [
-                        `<col=000080>Congratulations, you just advanced a ${achievementDetails.name.toLowerCase()} level.</col>`,
+                        `<col=000080>Congratulations, you just advanced ${startsWithVowel(achievementDetails.name) ? 'an' : 'a'} ` +
+                            `${achievementDetails.name.toLowerCase()} level.</col>`,
                             `Your ${achievementDetails.name.toLowerCase()} level is now ${finalLevel}.` ] }).then(d => d.close());
                     // @TODO sounds
                 }

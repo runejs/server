@@ -399,10 +399,10 @@ export class PacketSender {
         this.send(packet);
     }
 
-    public toggleWidgetVisibility(widgetId: number, hidden: boolean): void {
-        const packet = new Packet(82);
+    public toggleWidgetVisibility(widgetId: number, childId: number, hidden: boolean): void {
+        const packet = new Packet(115);
         packet.writeUnsignedByte(hidden ? 1 : 0);
-        packet.writeShortBE(widgetId);
+        packet.writeIntME2(widgetId << 16 | childId);
 
         this.send(packet);
     }

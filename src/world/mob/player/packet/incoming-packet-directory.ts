@@ -12,7 +12,7 @@ import { walkPacket } from './impl/walk-packet';
 import { itemOption1Packet } from './impl/item-option-1-packet';
 import { commandPacket } from './impl/command-packet';
 import { itemSwapPacket } from './impl/item-swap-packet';
-import { widgetActionPacket } from '@server/world/mob/player/packet/impl/widget-action-packet';
+import { widgetInteractionPacket } from '@server/world/mob/player/packet/impl/widget-interaction-packet';
 import { npcInteractionPacket } from '@server/world/mob/player/packet/impl/npc-interaction-packet';
 import { objectInteractionPacket } from '@server/world/mob/player/packet/impl/object-interaction-packet';
 import { chatPacket } from '@server/world/mob/player/packet/impl/chat-packet';
@@ -32,7 +32,7 @@ const packets: { [key: number]: incomingPacket } = {
     89:  walkPacket,
 
     64:  buttonClickPacket,
-    132: widgetActionPacket,
+    132: widgetInteractionPacket,
     176: widgetsClosedPacket,
 
     83:  itemSwapPacket,

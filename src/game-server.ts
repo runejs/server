@@ -6,14 +6,17 @@ import { World } from './world/world';
 import { ClientConnection } from './net/client-connection';
 import { logger } from '@runejs/logger';
 import { GameCache } from '@runejs/cache-parser';
+import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
+
+import { loadPlugins } from '@server/plugins/plugin-loader';
+import { ActionPlugin, ActionType } from '@server/plugins/plugin';
+
 import { setNpcPlugins } from '@server/world/mob/player/action/npc-action';
 import { setObjectPlugins } from '@server/world/mob/player/action/object-action';
-import { loadPlugins } from '@server/plugins/plugin-loader';
 import { setItemOnItemPlugins } from '@server/world/mob/player/action/item-on-item-action';
 import { setButtonPlugins } from '@server/world/mob/player/action/button-action';
-import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
-import { ActionPlugin, ActionType } from '@server/plugins/plugin';
 import { setCommandPlugins } from '@server/world/mob/player/action/input-command-action';
+import { setWidgetPlugins } from '@server/world/mob/player/action/widget-action';
 
 export let serverConfig: ServerConfig;
 export let gameCache: GameCache;
@@ -36,6 +39,7 @@ export async function injectPlugins(): Promise<void> {
     setObjectPlugins(actionTypes[ActionType.OBJECT_ACTION]);
     setItemOnItemPlugins(actionTypes[ActionType.ITEM_ON_ITEM]);
     setCommandPlugins(actionTypes[ActionType.COMMAND]);
+    setWidgetPlugins(actionTypes[ActionType.WIDGET_ACTION]);
 }
 
 export function runGameServer(): void {
