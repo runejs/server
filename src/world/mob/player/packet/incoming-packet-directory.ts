@@ -34,6 +34,7 @@ const packets: { [key: number]: incomingPacket } = {
     64:  buttonClickPacket,
     132: widgetInteractionPacket,
     176: widgetsClosedPacket,
+    231: characterDesignPacket,
 
     83:  itemSwapPacket,
     40:  itemOnItemPacket,

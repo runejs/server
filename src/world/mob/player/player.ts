@@ -164,13 +164,13 @@ export class Player extends Mob {
         this.packetSender.sendUpdateAllWidgetItems(widgetIds.inventory, this.inventory);
         this.packetSender.sendUpdateAllWidgetItems(widgetIds.equipment, this.equipment);
 
-        /*if(this.firstTimePlayer) {
+        if(this.firstTimePlayer) {
             this.activeWidget = {
                 widgetId: widgetIds.characterDesign,
                 type: 'SCREEN',
                 disablePlayerMovement: true
             };
-        } else if(serverConfig.showWelcome) {
+        }/* else if(serverConfig.showWelcome) {
             this.packetSender.updateWelcomeScreenInfo(widgetIds.welcomeScreenChildren.question, this.loginDate, this.lastAddress);
 
             this.activeWidget = {

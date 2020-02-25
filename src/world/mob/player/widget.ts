@@ -1,5 +1,5 @@
 export const widgetIds: any = {
-    characterDesign: 3559,
+    characterDesign: 269,
     inventory: {
         widgetId: 149,
         containerId: 0
