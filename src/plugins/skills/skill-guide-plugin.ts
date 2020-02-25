@@ -98,7 +98,7 @@ export const action: buttonAction = (details) => {
     const itemIds: number[] = subGuide.lines.map(g => g.itemId).concat(new Array(30 - subGuide.lines.length).fill(null));
     player.packetSender.sendUpdateAllWidgetItemsById({ widgetId: 8847, containerId: 0 }, itemIds);
 
-    // player.packetSender.updateWidgetString(8716, guide.name + ' Guide');
+    player.packetSender.updateWidgetString(308, 1, guide.name);
     // player.packetSender.updateWidgetString(8849, subGuide.name);
 
     for(let i = 0; i < 30; i++) {

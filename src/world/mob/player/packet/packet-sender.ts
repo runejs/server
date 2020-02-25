@@ -274,6 +274,22 @@ export class PacketSender {
         this.send(packet);
     }
 
+    public updateClientConfig(configId: number, value: number): void {
+        let packet: Packet;
+
+        if(value > 128) {
+            packet = new Packet(2);
+            packet.writeIntME2(value);
+            packet.writeUnsignedShortBE(configId);
+        } else {
+            packet = new Packet(222);
+            packet.writeNegativeOffsetByte(value);
+            packet.writeUnsignedOffsetShortBE(configId);
+        }
+
+        this.send(packet);
+    }
+
     public updateWidgetSetting(settingId: number, value: number): void {
         let packet: Packet;
 
@@ -310,8 +326,8 @@ export class PacketSender {
     }
 
     public showScreenWidget(widgetId: number): void {
-        const packet = new Packet(159);
-        packet.writeOffsetShortLE(widgetId);
+        const packet = new Packet(118);
+        packet.writeUnsignedShortBE(widgetId);
 
         this.send(packet);
     }

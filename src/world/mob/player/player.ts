@@ -486,8 +486,13 @@ export class Player extends Mob {
         };
     }
 
-    public closeActiveWidget(): void {
-        this.activeWidget = null;
+    public closeActiveWidget(notifyClient: boolean = true): void {
+        if(notifyClient) {
+            this.activeWidget = null;
+        } else {
+            this.actionsCancelled.next(true);
+            this._activeWidget = null;
+        }
     }
 
     public set position(position: Position) {

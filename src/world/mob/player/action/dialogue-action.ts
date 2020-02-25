@@ -3,7 +3,7 @@ import { gameCache } from '@server/game-server';
 import { Npc } from '@server/world/mob/npc/npc';
 import { skillDetails } from '@server/world/mob/skills';
 
-const widgetIds = {
+export const dialogueWidgetIds = {
     PLAYER: [ 64, 65, 66, 67 ],
     NPC: [ 241, 242, 243, 244 ],
     OPTIONS: [ 228, 230, 232, 234 ]
@@ -104,7 +104,7 @@ export class DialogueAction {
         if(options.type === 'LEVEL_UP') {
             widgetId = skillDetails.map(skill => skill.advancementWidgetId === undefined ? -1 : skill.advancementWidgetId)[options.skillId];
         } else {
-            widgetId = widgetIds[options.type][widgetIndex];
+            widgetId = dialogueWidgetIds[options.type][widgetIndex];
         }
 
         if(widgetId === undefined || widgetId === null || widgetId === -1) {
