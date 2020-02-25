@@ -126,7 +126,7 @@ export class Skills {
 
                 if(achievementDetails.advancementWidgetId) {
                     dialogueAction(this.mob, { type: 'LEVEL_UP', skillId, lines: [
-                        `@dbl@Congratulations, you just advanced a ${achievementDetails.name.toLowerCase()} level.`,
+                        `<col=000080>Congratulations, you just advanced a ${achievementDetails.name.toLowerCase()} level.</col>`,
                             `Your ${achievementDetails.name.toLowerCase()} level is now ${finalLevel}.` ] }).then(d => d.close());
                     // @TODO sounds
                 }

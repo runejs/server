@@ -4,6 +4,8 @@ import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 import { readFileSync } from 'fs';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
+// @TODO fix me!
+
 interface SkillSubGuide {
     name: string;
     lines: {
@@ -117,4 +119,4 @@ export const action: buttonAction = (details) => {
     player.metadata['activeSkillGuide'] = buttonId;
 };
 
-export default new RunePlugin({ type: ActionType.BUTTON, buttonIds, action });
+export default new RunePlugin({ type: ActionType.BUTTON, widgetId: 1, buttonIds, action });

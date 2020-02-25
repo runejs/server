@@ -6,4 +6,4 @@ export const action: buttonAction = (details) => {
     player.logout();
 };
 
-export default new RunePlugin({ type: ActionType.BUTTON, buttonIds: 11927558, action });
+export default new RunePlugin({ type: ActionType.BUTTON, widgetId: 182, buttonIds: 6, action });

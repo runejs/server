@@ -12,6 +12,7 @@ export type buttonAction = (details: ButtonActionDetails) => void;
  */
 export interface ButtonActionDetails {
     player: Player;
+    widgetId: number;
     buttonId: number;
 }
 
@@ -19,6 +20,7 @@ export interface ButtonActionDetails {
  * Defines a button interaction plugin.
  */
 export interface ButtonActionPlugin extends ActionPlugin {
+    widgetId: number;
     buttonIds: number | number[];
     action: buttonAction;
     cancelActions?: boolean;
@@ -38,12 +40,12 @@ export const setButtonPlugins = (plugins: ActionPlugin[]): void => {
     buttonInteractions = plugins as ButtonActionPlugin[];
 };
 
-export const buttonAction = (player: Player, buttonId: number): void => {
+export const buttonAction = (player: Player, widgetId: number, buttonId: number): void => {
     // Find all item on item action plugins that match this action
-    const interactionPlugins = buttonInteractions.filter(plugin => pluginFilter(plugin.buttonIds, buttonId));
+    const interactionPlugins = buttonInteractions.filter(plugin => plugin.widgetId === widgetId && pluginFilter(plugin.buttonIds, buttonId));
 
     if(interactionPlugins.length === 0) {
-        player.packetSender.chatboxMessage(`Unhandled button interaction: ${buttonId}`);
+        player.packetSender.chatboxMessage(`Unhandled button interaction: ${widgetId}:${buttonId}`);
         return;
     }
 
@@ -53,6 +55,6 @@ export const buttonAction = (player: Player, buttonId: number): void => {
             player.actionsCancelled.next();
         }
 
-        plugin.action({ player, buttonId });
+        plugin.action({ player, widgetId, buttonId });
     });
 };
