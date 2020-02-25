@@ -6,11 +6,12 @@ import { widgetIds } from '../../widget';
 import { dropItemAction } from '@server/world/mob/player/action/drop-item-action';
 
 export const dropItemPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
-    const slot = packet.readShortLE();
-    const itemId = packet.readNegativeOffsetShortLE();
-    const widgetId = packet.readNegativeOffsetShortLE();
+    const widgetId = packet.readUnsignedShortLE();
+    const containerId = packet.readUnsignedShortLE();
+    const slot = packet.readNegativeOffsetShortBE();
+    const itemId = packet.readUnsignedShortLE();
 
-    if(widgetId !== widgetIds.inventory) {
+    if(widgetId !== widgetIds.inventory.widgetId || containerId !== widgetIds.inventory.containerId) {
         logger.warn(`${player.username} attempted to drop item from incorrect widget id ${widgetId}.`);
         return;
     }

@@ -13,9 +13,9 @@ interface ObjectInteraction {
 }
 
 const option1 = (packet: RsBuffer): ObjectInteraction => {
-    const x = packet.readNegativeOffsetShortBE();
-    const y = packet.readUnsignedShortLE();
-    const objectId = packet.readUnsignedShortLE();
+    const objectId = packet.readNegativeOffsetShortBE();
+    const y = packet.readNegativeOffsetShortBE();
+    const x = packet.readNegativeOffsetShortLE();
     return { objectId, x, y };
 };
 
@@ -49,11 +49,11 @@ const option5 = (packet: RsBuffer): ObjectInteraction => {
 
 export const objectInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const options = {
-        181: { packetDef: option1, index: 0 },
-        241: { packetDef: option2, index: 1 },
+        30: { packetDef: option1, index: 0 },
+        /*241: { packetDef: option2, index: 1 },
         50:  { packetDef: option3, index: 2 },
         136: { packetDef: option4, index: 3 },
-        55:  { packetDef: option5, index: 4 },
+        55:  { packetDef: option5, index: 4 },*/
     };
 
     const { objectId, x, y } = options[packetId].packetDef(packet);

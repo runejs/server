@@ -247,6 +247,10 @@ export class RsBuffer {
     }
 
     public writeOffsetByte(value: number): void {
+        this.writeByte(0xff & value + 128);
+    }
+
+    public writeUnsignedOffsetByte(value: number): void {
         this.writeUnsignedByte(value + 128);
     }
 

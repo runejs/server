@@ -25,7 +25,7 @@ const action: objectAction = (details) => {
 
         world.chunkManager.toggleObjects(metadata.originalMain, metadata.main, metadata.originalMainPosition, metadata.mainPosition, metadata.originalMainChunk, metadata.mainChunk, true);
         world.chunkManager.toggleObjects(metadata.originalSecond, metadata.second, metadata.originalSecondPosition, metadata.secondPosition, metadata.originalSecondChunk, metadata.secondChunk, true);
-        player.packetSender.playSound(327, 7); // @TODO find correct gate closing sound
+        player.packetSender.playSound(60, 7); // @TODO find correct gate closing sound
     } else {
         let details = gates.find(g => g.main === gate.objectId);
         let clickedSecondary = false;
@@ -205,7 +205,7 @@ const action: objectAction = (details) => {
 
         world.chunkManager.toggleObjects(newHinge, gate, newPosition, position, newHingeChunk, hingeChunk, !cacheOriginal);
         world.chunkManager.toggleObjects(newSecond, secondGate, newSecondPosition, gateSecondPosition, newSecondChunk, gateSecondChunk, !cacheOriginal);
-        player.packetSender.playSound(328, 7); // @TODO find correct gate opening sound
+        player.packetSender.playSound(62, 7); // @TODO find correct gate opening sound
     }
 };
 

@@ -83,7 +83,8 @@ export const action: objectAction = (details): void => {
     const replacementDoorChunk = world.chunkManager.getChunkForWorldPosition(endPosition);
 
     world.chunkManager.toggleObjects(replacementDoor, door, endPosition, position, replacementDoorChunk, startDoorChunk, !cacheOriginal);
-    player.packetSender.playSound(opening ? 318 : 326, 7);
+    // 70 = close gate, 71 = open gate, 62 = open door, 60 = close door
+    player.packetSender.playSound(opening ? 62 : 60, 7);
 };
 
 export default new RunePlugin({ type: ActionType.OBJECT_ACTION, objectIds: [1530, 4465, 4467, 3014, 3017, 3018,

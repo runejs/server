@@ -115,7 +115,7 @@ export class PacketSender {
     }
 
     public playSound(soundId: number, volume: number, delay: number = 0): void {
-        const packet = new Packet(26);
+        const packet = new Packet(131);
         packet.writeShortBE(soundId);
         packet.writeByte(volume);
         packet.writeShortBE(delay);
@@ -141,30 +141,30 @@ export class PacketSender {
     public updateChunk(chunk: Chunk, chunkUpdates: ChunkUpdateItem[]): void {
         const { offsetX, offsetY } = this.getChunkOffset(chunk);
 
-        const packet = new Packet(183, PacketType.DYNAMIC_LARGE);
-        packet.writeUnsignedByte(offsetX);
-        packet.writeOffsetByte(offsetY);
+        const packet = new Packet(63, PacketType.DYNAMIC_LARGE);
+        packet.writeByteInverted(offsetX);
+        packet.writeNegativeOffsetByte(offsetY);
 
         chunkUpdates.forEach(update => {
             if(update.type === 'ADD') {
                 if(update.object) {
                     const offset = this.getChunkPositionOffset(update.object.x, update.object.y, chunk);
-                    packet.writeUnsignedByte(152);
+                    packet.writeUnsignedByte(241);
                     packet.writeByteInverted((update.object.type << 2) + (update.object.rotation & 3));
-                    packet.writeOffsetShortLE(update.object.objectId);
-                    packet.writeOffsetByte(offset);
+                    packet.writeUnsignedShortBE(update.object.objectId);
+                    packet.writeUnsignedOffsetByte(offset);
                 } else if(update.worldItem) {
                     const offset = this.getChunkPositionOffset(update.worldItem.position.x, update.worldItem.position.y, chunk);
-                    packet.writeUnsignedByte(107);
-                    packet.writeShortBE(update.worldItem.itemId);
-                    packet.writeByteInverted(offset);
-                    packet.writeNegativeOffsetShortBE(update.worldItem.amount);
+                    packet.writeUnsignedByte(175);
+                    packet.writeUnsignedShortLE(update.worldItem.itemId);
+                    packet.writeUnsignedShortBE(update.worldItem.amount);
+                    packet.writeUnsignedByte(offset);
                 }
             } else if(update.type === 'REMOVE') {
                 const offset = this.getChunkPositionOffset(update.object.x, update.object.y, chunk);
-                packet.writeUnsignedByte(88);
-                packet.writeNegativeOffsetByte(offset);
-                packet.writeNegativeOffsetByte((update.object.type << 2) + (update.object.rotation & 3));
+                packet.writeUnsignedByte(143);
+                packet.writeUnsignedOffsetByte(offset);
+                packet.writeByteInverted((update.object.type << 2) + (update.object.rotation & 3));
             }
         });
 
@@ -174,9 +174,9 @@ export class PacketSender {
     public clearChunk(chunk: Chunk): void {
         const { offsetX, offsetY } = this.getChunkOffset(chunk);
 
-        const packet = new Packet(40);
-        packet.writeNegativeOffsetByte(offsetY);
-        packet.writeByteInverted(offsetX);
+        const packet = new Packet(64);
+        packet.writeUnsignedByte(offsetY);
+        packet.writeUnsignedOffsetByte(offsetX);
 
         this.send(packet);
     }
@@ -184,10 +184,10 @@ export class PacketSender {
     public setWorldItem(worldItem: WorldItem, position: Position, offset: number = 0): void {
         this.updateReferencePosition(position);
 
-        const packet = new Packet(107);
-        packet.writeShortBE(worldItem.itemId);
-        packet.writeByteInverted(offset);
-        packet.writeNegativeOffsetShortBE(worldItem.amount);
+        const packet = new Packet(175);
+        packet.writeUnsignedShortLE(worldItem.itemId);
+        packet.writeUnsignedShortBE(worldItem.amount);
+        packet.writeUnsignedByte(offset);
 
         this.send(packet);
     }
@@ -195,9 +195,9 @@ export class PacketSender {
     public removeWorldItem(worldItem: WorldItem, position: Position, offset: number = 0): void {
         this.updateReferencePosition(position);
 
-        const packet = new Packet(208);
-        packet.writeNegativeOffsetShortBE(worldItem.itemId);
-        packet.writeOffsetByte(offset);
+        const packet = new Packet(74);
+        packet.writeUnsignedByte(offset);
+        packet.writeUnsignedOffsetShortBE(worldItem.itemId);
 
         this.send(packet);
     }
@@ -205,10 +205,10 @@ export class PacketSender {
     public setLandscapeObject(landscapeObject: LandscapeObject, position: Position, offset: number = 0): void {
         this.updateReferencePosition(position);
 
-        const packet = new Packet(152);
+        const packet = new Packet(241);
         packet.writeByteInverted((landscapeObject.type << 2) + (landscapeObject.rotation & 3));
-        packet.writeOffsetShortLE(landscapeObject.objectId);
-        packet.writeOffsetByte(offset);
+        packet.writeUnsignedShortBE(landscapeObject.objectId);
+        packet.writeUnsignedOffsetByte(offset);
 
         this.send(packet);
     }
@@ -216,9 +216,9 @@ export class PacketSender {
     public removeLandscapeObject(landscapeObject: LandscapeObject, position: Position, offset: number = 0): void {
         this.updateReferencePosition(position);
 
-        const packet = new Packet(88);
-        packet.writeNegativeOffsetByte(offset);
-        packet.writeNegativeOffsetByte((landscapeObject.type << 2) + (landscapeObject.rotation & 3));
+        const packet = new Packet(143);
+        packet.writeUnsignedOffsetByte(offset);
+        packet.writeByteInverted((landscapeObject.type << 2) + (landscapeObject.rotation & 3));
 
         this.send(packet);
     }
@@ -227,9 +227,9 @@ export class PacketSender {
         const offsetX = position.x - (this.player.lastMapRegionUpdatePosition.chunkX * 8);
         const offsetY = position.y - (this.player.lastMapRegionUpdatePosition.chunkY * 8);
 
-        const packet = new Packet(75);
+        const packet = new Packet(254);
+        packet.writeNegativeOffsetByte(offsetY);
         packet.writeByteInverted(offsetX);
-        packet.writeOffsetByte(offsetY);
 
         this.send(packet);
     }
@@ -363,14 +363,14 @@ export class PacketSender {
         items.forEach(item => {
             if(!item) {
                 // Empty slot
-                packet.writeOffsetByte(0);
+                packet.writeUnsignedOffsetByte(0);
                 packet.writeOffsetShortBE(0);
             } else {
                 if(item.amount >= 255) {
-                    packet.writeOffsetByte(255);
+                    packet.writeUnsignedOffsetByte(255);
                     packet.writeIntBE(item.amount);
                 } else {
-                    packet.writeOffsetByte(item.amount);
+                    packet.writeUnsignedOffsetByte(item.amount);
                 }
 
                 packet.writeOffsetShortBE(item.itemId + 1); // +1 because 0 means an empty slot
@@ -388,10 +388,10 @@ export class PacketSender {
         itemIds.forEach(itemId => {
             if(!itemId) {
                 // Empty slot
-                packet.writeOffsetByte(0);
+                packet.writeUnsignedOffsetByte(0);
                 packet.writeOffsetShortBE(0);
             } else {
-                packet.writeOffsetByte(1);
+                packet.writeUnsignedOffsetByte(1);
                 packet.writeOffsetShortBE(itemId + 1); // +1 because 0 means an empty slot
             }
         });
@@ -442,7 +442,7 @@ export class PacketSender {
         packet.writeShortBE(42); // membership credit days remaining
         packet.writeIntLE(addressToInt(lastAddress)); // last login IP/address
         packet.writeOffsetShortLE(0); // recovery question set time
-        packet.writeOffsetByte(12); // junk
+        packet.writeUnsignedOffsetByte(12); // junk
 
         this.send(packet);
     }
@@ -451,9 +451,9 @@ export class PacketSender {
      * Clears the player's current map chunk of all ground items and spawned/modified landscape objects.
      */
     public clearMapChunk(): void {
-        const packet = new Packet(40);
-        packet.writeNegativeOffsetByte(this.player.position.chunkY + 6); // Map Chunk Y
-        packet.writeByteInverted(this.player.position.chunkX + 6); // Map Chunk X
+        const packet = new Packet(64);
+        packet.writeUnsignedByte(this.player.position.chunkY + 6); // Map Chunk Y
+        packet.writeUnsignedOffsetByte(this.player.position.chunkX + 6); // Map Chunk X
 
         this.send(packet);
     }
@@ -489,7 +489,7 @@ export class PacketSender {
     }
 
     public sendLogout(): void {
-        this.send(new Packet(5));
+        this.send(new Packet(181));
     }
 
     public chatboxMessage(message: string): void {
@@ -501,7 +501,7 @@ export class PacketSender {
 
     public sendSkill(skillId: number, level: number, exp: number): void {
         const packet = new Packet(34);
-        packet.writeOffsetByte(level);
+        packet.writeUnsignedOffsetByte(level);
         packet.writeByte(skillId);
         packet.writeIntME2(exp);
 

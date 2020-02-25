@@ -221,7 +221,7 @@ export class Player extends Mob {
      * @param chunk The player's new active map chunk.
      */
     public chunkChanged(chunk: Chunk): void {
-        /*const nearbyChunks = world.chunkManager.getSurroundingChunks(chunk);
+        const nearbyChunks = world.chunkManager.getSurroundingChunks(chunk);
         if(this._nearbyChunks.length === 0) {
             this.sendChunkUpdates(nearbyChunks);
         } else {
@@ -229,7 +229,7 @@ export class Player extends Mob {
             this.sendChunkUpdates(newChunks);
         }
 
-        this._nearbyChunks = nearbyChunks;*/
+        this._nearbyChunks = nearbyChunks;
     }
 
     /**

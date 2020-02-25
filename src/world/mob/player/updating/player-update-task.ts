@@ -153,10 +153,10 @@ export class PlayerUpdateTask extends Task<void> {
         if(updateFlags.chatMessages.length !== 0) {
             const message = updateFlags.chatMessages[0];
             updateMaskData.writeUnsignedShortBE(((message.color & 0xFF) << 8) + (message.effects & 0xFF));
-            updateMaskData.writeOffsetByte(player.rights.valueOf());
+            updateMaskData.writeUnsignedOffsetByte(player.rights.valueOf());
             updateMaskData.writeByteInverted(message.data.length);
             for(let i = 0; i < message.data.length; i++) {
-                updateMaskData.writeOffsetByte(message.data.readInt8(i));
+                updateMaskData.writeUnsignedOffsetByte(message.data.readInt8(i));
             }
         }
 
