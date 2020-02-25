@@ -220,7 +220,7 @@ export class PlayerUpdateTask extends Task<void> {
             }
 
             if(torsoItemData && torsoItemData.equipment && torsoItemData.equipment.torsoType && torsoItemData.equipment.torsoType === TorsoType.FULL) {
-                appearanceData.writeShortBE(0x200 + torsoItem.itemId);
+                appearanceData.writeByte(0);
             } else {
                 appearanceData.writeShortBE(0x100 + player.appearance.arms);
             }
