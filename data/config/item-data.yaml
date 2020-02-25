@@ -15,6 +15,28 @@
   equipment:
     slot: HEAD
     helmetType: HAT
+- id: 1061
+  desc: leather boots
+  canTrade: true
+  weight: 0.34
+  alchemy:
+    high: 3
+    low: 3
+  equipment:
+    slot: BOOTS
+    bonuses:
+      offencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 1
+        crush: 1
+        magic: 0
+        ranged: 0
 - id: 1079
   desc: rune platelegs
   canTrade: true
