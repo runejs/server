@@ -63,7 +63,7 @@ Online players can be polled via the REST protocol for web applications. An acco
 
 #### Supported 435 Clients
 
-RuneJS supports the 435 RuneScape game client being renamed by [Promises](https://github.com/Promises) and [TheBlackParade](https://github.com/TheBlackParade)
+RuneJS supports the 435 RuneScape game client being renamed by [Promises](https://github.com/Promises) and [TheBlackParade](https://github.com/TheBlackParade):
 
 - [refactored-client-435](https://github.com/Promises/refactored-client-435)
 
