@@ -136,6 +136,12 @@ export class PlayerUpdateTask extends Task<void> {
             updateMaskData.writeByte(mask);
         }
 
+        if(updateFlags.facePosition) {
+            const position = updateFlags.facePosition;
+            updateMaskData.writeUnsignedShortBE(position.x * 2 + 1);
+            updateMaskData.writeUnsignedShortLE(position.y * 2 + 1);
+        }
+
         if(updateFlags.animation !== undefined) {
             const animation = updateFlags.animation;
 
@@ -147,16 +153,6 @@ export class PlayerUpdateTask extends Task<void> {
                 const delay = updateFlags.animation.delay || 0;
                 updateMaskData.writeUnsignedShortLE(updateFlags.animation.id);
                 updateMaskData.writeUnsignedByteInverted(delay);
-            }
-        }
-
-        if(updateFlags.chatMessages.length !== 0) {
-            const message = updateFlags.chatMessages[0];
-            updateMaskData.writeUnsignedShortBE(((message.color & 0xFF) << 8) + (message.effects & 0xFF));
-            updateMaskData.writeUnsignedOffsetByte(player.rights.valueOf());
-            updateMaskData.writeByteInverted(message.data.length);
-            for(let i = 0; i < message.data.length; i++) {
-                updateMaskData.writeUnsignedOffsetByte(message.data.readInt8(i));
             }
         }
 
@@ -180,16 +176,14 @@ export class PlayerUpdateTask extends Task<void> {
             }
         }
 
-        if(updateFlags.facePosition) {
-            const position = updateFlags.facePosition;
-            updateMaskData.writeUnsignedShortBE(position.x * 2 + 1);
-            updateMaskData.writeUnsignedShortLE(position.y * 2 + 1);
-        }
-
-        if(updateFlags.graphics) {
-            const delay = updateFlags.graphics.delay || 0;
-            updateMaskData.writeUnsignedShortLE(updateFlags.graphics.id);
-            updateMaskData.writeIntME2(updateFlags.graphics.height << 16 | delay & 0xffff);
+        if(updateFlags.chatMessages.length !== 0) {
+            const message = updateFlags.chatMessages[0];
+            updateMaskData.writeUnsignedShortBE(((message.color & 0xFF) << 8) + (message.effects & 0xFF));
+            updateMaskData.writeUnsignedOffsetByte(player.rights.valueOf());
+            updateMaskData.writeByteInverted(message.data.length);
+            for(let i = 0; i < message.data.length; i++) {
+                updateMaskData.writeUnsignedOffsetByte(message.data.readInt8(i));
+            }
         }
 
         if(updateFlags.appearanceUpdateRequired || forceUpdate) {
@@ -290,6 +284,12 @@ export class PlayerUpdateTask extends Task<void> {
 
             updateMaskData.writeByte(appearanceDataSize);
             updateMaskData.writeBytes(appearanceData.getData());
+        }
+
+        if(updateFlags.graphics) {
+            const delay = updateFlags.graphics.delay || 0;
+            updateMaskData.writeUnsignedShortLE(updateFlags.graphics.id);
+            updateMaskData.writeIntME2(updateFlags.graphics.height << 16 | delay & 0xffff);
         }
     }
 

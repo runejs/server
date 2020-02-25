@@ -53,8 +53,12 @@ export class World {
     }
 
     public init(): void {
-        this.chunkManager.generateCollisionMaps();
-        this.spawnNpcs();
+        new Promise(resolve => {
+            this.chunkManager.generateCollisionMaps();
+            resolve();
+        }).then(() => {
+            this.spawnNpcs();
+        });
     }
 
     public spawnNpcs(): void {

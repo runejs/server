@@ -20,16 +20,16 @@ const option1 = (packet: RsBuffer): ObjectInteraction => {
 };
 
 const option2 = (packet: RsBuffer): ObjectInteraction => {
-    const objectId = packet.readUnsignedShortBE();
-    const x = packet.readUnsignedShortBE();
-    const y = packet.readNegativeOffsetShortBE();
+    const x = packet.readNegativeOffsetShortLE();
+    const y = packet.readNegativeOffsetShortLE();
+    const objectId = packet.readNegativeOffsetShortLE();
     return { objectId, x, y };
 };
 
 const option3 = (packet: RsBuffer): ObjectInteraction => {
     const y = packet.readNegativeOffsetShortBE();
-    const objectId = packet.readUnsignedShortLE();
-    const x = packet.readNegativeOffsetShortLE();
+    const objectId = packet.readUnsignedShortBE();
+    const x = packet.readNegativeOffsetShortBE();
     return { objectId, x, y };
 };
 
@@ -50,9 +50,9 @@ const option5 = (packet: RsBuffer): ObjectInteraction => {
 export const objectInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const options = {
         30: { packetDef: option1, index: 0 },
-        /*241: { packetDef: option2, index: 1 },
-        50:  { packetDef: option3, index: 2 },
-        136: { packetDef: option4, index: 3 },
+        164: { packetDef: option2, index: 1 },
+        183: { packetDef: option3, index: 2 },
+        /*136: { packetDef: option4, index: 3 },
         55:  { packetDef: option5, index: 4 },*/
     };
 
