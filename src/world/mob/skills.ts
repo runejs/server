@@ -25,7 +25,7 @@ export enum Skill {
     SLAYER,
     FARMING,
     RUNECRAFTING,
-    CONSTRUCTION = 21
+    CONSTRUCTION = 22
 }
 
 export interface SkillDetail {
@@ -55,6 +55,7 @@ export const skillDetails: SkillDetail[] = [
     { name: 'Slayer', advancementWidgetId: 173 },
     { name: 'Farming', advancementWidgetId: 162 },
     { name: 'Runecrafting', advancementWidgetId: 172 },
+    null,
     { name: 'Construction' }
 ];
 
@@ -123,6 +124,10 @@ export class Skills {
 
             if(this.mob instanceof Player) {
                 const achievementDetails = skillDetails[skillId];
+                if(!achievementDetails) {
+                    return;
+                }
+
                 this.mob.packetSender.chatboxMessage(`Congratulations, you just advanced a ${achievementDetails.name.toLowerCase()} level.`);
 
                 if(achievementDetails.advancementWidgetId) {

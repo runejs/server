@@ -171,7 +171,7 @@ export class Player extends Mob {
                 disablePlayerMovement: true
             };
         } else if(serverConfig.showWelcome) {
-            // this.packetSender.updateWelcomeScreenInfo(widgetIds.welcomeScreenChildren.question, this.loginDate, this.lastAddress);
+            this.packetSender.updateWidgetString(widgetIds.welcomeScreenChildren.question, 1, `Want to help RuneJS improve?\\nSend us a pull request over on Github!`)
 
             this.activeWidget = {
                 widgetId: widgetIds.welcomeScreen,

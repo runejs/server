@@ -423,30 +423,6 @@ export class PacketSender {
         this.send(packet);
     }
 
-    public updateWelcomeScreenInfo(childId: number, lastLogin: Date, lastAddress: string): void {
-        const currentTime = rsTime(new Date());
-
-        // this.updateWidgetString(15270, `\\nYou do not have a Bank PIN.\\nPlease visit a bank if you would like one.`);
-        // this.updateWidgetString(childId + 2, `Interested in helping RuneJS improve?`);
-        // this.updateWidgetString(childId + 3, `Send us a Pull Request over on Github!`);
-        // @TODO reminder that welcome screen models can be changed :)
-
-        const packet = new Packet(76);
-        packet.writeUnsignedShortLE(0); // last password change time
-        packet.writeOffsetShortLE(3); // junk
-        packet.writeShortBE(4); // junk
-        packet.writeShortBE(5); // junk
-        packet.writeUnsignedShortLE(currentTime); // long screen display time
-        packet.writeOffsetShortBE(0); // unread website message count
-        packet.writeUnsignedOffsetShortBE(lastLogin === undefined || lastLogin === null ? currentTime : rsTime(lastLogin)); // last login time
-        packet.writeShortBE(42); // membership credit days remaining
-        packet.writeIntLE(addressToInt(lastAddress)); // last login IP/address
-        packet.writeOffsetShortLE(0); // recovery question set time
-        packet.writeUnsignedOffsetByte(12); // junk
-
-        this.send(packet);
-    }
-
     /**
      * Clears the player's current map chunk of all ground items and spawned/modified landscape objects.
      */
