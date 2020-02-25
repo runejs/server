@@ -50,7 +50,7 @@ The RuneJS `cache-parser` package can be found here:
 
 ## REST API
 
-Online players can be polled via the REST protocol for web applications. An accompanying server control panel UI is panned utilizing VueJS that will point to this REST service.
+Online players can be polled via the REST protocol for web applications.
 
 ##### API Endpoints:
 

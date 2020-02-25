@@ -415,10 +415,10 @@ export class PacketSender {
         this.send(packet);
     }
 
-    public showFullscreenWidget(widgetId: number, childWidgetId: number): void {
-        const packet = new Packet(253);
-        packet.writeUnsignedShortLE(childWidgetId);
-        packet.writeOffsetShortBE(widgetId);
+    public showFullscreenWidget(widgetId: number, secondaryWidgetId: number): void {
+        const packet = new Packet(195);
+        packet.writeUnsignedOffsetShortBE(secondaryWidgetId);
+        packet.writeUnsignedShortBE(widgetId);
 
         this.send(packet);
     }

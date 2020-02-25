@@ -15,15 +15,17 @@ export const widgetIds: any = {
         playerTab: 3822,
         shopTitle: 3901
     },
-    welcomeScreen: 15244,
+    welcomeScreen: 378,
     welcomeScreenChildren: {
-        question: 17511,
-        christmas: 15819,
-        security: 15812,
-        itemScam: 15801,
-        passwordSecurity: 15791,
-        goodBad: 15774,
-        drama: 15767
+        cogs: 16,
+        question: 17,
+        drama: 18,
+        bankPin: 19,
+        bankPinQuestion: 20,
+        scamming: 21,
+        bankPinKey: 22,
+        christmas: 23,
+        killcount: 24
     }
 };
 

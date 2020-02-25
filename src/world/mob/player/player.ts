@@ -170,8 +170,8 @@ export class Player extends Mob {
                 type: 'SCREEN',
                 disablePlayerMovement: true
             };
-        }/* else if(serverConfig.showWelcome) {
-            this.packetSender.updateWelcomeScreenInfo(widgetIds.welcomeScreenChildren.question, this.loginDate, this.lastAddress);
+        } else if(serverConfig.showWelcome) {
+            // this.packetSender.updateWelcomeScreenInfo(widgetIds.welcomeScreenChildren.question, this.loginDate, this.lastAddress);
 
             this.activeWidget = {
                 widgetId: widgetIds.welcomeScreen,
@@ -180,7 +180,7 @@ export class Player extends Mob {
             };
         }
 
-        this.updateBonuses();
+        /*this.updateBonuses();
         this.updateWidgetSettings();
         this.updateCarryWeight(true);
 
