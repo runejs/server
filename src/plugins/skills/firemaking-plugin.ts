@@ -49,7 +49,7 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
     world.chunkManager.addTemporaryLandscapeObject(fireObject, position, fireDuration()).then(() => {
         world.chunkManager.spawnWorldItem({ itemId: 592, amount: 1 }, position, null, 300);
     });
-    player.packetSender.playSound(240, 7);
+    player.packetSender.playSound(2594, 7);
     player.playAnimation(null);
     player.packetSender.chatboxMessage(`The fire catches and the logs begin to burn.`);
     player.skills.addExp(Skill.FIREMAKING, burnExp);
@@ -102,17 +102,18 @@ const action: itemOnItemAction = (details) => {
                 return;
             }
 
-            // @TODO check for existing location objects again (incase one spawned here during this loop)
-            // @TODO check for tinderbox incase it was removed
+            // @TODO check for existing location objects again (in-case one spawned here during this loop)
+            // @TODO check for tinderbox in-case it was removed
 
             if(elapsedTicks === 0 || elapsedTicks % 12 === 0) {
                 player.playAnimation(733);
             }
-            if(elapsedTicks !== 0 && (elapsedTicks === 2 || (elapsedTicks - 2) % 4 === 0)) {
-                player.packetSender.playSound(375, 7, 1);
-            }
 
-            const canLightFire = elapsedTicks > 0 && canLight(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level);
+            const canLightFire = elapsedTicks > 10 && canLight(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level);
+
+            if(!canLightFire && (elapsedTicks === 0 || elapsedTicks % 4 === 0)) {
+                player.packetSender.playSound(2599, 7);
+            }
 
             if(canLightFire) {
                 loop.cancel();

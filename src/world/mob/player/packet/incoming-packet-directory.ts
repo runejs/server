@@ -36,6 +36,7 @@ const packets: { [key: number]: incomingPacket } = {
     176: widgetsClosedPacket,
 
     83:  itemSwapPacket,
+    40:  itemOnItemPacket,
     102: itemEquipPacket,
     38:  itemOption1Packet,
     29:  dropItemPacket,

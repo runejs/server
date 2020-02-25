@@ -6,20 +6,23 @@ import { logger } from '@runejs/logger/dist/logger';
 import { itemOnItemAction } from '@server/world/mob/player/action/item-on-item-action';
 
 export const itemOnItemPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
-    const usedWithItemId = packet.readUnsignedShortBE();
-    const usedItemSlot = packet.readUnsignedShortLE();
+    const usedWithItemId = packet.readNegativeOffsetShortLE();
+    const usedWithSlot = packet.readNegativeOffsetShortLE();
+    const usedWithContainerId = packet.readUnsignedShortLE();
+    const usedWithWidgetId = packet.readUnsignedShortLE();
+    const usedContainerId = packet.readUnsignedShortLE();
+    const usedWidgetId = packet.readUnsignedShortLE();
     const usedItemId = packet.readUnsignedShortLE();
-    const usedWidgetId = packet.readNegativeOffsetShortLE();
-    const usedWithItemSlot = packet.readNegativeOffsetShortBE();
-    const usedWithWidgetId = packet.readNegativeOffsetShortBE();
+    const usedSlot = packet.readNegativeOffsetShortBE();
 
-    if(usedWidgetId === widgetIds.inventory && usedWithWidgetId === widgetIds.inventory) {
-        if(usedItemSlot < 0 || usedItemSlot > 27 || usedWithItemSlot < 0 || usedWithItemSlot > 27) {
+    if(usedWidgetId === widgetIds.inventory.widgetId && usedContainerId === widgetIds.inventory.containerId &&
+        usedWithWidgetId === widgetIds.inventory.widgetId && usedWithContainerId === widgetIds.inventory.containerId) {
+        if(usedSlot < 0 || usedSlot > 27 || usedWithSlot < 0 || usedWithSlot > 27) {
             return;
         }
 
-        const usedItem = player.inventory.items[usedItemSlot];
-        const usedWithItem = player.inventory.items[usedWithItemSlot];
+        const usedItem = player.inventory.items[usedSlot];
+        const usedWithItem = player.inventory.items[usedWithSlot];
         if(!usedItem || !usedWithItem) {
             return;
         }
@@ -28,8 +31,8 @@ export const itemOnItemPacket: incomingPacket = (player: Player, packetId: numbe
             return;
         }
 
-        itemOnItemAction(player, usedItem, usedItemSlot, usedWidgetId, usedWithItem, usedWithItemSlot, usedWithWidgetId);
+        itemOnItemAction(player, usedItem, usedSlot, usedWidgetId, usedWithItem, usedWithSlot, usedWithWidgetId);
     } else {
-        logger.warn(`Unhandled item on item case using widgets ${usedWidgetId} => ${usedWithWidgetId}`);
+        logger.warn(`Unhandled item on item case using widgets ${usedWidgetId}:${usedContainerId} => ${usedWithWidgetId}:${usedWithContainerId}`);
     }
 };

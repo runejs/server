@@ -141,7 +141,7 @@ export class PlayerUpdateTask extends Task<void> {
 
             if(animation === null || animation.id === -1) {
                 // Reset animation
-                updateMaskData.writeUnsignedShortLE(-1);
+                updateMaskData.writeShortLE(-1);
                 updateMaskData.writeUnsignedByteInverted(0);
             } else {
                 const delay = updateFlags.animation.delay || 0;
