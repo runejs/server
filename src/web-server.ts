@@ -188,9 +188,9 @@ export function runWebServer(): void {
                 const noted = req.query.noted.toLowerCase().trim();
 
                 if(noted === 'false') {
-                    worldItemList = worldItemList.filter(itemData => itemData.notedVersionOf === -1);
+                    worldItemList = worldItemList.filter(itemData => itemData.noteTemplateId === -1);
                 } else if(noted === 'true') {
-                    worldItemList = worldItemList.filter(itemData => itemData.notedVersionOf !== -1);
+                    worldItemList = worldItemList.filter(itemData => itemData.noteTemplateId !== -1);
                 }
             }
         }

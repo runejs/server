@@ -131,12 +131,12 @@ export class Chunk {
                     this.collisionMap.markBlocked(x, y, mark);
                 }
             } else if(objectType >= 9) {
-                this.collisionMap.markSolidOccupant(x, y, objectDetails.sizeX, objectDetails.sizeY, objectRotation, objectDetails.walkable, mark);
+                this.collisionMap.markSolidOccupant(x, y, objectDetails.sizeX, objectDetails.sizeY, objectRotation, objectDetails.nonWalkable, mark);
             } else if(objectType >= 0 && objectType <= 3) {
                 if(mark) {
-                    this.collisionMap.markWall(x, y, objectType, objectRotation, objectDetails.walkable);
+                    this.collisionMap.markWall(x, y, objectType, objectRotation, objectDetails.nonWalkable);
                 } else {
-                    this.collisionMap.unmarkWall(x, y, objectType, objectRotation, objectDetails.walkable);
+                    this.collisionMap.unmarkWall(x, y, objectType, objectRotation, objectDetails.nonWalkable);
                 }
             }
         }

@@ -3,7 +3,6 @@ import { gameCache } from '@server/game-server';
 import { widgetIds } from '@server/world/actor/player/widget';
 
 export const buyItemAction = (player: Player, itemId: number, amount: number, slot: number, interfaceId: number) => {
-
     const purchasedItem = gameCache.itemDefinitions.get(itemId);
     const coinsInInventoryIndex = player.inventory.findIndex(995);
 

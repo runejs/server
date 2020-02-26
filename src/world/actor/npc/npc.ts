@@ -38,7 +38,7 @@ export class Npc extends Actor {
         this._name = cacheData.name;
         this._combatLevel = cacheData.combatLevel;
         this._animations = cacheData.animations as NpcAnimations;
-        this.options = cacheData.actions;
+        this.options = cacheData.options;
         this.position = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
         this.initialPosition = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
 

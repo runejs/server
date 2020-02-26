@@ -1,6 +1,6 @@
 import { Chunk } from './chunk';
 import { Position } from '../position';
-import { gameCache } from '../../game-server';
+import { gameCache377 } from '../../game-server';
 import { logger } from '@runejs/logger';
 import { LandscapeObject } from '@runejs/cache-parser';
 import { Item } from '@server/world/items/item';
@@ -176,7 +176,7 @@ export class ChunkManager {
     public generateCollisionMaps(): void {
         logger.info('Generating game world collision maps...');
 
-        const tileList = gameCache.mapRegions.mapRegionTileList;
+        const tileList = gameCache377.mapRegions.mapRegionTileList;
 
         for(const tile of tileList) {
             const position = new Position(tile.x, tile.y, tile.level);
@@ -184,7 +184,7 @@ export class ChunkManager {
             chunk.addTile(tile, position);
         }
 
-        const objectList = gameCache.mapRegions.landscapeObjectList;
+        const objectList = gameCache377.mapRegions.landscapeObjectList;
 
         for(const landscapeObject of objectList) {
             const position = new Position(landscapeObject.x, landscapeObject.y, landscapeObject.level);
