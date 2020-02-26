@@ -116,8 +116,12 @@ export class RsBuffer {
         return this.buffer.readInt8(this.readerIndex++);
     }
 
-    public readByteInverted(): number {
+    public readUnsignedByteInverted(): number {
         return -this.buffer.readUInt8(this.readerIndex++);
+    }
+
+    public readByteInverted(): number {
+        return -this.buffer.readInt8(this.readerIndex++);
     }
 
     public readPreNegativeOffsetByte(): number {
@@ -170,6 +174,21 @@ export class RsBuffer {
         return value;
     }
 
+    public readIntME2(): number {
+        let value = ((this.readByte() & 0xff) << 8) | (this.readByte() & 0xff) | ((this.readByte() & 0xff) << 24) | ((this.readByte() & 0xff) << 16);
+        if(value > 32767) {
+            value -= 0x10000;
+        }
+
+        return value;
+    }
+
+    public readIntLE(): number {
+        const value = this.buffer.readInt32LE(this.readerIndex);
+        this.readerIndex += 4;
+        return value;
+    }
+
     public readIntBE(): number {
         const value = this.buffer.readInt32BE(this.readerIndex);
         this.readerIndex += 4;
@@ -202,6 +221,17 @@ export class RsBuffer {
         return Buffer.from(bytes).toString();
     }
 
+    public readNewString(): string {
+        const bytes: number[] = [];
+        let b: number;
+
+        while((b = this.readByte()) !== 0) {
+            bytes.push(b);
+        }
+
+        return Buffer.from(bytes).toString();
+    }
+
     public readBytes(length: number): Buffer {
         const result = this.buffer.slice(this.readerIndex, this.readerIndex + length + 1);
         this.readerIndex += length;
@@ -217,6 +247,10 @@ export class RsBuffer {
     }
 
     public writeOffsetByte(value: number): void {
+        this.writeByte(0xff & value + 128);
+    }
+
+    public writeUnsignedOffsetByte(value: number): void {
         this.writeUnsignedByte(value + 128);
     }
 
@@ -305,11 +339,19 @@ export class RsBuffer {
         this.writeUnsignedByte((value >> 16) & 0xff);
     }
 
+    public writeIntME2(value: number): void {
+        this.writeUnsignedByte((value >> 16) & 0xff);
+        this.writeUnsignedByte((value >> 24) & 0xff);
+        this.writeUnsignedByte(value & 0xff);
+        this.writeUnsignedByte((value >> 8) & 0xff);
+    }
+
     public writeLongBE(value: bigint): void {
         this.buffer.writeBigInt64BE(value, this.writerIndex);
         this.writerIndex += 8;
     }
 
+    // Old format string (300-era)
     public writeString(value: string): void {
         const encoder = new TextEncoder();
         const bytes = encoder.encode(value);
@@ -321,6 +363,18 @@ export class RsBuffer {
         this.writeByte(10); // end of line
     }
 
+    // New format string (400-era)
+    public writeNewString(value: string): void {
+        const encoder = new TextEncoder();
+        const bytes = encoder.encode(value);
+
+        for(const byte of bytes) {
+            this.writeByte(byte);
+        }
+
+        this.writeByte(0); // end of line
+    }
+
     public writeSmart(value: number): void {
         if(value >= 128) {
             this.writeShortBE(value);
@@ -330,6 +384,10 @@ export class RsBuffer {
     }
 
     public getReadable(): number {
+        if(this.buffer.length === 0) {
+            return 0;
+        }
+
         return this.buffer.length - this.readerIndex;
     }
 

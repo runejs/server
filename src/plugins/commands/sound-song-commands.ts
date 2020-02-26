@@ -1,19 +1,19 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { commandAction } from '@server/world/mob/player/action/input-command-action';
+import { commandAction } from '@server/world/actor/player/action/input-command-action';
 
 const songAction: commandAction = (details) => {
     const { player, args } = details;
-    player.packetSender.playSong(args.songId as number);
+    player.outgoingPackets.playSong(args.songId as number);
 };
 
 const soundAction: commandAction = (details) => {
     const { player, args } = details;
-    player.packetSender.playSound(args.soundId as number, args.volume as number);
+    player.outgoingPackets.playSound(args.soundId as number, args.volume as number);
 };
 
 const quickSongAction: commandAction = (details) => {
     const { player, args } = details;
-    player.packetSender.playQuickSong(args.songId as number, args.prevSongId as number);
+    player.outgoingPackets.playQuickSong(args.songId as number, args.prevSongId as number);
 };
 
 export default new RunePlugin([{

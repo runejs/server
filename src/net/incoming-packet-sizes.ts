@@ -1,86 +1,28 @@
-export const incomingPacketSizes: number[] = new Array(256);
-
-for(let i = 0; i < incomingPacketSizes.length; i++) {
-    incomingPacketSizes[i] = 0;
-}
-
-incomingPacketSizes[1] = 12;
-incomingPacketSizes[3] = 6;
-incomingPacketSizes[4] = 6;
-incomingPacketSizes[6] = 0;
-incomingPacketSizes[8] = 2;
-incomingPacketSizes[13] = 2;
-incomingPacketSizes[19] = 4;
-incomingPacketSizes[22] = 2;
-incomingPacketSizes[24] = 6;
-incomingPacketSizes[28] = -1;
-incomingPacketSizes[31] = 4;
-incomingPacketSizes[36] = 8;
-incomingPacketSizes[40] = 0;
-incomingPacketSizes[42] = 2;
-incomingPacketSizes[45] = 2;
-incomingPacketSizes[49] = -1;
-incomingPacketSizes[50] = 6;
-incomingPacketSizes[54] = 6;
-incomingPacketSizes[55] = 6;
-incomingPacketSizes[56] = -1;
-incomingPacketSizes[57] = 8;
-incomingPacketSizes[67] = 2;
-incomingPacketSizes[71] = 6;
-incomingPacketSizes[75] = 4;
-incomingPacketSizes[77] = 6;
-incomingPacketSizes[78] = 4;
-incomingPacketSizes[79] = 2;
-incomingPacketSizes[80] = 2;
-incomingPacketSizes[83] = 8;
-incomingPacketSizes[91] = 6;
-incomingPacketSizes[95] = 4;
-incomingPacketSizes[100] = 6;
-incomingPacketSizes[104] = 4;
-incomingPacketSizes[110] = 0;
-incomingPacketSizes[112] = 2;
-incomingPacketSizes[116] = 2;
-incomingPacketSizes[119] = 1;
-incomingPacketSizes[120] = 8;
-incomingPacketSizes[123] = 7;
-incomingPacketSizes[126] = 1;
-incomingPacketSizes[136] = 6;
-incomingPacketSizes[140] = 4;
-incomingPacketSizes[141] = 8;
-incomingPacketSizes[143] = 8;
-incomingPacketSizes[152] = 12;
-incomingPacketSizes[157] = 4;
-incomingPacketSizes[158] = 6;
-incomingPacketSizes[160] = 8;
-incomingPacketSizes[161] = 6;
-incomingPacketSizes[163] = 13;
-incomingPacketSizes[165] = 1;
-incomingPacketSizes[168] = 0;
-incomingPacketSizes[171] = -1;
-incomingPacketSizes[173] = 3;
-incomingPacketSizes[176] = 3;
-incomingPacketSizes[177] = 6;
-incomingPacketSizes[181] = 6;
-incomingPacketSizes[184] = 10;
-incomingPacketSizes[187] = 1;
-incomingPacketSizes[194] = 2;
-incomingPacketSizes[197] = 4;
-incomingPacketSizes[202] = 0;
-incomingPacketSizes[203] = 6;
-incomingPacketSizes[206] = 8;
-incomingPacketSizes[210] = 8;
-incomingPacketSizes[211] = 12;
-incomingPacketSizes[213] = -1;
-incomingPacketSizes[217] = 8;
-incomingPacketSizes[222] = 3;
-incomingPacketSizes[226] = 2;
-incomingPacketSizes[227] = -1;
-incomingPacketSizes[228] = 6;
-incomingPacketSizes[230] = 6;
-incomingPacketSizes[231] = 6;
-incomingPacketSizes[233] = 2;
-incomingPacketSizes[241] = 6;
-incomingPacketSizes[244] = -1;
-incomingPacketSizes[245] = 2;
-incomingPacketSizes[247] = -1;
-incomingPacketSizes[248] = 0;
+export const incomingPacketSizes: number[] = [
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //0
+    -3, -3, -3, 0, -3, -3, -3, -3, -3, -3, //10
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, 8, //20
+    6, -3, -3, -3, -3, -3, -3, -3, 8, -3, //30
+    16, -3, -3, -3, -3, -3, -3, -3, -3, -3, //40
+    -3, -3, -3, -3, -3, -3, -3, -3, 4, -3, //50
+    -3, -3, -3, 2, 4, -3, -3, -3, -3, -3, //60
+    -3, -3, -3, -1, -3, -3, -3, -3, -3, -3, //70
+    -3, -3, -3, 9, -3, -3, -3, -3, -3, -1, //80
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //90
+    -3, -3, 8, -3, -3, -3, -3, -3, -3, -3, //100
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //110
+    -3, 4, -3, -3, -3, -3, -3, -3, -3, -3, //120
+    -3, -3, 6, -3, -3, -3, -3, -3, -3, -3, //130
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //140
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //150
+    1, -3, -3, -3, 6, -3, -3, -3, -3, -3, //160
+    -3, -3, -3, -3, -3, -3, 0, -3, 0, -3, //170
+    -3, -3, -3, 6, -3, -3, -3, -3, -3, -3, //180
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //190
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //200
+    -3, -3, -3, -3, -3, -3, 0, -3, -3, -3, //210
+    -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, //220
+    -3, 13, -3, -3, 4, -3, -1, -3, -3, -3, //230
+    -3, -3, -3, -3, -3, -3, -3, -3, -1, -3,	//240
+    -3, -3, -3, -3, -3, -3, -3            	//250
+];

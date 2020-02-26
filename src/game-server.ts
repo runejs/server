@@ -5,18 +5,22 @@ import { RsBuffer } from './net/rs-buffer';
 import { World } from './world/world';
 import { ClientConnection } from './net/client-connection';
 import { logger } from '@runejs/logger';
-import { GameCache } from '@runejs/cache-parser';
-import { setNpcPlugins } from '@server/world/mob/player/action/npc-action';
-import { setObjectPlugins } from '@server/world/mob/player/action/object-action';
-import { loadPlugins } from '@server/plugins/plugin-loader';
-import { setItemOnItemPlugins } from '@server/world/mob/player/action/item-on-item-action';
-import { setButtonPlugins } from '@server/world/mob/player/action/button-action';
+import { EarlyFormatGameCache, NewFormatGameCache } from '@runejs/cache-parser';
 import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
+
+import { loadPlugins } from '@server/plugins/plugin-loader';
 import { ActionPlugin, ActionType } from '@server/plugins/plugin';
-import { setCommandPlugins } from '@server/world/mob/player/action/input-command-action';
+
+import { setNpcPlugins } from '@server/world/actor/player/action/npc-action';
+import { setObjectPlugins } from '@server/world/actor/player/action/object-action';
+import { setItemOnItemPlugins } from '@server/world/actor/player/action/item-on-item-action';
+import { setButtonPlugins } from '@server/world/actor/player/action/button-action';
+import { setCommandPlugins } from '@server/world/actor/player/action/input-command-action';
+import { setWidgetPlugins } from '@server/world/actor/player/action/widget-action';
 
 export let serverConfig: ServerConfig;
-export let gameCache: GameCache;
+export let gameCache377: EarlyFormatGameCache;
+export let gameCache: NewFormatGameCache;
 export let world: World;
 
 export async function injectPlugins(): Promise<void> {
@@ -36,6 +40,7 @@ export async function injectPlugins(): Promise<void> {
     setObjectPlugins(actionTypes[ActionType.OBJECT_ACTION]);
     setItemOnItemPlugins(actionTypes[ActionType.ITEM_ON_ITEM]);
     setCommandPlugins(actionTypes[ActionType.COMMAND]);
+    setWidgetPlugins(actionTypes[ActionType.WIDGET_ACTION]);
 }
 
 export function runGameServer(): void {
@@ -46,7 +51,8 @@ export function runGameServer(): void {
         return;
     }
 
-    gameCache = new GameCache('cache');
+    gameCache377 = new EarlyFormatGameCache('cache/377', { loadMaps: true, loadDefinitions: false, loadWidgets: false });
+    gameCache = new NewFormatGameCache('cache/435');
     world = new World();
     world.init();
     injectPlugins();
@@ -61,7 +67,6 @@ export function runGameServer(): void {
         }
 
         console.error('Unhandled rejection (promise: ', promise, ', reason: ', err, ').');
-        throw err;
     });
 
     net.createServer(socket => {

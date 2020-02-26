@@ -6,6 +6,6 @@ export abstract class DataParser {
     public constructor(protected readonly clientConnection: ClientConnection) {
     }
 
-    public abstract parse(buffer?: RsBuffer): void;
+    public abstract parse(buffer?: RsBuffer, packetId?: number): void | boolean;
 
 }

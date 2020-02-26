@@ -1,5 +1,6 @@
-- id: 8654
+- id: 118
   name: Attack
+  members: false
   subGuides:
     - name: Weapons
       lines:
@@ -55,8 +56,9 @@
           text: "Members: Guthan's warspear"
           level: 70
 
-- id: 8658
+- id: 122
   name: Agility
+  members: true
   subGuides:
     - name: Courses
       lines:
@@ -211,8 +213,9 @@
         - itemId: 6516
           text: "Iorwerth southern shortcut"
           level: 84
-- id: 8671
+- id: 139
   name: Woodcutting
+  members: false
   subGuides:
     - name: Trees
       lines:
@@ -274,8 +277,9 @@
         - itemId: 0
           text: Missing content
           level: 1
-- id: 8665
+- id: 129
   name: Cooking
+  members: false
   subGuides:
     - name: Meats
       lines:
@@ -528,8 +532,9 @@
          text: Cheese
          level: 48
 
-- id: 8668
+- id: 132
   name: Firemaking
+  members: false
   subGuides:
     - name: Burning
       lines:
@@ -663,8 +668,9 @@
         - itemId: 4700
           text: Sapphire lanterns
           level: 49
-- id: 8656
+- id: 120
   name: Mining
+  members: false
   subGuides:
     - name: Rocks
       lines:

@@ -1,5 +1,5 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { commandAction } from '@server/world/mob/player/action/input-command-action';
+import { commandAction } from '@server/world/actor/player/action/input-command-action';
 import { world } from '@server/game-server';
 
 const quadtreeAction: commandAction = (details) => {
@@ -17,12 +17,12 @@ const quadtreeAction: commandAction = (details) => {
 
 const trackedPlayersAction: commandAction = (details) => {
     const { player } = details;
-    player.packetSender.chatboxMessage(`Tracked players: ${player.trackedPlayers.length}`);
+    player.outgoingPackets.chatboxMessage(`Tracked players: ${player.trackedPlayers.length}`);
 };
 
 const trackedNpcsAction: commandAction = (details) => {
     const { player } = details;
-    player.packetSender.chatboxMessage(`Tracked npcs: ${player.trackedNpcs.length}`);
+    player.outgoingPackets.chatboxMessage(`Tracked npcs: ${player.trackedNpcs.length}`);
 };
 
 export default new RunePlugin([{

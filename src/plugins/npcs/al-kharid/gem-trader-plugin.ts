@@ -1,7 +1,7 @@
-import { npcAction } from '@server/world/mob/player/action/npc-action';
+import { npcAction } from '@server/world/actor/player/action/npc-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { openShop } from '@server/world/mob/player/action/shop-action';
-import { dialogueAction, DialogueEmote } from '@server/world/mob/player/action/dialogue-action';
+import { openShop } from '@server/world/actor/player/action/shop-action';
+import { dialogueAction, DialogueEmote } from '@server/world/actor/player/action/dialogue-action';
 
 const shopIdentification = 'ALKHARID_GEM_TRADER';
 

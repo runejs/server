@@ -1,4 +1,4 @@
-import { objectAction } from '@server/world/mob/player/action/object-action';
+import { objectAction } from '@server/world/actor/player/action/object-action';
 import { gameCache, world } from '@server/game-server';
 import { World } from '@server/world/world';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
@@ -34,7 +34,7 @@ export const action: objectAction = (details) => {
     }
     const pickedItem = gameCache.itemDefinitions.get(itemId);
     setTimeout(() => {
-        details.player.packetSender.chatboxMessage(`You ${details.option} the ${details.objectDefinition.name.toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`);
+        details.player.outgoingPackets.chatboxMessage(`You ${details.option} the ${details.objectDefinition.name.toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`);
         if (details.objectDefinition.name !== 'Flax' || Math.floor(Math.random() * 10) === 1) {
             world.chunkManager.removeLandscapeObjectTemporarily(details.object, details.position, 30);
         }

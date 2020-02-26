@@ -1,10 +1,10 @@
 import { Chunk } from './chunk';
 import { Position } from '../position';
-import { gameCache } from '../../game-server';
+import { gameCache377 } from '../../game-server';
 import { logger } from '@runejs/logger';
 import { LandscapeObject } from '@runejs/cache-parser';
 import { Item } from '@server/world/items/item';
-import { Player } from '@server/world/mob/player/player';
+import { Player } from '@server/world/actor/player/player';
 import { WorldItem } from '@server/world/items/world-item';
 import { World } from '@server/world/world';
 
@@ -39,7 +39,7 @@ export class ChunkManager {
         chunk.addWorldItem(worldItem);
 
         if(initiallyVisibleTo) {
-            initiallyVisibleTo.packetSender.setWorldItem(worldItem, worldItem.position);
+            initiallyVisibleTo.outgoingPackets.setWorldItem(worldItem, worldItem.position);
             setTimeout(() => {
                 if(worldItem.removed) {
                     return;
@@ -74,7 +74,7 @@ export class ChunkManager {
                     return;
                 }
 
-                player.packetSender.setWorldItem(worldItem, worldItem.position);
+                player.outgoingPackets.setWorldItem(worldItem, worldItem.position);
             });
 
             resolve();
@@ -86,7 +86,7 @@ export class ChunkManager {
             const nearbyPlayers = this.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
             nearbyPlayers.forEach(player => {
-                player.packetSender.removeWorldItem(worldItem, worldItem.position);
+                player.outgoingPackets.removeWorldItem(worldItem, worldItem.position);
             });
 
             resolve();
@@ -132,7 +132,7 @@ export class ChunkManager {
             const nearbyPlayers = this.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
             nearbyPlayers.forEach(player => {
-                player.packetSender.removeLandscapeObject(object, position);
+                player.outgoingPackets.removeLandscapeObject(object, position);
             });
 
             setTimeout(() => {
@@ -151,7 +151,7 @@ export class ChunkManager {
             const nearbyPlayers = this.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
             nearbyPlayers.forEach(player => {
-                player.packetSender.removeLandscapeObject(object, position);
+                player.outgoingPackets.removeLandscapeObject(object, position);
             });
 
             resolve(chunk);
@@ -166,7 +166,7 @@ export class ChunkManager {
             const nearbyPlayers = this.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
             nearbyPlayers.forEach(player => {
-                player.packetSender.setLandscapeObject(object, position);
+                player.outgoingPackets.setLandscapeObject(object, position);
             });
 
             resolve();
@@ -176,7 +176,7 @@ export class ChunkManager {
     public generateCollisionMaps(): void {
         logger.info('Generating game world collision maps...');
 
-        const tileList = gameCache.mapRegions.mapRegionTileList;
+        const tileList = gameCache377.mapRegions.mapRegionTileList;
 
         for(const tile of tileList) {
             const position = new Position(tile.x, tile.y, tile.level);
@@ -184,7 +184,7 @@ export class ChunkManager {
             chunk.addTile(tile, position);
         }
 
-        const objectList = gameCache.mapRegions.landscapeObjectList;
+        const objectList = gameCache377.mapRegions.landscapeObjectList;
 
         for(const landscapeObject of objectList) {
             const position = new Position(landscapeObject.x, landscapeObject.y, landscapeObject.level);
