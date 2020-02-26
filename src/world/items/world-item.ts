@@ -1,5 +1,5 @@
 import { Position } from '@server/world/position';
-import { Player } from '@server/world/mob/player/player';
+import { Player } from '@server/world/actor/player/player';
 
 export interface WorldItem {
     itemId: number;

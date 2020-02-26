@@ -1,6 +1,6 @@
 import BigInteger from 'bigi';
 import { RsBuffer } from '@server/net/rs-buffer';
-import { Player } from '@server/world/mob/player/player';
+import { Player } from '@server/world/actor/player/player';
 import { Isaac } from '@server/net/isaac';
 import { serverConfig, world } from '@server/game-server';
 import { DataParser } from './data-parser';

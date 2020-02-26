@@ -1,6 +1,6 @@
 import express, { Request } from 'express';
 import { gameCache, world } from './game-server';
-import { Player } from './world/mob/player/player';
+import { Player } from './world/actor/player/player';
 import { constants } from 'http2';
 import { logger } from '@runejs/logger';
 import { ItemData, ItemDetails, saveItemData } from './world/config/item-data';

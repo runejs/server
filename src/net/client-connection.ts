@@ -1,5 +1,5 @@
 import { Socket } from 'net';
-import { Player } from '@server/world/mob/player/player';
+import { Player } from '@server/world/actor/player/player';
 import { world } from '@server/game-server';
 import { RsBuffer } from './rs-buffer';
 import { LoginHandshakeParser } from './data-parser/login-handshake-parser';

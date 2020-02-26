@@ -1,9 +1,9 @@
-import { itemOnItemAction } from '@server/world/mob/player/action/item-on-item-action';
+import { itemOnItemAction } from '@server/world/actor/player/action/item-on-item-action';
 import { world } from '@server/game-server';
-import { Skill } from '@server/world/mob/skills';
-import { loopingAction } from '@server/world/mob/player/action/action';
+import { Skill } from '@server/world/actor/skills';
+import { loopingAction } from '@server/world/actor/player/action/action';
 import { LandscapeObject } from '@runejs/cache-parser';
-import { Player } from '@server/world/mob/player/player';
+import { Player } from '@server/world/actor/player/player';
 import { WorldItem } from '@server/world/items/world-item';
 import { Position } from '@server/world/position';
 import { randomBetween } from '@server/util/num';
@@ -49,9 +49,9 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
     world.chunkManager.addTemporaryLandscapeObject(fireObject, position, fireDuration()).then(() => {
         world.chunkManager.spawnWorldItem({ itemId: 592, amount: 1 }, position, null, 300);
     });
-    player.packetSender.playSound(2594, 7);
+    player.outgoingPackets.playSound(2594, 7);
     player.playAnimation(null);
-    player.packetSender.chatboxMessage(`The fire catches and the logs begin to burn.`);
+    player.outgoingPackets.chatboxMessage(`The fire catches and the logs begin to burn.`);
     player.skills.addExp(Skill.FIREMAKING, burnExp);
 
     if(!player.walkingQueue.moveIfAble(-1, 0)) {
@@ -79,7 +79,7 @@ const action: itemOnItemAction = (details) => {
     const position = player.position;
 
     if(!skillInfo) {
-        player.packetSender.chatboxMessage(`Mishandled firemaking log ${log.itemId}.`);
+        player.outgoingPackets.chatboxMessage(`Mishandled firemaking log ${log.itemId}.`);
         return;
     }
 
@@ -92,7 +92,7 @@ const action: itemOnItemAction = (details) => {
     if(player.metadata['lastFire'] && Date.now() - player.metadata['lastFire'] < 1200 && canChain(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level)) {
         lightFire(player, position, worldItemLog, skillInfo.burnExp);
     } else {
-        player.packetSender.chatboxMessage(`You attempt to light the logs.`);
+        player.outgoingPackets.chatboxMessage(`You attempt to light the logs.`);
 
         let elapsedTicks = 0;
         const loop = loopingAction(player);
@@ -112,7 +112,7 @@ const action: itemOnItemAction = (details) => {
             const canLightFire = elapsedTicks > 10 && canLight(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level);
 
             if(!canLightFire && (elapsedTicks === 0 || elapsedTicks % 4 === 0)) {
-                player.packetSender.playSound(2599, 7);
+                player.outgoingPackets.playSound(2599, 7);
             }
 
             if(canLightFire) {

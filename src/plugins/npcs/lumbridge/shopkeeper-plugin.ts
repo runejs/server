@@ -1,5 +1,5 @@
-import { npcAction } from '@server/world/mob/player/action/npc-action';
-import { openShop } from '@server/world/mob/player/action/shop-action';
+import { npcAction } from '@server/world/actor/player/action/npc-action';
+import { openShop } from '@server/world/actor/player/action/shop-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 

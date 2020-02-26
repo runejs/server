@@ -1,20 +1,20 @@
-import { Player } from './mob/player/player';
+import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { logger } from '@runejs/logger';
 import { ItemDetails, parseItemData } from './config/item-data';
 import { gameCache } from '@server/game-server';
 import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
-import { Npc } from './mob/npc/npc';
+import { Npc } from './actor/npc/npc';
 import { parseShops, Shop } from '@server/world/config/shops';
 import Quadtree from 'quadtree-lib';
 import { timer } from 'rxjs';
-import { Mob } from '@server/world/mob/mob';
+import { Actor } from '@server/world/actor/actor';
 
 export interface QuadtreeKey {
     x: number;
     y: number;
-    mob: Mob;
+    actor: Actor;
 }
 
 /**

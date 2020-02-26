@@ -1,5 +1,5 @@
-import { objectAction } from '@server/world/mob/player/action/object-action';
-import { loopingAction } from '@server/world/mob/player/action/action';
+import { objectAction } from '@server/world/actor/player/action/object-action';
+import { loopingAction } from '@server/world/actor/player/action/action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 const cycle = (player, i) => {

@@ -1,10 +1,10 @@
-import { buttonAction } from '@server/world/mob/player/action/button-action';
+import { buttonAction } from '@server/world/actor/player/action/button-action';
 import { logger } from '@runejs/logger/dist/logger';
 import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 import { readFileSync } from 'fs';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { Player } from '@server/world/mob/player/player';
-import { widgetAction } from '@server/world/mob/player/action/widget-action';
+import { Player } from '@server/world/actor/player/player';
+import { widgetAction } from '@server/world/actor/player/action/widget-action';
 
 // @TODO fix me!
 
@@ -70,17 +70,17 @@ function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refr
     }*/
 
     if(refreshSidebar) {
-        player.packetSender.updateWidgetString(308, 133, guide.members ? 'Members only skill' : '');
+        player.outgoingPackets.updateWidgetString(308, 133, guide.members ? 'Members only skill' : '');
 
         for(let i = 0; i < sidebarTextIds.length; i++) {
             const sidebarId = sidebarIds[i];
             let hide: boolean = true;
 
             if(i >= guide.subGuides.length) {
-                player.packetSender.updateWidgetString(308, sidebarTextIds[i], '');
+                player.outgoingPackets.updateWidgetString(308, sidebarTextIds[i], '');
                 hide = true;
             } else {
-                player.packetSender.updateWidgetString(308, sidebarTextIds[i], guide.subGuides[i].name);
+                player.outgoingPackets.updateWidgetString(308, sidebarTextIds[i], guide.subGuides[i].name);
                 hide = false;
             }
 
@@ -88,25 +88,25 @@ function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refr
                 // Apparently you can never have only TWO subguides...
                 // Because childId 98 deletes both options 2 AND 3. So, good thing there are no guides with only 2 sections, I guess?...
                 // Verified this in an interface editor, and they are indeed grouped in a single layer for some reason...
-                player.packetSender.toggleWidgetVisibility(308, sidebarIds[i], hide);
+                player.outgoingPackets.toggleWidgetVisibility(308, sidebarIds[i], hide);
             }
         }
     }
 
     const subGuide: SkillSubGuide = guide.subGuides[subGuideId];
 
-    player.packetSender.updateWidgetString(308, 1, guide.name + ' - ' + subGuide.name);
+    player.outgoingPackets.updateWidgetString(308, 1, guide.name + ' - ' + subGuide.name);
 
     const itemIds: number[] = subGuide.lines.map(g => g.itemId).concat(new Array(30 - subGuide.lines.length).fill(null));
-    player.packetSender.sendUpdateAllWidgetItemsById({ widgetId: 308, containerId: 132 }, itemIds);
+    player.outgoingPackets.sendUpdateAllWidgetItemsById({ widgetId: 308, containerId: 132 }, itemIds);
 
     for(let i = 0; i < 30; i++) {
         if(subGuide.lines.length <= i) {
-            player.packetSender.updateWidgetString(308, 5 + i, '');
-            player.packetSender.updateWidgetString(308, 45 + i, '');
+            player.outgoingPackets.updateWidgetString(308, 5 + i, '');
+            player.outgoingPackets.updateWidgetString(308, 45 + i, '');
         } else {
-            player.packetSender.updateWidgetString(308, 5 + i, subGuide.lines[i].level.toString());
-            player.packetSender.updateWidgetString(308, 45 + i, subGuide.lines[i].text);
+            player.outgoingPackets.updateWidgetString(308, 5 + i, subGuide.lines[i].level.toString());
+            player.outgoingPackets.updateWidgetString(308, 45 + i, subGuide.lines[i].text);
         }
     }
 

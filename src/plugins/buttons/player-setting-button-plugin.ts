@@ -1,4 +1,4 @@
-import { buttonAction } from '@server/world/mob/player/action/button-action';
+import { buttonAction } from '@server/world/actor/player/action/button-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 // @TODO fix me!

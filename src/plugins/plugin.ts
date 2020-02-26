@@ -1,9 +1,9 @@
-import { NpcActionPlugin } from '@server/world/mob/player/action/npc-action';
-import { ObjectActionPlugin } from '@server/world/mob/player/action/object-action';
-import { ButtonActionPlugin } from '@server/world/mob/player/action/button-action';
-import { ItemOnItemActionPlugin } from '@server/world/mob/player/action/item-on-item-action';
-import { CommandActionPlugin } from '@server/world/mob/player/action/input-command-action';
-import { WidgetActionPlugin } from '@server/world/mob/player/action/widget-action';
+import { NpcActionPlugin } from '@server/world/actor/player/action/npc-action';
+import { ObjectActionPlugin } from '@server/world/actor/player/action/object-action';
+import { ButtonActionPlugin } from '@server/world/actor/player/action/button-action';
+import { ItemOnItemActionPlugin } from '@server/world/actor/player/action/item-on-item-action';
+import { CommandActionPlugin } from '@server/world/actor/player/action/input-command-action';
+import { WidgetActionPlugin } from '@server/world/actor/player/action/widget-action';
 
 export enum ActionType {
     BUTTON = 'button',

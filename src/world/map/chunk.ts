@@ -1,9 +1,9 @@
 import { Position } from '../position';
-import { Player } from '../mob/player/player';
+import { Player } from '../actor/player/player';
 import { CollisionMap } from './collision-map';
 import { gameCache } from '../../game-server';
 import { LandscapeObject, LandscapeObjectDefinition, MapRegionTile } from '@runejs/cache-parser';
-import { Npc } from '../mob/npc/npc';
+import { Npc } from '../actor/npc/npc';
 import { WorldItem } from '@server/world/items/world-item';
 
 export interface ChunkUpdateItem {

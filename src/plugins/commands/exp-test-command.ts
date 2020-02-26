@@ -1,6 +1,6 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { commandAction } from '@server/world/mob/player/action/input-command-action';
-import { Skill } from '@server/world/mob/skills';
+import { commandAction } from '@server/world/actor/player/action/input-command-action';
+import { Skill } from '@server/world/actor/skills';
 
 const action: commandAction = (details) => {
     const { player } = details;

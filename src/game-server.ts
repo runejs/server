@@ -11,12 +11,12 @@ import { parseServerConfig, ServerConfig } from '@server/world/config/server-con
 import { loadPlugins } from '@server/plugins/plugin-loader';
 import { ActionPlugin, ActionType } from '@server/plugins/plugin';
 
-import { setNpcPlugins } from '@server/world/mob/player/action/npc-action';
-import { setObjectPlugins } from '@server/world/mob/player/action/object-action';
-import { setItemOnItemPlugins } from '@server/world/mob/player/action/item-on-item-action';
-import { setButtonPlugins } from '@server/world/mob/player/action/button-action';
-import { setCommandPlugins } from '@server/world/mob/player/action/input-command-action';
-import { setWidgetPlugins } from '@server/world/mob/player/action/widget-action';
+import { setNpcPlugins } from '@server/world/actor/player/action/npc-action';
+import { setObjectPlugins } from '@server/world/actor/player/action/object-action';
+import { setItemOnItemPlugins } from '@server/world/actor/player/action/item-on-item-action';
+import { setButtonPlugins } from '@server/world/actor/player/action/button-action';
+import { setCommandPlugins } from '@server/world/actor/player/action/input-command-action';
+import { setWidgetPlugins } from '@server/world/actor/player/action/widget-action';
 
 export let serverConfig: ServerConfig;
 export let gameCache: GameCache;

@@ -1,5 +1,5 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { widgetAction } from '@server/world/mob/player/action/widget-action';
+import { widgetAction } from '@server/world/actor/player/action/widget-action';
 
 const dialogueIds = [
     64, 65, 66, 67, 241,

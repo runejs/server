@@ -1,6 +1,6 @@
 import { RsBuffer } from '@server/net/rs-buffer';
 import { incomingPacketSizes } from '@server/net/incoming-packet-sizes';
-import { handlePacket } from '@server/world/mob/player/packet/incoming-packet-directory';
+import { handlePacket } from '@server/net/incoming-packet-directory';
 import { DataParser } from './data-parser';
 
 /**

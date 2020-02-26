@@ -3,7 +3,7 @@ import { directionData, WNES } from '@server/world/direction';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
 import { ModifiedLandscapeObject } from '@server/world/map/landscape-object';
-import { objectAction } from '@server/world/mob/player/action/object-action';
+import { objectAction } from '@server/world/actor/player/action/object-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 const gates = [
@@ -25,7 +25,7 @@ const action: objectAction = (details) => {
 
         world.chunkManager.toggleObjects(metadata.originalMain, metadata.main, metadata.originalMainPosition, metadata.mainPosition, metadata.originalMainChunk, metadata.mainChunk, true);
         world.chunkManager.toggleObjects(metadata.originalSecond, metadata.second, metadata.originalSecondPosition, metadata.secondPosition, metadata.originalSecondChunk, metadata.secondChunk, true);
-        player.packetSender.playSound(60, 7); // @TODO find correct gate closing sound
+        player.outgoingPackets.playSound(60, 7); // @TODO find correct gate closing sound
     } else {
         let details = gates.find(g => g.main === gate.objectId);
         let clickedSecondary = false;
@@ -130,7 +130,7 @@ const action: objectAction = (details) => {
             }
         }
 
-        player.packetSender.chatboxMessage(hinge + ' ' + direction);
+        player.outgoingPackets.chatboxMessage(hinge + ' ' + direction);
 
         let leftHingeDirections: { [key: string]: string } = {
             'NORTH': 'WEST',
@@ -205,7 +205,7 @@ const action: objectAction = (details) => {
 
         world.chunkManager.toggleObjects(newHinge, gate, newPosition, position, newHingeChunk, hingeChunk, !cacheOriginal);
         world.chunkManager.toggleObjects(newSecond, secondGate, newSecondPosition, gateSecondPosition, newSecondChunk, gateSecondChunk, !cacheOriginal);
-        player.packetSender.playSound(62, 7); // @TODO find correct gate opening sound
+        player.outgoingPackets.playSound(62, 7); // @TODO find correct gate opening sound
     }
 };
 
