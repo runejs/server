@@ -435,7 +435,7 @@ export class PacketSender {
     }
 
     public updateCarryWeight(weight: number): void {
-        const packet = new Packet(174);
+        const packet = new Packet(171);
         packet.writeShortBE(weight);
 
         this.send(packet);

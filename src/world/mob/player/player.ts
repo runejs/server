@@ -22,6 +22,7 @@ import { NpcUpdateTask } from './updating/npc-update-task';
 import { Subject } from 'rxjs';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { QuadtreeKey } from '@server/world/world';
+import { daysSinceLastLogin } from '@server/util/time';
 
 const DEFAULT_TAB_WIDGET_IDS = [
     92, 320, 274, 149, 387, 271, 192, -1, 131, 148, 182, 261, 464, 239
@@ -171,7 +172,24 @@ export class Player extends Mob {
                 disablePlayerMovement: true
             };
         } else if(serverConfig.showWelcome) {
-            this.packetSender.updateWidgetString(widgetIds.welcomeScreenChildren.question, 1, `Want to help RuneJS improve?\\nSend us a pull request over on Github!`)
+            const daysSinceLogin = daysSinceLastLogin(this.loginDate);
+            let loginDaysStr = '';
+
+            if(daysSinceLogin <= 0) {
+                loginDaysStr = 'earlier today';
+            } else if(daysSinceLogin === 1) {
+                loginDaysStr = 'yesterday';
+            } else {
+                loginDaysStr = daysSinceLogin + ' days ago';
+            }
+            this.packetSender.updateWidgetString(widgetIds.welcomeScreenChildren.question, 1, `Want to help RuneJS improve?\\nSend us a pull request over on Github!`);
+            this.packetSender.updateWidgetString(widgetIds.welcomeScreen, 13, `You last logged in @red@${loginDaysStr}@bla@ from: @red@${this.lastAddress}`);
+            this.packetSender.updateWidgetString(widgetIds.welcomeScreen, 16, `You have @yel@0 unread messages\\nin your message centre.`);
+            this.packetSender.updateWidgetString(widgetIds.welcomeScreen, 14, `\\nYou have not yet set any recovery questions.\\nIt is @lre@strongly@yel@ recommended that you do so.\\n\\nIf you don't you will be @lre@unable to recover your\\n@lre@password@yel@ if you forget it, or it is stolen.`);
+            this.packetSender.updateWidgetString(widgetIds.welcomeScreen, 22, `To change your recovery questions:\\n1) Logout and return to the frontpage of this website.\\n2) Choose 'Set new recovery questions'.`);
+            this.packetSender.updateWidgetString(widgetIds.welcomeScreen, 17, `\\nYou do not have a Bank PIN.\\nPlease visit a bank if you would like one.`);
+            this.packetSender.updateWidgetString(widgetIds.welcomeScreen, 21, `To start a subscripton:\\n1) Logout and return to the frontpage of this website.\\n2) Choose 'Start a new subscription'`);
+            this.packetSender.updateWidgetString(widgetIds.welcomeScreen, 19, `You are not a member.\\n\\nChoose to subscribe and\\nyou'll get loads of extra\\nbenefits and features.`);
 
             this.activeWidget = {
                 widgetId: widgetIds.welcomeScreen,
@@ -182,7 +200,7 @@ export class Player extends Mob {
 
         /*this.updateBonuses();
         this.updateWidgetSettings();
-        this.updateCarryWeight(true);
+        this.updateCarryWeight(true);*/
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
 
@@ -194,7 +212,7 @@ export class Player extends Mob {
         });
 
         this._loginDate = new Date();
-        this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';*/
+        this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
 
         logger.info(`${this.username}:${this.worldIndex} has logged in.`);
     }
