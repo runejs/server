@@ -71,8 +71,8 @@ export class DialogueAction {
         return this.dialogue({ emote, lines, type: 'PLAYER' });
     }
 
-    public npc(npc: Npc, emote: DialogueEmote, lines: string[]): Promise<DialogueAction> {
-        return this.dialogue({ emote, lines, type: 'NPC', npc: npc.id });
+    public npc(npc: Npc | number, emote: DialogueEmote, lines: string[]): Promise<DialogueAction> {
+        return this.dialogue({ emote, lines, type: 'NPC', npc: typeof npc === 'number' ? npc : npc.id });
     }
 
     public options(title: string, options: string[]): Promise<DialogueAction> {

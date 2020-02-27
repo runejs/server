@@ -17,21 +17,12 @@ export const action: objectAction = (details) => {
         player.giveItem(milkBucketItem.id);
         player.outgoingPackets.chatboxMessage(`You ${option} the ${objectDefinition.name} and receive some milk.`);
     } else {
-        const foundNpcs: Npc[] = world.findNearbyNpcsById(player.position, 3807, 10);
-
-        if(foundNpcs.length === 0) {
-            player.outgoingPackets.chatboxMessage(`You need a ${ emptyBucketItem.name } to ${ option } this ${ objectDefinition.name }!`);
-            return;
-        }
-
-        const foundNpc = foundNpcs[0];
-
         dialogueAction(player)
-            .then(d => d.npc(foundNpc, DialogueEmote.LAUGH_1, [`Tee hee! You've never milked a cow before, have you?`]))
+            .then(d => d.npc(3807, DialogueEmote.LAUGH_1, [`Tee hee! You've never milked a cow before, have you?`]))
             .then(d => d.player(DialogueEmote.CALM_TALK_1, ['Erm... No. How could you tell?']))
-            .then(d => d.npc(foundNpc, DialogueEmote.LAUGH_2, [`Because you're spilling milk all over the floor. What a`, 'waste! You need something to hold the milk.']))
+            .then(d => d.npc(3807, DialogueEmote.LAUGH_2, [`Because you're spilling milk all over the floor. What a`, 'waste! You need something to hold the milk.']))
             .then(d => d.player(DialogueEmote.CONSIDERING, [`Ah yes, I really should have guessed that one, shouldn't`, 'I?']))
-            .then(d => d.npc(foundNpc, DialogueEmote.LAUGH_2, [`You're from the city aren't you... Try it again with a`, `${emptyBucketItem.name.toLowerCase()}.`]))
+            .then(d => d.npc(3807, DialogueEmote.LAUGH_2, [`You're from the city aren't you... Try it again with a`, `${emptyBucketItem.name.toLowerCase()}.`]))
             .then(d => d.player(DialogueEmote.CALM_TALK_2, [`Right, I'll do that.`]))
             .then(d => {
                 d.close();
