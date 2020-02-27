@@ -5,6 +5,9 @@ import { World } from '@server/world/world';
 import { loopingAction } from '@server/world/actor/player/action/action';
 import { Skill } from '@server/world/actor/skills';
 import { Position } from '@server/world/position';
+import { animationIds } from '@server/world/config/animation-ids';
+import { soundIds } from '@server/world/config/sound-ids';
+import { gfxIds } from '@server/world/config/gfx-ids';
 
 enum Teleports {
     Home = 591,
@@ -28,28 +31,28 @@ function HomeTeleport(player: Player): void {
     loop.event.subscribe(() => {
 
         if (elapsedTicks === 0) {
-            player.playAnimation(4847);
-            player.playGraphics({id: 800, delay: 0, height: 0});
-            player.outgoingPackets.playSound(193, 10);
+            player.playAnimation(animationIds.homeTeleportDraw);
+            player.playGraphics({id: gfxIds.homeTeleportDraw, delay: 0, height: 0});
+            player.outgoingPackets.playSound(soundIds.homeTeleportDraw, 10);
         }
         if (elapsedTicks === 7) {
-            player.playAnimation(4850);
-            player.outgoingPackets.playSound(196, 10);
+            player.playAnimation(animationIds.homeTeleportPullOutAndReadBook);
+            player.outgoingPackets.playSound(soundIds.homeTeleportSit, 10);
         }
         if (elapsedTicks === 12) {
-            player.playAnimation(4853);
-            player.playGraphics({id: 802, delay: 0, height: 0});
-            player.outgoingPackets.playSound(194, 10);
+            player.playAnimation(animationIds.homeTeleportSit);
+            player.playGraphics({id: gfxIds.homeTeleportPullOutBook, delay: 0, height: 0});
+            player.outgoingPackets.playSound(soundIds.homeTeleportPullOutBook, 10);
         }
         if (elapsedTicks === 16) {
-            player.playAnimation(4855);
-            player.playGraphics({id: 803, delay: 0, height: 0});
-            player.outgoingPackets.playSound(195, 10);
+            player.playAnimation(animationIds.homeTeleportReadBookAndGlowCircle);
+            player.playGraphics({id: gfxIds.homeTeleportCircleGlow, delay: 0, height: 0});
+            player.outgoingPackets.playSound(soundIds.homeTeleportCircleGlowAndTeleport, 10);
 
         }
         if (elapsedTicks === 20) {
-            player.playAnimation(4857);
-            player.playGraphics({id: 804, delay: 0, height: 0});
+            player.playAnimation(animationIds.homeTeleport);
+            player.playGraphics({id: gfxIds.homeTeleport, delay: 0, height: 0});
         }
         if (elapsedTicks === 22) {
             player.teleport(new Position(3218, 3218));
