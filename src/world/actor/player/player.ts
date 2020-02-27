@@ -395,32 +395,31 @@ export class Player extends Actor {
     }
 
     public settingChanged(buttonId: number): void {
+        logger.info(`${buttonId}`);
         const settingsMappings = {
-            17104896: {setting: 'runEnabled', value: !this.settings['runEnabled']},
-            930: {setting: 'musicVolume', value: 4},
-            931: {setting: 'musicVolume', value: 3},
-            932: {setting: 'musicVolume', value: 2},
-            933: {setting: 'musicVolume', value: 1},
-            934: {setting: 'musicVolume', value: 0},
-            941: {setting: 'soundEffectVolume', value: 4},
-            942: {setting: 'soundEffectVolume', value: 3},
-            943: {setting: 'soundEffectVolume', value: 2},
-            944: {setting: 'soundEffectVolume', value: 1},
-            945: {setting: 'soundEffectVolume', value: 0},
-            957: {setting: 'splitPrivateChatEnabled', value: true},
-            958: {setting: 'splitPrivateChatEnabled', value: false},
-            913: {setting: 'twoMouseButtonsEnabled', value: true},
-            914: {setting: 'twoMouseButtonsEnabled', value: false},
-            906: {setting: 'screenBrightness', value: 1},
-            908: {setting: 'screenBrightness', value: 2},
-            910: {setting: 'screenBrightness', value: 3},
-            912: {setting: 'screenBrightness', value: 4},
-            915: {setting: 'chatEffectsEnabled', value: true},
-            916: {setting: 'chatEffectsEnabled', value: false},
-            12464: {setting: 'acceptAidEnabled', value: true},
-            12465: {setting: 'acceptAidEnabled', value: false},
-            150: {setting: 'autoRetaliateEnabled', value: true},
-            151: {setting: 'autoRetaliateEnabled', value: false}
+            0: {setting: 'runEnabled', value: !this.settings['runEnabled']},
+            1: {setting: 'chatEffectsEnabled', value: !this.settings['chatEffectsEnabled']},
+            2: {setting: 'splitPrivateChatEnabled', value: !this.settings['splitPrivateChatEnabled']},
+            3: {setting: 'twoMouseButtonsEnabled', value: !this.settings['twoMouseButtonsEnabled']},
+            4: {setting: 'acceptAidEnabled', value: !this.settings['acceptAidEnabled']},
+            // 5 is house options
+            // 6 is unknown, might not even exist
+            7: {setting: 'screenBrightness', value: 1},
+            8: {setting: 'screenBrightness', value: 2},
+            9: {setting: 'screenBrightness', value: 3},
+            10: {setting: 'screenBrightness', value: 4},
+            11: {setting: 'musicVolume', value: 0},
+            12: {setting: 'musicVolume', value: 1},
+            13: {setting: 'musicVolume', value: 2},
+            14: {setting: 'musicVolume', value: 3},
+            15: {setting: 'musicVolume', value: 4},
+            16: {setting: 'soundEffectVolume', value: 0},
+            17: {setting: 'soundEffectVolume', value: 1},
+            18: {setting: 'soundEffectVolume', value: 2},
+            19: {setting: 'soundEffectVolume', value: 3},
+            20: {setting: 'soundEffectVolume', value: 4},
+            // 150: {setting: 'autoRetaliateEnabled', value: true},
+            // 151: {setting: 'autoRetaliateEnabled', value: false}
         };
 
         if(!settingsMappings.hasOwnProperty(buttonId)) {
