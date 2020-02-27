@@ -65,11 +65,7 @@ export class NpcUpdateTask extends Task<void> {
                 npcUpdatePacket.closeBitChannel();
             }
 
-            new Promise(resolve => {
-                this.player.outgoingPackets.send(npcUpdatePacket);
-                resolve();
-            });
-
+            this.player.outgoingPackets.queue(npcUpdatePacket, true);
             resolve();
         });
     }

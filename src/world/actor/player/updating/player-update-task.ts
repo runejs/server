@@ -91,11 +91,7 @@ export class PlayerUpdateTask extends Task<void> {
                 playerUpdatePacket.closeBitChannel();
             }
 
-            new Promise(resolve => {
-                this.player.outgoingPackets.send(playerUpdatePacket);
-                resolve();
-            });
-
+            this.player.outgoingPackets.queue(playerUpdatePacket, true);
             resolve();
         });
     }
