@@ -1,6 +1,6 @@
 import { Player } from '../player';
 import { Item } from '@server/world/items/item';
-import { widgetIds } from '../widget';
+import { widgetIds } from '../../../config/widget';
 
 export const unequipItemAction = (player: Player, itemId: number, equipmentSlot: number) => {
     const inventory = player.inventory;

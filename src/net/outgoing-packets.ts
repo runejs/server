@@ -218,20 +218,6 @@ export class OutgoingPackets {
         this.queue(packet);
     }
 
-    public updateWidgetSetting(settingId: number, value: number): void {
-        let packet: Packet;
-
-        if(value > 255) {
-            // @TODO large settings values - packet 115?
-        } else {
-            packet = new Packet(182);
-            packet.writeOffsetShortBE(settingId);
-            packet.writeNegativeOffsetByte(value);
-        }
-
-        this.queue(packet);
-    }
-
     public updateWidgetItemModel(widgetId: number, itemId: number, scale?: number): void {
         const packet = new Packet(21);
         packet.writeShortBE(scale);

@@ -88,7 +88,7 @@ export const inputCommandAction = (player: Player, command: string, inputArgs: s
                     } else {
                         if(pluginArg.type === 'number') {
                             argValue = parseInt(argValue);
-                            if(isNaN(argValue) || argValue < 1) {
+                            if(isNaN(argValue)) {
                                 player.outgoingPackets.chatboxMessage(syntaxError);
                                 return;
                             }

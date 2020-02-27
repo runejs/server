@@ -3,6 +3,7 @@ import { world } from '@server/game-server';
 import { Chunk } from '@server/world/map/chunk';
 import { objectAction } from '@server/world/actor/player/action/object-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { soundIds } from '@server/world/config/sound-ids';
 
 // @TODO move to yaml config
 const doors = [
@@ -89,7 +90,7 @@ export const action: objectAction = (details): void => {
 
     world.chunkManager.toggleObjects(replacementDoor, door, endPosition, position, replacementDoorChunk, startDoorChunk, !cacheOriginal);
     // 70 = close gate, 71 = open gate, 62 = open door, 60 = close door
-    player.outgoingPackets.playSound(opening ? 62 : 60, 7);
+    player.outgoingPackets.playSound(opening ? soundIds.openDoor : soundIds.closeDoor, 7);
 };
 
 export default new RunePlugin({ type: ActionType.OBJECT_ACTION, objectIds: [1530, 4465, 4467, 3014, 3017, 3018,

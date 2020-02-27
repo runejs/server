@@ -11,9 +11,9 @@ import {
     defaultAppearance, defaultSettings,
     loadPlayerSave,
     PlayerSave, PlayerSettings,
-    savePlayerData
+    savePlayerData, validateSettings
 } from './player-data';
-import { ActiveWidget, widgetIds, widgetSettings } from './widget';
+import { ActiveWidget, widgetIds, widgetSettings } from '../../config/widget';
 import { ContainerUpdateEvent, ItemContainer } from '../../items/item-container';
 import { EquipmentBonuses, ItemDetails } from '../../config/item-data';
 import { Item } from '../../items/item';
@@ -25,7 +25,7 @@ import { QuadtreeKey } from '@server/world/world';
 import { daysSinceLastLogin } from '@server/util/time';
 
 const DEFAULT_TAB_WIDGET_IDS = [
-    92, 320, 274, 149, 387, 271, 192, -1, 131, 148, 182, 261, 464, 239
+    92, widgetIds.skillsTab, 274, widgetIds.inventory.widgetId, widgetIds.equipment.widgetId, 271, 192, -1, 131, 148, widgetIds.logoutTab, widgetIds.settingsTab, 464, 239
 ];
 
 export enum Rights {
@@ -198,9 +198,9 @@ export class Player extends Actor {
             };
         }
 
-        /*this.updateBonuses();
+        validateSettings(this);
         this.updateWidgetSettings();
-        this.updateCarryWeight(true);*/
+        this.updateCarryWeight(true);
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
 
@@ -395,7 +395,6 @@ export class Player extends Actor {
     }
 
     public settingChanged(buttonId: number): void {
-        logger.info(`${buttonId}`);
         const settingsMappings = {
             0: {setting: 'runEnabled', value: !this.settings['runEnabled']},
             1: {setting: 'chatEffectsEnabled', value: !this.settings['chatEffectsEnabled']},
@@ -418,6 +417,11 @@ export class Player extends Actor {
             18: {setting: 'soundEffectVolume', value: 2},
             19: {setting: 'soundEffectVolume', value: 3},
             20: {setting: 'soundEffectVolume', value: 4},
+            29: {setting: 'areaEffectVolume', value: 4},
+            30: {setting: 'areaEffectVolume', value: 3},
+            31: {setting: 'areaEffectVolume', value: 2},
+            32: {setting: 'areaEffectVolume', value: 1},
+            33: {setting: 'areaEffectVolume', value: 0},
             // 150: {setting: 'autoRetaliateEnabled', value: true},
             // 151: {setting: 'autoRetaliateEnabled', value: false}
         };
@@ -432,15 +436,18 @@ export class Player extends Actor {
 
     public updateWidgetSettings(): void {
         const settings = this.settings;
-        this.outgoingPackets.updateWidgetSetting(widgetSettings.brightness, settings.screenBrightness);
-        this.outgoingPackets.updateWidgetSetting(widgetSettings.mouseButtons, settings.twoMouseButtonsEnabled ? 0 : 1);
-        this.outgoingPackets.updateWidgetSetting(widgetSettings.splitPrivateChat, settings.splitPrivateChatEnabled ? 1 : 0);
-        this.outgoingPackets.updateWidgetSetting(widgetSettings.chatEffects, settings.chatEffectsEnabled ? 0 : 1);
-        this.outgoingPackets.updateWidgetSetting(widgetSettings.acceptAid, settings.acceptAidEnabled ? 1 : 0);
-        this.outgoingPackets.updateWidgetSetting(widgetSettings.musicVolume, settings.musicVolume);
-        this.outgoingPackets.updateWidgetSetting(widgetSettings.soundEffectVolume, settings.soundEffectVolume);
-        this.outgoingPackets.updateWidgetSetting(widgetSettings.runMode, settings.runEnabled ? 1 : 0);
-        this.outgoingPackets.updateWidgetSetting(widgetSettings.autoRetaliate, settings.autoRetaliateEnabled ? 0 : 1);
+        this.outgoingPackets.updateClientConfig(widgetSettings.brightness, settings.screenBrightness);
+        this.outgoingPackets.updateClientConfig(widgetSettings.mouseButtons, settings.twoMouseButtonsEnabled ? 0 : 1);
+        this.outgoingPackets.updateClientConfig(widgetSettings.splitPrivateChat, settings.splitPrivateChatEnabled ? 1 : 0);
+        this.outgoingPackets.updateClientConfig(widgetSettings.chatEffects, settings.chatEffectsEnabled ? 0 : 1);
+        this.outgoingPackets.updateClientConfig(widgetSettings.acceptAid, settings.acceptAidEnabled ? 1 : 0);
+        this.outgoingPackets.updateClientConfig(widgetSettings.musicVolume, settings.musicVolume);
+        this.outgoingPackets.updateClientConfig(widgetSettings.soundEffectVolume, settings.soundEffectVolume);
+        this.outgoingPackets.updateClientConfig(widgetSettings.areaEffectVolume, settings.areaEffectVolume);
+        this.outgoingPackets.updateClientConfig(widgetSettings.runMode, settings.runEnabled ? 1 : 0);
+        this.outgoingPackets.updateClientConfig(widgetSettings.autoRetaliate, settings.autoRetaliateEnabled ? 0 : 1);
+        this.outgoingPackets.updateClientConfig(widgetSettings.attackStyle, settings.attackStyle);
+        this.outgoingPackets.updateClientConfig(widgetSettings.bankInsertMode, settings.bankInsertMode);
     }
 
     public updateBonuses(): void {

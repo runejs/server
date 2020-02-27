@@ -8,6 +8,10 @@ export const widgetIds: any = {
         widgetId: 387,
         containerId: 25
     },
+    skillGuide: 308,
+    skillsTab: 320,
+    logoutTab: 182,
+    settingsTab: 261,
     shop: {
         shopInventory: 3900,
         shopScreen: 3824,
@@ -30,17 +34,20 @@ export const widgetIds: any = {
 };
 
 export const widgetSettings = {
-    runMode: 173,
+    musicPlayer: 18,
+    attackStyle: 43,
+    brightness: 166,
+    unknown: 167, // ????
     musicVolume: 168,
     soundEffectVolume: 169,
-    splitPrivateChat: 287,
     mouseButtons: 170,
-    brightness: 166,
     chatEffects: 171,
-    acceptAid: 427,
     autoRetaliate: 172,
-    musicPlayer: 18,
-    attackStyle: 43
+    runMode: 173,
+    splitPrivateChat: 287,
+    bankInsertMode: 304,
+    acceptAid: 427,
+    areaEffectVolume: 872,
 };
 
 export interface ActiveWidget {

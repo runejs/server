@@ -1,6 +1,7 @@
 import { npcAction } from '@server/world/actor/player/action/npc-action';
 import { dialogueAction, DialogueEmote } from '@server/world/actor/player/action/dialogue-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { npcIds } from '@server/world/config/npc-ids';
 
 const action: npcAction = (details) => {
     const { player, npc } = details;
@@ -49,4 +50,4 @@ const action: npcAction = (details) => {
         });
 };
 
-export default new RunePlugin({ type: ActionType.NPC_ACTION, npcIds: 0, options: 'talk-to', walkTo: true, action });
+export default new RunePlugin({ type: ActionType.NPC_ACTION, npcIds: npcIds.hans, options: 'talk-to', walkTo: true, action });
