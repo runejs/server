@@ -1,7 +1,7 @@
 import { Player } from '../player';
 import { world } from '@server/game-server';
 import { Item } from '@server/world/items/item';
-import { widgetIds } from '@server/world/actor/player/widget';
+import { widgetIds } from '@server/world/config/widget';
 
 export const dropItemAction = (player: Player, item: Item, inventorySlot: number) => {
     player.inventory.remove(inventorySlot);

@@ -8,6 +8,10 @@ export const widgetIds: any = {
         widgetId: 387,
         containerId: 25
     },
+    skillGuide: 308,
+    skillsTab: 320,
+    logoutTab: 182,
+    settingsTab: 261,
     shop: {
         shopInventory: 3900,
         shopScreen: 3824,

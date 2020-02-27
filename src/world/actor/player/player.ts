@@ -13,7 +13,7 @@ import {
     PlayerSave, PlayerSettings,
     savePlayerData, validateSettings
 } from './player-data';
-import { ActiveWidget, widgetIds, widgetSettings } from './widget';
+import { ActiveWidget, widgetIds, widgetSettings } from '../../config/widget';
 import { ContainerUpdateEvent, ItemContainer } from '../../items/item-container';
 import { EquipmentBonuses, ItemDetails } from '../../config/item-data';
 import { Item } from '../../items/item';
@@ -25,7 +25,7 @@ import { QuadtreeKey } from '@server/world/world';
 import { daysSinceLastLogin } from '@server/util/time';
 
 const DEFAULT_TAB_WIDGET_IDS = [
-    92, 320, 274, 149, 387, 271, 192, -1, 131, 148, 182, 261, 464, 239
+    92, widgetIds.skillsTab, 274, widgetIds.inventory.widgetId, widgetIds.equipment.widgetId, 271, 192, -1, 131, 148, widgetIds.logoutTab, widgetIds.settingsTab, 464, 239
 ];
 
 export enum Rights {

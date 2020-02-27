@@ -2,7 +2,7 @@ import { world } from '@server/game-server';
 import { Player } from '@server/world/actor/player/player';
 import { logger } from '@runejs/logger/dist/logger';
 import { Shop } from '@server/world/config/shops';
-import { widgetIds } from '@server/world/actor/player/widget';
+import { widgetIds } from '@server/world/config/widget';
 
 function findShop(identification: string): Shop {
     for(let i = 0; i <= world.shops.length; i++) {

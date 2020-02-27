@@ -1,6 +1,6 @@
 import { Player } from '@server/world/actor/player/player';
 import { gameCache } from '@server/game-server';
-import { widgetIds } from '@server/world/actor/player/widget';
+import { widgetIds } from '@server/world/config/widget';
 
 export const buyItemAction = (player: Player, itemId: number, amount: number, slot: number, interfaceId: number) => {
     const purchasedItem = gameCache.itemDefinitions.get(itemId);

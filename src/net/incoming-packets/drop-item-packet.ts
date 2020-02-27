@@ -2,7 +2,7 @@ import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../world/actor/player/player';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { logger } from '@runejs/logger/dist/logger';
-import { widgetIds } from '../../world/actor/player/widget';
+import { widgetIds } from '../../world/config/widget';
 import { dropItemAction } from '@server/world/actor/player/action/drop-item-action';
 
 export const dropItemPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
