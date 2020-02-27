@@ -1,17 +1,16 @@
 import { buttonAction } from '@server/world/actor/player/action/button-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
-// @TODO fix me!
 const buttonIds: number[] = [
-    17104896, // walk/run
-    930, 931, 932, 933, 934, // music volume
-    941, 942, 943, 944, 945, // sound effect volume
-    957, 958, // split private chat
-    913, 914, // mouse buttons
-    906, 908, 910, 912, // screen brightness
-    915, 916, // chat effects
-    12464, 12465, // accept aid
-    150, 151, // auto retaliate
+    0, // walk/run
+    11, 12, 13, 14, 15, // music volume
+    16, 17, 18, 19, 20, // sound effect volume
+    2, // split private chat
+    3, // mouse buttons
+    7, 8, 9, 10, // screen brightness
+    1, // chat effects
+    4, // accept aid
+    5, // house options
 ];
 
 export const action: buttonAction = (details) => {
@@ -19,4 +18,4 @@ export const action: buttonAction = (details) => {
     player.settingChanged(buttonId);
 };
 
-export default new RunePlugin({ type: ActionType.BUTTON, widgetId: 0, buttonIds, action });
+export default new RunePlugin({ type: ActionType.BUTTON, widgetId: 261, buttonIds: buttonIds, action });
