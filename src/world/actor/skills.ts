@@ -115,7 +115,7 @@ export class Skills {
         this.setExp(skillId, finalExp);
 
         if(this.actor instanceof Player) {
-            this.actor.outgoingPackets.sendSkill(skillId, finalLevel, finalExp);
+            this.actor.outgoingPackets.updateSkill(skillId, finalLevel, finalExp);
         }
 
         if(currentLevel !== finalLevel) {

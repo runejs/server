@@ -160,7 +160,7 @@ export class Player extends Actor {
             }
         });
 
-        this.skills.values.forEach((skill, index) => this.outgoingPackets.sendSkill(index, skill.level, skill.exp));
+        this.skills.values.forEach((skill, index) => this.outgoingPackets.updateSkill(index, skill.level, skill.exp));
 
         this.outgoingPackets.sendUpdateAllWidgetItems(widgetIds.inventory, this.inventory);
         this.outgoingPackets.sendUpdateAllWidgetItems(widgetIds.equipment, this.equipment);
@@ -214,6 +214,8 @@ export class Player extends Actor {
         this._loginDate = new Date();
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
 
+        this.outgoingPackets.flushQueue();
+
         logger.info(`${this.username}:${this.worldIndex} has logged in.`);
     }
 
@@ -225,7 +227,7 @@ export class Player extends Actor {
         world.playerTree.remove(this.quadtreeKey);
         savePlayerData(this);
 
-        this.outgoingPackets.sendLogout();
+        this.outgoingPackets.logout();
         world.chunkManager.getChunkForWorldPosition(this.position).removePlayer(this);
         world.deregisterPlayer(this);
         this.loggedIn = false;
@@ -298,9 +300,15 @@ export class Player extends Actor {
         });
     }
 
+    public async update(): Promise<void> {
+        await Promise.all([ this.playerUpdateTask.execute(), this.npcUpdateTask.execute() ]);
+    }
+
     public async reset(): Promise<void> {
         return new Promise<void>(resolve => {
             this.updateFlags.reset();
+
+            this.outgoingPackets.flushQueue();
 
             if(this.metadata['updateChunk']) {
                 const { newChunk, oldChunk } = this.metadata['updateChunk'];

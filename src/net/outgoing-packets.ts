@@ -11,90 +11,18 @@ import { rsTime } from '@server/util/time';
 import { addressToInt } from '@server/util/address';
 
 /**
- * 6   = set chatbox input type to 2
- * 156 = set minimap state
- * 167 = move camera?
- *
- *
- * 220 = play song
- * 249 = play overlay song?
- * 41  = play sound at position
- *
- * 61  = reset X reference coordinate
- * 75  = update reference position
- * 40  = clear map region ground items and objects
- * 53  = construct map region
- * 222 = send current map region
- * 183 = update map region ground items and objects
- * 88  = remove landscape object
- * 208 = remove ground item
- * 152 = set landscape object
- * 121 = update ground item amount
- * 107 = set ground item
- *
- * 135 = private message received
- * 190 = system update notification
- * 63  = send chatbox message
- *
- * 5   = send logout
- * 199 = show mob hint icon - @TODO COME BACK TO THIS
- * 13  = reset mob animations
- * 90  = player updating
- * 71  = npc updating
- * 157 = add player option
- * 126 = update member status and player index
- *
- * 59  = show graphics at position
- *
- * 29  = close all widgets
- * 10  = show tab widget
- * 76  = show welcome widget
- * 159 = show standalone game widget
- * 50  = show walkable game widget
- * 246 = show standalone sidebar tab widget
- * 128 = show game and sidebar tab widget together (for banking and such)
- * 109 = show standalone chatbox widget
- * 252 = force open sidebar tab
- *
- * 2   = show widget animation
- * 218 = update widget color
- * 232 = send widget string
- * 238 = flash sidebar tab icon
- * 200 = set widget scroll position
- * 166 = set widget position
- * 82  = set widget hidden until hovered state
- *
- * 206 = update widget items
- * 134 = update specific widget items
- * 219 = clear widget items
- * 125 = send player run energy
- * 174 = update carry weight
- * 49  = update player skill
- * 78  = send friend info
- * 251 = update friend list status
- * 226 = update ignore list
- *
- * 186 = set widget model rotation and zoom
- * 21  = show item model on widget
- * 216 = show widget media type 1
- * 162 = show npc head on widget? - @TODO COME BACK TO THIS
- * 255 = show player head on widget
- *
- * 201 = update chat settings
- * 113 = reset widget settings
- * 115 = update large widget setting value
- * 182 = update small widget setting value
- */
-
-/**
  * A helper class for sending various network packets back to the game client.
  */
 export class OutgoingPackets {
 
+    private updatingQueue: Buffer[];
+    private packetQueue: Buffer[];
     private readonly player: Player;
     private readonly socket: Socket;
 
     public constructor(player: Player) {
+        this.updatingQueue = [];
+        this.packetQueue = [];
         this.player = player;
         this.socket = player.socket;
     }
@@ -103,7 +31,7 @@ export class OutgoingPackets {
         const packet = new Packet(217);
         packet.writeShortLE(songId);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public playQuickSong(songId: number, previousSongId: number): void {
@@ -111,7 +39,7 @@ export class OutgoingPackets {
         packet.writeShortLE(songId);
         packet.writeMediumME(previousSongId);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public playSound(soundId: number, volume: number, delay: number = 0): void {
@@ -120,7 +48,7 @@ export class OutgoingPackets {
         packet.writeByte(volume);
         packet.writeShortBE(delay);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     private getChunkPositionOffset(x: number, y: number, chunk: Chunk): number {
@@ -168,7 +96,7 @@ export class OutgoingPackets {
             }
         });
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public clearChunk(chunk: Chunk): void {
@@ -178,7 +106,7 @@ export class OutgoingPackets {
         packet.writeUnsignedByte(offsetY);
         packet.writeUnsignedOffsetByte(offsetX);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public setWorldItem(worldItem: WorldItem, position: Position, offset: number = 0): void {
@@ -189,7 +117,7 @@ export class OutgoingPackets {
         packet.writeUnsignedShortBE(worldItem.amount);
         packet.writeUnsignedByte(offset);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public removeWorldItem(worldItem: WorldItem, position: Position, offset: number = 0): void {
@@ -199,7 +127,7 @@ export class OutgoingPackets {
         packet.writeUnsignedByte(offset);
         packet.writeUnsignedOffsetShortBE(worldItem.itemId);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public setLandscapeObject(landscapeObject: LandscapeObject, position: Position, offset: number = 0): void {
@@ -210,7 +138,7 @@ export class OutgoingPackets {
         packet.writeUnsignedShortBE(landscapeObject.objectId);
         packet.writeUnsignedOffsetByte(offset);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public removeLandscapeObject(landscapeObject: LandscapeObject, position: Position, offset: number = 0): void {
@@ -220,7 +148,7 @@ export class OutgoingPackets {
         packet.writeUnsignedOffsetByte(offset);
         packet.writeByteInverted((landscapeObject.type << 2) + (landscapeObject.rotation & 3));
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public updateReferencePosition(position: Position): void {
@@ -231,7 +159,7 @@ export class OutgoingPackets {
         packet.writeNegativeOffsetByte(offsetY);
         packet.writeByteInverted(offsetX);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     // Text dialogs = 356, 359, 363, 368, 374
@@ -241,7 +169,7 @@ export class OutgoingPackets {
         const packet = new Packet(208);
         packet.writeUnsignedOffsetShortBE(widgetId);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public setWidgetNpcHead(widgetId: number, childId: number, modelId: number): void {
@@ -249,14 +177,14 @@ export class OutgoingPackets {
         packet.writeUnsignedShortLE(modelId);
         packet.writeIntLE(widgetId << 16 | childId);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public setWidgetPlayerHead(widgetId: number, childId: number): void {
         const packet = new Packet(210);
         packet.writeIntLE(widgetId << 16 | childId);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public playWidgetAnimation(widgetId: number, childId: number, animationId: number): void {
@@ -264,14 +192,14 @@ export class OutgoingPackets {
         packet.writeShortBE(animationId);
         packet.writeIntBE(widgetId << 16 | childId);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public showScreenAndTabWidgets(widgetId: number, sidebarId: number) : void {
         const packet = new Packet(128);
         packet.writeNegativeOffsetShortBE(widgetId);
         packet.writeNegativeOffsetShortLE(sidebarId);
-        this.send(packet);
+        this.queue(packet);
     }
 
     public updateClientConfig(configId: number, value: number): void {
@@ -287,7 +215,7 @@ export class OutgoingPackets {
             packet.writeUnsignedOffsetShortBE(configId);
         }
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public updateWidgetSetting(settingId: number, value: number): void {
@@ -301,7 +229,7 @@ export class OutgoingPackets {
             packet.writeNegativeOffsetByte(value);
         }
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public updateWidgetItemModel(widgetId: number, itemId: number, scale?: number): void {
@@ -310,7 +238,7 @@ export class OutgoingPackets {
         packet.writeShortLE(itemId);
         packet.writeOffsetShortLE(widgetId);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public updateWidgetString(widgetId: number, childId: number, value: string): void {
@@ -318,18 +246,18 @@ export class OutgoingPackets {
         packet.writeIntLE(widgetId << 16 | childId);
         packet.writeNewString(value);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public closeActiveWidgets(): void {
-        this.send(new Packet(180));
+        this.queue(new Packet(180));
     }
 
     public showScreenWidget(widgetId: number): void {
         const packet = new Packet(118);
         packet.writeUnsignedShortBE(widgetId);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     // @TODO this can support multiple items/slots !!!
@@ -351,7 +279,7 @@ export class OutgoingPackets {
             }
         }
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public sendUpdateAllWidgetItems(widget: { widgetId: number, containerId: number }, container: ItemContainer): void {
@@ -377,7 +305,7 @@ export class OutgoingPackets {
             }
         });
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public sendUpdateAllWidgetItemsById(widget: { widgetId: number, containerId: number }, itemIds: number[]): void {
@@ -396,7 +324,7 @@ export class OutgoingPackets {
             }
         });
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public toggleWidgetVisibility(widgetId: number, childId: number, hidden: boolean): void {
@@ -404,7 +332,7 @@ export class OutgoingPackets {
         packet.writeUnsignedByte(hidden ? 1 : 0);
         packet.writeIntME2(widgetId << 16 | childId);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public sendTabWidget(tabIndex: number, widgetId: number): void {
@@ -412,7 +340,7 @@ export class OutgoingPackets {
         packet.writeShortBE(widgetId);
         packet.writeByte(tabIndex);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public showFullscreenWidget(widgetId: number, secondaryWidgetId: number): void {
@@ -420,25 +348,14 @@ export class OutgoingPackets {
         packet.writeUnsignedOffsetShortBE(secondaryWidgetId);
         packet.writeUnsignedShortBE(widgetId);
 
-        this.send(packet);
-    }
-
-    /**
-     * Clears the player's current map chunk of all ground items and spawned/modified landscape objects.
-     */
-    public clearMapChunk(): void {
-        const packet = new Packet(64);
-        packet.writeUnsignedByte(this.player.position.chunkY + 6); // Map Chunk Y
-        packet.writeUnsignedOffsetByte(this.player.position.chunkX + 6); // Map Chunk X
-
-        this.send(packet);
+        this.queue(packet);
     }
 
     public updateCarryWeight(weight: number): void {
         const packet = new Packet(171);
         packet.writeShortBE(weight);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public showHintIcon(iconType: 2 | 3 | 4 | 5 | 6, position: Position, offset: number = 0): void {
@@ -448,7 +365,7 @@ export class OutgoingPackets {
         packet.writeUnsignedShortBE(position.y);
         packet.writeUnsignedByte(offset);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public showPlayerHintIcon(player: Player): void {
@@ -461,27 +378,30 @@ export class OutgoingPackets {
         packet.writeByte(0);
         packet.writeByte(0);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
-    public sendLogout(): void {
-        this.send(new Packet(181));
+    public logout(): void {
+        this.packetQueue = [];
+        this.updatingQueue = [];
+
+        this.socket.write(new Packet(181).toBuffer(this.player.outCipher));
     }
 
     public chatboxMessage(message: string): void {
         const packet = new Packet(82, PacketType.DYNAMIC_SMALL);
         packet.writeNewString(message);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
-    public sendSkill(skillId: number, level: number, exp: number): void {
+    public updateSkill(skillId: number, level: number, exp: number): void {
         const packet = new Packet(34);
         packet.writeUnsignedOffsetByte(level);
         packet.writeByte(skillId);
         packet.writeIntME2(exp);
 
-        this.send(packet);
+        this.queue(packet);
     }
 
     public updateCurrentMapChunk(): void {
@@ -500,15 +420,32 @@ export class OutgoingPackets {
             }
         }
 
-        this.send(packet);
+        this.queue(packet);
     }
 
-    public send(packet: Packet): void {
+    public flushQueue(): void {
         if(!this.socket || this.socket.destroyed) {
             return;
         }
 
-        this.socket.write(packet.toBuffer(this.player.outCipher));
+        const buffer = Buffer.concat([ ...this.packetQueue, ...this.updatingQueue ]);
+        if(buffer.length !== 0) {
+            this.socket.write(buffer);
+        }
+
+        this.updatingQueue = [];
+        this.packetQueue = [];
+    }
+
+    public queue(packet: Packet, updateTask: boolean = false): void {
+        if(!this.socket || this.socket.destroyed) {
+            return;
+        }
+
+        const queue = updateTask ? this.updatingQueue : this.packetQueue;
+
+        const packetBuffer = packet.toBuffer(this.player.outCipher);
+        queue.push(packetBuffer);
     }
 
 }
