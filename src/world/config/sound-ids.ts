@@ -6,4 +6,8 @@ export const soundIds = {
     closeDoor: 60,
     openGate: 67,
     closeGate: 66,
+    homeTeleportDraw: 193,
+    homeTeleportSit: 196,
+    homeTeleportPullOutBook: 194,
+    homeTeleportCircleGlowAndTeleport: 195,
 };
