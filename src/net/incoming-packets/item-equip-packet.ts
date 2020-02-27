@@ -2,7 +2,7 @@ import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../world/actor/player/player';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { logger } from '@runejs/logger/dist/logger';
-import { widgetIds } from '../../world/actor/player/widget';
+import { widgetIds } from '../../world/config/widget';
 import { equipItemAction } from '../../world/actor/player/action/equip-item-action';
 
 export const itemEquipPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {

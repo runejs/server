@@ -1,5 +1,5 @@
 import { Player } from '../player';
-import { widgetIds } from '../widget';
+import { widgetIds } from '../../../config/widget';
 
 export const swapItemAction = (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }) => {
     if(widget.widgetId === widgetIds.inventory.widgetId && widget.containerId === widgetIds.inventory.containerId) {

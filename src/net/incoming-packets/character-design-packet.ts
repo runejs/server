@@ -1,7 +1,7 @@
 import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../world/actor/player/player';
 import { RsBuffer } from '@server/net/rs-buffer';
-import { widgetIds } from '../../world/actor/player/widget';
+import { widgetIds } from '../../world/config/widget';
 
 export const characterDesignPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     if(!player.activeWidget || player.activeWidget.widgetId !== widgetIds.characterDesign) {

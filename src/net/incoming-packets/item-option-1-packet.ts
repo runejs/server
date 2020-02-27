@@ -1,7 +1,7 @@
 import { incomingPacket } from '../incoming-packet';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { Player } from '../../world/actor/player/player';
-import { widgetIds } from '../../world/actor/player/widget';
+import { widgetIds } from '../../world/config/widget';
 import { logger } from '@runejs/logger/dist/logger';
 import { unequipItemAction } from '../../world/actor/player/action/unequip-item-action';
 import { ItemContainer } from '@server/world/items/item-container';

@@ -8,10 +8,14 @@ import { WorldItem } from '@server/world/items/world-item';
 import { Position } from '@server/world/position';
 import { randomBetween } from '@server/util/num';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { objectIds } from '@server/world/config/object-ids';
+import { itemIds } from '@server/world/config/item-ids';
+import { soundIds } from '@server/world/config/sound-ids';
+import { animationIds } from '@server/world/config/animation-ids';
 
 const logs = [
     {
-        logId: 1511,
+        logId: itemIds.logs,
         requiredLevel: 1,
         burnExp: 40
     }
@@ -38,7 +42,7 @@ const fireDuration = (): number => {
 const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, burnExp: number): void => {
     world.chunkManager.removeWorldItem(worldItemLog);
     const fireObject: LandscapeObject = {
-        objectId: 2732,
+        objectId: objectIds.fire,
         x: position.x,
         y: position.y,
         level: position.level,
@@ -58,7 +62,7 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
         }
     }
     world.chunkManager.addTemporaryLandscapeObject(fireObject, position, fireDuration()).then(() => {
-        world.chunkManager.spawnWorldItem({ itemId: 592, amount: 1 }, position, null, 300);
+        world.chunkManager.spawnWorldItem({ itemId: itemIds.ashes, amount: 1 }, position, null, 300);
     });
 
     player.face(position, false);
@@ -73,8 +77,8 @@ const action: itemOnItemAction = (details) => {
         return;
     }
 
-    const log = usedItem.itemId !== 590 ? usedItem : usedWithItem;
-    const removeFromSlot = usedItem.itemId !== 590 ? usedSlot : usedWithSlot;
+    const log = usedItem.itemId !== itemIds.tinderbox ? usedItem : usedWithItem;
+    const removeFromSlot = usedItem.itemId !== itemIds.tinderbox ? usedSlot : usedWithSlot;
     const skillInfo = logs.find(l => l.logId === log.itemId);
     const position = player.position;
 
@@ -114,15 +118,15 @@ const action: itemOnItemAction = (details) => {
             // @TODO check for tinderbox in-case it was removed
 
             if(elapsedTicks === 0 || elapsedTicks % 12 === 0) {
-                player.playAnimation(733);
+                player.playAnimation(animationIds.lightingFire);
             }
 
             canLightFire = elapsedTicks > 10 && canLight(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level);
 
             if(!canLightFire && (elapsedTicks === 0 || elapsedTicks % 4 === 0)) {
-                player.outgoingPackets.playSound(2599, 10, 0);
+                player.outgoingPackets.playSound(soundIds.lightingFire, 10, 0);
             } else if(canLightFire) {
-                player.outgoingPackets.playSound(2594, 7);
+                player.outgoingPackets.playSound(soundIds.fireLit, 7);
             }
 
             elapsedTicks++;
@@ -130,4 +134,4 @@ const action: itemOnItemAction = (details) => {
     }
 };
 
-export default new RunePlugin({ type: ActionType.ITEM_ON_ITEM, items: [ { item1: 590, item2: 1511 } ], action });
+export default new RunePlugin({ type: ActionType.ITEM_ON_ITEM, items: logs.map(log => ({item1: itemIds.tinderbox, item2: log.logId})), action });

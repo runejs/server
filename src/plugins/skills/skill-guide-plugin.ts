@@ -5,6 +5,7 @@ import { readFileSync } from 'fs';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { Player } from '@server/world/actor/player/player';
 import { widgetAction } from '@server/world/actor/player/action/widget-action';
+import { widgetIds } from '@server/world/config/widget';
 
 // @TODO fix me!
 
@@ -52,35 +53,18 @@ const buttonIds = guides.map(g => g.id);
 function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refreshSidebar: boolean = true): void {
     let guide: SkillGuide = guides.find(g => g.id === guideId);
 
-    /*if(!refreshSidebar) {
-        const activeSkillGuide = player.metadata['activeSkillGuide'];
-        if(!activeSkillGuide) {
-            return;
-        }
-
-        guide = guides.find(g => g.id === activeSkillGuide);
-        subGuideIndex = sidebarTextIds.indexOf(buttonId);
-
-        if(subGuideIndex >= guide.subGuides.length) {
-            return;
-        }
-
-        buttonId = activeSkillGuide;
-        refreshSidebar = false;
-    }*/
-
     if(refreshSidebar) {
-        player.outgoingPackets.updateWidgetString(308, 133, guide.members ? 'Members only skill' : '');
+        player.outgoingPackets.updateWidgetString(widgetIds.skillGuide, 133, guide.members ? 'Members only skill' : '');
 
         for(let i = 0; i < sidebarTextIds.length; i++) {
             const sidebarId = sidebarIds[i];
             let hide: boolean = true;
 
             if(i >= guide.subGuides.length) {
-                player.outgoingPackets.updateWidgetString(308, sidebarTextIds[i], '');
+                player.outgoingPackets.updateWidgetString(widgetIds.skillGuide, sidebarTextIds[i], '');
                 hide = true;
             } else {
-                player.outgoingPackets.updateWidgetString(308, sidebarTextIds[i], guide.subGuides[i].name);
+                player.outgoingPackets.updateWidgetString(widgetIds.skillGuide, sidebarTextIds[i], guide.subGuides[i].name);
                 hide = false;
             }
 
@@ -88,30 +72,30 @@ function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refr
                 // Apparently you can never have only TWO subguides...
                 // Because childId 98 deletes both options 2 AND 3. So, good thing there are no guides with only 2 sections, I guess?...
                 // Verified this in an interface editor, and they are indeed grouped in a single layer for some reason...
-                player.outgoingPackets.toggleWidgetVisibility(308, sidebarIds[i], hide);
+                player.outgoingPackets.toggleWidgetVisibility(widgetIds.skillGuide, sidebarIds[i], hide);
             }
         }
     }
 
     const subGuide: SkillSubGuide = guide.subGuides[subGuideId];
 
-    player.outgoingPackets.updateWidgetString(308, 1, guide.name + ' - ' + subGuide.name);
+    player.outgoingPackets.updateWidgetString(widgetIds.skillGuide, 1, guide.name + ' - ' + subGuide.name);
 
     const itemIds: number[] = subGuide.lines.map(g => g.itemId).concat(new Array(30 - subGuide.lines.length).fill(null));
-    player.outgoingPackets.sendUpdateAllWidgetItemsById({ widgetId: 308, containerId: 132 }, itemIds);
+    player.outgoingPackets.sendUpdateAllWidgetItemsById({ widgetId: widgetIds.skillGuide, containerId: 132 }, itemIds);
 
     for(let i = 0; i < 30; i++) {
         if(subGuide.lines.length <= i) {
-            player.outgoingPackets.updateWidgetString(308, 5 + i, '');
-            player.outgoingPackets.updateWidgetString(308, 45 + i, '');
+            player.outgoingPackets.updateWidgetString(widgetIds.skillGuide, 5 + i, '');
+            player.outgoingPackets.updateWidgetString(widgetIds.skillGuide, 45 + i, '');
         } else {
-            player.outgoingPackets.updateWidgetString(308, 5 + i, subGuide.lines[i].level.toString());
-            player.outgoingPackets.updateWidgetString(308, 45 + i, subGuide.lines[i].text);
+            player.outgoingPackets.updateWidgetString(widgetIds.skillGuide, 5 + i, subGuide.lines[i].level.toString());
+            player.outgoingPackets.updateWidgetString(widgetIds.skillGuide, 45 + i, subGuide.lines[i].text);
         }
     }
 
     player.activeWidget = {
-        widgetId: 308,
+        widgetId: widgetIds.skillGuide,
         type: 'SCREEN',
         closeOnWalk: false
     };
@@ -143,6 +127,6 @@ export const openSubGuideAction: widgetAction = (details) => {
 };
 
 export default new RunePlugin([
-    { type: ActionType.BUTTON, widgetId: 320, buttonIds, action: openGuideAction },
-    { type: ActionType.WIDGET_ACTION, widgetIds: 308, childIds: sidebarTextIds, optionId: 0, action: openSubGuideAction }
+    { type: ActionType.BUTTON, widgetId: widgetIds.skillsTab, buttonIds, action: openGuideAction },
+    { type: ActionType.WIDGET_ACTION, widgetIds: widgetIds.skillGuide, childIds: sidebarTextIds, optionId: 0, action: openSubGuideAction }
 ]);

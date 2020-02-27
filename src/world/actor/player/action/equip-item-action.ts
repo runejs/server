@@ -3,7 +3,7 @@ import { world } from '@server/game-server';
 import { logger } from '@runejs/logger/dist/logger';
 import { EquipmentSlot, equipmentSlotIndex, ItemDetails, WeaponType } from '@server/world/config/item-data';
 import { Item } from '@server/world/items/item';
-import { widgetIds } from '../widget';
+import { widgetIds } from '../../../config/widget';
 import { ItemContainer } from '@server/world/items/item-container';
 
 export const equipItemAction = (player: Player, itemId: number, inventorySlot: number) => {
