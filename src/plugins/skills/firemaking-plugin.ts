@@ -46,10 +46,6 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
         rotation: 0
     };
 
-    world.chunkManager.addTemporaryLandscapeObject(fireObject, position, fireDuration()).then(() => {
-        world.chunkManager.spawnWorldItem({ itemId: 592, amount: 1 }, position, null, 300);
-    });
-    player.outgoingPackets.playSound(2594, 7);
     player.playAnimation(null);
     player.outgoingPackets.chatboxMessage(`The fire catches and the logs begin to burn.`);
     player.skills.addExp(Skill.FIREMAKING, burnExp);
@@ -61,9 +57,13 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
             }
         }
     }
+    world.chunkManager.addTemporaryLandscapeObject(fireObject, position, fireDuration()).then(() => {
+        world.chunkManager.spawnWorldItem({ itemId: 592, amount: 1 }, position, null, 300);
+    });
 
     player.face(position, false);
-    player.metadata['lastFire'] = Date.now();
+    player.metadata.lastFire = Date.now();
+    player.metadata.busy = false;
 };
 
 const action: itemOnItemAction = (details) => {
@@ -94,11 +94,19 @@ const action: itemOnItemAction = (details) => {
     } else {
         player.outgoingPackets.chatboxMessage(`You attempt to light the logs.`);
 
+        let canLightFire = false;
         let elapsedTicks = 0;
         const loop = loopingAction(player);
         loop.event.subscribe(() => {
             if(worldItemLog.removed) {
                 loop.cancel();
+                return;
+            }
+
+            if(canLightFire) {
+                loop.cancel();
+                player.metadata.busy = true;
+                setTimeout(() => lightFire(player, position, worldItemLog, skillInfo.burnExp), 1200);
                 return;
             }
 
@@ -109,18 +117,15 @@ const action: itemOnItemAction = (details) => {
                 player.playAnimation(733);
             }
 
-            const canLightFire = elapsedTicks > 10 && canLight(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level);
+            canLightFire = elapsedTicks > 10 && canLight(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level);
 
             if(!canLightFire && (elapsedTicks === 0 || elapsedTicks % 4 === 0)) {
-                player.outgoingPackets.playSound(2599, 7);
+                player.outgoingPackets.playSound(2599, 10, 0);
+            } else if(canLightFire) {
+                player.outgoingPackets.playSound(2594, 7);
             }
 
-            if(canLightFire) {
-                loop.cancel();
-                lightFire(player, position, worldItemLog, skillInfo.burnExp);
-            } else {
-                elapsedTicks++;
-            }
+            elapsedTicks++;
         });
     }
 };

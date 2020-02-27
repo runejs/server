@@ -102,7 +102,7 @@ export class DialogueAction {
         let widgetId = -1;
 
         if(options.type === 'LEVEL_UP') {
-            widgetId = skillDetails.map(skill => skill.advancementWidgetId === undefined ? -1 : skill.advancementWidgetId)[options.skillId];
+            widgetId = skillDetails.map(skill => !skill || !skill.advancementWidgetId ? -1 : skill.advancementWidgetId)[options.skillId];
         } else {
             widgetId = dialogueWidgetIds[options.type][widgetIndex];
         }
