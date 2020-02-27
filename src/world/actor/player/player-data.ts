@@ -21,16 +21,19 @@ export interface Appearance {
     skinColor: number;
 }
 
-export interface PlayerSettings {
-    musicVolume: number;
-    soundEffectVolume: number;
-    splitPrivateChatEnabled: boolean;
-    twoMouseButtonsEnabled: boolean;
-    screenBrightness: number;
-    chatEffectsEnabled: boolean;
-    acceptAidEnabled: boolean;
-    runEnabled: boolean;
-    autoRetaliateEnabled: boolean;
+export class PlayerSettings {
+    musicVolume: number = 0;
+    soundEffectVolume: number = 0;
+    areaEffectVolume: number = 0;
+    splitPrivateChatEnabled: boolean = false;
+    twoMouseButtonsEnabled: boolean = true;
+    screenBrightness: number = 2;
+    chatEffectsEnabled: boolean = true;
+    acceptAidEnabled: boolean = true;
+    runEnabled: boolean = false;
+    autoRetaliateEnabled: boolean = true;
+    attackStyle: number = 0;
+    bankInsertMode: number = 0;
 }
 
 export interface PlayerSave {
@@ -71,17 +74,22 @@ export const defaultAppearance = (): Appearance => {
 };
 
 export const defaultSettings = (): PlayerSettings => {
-    return {
-        musicVolume: 0,
-        soundEffectVolume: 0,
-        splitPrivateChatEnabled: false,
-        twoMouseButtonsEnabled: false,
-        screenBrightness: 2,
-        chatEffectsEnabled: true,
-        acceptAidEnabled: true,
-        runEnabled: false,
-        autoRetaliateEnabled: true
-    } as PlayerSettings;
+    return new PlayerSettings();
+};
+
+export const validateSettings = (player: Player): void => {
+    const existingKeys = Object.keys(player.settings);
+    const newSettings = new PlayerSettings();
+    const newKeys = Object.keys(newSettings);
+
+    if(newKeys.length === existingKeys.length) {
+        return;
+    }
+
+    const missingKeys = newKeys.filter(key => existingKeys.indexOf(key) === -1);
+    for(const key of missingKeys) {
+        player.settings[key] = newSettings[key];
+    }
 };
 
 export function savePlayerData(player: Player): boolean {

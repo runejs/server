@@ -61,6 +61,33 @@ export class World {
         });
     }
 
+    public findNearbyNpcsById(position: Position, npcId: number, distance: number): Npc[] {
+        return this.npcTree.colliding({
+            x: position.x - (distance / 2),
+            y: position.y - (distance / 2),
+            width: distance,
+            height: distance
+        }).map(quadree => quadree.actor as Npc).filter(npc => npc.id === npcId);
+    }
+
+    public findNearbyNpcs(position: Position, distance: number): Npc[] {
+        return this.npcTree.colliding({
+            x: position.x - (distance / 2),
+            y: position.y - (distance / 2),
+            width: distance,
+            height: distance
+        }).map(quadree => quadree.actor as Npc);
+    }
+
+    public findNearbyPlayers(position: Position, distance: number): Player[] {
+        return this.playerTree.colliding({
+            x: position.x - (distance / 2),
+            y: position.y - (distance / 2),
+            width: distance,
+            height: distance
+        }).map(quadree => quadree.actor as Player);
+    }
+
     public spawnNpcs(): void {
         this.npcSpawns.forEach(npcSpawn => {
             const npcDefinition = gameCache.npcDefinitions.get(npcSpawn.npcId);
