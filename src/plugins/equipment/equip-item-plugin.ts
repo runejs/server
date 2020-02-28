@@ -1,5 +1,5 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { widgetIds } from '@server/world/config/widget';
+import { widgets } from '@server/world/config/widget';
 import { getItemFromContainer, itemAction } from '@server/world/actor/player/action/item-action';
 import { updateBonusStrings } from '@server/plugins/equipment/equipment-stats-plugin';
 import { EquipmentSlot, equipmentSlotIndex, ItemDetails, WeaponType } from '@server/world/config/item-data';
@@ -94,11 +94,11 @@ export const action: itemAction = (details) => {
     player.updateBonuses();
 
     // @TODO change packets to only update modified container slots
-    player.outgoingPackets.sendUpdateAllWidgetItems(widgetIds.inventory, inventory);
-    player.outgoingPackets.sendUpdateAllWidgetItems(widgetIds.equipment, equipment);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, inventory);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, equipment);
 
-    if(player.hasWidgetOpen(widgetIds.equipmentStats.widgetId)) {
-        player.outgoingPackets.sendUpdateAllWidgetItems(widgetIds.equipmentStats, equipment);
+    if(player.hasWidgetOpen(widgets.equipmentStats.widgetId)) {
+        player.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipmentStats, equipment);
         updateBonusStrings(player);
     }
 
@@ -107,7 +107,7 @@ export const action: itemAction = (details) => {
 
 export default new RunePlugin({
     type: ActionType.ITEM_ACTION,
-    widgets: widgetIds.inventory,
+    widgets: widgets.inventory,
     options: 'equip',
     action,
     cancelOtherActions: false

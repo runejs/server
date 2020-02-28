@@ -1,6 +1,6 @@
 import { buttonAction } from '@server/world/actor/player/action/button-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { widgetIds } from '@server/world/config/widget';
+import { widgets } from '@server/world/config/widget';
 import { Player } from '@server/world/actor/player/player';
 
 export function updateBonusStrings(player: Player) {
@@ -17,7 +17,7 @@ export function updateBonusStrings(player: Player) {
         { id: 117, text: 'Range', value: player.bonuses.defencive.ranged },
         { id: 119, text: 'Strength', value: player.bonuses.skill.strength },
         { id: 120, text: 'Prayer', value: player.bonuses.skill.prayer },
-    ].forEach(bonus => player.outgoingPackets.updateWidgetString(widgetIds.equipmentStats.widgetId, bonus.id,
+    ].forEach(bonus => player.outgoingPackets.updateWidgetString(widgets.equipmentStats.widgetId, bonus.id,
         `${bonus.text}: ${bonus.value > 0 ? `+${bonus.value}` : bonus.value}`));
 }
 
@@ -28,15 +28,15 @@ export const action: buttonAction = (details) => {
 
     updateBonusStrings(player);
 
-    player.outgoingPackets.sendUpdateAllWidgetItems(widgetIds.equipmentStats, player.equipment);
-    player.outgoingPackets.sendUpdateAllWidgetItems(widgetIds.inventory, player.inventory);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipmentStats, player.equipment);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
 
     player.activeWidget = {
-        widgetId: widgetIds.equipmentStats.widgetId,
-        secondaryWidgetId: widgetIds.inventory.widgetId,
+        widgetId: widgets.equipmentStats.widgetId,
+        secondaryWidgetId: widgets.inventory.widgetId,
         type: 'SCREEN_AND_TAB',
         closeOnWalk: true
     };
 };
 
-export default new RunePlugin({ type: ActionType.BUTTON, widgetId: widgetIds.equipment.widgetId, buttonIds: 24, action });
+export default new RunePlugin({ type: ActionType.BUTTON, widgetId: widgets.equipment.widgetId, buttonIds: 24, action });

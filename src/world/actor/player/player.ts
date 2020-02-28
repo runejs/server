@@ -13,7 +13,7 @@ import {
     PlayerSave, PlayerSettings,
     savePlayerData, validateSettings
 } from './player-data';
-import { ActiveWidget, widgetIds, widgetSettings } from '../../config/widget';
+import { ActiveWidget, widgets, widgetSettings } from '../../config/widget';
 import { ContainerUpdateEvent, ItemContainer } from '../../items/item-container';
 import { EquipmentBonuses, ItemDetails } from '../../config/item-data';
 import { Item } from '../../items/item';
@@ -25,7 +25,7 @@ import { QuadtreeKey } from '@server/world/world';
 import { daysSinceLastLogin } from '@server/util/time';
 
 const DEFAULT_TAB_WIDGET_IDS = [
-    92, widgetIds.skillsTab, 274, widgetIds.inventory.widgetId, widgetIds.equipment.widgetId, 271, 192, -1, 131, 148, widgetIds.logoutTab, widgetIds.settingsTab, 464, 239
+    92, widgets.skillsTab, 274, widgets.inventory.widgetId, widgets.equipment.widgetId, 271, 192, -1, 131, 148, widgets.logoutTab, widgets.settingsTab, 464, 239
 ];
 
 export enum Rights {
@@ -162,12 +162,12 @@ export class Player extends Actor {
 
         this.skills.values.forEach((skill, index) => this.outgoingPackets.updateSkill(index, skill.level, skill.exp));
 
-        this.outgoingPackets.sendUpdateAllWidgetItems(widgetIds.inventory, this.inventory);
-        this.outgoingPackets.sendUpdateAllWidgetItems(widgetIds.equipment, this.equipment);
+        this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
+        this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
 
         if(this.firstTimePlayer) {
             this.activeWidget = {
-                widgetId: widgetIds.characterDesign,
+                widgetId: widgets.characterDesign,
                 type: 'SCREEN',
                 disablePlayerMovement: true
             };
@@ -182,18 +182,18 @@ export class Player extends Actor {
             } else {
                 loginDaysStr = daysSinceLogin + ' days ago';
             }
-            this.outgoingPackets.updateWidgetString(widgetIds.welcomeScreenChildren.question, 1, `Want to help RuneJS improve?\\nSend us a pull request over on Github!`);
-            this.outgoingPackets.updateWidgetString(widgetIds.welcomeScreen, 13, `You last logged in @red@${loginDaysStr}@bla@ from: @red@${this.lastAddress}`);
-            this.outgoingPackets.updateWidgetString(widgetIds.welcomeScreen, 16, `You have @yel@0 unread messages\\nin your message centre.`);
-            this.outgoingPackets.updateWidgetString(widgetIds.welcomeScreen, 14, `\\nYou have not yet set any recovery questions.\\nIt is @lre@strongly@yel@ recommended that you do so.\\n\\nIf you don't you will be @lre@unable to recover your\\n@lre@password@yel@ if you forget it, or it is stolen.`);
-            this.outgoingPackets.updateWidgetString(widgetIds.welcomeScreen, 22, `To change your recovery questions:\\n1) Logout and return to the frontpage of this website.\\n2) Choose 'Set new recovery questions'.`);
-            this.outgoingPackets.updateWidgetString(widgetIds.welcomeScreen, 17, `\\nYou do not have a Bank PIN.\\nPlease visit a bank if you would like one.`);
-            this.outgoingPackets.updateWidgetString(widgetIds.welcomeScreen, 21, `To start a subscripton:\\n1) Logout and return to the frontpage of this website.\\n2) Choose 'Start a new subscription'`);
-            this.outgoingPackets.updateWidgetString(widgetIds.welcomeScreen, 19, `You are not a member.\\n\\nChoose to subscribe and\\nyou'll get loads of extra\\nbenefits and features.`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreenChildren.question, 1, `Want to help RuneJS improve?\\nSend us a pull request over on Github!`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 13, `You last logged in @red@${loginDaysStr}@bla@ from: @red@${this.lastAddress}`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 16, `You have @yel@0 unread messages\\nin your message centre.`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 14, `\\nYou have not yet set any recovery questions.\\nIt is @lre@strongly@yel@ recommended that you do so.\\n\\nIf you don't you will be @lre@unable to recover your\\n@lre@password@yel@ if you forget it, or it is stolen.`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 22, `To change your recovery questions:\\n1) Logout and return to the frontpage of this website.\\n2) Choose 'Set new recovery questions'.`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 17, `\\nYou do not have a Bank PIN.\\nPlease visit a bank if you would like one.`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 21, `To start a subscripton:\\n1) Logout and return to the frontpage of this website.\\n2) Choose 'Start a new subscription'`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 19, `You are not a member.\\n\\nChoose to subscribe and\\nyou'll get loads of extra\\nbenefits and features.`);
 
             this.activeWidget = {
-                widgetId: widgetIds.welcomeScreen,
-                secondaryWidgetId: widgetIds.welcomeScreenChildren.question,
+                widgetId: widgets.welcomeScreen,
+                secondaryWidgetId: widgets.welcomeScreenChildren.question,
                 type: 'FULLSCREEN'
             };
         }
@@ -354,14 +354,14 @@ export class Player extends Actor {
             return -1;
         }
 
-        this.outgoingPackets.sendUpdateSingleWidgetItem(widgetIds.inventory, slot, null);
+        this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, slot, null);
         return slot;
     }
 
     public removeItem(slot: number): void {
         this.inventory.remove(slot);
 
-        this.outgoingPackets.sendUpdateSingleWidgetItem(widgetIds.inventory, slot, null);
+        this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, slot, null);
     }
 
     public giveItem(item: number | Item): boolean {
@@ -370,7 +370,7 @@ export class Player extends Actor {
             return false;
         }
 
-        this.outgoingPackets.sendUpdateSingleWidgetItem(widgetIds.inventory, addedItem.slot, addedItem.item);
+        this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, addedItem.slot, addedItem.item);
         return true;
     }
 
