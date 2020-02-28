@@ -195,10 +195,10 @@ export class OutgoingPackets {
         this.queue(packet);
     }
 
-    public showScreenAndTabWidgets(widgetId: number, sidebarId: number) : void {
-        const packet = new Packet(128);
-        packet.writeNegativeOffsetShortBE(widgetId);
-        packet.writeNegativeOffsetShortLE(sidebarId);
+    public showScreenAndTabWidgets(widgetId: number, tabWidgetId: number) : void {
+        const packet = new Packet(84);
+        packet.writeUnsignedShortBE(tabWidgetId);
+        packet.writeUnsignedOffsetShortLE(widgetId);
         this.queue(packet);
     }
 

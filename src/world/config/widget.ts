@@ -8,6 +8,14 @@ export const widgetIds: any = {
         widgetId: 387,
         containerId: 25
     },
+    equipmentStats: {
+        widgetId: 465,
+        containerId: 103
+    },
+    equipmentStatsInventory: {
+        widgetId: 336,
+        containerId: 0
+    },
     skillGuide: 308,
     skillsTab: 320,
     logoutTab: 182,
@@ -15,8 +23,8 @@ export const widgetIds: any = {
     shop: {
         shopInventory: 3900,
         shopScreen: 3824,
-        playerInventory: 3823,
-        playerTab: 3822,
+        playerInventory: 0,
+        playerTab: 56,
         shopTitle: 3901
     },
     welcomeScreen: 378,

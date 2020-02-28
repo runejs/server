@@ -1,12 +1,7 @@
 import { incomingPacket } from '../incoming-packet';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { Player } from '../../world/actor/player/player';
-import { widgetIds } from '../../world/config/widget';
-import { logger } from '@runejs/logger/dist/logger';
-import { unequipItemAction } from '../../world/actor/player/action/unequip-item-action';
-import { ItemContainer } from '@server/world/items/item-container';
-import { buyItemValueAction } from '@server/world/actor/player/action/buy-item-value-action';
-import { sellItemValueAction } from '@server/world/actor/player/action/sell-item-value-action';
+import { itemAction } from '@server/world/actor/player/action/item-action';
 
 export const itemOption1Packet: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const itemId = packet.readNegativeOffsetShortBE();
@@ -14,6 +9,10 @@ export const itemOption1Packet: incomingPacket = (player: Player, packetId: numb
     const widgetId = packet.readShortLE();
     const containerId = packet.readShortLE();
 
+    // @TODO parse widgets and find actual item option NAME to pass to this
+    itemAction(player, itemId, slot, widgetId, containerId, 'option-1');
+
+    /*
     // Handles the value option in shops.
     if(widgetId === widgetIds.shop.shopInventory) {
         buyItemValueAction(player, itemId, slot);
@@ -56,5 +55,5 @@ export const itemOption1Packet: incomingPacket = (player: Player, packetId: numb
 
     if(widgetId === widgetIds.equipment.widgetId && containerId === widgetIds.equipment.containerId) {
         unequipItemAction(player, itemId, slot);
-    }
+    }*/
 };

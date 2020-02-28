@@ -2,6 +2,34 @@ import * as fs from 'fs';
 import * as util from 'util';
 import { RunePlugin } from '@server/plugins/plugin';
 
+export const basicStringFilter = (pluginValues: string | string[], searchValue: string): boolean => {
+    if(Array.isArray(pluginValues)) {
+        if(pluginValues.indexOf(searchValue) === -1) {
+            return false;
+        }
+    } else {
+        if(pluginValues !== searchValue) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
+export const basicNumberFilter = (pluginValues: number | number[], searchValue: number): boolean => {
+    if(Array.isArray(pluginValues)) {
+        if(pluginValues.indexOf(searchValue) === -1) {
+            return false;
+        }
+    } else {
+        if(pluginValues !== searchValue) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
 export const pluginFilter = (pluginIds: number | number[], searchId: number, pluginOptions?: string | string[], searchOption?: string): boolean => {
     if(Array.isArray(pluginIds)) {
         if(pluginIds.indexOf(searchId) === -1) {
