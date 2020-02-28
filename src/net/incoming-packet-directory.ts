@@ -5,8 +5,6 @@ import { logger } from '@runejs/logger';
 import { incomingPacket } from './incoming-packet';
 import { characterDesignPacket } from './incoming-packets/character-design-packet';
 import { itemEquipPacket } from './incoming-packets/item-equip-packet';
-import { interfaceClickPacket } from './incoming-packets/interface-click-packet';
-import { cameraTurnPacket } from './incoming-packets/camera-turn-packet';
 import { buttonClickPacket } from './incoming-packets/button-click-packet';
 import { walkPacket } from './incoming-packets/walk-packet';
 import { itemOption1Packet } from './incoming-packets/item-option-1-packet';
@@ -18,8 +16,8 @@ import { objectInteractionPacket } from '@server/net/incoming-packets/object-int
 import { chatPacket } from '@server/net/incoming-packets/chat-packet';
 import { dropItemPacket } from '@server/net/incoming-packets/drop-item-packet';
 import { itemOnItemPacket } from '@server/net/incoming-packets/item-on-item-packet';
-import { buyItemPacket } from '@server/net/incoming-packets/buy-item-packet';
 import { widgetsClosedPacket } from '@server/net/incoming-packets/widgets-closed-packet';
+import { pickupItemPacket } from '@server/net/incoming-packets/pickup-item-packet';
 
 const ignore = [ 234, 160, 58 /* camera move */ ];
 
@@ -41,6 +39,7 @@ const packets: { [key: number]: incomingPacket } = {
     102: itemEquipPacket,
     38:  itemOption1Packet,
     29:  dropItemPacket,
+    85:  pickupItemPacket,
 
     63:  npcInteractionPacket,
 
