@@ -1,4 +1,5 @@
 export const soundIds = {
+    dropItem: 2739,
     milkCow: 372,
     lightingFire: 2599,
     fireLit: 2594,

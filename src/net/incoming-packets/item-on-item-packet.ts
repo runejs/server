@@ -1,7 +1,7 @@
 import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../world/actor/player/player';
 import { RsBuffer } from '@server/net/rs-buffer';
-import { widgetIds } from '@server/world/config/widget';
+import { widgets } from '@server/world/config/widget';
 import { logger } from '@runejs/logger/dist/logger';
 import { itemOnItemAction } from '@server/world/actor/player/action/item-on-item-action';
 
@@ -15,8 +15,8 @@ export const itemOnItemPacket: incomingPacket = (player: Player, packetId: numbe
     const usedItemId = packet.readUnsignedShortLE();
     const usedSlot = packet.readNegativeOffsetShortBE();
 
-    if(usedWidgetId === widgetIds.inventory.widgetId && usedContainerId === widgetIds.inventory.containerId &&
-        usedWithWidgetId === widgetIds.inventory.widgetId && usedWithContainerId === widgetIds.inventory.containerId) {
+    if(usedWidgetId === widgets.inventory.widgetId && usedContainerId === widgets.inventory.containerId &&
+        usedWithWidgetId === widgets.inventory.widgetId && usedWithContainerId === widgets.inventory.containerId) {
         if(usedSlot < 0 || usedSlot > 27 || usedWithSlot < 0 || usedWithSlot > 27) {
             return;
         }

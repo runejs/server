@@ -1,4 +1,4 @@
-export const widgetIds: any = {
+export const widgets: any = {
     characterDesign: 269,
     inventory: {
         widgetId: 149,

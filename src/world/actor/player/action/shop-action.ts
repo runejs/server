@@ -2,7 +2,7 @@ import { world } from '@server/game-server';
 import { Player } from '@server/world/actor/player/player';
 import { logger } from '@runejs/logger/dist/logger';
 import { Shop } from '@server/world/config/shops';
-import { widgetIds } from '@server/world/config/widget';
+import { widgets } from '@server/world/config/widget';
 
 function findShop(identification: string): Shop {
     for(let i = 0; i <= world.shops.length; i++) {
@@ -20,37 +20,37 @@ export function openShop(player: Player, identification: string, closeOnWalk: bo
         // player.packetSender.updateWidgetString(widgetIds.shop.shopTitle, openedShop.name);
         for(let i = 0; i < 30; i++) {
             if(openedShop.items.length <= i) {
-                player.outgoingPackets.sendUpdateSingleWidgetItem(widgetIds.shop.shopInventory, i, null);
+                player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.shop.shopInventory, i, null);
             } else {
-                player.outgoingPackets.sendUpdateSingleWidgetItem(widgetIds.shop.shopInventory, i, {
+                player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.shop.shopInventory, i, {
                     itemId: openedShop.items[i].id, amount: openedShop.items[i].amountInStock
                 });
             }
         }
         for(let i = 0; i < openedShop.items.length; i++) {
-            player.outgoingPackets.sendUpdateSingleWidgetItem(widgetIds.shop.shopInventory, i, {
+            player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.shop.shopInventory, i, {
                 itemId: openedShop.items[i].id, amount: openedShop.items[i].amountInStock
             });
         }
 
-        player.outgoingPackets.sendUpdateAllWidgetItems(widgetIds.shop.playerInventory, player.inventory);
+        player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shop.playerInventory, player.inventory);
 
         player.activeWidget = {
-            widgetId: widgetIds.shop.shopScreen,
-            secondaryWidgetId: widgetIds.shop.playerTab,
+            widgetId: widgets.shop.shopScreen,
+            secondaryWidgetId: widgets.shop.playerTab,
             type: 'SCREEN_AND_TAB',
             closeOnWalk: closeOnWalk
         };
       
-        player.outgoingPackets.sendUpdateAllWidgetItems(widgetIds.inventory, player.inventory);
-        player.outgoingPackets.showScreenAndTabWidgets(widgetIds.shop.shopScreen, widgetIds.shop.playerTab);
+        player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
+        player.outgoingPackets.showScreenAndTabWidgets(widgets.shop.shopScreen, widgets.shop.playerTab);
         for(let i = 0; i < player.inventory.items.length; i++) {
             if(player.inventory.items[i] !== null) {
-                player.outgoingPackets.sendUpdateSingleWidgetItem(widgetIds.shop.playerInventory, i, {
+                player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.shop.playerInventory, i, {
                     itemId: player.inventory.items[i].itemId, amount: player.inventory.items[i].amount
                 });
             } else {
-                player.outgoingPackets.sendUpdateSingleWidgetItem(widgetIds.shop.playerInventory, i, null);
+                player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.shop.playerInventory, i, null);
             }
         }
 

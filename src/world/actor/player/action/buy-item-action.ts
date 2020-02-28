@@ -1,6 +1,6 @@
 import { Player } from '@server/world/actor/player/player';
 import { gameCache } from '@server/game-server';
-import { widgetIds } from '@server/world/config/widget';
+import { widgets } from '@server/world/config/widget';
 
 export const buyItemAction = (player: Player, itemId: number, amount: number, slot: number, interfaceId: number) => {
     const purchasedItem = gameCache.itemDefinitions.get(itemId);
@@ -11,7 +11,7 @@ export const buyItemAction = (player: Player, itemId: number, amount: number, sl
         return;
     }
 
-    if(interfaceId !== widgetIds.shop.shopInventory) {
+    if(interfaceId !== widgets.shop.shopInventory) {
         return;
     }
 
@@ -38,12 +38,12 @@ export const buyItemAction = (player: Player, itemId: number, amount: number, sl
         player.inventory.add(itemId);
     }
 
-    if(interfaceId === widgetIds.shop.shopInventory) {
-        console.log(interfaceId, widgetIds.shop.shopInventory);
-        player.outgoingPackets.sendUpdateAllWidgetItems(widgetIds.shop.playerInventory, player.inventory);
+    if(interfaceId === widgets.shop.shopInventory) {
+        console.log(interfaceId, widgets.shop.shopInventory);
+        player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shop.playerInventory, player.inventory);
     }
 
     // Update the inventory items.
-    player.outgoingPackets.sendUpdateAllWidgetItems(widgetIds.inventory, player.inventory);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
 
 };

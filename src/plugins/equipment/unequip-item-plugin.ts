@@ -1,5 +1,5 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { widgetIds } from '@server/world/config/widget';
+import { widgets } from '@server/world/config/widget';
 import { getItemFromContainer, itemAction } from '@server/world/actor/player/action/item-action';
 import { updateBonusStrings } from '@server/plugins/equipment/equipment-stats-plugin';
 
@@ -27,11 +27,11 @@ export const action: itemAction = (details) => {
 
     player.updateBonuses();
 
-    player.outgoingPackets.sendUpdateSingleWidgetItem(widgetIds.inventory, inventorySlot, item);
-    player.outgoingPackets.sendUpdateSingleWidgetItem(widgetIds.equipment, itemSlot, null);
+    player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, inventorySlot, item);
+    player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.equipment, itemSlot, null);
 
-    if(widgetId === widgetIds.equipmentStats.widgetId) {
-        player.outgoingPackets.sendUpdateSingleWidgetItem(widgetIds.equipmentStats, itemSlot, null);
+    if(widgetId === widgets.equipmentStats.widgetId) {
+        player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.equipmentStats, itemSlot, null);
         updateBonusStrings(player);
     }
 
@@ -41,8 +41,8 @@ export const action: itemAction = (details) => {
 export default new RunePlugin({
     type: ActionType.ITEM_ACTION,
     widgets: [
-        widgetIds.equipment,
-        widgetIds.equipmentStats
+        widgets.equipment,
+        widgets.equipmentStats
     ],
     options: 'option-1',
     action,
