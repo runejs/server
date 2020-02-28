@@ -12,4 +12,5 @@ export const soundIds = {
     homeTeleportSit: 196,
     homeTeleportPullOutBook: 194,
     homeTeleportCircleGlowAndTeleport: 195,
+    emptyBucket: 2401,
 };
