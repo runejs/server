@@ -24,7 +24,7 @@ export const action: itemAction = (details) => {
 export default new RunePlugin({
     type: ActionType.ITEM_ACTION,
     widgets: widgets.inventory,
-    options: 'option-2',
+    options: 'empty',
     itemIds: [itemIds.bucketOfMilk, itemIds.bucketOfWater],
     action,
     cancelOtherActions: false
