@@ -2,6 +2,7 @@ import { incomingPacket } from '../incoming-packet';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { Player } from '../../world/actor/player/player';
 import { itemAction } from '@server/world/actor/player/action/item-action';
+import { getItemOption } from '@server/world/items/item';
 
 export const itemOption1Packet: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
     const itemId = packet.readNegativeOffsetShortBE();
@@ -9,8 +10,9 @@ export const itemOption1Packet: incomingPacket = (player: Player, packetId: numb
     const widgetId = packet.readShortLE();
     const containerId = packet.readShortLE();
 
-    // @TODO parse widgets and find actual item option NAME to pass to this
-    itemAction(player, itemId, slot, widgetId, containerId, 'option-1');
+    const option = getItemOption(itemId, 1, { widgetId, containerId });
+
+    itemAction(player, itemId, slot, widgetId, containerId, option);
 
     /*
     // Handles the value option in shops.
@@ -56,4 +58,5 @@ export const itemOption1Packet: incomingPacket = (player: Player, packetId: numb
     if(widgetId === widgetIds.equipment.widgetId && containerId === widgetIds.equipment.containerId) {
         unequipItemAction(player, itemId, slot);
     }*/
+
 };

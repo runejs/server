@@ -44,7 +44,7 @@ export default new RunePlugin({
         widgets.equipment,
         widgets.equipmentStats
     ],
-    options: 'option-1',
+    options: 'remove',
     action,
     cancelOtherActions: false
 });

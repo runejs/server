@@ -18,7 +18,7 @@ import { dropItemPacket } from '@server/net/incoming-packets/drop-item-packet';
 import { itemOnItemPacket } from '@server/net/incoming-packets/item-on-item-packet';
 import { widgetsClosedPacket } from '@server/net/incoming-packets/widgets-closed-packet';
 import { pickupItemPacket } from '@server/net/incoming-packets/pickup-item-packet';
-import { itemOption2Packet } from '@server/net/incoming-packets/item-option-2-packet';
+import { itemOption4Packet } from '@server/net/incoming-packets/item-option-4-packet';
 
 const ignore = [ 234, 160, 58 /* camera move */ ];
 
@@ -39,7 +39,7 @@ const packets: { [key: number]: incomingPacket } = {
     40:  itemOnItemPacket,
     102: itemEquipPacket,
     38:  itemOption1Packet,
-    98:  itemOption2Packet,
+    98:  itemOption4Packet,
     29:  dropItemPacket,
     85:  pickupItemPacket,
 
