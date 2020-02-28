@@ -200,6 +200,7 @@ export class Player extends Actor {
 
         validateSettings(this);
         this.updateWidgetSettings();
+        this.updateBonuses();
         this.updateCarryWeight(true);
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
@@ -407,16 +408,16 @@ export class Player extends Actor {
             8: {setting: 'screenBrightness', value: 2},
             9: {setting: 'screenBrightness', value: 3},
             10: {setting: 'screenBrightness', value: 4},
-            11: {setting: 'musicVolume', value: 0},
-            12: {setting: 'musicVolume', value: 1},
+            11: {setting: 'musicVolume', value: 4},
+            12: {setting: 'musicVolume', value: 3},
             13: {setting: 'musicVolume', value: 2},
-            14: {setting: 'musicVolume', value: 3},
-            15: {setting: 'musicVolume', value: 4},
-            16: {setting: 'soundEffectVolume', value: 0},
-            17: {setting: 'soundEffectVolume', value: 1},
+            14: {setting: 'musicVolume', value: 1},
+            15: {setting: 'musicVolume', value: 0},
+            16: {setting: 'soundEffectVolume', value: 4},
+            17: {setting: 'soundEffectVolume', value: 3},
             18: {setting: 'soundEffectVolume', value: 2},
-            19: {setting: 'soundEffectVolume', value: 3},
-            20: {setting: 'soundEffectVolume', value: 4},
+            19: {setting: 'soundEffectVolume', value: 1},
+            20: {setting: 'soundEffectVolume', value: 0},
             29: {setting: 'areaEffectVolume', value: 4},
             30: {setting: 'areaEffectVolume', value: 3},
             31: {setting: 'areaEffectVolume', value: 2},
@@ -460,26 +461,6 @@ export class Player extends Actor {
 
             this.addBonuses(item);
         }
-
-        [
-            { id: 1675, text: 'Stab', value: this._bonuses.offencive.stab },
-            { id: 1676, text: 'Slash', value: this._bonuses.offencive.slash },
-            { id: 1677, text: 'Crush', value: this._bonuses.offencive.crush },
-            { id: 1678, text: 'Magic', value: this._bonuses.offencive.magic },
-            { id: 1679, text: 'Range', value: this._bonuses.offencive.ranged },
-            { id: 1680, text: 'Stab', value: this._bonuses.defencive.stab },
-            { id: 1681, text: 'Slash', value: this._bonuses.defencive.slash },
-            { id: 1682, text: 'Crush', value: this._bonuses.defencive.crush },
-            { id: 1683, text: 'Magic', value: this._bonuses.defencive.magic },
-            { id: 1684, text: 'Range', value: this._bonuses.defencive.ranged },
-            { id: 1686, text: 'Strength', value: this._bonuses.skill.strength },
-            { id: 1687, text: 'Prayer', value: this._bonuses.skill.prayer },
-        ].forEach(bonus => this.updateBonusString(bonus.id, bonus.text, bonus.value));
-    }
-
-    private updateBonusString(widgetChildId: number, text: string, value: number): void {
-        const s = `${text}: ${value > 0 ? `+${value}` : value}`;
-        // this.packetSender.updateWidgetString(widgetChildId, s);
     }
 
     private addBonuses(item: Item): void {
@@ -525,6 +506,10 @@ export class Player extends Actor {
             this.actionsCancelled.next(true);
             this._activeWidget = null;
         }
+    }
+
+    public hasWidgetOpen(widgetId: number): boolean {
+        return this.activeWidget && this.activeWidget.widgetId === widgetId;
     }
 
     public set position(position: Position) {
@@ -627,5 +612,9 @@ export class Player extends Actor {
 
     public get nearbyChunks(): Chunk[] {
         return this._nearbyChunks;
+    }
+
+    public get bonuses(): EquipmentBonuses {
+        return this._bonuses;
     }
 }
