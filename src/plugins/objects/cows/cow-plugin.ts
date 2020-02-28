@@ -13,7 +13,7 @@ export const action: objectAction = (details) => {
     const {player, option, objectDefinition, object} = details;
     const emptyBucketItem = gameCache.itemDefinitions.get(itemIds.bucket);
 
-    if(player.hasItemInInventory(itemIds.bucket)) {
+    if (player.hasItemInInventory(itemIds.bucket)) {
         player.playAnimation(animationIds.milkCow);
         player.outgoingPackets.playSound(soundIds.milkCow, 7);
         player.removeFirstItem(itemIds.bucket);
