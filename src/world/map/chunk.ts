@@ -39,6 +39,23 @@ export class Chunk {
         this._worldItems = new Map<string, WorldItem[]>();
     }
 
+    public getWorldItem(itemId: number, position: Position): WorldItem {
+        const key = position.key;
+
+        if(this._worldItems.has(key)) {
+            const list = this._worldItems.get(key);
+            const worldItem = list.find(item => item.itemId === itemId);
+
+            if(!worldItem) {
+                return null;
+            }
+
+            return worldItem;
+        }
+
+        return null;
+    }
+
     public addWorldItem(worldItem: WorldItem): void {
         const key = worldItem.position.key;
 
