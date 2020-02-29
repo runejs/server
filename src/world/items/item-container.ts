@@ -43,7 +43,7 @@ export class ItemContainer {
         if(stackable) {
             const index = this.findIndex(search);
 
-            if(index === null) {
+            if(index === null || item === -1) {
                 return [];
             } else {
                 return [ index ];
