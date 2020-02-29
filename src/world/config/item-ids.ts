@@ -6,4 +6,10 @@ export const itemIds = {
     ashes: 592,
     tinderbox: 590,
     logs: 1511,
+    jug: 1935,
+    jugOfWater: 1937,
+    pot: 1931,
+    potOfFlour: 1933,
+    grain: 1947
+
 };

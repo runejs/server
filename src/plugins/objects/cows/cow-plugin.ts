@@ -18,7 +18,7 @@ export const action: objectAction = (details) => {
         player.outgoingPackets.playSound(soundIds.milkCow, 7);
         player.removeFirstItem(itemIds.bucket);
         player.giveItem(itemIds.bucketOfMilk);
-        player.outgoingPackets.chatboxMessage(`You ${option} the ${objectDefinition.name} and receive some milk.`);
+        player.outgoingPackets.chatboxMessage(`You milk the ${objectDefinition.name} and receive some milk.`);
     } else {
         dialogueAction(player)
             .then(d => d.npc(npcIds.gillieGroats, DialogueEmote.LAUGH_1, [`Tee hee! You've never milked a cow before, have you?`]))
@@ -33,10 +33,21 @@ export const action: objectAction = (details) => {
     }
 };
 
-export default new RunePlugin({
-    type: ActionType.OBJECT_ACTION,
-    objectIds: objectIds.milkableCow,
-    options: 'milk',
-    walkTo: true,
-    action
-});
+export default new RunePlugin(
+    [
+        {
+            type: ActionType.OBJECT_ACTION,
+            objectIds: objectIds.milkableCow,
+            options: 'milk',
+            walkTo: true,
+            action
+        },
+        {
+            type: ActionType.ITEM_ON_OBJECT_ACTION,
+            objectIds: objectIds.milkableCow,
+            itemIds: itemIds.bucket,
+            options: 'milk',
+            walkTo: true,
+            action
+        }
+    ]);

@@ -13,4 +13,6 @@ export const soundIds = {
     homeTeleportPullOutBook: 194,
     homeTeleportCircleGlowAndTeleport: 195,
     emptyBucket: 2401,
+    potContentModified: 2584,
+    fillContainerWithWater: 2609,
 };

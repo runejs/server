@@ -18,6 +18,7 @@ import { itemOnItemPacket } from '@server/net/incoming-packets/item-on-item-pack
 import { widgetsClosedPacket } from '@server/net/incoming-packets/widgets-closed-packet';
 import { pickupItemPacket } from '@server/net/incoming-packets/pickup-item-packet';
 import { itemInteractionPacket } from '@server/net/incoming-packets/item-interaction-packet';
+import { itemOnObjectPacket } from '@server/net/incoming-packets/item-on-object-packet';
 
 const ignore = [ 234, 160, 58 /* camera move */ ];
 
@@ -47,6 +48,7 @@ const packets: { [key: number]: incomingPacket } = {
 
     63:  npcInteractionPacket,
     116: npcInteractionPacket,
+    24: itemOnObjectPacket,
 
     30:  objectInteractionPacket,
     164: objectInteractionPacket,
