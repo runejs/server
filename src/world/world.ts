@@ -14,6 +14,7 @@ import { WorldItem } from '@server/world/items/world-item';
 import { Item } from '@server/world/items/item';
 import { Chunk } from '@server/world/map/chunk';
 import { LandscapeObject } from '@runejs/cache-parser';
+import { schedule } from '@server/task/task';
 
 export interface QuadtreeKey {
     x: number;
@@ -156,7 +157,7 @@ export class World {
         this.addLandscapeObject(newObject, position);
 
         if(respawnTicks !== -1) {
-            timer(respawnTicks * World.TICK_LENGTH).toPromise().then(() => this.addLandscapeObject(oldObject, position));
+            schedule(respawnTicks).then(() => this.addLandscapeObject(oldObject, position));
         }
     }
 

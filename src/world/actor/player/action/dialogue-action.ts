@@ -6,14 +6,19 @@ import { skillDetails } from '@server/world/actor/skills';
 export const dialogueWidgetIds = {
     PLAYER: [ 64, 65, 66, 67 ],
     NPC: [ 241, 242, 243, 244 ],
-    OPTIONS: [ 228, 230, 232, 234 ]
+    OPTIONS: [ 228, 230, 232, 234 ],
+    TEXT: [ 210, 211, 212, 213, 214 ]
 };
 
+/**
+ * Min -> max lines for a specific dialogue type.
+ */
 const lineConstraints = {
     PLAYER: [ 1, 4 ],
     NPC: [ 1, 4 ],
     OPTIONS: [ 2, 5 ],
-    LEVEL_UP: [ 2, 2 ]
+    LEVEL_UP: [ 2, 2 ],
+    TEXT: [ 1, 5 ]
 };
 
 export enum DialogueEmote {
@@ -49,7 +54,7 @@ export enum DialogueEmote {
     ANGRY_4 = 617
 }
 
-export type DialogueType = 'PLAYER' | 'NPC' | 'OPTIONS' | 'LEVEL_UP';
+export type DialogueType = 'PLAYER' | 'NPC' | 'OPTIONS' | 'LEVEL_UP' | 'TEXT';
 
 export interface DialogueOptions {
     type: DialogueType;
