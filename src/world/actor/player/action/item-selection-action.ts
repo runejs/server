@@ -51,7 +51,7 @@ export interface ItemSelection {
 }
 
 // @TODO Make-X
-export const itemSelectionAction = (player: Player, type: 'COOKING' | 'MAKING', items: SelectableItem[]): Promise<ItemSelection> => {
+export function itemSelectionAction(player: Player, type: 'COOKING' | 'MAKING', items: SelectableItem[]): Promise<ItemSelection> {
     let widgetId = 307;
 
     if(type === 'MAKING') {
@@ -66,45 +66,51 @@ export const itemSelectionAction = (player: Player, type: 'COOKING' | 'MAKING', 
         }
     }
 
+    const childIds = widgets[widgetId].items;
+    childIds.forEach((childId, index) => {
+        const itemInfo = items[index];
+
+        if(itemInfo.offset === undefined) {
+            itemInfo.offset = -12;
+        }
+
+        if(itemInfo.zoom === undefined) {
+            itemInfo.zoom = 180;
+        }
+
+        player.outgoingPackets.setItemOnWidget(widgetId, childId, itemInfo.itemId, itemInfo.zoom);
+        player.outgoingPackets.moveWidgetChild(widgetId, childId, 0, itemInfo.offset);
+        player.outgoingPackets.updateWidgetString(widgetId, widgets[widgetId].text[index], '\\n\\n\\n\\n' + itemInfo.itemName);
+    });
+
     return new Promise((resolve, reject) => {
-        const childIds = widgets[widgetId].items;
-        childIds.forEach((childId, index) => {
-            const itemInfo = items[index];
-
-            if(itemInfo.offset === undefined) {
-                itemInfo.offset = -12;
-            }
-
-            if(itemInfo.zoom === undefined) {
-                itemInfo.zoom = 180;
-            }
-
-            player.outgoingPackets.setItemOnWidget(widgetId, childId, itemInfo.itemId, itemInfo.zoom);
-            player.outgoingPackets.moveWidgetChild(widgetId, childId, 0, itemInfo.offset);
-            player.outgoingPackets.updateWidgetString(widgetId, widgets[widgetId].text[index], '\\n\\n\\n\\n' + itemInfo.itemName);
-        });
-
         player.activeWidget = {
             widgetId,
             type: 'CHAT',
-            closeOnWalk: false
+            closeOnWalk: true
         };
 
-        const actionsSub = player.actionsCancelled.subscribe(() => {
+        let actionsSub = player.actionsCancelled.subscribe(() => {
             actionsSub.unsubscribe();
-            reject();
+            reject('Pending Actions Cancelled');
         });
 
         const interactionSub = player.dialogueInteractionEvent.subscribe(childId => {
-            const options = widgets[widgetId].options;
+            if(!player.activeWidget || player.activeWidget.widgetId !== widgetId) {
+                interactionSub.unsubscribe();
+                actionsSub.unsubscribe();
+                reject('Active Widget Mismatch');
+                return;
+            }
 
-            console.log(childId);
+            const options = widgets[widgetId].options;
 
             const choiceIndex = options.findIndex(arr => arr.indexOf(childId) !== -1);
 
             if(choiceIndex === -1) {
                 interactionSub.unsubscribe();
-                reject();
+                actionsSub.unsubscribe();
+                reject('Choice Index Not Found');
                 return;
             }
 
@@ -112,15 +118,43 @@ export const itemSelectionAction = (player: Player, type: 'COOKING' | 'MAKING', 
 
             if(optionIndex === -1) {
                 interactionSub.unsubscribe();
-                reject();
+                actionsSub.unsubscribe();
+                reject('Option Index Not Found');
                 return;
             }
 
             const itemId = items[choiceIndex].itemId;
             const amount = amounts[optionIndex];
 
-            interactionSub.unsubscribe();
-            resolve({ itemId, amount } as ItemSelection);
+            if(amount === 0) {
+                actionsSub.unsubscribe();
+
+                player.outgoingPackets.showNumberInputDialogue();
+
+                actionsSub = player.actionsCancelled.subscribe(() => {
+                    actionsSub.unsubscribe();
+                    reject('Pending Actions Cancelled');
+                });
+
+                const inputSub = player.numericInputEvent.subscribe(input => {
+                    inputSub.unsubscribe();
+                    actionsSub.unsubscribe();
+                    interactionSub.unsubscribe();
+
+                    if(input < 1 || input > 2147483647) {
+                        player.closeActiveWidget();
+                        reject('Invalid User Amount Input');
+                    } else {
+                        player.closeActiveWidget();
+                        resolve({itemId, amount: input} as ItemSelection);
+                    }
+                });
+            } else {
+                actionsSub.unsubscribe();
+                interactionSub.unsubscribe();
+                player.closeActiveWidget();
+                resolve({itemId, amount} as ItemSelection);
+            }
         });
     });
-};
+}

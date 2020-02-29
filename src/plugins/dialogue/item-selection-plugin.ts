@@ -7,7 +7,6 @@ import { widgetAction } from '@server/world/actor/player/action/widget-action';
 export const action: widgetAction = (details) => {
     const { player, childId } = details;
     player.dialogueInteractionEvent.next(childId);
-    player.activeWidget = null;
 };
 
 export default new RunePlugin({ type: ActionType.WIDGET_ACTION, widgetIds: [ 303, 304, 305, 306, 307, 309 ], action, cancelActions: false });

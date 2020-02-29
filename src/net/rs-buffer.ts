@@ -189,6 +189,12 @@ export class RsBuffer {
         return value;
     }
 
+    public readUnsignedIntBE(): number {
+        const value = this.buffer.readUInt32BE(this.readerIndex);
+        this.readerIndex += 4;
+        return value;
+    }
+
     public readIntBE(): number {
         const value = this.buffer.readInt32BE(this.readerIndex);
         this.readerIndex += 4;
