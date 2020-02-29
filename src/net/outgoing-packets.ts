@@ -355,6 +355,16 @@ export class OutgoingPackets {
         this.queue(packet);
     }
 
+    public showNumberInputDialogue(): void {
+        const packet = new Packet(132);
+        this.queue(packet);
+    }
+
+    public showTextInputDialogue(): void {
+        const packet = new Packet(124);
+        this.queue(packet);
+    }
+
     public updateCarryWeight(weight: number): void {
         const packet = new Packet(171);
         packet.writeShortBE(weight);

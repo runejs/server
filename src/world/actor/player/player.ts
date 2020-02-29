@@ -64,6 +64,7 @@ export class Player extends Actor {
     private _carryWeight: number;
     private _settings: PlayerSettings;
     public readonly dialogueInteractionEvent: Subject<number>;
+    public readonly numericInputEvent: Subject<number>;
     private _walkingTo: Position;
     private _nearbyChunks: Chunk[];
     public readonly actionsCancelled: Subject<boolean>;
@@ -88,6 +89,7 @@ export class Player extends Actor {
         this._carryWeight = 0;
         this._equipment = new ItemContainer(14);
         this.dialogueInteractionEvent = new Subject<number>();
+        this.numericInputEvent = new Subject<number>();
         this._nearbyChunks = [];
         this.actionsCancelled = new Subject<boolean>();
 
