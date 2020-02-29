@@ -281,7 +281,7 @@ export class OutgoingPackets {
                 packet.writeOffsetShortBE(0);
             } else {
                 if(item.amount >= 255) {
-                    packet.writeUnsignedOffsetByte(255);
+                    packet.writeUnsignedByteOffset(255);
                     packet.writeIntBE(item.amount);
                 } else {
                     packet.writeUnsignedOffsetByte(item.amount);

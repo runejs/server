@@ -23,6 +23,7 @@ import { Subject } from 'rxjs';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { QuadtreeKey } from '@server/world/world';
 import { daysSinceLastLogin } from '@server/util/time';
+import { itemIds } from '@server/world/config/item-ids';
 
 const DEFAULT_TAB_WIDGET_IDS = [
     92, widgets.skillsTab, 274, widgets.inventory.widgetId, widgets.equipment.widgetId, 271, 192, -1, 131, 148, widgets.logoutTab, widgets.settingsTab, 464, 239
@@ -356,6 +357,10 @@ export class Player extends Actor {
 
         this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, slot, null);
         return slot;
+    }
+
+    public hasCoins(amount: number): number {
+        return this.inventory.items.findIndex(item => item && item.itemId === itemIds.coins && item.amount >= amount);
     }
 
     public removeItem(slot: number): void {
