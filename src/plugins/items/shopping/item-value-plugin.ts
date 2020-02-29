@@ -12,7 +12,9 @@ export const shopSellValueAction: itemAction = (details) => {
         return;
     }
 
-    player.outgoingPackets.chatboxMessage(`${item.name}: currently costs ${item.value} coins.`);
+    const itemValue = item.value || 1;
+
+    player.outgoingPackets.chatboxMessage(`${item.name}: currently costs ${itemValue} coins.`);
 };
 
 export const shopPurchaseValueAction: itemAction = (details) => {

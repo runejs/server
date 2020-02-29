@@ -51,43 +51,6 @@ const packets: { [key: number]: incomingPacket } = {
     30:  objectInteractionPacket,
     164: objectInteractionPacket,
     183: objectInteractionPacket,
-
-    /*19:  interfaceClickPacket,
-    140: cameraTurnPacket,
-
-    79:  buttonClickPacket,
-    226: dialogueInteractionPacket,
-
-    112: npcInteractionPacket,
-    13:  npcInteractionPacket,
-    42:  npcInteractionPacket,
-    8:   npcInteractionPacket,
-    67:  npcInteractionPacket,
-
-    181: objectInteractionPacket,
-    241: objectInteractionPacket,
-    50:  objectInteractionPacket,
-    136: objectInteractionPacket,
-    55:  objectInteractionPacket,
-
-    28:  walkPacket,
-    213: walkPacket,
-    247: walkPacket,
-
-    163: characterDesignPacket,
-
-    24:  itemEquipPacket,
-    3:   itemOption1Packet,
-    123: itemSwapPacket,
-    4:   dropItemPacket,
-    1:   itemOnItemPacket,
-
-    49:  chatPacket,
-    56:  commandPacket,
-
-    177: buyItemPacket,
-    91:  buyItemPacket,
-    231: buyItemPacket*/
 };
 
 export function handlePacket(player: Player, packetId: number, packetSize: number, buffer: Buffer): void {
@@ -105,5 +68,5 @@ export function handlePacket(player: Player, packetId: number, packetSize: numbe
     new Promise(resolve => {
         packetFunction(player, packetId, packetSize, new RsBuffer(buffer));
         resolve();
-    });
+    }).catch(error => logger.error(`Error handling inbound packet: ${error}`));
 }

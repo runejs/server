@@ -360,7 +360,8 @@ export class Player extends Actor {
     }
 
     public hasCoins(amount: number): number {
-        return this.inventory.items.findIndex(item => item && item.itemId === itemIds.coins && item.amount >= amount);
+        return this.inventory.items
+            .findIndex(item => item !== null && item.itemId === itemIds.coins && item.amount >= amount);
     }
 
     public removeItem(slot: number): void {
