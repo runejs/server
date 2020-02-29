@@ -313,10 +313,28 @@ export class OutgoingPackets {
         this.queue(packet);
     }
 
+    public setItemOnWidget(widgetId: number, childId: number, itemId: number, zoom: number): void {
+        const packet = new Packet(120);
+        packet.writeUnsignedShortBE(zoom);
+        packet.writeUnsignedShortLE(itemId);
+        packet.writeIntLE(widgetId << 16 | childId);
+
+        this.queue(packet);
+    }
+
     public toggleWidgetVisibility(widgetId: number, childId: number, hidden: boolean): void {
         const packet = new Packet(115);
         packet.writeUnsignedByte(hidden ? 1 : 0);
         packet.writeIntME2(widgetId << 16 | childId);
+
+        this.queue(packet);
+    }
+
+    public moveWidgetChild(widgetId: number, childId: number, offsetX: number, offsetY: number): void {
+        const packet = new Packet(3);
+        packet.writeIntBE(widgetId << 16 | childId);
+        packet.writeUnsignedOffsetShortLE(offsetY);
+        packet.writeUnsignedOffsetShortLE(offsetX);
 
         this.queue(packet);
     }
