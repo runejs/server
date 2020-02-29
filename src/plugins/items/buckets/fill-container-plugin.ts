@@ -1,0 +1,43 @@
+import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
+import { gameCache } from '@server/game-server';
+import { itemIds } from '@server/world/config/item-ids';
+import { animationIds } from '@server/world/config/animation-ids';
+import { soundIds } from '@server/world/config/sound-ids';
+import { ActionType, RunePlugin } from '@server/plugins/plugin';
+
+const FountainIds: number[] = [879];
+const SinkIds: number[] = [14878, 873];
+const WellIds: number[] = [878];
+export const action: itemOnObjectAction = (details) => {
+    const {player, objectDefinition, item} = details;
+    const itemDef = gameCache.itemDefinitions.get(item.itemId);
+    if (item.itemId !== itemIds.bucket && WellIds.indexOf(objectDefinition.id) > -1) {
+        player.outgoingPackets.chatboxMessage(`If I drop my ${itemDef.name.toLowerCase()} down there, I don't think I'm likely to get it back.`);
+        return;
+    }
+
+    player.playAnimation(animationIds.fillContainerWithWater);
+    player.outgoingPackets.playSound(soundIds.fillContainerWithWater, 7);
+    player.removeFirstItem(item.itemId);
+    switch (item.itemId) {
+        case itemIds.bucket:
+            player.giveItem(itemIds.bucketOfWater);
+            break;
+        case itemIds.jug:
+            player.giveItem(itemIds.jugOfWater);
+            break;
+
+
+    }
+
+    player.outgoingPackets.chatboxMessage(`You fill the ${itemDef.name.toLowerCase()} from the ${objectDefinition.name.toLowerCase()}.`);
+
+};
+
+export default new RunePlugin({
+    type: ActionType.ITEM_ON_OBJECT_ACTION,
+    objectIds: [...FountainIds, ...WellIds, ...SinkIds],
+    itemIds: [itemIds.bucket, itemIds.jug],
+    walkTo: true,
+    action
+});
