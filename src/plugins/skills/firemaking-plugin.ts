@@ -40,7 +40,7 @@ const fireDuration = (): number => {
 };
 
 const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, burnExp: number): void => {
-    world.chunkManager.removeWorldItem(worldItemLog);
+    world.removeWorldItem(worldItemLog);
     const fireObject: LandscapeObject = {
         objectId: objectIds.fire,
         x: position.x,
@@ -61,8 +61,8 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
             }
         }
     }
-    world.chunkManager.addTemporaryLandscapeObject(fireObject, position, fireDuration()).then(() => {
-        world.chunkManager.spawnWorldItem({ itemId: itemIds.ashes, amount: 1 }, position, null, 300);
+    world.addTemporaryLandscapeObject(fireObject, position, fireDuration()).then(() => {
+        world.spawnWorldItem({ itemId: itemIds.ashes, amount: 1 }, position, null, 300);
     });
 
     player.face(position, false);
@@ -91,7 +91,7 @@ const action: itemOnItemAction = (details) => {
     // @TODO check firemaking level
 
     player.removeItem(removeFromSlot);
-    const worldItemLog = world.chunkManager.spawnWorldItem(log, player.position, player, 300);
+    const worldItemLog = world.spawnWorldItem(log, player.position, player, 300);
 
     if(player.metadata['lastFire'] && Date.now() - player.metadata['lastFire'] < 1200 && canChain(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level)) {
         lightFire(player, position, worldItemLog, skillInfo.burnExp);

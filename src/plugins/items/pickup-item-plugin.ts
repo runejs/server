@@ -34,7 +34,7 @@ export const action: worldItemAction = (details) => {
         return;
     }
 
-    world.chunkManager.removeWorldItem(worldItem);
+    world.removeWorldItem(worldItem);
 
     const item: Item = {
         itemId: worldItem.itemId,

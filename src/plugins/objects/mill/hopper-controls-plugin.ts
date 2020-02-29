@@ -23,7 +23,7 @@ export const action: objectAction = (details) => {
         type: details.object.type,
         rotation: details.object.rotation
     };
-    world.chunkManager.addTemporaryLandscapeObject(newHopper, details.position, 1);
+    world.addTemporaryLandscapeObject(newHopper, details.position, 1);
 
 
     setTimeout(() => {
@@ -36,7 +36,7 @@ export const action: objectAction = (details) => {
             details.player.metadata['grain'] = 0;
             const flourBinPos = new Position(3166, 3306);
             const fullFlourBin: LandscapeObject = {objectId: 1782, x: 3166, y: 3306, rotation: 0, level: 0, type: 10};
-            world.chunkManager.addLandscapeObject(fullFlourBin, flourBinPos);
+            world.addLandscapeObject(fullFlourBin, flourBinPos);
 
 
         } else {

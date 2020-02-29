@@ -18,7 +18,7 @@ export const action: itemAction = (details) => {
     inventory.remove(itemSlot);
     player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, itemSlot, null);
     player.outgoingPackets.playSound(soundIds.dropItem, 5);
-    world.chunkManager.spawnWorldItem(item, player.position, player, 300);
+    world.spawnWorldItem(item, player.position, player, 300);
 };
 
 export default new RunePlugin({
