@@ -4,15 +4,10 @@ import { world } from '@server/game-server';
 import { Position } from '@server/world/position';
 import { LandscapeObject } from '@runejs/cache-parser';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { logger } from '@runejs/logger/dist/logger';
 
 
 export const action: objectAction = (details) => {
-    if (details.player.metadata['busy']) {
-        return;
-    }
-
-    details.player.metadata['busy'] = true;
+    details.player.busy = true;
     details.player.playAnimation(3571);
     details.player.outgoingPackets.playSound(2400, 5);
     const newHopper = {
@@ -42,7 +37,7 @@ export const action: objectAction = (details) => {
         } else {
             details.player.outgoingPackets.chatboxMessage(`You operate the hopper. Nothing interesting happens.`);
         }
-        details.player.metadata['busy'] = false;
+        details.player.busy = false;
     }, World.TICK_LENGTH);
 
 };

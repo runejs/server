@@ -257,7 +257,7 @@ export class WalkingQueue {
     }
 
     public process(): void {
-        if(this.queue.length === 0 || !this.valid) {
+        if(this.actor.busy || this.queue.length === 0 || !this.valid) {
             this.resetDirections();
             return;
         }

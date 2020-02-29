@@ -45,6 +45,10 @@ export const setItemOnItemPlugins = (plugins: ActionPlugin[]): void => {
 export const itemOnItemAction = (player: Player,
                                  usedItem: Item, usedSlot: number, usedWidgetId: number,
                                  usedWithItem: Item, usedWithSlot: number, usedWithWidgetId: number): void => {
+    if(player.busy) {
+        return;
+    }
+
     // Find all item on item action plugins that match this action
     const interactionPlugins = itemOnItemInteractions.filter(plugin =>
         plugin.items.findIndex(i => i.item1 === usedItem.itemId && i.item2 === usedWithItem.itemId) !== -1 ||
