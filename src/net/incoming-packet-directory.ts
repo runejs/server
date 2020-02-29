@@ -7,7 +7,6 @@ import { characterDesignPacket } from './incoming-packets/character-design-packe
 import { itemEquipPacket } from './incoming-packets/item-equip-packet';
 import { buttonClickPacket } from './incoming-packets/button-click-packet';
 import { walkPacket } from './incoming-packets/walk-packet';
-import { itemOption1Packet } from './incoming-packets/item-option-1-packet';
 import { commandPacket } from './incoming-packets/command-packet';
 import { itemSwapPacket } from './incoming-packets/item-swap-packet';
 import { widgetInteractionPacket } from '@server/net/incoming-packets/widget-interaction-packet';
@@ -18,7 +17,7 @@ import { dropItemPacket } from '@server/net/incoming-packets/drop-item-packet';
 import { itemOnItemPacket } from '@server/net/incoming-packets/item-on-item-packet';
 import { widgetsClosedPacket } from '@server/net/incoming-packets/widgets-closed-packet';
 import { pickupItemPacket } from '@server/net/incoming-packets/pickup-item-packet';
-import { itemOption4Packet } from '@server/net/incoming-packets/item-option-4-packet';
+import { itemInteractionPacket } from '@server/net/incoming-packets/item-interaction-packet';
 
 const ignore = [ 234, 160, 58 /* camera move */ ];
 
@@ -38,12 +37,16 @@ const packets: { [key: number]: incomingPacket } = {
     83:  itemSwapPacket,
     40:  itemOnItemPacket,
     102: itemEquipPacket,
-    38:  itemOption1Packet,
-    98:  itemOption4Packet,
+    38:  itemInteractionPacket,
+    98:  itemInteractionPacket,
+    228: itemInteractionPacket,
+    26:  itemInteractionPacket,
+    147: itemInteractionPacket,
     29:  dropItemPacket,
     85:  pickupItemPacket,
 
     63:  npcInteractionPacket,
+    116: npcInteractionPacket,
 
     30:  objectInteractionPacket,
     164: objectInteractionPacket,

@@ -50,5 +50,5 @@ export const getItemOption = (itemId: number, optionNumber: number, widget: { wi
         }
     }
 
-    return option;
+    return option.replace(/ /g, '-');
 };

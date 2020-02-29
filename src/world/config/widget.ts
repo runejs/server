@@ -21,11 +21,13 @@ export const widgets: any = {
     logoutTab: 182,
     settingsTab: 261,
     shop: {
-        shopInventory: 3900,
-        shopScreen: 3824,
-        playerInventory: 0,
-        playerTab: 56,
-        shopTitle: 3901
+        widgetId: 300,
+        containerId: 75,
+        title: 76
+    },
+    shopPlayerInventory: {
+        widgetId: 301,
+        containerId: 0
     },
     welcomeScreen: 378,
     welcomeScreenChildren: {
