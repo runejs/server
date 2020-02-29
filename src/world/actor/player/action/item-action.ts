@@ -63,6 +63,10 @@ export const getItemFromContainer = (itemId: number, slot: number, container: It
 
 // @TODO priority and cancelling other (lower priority) actions
 export const itemAction = (player: Player, itemId: number, slot: number, widgetId: number, containerId: number, option: string): void => {
+    if(player.busy) {
+        return;
+    }
+
     let cancelActions = false;
 
     // Find all object action plugins that reference this landscape object

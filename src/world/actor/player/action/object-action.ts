@@ -51,6 +51,10 @@ export const setObjectPlugins = (plugins: ActionPlugin[]): void => {
 // @TODO priority and cancelling other (lower priority) actions
 export const objectAction = (player: Player, landscapeObject: LandscapeObject, landscapeObjectDefinition: LandscapeObjectDefinition,
                              position: Position, option: string, cacheOriginal: boolean): void => {
+    if(player.busy) {
+        return;
+    }
+
     // Find all object action plugins that reference this landscape object
     const interactionPlugins = objectInteractions.filter(plugin => pluginFilter(plugin.objectIds, landscapeObject.objectId, plugin.options, option));
 

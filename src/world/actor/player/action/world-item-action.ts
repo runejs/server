@@ -44,6 +44,10 @@ export const setWorldItemPlugins = (plugins: ActionPlugin[]): void => {
 
 // @TODO priority and cancelling other (lower priority) actions
 export const worldItemAction = (player: Player, worldItem: WorldItem, option: string): void => {
+    if(player.busy) {
+        return;
+    }
+
     // Find all world item action plugins that reference this world item
     const interactionPlugins = worldItemInteractions.filter(plugin => {
         if(plugin.itemIds !== undefined) {

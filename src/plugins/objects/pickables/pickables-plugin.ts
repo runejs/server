@@ -5,10 +5,7 @@ import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 
 export const action: objectAction = (details) => {
-    if(details.player.metadata['busy']) {
-        return;
-    }
-    details.player.metadata['busy'] = true;
+    details.player.busy = true;
     details.player.playAnimation(827);
     let itemId: number = 1965;
     let prefix = 'some';
@@ -40,7 +37,7 @@ export const action: objectAction = (details) => {
             world.removeLandscapeObjectTemporarily(details.object, details.position, 30);
         }
         details.player.giveItem(pickedItem.id);
-        details.player.metadata['busy'] = false;
+        details.player.busy = false;
     }, World.TICK_LENGTH);
 };
 

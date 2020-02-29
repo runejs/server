@@ -20,6 +20,7 @@ export abstract class Actor extends Entity {
     private _faceDirection: number;
     private readonly _inventory: ItemContainer;
     public readonly skills: Skills;
+    private _busy: boolean;
     public readonly metadata: { [key: string]: any } = {};
 
     protected constructor() {
@@ -31,6 +32,7 @@ export abstract class Actor extends Entity {
         this._faceDirection = -1;
         this._inventory = new ItemContainer(28);
         this.skills = new Skills(this);
+        this._busy = false;
     }
 
     public face(face: Position | Actor, clearWalkingQueue: boolean = true, autoClear: boolean = true): void {
@@ -202,5 +204,13 @@ export abstract class Actor extends Entity {
 
     public get inventory(): ItemContainer {
         return this._inventory;
+    }
+
+    public get busy(): boolean {
+        return this._busy;
+    }
+
+    public set busy(value: boolean) {
+        this._busy = value;
     }
 }

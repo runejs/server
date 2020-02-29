@@ -5,12 +5,11 @@ import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-ob
 
 
 export const action: itemOnObjectAction = (details) => {
-
     if ((details.player.metadata['grain'] && details.player.metadata['grain'] === 1)) {
         details.player.outgoingPackets.chatboxMessage(`There is already grain in the hopper.`);
         return;
     }
-    details.player.metadata['busy'] = true;
+    details.player.busy = true;
     details.player.playAnimation(3572);
     details.player.outgoingPackets.playSound(2576, 5);
 
@@ -19,7 +18,7 @@ export const action: itemOnObjectAction = (details) => {
         details.player.outgoingPackets.chatboxMessage(`You put the grain in the hopper. You should now pull the lever nearby to operate`);
         details.player.outgoingPackets.chatboxMessage(`the hopper.`);
         details.player.metadata['grain'] = 1;
-        details.player.metadata['busy'] = false;
+        details.player.busy = false;
     }, World.TICK_LENGTH);
 
 };
