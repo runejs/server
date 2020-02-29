@@ -139,6 +139,27 @@ export class World {
         });
     }
 
+    public replaceObject(newObject: LandscapeObject | number, oldObject: LandscapeObject, respawnTicks: number = -1): void {
+        if(typeof newObject === 'number') {
+            newObject = {
+                objectId: newObject,
+                x: oldObject.x,
+                y: oldObject.y,
+                level: oldObject.level,
+                type: oldObject.type,
+                rotation: oldObject.rotation
+            } as LandscapeObject;
+        }
+
+        const position = new Position(newObject.x, newObject.y, newObject.level);
+
+        this.addLandscapeObject(newObject, position);
+
+        if(respawnTicks !== -1) {
+            timer(respawnTicks * World.TICK_LENGTH).toPromise().then(() => this.addLandscapeObject(oldObject, position));
+        }
+    }
+
     public toggleObjects(newObject: LandscapeObject, oldObject: LandscapeObject, newPosition: Position, oldPosition: Position,
                          newChunk: Chunk, oldChunk: Chunk, newObjectInCache: boolean): void {
         if(newObjectInCache) {
