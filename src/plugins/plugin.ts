@@ -31,7 +31,7 @@ export class RunePlugin {
 
     public constructor(actions: NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | ItemOnObjectActionPlugin |
         CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin |
-        (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin |
+        (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | ItemOnObjectActionPlugin |
             CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin)[]) {
         if (!Array.isArray(actions)) {
             this.actions = [actions];
