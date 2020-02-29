@@ -23,8 +23,8 @@ export const action: objectAction = (details) => {
         type: details.object.type,
         rotation: details.object.rotation
     };
-    world.addTemporaryLandscapeObject(newHopper, details.position, 1);
 
+    world.replaceObject(2722, details.object, 1);
 
     setTimeout(() => {
         if (details.player.metadata['grain'] && details.player.metadata['grain'] >= 1) {
