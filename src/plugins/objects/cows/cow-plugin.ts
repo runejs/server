@@ -7,10 +7,11 @@ import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { itemIds } from '@server/world/config/item-ids';
 import { objectIds } from '@server/world/config/object-ids';
+import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
 
 
-export const action: objectAction = (details) => {
-    const {player, option, objectDefinition, object} = details;
+export const action: objectAction | itemOnObjectAction = (details) => {
+    const {player, objectDefinition} = details;
     const emptyBucketItem = gameCache.itemDefinitions.get(itemIds.bucket);
 
     if (player.hasItemInInventory(itemIds.bucket)) {
@@ -46,7 +47,6 @@ export default new RunePlugin(
             type: ActionType.ITEM_ON_OBJECT_ACTION,
             objectIds: objectIds.milkableCow,
             itemIds: itemIds.bucket,
-            options: 'milk',
             walkTo: true,
             action
         }
