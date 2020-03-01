@@ -8,8 +8,10 @@ import { soundIds } from '@server/world/config/sound-ids';
 import { itemIds } from '@server/world/config/item-ids';
 import { objectIds } from '@server/world/config/object-ids';
 import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
+import { LandscapeObjectDefinition } from '@runejs/cache-parser';
+import { Player } from '@server/world/actor/player/player';
 
-function milkCow(details) {
+function milkCow(details: {objectDefinition: LandscapeObjectDefinition, player: Player}): void {
     const { player, objectDefinition } = details;
     const emptyBucketItem = gameCache.itemDefinitions.get(itemIds.bucket);
 
