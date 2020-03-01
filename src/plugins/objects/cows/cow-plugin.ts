@@ -10,7 +10,7 @@ import { objectIds } from '@server/world/config/object-ids';
 
 
 export const action: objectAction = (details) => {
-    const {player, option, objectDefinition, object} = details;
+    const {player, objectDefinition} = details;
     const emptyBucketItem = gameCache.itemDefinitions.get(itemIds.bucket);
 
     if (player.hasItemInInventory(itemIds.bucket)) {
@@ -46,7 +46,6 @@ export default new RunePlugin(
             type: ActionType.ITEM_ON_OBJECT_ACTION,
             objectIds: objectIds.milkableCow,
             itemIds: itemIds.bucket,
-            options: 'milk',
             walkTo: true,
             action
         }

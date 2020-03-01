@@ -1,16 +1,11 @@
-import { World } from '@server/world/world';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { itemIds } from '@server/world/config/item-ids';
-import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
 import { objectAction } from '@server/world/actor/player/action/object-action';
-import { gameCache } from '@server/game-server';
-import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
-import { dialogueAction, DialogueEmote } from '@server/world/actor/player/action/dialogue-action';
-import { npcIds } from '@server/world/config/npc-ids';
+import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
 
 
-export const action: objectAction = (details) => {
+export const action: any = (details) => {
     const {player, objectDefinition} = details;
 
     if (!details.player.metadata['flour']) {
@@ -18,8 +13,6 @@ export const action: objectAction = (details) => {
         player.outgoingPackets.chatboxMessage(`first.`);
         return;
     }
-    const emptyBucketItem = gameCache.itemDefinitions.get(itemIds.pot);
-
     if (player.hasItemInInventory(itemIds.pot)) {
         player.outgoingPackets.playSound(soundIds.potContentModified, 7);
         player.removeFirstItem(itemIds.pot);
@@ -30,20 +23,27 @@ export const action: objectAction = (details) => {
     }
 };
 
+const actionInteract: objectAction = (details) => {
+    action(details);
+};
+
+const actionItem: itemOnObjectAction = (details) => {
+    action(details);
+};
+
 export default new RunePlugin([
     {
         type: ActionType.ITEM_ON_OBJECT_ACTION,
         objectIds: [1782],
         itemIds: [itemIds.pot],
-        options: ['empty'],
         walkTo: true,
-        action
+        actionItem
     },
     {
         type: ActionType.OBJECT_ACTION,
         objectIds: [1782],
         options: ['empty'],
         walkTo: true,
-        action
+        actionInteract
     }
 ]);
