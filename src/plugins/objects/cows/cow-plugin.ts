@@ -7,10 +7,9 @@ import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { itemIds } from '@server/world/config/item-ids';
 import { objectIds } from '@server/world/config/object-ids';
-import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
 
 
-export const action: objectAction | itemOnObjectAction = (details) => {
+export const action: objectAction = (details) => {
     const {player, objectDefinition} = details;
     const emptyBucketItem = gameCache.itemDefinitions.get(itemIds.bucket);
 

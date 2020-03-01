@@ -5,7 +5,7 @@ import { soundIds } from '@server/world/config/sound-ids';
 import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
 
 
-export const action: objectAction | itemOnObjectAction = (details) => {
+export const action: objectAction = (details) => {
     const {player, objectDefinition} = details;
 
     if (!details.player.metadata['flour']) {
