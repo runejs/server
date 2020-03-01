@@ -5,7 +5,7 @@ import { soundIds } from '@server/world/config/sound-ids';
 import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
 
 
-export const action: objectAction = (details) => {
+export const action: any = (details) => {
     const {player, objectDefinition} = details;
 
     if (!details.player.metadata['flour']) {
@@ -23,19 +23,27 @@ export const action: objectAction = (details) => {
     }
 };
 
+const actionInteract: objectAction = (details) => {
+    action(details);
+};
+
+const actionItem: itemOnObjectAction = (details) => {
+    action(details);
+};
+
 export default new RunePlugin([
     {
         type: ActionType.ITEM_ON_OBJECT_ACTION,
         objectIds: [1782],
         itemIds: [itemIds.pot],
         walkTo: true,
-        action
+        actionItem
     },
     {
         type: ActionType.OBJECT_ACTION,
         objectIds: [1782],
         options: ['empty'],
         walkTo: true,
-        action
+        actionInteract
     }
 ]);
