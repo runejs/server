@@ -20,6 +20,7 @@ import { setWidgetPlugins } from '@server/world/actor/player/action/widget-actio
 import { setItemPlugins } from '@server/world/actor/player/action/item-action';
 import { setWorldItemPlugins } from '@server/world/actor/player/action/world-item-action';
 import { setItemOnObjectPlugins } from '@server/world/actor/player/action/item-on-object-action';
+import { setItemOnNpcPlugins } from '@server/world/actor/player/action/item-on-npc-action';
 
 export let serverConfig: ServerConfig;
 export let gameCache377: EarlyFormatGameCache;
@@ -42,6 +43,7 @@ export async function injectPlugins(): Promise<void> {
     setNpcPlugins(actionTypes[ActionType.NPC_ACTION]);
     setObjectPlugins(actionTypes[ActionType.OBJECT_ACTION]);
     setItemOnObjectPlugins(actionTypes[ActionType.ITEM_ON_OBJECT_ACTION]);
+    setItemOnNpcPlugins(actionTypes[ActionType.ITEM_ON_NPC_ACTION]);
     setItemOnItemPlugins(actionTypes[ActionType.ITEM_ON_ITEM]);
     setItemPlugins(actionTypes[ActionType.ITEM_ACTION]);
     setWorldItemPlugins(actionTypes[ActionType.WORLD_ITEM_ACTION]);

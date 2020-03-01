@@ -7,6 +7,7 @@ import { WidgetActionPlugin } from '@server/world/actor/player/action/widget-act
 import { ItemActionPlugin } from '@server/world/actor/player/action/item-action';
 import { WorldItemActionPlugin } from '@server/world/actor/player/action/world-item-action';
 import { ItemOnObjectActionPlugin } from '@server/world/actor/player/action/item-on-object-action';
+import { ItemOnNpcActionPlugin } from '@server/world/actor/player/action/item-on-npc-action';
 
 export enum ActionType {
     BUTTON = 'button',
@@ -17,6 +18,7 @@ export enum ActionType {
     NPC_ACTION = 'npc_action',
     OBJECT_ACTION = 'object_action',
     ITEM_ON_OBJECT_ACTION = 'item_on_object_action',
+    ITEM_ON_NPC_ACTION = 'item_on_npc_action',
     COMMAND = 'command'
 }
 
@@ -27,12 +29,12 @@ export interface ActionPlugin {
 export class RunePlugin {
 
     public actions: (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | ItemOnObjectActionPlugin |
-        CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin)[];
+        CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | ItemOnNpcActionPlugin)[];
 
     public constructor(actions: NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | ItemOnObjectActionPlugin |
-        CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin |
+        CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | ItemOnNpcActionPlugin |
         (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | ItemOnObjectActionPlugin |
-            CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin)[]) {
+            CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | ItemOnNpcActionPlugin)[]) {
         if (!Array.isArray(actions)) {
             this.actions = [actions];
         } else {
