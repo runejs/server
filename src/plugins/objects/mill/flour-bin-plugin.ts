@@ -5,8 +5,8 @@ import { soundIds } from '@server/world/config/sound-ids';
 import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
 
 
-export const action: any = (details) => {
-    const {player, objectDefinition} = details;
+function flourBin(details) {
+    const { player, objectDefinition } = details;
 
     if (!details.player.metadata['flour']) {
         player.outgoingPackets.chatboxMessage(`The ${objectDefinition.name.toLowerCase()} is already empty. You need to place wheat in the hopper upstairs `);
@@ -21,14 +21,14 @@ export const action: any = (details) => {
     } else {
         player.outgoingPackets.chatboxMessage(`You need a pot to hold the flour in.`);
     }
-};
+}
 
 const actionInteract: objectAction = (details) => {
-    action(details);
+    flourBin(details);
 };
 
 const actionItem: itemOnObjectAction = (details) => {
-    action(details);
+    flourBin(details);
 };
 
 export default new RunePlugin([
@@ -37,13 +37,13 @@ export default new RunePlugin([
         objectIds: [1782],
         itemIds: [itemIds.pot],
         walkTo: true,
-        actionItem
+        action: actionItem
     },
     {
         type: ActionType.OBJECT_ACTION,
         objectIds: [1782],
         options: ['empty'],
         walkTo: true,
-        actionInteract
+        action: actionInteract
     }
 ]);
