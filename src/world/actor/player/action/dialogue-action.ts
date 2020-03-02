@@ -136,7 +136,7 @@ export class DialogueAction {
         } else if(options.type === 'OPTIONS') {
             this.p.outgoingPackets.updateWidgetString(widgetId, 0, options.title);
             textOffset = 1;
-        } else if(options.type === 'LEVEL_UP') {
+        } else if(options.type === 'LEVEL_UP' || options.type === 'TEXT') {
             textOffset = 0;
         }
 

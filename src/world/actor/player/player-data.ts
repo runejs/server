@@ -53,6 +53,7 @@ export interface PlayerSave {
     equipment: Item[];
     skills: SkillValue[];
     settings: PlayerSettings;
+    savedMetadata: { [key: string]: any };
 }
 
 export const defaultAppearance = (): Appearance => {
@@ -112,7 +113,8 @@ export function savePlayerData(player: Player): boolean {
         inventory: player.inventory.items,
         equipment: player.equipment.items,
         skills: player.skills.values,
-        settings: player.settings
+        settings: player.settings,
+        savedMetadata: player.savedMetadata
     };
 
     try {

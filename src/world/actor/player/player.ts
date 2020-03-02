@@ -24,9 +24,12 @@ import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { QuadtreeKey } from '@server/world/world';
 import { daysSinceLastLogin } from '@server/util/time';
 import { itemIds } from '@server/world/config/item-ids';
+import { unlockEmotes } from '@server/plugins/buttons/player-emotes-plugin';
+import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
 
 const DEFAULT_TAB_WIDGET_IDS = [
-    92, widgets.skillsTab, 274, widgets.inventory.widgetId, widgets.equipment.widgetId, 271, 192, -1, 131, 148, widgets.logoutTab, widgets.settingsTab, 464, 239
+    92, widgets.skillsTab, 274, widgets.inventory.widgetId, widgets.equipment.widgetId, 271, 192, -1, 131, 148,
+    widgets.logoutTab, widgets.settingsTab, widgets.emotesTab, 239
 ];
 
 export enum Rights {
@@ -69,6 +72,7 @@ export class Player extends Actor {
     private _nearbyChunks: Chunk[];
     public readonly actionsCancelled: Subject<boolean>;
     private quadtreeKey: QuadtreeKey = null;
+    public savedMetadata: { [key: string]: any } = {};
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -100,6 +104,10 @@ export class Player extends Actor {
         const playerSave: PlayerSave = loadPlayerSave(this.username);
         const firstTimePlayer: boolean = playerSave === null;
         this.firstTimePlayer = firstTimePlayer;
+
+        if(playerSave.savedMetadata) {
+            this.savedMetadata = playerSave.savedMetadata;
+        }
 
         if(!firstTimePlayer) {
             // Existing player logging in
@@ -218,6 +226,8 @@ export class Player extends Actor {
         this._loginDate = new Date();
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
 
+        unlockEmotes(this);
+
         this.outgoingPackets.flushQueue();
 
         logger.info(`${this.username}:${this.worldIndex} has logged in.`);
@@ -330,6 +340,37 @@ export class Player extends Actor {
         });
     }
 
+    /**
+     * Sends a message to the player via the chatbox.
+     * @param messages The single message or array of lines to send to the player.
+     * @param showDialogue Whether or not to show the message in a "Click to continue" dialogue.
+     * @returns A Promise<void> that resolves when the player has clicked the "click to continue" button or
+     * after their chat messages have been sent.
+     */
+    public sendMessage(messages: string | string[], showDialogue: boolean = false): Promise<void> {
+        if(!Array.isArray(messages)) {
+            messages = [ messages ];
+        }
+
+        if(!showDialogue) {
+            messages.forEach(message => this.outgoingPackets.chatboxMessage(message));
+            return Promise.resolve();
+        } else {
+            if(messages.length > 5) {
+                throw `Dialogues have a maximum of 5 lines!`;
+            }
+
+            return dialogueAction(this, { type: 'TEXT', lines: messages }).then(d => {
+                d.close();
+                return Promise.resolve();
+            }).catch(() => {});
+        }
+    }
+
+    /**
+     * Instantly teleports the player to the specified location.
+     * @param newPosition The player's new position.
+     */
     public teleport(newPosition: Position): void {
         const oldChunk = world.chunkManager.getChunkForWorldPosition(this.position);
         const newChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
