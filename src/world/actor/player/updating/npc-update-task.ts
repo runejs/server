@@ -78,6 +78,10 @@ export class NpcUpdateTask extends Task<void> {
 
         let mask = 0;
 
+        if(updateFlags.appearanceUpdateRequired) {
+            mask |= 0x80;
+        }
+
         if(updateFlags.faceActor !== undefined) {
             mask |= 0x4;
         }
@@ -91,7 +95,7 @@ export class NpcUpdateTask extends Task<void> {
             mask |= 0x10;
         }
 
-        updateMaskData.writeByte(mask);
+        updateMaskData.writeUnsignedByte(mask);
 
         if(updateFlags.faceActor !== undefined) {
             const actor = updateFlags.faceActor;
@@ -122,6 +126,11 @@ export class NpcUpdateTask extends Task<void> {
                 updateMaskData.writeNewString('Undefined Message');
             }
         }
+
+        if(updateFlags.appearanceUpdateRequired) {
+            updateMaskData.writeOffsetShortBE(npc.id);
+        }
+
 
         if(updateFlags.facePosition) {
             const position = updateFlags.facePosition;

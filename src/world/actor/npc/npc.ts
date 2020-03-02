@@ -35,7 +35,7 @@ export interface NpcInitPlugin extends ActionPlugin {
  */
 export class Npc extends Actor {
 
-    public readonly id: number;
+    public id: number;
     public readonly uuid: string;
     private _name: string;
     private _combatLevel: number;
@@ -150,5 +150,10 @@ export class Npc extends Actor {
                 volume
             );
         });
+    }
+
+    public setNewId(id: number): void {
+        this.id = id;
+        this.updateFlags.appearanceUpdateRequired = true;
     }
 }
