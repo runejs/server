@@ -5,6 +5,7 @@ import { World } from '@server/world/world';
 import { itemOnNpcAction } from '@server/world/actor/player/action/item-on-npc-action';
 import { itemIds } from '@server/world/config/item-ids';
 import { soundIds } from '@server/world/config/sound-ids';
+import { animationIds } from '@server/world/config/animation-ids';
 
 const initAction: npcInitAction = (details) => {
     setInterval(() => {
@@ -17,8 +18,8 @@ const initAction: npcInitAction = (details) => {
 
 export const shearAction: itemOnNpcAction = (details) => {
     details.player.busy = true;
-    details.player.playAnimation(893);
-    details.player.outgoingPackets.playSound(761, 5);
+    details.player.playAnimation(animationIds.shearSheep);
+    details.player.outgoingPackets.playSound(soundIds.shearSheep, 5);
 
     setTimeout(() => {
         if (Math.random() >= 0.66) {
@@ -43,7 +44,7 @@ export default new RunePlugin([
         {
             type: ActionType.ITEM_ON_NPC_ACTION,
             npcsIds: [npcIds.sheep],
-            itemIds: [itemIds.shears, itemIds.recruitment_drive.shears],
+            itemIds: [itemIds.shears, itemIds.recruitmentDrive.shears],
             walkTo: true,
             action: shearAction
         }

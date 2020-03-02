@@ -7,5 +7,6 @@ export const animationIds = {
     homeTeleportReadBookAndGlowCircle: 4855,
     homeTeleport: 4857,
     fillContainerWithWater: 832,
+    shearSheep: 893,
 
 };
