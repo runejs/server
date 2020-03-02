@@ -7,6 +7,8 @@ import { WidgetActionPlugin } from '@server/world/actor/player/action/widget-act
 import { ItemActionPlugin } from '@server/world/actor/player/action/item-action';
 import { WorldItemActionPlugin } from '@server/world/actor/player/action/world-item-action';
 import { ItemOnObjectActionPlugin } from '@server/world/actor/player/action/item-on-object-action';
+import { PlayerInitPlugin } from '@server/world/actor/player/player';
+import { NpcInitPlugin } from '@server/world/actor/npc/npc';
 
 export enum ActionType {
     BUTTON = 'button',
@@ -17,7 +19,9 @@ export enum ActionType {
     NPC_ACTION = 'npc_action',
     OBJECT_ACTION = 'object_action',
     ITEM_ON_OBJECT_ACTION = 'item_on_object_action',
-    COMMAND = 'command'
+    COMMAND = 'command',
+    PLAYER_INIT = 'player_init',
+    NPC_INIT = 'npc_init'
 }
 
 export interface ActionPlugin {
@@ -27,12 +31,12 @@ export interface ActionPlugin {
 export class RunePlugin {
 
     public actions: (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | ItemOnObjectActionPlugin |
-        CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin)[];
+        CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | PlayerInitPlugin | NpcInitPlugin)[];
 
     public constructor(actions: NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | ItemOnObjectActionPlugin |
-        CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin |
+        CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | PlayerInitPlugin | NpcInitPlugin |
         (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | ItemOnObjectActionPlugin |
-            CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin)[]) {
+            CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | PlayerInitPlugin | NpcInitPlugin)[]) {
         if (!Array.isArray(actions)) {
             this.actions = [actions];
         } else {

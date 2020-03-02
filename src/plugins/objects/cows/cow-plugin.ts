@@ -7,10 +7,12 @@ import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { itemIds } from '@server/world/config/item-ids';
 import { objectIds } from '@server/world/config/object-ids';
+import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
+import { LandscapeObjectDefinition } from '@runejs/cache-parser';
+import { Player } from '@server/world/actor/player/player';
 
-
-export const action: objectAction = (details) => {
-    const {player, option, objectDefinition, object} = details;
+function milkCow(details: {objectDefinition: LandscapeObjectDefinition, player: Player}): void {
+    const { player, objectDefinition } = details;
     const emptyBucketItem = gameCache.itemDefinitions.get(itemIds.bucket);
 
     if (player.hasItemInInventory(itemIds.bucket)) {
@@ -31,7 +33,11 @@ export const action: objectAction = (details) => {
                 d.close();
             });
     }
-};
+}
+
+export const actionItem: itemOnObjectAction = (details) => milkCow(details);
+
+export const actionInteract: objectAction = (details) => milkCow(details);
 
 export default new RunePlugin(
     [
@@ -40,14 +46,13 @@ export default new RunePlugin(
             objectIds: objectIds.milkableCow,
             options: 'milk',
             walkTo: true,
-            action
+            action: actionInteract
         },
         {
             type: ActionType.ITEM_ON_OBJECT_ACTION,
             objectIds: objectIds.milkableCow,
             itemIds: itemIds.bucket,
-            options: 'milk',
             walkTo: true,
-            action
+            action: actionItem
         }
     ]);

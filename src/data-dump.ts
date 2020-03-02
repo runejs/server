@@ -2,39 +2,34 @@ import { join } from "path";
 import { writeFileSync } from "fs";
 import { gameCache } from '@server/game-server';
 import { logger } from '@runejs/logger/dist/logger';
+import { ItemDefinition, NpcDefinition } from '@runejs/cache-parser';
+import { WidgetDefinition } from '@runejs/cache-parser/dist/cache-new-format/screen/widgets';
 
-export function dumpItems(): boolean {
-    const filePath = join('data/dump', 'items.json');
+function dump<T>(fileName: string, definitions: Map<number, T>): boolean {
+    const filePath = join('data/dump', fileName);
 
-    const itemMap = gameCache.itemDefinitions;
-    const items = [];
-    for(let i = 0; i < itemMap.size; i++) {
-        items.push(itemMap.get(i));
+    const arr = [];
+    for(let i = 0; i < definitions.size; i++) {
+        arr.push(definitions.get(i));
     }
 
     try {
-        writeFileSync(filePath, JSON.stringify(items, null, 4));
+        writeFileSync(filePath, JSON.stringify(arr, null, 4));
         return true;
     } catch(error) {
-        logger.error(`Error dumping item data.`);
+        logger.error(`Error dumping ${fileName}`);
         return false;
     }
 }
 
+export function dumpNpcs(): boolean {
+    return dump<NpcDefinition>('npcs.json', gameCache.npcDefinitions);
+}
+
+export function dumpItems(): boolean {
+    return dump<ItemDefinition>('items.json', gameCache.itemDefinitions);
+}
+
 export function dumpWidgets(): boolean {
-    const filePath = join('data/dump', 'widgets.json');
-
-    const widgetMap = gameCache.widgetDefinitions;
-    const widgets = [];
-    for(let i = 0; i < widgetMap.size; i++) {
-        widgets.push(widgetMap.get(i));
-    }
-
-    try {
-        writeFileSync(filePath, JSON.stringify(widgets, null, 4));
-        return true;
-    } catch(error) {
-        logger.error(`Error dumping widget data.`);
-        return false;
-    }
+    return dump<WidgetDefinition>('widgets.json', gameCache.widgetDefinitions);
 }
