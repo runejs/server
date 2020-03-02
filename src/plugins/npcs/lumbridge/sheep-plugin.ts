@@ -20,7 +20,8 @@ export const shearAction: itemOnNpcAction = (details) => {
     details.player.busy = true;
     details.player.playAnimation(animationIds.shearSheep);
     details.player.outgoingPackets.playSound(soundIds.shearSheep, 5);
-
+    // set to face position, so it does not look weird when the player walk away
+    details.npc.face(details.player.position);
     setTimeout(() => {
         if (Math.random() >= 0.66) {
             details.player.outgoingPackets.chatboxMessage('The sheep manages to get away from you!');
