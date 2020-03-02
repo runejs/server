@@ -6,6 +6,8 @@ import { Position } from '@server/world/position';
 import { world } from '@server/game-server';
 import { Direction } from '@server/world/direction';
 import { QuadtreeKey } from '@server/world/world';
+import { ActionPlugin } from '@server/plugins/plugin';
+import { basicNumberFilter } from '@server/plugins/plugin-loader';
 
 interface NpcAnimations {
     walk: number;
@@ -13,6 +15,19 @@ interface NpcAnimations {
     turnAround: number;
     turnRight: number;
     turnLeft: number;
+}
+
+let npcInitPlugins: NpcInitPlugin[];
+
+export type npcInitAction = (details: { npc: Npc }) => void;
+
+export const setNpcInitPlugins = (plugins: ActionPlugin[]): void => {
+    npcInitPlugins = plugins as NpcInitPlugin[];
+};
+
+export interface NpcInitPlugin extends ActionPlugin {
+    action: npcInitAction;
+    npcIds: number | number[];
 }
 
 /**
@@ -54,6 +69,13 @@ export class Npc extends Actor {
     public init(): void {
         world.chunkManager.getChunkForWorldPosition(this.position).addNpc(this);
         this.initiateRandomMovement();
+
+        new Promise(resolve => {
+            npcInitPlugins
+                .filter(plugin => basicNumberFilter(plugin.npcIds, this.id))
+                .forEach(plugin => plugin.action({ npc: this }));
+            resolve();
+        });
     }
 
     public async tick(): Promise<void> {

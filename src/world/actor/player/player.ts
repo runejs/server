@@ -11,9 +11,9 @@ import {
     defaultAppearance, defaultSettings,
     loadPlayerSave,
     PlayerSave, PlayerSettings,
-    savePlayerData, validateSettings
+    savePlayerData
 } from './player-data';
-import { ActiveWidget, widgets, widgetSettings } from '../../config/widget';
+import { ActiveWidget, widgets } from '../../config/widget';
 import { ContainerUpdateEvent, ItemContainer } from '../../items/item-container';
 import { EquipmentBonuses, ItemDetails } from '../../config/item-data';
 import { Item } from '../../items/item';
@@ -24,8 +24,8 @@ import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { QuadtreeKey } from '@server/world/world';
 import { daysSinceLastLogin } from '@server/util/time';
 import { itemIds } from '@server/world/config/item-ids';
-import { unlockEmotes } from '@server/plugins/buttons/player-emotes-plugin';
 import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
+import { ActionPlugin } from '@server/plugins/plugin';
 
 const DEFAULT_TAB_WIDGET_IDS = [
     92, widgets.skillsTab, 274, widgets.inventory.widgetId, widgets.equipment.widgetId, 271, 192, -1, 131, 148,
@@ -36,6 +36,18 @@ export enum Rights {
     ADMIN = 2,
     MOD = 1,
     USER = 0
+}
+
+let playerInitPlugins: PlayerInitPlugin[];
+
+export type playerInitAction = (details: { player: Player }) => void;
+
+export const setPlayerInitPlugins = (plugins: ActionPlugin[]): void => {
+    playerInitPlugins = plugins as PlayerInitPlugin[];
+};
+
+export interface PlayerInitPlugin extends ActionPlugin {
+    action: playerInitAction;
 }
 
 /**
@@ -209,8 +221,6 @@ export class Player extends Actor {
             };
         }
 
-        validateSettings(this);
-        this.updateWidgetSettings();
         this.updateBonuses();
         this.updateCarryWeight(true);
 
@@ -226,11 +236,14 @@ export class Player extends Actor {
         this._loginDate = new Date();
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
 
-        unlockEmotes(this);
+        new Promise(resolve => {
+            playerInitPlugins.forEach(plugin => plugin.action({ player: this }));
+            resolve();
+        }).then(() => {
+            this.outgoingPackets.flushQueue();
 
-        this.outgoingPackets.flushQueue();
-
-        logger.info(`${this.username}:${this.worldIndex} has logged in.`);
+            logger.info(`${this.username}:${this.worldIndex} has logged in.`);
+        });
     }
 
     public logout(): void {
@@ -482,22 +495,6 @@ export class Player extends Actor {
 
         const config = settingsMappings[buttonId];
         this.settings[config.setting] = config.value;
-    }
-
-    public updateWidgetSettings(): void {
-        const settings = this.settings;
-        this.outgoingPackets.updateClientConfig(widgetSettings.brightness, settings.screenBrightness);
-        this.outgoingPackets.updateClientConfig(widgetSettings.mouseButtons, settings.twoMouseButtonsEnabled ? 0 : 1);
-        this.outgoingPackets.updateClientConfig(widgetSettings.splitPrivateChat, settings.splitPrivateChatEnabled ? 1 : 0);
-        this.outgoingPackets.updateClientConfig(widgetSettings.chatEffects, settings.chatEffectsEnabled ? 0 : 1);
-        this.outgoingPackets.updateClientConfig(widgetSettings.acceptAid, settings.acceptAidEnabled ? 1 : 0);
-        this.outgoingPackets.updateClientConfig(widgetSettings.musicVolume, settings.musicVolume);
-        this.outgoingPackets.updateClientConfig(widgetSettings.soundEffectVolume, settings.soundEffectVolume);
-        this.outgoingPackets.updateClientConfig(widgetSettings.areaEffectVolume, settings.areaEffectVolume);
-        this.outgoingPackets.updateClientConfig(widgetSettings.runMode, settings.runEnabled ? 1 : 0);
-        this.outgoingPackets.updateClientConfig(widgetSettings.autoRetaliate, settings.autoRetaliateEnabled ? 0 : 1);
-        this.outgoingPackets.updateClientConfig(widgetSettings.attackStyle, settings.attackStyle);
-        this.outgoingPackets.updateClientConfig(widgetSettings.bankInsertMode, settings.bankInsertMode);
     }
 
     public updateBonuses(): void {
