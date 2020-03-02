@@ -141,6 +141,7 @@ export class Npc extends Actor {
 
     public sendSound(soundid: number, volume: number): void {
         world.findNearbyPlayers(this.position, 10).forEach(player => {
+            player.outgoingPackets.updateReferencePosition(this.position);
             player.outgoingPackets.playSoundAtPosition(
                 world.chunkManager.getChunkForWorldPosition(this.position),
                 soundid,

@@ -11,9 +11,9 @@ const initAction: npcInitAction = (details) => {
     setInterval(() => {
         if (Math.random() >= 0.66) {
             details.npc.updateFlags.addChatMessage({message: `Baa!`});
-            details.npc.sendSound(soundIds.sheepBaa, 7);
+            details.npc.sendSound(soundIds.sheepBaa, 4);
         }
-    }, 3 * World.TICK_LENGTH);
+    }, (Math.floor(Math.random() * 20) + 10) * World.TICK_LENGTH);
 };
 
 export const shearAction: itemOnNpcAction = (details) => {
@@ -24,13 +24,15 @@ export const shearAction: itemOnNpcAction = (details) => {
     setTimeout(() => {
         if (Math.random() >= 0.66) {
             details.player.outgoingPackets.chatboxMessage('The sheep manages to get away from you!');
-            // TODO: sheep says baa!, makes baa sound and goes backwards about 5 tiles
+            // TODO: move sheep backwards about 5 tiles, moonwalk, not turn around
         } else {
             details.player.outgoingPackets.chatboxMessage('You get some wool.');
             details.player.giveItem(itemIds.wool);
-            // TODO: sheep says baa!, makes baa sound and gets replaces with skinned sheep
+            details.npc.updateFlags.addChatMessage({message: 'Baa!'});
+            details.npc.sendSound(soundIds.sheepBaa, 4);
+            //TODO: Replace with naked sheep
+
         }
-        details.npc.updateFlags.addChatMessage({message: 'Baa!'});
         details.player.busy = false;
     }, World.TICK_LENGTH);
 
