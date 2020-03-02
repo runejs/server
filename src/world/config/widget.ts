@@ -20,6 +20,7 @@ export const widgets: any = {
     skillsTab: 320,
     logoutTab: 182,
     settingsTab: 261,
+    emotesTab: 464,
     shop: {
         widgetId: 300,
         containerId: 75,
