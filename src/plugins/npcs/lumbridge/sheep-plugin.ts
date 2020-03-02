@@ -6,6 +6,7 @@ import { itemOnNpcAction } from '@server/world/actor/player/action/item-on-npc-a
 import { itemIds } from '@server/world/config/item-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { animationIds } from '@server/world/config/animation-ids';
+import { oppositeDirectionIndex } from '@server/world/direction';
 
 const initAction: npcInitAction = (details) => {
     setInterval(() => {
@@ -25,14 +26,17 @@ export const shearAction: itemOnNpcAction = (details) => {
     setTimeout(() => {
         if (Math.random() >= 0.66) {
             details.player.outgoingPackets.chatboxMessage('The sheep manages to get away from you!');
-            // TODO: move sheep backwards about 5 tiles, moonwalk, not turn around
+            details.npc.forceMovement(details.player.faceDirection, 5);
         } else {
             details.player.outgoingPackets.chatboxMessage('You get some wool.');
             details.player.giveItem(itemIds.wool);
             details.npc.updateFlags.addChatMessage({message: 'Baa!'});
             details.npc.sendSound(soundIds.sheepBaa, 4);
-            //TODO: Replace with naked sheep
+            details.npc.setNewId(npcIds.nakedSheep);
 
+            setTimeout(() => {
+                details.npc.setNewId(npcIds.sheep);
+            }, (Math.floor(Math.random() * 20) + 10) * World.TICK_LENGTH);
         }
         details.player.busy = false;
     }, World.TICK_LENGTH);

@@ -6,6 +6,7 @@ import { Entity } from '../entity';
 import { Skills } from '@server/world/actor/skills';
 import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
+import { DirectionData, directionData, directionFromIndex } from '@server/world/direction';
 
 /**
  * Handles an actor within the game world.
@@ -36,43 +37,43 @@ export abstract class Actor extends Entity {
     }
 
     public face(face: Position | Actor, clearWalkingQueue: boolean = true, autoClear: boolean = true): void {
-        if(face instanceof Position) {
+        if (face instanceof Position) {
             this.updateFlags.facePosition = face;
-        } else if(face instanceof Actor) {
+        } else if (face instanceof Actor) {
             this.updateFlags.faceActor = face;
             this.metadata['faceActor'] = face;
 
-            if(autoClear) {
+            if (autoClear) {
                 setTimeout(() => {
                     this.clearFaceActor();
                 }, 20000);
             }
         }
 
-        if(clearWalkingQueue) {
+        if (clearWalkingQueue) {
             this.walkingQueue.clear();
             this.walkingQueue.valid = false;
         }
     }
 
     public clearFaceActor(): void {
-        if(this.metadata['faceActor']) {
+        if (this.metadata['faceActor']) {
             this.updateFlags.faceActor = null;
             this.metadata['faceActor'] = undefined;
         }
     }
 
     public playAnimation(animation: number | Animation): void {
-        if(typeof animation === 'number') {
-            animation = { id: animation, delay: 0 };
+        if (typeof animation === 'number') {
+            animation = {id: animation, delay: 0};
         }
 
         this.updateFlags.animation = animation;
     }
 
     public playGraphics(graphics: number | Graphic): void {
-        if(typeof graphics === 'number') {
-            graphics = { id: graphics, delay: 0, height: 120 };
+        if (typeof graphics === 'number') {
+            graphics = {id: graphics, delay: 0, height: 120};
         }
 
         this.updateFlags.graphics = graphics;
@@ -95,18 +96,18 @@ export abstract class Actor extends Entity {
     }
 
     public canMove(): boolean {
-        return true;
+        return !this.busy;
     }
 
     public initiateRandomMovement(): void {
         setInterval(() => {
-            if(!this.canMove()) {
+            if (!this.canMove()) {
                 return;
             }
 
             const movementChance = Math.floor(Math.random() * 10);
 
-            if(movementChance < 7) {
+            if (movementChance < 7) {
                 return;
             }
 
@@ -114,17 +115,17 @@ export abstract class Actor extends Entity {
             let py: number;
             let movementAllowed = false;
 
-            while(!movementAllowed) {
+            while (!movementAllowed) {
                 px = this.position.x;
                 py = this.position.y;
 
                 const moveXChance = Math.floor(Math.random() * 10);
 
-                if(moveXChance > 6) {
+                if (moveXChance > 6) {
                     const moveXAmount = Math.floor(Math.random() * 5);
                     const moveXMod = Math.floor(Math.random() * 2);
 
-                    if(moveXMod === 0) {
+                    if (moveXMod === 0) {
                         px -= moveXAmount;
                     } else {
                         px += moveXAmount;
@@ -133,11 +134,11 @@ export abstract class Actor extends Entity {
 
                 const moveYChance = Math.floor(Math.random() * 10);
 
-                if(moveYChance > 6) {
+                if (moveYChance > 6) {
                     const moveYAmount = Math.floor(Math.random() * 5);
                     const moveYMod = Math.floor(Math.random() * 2);
 
-                    if(moveYMod === 0) {
+                    if (moveYMod === 0) {
                         py -= moveYAmount;
                     } else {
                         py += moveYAmount;
@@ -146,8 +147,8 @@ export abstract class Actor extends Entity {
 
                 let valid = true;
 
-                if(this instanceof Npc) {
-                    if(px > this.initialPosition.x + this.movementRadius || px < this.initialPosition.x - this.movementRadius
+                if (this instanceof Npc) {
+                    if (px > this.initialPosition.x + this.movementRadius || px < this.initialPosition.x - this.movementRadius
                         || py > this.initialPosition.y + this.movementRadius || py < this.initialPosition.y - this.movementRadius) {
                         valid = false;
                     }
@@ -156,12 +157,55 @@ export abstract class Actor extends Entity {
                 movementAllowed = valid;
             }
 
-            if(px !== this.position.x || py !== this.position.y) {
+            if (px !== this.position.x || py !== this.position.y) {
                 this.walkingQueue.clear();
                 this.walkingQueue.valid = true;
                 this.walkingQueue.add(px, py);
             }
         }, 1000);
+    }
+
+    public forceMovement(direction: number, steps: number): void {
+        if (!this.canMove()) {
+            return;
+        }
+
+        let px: number;
+        let py: number;
+        let movementAllowed = false;
+
+        while (!movementAllowed) {
+            px = this.position.x;
+            py = this.position.y;
+
+            const movementDirection: DirectionData = directionFromIndex(direction);
+            if (!movementDirection) {
+                return;
+            }
+            let valid = true;
+            for (let step = 0; step < steps; step++) {
+                px += movementDirection.deltaX;
+                py += movementDirection.deltaY;
+
+                if (this instanceof Npc) {
+                    if (px > this.initialPosition.x + this.movementRadius || px < this.initialPosition.x - this.movementRadius
+                        || py > this.initialPosition.y + this.movementRadius || py < this.initialPosition.y - this.movementRadius) {
+                        valid = false;
+                    }
+                }
+
+            }
+
+            movementAllowed = valid;
+
+
+        }
+
+        if (px !== this.position.x || py !== this.position.y) {
+            this.walkingQueue.clear();
+            this.walkingQueue.valid = true;
+            this.walkingQueue.add(px, py);
+        }
     }
 
     public abstract equals(actor: Actor): boolean;

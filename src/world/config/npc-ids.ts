@@ -4,6 +4,7 @@ export const npcIds = {
     farmer: 7,
     tramp: 11,
     sheep: 43,
+    nakedSheep: 42,
     shopKeeper: 520,
     lumbridgeBob: 519,
     gemTrader: 540,
