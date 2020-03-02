@@ -21,6 +21,8 @@ import { setItemPlugins } from '@server/world/actor/player/action/item-action';
 import { setWorldItemPlugins } from '@server/world/actor/player/action/world-item-action';
 import { setItemOnObjectPlugins } from '@server/world/actor/player/action/item-on-object-action';
 import { setItemOnNpcPlugins } from '@server/world/actor/player/action/item-on-npc-action';
+import { setPlayerInitPlugins } from '@server/world/actor/player/player';
+import { setNpcInitPlugins } from '@server/world/actor/npc/npc';
 
 export let serverConfig: ServerConfig;
 export let gameCache377: EarlyFormatGameCache;
@@ -49,6 +51,8 @@ export async function injectPlugins(): Promise<void> {
     setWorldItemPlugins(actionTypes[ActionType.WORLD_ITEM_ACTION]);
     setCommandPlugins(actionTypes[ActionType.COMMAND]);
     setWidgetPlugins(actionTypes[ActionType.WIDGET_ACTION]);
+    setPlayerInitPlugins(actionTypes[ActionType.PLAYER_INIT]);
+    setNpcInitPlugins(actionTypes[ActionType.NPC_INIT]);
 }
 
 export function runGameServer(): void {
@@ -62,46 +66,47 @@ export function runGameServer(): void {
     gameCache377 = new EarlyFormatGameCache('cache/377', { loadMaps: true, loadDefinitions: false, loadWidgets: false });
     gameCache = new NewFormatGameCache('cache/435');
     world = new World();
-    world.init();
-    injectPlugins();
+    injectPlugins().then(() => {
+        world.init();
 
-    if(process.argv.indexOf('-fakePlayers') !== -1) {
-        world.generateFakePlayers();
-    }
-
-    process.on('unhandledRejection', (err, promise) => {
-        if(err === 'WIDGET_CLOSED') {
-            return;
+        if(process.argv.indexOf('-fakePlayers') !== -1) {
+            world.generateFakePlayers();
         }
 
-        console.error('Unhandled rejection (promise: ', promise, ', reason: ', err, ').');
+        process.on('unhandledRejection', (err, promise) => {
+            if(err === 'WIDGET_CLOSED') {
+                return;
+            }
+
+            console.error('Unhandled rejection (promise: ', promise, ', reason: ', err, ').');
+        });
+
+        net.createServer(socket => {
+            logger.info('Socket opened');
+            // socket.setNoDelay(true);
+            let clientConnection = new ClientConnection(socket);
+
+            socket.on('data', data => {
+                if(clientConnection) {
+                    clientConnection.parseIncomingData(new RsBuffer(data));
+                }
+            });
+
+            socket.on('close', () => {
+                if(clientConnection) {
+                    clientConnection.connectionDestroyed();
+                    clientConnection = null;
+                }
+            });
+
+            socket.on('error', error => {
+                socket.destroy();
+                logger.error('Socket destroyed due to connection error.');
+            });
+        }).listen(serverConfig.port, serverConfig.host);
+
+        logger.info(`Game server listening on port ${serverConfig.port}.`);
     });
-
-    net.createServer(socket => {
-        logger.info('Socket opened');
-        // socket.setNoDelay(true);
-        let clientConnection = new ClientConnection(socket);
-
-        socket.on('data', data => {
-            if(clientConnection) {
-                clientConnection.parseIncomingData(new RsBuffer(data));
-            }
-        });
-
-        socket.on('close', () => {
-            if(clientConnection) {
-                clientConnection.connectionDestroyed();
-                clientConnection = null;
-            }
-        });
-
-        socket.on('error', error => {
-            socket.destroy();
-            logger.error('Socket destroyed due to connection error.');
-        });
-    }).listen(serverConfig.port, serverConfig.host);
-
-    logger.info(`Game server listening on port ${serverConfig.port}.`);
 
     const watcher = watch('dist/plugins/');
     watcher.on('ready', function() {

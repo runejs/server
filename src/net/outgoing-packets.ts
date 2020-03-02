@@ -51,6 +51,16 @@ export class OutgoingPackets {
         this.queue(packet);
     }
 
+    public playSoundAtPosition(soundId: number, soundX:number, soundY:number, volume: number, delay: number = 0): void {
+        const packet = new Packet(9);
+        packet.writeUnsignedByte(getChunkPositionOffset(x, y))
+        packet.writeShortBE(soundId);
+        packet.writeByte(volume);
+        packet.writeShortBE(delay);
+
+        this.queue(packet);
+    }
+
     private getChunkPositionOffset(x: number, y: number, chunk: Chunk): number {
         const offsetX = x - ((chunk.position.x + 6) * 8);
         const offsetY = y - ((chunk.position.y + 6) * 8);

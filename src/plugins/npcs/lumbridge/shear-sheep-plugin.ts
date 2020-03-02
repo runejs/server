@@ -18,8 +18,8 @@ export const action: itemOnNpcAction = (details) => {
             details.player.outgoingPackets.chatboxMessage('You get some wool.');
             details.player.giveItem(1737);
             // TODO: sheep says baa!, makes baa sound and gets replaces with skinned sheep
-
         }
+        details.npc.updateFlags.addChatMessage({ message: 'Baa!' });
         details.player.busy = false;
     }, World.TICK_LENGTH);
 
