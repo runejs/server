@@ -18,7 +18,7 @@ const gates = [
     {
         main: 12986,
         mainOpen: 12988,
-        hinge: 'Left',
+        hinge: 'LEFT',
         secondary: 12987,
         secondaryOpen: 12989
     }

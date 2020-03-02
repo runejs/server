@@ -57,11 +57,11 @@ export class Npc extends Actor {
         this.position = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
         this.initialPosition = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
 
-        if(npcSpawn.radius) {
+        if (npcSpawn.radius) {
             this._movementRadius = npcSpawn.radius;
         }
 
-        if(npcSpawn.face) {
+        if (npcSpawn.face) {
             this._initialFaceDirection = npcSpawn.face;
         }
     }
@@ -73,7 +73,7 @@ export class Npc extends Actor {
         new Promise(resolve => {
             npcInitPlugins
                 .filter(plugin => basicNumberFilter(plugin.npcIds, this.id))
-                .forEach(plugin => plugin.action({ npc: this }));
+                .forEach(plugin => plugin.action({npc: this}));
             resolve();
         });
     }
@@ -97,7 +97,7 @@ export class Npc extends Actor {
     }
 
     public equals(other: Npc): boolean {
-        if(!other) {
+        if (!other) {
             return false;
         }
 
@@ -107,11 +107,11 @@ export class Npc extends Actor {
     public set position(position: Position) {
         super.position = position;
 
-        if(this.quadtreeKey !== null) {
+        if (this.quadtreeKey !== null) {
             world.npcTree.remove(this.quadtreeKey);
         }
 
-        this.quadtreeKey = { x: position.x, y: position.y, actor: this };
+        this.quadtreeKey = {x: position.x, y: position.y, actor: this};
         world.npcTree.push(this.quadtreeKey);
     }
 
@@ -137,5 +137,17 @@ export class Npc extends Actor {
 
     public get initialFaceDirection(): Direction {
         return this._initialFaceDirection;
+    }
+
+    public sendSound(soundid: number, volume: number): void {
+        world.findNearbyPlayers(this.position, 10).forEach(player => {
+            player.outgoingPackets.playSoundAtPosition(
+                world.chunkManager.getChunkForWorldPosition(this.position),
+                soundid,
+                this.position.x,
+                this.position.y,
+                volume
+            );
+        });
     }
 }

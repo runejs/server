@@ -15,4 +15,5 @@ export const soundIds = {
     emptyBucket: 2401,
     potContentModified: 2584,
     fillContainerWithWater: 2609,
+    sheepBaa: 2053,
 };
