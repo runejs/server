@@ -149,7 +149,7 @@ export const buttonClicked: buttonAction = (details) => {
     details.player.closeActiveWidget();
 
     if (!details.player.skills.hasSkillLevel(Skill.CRAFTING, product.spinnable.requiredLevel)) {
-        details.player.outgoingPackets.chatboxMessage(`You need a crafting level of ${product.spinnable.requiredLevel} to craft this item.`);
+        details.player.sendMessage(`You need a crafting level of ${product.spinnable.requiredLevel} to craft ${gameCache.itemDefinitions.get(product.spinnable.output).name.toLowerCase()}.`, true);
         return;
     }
 
