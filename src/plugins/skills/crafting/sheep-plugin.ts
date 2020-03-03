@@ -6,7 +6,6 @@ import { itemOnNpcAction } from '@server/world/actor/player/action/item-on-npc-a
 import { itemIds } from '@server/world/config/item-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { animationIds } from '@server/world/config/animation-ids';
-import { oppositeDirectionIndex } from '@server/world/direction';
 
 const initAction: npcInitAction = (details) => {
     setInterval(() => {
