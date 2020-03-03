@@ -12,9 +12,24 @@ export const itemIds = {
     potOfFlour: 1933,
     grain: 1947,
     wool: 1737,
+    ballOfWool: 1759,
+    cabbage: 1965,
+    flax: 1779,
+    bowstring: 1777,
+    oakRoots: 6043,
+    willowRoots: 6045,
+    mapleRoots: 6047,
+    yewRoots: 6049,
+    magicRoots: 6051,
+    potato: 1942,
+    onion: 1957,
     shears: 1735,
+    magicString: 6038,
+    crossbowString: 9438,
+    sinew: 9436,
     recruitmentDrive: {
         shears: 5603,
-    }
+    },
+
 
 };

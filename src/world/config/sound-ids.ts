@@ -17,4 +17,5 @@ export const soundIds = {
     fillContainerWithWater: 2609,
     sheepBaa: 2053,
     shearSheep: 761,
+    spinWool: 2590,
 };
