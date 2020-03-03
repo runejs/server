@@ -116,7 +116,7 @@ const spinProduct: any = (details: ButtonActionDetails, spinnable: Spinnable, co
                 cancel = true;
             }
             if (cancel) {
-                details.player.outgoingPackets.chatboxMessage(`You don't have any ${gameCache.itemDefinitions.get(currentItem).name.toLowerCase()}.`);
+                details.player.sendMessage(`You don't have any ${gameCache.itemDefinitions.get(currentItem).name.toLowerCase()}.`);
                 loop.cancel();
                 return;
             }
