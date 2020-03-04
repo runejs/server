@@ -41,7 +41,8 @@ export const widgets: any = {
         bankPinKey: 22,
         christmas: 23,
         killcount: 24
-    }
+    },
+    whatWouldYouLikeToSpin: 459
 };
 
 export const widgetSettings = {

@@ -2,31 +2,32 @@ import { objectAction } from '@server/world/actor/player/action/object-action';
 import { gameCache, world } from '@server/game-server';
 import { World } from '@server/world/world';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { itemIds } from '@server/world/config/item-ids';
 
 
 export const action: objectAction = (details) => {
     details.player.busy = true;
     details.player.playAnimation(827);
-    let itemId: number = 1965;
+    let itemId: number = itemIds.cabbage;
     let prefix = 'some';
     switch (details.objectDefinition.name) {
         case 'Wheat':
-            itemId = 1947;
+            itemId = itemIds.grain;
             break;
         case 'Onion':
-            itemId = 1957;
+            itemId = itemIds.onion;
             prefix = 'an';
             break;
         case 'Potato':
             prefix = 'a';
-            itemId = 1942;
+            itemId = itemIds.potato;
             break;
         case 'Flax':
-            itemId = 1779;
+            itemId = itemIds.flax;
             break;
         case 'Cabbage':
         default:
-            itemId = 1965;
+            itemId = itemIds.cabbage;
             break;
     }
     const pickedItem = gameCache.itemDefinitions.get(itemId);
