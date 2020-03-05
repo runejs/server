@@ -74,7 +74,7 @@ export class PlayerUpdateTask extends Task<void> {
 
                 playerUpdatePacket.writeBits(5, positionOffsetX); // World Position X axis offset relative to the main player
                 playerUpdatePacket.writeBits(5, positionOffsetY); // World Position Y axis offset relative to the main player
-                playerUpdatePacket.writeBits(3, 0); // @TODO default face direction
+                playerUpdatePacket.writeBits(3, newPlayer.faceDirection);
                 playerUpdatePacket.writeBits(1, 1); // Update is required
                 playerUpdatePacket.writeBits(1, 1); // Discard client walking queues
 

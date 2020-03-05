@@ -5,6 +5,7 @@ import { RsBuffer } from '@server/net/rs-buffer';
 import { Npc } from '@server/world/actor/npc/npc';
 import { world } from '@server/game-server';
 import { registerNewActors, updateTrackedActors } from './actor-updating';
+import { directionData } from '@server/world/direction';
 
 /**
  * Handles the chonky npc updating packet for a specific player.
@@ -45,7 +46,7 @@ export class NpcUpdateTask extends Task<void> {
 
                 // Notify the client of the new npc and their worldIndex
                 npcUpdatePacket.writeBits(15, newNpc.worldIndex);
-                npcUpdatePacket.writeBits(3, 0); // @TODO default face direction
+                npcUpdatePacket.writeBits(3, newNpc.faceDirection);
                 npcUpdatePacket.writeBits(5, positionOffsetX); // World Position X axis offset relative to the player
                 npcUpdatePacket.writeBits(5, positionOffsetY); // World Position Y axis offset relative to the player
                 npcUpdatePacket.writeBits(1, newNpc.updateFlags.updateBlockRequired ? 1 : 0); // Update is required
@@ -81,7 +82,6 @@ export class NpcUpdateTask extends Task<void> {
         if(updateFlags.appearanceUpdateRequired) {
             mask |= 0x80;
         }
-
         if(updateFlags.faceActor !== undefined) {
             mask |= 0x4;
         }
@@ -130,7 +130,6 @@ export class NpcUpdateTask extends Task<void> {
         if(updateFlags.appearanceUpdateRequired) {
             updateMaskData.writeOffsetShortBE(npc.id);
         }
-
 
         if(updateFlags.facePosition) {
             const position = updateFlags.facePosition;
