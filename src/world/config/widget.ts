@@ -16,6 +16,13 @@ export const widgets: any = {
         widgetId: 336,
         containerId: 0
     },
+    bank: {
+        screenWidget: 12,
+        tabWidget: {
+            widgetId: 266,
+            containerId: 0
+        }
+    },
     skillGuide: 308,
     skillsTab: 320,
     logoutTab: 182,
