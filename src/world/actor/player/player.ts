@@ -117,11 +117,11 @@ export class Player extends Actor {
         const firstTimePlayer: boolean = playerSave === null;
         this.firstTimePlayer = firstTimePlayer;
 
-        if(playerSave.savedMetadata) {
-            this.savedMetadata = playerSave.savedMetadata;
-        }
-
         if(!firstTimePlayer) {
+            if(playerSave.savedMetadata) {
+                this.savedMetadata = playerSave.savedMetadata;
+            }
+
             // Existing player logging in
             this.position = new Position(playerSave.position.x, playerSave.position.y, playerSave.position.level);
             if(playerSave.inventory && playerSave.inventory.length !== 0) {
@@ -158,6 +158,7 @@ export class Player extends Actor {
             this.inventory.add({itemId: 1201, amount: 1});
             this._appearance = defaultAppearance();
             this._rights = Rights.USER;
+            this.savedMetadata = {};
         }
 
         if(!this._settings) {
