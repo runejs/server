@@ -32,6 +32,7 @@
         "js-yaml": "^3.13.1",
         "quadtree-lib": "^1.0.9",
         "rxjs": "^6.5.4",
+        "source-map-support": "^0.5.16",
         "ts-node": "^8.4.1",
         "tslib": "^1.10.0",
         "typescript": "^3.7.2",
