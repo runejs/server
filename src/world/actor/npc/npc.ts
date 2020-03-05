@@ -4,7 +4,7 @@ import { NpcDefinition } from '@runejs/cache-parser';
 import uuidv4 from 'uuid/v4';
 import { Position } from '@server/world/position';
 import { world } from '@server/game-server';
-import { Direction } from '@server/world/direction';
+import { Direction, directionData } from '@server/world/direction';
 import { QuadtreeKey } from '@server/world/world';
 import { ActionPlugin } from '@server/plugins/plugin';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
@@ -42,7 +42,6 @@ export class Npc extends Actor {
     private _animations: NpcAnimations;
     public readonly options: string[];
     private _movementRadius: number = 0;
-    private _initialFaceDirection: Direction = 'NORTH';
     public readonly initialPosition: Position;
     private quadtreeKey: QuadtreeKey = null;
 
@@ -57,12 +56,12 @@ export class Npc extends Actor {
         this.position = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
         this.initialPosition = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
 
-        if (npcSpawn.radius) {
+        if(npcSpawn.radius) {
             this._movementRadius = npcSpawn.radius;
         }
 
-        if (npcSpawn.face) {
-            this._initialFaceDirection = npcSpawn.face;
+        if(npcSpawn.face) {
+            this.faceDirection = directionData[npcSpawn.face].index;
         }
     }
 
@@ -92,12 +91,33 @@ export class Npc extends Actor {
         });
     }
 
+    /**
+     * Whether or not the Npc can currently move.
+     */
     public canMove(): boolean {
         return this.updateFlags.faceActor === undefined && this.updateFlags.animation === undefined;
     }
 
+    /**
+     * Plays a sound at the Npc's location for all nearby players.
+     * @param soundId The ID of the sound effect.
+     * @param volume The volume to play the sound at.
+     */
+    public playSound(soundId: number, volume: number): void {
+        world.playLocationSound(this.position, soundId, volume);
+    }
+
+    /**
+     * Transforms the Npc visually into a different Npc.
+     * @param id The id of the Npc to transform into.
+     */
+    public setNewId(id: number): void {
+        this.id = id;
+        this.updateFlags.appearanceUpdateRequired = true;
+    }
+
     public equals(other: Npc): boolean {
-        if (!other) {
+        if(!other) {
             return false;
         }
 
@@ -107,7 +127,7 @@ export class Npc extends Actor {
     public set position(position: Position) {
         super.position = position;
 
-        if (this.quadtreeKey !== null) {
+        if(this.quadtreeKey !== null) {
             world.npcTree.remove(this.quadtreeKey);
         }
 
@@ -135,25 +155,4 @@ export class Npc extends Actor {
         return this._movementRadius;
     }
 
-    public get initialFaceDirection(): Direction {
-        return this._initialFaceDirection;
-    }
-
-    public sendSound(soundid: number, volume: number): void {
-        world.findNearbyPlayers(this.position, 10).forEach(player => {
-            player.outgoingPackets.updateReferencePosition(this.position);
-            player.outgoingPackets.playSoundAtPosition(
-                world.chunkManager.getChunkForWorldPosition(this.position),
-                soundid,
-                this.position.x,
-                this.position.y,
-                volume
-            );
-        });
-    }
-
-    public setNewId(id: number): void {
-        this.id = id;
-        this.updateFlags.appearanceUpdateRequired = true;
-    }
 }

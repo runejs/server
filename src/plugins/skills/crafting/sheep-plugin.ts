@@ -11,7 +11,7 @@ const initAction: npcInitAction = (details) => {
     setInterval(() => {
         if (Math.random() >= 0.66) {
             details.npc.updateFlags.addChatMessage({message: `Baa!`});
-            details.npc.sendSound(soundIds.sheepBaa, 4);
+            details.npc.playSound(soundIds.sheepBaa, 4);
         }
     }, (Math.floor(Math.random() * 20) + 10) * World.TICK_LENGTH);
 };
@@ -30,7 +30,7 @@ export const shearAction: itemOnNpcAction = (details) => {
             details.player.outgoingPackets.chatboxMessage('You get some wool.');
             details.player.giveItem(itemIds.wool);
             details.npc.updateFlags.addChatMessage({message: 'Baa!'});
-            details.npc.sendSound(soundIds.sheepBaa, 4);
+            details.npc.playSound(soundIds.sheepBaa, 4);
             details.npc.setNewId(npcIds.nakedSheep);
 
             setTimeout(() => {
