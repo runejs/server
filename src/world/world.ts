@@ -2,7 +2,7 @@ import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { logger } from '@runejs/logger';
 import { ItemDetails, parseItemData } from './config/item-data';
-import { gameCache } from '@server/game-server';
+import { gameCache, world } from '@server/game-server';
 import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './actor/npc/npc';
@@ -63,6 +63,25 @@ export class World {
             resolve();
         }).then(() => {
             this.spawnNpcs();
+        });
+    }
+
+    /**
+     * Players a sound at a specific position for all players within range of that position.
+     * @param position The position to play the sound at.
+     * @param soundId The ID of the sound effect.
+     * @param volume The volume the sound should play at.
+     * @param distance The distance which the sound should reach.
+     */
+    public playLocationSound(position: Position, soundId: number, volume: number, distance: number = 10): void {
+        this.findNearbyPlayers(position, distance).forEach(player => {
+            player.outgoingPackets.updateReferencePosition(position);
+            player.outgoingPackets.playSoundAtPosition(
+                soundId,
+                position.x,
+                position.y,
+                volume
+            );
         });
     }
 
@@ -470,7 +489,7 @@ export class World {
 
     public npcExists(npc: Npc): boolean {
         const foundNpc = this.npcList[npc.worldIndex];
-        if(!foundNpc) {
+        if(!foundNpc || !foundNpc.exists) {
             return false;
         }
 
@@ -492,6 +511,7 @@ export class World {
     }
 
     public deregisterNpc(npc: Npc): void {
+        npc.exists = false;
         this.npcList[npc.worldIndex] = null;
     }
 

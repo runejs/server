@@ -54,43 +54,43 @@ function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refr
     let guide: SkillGuide = guides.find(g => g.id === guideId);
 
     if(refreshSidebar) {
-        player.outgoingPackets.updateWidgetString(widgets.skillGuide, 133, guide.members ? 'Members only skill' : '');
+        player.modifyWidget(widgets.skillGuide, { childId: 133, text: (guide.members ? 'Members only skill' : '') });
 
         for(let i = 0; i < sidebarTextIds.length; i++) {
             const sidebarId = sidebarIds[i];
-            let hide: boolean = true;
+            let hidden: boolean = true;
 
             if(i >= guide.subGuides.length) {
-                player.outgoingPackets.updateWidgetString(widgets.skillGuide, sidebarTextIds[i], '');
-                hide = true;
+                player.modifyWidget(widgets.skillGuide, { childId: sidebarTextIds[i], text: '' });
+                hidden = true;
             } else {
-                player.outgoingPackets.updateWidgetString(widgets.skillGuide, sidebarTextIds[i], guide.subGuides[i].name);
-                hide = false;
+                player.modifyWidget(widgets.skillGuide, { childId: sidebarTextIds[i], text: guide.subGuides[i].name });
+                hidden = false;
             }
 
             if(sidebarId !== -1) {
                 // Apparently you can never have only TWO subguides...
                 // Because childId 98 deletes both options 2 AND 3. So, good thing there are no guides with only 2 sections, I guess?...
                 // Verified this in an interface editor, and they are indeed grouped in a single layer for some reason...
-                player.outgoingPackets.toggleWidgetVisibility(widgets.skillGuide, sidebarIds[i], hide);
+                player.modifyWidget(widgets.skillGuide, { childId: sidebarIds[i], hidden });
             }
         }
     }
 
     const subGuide: SkillSubGuide = guide.subGuides[subGuideId];
 
-    player.outgoingPackets.updateWidgetString(widgets.skillGuide, 1, guide.name + ' - ' + subGuide.name);
+    player.modifyWidget(widgets.skillGuide, { childId: 1, text: (guide.name + ' - ' + subGuide.name) });
 
     const itemIds: number[] = subGuide.lines.map(g => g.itemId).concat(new Array(30 - subGuide.lines.length).fill(null));
     player.outgoingPackets.sendUpdateAllWidgetItemsById({ widgetId: widgets.skillGuide, containerId: 132 }, itemIds);
 
     for(let i = 0; i < 30; i++) {
         if(subGuide.lines.length <= i) {
-            player.outgoingPackets.updateWidgetString(widgets.skillGuide, 5 + i, '');
-            player.outgoingPackets.updateWidgetString(widgets.skillGuide, 45 + i, '');
+            player.modifyWidget(widgets.skillGuide, { childId: 5 + i, text: '' });
+            player.modifyWidget(widgets.skillGuide, { childId: 45 + i, text: '' });
         } else {
-            player.outgoingPackets.updateWidgetString(widgets.skillGuide, 5 + i, subGuide.lines[i].level.toString());
-            player.outgoingPackets.updateWidgetString(widgets.skillGuide, 45 + i, subGuide.lines[i].text);
+            player.modifyWidget(widgets.skillGuide, { childId: 5 + i, text: subGuide.lines[i].level.toString() });
+            player.modifyWidget(widgets.skillGuide, { childId: 45 + i, text: subGuide.lines[i].text });
         }
     }
 

@@ -8,6 +8,6 @@ export const animationIds = {
     homeTeleport: 4857,
     fillContainerWithWater: 832,
     shearSheep: 893,
-    spinSpinningWheel: 894
-
+    spinSpinningWheel: 894,
+    cry: 860,
 };

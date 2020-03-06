@@ -17,10 +17,10 @@ function milkCow(details: {objectDefinition: LandscapeObjectDefinition, player: 
 
     if (player.hasItemInInventory(itemIds.bucket)) {
         player.playAnimation(animationIds.milkCow);
-        player.outgoingPackets.playSound(soundIds.milkCow, 7);
+        player.playSound(soundIds.milkCow, 7);
         player.removeFirstItem(itemIds.bucket);
         player.giveItem(itemIds.bucketOfMilk);
-        player.outgoingPackets.chatboxMessage(`You milk the ${objectDefinition.name} and receive some milk.`);
+        player.sendMessage(`You milk the ${objectDefinition.name} and receive some milk.`);
     } else {
         dialogueAction(player)
             .then(d => d.npc(npcIds.gillieGroats, DialogueEmote.LAUGH_1, [`Tee hee! You've never milked a cow before, have you?`]))

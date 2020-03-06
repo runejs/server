@@ -117,11 +117,11 @@ export class Player extends Actor {
         const firstTimePlayer: boolean = playerSave === null;
         this.firstTimePlayer = firstTimePlayer;
 
-        if(playerSave.savedMetadata) {
-            this.savedMetadata = playerSave.savedMetadata;
-        }
-
         if(!firstTimePlayer) {
+            if(playerSave.savedMetadata) {
+                this.savedMetadata = playerSave.savedMetadata;
+            }
+
             // Existing player logging in
             this.position = new Position(playerSave.position.x, playerSave.position.y, playerSave.position.level);
             if(playerSave.inventory && playerSave.inventory.length !== 0) {
@@ -158,6 +158,7 @@ export class Player extends Actor {
             this.inventory.add({itemId: 1201, amount: 1});
             this._appearance = defaultAppearance();
             this._rights = Rights.USER;
+            this.savedMetadata = {};
         }
 
         if(!this._settings) {
@@ -351,6 +352,33 @@ export class Player extends Actor {
 
             resolve();
         });
+    }
+
+    /**
+     * Modifies the specified widget using the provided options.
+     * @param widgetId The widget id of the widget to modify.
+     * @param options The options with which to modify the widget.
+     */
+    public modifyWidget(widgetId: number, options: { childId?: number, text?: string, hidden?: boolean }): void {
+        const { childId, text, hidden } = options;
+
+        if(childId) {
+            if(text) {
+                this.outgoingPackets.updateWidgetString(widgetId, childId, text);
+            } else if(hidden !== undefined) {
+                this.outgoingPackets.toggleWidgetVisibility(widgets.skillGuide, childId, hidden);
+            }
+        }
+    }
+
+    /**
+     * Plays a sound for this specific player.
+     * @param soundId The id of the sound effect.
+     * @param volume The volume to play the sound at; defaults to 10 (max).
+     * @param delay The delay after which to play the sound; defaults to 0 (no delay).
+     */
+    public playSound(soundId: number, volume: number = 10, delay: number = 0): void {
+        this.outgoingPackets.playSound(soundId, volume, delay);
     }
 
     /**
