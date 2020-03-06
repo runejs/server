@@ -234,6 +234,7 @@ export class Player extends Actor {
         this.updateCarryWeight(true);
         this.modifyWidget(widgets.musicPlayerTab, { childId: 82, textColor: colors.green }); // Set "Harmony" to green/unlocked on the music tab
         this.playSong(songs.harmony);
+        this.updateQuestTab();
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
 
@@ -363,6 +364,26 @@ export class Player extends Actor {
         });
     }
 
+    private updateQuestTab(): void {
+        Object.keys(quests).forEach(questKey => {
+            const questData = quests[questKey];
+            const playerQuest = this.quests.find(quest => quest.questId === questData.id);
+            let stage = 'NOT_STARTED';
+            let color = colors.red;
+            if(playerQuest && playerQuest.stage) {
+                stage = playerQuest.stage;
+                color = stage === 'COMPLETE' ? colors.green : colors.yellow;
+            }
+
+            this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: color });
+        })
+    }
+
+    /**
+     * Sets a player's quest stage to the specified value.
+     * @param quest The quest or ID of the quest to set the stage of.
+     * @param stage The stage to set the quest to.
+     */
     public setQuestStage(quest: number | QuestData, stage: string): void {
         let questId;
         let questData: QuestData;
