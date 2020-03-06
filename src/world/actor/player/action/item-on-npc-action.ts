@@ -3,7 +3,7 @@ import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/logger/dist/logger';
-import { ActionPlugin } from '@server/plugins/plugin';
+import { ActionPlugin, questFilter } from '@server/plugins/plugin';
 import { Item } from '@server/world/items/item';
 import { Npc } from '@server/world/actor/npc/npc';
 
@@ -52,32 +52,34 @@ export const setItemOnNpcPlugins = (plugins: ActionPlugin[]): void => {
 // @TODO priority and cancelling other (lower priority) actions
 export const itemOnNpcAction = (player: Player, npc: Npc,
                                 position: Position, item: Item, itemWidgetId: number, itemContainerId: number): void => {
-    if (player.busy) {
+    if(player.busy) {
         return;
     }
 
-    // Find all item on npc action plugins that reference this landscape object
-    let interactionPlugins = itemOnNpcInteractions.filter(plugin => pluginFilter(plugin.npcsIds, npc.id));
+    // Find all item on npc action plugins that reference this npc and item
+    let interactionActions = itemOnNpcInteractions.filter(plugin =>
+        questFilter(player, plugin) &&
+        pluginFilter(plugin.npcsIds, npc.id) && pluginFilter(plugin.itemIds, item.itemId));
+    const questActions = interactionActions.filter(plugin => plugin.quest !== undefined);
 
-    // Find all item on npc action plugins that reference this item
-    if (interactionPlugins.length !== 0) {
-        interactionPlugins = interactionPlugins.filter(plugin => pluginFilter(plugin.itemIds, item.itemId));
+    if(questActions.length !== 0) {
+        interactionActions = questActions;
     }
 
-    if (interactionPlugins.length === 0) {
-        player.outgoingPackets.chatboxMessage(`Unhandled item on npc interaction: ${item.itemId} on ${npc.name} ` +
-            `(id-${npc.id}) @ ${position.x},${position.y},${position.level}`);
+    if(interactionActions.length === 0) {
+        player.outgoingPackets.chatboxMessage(`Unhandled item on npc interaction: ${ item.itemId } on ${ npc.name } ` +
+            `(id-${ npc.id }) @ ${ position.x },${ position.y },${ position.level }`);
         return;
     }
 
     player.actionsCancelled.next();
 
     // Separate out walk-to actions from immediate actions
-    const walkToPlugins = interactionPlugins.filter(plugin => plugin.walkTo);
-    const immediatePlugins = interactionPlugins.filter(plugin => !plugin.walkTo);
+    const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);
+    const immediatePlugins = interactionActions.filter(plugin => !plugin.walkTo);
 
     // Make sure we walk to the npc before running any of the walk-to plugins
-    if (walkToPlugins.length !== 0) {
+    if(walkToPlugins.length !== 0) {
         walkToAction(player, position)
             .then(() => {
                 player.face(position);
@@ -96,15 +98,14 @@ export const itemOnNpcAction = (player: Player, npc: Npc,
     }
 
     // Immediately run any non-walk-to plugins
-    if (immediatePlugins.length !== 0) {
-        immediatePlugins.forEach(plugin =>
-            plugin.action({
-                player,
-                npc,
-                position,
-                item,
-                itemWidgetId,
-                itemContainerId
-            }));
+    for(const plugin of immediatePlugins) {
+        plugin.action({
+            player,
+            npc,
+            position,
+            item,
+            itemWidgetId,
+            itemContainerId
+        });
     }
 };

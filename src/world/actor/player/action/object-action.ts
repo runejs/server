@@ -4,7 +4,7 @@ import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/logger/dist/logger';
-import { ActionPlugin } from '@server/plugins/plugin';
+import { ActionPlugin, questFilter } from '@server/plugins/plugin';
 
 /**
  * The definition for an object action function.
@@ -56,9 +56,14 @@ export const objectAction = (player: Player, landscapeObject: LandscapeObject, l
     }
 
     // Find all object action plugins that reference this landscape object
-    const interactionPlugins = objectInteractions.filter(plugin => pluginFilter(plugin.objectIds, landscapeObject.objectId, plugin.options, option));
+    let interactionActions = objectInteractions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, landscapeObject.objectId, plugin.options, option));
+    const questActions = interactionActions.filter(plugin => plugin.quest !== undefined);
 
-    if(interactionPlugins.length === 0) {
+    if(questActions.length !== 0) {
+        interactionActions = questActions;
+    }
+
+    if(interactionActions.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled object interaction: ${option} ${landscapeObjectDefinition.name} ` +
             `(id-${landscapeObject.objectId}) @ ${position.x},${position.y},${position.level}`);
         return;
@@ -67,8 +72,8 @@ export const objectAction = (player: Player, landscapeObject: LandscapeObject, l
     player.actionsCancelled.next();
 
     // Separate out walk-to actions from immediate actions
-    const walkToPlugins = interactionPlugins.filter(plugin => plugin.walkTo);
-    const immediatePlugins = interactionPlugins.filter(plugin => !plugin.walkTo);
+    const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);
+    const immediatePlugins = interactionActions.filter(plugin => !plugin.walkTo);
 
     // Make sure we walk to the object before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {

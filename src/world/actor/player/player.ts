@@ -10,7 +10,7 @@ import {
     Appearance,
     defaultAppearance, defaultSettings,
     loadPlayerSave,
-    PlayerSave, PlayerSettings,
+    PlayerSave, PlayerSettings, QuestProgress,
     savePlayerData
 } from './player-data';
 import { ActiveWidget, widgets } from '../../config/widget';
@@ -28,6 +28,7 @@ import { dialogueAction } from '@server/world/actor/player/action/dialogue-actio
 import { ActionPlugin } from '@server/plugins/plugin';
 import { songs } from '@server/world/config/songs';
 import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
+import { QuestData, quests } from '@server/world/config/quests';
 
 const DEFAULT_TAB_WIDGET_IDS = [
     92, widgets.skillsTab, 274, widgets.inventory.widgetId, widgets.equipment.widgetId, 271, 192, -1, 131, 148,
@@ -87,6 +88,7 @@ export class Player extends Actor {
     public readonly actionsCancelled: Subject<boolean>;
     private quadtreeKey: QuadtreeKey = null;
     public savedMetadata: { [key: string]: any } = {};
+    public quests: QuestProgress[] = [];
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -144,6 +146,10 @@ export class Player extends Actor {
                 this._loginDate = new Date();
             } else {
                 this._loginDate = new Date(lastLogin);
+            }
+
+            if(playerSave.quests) {
+                this.quests = playerSave.quests;
             }
 
             this._lastAddress = playerSave.lastLogin?.address || (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
@@ -355,6 +361,37 @@ export class Player extends Actor {
 
             resolve();
         });
+    }
+
+    public setQuestStage(quest: number | QuestData, stage: string): void {
+        let questId;
+        let questData: QuestData;
+        if(typeof quest === 'number') {
+            questId = quest;
+            questData = Object.keys(quests).map(key => quests[key]).find(quest => quest.id === questId);
+        } else {
+            questId = quest.id;
+            questData = quest;
+        }
+
+        let playerQuest = this.quests.find(quest => quest.questId === questId);
+        if(!playerQuest) {
+            playerQuest = {
+                questId,
+                stage: 'NOT_STARTED',
+                attributes: {}
+            };
+
+            this.quests.push(playerQuest);
+        }
+
+        if(playerQuest.stage === 'NOT_STARTED' && stage !== 'COMPLETE') {
+            this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
+        } else if(playerQuest.stage !== 'COMPLETE' && stage === 'COMPLETE') {
+            this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.green });
+        }
+
+        playerQuest.stage = stage;
     }
 
     /**

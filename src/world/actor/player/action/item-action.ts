@@ -1,5 +1,5 @@
 import { Player } from '@server/world/actor/player/player';
-import { ActionPlugin } from '@server/plugins/plugin';
+import { ActionPlugin, questFilter } from '@server/plugins/plugin';
 import { ItemContainer } from '@server/world/items/item-container';
 import { Item } from '@server/world/items/item';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
@@ -70,7 +70,11 @@ export const itemAction = (player: Player, itemId: number, slot: number, widgetI
     let cancelActions = false;
 
     // Find all object action plugins that reference this landscape object
-    const interactionPlugins = itemInteractions.filter(plugin => {
+    let interactionActions = itemInteractions.filter(plugin => {
+        if(!questFilter(player, plugin)) {
+            return false;
+        }
+
         if(plugin.itemIds !== undefined) {
             if(!basicNumberFilter(plugin.itemIds, itemId)) {
                 return false;
@@ -109,7 +113,13 @@ export const itemAction = (player: Player, itemId: number, slot: number, widgetI
         return true;
     });
 
-    if(interactionPlugins.length === 0) {
+    const questActions = interactionActions.filter(plugin => plugin.quest !== undefined);
+
+    if(questActions.length !== 0) {
+        interactionActions = questActions;
+    }
+
+    if(interactionActions.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled item option: ${option} ${itemId} in slot ${slot} within widget ${widgetId}:${containerId}`);
         return;
     }
@@ -118,7 +128,7 @@ export const itemAction = (player: Player, itemId: number, slot: number, widgetI
         player.actionsCancelled.next();
     }
 
-    interactionPlugins.forEach(plugin =>
+    for(const plugin of interactionActions) {
         plugin.action({
             player,
             itemId,
@@ -127,5 +137,7 @@ export const itemAction = (player: Player, itemId: number, slot: number, widgetI
             containerId,
             itemDetails: world.itemData.get(itemId),
             option
-        }));
+        });
+    }
+
 };

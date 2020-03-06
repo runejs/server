@@ -1,6 +1,6 @@
 import { Player } from '@server/world/actor/player/player';
 import { pluginFilter } from '@server/plugins/plugin-loader';
-import { ActionPlugin } from '@server/plugins/plugin';
+import { ActionPlugin, questFilter } from '@server/plugins/plugin';
 
 /**
  * The definition for a button action function.
@@ -42,19 +42,25 @@ export const setButtonPlugins = (plugins: ActionPlugin[]): void => {
 
 export const buttonAction = (player: Player, widgetId: number, buttonId: number): void => {
     // Find all item on item action plugins that match this action
-    const interactionPlugins = buttonInteractions.filter(plugin => plugin.widgetId === widgetId && pluginFilter(plugin.buttonIds, buttonId));
+    let interactionActions = buttonInteractions.filter(plugin => questFilter(player, plugin) &&
+        plugin.widgetId === widgetId && pluginFilter(plugin.buttonIds, buttonId));
+    const questActions = interactionActions.filter(plugin => plugin.quest !== undefined);
 
-    if(interactionPlugins.length === 0) {
+    if(questActions.length !== 0) {
+        interactionActions = questActions;
+    }
+
+    if(interactionActions.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled button interaction: ${widgetId}:${buttonId}`);
         return;
     }
 
     // Immediately run the plugins
-    interactionPlugins.forEach(plugin => {
+    for(const plugin of interactionActions) {
         if(plugin.cancelActions) {
             player.actionsCancelled.next();
         }
 
         plugin.action({ player, widgetId, buttonId });
-    });
+    }
 };

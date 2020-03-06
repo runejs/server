@@ -22,6 +22,7 @@ export const widgets: any = {
     settingsTab: 261,
     emotesTab: 464,
     musicPlayerTab: 239,
+    questTab: 274,
     shop: {
         widgetId: 300,
         containerId: 75,
@@ -31,6 +32,7 @@ export const widgets: any = {
         widgetId: 301,
         containerId: 0
     },
+    questJournal: 275,
     welcomeScreen: 378,
     welcomeScreenChildren: {
         cogs: 16,

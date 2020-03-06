@@ -9,7 +9,7 @@ import { EarlyFormatGameCache, NewFormatGameCache } from '@runejs/cache-parser';
 import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
 
 import { loadPlugins } from '@server/plugins/plugin-loader';
-import { ActionPlugin, ActionType } from '@server/plugins/plugin';
+import { ActionPlugin, ActionType, sort } from '@server/plugins/plugin';
 
 import { setNpcPlugins } from '@server/world/actor/player/action/npc-action';
 import { setObjectPlugins } from '@server/world/actor/player/action/object-action';
@@ -40,6 +40,8 @@ export async function injectPlugins(): Promise<void> {
 
         actionTypes[action.type].push(action);
     });
+
+    Object.keys(actionTypes).forEach(key => actionTypes[key] = sort(actionTypes[key]));
 
     setButtonPlugins(actionTypes[ActionType.BUTTON]);
     setNpcPlugins(actionTypes[ActionType.NPC_ACTION]);

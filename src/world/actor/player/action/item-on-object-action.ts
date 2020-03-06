@@ -4,7 +4,7 @@ import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/logger/dist/logger';
-import { ActionPlugin } from '@server/plugins/plugin';
+import { ActionPlugin, questFilter } from '@server/plugins/plugin';
 import { Item } from '@server/world/items/item';
 import { soundIds } from '@server/world/config/sound-ids';
 
@@ -60,28 +60,33 @@ export const itemOnObjectAction = (player: Player, landscapeObject: LandscapeObj
     }
 
     // Find all item on object action plugins that reference this landscape object
-    let interactionPlugins = itemOnObjectInteractions.filter(plugin => pluginFilter(plugin.objectIds, landscapeObject.objectId));
+    let interactionActions = itemOnObjectInteractions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, landscapeObject.objectId));
+    const questActions = interactionActions.filter(plugin => plugin.quest !== undefined);
 
-    // Find all item on object action plugins that reference this item
-    if (interactionPlugins.length !== 0) {
-        interactionPlugins = interactionPlugins.filter(plugin => pluginFilter(plugin.itemIds, item.itemId));
+    if(questActions.length !== 0) {
+        interactionActions = questActions;
     }
 
-    if (interactionPlugins.length === 0) {
-        player.outgoingPackets.chatboxMessage(`Unhandled item on object interaction: ${item.itemId} on ${landscapeObjectDefinition.name} ` +
-            `(id-${landscapeObject.objectId}) @ ${position.x},${position.y},${position.level}`);
+    // Find all item on object action plugins that reference this item
+    if(interactionActions.length !== 0) {
+        interactionActions = interactionActions.filter(plugin => pluginFilter(plugin.itemIds, item.itemId));
+    }
+
+    if(interactionActions.length === 0) {
+        player.outgoingPackets.chatboxMessage(`Unhandled item on object interaction: ${ item.itemId } on ${ landscapeObjectDefinition.name } ` +
+            `(id-${ landscapeObject.objectId }) @ ${ position.x },${ position.y },${ position.level }`);
         return;
     }
 
     player.actionsCancelled.next();
 
     // Separate out walk-to actions from immediate actions
-    const walkToPlugins = interactionPlugins.filter(plugin => plugin.walkTo);
-    const immediatePlugins = interactionPlugins.filter(plugin => !plugin.walkTo);
+    const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);
+    const immediatePlugins = interactionActions.filter(plugin => !plugin.walkTo);
 
     // Make sure we walk to the object before running any of the walk-to plugins
-    if (walkToPlugins.length !== 0) {
-        walkToAction(player, position, {interactingObject: landscapeObject})
+    if(walkToPlugins.length !== 0) {
+        walkToAction(player, position, { interactingObject: landscapeObject })
             .then(() => {
                 player.face(position);
 
@@ -101,7 +106,7 @@ export const itemOnObjectAction = (player: Player, landscapeObject: LandscapeObj
     }
 
     // Immediately run any non-walk-to plugins
-    if (immediatePlugins.length !== 0) {
+    if(immediatePlugins.length !== 0) {
         immediatePlugins.forEach(plugin =>
             plugin.action({
                 player,
