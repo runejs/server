@@ -19,6 +19,10 @@ export class Position {
         this.move(x, y, level);
     }
 
+    public clone(): Position {
+        return new Position(this.x, this.y, this.y);
+    }
+
     public withinInteractionDistance(landscapeObject: LandscapeObject): boolean {
         const definition = gameCache.landscapeObjectDefinitions.get(landscapeObject.objectId);
         const occupantX = landscapeObject.x;
