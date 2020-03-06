@@ -26,6 +26,8 @@ import { daysSinceLastLogin } from '@server/util/time';
 import { itemIds } from '@server/world/config/item-ids';
 import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
 import { ActionPlugin } from '@server/plugins/plugin';
+import { songs } from '@server/world/config/songs';
+import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 
 const DEFAULT_TAB_WIDGET_IDS = [
     92, widgets.skillsTab, 274, widgets.inventory.widgetId, widgets.equipment.widgetId, 271, 192, -1, 131, 148,
@@ -224,6 +226,8 @@ export class Player extends Actor {
 
         this.updateBonuses();
         this.updateCarryWeight(true);
+        this.modifyWidget(widgets.musicPlayerTab, { childId: 82, textColor: colors.green }); // Set "Harmony" to green/unlocked on the music tab
+        this.playSong(songs.harmony);
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
 
@@ -242,7 +246,6 @@ export class Player extends Actor {
             resolve();
         }).then(() => {
             this.outgoingPackets.flushQueue();
-
             logger.info(`${this.username}:${this.worldIndex} has logged in.`);
         });
     }
@@ -359,16 +362,29 @@ export class Player extends Actor {
      * @param widgetId The widget id of the widget to modify.
      * @param options The options with which to modify the widget.
      */
-    public modifyWidget(widgetId: number, options: { childId?: number, text?: string, hidden?: boolean }): void {
-        const { childId, text, hidden } = options;
+    public modifyWidget(widgetId: number, options: { childId?: number, text?: string, hidden?: boolean, textColor?: number }): void {
+        const { childId, text, hidden, textColor } = options;
 
         if(childId) {
-            if(text) {
+            if(text !== undefined) {
                 this.outgoingPackets.updateWidgetString(widgetId, childId, text);
-            } else if(hidden !== undefined) {
+            }
+            if(hidden !== undefined) {
                 this.outgoingPackets.toggleWidgetVisibility(widgets.skillGuide, childId, hidden);
             }
+            if(textColor !== undefined) {
+                const { r, g, b } = hexToRgb(textColor);
+                this.outgoingPackets.updateWidgetColor(widgetId, childId, rgbTo16Bit(r, g, b));
+            }
         }
+    }
+
+    /**
+     * Plays the given song for the player.
+     * @param songId The id of the song to play.
+     */
+    public playSong(songId: number): void {
+        this.outgoingPackets.playSong(songId);
     }
 
     /**

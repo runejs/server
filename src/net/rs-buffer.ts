@@ -326,6 +326,12 @@ export class RsBuffer {
         this.writeUnsignedByte(value >> 8);
     }
 
+    public writeMediumBE(value: number): void {
+        this.writeUnsignedByte(value >> 16);
+        this.writeUnsignedByte(value >> 8);
+        this.writeUnsignedByte(value);
+    }
+
     public writeMediumME(value: number): void {
         this.writeUnsignedByte(value >> 8);
         this.writeUnsignedByte(value >> 16);
