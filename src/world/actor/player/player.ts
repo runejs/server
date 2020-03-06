@@ -226,7 +226,7 @@ export class Player extends Actor {
 
         this.updateBonuses();
         this.updateCarryWeight(true);
-        this.modifyWidget(239, { childId: 82, textColor: colors.green }); // Set "Harmony" to green/unlocked on the music tab
+        this.modifyWidget(widgets.musicPlayerTab, { childId: 82, textColor: colors.green }); // Set "Harmony" to green/unlocked on the music tab
         this.playSong(songs.harmony);
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));

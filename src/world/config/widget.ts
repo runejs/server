@@ -21,6 +21,7 @@ export const widgets: any = {
     logoutTab: 182,
     settingsTab: 261,
     emotesTab: 464,
+    musicPlayerTab: 239,
     shop: {
         widgetId: 300,
         containerId: 75,
