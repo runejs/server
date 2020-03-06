@@ -17,8 +17,8 @@ export function updateBonusStrings(player: Player) {
         { id: 117, text: 'Range', value: player.bonuses.defencive.ranged },
         { id: 119, text: 'Strength', value: player.bonuses.skill.strength },
         { id: 120, text: 'Prayer', value: player.bonuses.skill.prayer },
-    ].forEach(bonus => player.outgoingPackets.updateWidgetString(widgets.equipmentStats.widgetId, bonus.id,
-        `${bonus.text}: ${bonus.value > 0 ? `+${bonus.value}` : bonus.value}`));
+    ].forEach(bonus => player.modifyWidget(widgets.equipmentStats.widgetId, { childId: bonus.id,
+        text: `${bonus.text}: ${bonus.value > 0 ? `+${bonus.value}` : bonus.value}` }));
 }
 
 export const action: buttonAction = (details) => {

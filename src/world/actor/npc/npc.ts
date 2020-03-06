@@ -44,6 +44,7 @@ export class Npc extends Actor {
     private _movementRadius: number = 0;
     public readonly initialPosition: Position;
     private quadtreeKey: QuadtreeKey = null;
+    private _exists: boolean = true;
 
     public constructor(npcSpawn: NpcSpawn, cacheData: NpcDefinition) {
         super();
@@ -89,6 +90,14 @@ export class Npc extends Actor {
             this.updateFlags.reset();
             resolve();
         });
+    }
+
+    /**
+     * Forces the Npc to speak the given message to the open world.
+     * @param message The message for the Npc to say.
+     */
+    public say(message: string): void {
+        this.updateFlags.addChatMessage({ message });
     }
 
     /**
@@ -155,4 +164,11 @@ export class Npc extends Actor {
         return this._movementRadius;
     }
 
+    public get exists(): boolean {
+        return this._exists;
+    }
+
+    public set exists(value: boolean) {
+        this._exists = value;
+    }
 }

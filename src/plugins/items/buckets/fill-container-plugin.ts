@@ -12,12 +12,12 @@ export const action: itemOnObjectAction = (details) => {
     const {player, objectDefinition, item} = details;
     const itemDef = gameCache.itemDefinitions.get(item.itemId);
     if (item.itemId !== itemIds.bucket && WellIds.indexOf(objectDefinition.id) > -1) {
-        player.outgoingPackets.chatboxMessage(`If I drop my ${itemDef.name.toLowerCase()} down there, I don't think I'm likely to get it back.`);
+        player.sendMessage(`If I drop my ${itemDef.name.toLowerCase()} down there, I don't think I'm likely to get it back.`);
         return;
     }
 
     player.playAnimation(animationIds.fillContainerWithWater);
-    player.outgoingPackets.playSound(soundIds.fillContainerWithWater, 7);
+    player.playSound(soundIds.fillContainerWithWater, 7);
     player.removeFirstItem(item.itemId);
     switch (item.itemId) {
         case itemIds.bucket:
@@ -30,7 +30,7 @@ export const action: itemOnObjectAction = (details) => {
 
     }
 
-    player.outgoingPackets.chatboxMessage(`You fill the ${itemDef.name.toLowerCase()} from the ${objectDefinition.name.toLowerCase()}.`);
+    player.sendMessage(`You fill the ${itemDef.name.toLowerCase()} from the ${objectDefinition.name.toLowerCase()}.`);
 
 };
 

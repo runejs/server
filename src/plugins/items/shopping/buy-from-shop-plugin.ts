@@ -54,7 +54,7 @@ export const action: itemAction = (details) => {
     const coinsIndex = player.hasCoins(buyCost);
 
     if(coinsIndex === -1) {
-        player.outgoingPackets.chatboxMessage(`You don't have enough coins.`);
+        player.sendMessage(`You don't have enough coins.`);
         return;
     }
 
@@ -65,13 +65,13 @@ export const action: itemAction = (details) => {
 
         if(inventoryStackSlot === -1) {
             if(inventory.getFirstOpenSlot() === -1) {
-                player.outgoingPackets.chatboxMessage(`You don't have enough space in your inventory.`);
+                player.sendMessage(`You don't have enough space in your inventory.`);
                 return;
             }
         } else {
             const inventoryItem = inventory.items[inventoryStackSlot];
             if(inventoryItem.amount + buyAmount >= 2147483647) {
-                player.outgoingPackets.chatboxMessage(`You don't have enough space in your inventory.`);
+                player.sendMessage(`You don't have enough space in your inventory.`);
                 return;
             }
 
@@ -97,7 +97,7 @@ export const action: itemAction = (details) => {
         }
 
         if(bought !== buyAmount) {
-            player.outgoingPackets.chatboxMessage(`You don't have enough space in your inventory.`);
+            player.sendMessage(`You don't have enough space in your inventory.`);
         }
 
         shopContainer.set(itemSlot, { itemId, amount: shopItem.amount - bought });

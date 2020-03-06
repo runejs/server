@@ -12,7 +12,7 @@ function unequipItem(player: Player, inventory: ItemContainer, equipment: ItemCo
     const inventorySlot = inventory.getFirstOpenSlot();
 
     if(inventorySlot === -1) {
-        player.outgoingPackets.chatboxMessage(`You don't have enough free space to do that.`);
+        player.sendMessage(`You don't have enough free space to do that.`);
         return false;
     }
 
@@ -40,7 +40,7 @@ export const action: itemAction = (details) => {
     }
 
     if(!itemDetails || !itemDetails.equipment || !itemDetails.equipment.slot) {
-        player.outgoingPackets.chatboxMessage(`Unable to equip item ${itemId}/${itemDetails.name}: Missing equipment data.`);
+        player.sendMessage(`Unable to equip item ${itemId}/${itemDetails.name}: Missing equipment data.`);
         return;
     }
 

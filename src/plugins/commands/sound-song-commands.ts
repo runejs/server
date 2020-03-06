@@ -8,7 +8,7 @@ const songAction: commandAction = (details) => {
 
 const soundAction: commandAction = (details) => {
     const { player, args } = details;
-    player.outgoingPackets.playSound(args.soundId as number, args.volume as number);
+    player.playSound(args.soundId as number, args.volume as number);
 };
 
 const quickSongAction: commandAction = (details) => {

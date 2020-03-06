@@ -8,7 +8,7 @@ const action: commandAction = (details) => {
     const inventorySlot = player.inventory.getFirstOpenSlot();
 
     if(inventorySlot === -1) {
-        player.outgoingPackets.chatboxMessage(`You don't have enough free space to do that.`);
+        player.sendMessage(`You don't have enough free space to do that.`);
         return;
     }
 
@@ -43,7 +43,7 @@ const action: commandAction = (details) => {
         }
     }
 
-    player.outgoingPackets.chatboxMessage(`Added ${actualAmount}x ${itemDefinition.name} to inventory.`);
+    player.sendMessage(`Added ${actualAmount}x ${itemDefinition.name} to inventory.`);
 };
 
 export default new RunePlugin({

@@ -16,7 +16,7 @@ export const action: itemAction = (details) => {
     }
 
     inventory.remove(itemSlot);
-    player.outgoingPackets.playSound(soundIds.emptyBucket, 5);
+    player.playSound(soundIds.emptyBucket, 5);
     switch (itemId) {
         case itemIds.jugOfWater:
             player.giveItem(itemIds.jug);
@@ -25,6 +25,8 @@ export const action: itemAction = (details) => {
             player.giveItem(itemIds.bucket);
         break;
     }
+
+    // @TODO only update necessary slots
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, inventory);
 };
 

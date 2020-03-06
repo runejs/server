@@ -30,7 +30,7 @@ export const action: worldItemAction = (details) => {
     }
 
     if(slot === -1) {
-        player.outgoingPackets.chatboxMessage(`You don't have enough free space to do that.`);
+        player.sendMessage(`You don't have enough free space to do that.`);
         return;
     }
 
@@ -43,7 +43,7 @@ export const action: worldItemAction = (details) => {
 
     inventory.add(item);
     player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, slot, item);
-    player.outgoingPackets.playSound(soundIds.pickupItem, 3);
+    player.playSound(soundIds.pickupItem, 3);
 };
 
 export default new RunePlugin({

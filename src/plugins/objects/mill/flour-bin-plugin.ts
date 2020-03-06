@@ -11,17 +11,17 @@ function flourBin(details: {objectDefinition: LandscapeObjectDefinition, player:
     const { player, objectDefinition } = details;
 
     if (!details.player.metadata['flour']) {
-        player.outgoingPackets.chatboxMessage(`The ${objectDefinition.name.toLowerCase()} is already empty. You need to place wheat in the hopper upstairs `);
-        player.outgoingPackets.chatboxMessage(`first.`);
+        player.sendMessage(`The ${objectDefinition.name.toLowerCase()} is already empty. You need to place wheat in the hopper upstairs `);
+        player.sendMessage(`first.`);
         return;
     }
     if (player.hasItemInInventory(itemIds.pot)) {
-        player.outgoingPackets.playSound(soundIds.potContentModified, 7);
+        player.playSound(soundIds.potContentModified, 7);
         player.removeFirstItem(itemIds.pot);
         player.giveItem(itemIds.potOfFlour);
         details.player.metadata['flour'] -= 1;
     } else {
-        player.outgoingPackets.chatboxMessage(`You need a pot to hold the flour in.`);
+        player.sendMessage(`You need a pot to hold the flour in.`);
     }
 }
 

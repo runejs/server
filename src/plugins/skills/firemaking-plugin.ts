@@ -51,7 +51,7 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
     };
 
     player.playAnimation(null);
-    player.outgoingPackets.chatboxMessage(`The fire catches and the logs begin to burn.`);
+    player.sendMessage(`The fire catches and the logs begin to burn.`);
     player.skills.addExp(Skill.FIREMAKING, burnExp);
 
     if(!player.walkingQueue.moveIfAble(-1, 0)) {
@@ -83,7 +83,7 @@ const action: itemOnItemAction = (details) => {
     const position = player.position;
 
     if(!skillInfo) {
-        player.outgoingPackets.chatboxMessage(`Mishandled firemaking log ${log.itemId}.`);
+        player.sendMessage(`Mishandled firemaking log ${log.itemId}.`);
         return;
     }
 
@@ -96,11 +96,11 @@ const action: itemOnItemAction = (details) => {
     if(player.metadata['lastFire'] && Date.now() - player.metadata['lastFire'] < 1200 && canChain(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level)) {
         lightFire(player, position, worldItemLog, skillInfo.burnExp);
     } else {
-        player.outgoingPackets.chatboxMessage(`You attempt to light the logs.`);
+        player.sendMessage(`You attempt to light the logs.`);
 
         let canLightFire = false;
         let elapsedTicks = 0;
-        const loop = loopingAction(player);
+        const loop = loopingAction({ player });
         loop.event.subscribe(() => {
             if(worldItemLog.removed) {
                 loop.cancel();
@@ -124,9 +124,9 @@ const action: itemOnItemAction = (details) => {
             canLightFire = elapsedTicks > 10 && canLight(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level);
 
             if(!canLightFire && (elapsedTicks === 0 || elapsedTicks % 4 === 0)) {
-                player.outgoingPackets.playSound(soundIds.lightingFire, 10, 0);
+                player.playSound(soundIds.lightingFire, 10, 0);
             } else if(canLightFire) {
-                player.outgoingPackets.playSound(soundIds.fireLit, 7);
+                player.playSound(soundIds.fireLit, 7);
             }
 
             elapsedTicks++;

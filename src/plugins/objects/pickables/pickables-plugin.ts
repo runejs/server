@@ -32,8 +32,8 @@ export const action: objectAction = (details) => {
     }
     const pickedItem = gameCache.itemDefinitions.get(itemId);
     setTimeout(() => {
-        details.player.outgoingPackets.chatboxMessage(`You ${details.option} the ${details.objectDefinition.name.toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`);
-        details.player.outgoingPackets.playSound(2581, 7);
+        details.player.sendMessage(`You ${details.option} the ${details.objectDefinition.name.toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`);
+        details.player.playSound(2581, 7);
         if (details.objectDefinition.name !== 'Flax' || Math.floor(Math.random() * 10) === 1) {
             world.removeLandscapeObjectTemporarily(details.object, details.position, 30);
         }

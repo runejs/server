@@ -41,7 +41,7 @@ export const action: objectAction = (details) => {
     if (!details.objectDefinition.name.startsWith('Stair')) {
         player.playAnimation(up ? 828 : 827);
     }
-    player.outgoingPackets.chatboxMessage(`You climb ${option.slice(6)} the ${details.objectDefinition.name.toLowerCase()}.`);
+    player.sendMessage(`You climb ${option.slice(6)} the ${details.objectDefinition.name.toLowerCase()}.`);
     setTimeout(() => {
         details.player.teleport(new Position(position.x, position.y, level));
     }, World.TICK_LENGTH);

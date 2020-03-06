@@ -2,6 +2,7 @@ import { npcAction } from '@server/world/actor/player/action/npc-action';
 import { dialogueAction, DialogueEmote } from '@server/world/actor/player/action/dialogue-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { npcIds } from '@server/world/config/npc-ids';
+import { animationIds } from '@server/world/config/animation-ids';
 
 const action: npcAction = (details) => {
     const { player, npc } = details;
@@ -41,11 +42,11 @@ const action: npcAction = (details) => {
             player.clearFaceActor();
 
             if(d.action === 1) {
-                npc.updateFlags.animation = { id: 860 };
-                npc.updateFlags.addChatMessage({ message: 'Jerk!' });
-                player.outgoingPackets.chatboxMessage('Hans wanders off rather dejectedly.');
+                npc.playAnimation(animationIds.cry);
+                npc.say('Jerk!');
+                player.sendMessage('Hans wanders off rather dejectedly.');
             } else {
-                player.outgoingPackets.chatboxMessage('Hans wanders off aimlessly through the courtyard.');
+                player.sendMessage('Hans wanders off aimlessly through the courtyard.');
             }
         });
 };

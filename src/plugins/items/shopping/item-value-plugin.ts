@@ -14,13 +14,13 @@ export const shopSellValueAction: itemAction = (details) => {
 
     const itemValue = item.value || 1;
 
-    player.outgoingPackets.chatboxMessage(`${item.name}: currently costs ${itemValue} coins.`);
+    player.sendMessage(`${item.name}: currently costs ${itemValue} coins.`);
 };
 
 export const shopPurchaseValueAction: itemAction = (details) => {
     const { player } = details;
 
-    player.outgoingPackets.chatboxMessage(`Shop purchase value is TBD`);
+    player.sendMessage(`Shop purchase value is TBD`);
 };
 
 export default new RunePlugin([{
