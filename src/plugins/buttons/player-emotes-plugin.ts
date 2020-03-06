@@ -119,7 +119,7 @@ export const action: buttonAction = (details) => {
     const emote = emotes[buttonId];
 
     if(emote.name === 'SKILLCAPE') {
-        player.outgoingPackets.chatboxMessage(`You need to be wearing a skillcape in order to perform that emote.`);
+        player.sendMessage(`You need to be wearing a skillcape in order to perform that emote.`);
     } else {
         if(emote.unlockable) {
             const unlockedEmotes: string[] = player.savedMetadata.unlockedEmotes || [];

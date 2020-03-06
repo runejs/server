@@ -489,7 +489,7 @@ export class World {
 
     public npcExists(npc: Npc): boolean {
         const foundNpc = this.npcList[npc.worldIndex];
-        if(!foundNpc) {
+        if(!foundNpc || !foundNpc.exists) {
             return false;
         }
 
@@ -511,6 +511,7 @@ export class World {
     }
 
     public deregisterNpc(npc: Npc): void {
+        npc.exists = false;
         this.npcList[npc.worldIndex] = null;
     }
 

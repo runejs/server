@@ -1,9 +1,7 @@
-import { buttonAction, ButtonActionDetails } from '@server/world/actor/player/action/button-action';
+import { buttonAction } from '@server/world/actor/player/action/button-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { Player } from '@server/world/actor/player/player';
-import { World } from '@server/world/world';
 import { loopingAction } from '@server/world/actor/player/action/action';
-import { Skill } from '@server/world/actor/skills';
 import { Position } from '@server/world/position';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
@@ -27,9 +25,9 @@ const buttonIds: number[] = [
 
 function HomeTeleport(player: Player): void {
     let elapsedTicks = 0;
-    const loop = loopingAction(player);
-    loop.event.subscribe(() => {
 
+    const loop = loopingAction({ player });
+    loop.event.subscribe(() => {
         if (elapsedTicks === 0) {
             player.playAnimation(animationIds.homeTeleportDraw);
             player.playGraphics({id: gfxIds.homeTeleportDraw, delay: 0, height: 0});

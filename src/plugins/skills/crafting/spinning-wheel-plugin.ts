@@ -96,7 +96,7 @@ const spinProduct: any = (details: ButtonActionDetails, spinnable: Spinnable, co
         currentItem = spinnable.input;
     }
     // Create a new tick loop
-    const loop = loopingAction(details.player);
+    const loop = loopingAction({ player: details.player });
     loop.event.subscribe(() => {
         if (created === count) {
             loop.cancel();

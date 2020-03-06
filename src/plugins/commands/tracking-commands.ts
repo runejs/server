@@ -17,12 +17,12 @@ const quadtreeAction: commandAction = (details) => {
 
 const trackedPlayersAction: commandAction = (details) => {
     const { player } = details;
-    player.outgoingPackets.chatboxMessage(`Tracked players: ${player.trackedPlayers.length}`);
+    player.sendMessage(`Tracked players: ${player.trackedPlayers.length}`);
 };
 
 const trackedNpcsAction: commandAction = (details) => {
     const { player } = details;
-    player.outgoingPackets.chatboxMessage(`Tracked npcs: ${player.trackedNpcs.length}`);
+    player.sendMessage(`Tracked npcs: ${player.trackedNpcs.length}`);
 };
 
 export default new RunePlugin([{

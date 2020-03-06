@@ -28,12 +28,12 @@ const gates = [
 const action: objectAction = (details) => {
     let {object: gate, position, player, cacheOriginal} = details;
 
-    if ((gate as ModifiedLandscapeObject).metadata) {
+    if((gate as ModifiedLandscapeObject).metadata) {
         const metadata = (gate as ModifiedLandscapeObject).metadata;
 
         world.toggleObjects(metadata.originalMain, metadata.main, metadata.originalMainPosition, metadata.mainPosition, metadata.originalMainChunk, metadata.mainChunk, true);
         world.toggleObjects(metadata.originalSecond, metadata.second, metadata.originalSecondPosition, metadata.secondPosition, metadata.originalSecondChunk, metadata.secondChunk, true);
-        player.outgoingPackets.playSound(soundIds.closeGate, 7);
+        player.playSound(soundIds.closeGate, 7);
     } else {
         let details = gates.find(g => g.main === gate.objectId);
         let clickedSecondary = false;
@@ -42,7 +42,7 @@ const action: objectAction = (details) => {
         let direction = WNES[gate.rotation];
         let hingeChunk, gateSecondPosition;
 
-        if (!details) {
+        if(!details) {
             details = gates.find(g => g.secondary === gate.objectId);
             secondGate = gate;
             gateSecondPosition = position;
@@ -52,8 +52,8 @@ const action: objectAction = (details) => {
             let deltaX = 0;
             let deltaY = 0;
 
-            if (hinge === 'LEFT') {
-                switch (direction) {
+            if(hinge === 'LEFT') {
+                switch(direction) {
                     case 'WEST':
                         deltaY--;
                         break;
@@ -67,8 +67,8 @@ const action: objectAction = (details) => {
                         deltaX++;
                         break;
                 }
-            } else if (hinge === 'RIGHT') {
-                switch (direction) {
+            } else if(hinge === 'RIGHT') {
+                switch(direction) {
                     case 'WEST':
                         deltaY++;
                         break;
@@ -98,8 +98,8 @@ const action: objectAction = (details) => {
         let newX = 0;
         let newY = 0;
 
-        if (hinge === 'LEFT') {
-            switch (direction) {
+        if(hinge === 'LEFT') {
+            switch(direction) {
                 case 'WEST':
                     deltaY++;
                     newX--;
@@ -117,8 +117,8 @@ const action: objectAction = (details) => {
                     newY--;
                     break;
             }
-        } else if (hinge === 'RIGHT') {
-            switch (direction) {
+        } else if(hinge === 'RIGHT') {
+            switch(direction) {
                 case 'WEST':
                     deltaY--;
                     newX++;
@@ -137,8 +137,6 @@ const action: objectAction = (details) => {
                     break;
             }
         }
-
-        player.outgoingPackets.chatboxMessage(hinge + ' ' + direction);
 
         let leftHingeDirections: { [key: string]: string } = {
             'NORTH': 'WEST',
@@ -153,21 +151,21 @@ const action: objectAction = (details) => {
             'EAST': 'SOUTH'
         };
 
-        if (deltaX === 0 && deltaY === 0) {
+        if(deltaX === 0 && deltaY === 0) {
             logger.error('Improperly handled gate at ' + gate.x + ',' + gate.y + ',' + gate.level);
             return;
         }
 
         const newDirection = hinge === 'LEFT' ? leftHingeDirections[direction] : rightHingeDirections[direction];
 
-        if (!clickedSecondary) {
+        if(!clickedSecondary) {
             hingeChunk = world.chunkManager.getChunkForWorldPosition(position);
             gateSecondPosition = new Position(gate.x + deltaX, gate.y + deltaY, gate.level);
         }
 
         const gateSecondChunk = world.chunkManager.getChunkForWorldPosition(gateSecondPosition);
 
-        if (!clickedSecondary) {
+        if(!clickedSecondary) {
             secondGate = gateSecondChunk.getCacheObject(details.secondary, gateSecondPosition);
         }
 
@@ -213,7 +211,7 @@ const action: objectAction = (details) => {
 
         world.toggleObjects(newHinge, gate, newPosition, position, newHingeChunk, hingeChunk, !cacheOriginal);
         world.toggleObjects(newSecond, secondGate, newSecondPosition, gateSecondPosition, newSecondChunk, gateSecondChunk, !cacheOriginal);
-        player.outgoingPackets.playSound(soundIds.openGate, 7);
+        player.playSound(soundIds.openGate, 7);
     }
 };
 

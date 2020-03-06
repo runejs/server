@@ -3,10 +3,8 @@ import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { openShop } from '@server/world/actor/player/action/shop-action';
 import { dialogueAction, DialogueEmote } from '@server/world/actor/player/action/dialogue-action';
 
-const shopIdentification = 'ALKHARID_GEM_TRADER';
-
 const tradeAction : npcAction = (details)  => {
-    openShop(details.player, shopIdentification);
+    openShop(details.player, 'ALKHARID_GEM_TRADER');
 };
 
 const talkToAction : npcAction = (details) => {

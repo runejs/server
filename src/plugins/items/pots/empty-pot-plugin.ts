@@ -16,7 +16,7 @@ export const action: itemAction = (details) => {
     }
 
     inventory.remove(itemSlot);
-    player.outgoingPackets.playSound(soundIds.potContentModified, 5);
+    player.playSound(soundIds.potContentModified, 5);
     player.giveItem(itemIds.pot);
 };
 

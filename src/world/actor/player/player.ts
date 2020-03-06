@@ -355,6 +355,33 @@ export class Player extends Actor {
     }
 
     /**
+     * Modifies the specified widget using the provided options.
+     * @param widgetId The widget id of the widget to modify.
+     * @param options The options with which to modify the widget.
+     */
+    public modifyWidget(widgetId: number, options: { childId?: number, text?: string, hidden?: boolean }): void {
+        const { childId, text, hidden } = options;
+
+        if(childId) {
+            if(text) {
+                this.outgoingPackets.updateWidgetString(widgetId, childId, text);
+            } else if(hidden !== undefined) {
+                this.outgoingPackets.toggleWidgetVisibility(widgets.skillGuide, childId, hidden);
+            }
+        }
+    }
+
+    /**
+     * Plays a sound for this specific player.
+     * @param soundId The id of the sound effect.
+     * @param volume The volume to play the sound at; defaults to 10 (max).
+     * @param delay The delay after which to play the sound; defaults to 0 (no delay).
+     */
+    public playSound(soundId: number, volume: number = 10, delay: number = 0): void {
+        this.outgoingPackets.playSound(soundId, volume, delay);
+    }
+
+    /**
      * Sends a message to the player via the chatbox.
      * @param messages The single message or array of lines to send to the player.
      * @param showDialogue Whether or not to show the message in a "Click to continue" dialogue.

@@ -3,7 +3,7 @@ import { commandAction } from '@server/world/actor/player/action/input-command-a
 
 const action: commandAction = (details) => {
     const { player } = details;
-    player.outgoingPackets.chatboxMessage(`@[ ${player.position.x}, ${player.position.y}, ${player.position.level} ]`);
+    player.sendMessage(`@[ ${player.position.x}, ${player.position.y}, ${player.position.level} ]`);
 };
 
 export default new RunePlugin({

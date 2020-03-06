@@ -18,7 +18,7 @@ export const action: itemAction = (details) => {
     const inventorySlot = inventory.getFirstOpenSlot();
 
     if(inventorySlot === -1) {
-        player.outgoingPackets.chatboxMessage(`You don't have enough free space to do that.`);
+        player.sendMessage(`You don't have enough free space to do that.`);
         return;
     }
 

@@ -5,11 +5,11 @@ import { injectPlugins } from '@server/game-server';
 const action: commandAction = (details) => {
     const { player } = details;
 
-    player.outgoingPackets.chatboxMessage('Reloading plugins...');
+    player.sendMessage('Reloading plugins...');
 
     injectPlugins()
-        .then(() => player.outgoingPackets.chatboxMessage('Plugins reloaded.'))
-        .catch(() => player.outgoingPackets.chatboxMessage('Error reloading plugins.'));
+        .then(() => player.sendMessage('Plugins reloaded.'))
+        .catch(() => player.sendMessage('Error reloading plugins.'));
 };
 
 export default new RunePlugin({ type: ActionType.COMMAND, commands: 'plugins', action });

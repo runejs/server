@@ -3,20 +3,17 @@ import { widgets } from '@server/world/config/widget';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { Shop, shopItemContainer } from '@server/world/config/shops';
 import { world } from '@server/game-server';
-import { ItemContainer } from '@server/world/items/item-container';
 import { itemIds } from '@server/world/config/item-ids';
 
 export const action: itemAction = (details) => {
     const { player, itemId, itemSlot, widgetId, containerId, option } = details;
 
     if(!player.activeWidget || player.activeWidget.widgetId !== widgets.shop.widgetId) {
-        console.log('no widget');
         return;
     }
 
     const openedShop: Shop = player.metadata['lastOpenedShop'];
     if(!openedShop) {
-        console.log('no shop');
         return;
     }
 
@@ -25,7 +22,6 @@ export const action: itemAction = (details) => {
 
     if(!inventoryItem) {
         // The specified item was not found in the specified slot.
-        console.log('no item');
         return;
     }
 
@@ -41,7 +37,7 @@ export const action: itemAction = (details) => {
 
     const shopItemIndex = shopContainer.items.findIndex(item => item !== null && item.itemId === itemId);
     if(shopItemIndex === -1 && shopSpaces.length === 0) {
-        player.outgoingPackets.chatboxMessage(`There isn't enough space in the shop.`);
+        player.sendMessage(`There isn't enough space in the shop.`);
         return;
     }
 
