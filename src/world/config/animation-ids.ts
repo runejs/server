@@ -10,4 +10,5 @@ export const animationIds = {
     shearSheep: 893,
     spinSpinningWheel: 894,
     cry: 860,
+    climbLadder: 828
 };

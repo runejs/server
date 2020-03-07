@@ -20,7 +20,7 @@ export class Position {
     }
 
     public clone(): Position {
-        return new Position(this.x, this.y, this.y);
+        return new Position(this.x, this.y, this.level);
     }
 
     public withinInteractionDistance(landscapeObject: LandscapeObject): boolean {
