@@ -152,7 +152,8 @@ export class DialogueAction {
                 forceClosed: () => reject('WIDGET_CLOSED')
             };
 
-            this.p.dialogueInteractionEvent.subscribe(action => {
+            const sub = this.p.dialogueInteractionEvent.subscribe(action => {
+                sub.unsubscribe();
                 this._action = action;
                 resolve(this);
             });
