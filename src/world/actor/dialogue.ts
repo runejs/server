@@ -3,27 +3,6 @@ import { Player } from '@server/world/actor/player/player';
 import { Subscription } from 'rxjs';
 import { gameCache } from '@server/game-server';
 
-function parseDialogueFunctionArgs(func): string {
-    const str = func.toString();
-
-    if(!str) {
-        return null;
-    }
-
-    const argEndIndex = str.indexOf('=>');
-
-    if(argEndIndex === -1) {
-        return null;
-    }
-
-    let arg = str.substring(0, argEndIndex).trim();
-    if(!arg || arg.length === 0) {
-        return null;
-    }
-
-    return arg;
-}
-
 export enum Emote {
     POMPOUS = 'POMPOUS',
     UNKOWN_CREATURE = 'UNKOWN_CREATURE',
@@ -48,9 +27,8 @@ export enum Emote {
     LAUGH_EVIL = 'LAUGH_EVIL'
 }
 
-const nonLineEmotes = [ Emote.BLANK_STARE, Emote.SINGLE_WORD, Emote.EVIL_STARE, Emote.LAUGH_EVIL ];
-
-export enum EmoteAnimation {
+// A big thanks to Dust R I P for all these emotes!
+enum EmoteAnimation {
     POMPOUS_1LINE = 554,
     POMPOUS_2LINE = 555,
     POMPOUS_3LINE = 556,
@@ -121,17 +99,12 @@ export enum EmoteAnimation {
     EASTER_BUNNY_4LINE = 1827,
 }
 
-type DialogueTree = (Function | DialogueFunction)[];
-
-interface NpcParticipant {
-    npc: Npc | number;
-    key: string;
-}
-
+const nonLineEmotes = [ Emote.BLANK_STARE, Emote.SINGLE_WORD, Emote.EVIL_STARE, Emote.LAUGH_EVIL ];
 const playerWidgetIds = [ 64, 65, 66, 67 ];
 const npcWidgetIds = [ 241, 242, 243, 244 ];
 const optionWidgetIds = [ 228, 230, 232, 234 ];
 
+// Thank you to the Apollo team for these values. :)
 const charWidths = [ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
     3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 7, 14, 9, 12, 12, 4, 5,
     5, 10, 8, 4, 8, 4, 7, 9, 7, 9, 8, 8, 8, 9, 7, 9, 9, 4, 5, 7,
@@ -178,6 +151,35 @@ function wrapText(text: string, type: 'ACTOR' | 'TEXT'): string[] {
     return lines;
 }
 
+function parseDialogueFunctionArgs(func): string {
+    const str = func.toString();
+
+    if(!str) {
+        return null;
+    }
+
+    const argEndIndex = str.indexOf('=>');
+
+    if(argEndIndex === -1) {
+        return null;
+    }
+
+    let arg = str.substring(0, argEndIndex).trim();
+    if(!arg || arg.length === 0) {
+        return null;
+    }
+
+    return arg;
+}
+
+type DialogueTree = (Function | DialogueFunction)[];
+
+interface NpcParticipant {
+    npc: Npc | number;
+    key: string;
+}
+
+// @TODO level-up, plain text
 export async function dialogue(participants: (Player | NpcParticipant)[], dialogueTree: DialogueTree): Promise<void> {
     const player = participants.find(p => p instanceof Player) as Player;
 
