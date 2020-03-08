@@ -11,7 +11,8 @@ const action: npcAction = (details) => {
 
     dialogue([ player, { npc, key: 'hans' }], [
         hans => [ Emote.GENERIC, `Welcome to RuneScape!` ],
-        hans => [ Emote.HAPPY, `How do you feel about Rune.JS so far?\nPlease take a moment to let us know what you think!` ],
+        hans => [ Emote.HAPPY, `How do you feel about Rune.JS so far?\n` +
+            `Please take a moment to let us know what you think!` ],
         () => ({
             'Love it!': [
                 player => [ Emote.HAPPY, `Loving it so far, thanks for asking!` ],

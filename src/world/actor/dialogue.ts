@@ -179,6 +179,12 @@ interface NpcParticipant {
     key: string;
 }
 
+class DialogueFunction {
+    constructor(public type: string, public execute: Function) {}
+}
+
+export const execute = (execute: Function): DialogueFunction => new DialogueFunction('execute', execute);
+
 // @TODO level-up, plain text
 export async function dialogue(participants: (Player | NpcParticipant)[], dialogueTree: DialogueTree): Promise<void> {
     const player = participants.find(p => p instanceof Player) as Player;
@@ -214,24 +220,42 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
             let isOptions = false;
 
             if(args === '()') {
-                const trees = dialogueAction();
-                const options = Object.keys(trees);
-                isOptions = true;
-                widgetId = optionWidgetIds[options.length - 2];
+                const result = dialogueAction();
+                let trees;
 
-                for(let i = 0; i < options.length; i++) {
-                    player.outgoingPackets.updateWidgetString(widgetId, 1 + i, options[i]);
+                if(typeof result === 'function') {
+                    const funcResult = result();
+
+                    if(Array.isArray(funcResult)) {
+                        // given function returned a dialogue tree
+                        dialogue(participants, funcResult).then(() => resolve());
+                    } else {
+                        // given function returned an option list
+                        trees = funcResult;
+                    }
+                } else {
+                    trees = result;
                 }
 
-                sub.push(player.dialogueInteractionEvent.subscribe(choice => {
-                    sub.forEach(s => s.unsubscribe());
-                    const tree: DialogueTree = trees[options[choice - 1]];
-                    if(!tree || tree.length === 0) {
-                        resolve();
-                    } else {
-                        dialogue(participants, tree).then(() => resolve());
+                if(trees) {
+                    const options = Object.keys(trees);
+                    isOptions = true;
+                    widgetId = optionWidgetIds[options.length - 2];
+
+                    for(let i = 0; i < options.length; i++) {
+                        player.outgoingPackets.updateWidgetString(widgetId, 1 + i, options[i]);
                     }
-                }));
+
+                    sub.push(player.dialogueInteractionEvent.subscribe(choice => {
+                        sub.forEach(s => s.unsubscribe());
+                        const tree: DialogueTree = trees[options[choice - 1]];
+                        if(!tree || tree.length === 0) {
+                            resolve();
+                        } else {
+                            dialogue(participants, tree).then(() => resolve());
+                        }
+                    }));
+                }
             } else if(args === 'player') {
                 const dialogueDetails = dialogueAction(player);
                 const emote = dialogueDetails[0] as Emote;
@@ -296,9 +320,3 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
         });
     }
 }
-
-class DialogueFunction {
-    constructor(public type: string, public execute: Function) {}
-}
-
-export const execute = (execute: Function): DialogueFunction => new DialogueFunction('execute', execute);

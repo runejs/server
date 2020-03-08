@@ -65,6 +65,7 @@ export interface DialogueOptions {
     lines: string[];
 }
 
+// @DEPRECATED
 export class DialogueAction {
 
     private _action: number = null;

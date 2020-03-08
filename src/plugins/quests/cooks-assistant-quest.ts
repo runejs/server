@@ -4,6 +4,36 @@ import { npcIds } from '@server/world/config/npc-ids';
 import { quests } from '@server/world/config/quests';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 
+const ingredientHelpMenu = () => {
+    return {
+        'Where do I find some flour?': [
+            player => [ Emote.GENERIC, `Where do I find some flour?` ],
+            cook => [ Emote.GENERIC, `There is a Mill fairly close, go North and then West. Mill Lane Mill ` +
+            `is just off the road to Draynor. I usually get my flour from there.` ],
+            cook => [ Emote.HAPPY, `Talk to Millie, she'll help, she's a lovely girl and a fine Miller.` ],
+            () => ingredientHelpMenu
+        ],
+        'How about milk?': [
+            player => [ Emote.GENERIC, `How about milk?` ],
+            cook => [ Emote.GENERIC, `There is a cattle field on the other side of the river, just across ` +
+            `the road from Groats' Farm.` ],
+            cook => [ Emote.HAPPY, `Talk to Gillie Groats, she look after the Dairy Cows - ` +
+            `she'll tell you everything you need to know about milking cows!` ],
+            () => ingredientHelpMenu
+        ],
+        'And eggs? Where are they found?': [
+            player => [ Emote.GENERIC, `And eggs? Where are they found?` ],
+            cook => [ Emote.GENERIC, `I normally get my eggs from the Groats' farm, on the other side of ` +
+            `the river.` ],
+            cook => [ Emote.GENERIC, `But any chicken should lay eggs.` ],
+            () => ingredientHelpMenu
+        ],
+        'Actually, I know where to find this stuff.': [
+            player => [ Emote.GENERIC, `I've got all the information I need. Thanks.` ]
+        ]
+    };
+};
+
 const startQuestAction: npcAction = (details) => {
     const { player, npc } = details;
 
@@ -17,7 +47,8 @@ const startQuestAction: npcAction = (details) => {
             ],
             'You don\'t look very happy.': [
                 player => [ Emote.WORRIED, `You don't look very happy.` ],
-                cook => [ Emote.SAD, `No, I'm not. The world is caving in around me - I am overcome by dark feelings of impending doom.` ],
+                cook => [ Emote.SAD, `No, I'm not. The world is caving in around me - I am overcome by dark feelings ` +
+                    `of impending doom.` ],
                 () => ({
                     'What\'s wrong?': [],
                     'I\'d take the rest of the day off if I were you.': [
@@ -26,7 +57,8 @@ const startQuestAction: npcAction = (details) => {
                         player => [ Emote.SKEPTICAL, `Well maybe you need to take a holiday...` ],
                         cook => [ Emote.SAD, `That would be nice, but the Duke doesn't allow holidays for core staff.` ],
                         player => [ Emote.LAUGH, `Hmm, why not run away to the sea and start a new life as a Pirate?` ],
-                        cook => [ Emote.SKEPTICAL, `My wife gets sea sick, and I have an irrational fear of eyepatches. I don't see it working myself.` ],
+                        cook => [ Emote.SKEPTICAL, `My wife gets sea sick, and I have an irrational fear of eyepatches. ` +
+                            `I don't see it working myself.` ],
                         player => [ Emote.WORRIED, `I'm afraid I've run out of ideas.` ],
                         cook => [ Emote.SAD, `I know I'm doomed.` ]
                     ]
@@ -37,8 +69,10 @@ const startQuestAction: npcAction = (details) => {
                 cook => [ Emote.SKEPTICAL, `Err thank you. It's a pretty ordinary cooks hat really.` ],
                 player => [ Emote.HAPPY, `Still, suits you. The trousers are pretty special too.` ],
                 cook => [ Emote.SKEPTICAL, `It's all standard cook's issue uniform...` ],
-                player => [ Emote.POMPOUS, `The whole hat, apron, striped trousers ensemble - it works. It makes you look like a real cook.` ],
-                cook => [ Emote.ANGRY, `I am a real cook! I haven't got time to be chatting about Culinary Fashion. I am in desperate need of help!` ]
+                player => [ Emote.POMPOUS, `The whole hat, apron, striped trousers ensemble - it works. It makes you ` +
+                    `look like a real cook.` ],
+                cook => [ Emote.ANGRY, `I am a real cook! I haven't got time to be chatting about Culinary Fashion. ` +
+                    `I am in desperate need of help!` ]
             ]
         }),
         player => [ Emote.HAPPY, `What's wrong?` ],
@@ -56,37 +90,12 @@ const startQuestAction: npcAction = (details) => {
                 cook => [ Emote.HAPPY, `Oh thank you, thank you. I need milk, an egg and flour. I'd be very grateful ` +
                     `if you can get them for me.` ],
                 player => [ Emote.GENERIC, `So where do I find these ingredients then?` ],
-                () => ({
-                    'Where do I find some flour?': [
-                        player => [ Emote.GENERIC, `Where do I find some flour?` ],
-                        cook => [ Emote.GENERIC, `There is a Mill fairly close, go North and then West. Mill Lane Mill ` +
-                            `is just off the road to Draynor. I usually get my flour from there.` ],
-                        cook => [ Emote.HAPPY, `Talk to Millie, she'll help, she's a lovely girl and a fine Miller.` ]
-                        // @TODO move back to the previous options menu
-                    ],
-                    'How about milk?': [
-                        player => [ Emote.GENERIC, `How about milk?` ],
-                        cook => [ Emote.GENERIC, `There is a cattle field on the other side of the river, just across ` +
-                            `the road from Groats' Farm.` ],
-                        cook => [ Emote.HAPPY, `Talk to Gillie Groats, she look after the Dairy Cows - ` +
-                            `she'll tell you everything you need to know about milking cows!` ]
-                        // @TODO move back to the previous options menu
-                    ],
-                    'And eggs? Where are they found?': [
-                        player => [ Emote.GENERIC, `And eggs? Where are they found?` ],
-                        cook => [ Emote.GENERIC, `I normally get my eggs from the Groats' farm, on the other side of the river.` ],
-                        cook => [ Emote.GENERIC, `But any chicken should lay eggs.` ]
-                        // @TODO move back to the previous options menu
-                    ],
-                    'Actually, I know where to find this stuff.': [
-                        player => [ Emote.GENERIC, `I've got all the information I need. Thanks.` ]
-                    ]
-                })
+                () => ingredientHelpMenu
             ],
             'I can\'t right now, maybe later.': [
                 player => [ Emote.GENERIC, `No, I don't feel like it. Maybe later.` ],
-                cook => [ Emote.ANGRY, `Fine. I always knew you Adventurer types were callous beasts. Go on your merry way!` ]
-                // @TODO options for "where do I find x"
+                cook => [ Emote.ANGRY, `Fine. I always knew you Adventurer types were callous beasts. ` +
+                    `Go on your merry way!` ]
             ]
         })
     ]).catch(() => {});
