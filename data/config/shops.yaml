@@ -169,3 +169,30 @@
       text: Adamant platelegs
       price: 6400
       amountInStock: 1
+- identification: RANAELS_SUPER_SKIRT_STORE
+  name: Ranael's Super Skirt Store
+  items:
+    - id: 1087
+      text: Bronze plateskirt
+      price: 80
+      amountInStock: 5
+    - id: 1081
+      text: Iron plateskirt
+      price: 280
+      amountInStock: 3
+    - id: 1083
+      text: Steel plateskirt
+      price: 1000
+      amountInStock: 2
+    - id: 1089
+      text: Black plateskirt
+      price: 1920
+      amountInStock: 1
+    - id: 1085
+      text: Mithril plateskirt
+      price: 2600
+      amountInStock: 1
+    - id: 1091
+      text: Adamant plateskirt
+      price: 6400
+      amountInStock: 1
