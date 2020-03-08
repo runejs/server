@@ -15,7 +15,7 @@ const talkToAction : npcAction = (details) => {
         .then(d => {
             switch (d.action) {
                 case 1:
-                    return d.player(DialogueEmote.JOYFUL, [ 'Yes, please.!' ])
+                    return d.player(DialogueEmote.JOYFUL, [ 'Yes, please!' ])
                         .then(d => {
                             tradeAction(details);
                             return d;
