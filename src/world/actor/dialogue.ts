@@ -204,6 +204,8 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
 
         await new Promise((resolve, reject) => {
             if(dialogueAction instanceof DialogueFunction) {
+                // Code execution dialogue.
+
                 dialogueAction.execute();
                 resolve();
                 return;
@@ -219,11 +221,13 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
             let widgetId: number;
             let isOptions = false;
 
-            if(args === '()') {
+            if(args === 'options' || args === '()') {
+                // Options or custom function dialogue.
+
                 const result = dialogueAction();
                 let trees;
 
-                if(typeof result === 'function') {
+                if(args === '()') {
                     const funcResult = result();
 
                     if(Array.isArray(funcResult)) {
@@ -256,43 +260,45 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
                         }
                     }));
                 }
-            } else if(args === 'player') {
-                const dialogueDetails = dialogueAction(player);
-                const emote = dialogueDetails[0] as Emote;
-                const text = dialogueDetails[1] as string;
-                const lines = wrapText(text, 'ACTOR');
-                widgetId = playerWidgetIds[lines.length - 1];
-                const animation = nonLineEmotes.indexOf(emote) !== -1 ? EmoteAnimation[emote] : EmoteAnimation[`${emote}_${lines.length}LINE`];
-
-                player.outgoingPackets.setWidgetPlayerHead(widgetId, 0);
-                player.outgoingPackets.playWidgetAnimation(widgetId, 0, animation);
-                player.outgoingPackets.updateWidgetString(widgetId, 1, player.username);
-
-                for(let i = 0; i < lines.length; i++) {
-                    player.outgoingPackets.updateWidgetString(widgetId, 2 + i, lines[i]);
-                }
             } else {
-                const participant = participants.find(p => (!(p instanceof Player) && p.key === args) ? p.npc : null) as NpcParticipant;
-                if(!participant || !participant.npc) {
-                    resolve();
-                    return;
+                // Player or Npc dialogue.
+
+                let dialogueDetails: [ Emote, string ];
+                let npc: Npc | number;
+
+                if(args !== 'player') {
+                    const participant = participants.find(p => (!(p instanceof Player) && p.key === args) ? p.npc : null) as NpcParticipant;
+                    if(!participant || !participant.npc) {
+                        resolve();
+                        return;
+                    }
+
+                    npc = participant.npc;
+                    if(typeof npc !== 'number') {
+                        npc = npc.id;
+                    }
+
+                    dialogueDetails = dialogueAction(npc);
+                } else {
+                    dialogueDetails = dialogueAction(player);
                 }
 
-                let npc = participant.npc;
-                if(typeof npc !== 'number') {
-                    npc = npc.id;
-                }
-
-                const dialogueDetails = dialogueAction(npc);
                 const emote = dialogueDetails[0] as Emote;
                 const text = dialogueDetails[1] as string;
                 const lines = wrapText(text, 'ACTOR');
-                widgetId = npcWidgetIds[lines.length - 1];
                 const animation = nonLineEmotes.indexOf(emote) !== -1 ? EmoteAnimation[emote] : EmoteAnimation[`${emote}_${lines.length}LINE`];
 
-                player.outgoingPackets.setWidgetNpcHead(widgetId, 0, npc);
+                if(args !== 'player') {
+                    widgetId = npcWidgetIds[lines.length - 1];
+                    player.outgoingPackets.setWidgetNpcHead(widgetId, 0, npc as number);
+                    player.outgoingPackets.updateWidgetString(widgetId, 1, gameCache.npcDefinitions.get(npc as number).name);
+                } else {
+                    widgetId = playerWidgetIds[lines.length - 1];
+                    player.outgoingPackets.setWidgetPlayerHead(widgetId, 0);
+                    player.outgoingPackets.updateWidgetString(widgetId, 1, player.username);
+                }
+
                 player.outgoingPackets.playWidgetAnimation(widgetId, 0, animation);
-                player.outgoingPackets.updateWidgetString(widgetId, 1, gameCache.npcDefinitions.get(npc).name);
 
                 for(let i = 0; i < lines.length; i++) {
                     player.outgoingPackets.updateWidgetString(widgetId, 2 + i, lines[i]);

@@ -13,7 +13,7 @@ const action: npcAction = (details) => {
         hans => [ Emote.GENERIC, `Welcome to RuneScape!` ],
         hans => [ Emote.HAPPY, `How do you feel about Rune.JS so far?\n` +
             `Please take a moment to let us know what you think!` ],
-        () => ({
+        options => ({
             'Love it!': [
                 player => [ Emote.HAPPY, `Loving it so far, thanks for asking!` ],
                 hans => [ Emote.HAPPY, `You're very welcome! Glad to hear it.` ]

@@ -39,7 +39,7 @@ const startQuestAction: npcAction = (details) => {
 
     dialogue([ player, { npc, key: 'cook' }], [
         cook => [ Emote.WORRIED, `What am I to do?` ],
-        () => ({
+        options => ({
             'What\'s wrong?': [],
             'Can you make me a cake?': [
                 player => [ Emote.HAPPY, `You're a cook, why don't you bake me a cake?` ],
@@ -49,7 +49,7 @@ const startQuestAction: npcAction = (details) => {
                 player => [ Emote.WORRIED, `You don't look very happy.` ],
                 cook => [ Emote.SAD, `No, I'm not. The world is caving in around me - I am overcome by dark feelings ` +
                     `of impending doom.` ],
-                () => ({
+                options => ({
                     'What\'s wrong?': [],
                     'I\'d take the rest of the day off if I were you.': [
                         player => [ Emote.GENERIC, `I'd take the rest of the day off if I were you.` ],
@@ -81,7 +81,7 @@ const startQuestAction: npcAction = (details) => {
         cook => [ Emote.WORRIED, `I've forgotten to buy the ingredients. I'll never get ` +
             `them in time now. He'll sack me! What will I do? I have four children and a goat to ` +
             `look after. Would you help me? Please?` ],
-        () => ({
+        options => ({
             'I\'m always happy to help a cook in distress.': [
                 execute(() => {
                     player.setQuestStage(quests.cooksAssistant.id, 'COLLECTING');
