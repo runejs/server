@@ -106,35 +106,39 @@
 - identification: DOMMIK_CRAFTING_STORE
   name: Dommik's Crafting Store
   items:
-    - id: 0
+    - id: 1755
       text: Chisel
       price: 1
       amountInStock: 2
-    - id: 0
+    - id: 1592
       text: Ring mould
       price: 5
       amountInStock: 4
-    - id: 0
-      text: Neclace mould
+    - id: 1597
+      text: Necklace mould
       price: 5
       amountInStock: 2
-    - id: 0
+    - id: 1595
       text: Amulet mould
       price: 5
       amountInStock: 2
-    - id: 0
+    - id: 1733
       text: Needle
       price: 1
       amountInStock: 3
-    - id: 0
+    - id: 1734
       text: Thread
       price: 1
       amountInStock: 100
-    - id: 0
+    - id: 1599
       text: Holy mould
       price: 5
       amountInStock: 3
-    - id: 0
-      text: Holy mould
-      price: 5
-      amountInStock: 3
+    - id: 2976
+      text: Sickle mould
+      price: 10
+      amountInStock: 6
+    - id: 5523
+      text: Tiara mould
+      price: 100
+      amountInStock: 10

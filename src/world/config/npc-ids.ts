@@ -7,6 +7,7 @@ export const npcIds = {
     nakedSheep: 42,
     shopKeeper: 520,
     lumbridgeBob: 519,
+    dommik: 545,
     gemTrader: 540,
     gillieGroats: 3807,
 };
