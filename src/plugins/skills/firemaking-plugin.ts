@@ -1,17 +1,21 @@
-import { itemOnItemAction } from '@server/world/mob/player/action/item-on-item-action';
+import { itemOnItemAction } from '@server/world/actor/player/action/item-on-item-action';
 import { world } from '@server/game-server';
-import { Skill } from '@server/world/mob/skills';
-import { loopingAction } from '@server/world/mob/player/action/action';
+import { Skill } from '@server/world/actor/skills';
+import { loopingAction } from '@server/world/actor/player/action/action';
 import { LandscapeObject } from '@runejs/cache-parser';
-import { Player } from '@server/world/mob/player/player';
+import { Player } from '@server/world/actor/player/player';
 import { WorldItem } from '@server/world/items/world-item';
 import { Position } from '@server/world/position';
 import { randomBetween } from '@server/util/num';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { objectIds } from '@server/world/config/object-ids';
+import { itemIds } from '@server/world/config/item-ids';
+import { soundIds } from '@server/world/config/sound-ids';
+import { animationIds } from '@server/world/config/animation-ids';
 
 const logs = [
     {
-        logId: 1511,
+        logId: itemIds.logs,
         requiredLevel: 1,
         burnExp: 40
     }
@@ -36,9 +40,9 @@ const fireDuration = (): number => {
 };
 
 const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, burnExp: number): void => {
-    world.chunkManager.removeWorldItem(worldItemLog);
+    world.removeWorldItem(worldItemLog);
     const fireObject: LandscapeObject = {
-        objectId: 2732,
+        objectId: objectIds.fire,
         x: position.x,
         y: position.y,
         level: position.level,
@@ -46,12 +50,8 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
         rotation: 0
     };
 
-    world.chunkManager.addTemporaryLandscapeObject(fireObject, position, fireDuration()).then(() => {
-        world.chunkManager.spawnWorldItem({ itemId: 592, amount: 1 }, position, null, 300);
-    });
-    player.packetSender.playSound(240, 7);
     player.playAnimation(null);
-    player.packetSender.chatboxMessage(`The fire catches and the logs begin to burn.`);
+    player.sendMessage(`The fire catches and the logs begin to burn.`);
     player.skills.addExp(Skill.FIREMAKING, burnExp);
 
     if(!player.walkingQueue.moveIfAble(-1, 0)) {
@@ -61,9 +61,13 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
             }
         }
     }
+    world.addTemporaryLandscapeObject(fireObject, position, fireDuration()).then(() => {
+        world.spawnWorldItem({ itemId: itemIds.ashes, amount: 1 }, position, null, 300);
+    });
 
     player.face(position, false);
-    player.metadata['lastFire'] = Date.now();
+    player.metadata.lastFire = Date.now();
+    player.metadata.busy = false;
 };
 
 const action: itemOnItemAction = (details) => {
@@ -73,13 +77,13 @@ const action: itemOnItemAction = (details) => {
         return;
     }
 
-    const log = usedItem.itemId !== 590 ? usedItem : usedWithItem;
-    const removeFromSlot = usedItem.itemId !== 590 ? usedSlot : usedWithSlot;
+    const log = usedItem.itemId !== itemIds.tinderbox ? usedItem : usedWithItem;
+    const removeFromSlot = usedItem.itemId !== itemIds.tinderbox ? usedSlot : usedWithSlot;
     const skillInfo = logs.find(l => l.logId === log.itemId);
     const position = player.position;
 
     if(!skillInfo) {
-        player.packetSender.chatboxMessage(`Mishandled firemaking log ${log.itemId}.`);
+        player.sendMessage(`Mishandled firemaking log ${log.itemId}.`);
         return;
     }
 
@@ -87,41 +91,47 @@ const action: itemOnItemAction = (details) => {
     // @TODO check firemaking level
 
     player.removeItem(removeFromSlot);
-    const worldItemLog = world.chunkManager.spawnWorldItem(log, player.position, player, 300);
+    const worldItemLog = world.spawnWorldItem(log, player.position, player, 300);
 
     if(player.metadata['lastFire'] && Date.now() - player.metadata['lastFire'] < 1200 && canChain(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level)) {
         lightFire(player, position, worldItemLog, skillInfo.burnExp);
     } else {
-        player.packetSender.chatboxMessage(`You attempt to light the logs.`);
+        player.sendMessage(`You attempt to light the logs.`);
 
+        let canLightFire = false;
         let elapsedTicks = 0;
-        const loop = loopingAction(player);
+        const loop = loopingAction({ player });
         loop.event.subscribe(() => {
             if(worldItemLog.removed) {
                 loop.cancel();
                 return;
             }
 
-            // @TODO check for existing location objects again (incase one spawned here during this loop)
-            // @TODO check for tinderbox incase it was removed
-
-            if(elapsedTicks === 0 || elapsedTicks % 12 === 0) {
-                player.playAnimation(733);
-            }
-            if(elapsedTicks !== 0 && (elapsedTicks === 2 || (elapsedTicks - 2) % 4 === 0)) {
-                player.packetSender.playSound(375, 7, 1);
-            }
-
-            const canLightFire = elapsedTicks > 0 && canLight(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level);
-
             if(canLightFire) {
                 loop.cancel();
-                lightFire(player, position, worldItemLog, skillInfo.burnExp);
-            } else {
-                elapsedTicks++;
+                player.metadata.busy = true;
+                setTimeout(() => lightFire(player, position, worldItemLog, skillInfo.burnExp), 1200);
+                return;
             }
+
+            // @TODO check for existing location objects again (in-case one spawned here during this loop)
+            // @TODO check for tinderbox in-case it was removed
+
+            if(elapsedTicks === 0 || elapsedTicks % 12 === 0) {
+                player.playAnimation(animationIds.lightingFire);
+            }
+
+            canLightFire = elapsedTicks > 10 && canLight(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level);
+
+            if(!canLightFire && (elapsedTicks === 0 || elapsedTicks % 4 === 0)) {
+                player.playSound(soundIds.lightingFire, 10, 0);
+            } else if(canLightFire) {
+                player.playSound(soundIds.fireLit, 7);
+            }
+
+            elapsedTicks++;
         });
     }
 };
 
-export default new RunePlugin({ type: ActionType.ITEM_ON_ITEM, items: [ { item1: 590, item2: 1511 } ], action });
+export default new RunePlugin({ type: ActionType.ITEM_ON_ITEM, items: logs.map(log => ({item1: itemIds.tinderbox, item2: log.logId})), action });

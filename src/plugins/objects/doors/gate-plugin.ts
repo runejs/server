@@ -3,8 +3,9 @@ import { directionData, WNES } from '@server/world/direction';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
 import { ModifiedLandscapeObject } from '@server/world/map/landscape-object';
-import { objectAction } from '@server/world/mob/player/action/object-action';
+import { objectAction } from '@server/world/actor/player/action/object-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { soundIds } from '@server/world/config/sound-ids';
 
 const gates = [
     {
@@ -13,19 +14,26 @@ const gates = [
         hinge: 'LEFT',
         secondary: 1553,
         secondaryOpen: 1556
+    },
+    {
+        main: 12986,
+        mainOpen: 12988,
+        hinge: 'LEFT',
+        secondary: 12987,
+        secondaryOpen: 12989
     }
 ];
 
 // @TODO clean up this disgusting code
 const action: objectAction = (details) => {
-    let { object: gate, position, player, cacheOriginal } = details;
+    let {object: gate, position, player, cacheOriginal} = details;
 
     if((gate as ModifiedLandscapeObject).metadata) {
         const metadata = (gate as ModifiedLandscapeObject).metadata;
 
-        world.chunkManager.toggleObjects(metadata.originalMain, metadata.main, metadata.originalMainPosition, metadata.mainPosition, metadata.originalMainChunk, metadata.mainChunk, true);
-        world.chunkManager.toggleObjects(metadata.originalSecond, metadata.second, metadata.originalSecondPosition, metadata.secondPosition, metadata.originalSecondChunk, metadata.secondChunk, true);
-        player.packetSender.playSound(327, 7); // @TODO find correct gate closing sound
+        world.toggleObjects(metadata.originalMain, metadata.main, metadata.originalMainPosition, metadata.mainPosition, metadata.originalMainChunk, metadata.mainChunk, true);
+        world.toggleObjects(metadata.originalSecond, metadata.second, metadata.originalSecondPosition, metadata.secondPosition, metadata.originalSecondChunk, metadata.secondChunk, true);
+        player.playSound(soundIds.closeGate, 7);
     } else {
         let details = gates.find(g => g.main === gate.objectId);
         let clickedSecondary = false;
@@ -130,8 +138,6 @@ const action: objectAction = (details) => {
             }
         }
 
-        player.packetSender.chatboxMessage(hinge + ' ' + direction);
-
         let leftHingeDirections: { [key: string]: string } = {
             'NORTH': 'WEST',
             'SOUTH': 'EAST',
@@ -203,11 +209,13 @@ const action: objectAction = (details) => {
         newHinge.metadata = metadata;
         newSecond.metadata = metadata;
 
-        world.chunkManager.toggleObjects(newHinge, gate, newPosition, position, newHingeChunk, hingeChunk, !cacheOriginal);
-        world.chunkManager.toggleObjects(newSecond, secondGate, newSecondPosition, gateSecondPosition, newSecondChunk, gateSecondChunk, !cacheOriginal);
-        player.packetSender.playSound(328, 7); // @TODO find correct gate opening sound
+        world.toggleObjects(newHinge, gate, newPosition, position, newHingeChunk, hingeChunk, !cacheOriginal);
+        world.toggleObjects(newSecond, secondGate, newSecondPosition, gateSecondPosition, newSecondChunk, gateSecondChunk, !cacheOriginal);
+        player.playSound(soundIds.openGate, 7);
     }
 };
 
-export default new RunePlugin({ type: ActionType.OBJECT_ACTION, objectIds: [1551, 1552, 1553, 1556],
-    options: [ 'open', 'close' ], walkTo: true, action });
+export default new RunePlugin({
+    type: ActionType.OBJECT_ACTION, objectIds: [1551, 1552, 1553, 1556, 12986, 12987, 12988, 12989],
+    options: ['open', 'close'], walkTo: true, action
+});

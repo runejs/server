@@ -1,4 +1,4 @@
-interface DirectionData {
+export interface DirectionData {
     index: number;
     deltaX: number;
     deltaY: number;
@@ -60,3 +60,18 @@ export const directionData: { [key: string]: DirectionData } = {
     }
 };
 export const WNES: Direction[] = ['WEST', 'NORTH', 'EAST', 'SOUTH'];
+
+export const directionFromIndex = (index: number): DirectionData => {
+    const keys = Object.keys(directionData);
+    for (const key of keys) {
+        if (directionData[key].index === index) {
+            return directionData[key];
+        }
+    }
+
+    return null;
+};
+
+export const oppositeDirectionIndex = (index: number): number => {
+    return 7 - index;
+};

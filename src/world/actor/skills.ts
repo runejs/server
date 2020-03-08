@@ -1,0 +1,159 @@
+import { Actor } from '@server/world/actor/actor';
+import { Player } from '@server/world/actor/player/player';
+import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
+import { startsWithVowel } from '@server/util/strings';
+
+export enum Skill {
+    ATTACK,
+    DEFENCE,
+    STRENGTH,
+    HITPOINTS,
+    RANGED,
+    PRAYER,
+    MAGIC,
+    COOKING,
+    WOODCUTTING,
+    FLETCHING,
+    FISHING,
+    FIREMAKING,
+    CRAFTING,
+    SMITHING,
+    MINING,
+    HERBLORE,
+    AGILITY,
+    THIEVING,
+    SLAYER,
+    FARMING,
+    RUNECRAFTING,
+    CONSTRUCTION = 22
+}
+
+export interface SkillDetail {
+    readonly name: string;
+    readonly advancementWidgetId?: number;
+}
+
+export const skillDetails: SkillDetail[] = [
+    { name: 'Attack', advancementWidgetId: 158 },
+    { name: 'Defence', advancementWidgetId: 161 },
+    { name: 'Strength', advancementWidgetId: 175 },
+    { name: 'Hitpoints', advancementWidgetId: 167 },
+    { name: 'Ranged', advancementWidgetId: 171 },
+    { name: 'Prayer', advancementWidgetId: 170 },
+    { name: 'Magic', advancementWidgetId: 168 },
+    { name: 'Cooking', advancementWidgetId: 159 },
+    { name: 'Woodcutting', advancementWidgetId: 177 },
+    { name: 'Fletching', advancementWidgetId: 165 },
+    { name: 'Fishing', advancementWidgetId: 164 },
+    { name: 'Firemaking', advancementWidgetId: 163 },
+    { name: 'Crafting', advancementWidgetId: 160 },
+    { name: 'Smithing', advancementWidgetId: 174 },
+    { name: 'Mining', advancementWidgetId: 169 },
+    { name: 'Herblore', advancementWidgetId: 166 },
+    { name: 'Agility', advancementWidgetId: 157 },
+    { name: 'Thieving', advancementWidgetId: 176 },
+    { name: 'Slayer', advancementWidgetId: 173 },
+    { name: 'Farming', advancementWidgetId: 162 },
+    { name: 'Runecrafting', advancementWidgetId: 172 },
+    null,
+    { name: 'Construction' }
+];
+
+export interface SkillValue {
+    exp: number;
+    level: number;
+}
+
+export class Skills {
+
+    private _values: SkillValue[];
+
+    public constructor(private actor: Actor, values?: SkillValue[]) {
+        if(values) {
+            this._values = values;
+        } else {
+            this._values = this.defaultValues();
+        }
+    }
+
+    private defaultValues(): SkillValue[] {
+        const values: SkillValue[] = [];
+        skillDetails.forEach(s => values.push({ exp: 0, level: 1 }));
+        values[Skill.HITPOINTS] = { exp: 1154, level: 10 };
+        return values;
+    }
+
+    public hasSkillLevel(skillId: number, level: number): boolean {
+        return this.values[skillId].level >= level;
+    }
+
+    public getLevelForExp(exp: number): number {
+        let points = 0;
+        let output = 0;
+
+        for(let i = 1; i <= 99; i++) {
+            points += Math.floor(i + 300 * Math.pow(2, i / 7));
+            output = Math.floor(points / 4);
+            if(output >= exp) {
+                return i;
+            }
+        }
+
+        return 99;
+    }
+
+    public addExp(skillId: number, exp: number): void {
+        const currentExp = this._values[skillId].exp;
+        const currentLevel = this.getLevelForExp(currentExp);
+        let finalExp = currentExp + exp;
+        if(finalExp > 200000000) {
+            finalExp = 200000000;
+        }
+
+        const finalLevel = this.getLevelForExp(finalExp);
+
+        this.setExp(skillId, finalExp);
+
+        if(this.actor instanceof Player) {
+            this.actor.outgoingPackets.updateSkill(skillId, finalLevel, finalExp);
+        }
+
+        if(currentLevel !== finalLevel) {
+            this.setLevel(skillId, finalLevel);
+            this.actor.playGraphics({ id: 199, delay: 0, height: 125 });
+
+            if(this.actor instanceof Player) {
+                const achievementDetails = skillDetails[skillId];
+                if(!achievementDetails) {
+                    return;
+                }
+
+                this.actor.outgoingPackets.chatboxMessage(`Congratulations, you just advanced a ${achievementDetails.name.toLowerCase()} level.`);
+
+                if(achievementDetails.advancementWidgetId) {
+                    dialogueAction(this.actor, { type: 'LEVEL_UP', skillId, lines: [
+                        `<col=000080>Congratulations, you just advanced ${startsWithVowel(achievementDetails.name) ? 'an' : 'a'} ` +
+                            `${achievementDetails.name.toLowerCase()} level.</col>`,
+                            `Your ${achievementDetails.name.toLowerCase()} level is now ${finalLevel}.` ] }).then(d => d.close());
+                    // @TODO sounds
+                }
+            }
+        }
+    }
+
+    public setExp(skillId: number, exp: number): void {
+        this._values[skillId].exp = exp;
+    }
+
+    public setLevel(skillId, level: number): void {
+        this._values[skillId].level = level;
+    }
+
+    public get values(): SkillValue[] {
+        return this._values;
+    }
+
+    public set values(value: SkillValue[]) {
+        this._values = value;
+    }
+}

@@ -1,6 +1,6 @@
 import { RsBuffer } from '@server/net/rs-buffer';
 import { incomingPacketSizes } from '@server/net/incoming-packet-sizes';
-import { handlePacket } from '@server/world/mob/player/packet/incoming-packet-directory';
+import { handlePacket } from '@server/net/incoming-packet-directory';
 import { DataParser } from './data-parser';
 
 /**
@@ -43,17 +43,29 @@ export class ClientPacketDataParser extends DataParser {
             this.activePacketSize = incomingPacketSizes[this.activePacketId];
         }
 
+        // Packet will provide the size
         if(this.activePacketSize === -1) {
             if(this.activeBuffer.getReadable() < 1) {
                 return;
             }
 
-            this.activePacketSize = this.activeBuffer.readByte() & 0xff;
+            this.activePacketSize = this.activeBuffer.readUnsignedByte();
+        }
+
+        // Packet has no set size
+        let clearBuffer = false;
+        if(this.activePacketSize === -3) {
+            if(this.activeBuffer.getReadable() < 1) {
+                return;
+            }
+
+            this.activePacketSize = this.activeBuffer.getReadable();
+            clearBuffer = true;
         }
 
         if(this.activeBuffer.getReadable() < this.activePacketSize) {
-            console.error('Not enough readable data for packet ' + this.activePacketId + ' with size ' + this.activePacketSize + ', but only ' +
-                this.activeBuffer.getReadable() + ' data is left of ' + this.activeBuffer.getBuffer().length);
+            //console.error('Not enough readable data for packet ' + this.activePacketId + ' with size ' + this.activePacketSize + ', but only ' +
+            //    this.activeBuffer.getReadable() + ' data is left of ' + this.activeBuffer.getBuffer().length);
             return;
         }
 
@@ -61,12 +73,16 @@ export class ClientPacketDataParser extends DataParser {
             // read packet data
             const packetData = this.activeBuffer.readBytes(this.activePacketSize);
             handlePacket(this.clientConnection.player, this.activePacketId, this.activePacketSize, packetData);
+
+            if(clearBuffer) {
+                this.activeBuffer = null;
+            }
         }
 
         this.activePacketId = null;
         this.activePacketSize = null;
 
-        if(this.activeBuffer.getReadable() > 0) {
+        if(this.activeBuffer !== null && this.activeBuffer.getReadable() > 0) {
             this.parse();
         }
     }

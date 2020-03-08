@@ -1,9 +1,9 @@
 import { Position } from '../position';
-import { Player } from '../mob/player/player';
+import { Player } from '../actor/player/player';
 import { CollisionMap } from './collision-map';
 import { gameCache } from '../../game-server';
 import { LandscapeObject, LandscapeObjectDefinition, MapRegionTile } from '@runejs/cache-parser';
-import { Npc } from '../mob/npc/npc';
+import { Npc } from '../actor/npc/npc';
 import { WorldItem } from '@server/world/items/world-item';
 
 export interface ChunkUpdateItem {
@@ -37,6 +37,23 @@ export class Chunk {
         this._addedLandscapeObjects = new Map<string, LandscapeObject>();
         this._removedLandscapeObjects = new Map<string, LandscapeObject>();
         this._worldItems = new Map<string, WorldItem[]>();
+    }
+
+    public getWorldItem(itemId: number, position: Position): WorldItem {
+        const key = position.key;
+
+        if(this._worldItems.has(key)) {
+            const list = this._worldItems.get(key);
+            const worldItem = list.find(item => item.itemId === itemId);
+
+            if(!worldItem) {
+                return null;
+            }
+
+            return worldItem;
+        }
+
+        return null;
     }
 
     public addWorldItem(worldItem: WorldItem): void {
@@ -131,12 +148,12 @@ export class Chunk {
                     this.collisionMap.markBlocked(x, y, mark);
                 }
             } else if(objectType >= 9) {
-                this.collisionMap.markSolidOccupant(x, y, objectDetails.sizeX, objectDetails.sizeY, objectRotation, objectDetails.walkable, mark);
+                this.collisionMap.markSolidOccupant(x, y, objectDetails.sizeX, objectDetails.sizeY, objectRotation, objectDetails.nonWalkable, mark);
             } else if(objectType >= 0 && objectType <= 3) {
                 if(mark) {
-                    this.collisionMap.markWall(x, y, objectType, objectRotation, objectDetails.walkable);
+                    this.collisionMap.markWall(x, y, objectType, objectRotation, objectDetails.nonWalkable);
                 } else {
-                    this.collisionMap.unmarkWall(x, y, objectType, objectRotation, objectDetails.walkable);
+                    this.collisionMap.unmarkWall(x, y, objectType, objectRotation, objectDetails.nonWalkable);
                 }
             }
         }

@@ -5,18 +5,28 @@ import { RsBuffer } from './net/rs-buffer';
 import { World } from './world/world';
 import { ClientConnection } from './net/client-connection';
 import { logger } from '@runejs/logger';
-import { GameCache } from '@runejs/cache-parser';
-import { setNpcPlugins } from '@server/world/mob/player/action/npc-action';
-import { setObjectPlugins } from '@server/world/mob/player/action/object-action';
-import { loadPlugins } from '@server/plugins/plugin-loader';
-import { setItemOnItemPlugins } from '@server/world/mob/player/action/item-on-item-action';
-import { setButtonPlugins } from '@server/world/mob/player/action/button-action';
+import { EarlyFormatGameCache, NewFormatGameCache } from '@runejs/cache-parser';
 import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
+
+import { loadPlugins } from '@server/plugins/plugin-loader';
 import { ActionPlugin, ActionType } from '@server/plugins/plugin';
-import { setCommandPlugins } from '@server/world/mob/player/action/input-command-action';
+
+import { setNpcPlugins } from '@server/world/actor/player/action/npc-action';
+import { setObjectPlugins } from '@server/world/actor/player/action/object-action';
+import { setItemOnItemPlugins } from '@server/world/actor/player/action/item-on-item-action';
+import { setButtonPlugins } from '@server/world/actor/player/action/button-action';
+import { setCommandPlugins } from '@server/world/actor/player/action/input-command-action';
+import { setWidgetPlugins } from '@server/world/actor/player/action/widget-action';
+import { setItemPlugins } from '@server/world/actor/player/action/item-action';
+import { setWorldItemPlugins } from '@server/world/actor/player/action/world-item-action';
+import { setItemOnObjectPlugins } from '@server/world/actor/player/action/item-on-object-action';
+import { setItemOnNpcPlugins } from '@server/world/actor/player/action/item-on-npc-action';
+import { setPlayerInitPlugins } from '@server/world/actor/player/player';
+import { setNpcInitPlugins } from '@server/world/actor/npc/npc';
 
 export let serverConfig: ServerConfig;
-export let gameCache: GameCache;
+export let gameCache377: EarlyFormatGameCache;
+export let gameCache: NewFormatGameCache;
 export let world: World;
 
 export async function injectPlugins(): Promise<void> {
@@ -34,8 +44,15 @@ export async function injectPlugins(): Promise<void> {
     setButtonPlugins(actionTypes[ActionType.BUTTON]);
     setNpcPlugins(actionTypes[ActionType.NPC_ACTION]);
     setObjectPlugins(actionTypes[ActionType.OBJECT_ACTION]);
+    setItemOnObjectPlugins(actionTypes[ActionType.ITEM_ON_OBJECT_ACTION]);
+    setItemOnNpcPlugins(actionTypes[ActionType.ITEM_ON_NPC_ACTION]);
     setItemOnItemPlugins(actionTypes[ActionType.ITEM_ON_ITEM]);
+    setItemPlugins(actionTypes[ActionType.ITEM_ACTION]);
+    setWorldItemPlugins(actionTypes[ActionType.WORLD_ITEM_ACTION]);
     setCommandPlugins(actionTypes[ActionType.COMMAND]);
+    setWidgetPlugins(actionTypes[ActionType.WIDGET_ACTION]);
+    setPlayerInitPlugins(actionTypes[ActionType.PLAYER_INIT]);
+    setNpcInitPlugins(actionTypes[ActionType.NPC_INIT]);
 }
 
 export function runGameServer(): void {
@@ -46,49 +63,50 @@ export function runGameServer(): void {
         return;
     }
 
-    gameCache = new GameCache('cache');
+    gameCache377 = new EarlyFormatGameCache('cache/377', { loadMaps: true, loadDefinitions: false, loadWidgets: false });
+    gameCache = new NewFormatGameCache('cache/435');
     world = new World();
-    world.init();
-    injectPlugins();
+    injectPlugins().then(() => {
+        world.init();
 
-    if(process.argv.indexOf('-fakePlayers') !== -1) {
-        world.generateFakePlayers();
-    }
-
-    process.on('unhandledRejection', (err, promise) => {
-        if(err === 'WIDGET_CLOSED') {
-            return;
+        if(process.argv.indexOf('-fakePlayers') !== -1) {
+            world.generateFakePlayers();
         }
 
-        console.error('Unhandled rejection (promise: ', promise, ', reason: ', err, ').');
-        throw err;
+        process.on('unhandledRejection', (err, promise) => {
+            if(err === 'WIDGET_CLOSED') {
+                return;
+            }
+
+            console.error('Unhandled rejection (promise: ', promise, ', reason: ', err, ').');
+        });
+
+        net.createServer(socket => {
+            logger.info('Socket opened');
+            // socket.setNoDelay(true);
+            let clientConnection = new ClientConnection(socket);
+
+            socket.on('data', data => {
+                if(clientConnection) {
+                    clientConnection.parseIncomingData(new RsBuffer(data));
+                }
+            });
+
+            socket.on('close', () => {
+                if(clientConnection) {
+                    clientConnection.connectionDestroyed();
+                    clientConnection = null;
+                }
+            });
+
+            socket.on('error', error => {
+                socket.destroy();
+                logger.error('Socket destroyed due to connection error.');
+            });
+        }).listen(serverConfig.port, serverConfig.host);
+
+        logger.info(`Game server listening on port ${serverConfig.port}.`);
     });
-
-    net.createServer(socket => {
-        logger.info('Socket opened');
-        // socket.setNoDelay(true);
-        let clientConnection = new ClientConnection(socket);
-
-        socket.on('data', data => {
-            if(clientConnection) {
-                clientConnection.parseIncomingData(new RsBuffer(data));
-            }
-        });
-
-        socket.on('close', () => {
-            if(clientConnection) {
-                clientConnection.connectionDestroyed();
-                clientConnection = null;
-            }
-        });
-
-        socket.on('error', error => {
-            socket.destroy();
-            logger.error('Socket destroyed due to connection error.');
-        });
-    }).listen(serverConfig.port, serverConfig.host);
-
-    logger.info(`Game server listening on port ${serverConfig.port}.`);
 
     const watcher = watch('dist/plugins/');
     watcher.on('ready', function() {
