@@ -151,7 +151,7 @@ function wrapText(text: string, type: 'ACTOR' | 'TEXT'): string[] {
     return lines;
 }
 
-function parseDialogueFunctionArgs(func): string {
+function parseDialogueFunctionArgs(func): string[] {
     const str = func.toString();
 
     if(!str) {
@@ -164,12 +164,12 @@ function parseDialogueFunctionArgs(func): string {
         return null;
     }
 
-    let arg = str.substring(0, argEndIndex).trim();
+    let arg = str.substring(0, argEndIndex).replace(/[\\(\\) ]/g, '').trim();
     if(!arg || arg.length === 0) {
         return null;
     }
 
-    return arg;
+    return arg.split(',');
 }
 
 type DialogueTree = (Function | DialogueFunction)[];
@@ -185,8 +185,10 @@ class DialogueFunction {
 
 export const execute = (execute: Function): DialogueFunction => new DialogueFunction('execute', execute);
 
+export const goBack = (to: string): Function => goBackTo => to;
+
 // @TODO level-up, plain text
-export async function dialogue(participants: (Player | NpcParticipant)[], dialogueTree: DialogueTree): Promise<void> {
+export async function dialogue(participants: (Player | NpcParticipant)[], dialogueTree: DialogueTree, parent: boolean = true): Promise<void> {
     const player = participants.find(p => p instanceof Player) as Player;
 
     if(!player) {
@@ -194,6 +196,11 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
     }
 
     let stopLoop = false;
+
+    if(parent) {
+        // dis aint gonna work
+        player.metadata.goBackIndexes = {};
+    }
 
     for(let i = 0; i < dialogueTree.length; i++) {
         if(stopLoop) {
@@ -214,7 +221,15 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
             }
 
             const args = parseDialogueFunctionArgs(dialogueAction);
-            if(!args) {
+            const dialogueType = args[0];
+
+            if(args.length === 2 && typeof args[1] === 'string') {
+                console.log(args[1]);
+                player.metadata.goBackIndexes[args[1]] = i;
+                console.log(player.metadata.goBackIndexes);
+            }
+
+            if(!dialogueType) {
                 console.error('No arguments passed to dialogue function.');
                 resolve();
                 return;
@@ -223,12 +238,12 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
             let widgetId: number;
             let isOptions = false;
 
-            if(args === 'options' || args === '()') {
+            if(dialogueType === 'options' || dialogueType === '()') {
                 // Options or custom function dialogue.
 
                 let result = dialogueAction();
 
-                if(args === '()') {
+                if(dialogueType === '()') {
                     const funcResult = result();
 
                     if(!Array.isArray(funcResult) || funcResult.length === 0) {
@@ -238,7 +253,7 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
 
                     if(typeof funcResult[0] === 'function') {
                         // given function returned a dialogue tree
-                        dialogue(participants, funcResult).then(() => resolve());
+                        dialogue(participants, funcResult, false).then(() => resolve());
                     } else {
                         // given function returned an option list
                         result = funcResult;
@@ -264,18 +279,33 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
                         if(!tree || tree.length === 0) {
                             resolve();
                         } else {
-                            dialogue(participants, tree).then(() => resolve());
+                            dialogue(participants, tree, false).then(() => resolve());
                         }
                     }));
                 }
+            } else if(dialogueType === 'goBackTo') {
+                console.log('goBackTo');
+                const goBackTo = dialogueAction();
+                console.log('goBackTo ' + goBackTo);
+                console.log(player.metadata.goBackIndexes);
+                if(!goBackTo || player.metadata.goBackIndexes[goBackTo] === undefined) {
+                    console.log('not find gobackto');
+                    resolve();
+                    return;
+                }
+                console.log('goBackTo valid ' + goBackTo);
+
+                i = player.metadata.goBackIndexes[goBackTo];
+                resolve();
+                return;
             } else {
                 // Player or Npc dialogue.
 
                 let dialogueDetails: [ Emote, string ];
                 let npc: Npc | number;
 
-                if(args !== 'player') {
-                    const participant = participants.find(p => (!(p instanceof Player) && p.key === args) ? p.npc : null) as NpcParticipant;
+                if(dialogueType !== 'player') {
+                    const participant = participants.find(p => (!(p instanceof Player) && p.key === dialogueType) ? p.npc : null) as NpcParticipant;
                     if(!participant || !participant.npc) {
                         resolve();
                         return;
@@ -296,7 +326,7 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
                 const lines = wrapText(text, 'ACTOR');
                 const animation = nonLineEmotes.indexOf(emote) !== -1 ? EmoteAnimation[emote] : EmoteAnimation[`${emote}_${lines.length}LINE`];
 
-                if(args !== 'player') {
+                if(dialogueType !== 'player') {
                     widgetId = npcWidgetIds[lines.length - 1];
                     player.outgoingPackets.setWidgetNpcHead(widgetId, 0, npc as number);
                     player.outgoingPackets.updateWidgetString(widgetId, 1, gameCache.npcDefinitions.get(npc as number).name);
