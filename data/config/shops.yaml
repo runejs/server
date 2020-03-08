@@ -103,3 +103,38 @@
      text: Diamond
      price: 2000
      amountInStock: 0
+- identification: DOMMIK_CRAFTING_STORE
+  name: Dommik's Crafting Store
+  items:
+    - id: 0
+      text: Chisel
+      price: 1
+      amountInStock: 2
+    - id: 0
+      text: Ring mould
+      price: 5
+      amountInStock: 4
+    - id: 0
+      text: Neclace mould
+      price: 5
+      amountInStock: 2
+    - id: 0
+      text: Amulet mould
+      price: 5
+      amountInStock: 2
+    - id: 0
+      text: Needle
+      price: 1
+      amountInStock: 3
+    - id: 0
+      text: Thread
+      price: 1
+      amountInStock: 100
+    - id: 0
+      text: Holy mould
+      price: 5
+      amountInStock: 3
+    - id: 0
+      text: Holy mould
+      price: 5
+      amountInStock: 3

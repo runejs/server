@@ -26,3 +26,35 @@
   x: 3288
   y: 3212
   radius: 1
+- npcId: 3807
+  x: 3253
+  y: 3274
+  radius: 1
+- npcId: 3579
+  x: 3197
+  y: 3262
+  radius: 10
+- npcId: 43
+  x: 3199
+  y: 3267
+  radius: 10
+- npcId: 43
+  x: 3203
+  y: 3271
+  radius: 10
+- npcId: 43
+  x: 3199
+  y: 3273
+  radius: 10
+- npcId: 43
+  x: 3208
+  y: 3273
+  radius: 10
+- npcId: 43
+  x: 3209
+  y: 3260
+  radius: 10
+- npcId: 545
+  x: 3320
+  y: 3194
+  radius: 3
