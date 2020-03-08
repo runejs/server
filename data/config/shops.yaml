@@ -142,3 +142,30 @@
       text: Tiara mould
       price: 100
       amountInStock: 10
+- identification: LOUIES_ARMOURED_LEGS_BAZAR
+  name: Louie's Armoured Legs Bazaar
+  items:
+    - id: 1075
+      text: Bronze platelegs
+      price: 80
+      amountInStock: 5
+    - id: 1067
+      text: Iron platelegs
+      price: 280
+      amountInStock: 3
+    - id: 1069
+      text: Steel platelegs
+      price: 1000
+      amountInStock: 2
+    - id: 1077
+      text: Black platelegs
+      price: 1920
+      amountInStock: 1
+    - id: 1071
+      text: Mithril platelegs
+      price: 2600
+      amountInStock: 1
+    - id: 1073
+      text: Adamant platelegs
+      price: 6400
+      amountInStock: 1

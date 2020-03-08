@@ -2,6 +2,7 @@ import { npcAction } from '@server/world/actor/player/action/npc-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { openShop } from '@server/world/actor/player/action/shop-action';
 import { dialogueAction, DialogueEmote } from '@server/world/actor/player/action/dialogue-action';
+import { npcIds } from '@server/world/config/npc-ids';
 
 const tradeAction : npcAction = (details)  => {
     openShop(details.player, 'ALKHARID_GEM_TRADER');
@@ -33,6 +34,6 @@ const talkToAction : npcAction = (details) => {
 };
 
 export default new RunePlugin([
-    {type: ActionType.NPC_ACTION, npcIds: 540, options: 'trade', walkTo: true, action: tradeAction},
-    {type: ActionType.NPC_ACTION, npcIds: 540, options: 'talk-to', walkTo: true, action: talkToAction}
+    {type: ActionType.NPC_ACTION, npcIds: npcIds.gemTrader, options: 'trade', walkTo: true, action: tradeAction},
+    {type: ActionType.NPC_ACTION, npcIds: npcIds.gemTrader, options: 'talk-to', walkTo: true, action: talkToAction}
 ]);
