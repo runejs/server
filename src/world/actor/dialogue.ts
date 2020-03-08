@@ -195,7 +195,7 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
 
     let stopLoop = false;
 
-    for(const dialogueAction of dialogueTree) {
+    for(let i = 0; i < dialogueTree.length; i++) {
         if(stopLoop) {
             return Promise.reject('Action cancelled.');
         }
@@ -203,6 +203,8 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
         let sub: Subscription[] = [];
 
         await new Promise((resolve, reject) => {
+            const dialogueAction = dialogueTree[i];
+
             if(dialogueAction instanceof DialogueFunction) {
                 // Code execution dialogue.
 
@@ -224,25 +226,31 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
             if(args === 'options' || args === '()') {
                 // Options or custom function dialogue.
 
-                const result = dialogueAction();
-                let trees;
+                let result = dialogueAction();
 
                 if(args === '()') {
                     const funcResult = result();
 
-                    if(Array.isArray(funcResult)) {
+                    if(!Array.isArray(funcResult) || funcResult.length === 0) {
+                        reject('Invalid dialogue function response type.');
+                        return;
+                    }
+
+                    if(typeof funcResult[0] === 'function') {
                         // given function returned a dialogue tree
                         dialogue(participants, funcResult).then(() => resolve());
                     } else {
                         // given function returned an option list
-                        trees = funcResult;
+                        result = funcResult;
+                        isOptions = true;
                     }
                 } else {
-                    trees = result;
+                    isOptions = true;
                 }
 
-                if(trees) {
-                    const options = Object.keys(trees);
+                if(isOptions) {
+                    const options = (result as any[]).filter((option, index) => index % 2 === 0);
+                    const trees = (result as any[]).filter((option, index) => index % 2 !== 0);
                     isOptions = true;
                     widgetId = optionWidgetIds[options.length - 2];
 
@@ -252,7 +260,7 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
 
                     sub.push(player.dialogueInteractionEvent.subscribe(choice => {
                         sub.forEach(s => s.unsubscribe());
-                        const tree: DialogueTree = trees[options[choice - 1]];
+                        const tree: DialogueTree = trees[choice - 1];
                         if(!tree || tree.length === 0) {
                             resolve();
                         } else {
