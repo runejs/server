@@ -58,3 +58,15 @@
   x: 3210
   y: 3215
   radius: 5
+- npcId: 545
+  x: 3320
+  y: 3194
+  radius: 3
+- npcId: 542
+  x: 3317
+  y: 3174
+  radius: 3
+- npcId: 544
+  x: 3315
+  y: 3161
+  radius: 3
