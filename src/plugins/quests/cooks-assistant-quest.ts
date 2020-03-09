@@ -4,36 +4,6 @@ import { npcIds } from '@server/world/config/npc-ids';
 import { quests } from '@server/world/config/quests';
 import { dialogue, Emote, execute, goto } from '@server/world/actor/dialogue';
 
-const ingredientHelpMenu = () => {
-    return [
-        `Where do I find some flour?`, [
-            player => [ Emote.GENERIC, `Where do I find some flour?` ],
-            cook => [ Emote.GENERIC, `There is a Mill fairly close, go North and then West. Mill Lane Mill ` +
-            `is just off the road to Draynor. I usually get my flour from there.` ],
-            cook => [ Emote.HAPPY, `Talk to Millie, she'll help, she's a lovely girl and a fine Miller.` ],
-            () => ingredientHelpMenu
-        ],
-        `How about milk?`, [
-            player => [ Emote.GENERIC, `How about milk?` ],
-            cook => [ Emote.GENERIC, `There is a cattle field on the other side of the river, just across ` +
-            `the road from Groats' Farm.` ],
-            cook => [ Emote.HAPPY, `Talk to Gillie Groats, she look after the Dairy Cows - ` +
-            `she'll tell you everything you need to know about milking cows!` ],
-            () => ingredientHelpMenu
-        ],
-        `And eggs? Where are they found?`, [
-            player => [ Emote.GENERIC, `And eggs? Where are they found?` ],
-            cook => [ Emote.GENERIC, `I normally get my eggs from the Groats' farm, on the other side of ` +
-            `the river.` ],
-            cook => [ Emote.GENERIC, `But any chicken should lay eggs.` ],
-            () => ingredientHelpMenu
-        ],
-        `Actually, I know where to find this stuff.`, [
-            player => [ Emote.GENERIC, `I've got all the information I need. Thanks.` ]
-        ]
-    ];
-};
-
 const startQuestAction: npcAction = (details) => {
     const { player, npc } = details;
 
