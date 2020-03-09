@@ -54,7 +54,7 @@ export const npcAction = (player: Player, npc: Npc, position: Position, option: 
 
     // Find all NPC action plugins that reference this NPC
     let interactionActions = npcInteractions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.npcIds, npc.id, plugin.options, option));
-    const questActions = interactionActions.filter(plugin => plugin.quest !== undefined);
+    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
 
     if(questActions.length !== 0) {
         interactionActions = questActions;

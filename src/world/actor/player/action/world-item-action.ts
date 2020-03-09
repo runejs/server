@@ -66,7 +66,7 @@ export const worldItemAction = (player: Player, worldItem: WorldItem, option: st
 
         return true;
     });
-    const questActions = interactionActions.filter(plugin => plugin.quest !== undefined);
+    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
 
     if(questActions.length !== 0) {
         interactionActions = questActions;

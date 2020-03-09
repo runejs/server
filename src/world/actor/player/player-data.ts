@@ -6,7 +6,7 @@ import { Player } from './player';
 import { SkillValue } from '@server/world/actor/skills';
 
 export interface QuestProgress {
-    questId: number;
+    questId: string;
     stage: string;
     attributes: { [key: string]: any };
 }

@@ -10,6 +10,7 @@ import { ItemOnItemActionPlugin } from '@server/world/actor/player/action/item-o
 import { ButtonActionPlugin } from '@server/world/actor/player/action/button-action';
 import { WorldItemActionPlugin } from '@server/world/actor/player/action/world-item-action';
 import { ItemActionPlugin } from '@server/world/actor/player/action/item-action';
+import { QuestPlugin } from '@server/world/config/quests';
 
 export enum ActionType {
     BUTTON = 'button',
@@ -23,57 +24,58 @@ export enum ActionType {
     ITEM_ON_NPC_ACTION = 'item_on_npc_action',
     COMMAND = 'command',
     PLAYER_INIT = 'player_init',
-    NPC_INIT = 'npc_init'
+    NPC_INIT = 'npc_init',
+    QUEST = 'quest'
 }
 
 export interface QuestAction {
-    questId: number;
+    questId: string;
     stage: string;
 }
 
 export interface ActionPlugin {
     type: ActionType;
-    quest?: QuestAction;
+    questAction?: QuestAction;
 }
 
 export function sort(plugins: ActionPlugin[]): ActionPlugin[] {
-    return plugins.sort(plugin => plugin.quest !== undefined ? -1 : 1);
+    return plugins.sort(plugin => plugin.questAction !== undefined ? -1 : 1);
 }
 
 export function questFilter(player: Player, plugin: ActionPlugin): boolean {
-    if(!plugin.quest) {
+    if(!plugin.questAction) {
         return true;
     }
 
-    const questId = plugin.quest.questId;
+    const questId = plugin.questAction.questId;
     const playerQuest = player.quests.find(quest => quest.questId === questId);
     if(!playerQuest) {
         // @TODO quest requirements
-        return plugin.quest.stage === 'NOT_STARTED';
+        return plugin.questAction.stage === 'NOT_STARTED';
     }
 
-    return playerQuest.stage === plugin.quest.stage;
+    return playerQuest.stage === plugin.questAction.stage;
 }
 
 export class RunePlugin {
 
     public actions: (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | ItemOnObjectActionPlugin | ItemOnNpcActionPlugin |
-        CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | PlayerInitPlugin | NpcInitPlugin)[];
+        CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | PlayerInitPlugin | NpcInitPlugin | QuestPlugin)[];
 
     public constructor(actions: NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | ItemOnObjectActionPlugin |
-        CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | PlayerInitPlugin | NpcInitPlugin | ItemOnNpcActionPlugin |
+        CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | PlayerInitPlugin | NpcInitPlugin | QuestPlugin | ItemOnNpcActionPlugin |
         (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | ItemOnObjectActionPlugin | ItemOnNpcActionPlugin |
-            CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | PlayerInitPlugin | NpcInitPlugin)[], quest?: QuestAction) {
+            CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | PlayerInitPlugin | NpcInitPlugin | QuestPlugin)[], quest?: QuestAction) {
         if(!Array.isArray(actions)) {
-            if(quest !== undefined && !actions.quest) {
-                actions.quest = quest;
+            if(quest !== undefined && !actions.questAction) {
+                actions.questAction = quest;
             }
             this.actions = [actions];
         } else {
             if(quest !== undefined) {
                 actions.forEach(action => {
-                    if(!action.quest) {
-                        action.quest = quest;
+                    if(!action.questAction) {
+                        action.questAction = quest;
                     }
                 });
             }

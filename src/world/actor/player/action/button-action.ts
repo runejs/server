@@ -21,7 +21,7 @@ export interface ButtonActionDetails {
  */
 export interface ButtonActionPlugin extends ActionPlugin {
     widgetId: number;
-    buttonIds: number | number[];
+    buttonIds?: number | number[];
     action: buttonAction;
     cancelActions?: boolean;
 }
@@ -43,8 +43,8 @@ export const setButtonPlugins = (plugins: ActionPlugin[]): void => {
 export const buttonAction = (player: Player, widgetId: number, buttonId: number): void => {
     // Find all item on item action plugins that match this action
     let interactionActions = buttonInteractions.filter(plugin => questFilter(player, plugin) &&
-        plugin.widgetId === widgetId && pluginFilter(plugin.buttonIds, buttonId));
-    const questActions = interactionActions.filter(plugin => plugin.quest !== undefined);
+        plugin.widgetId === widgetId && (plugin.buttonIds === undefined || pluginFilter(plugin.buttonIds, buttonId)));
+    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
 
     if(questActions.length !== 0) {
         interactionActions = questActions;

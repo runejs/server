@@ -60,7 +60,7 @@ export const itemOnNpcAction = (player: Player, npc: Npc,
     let interactionActions = itemOnNpcInteractions.filter(plugin =>
         questFilter(player, plugin) &&
         pluginFilter(plugin.npcsIds, npc.id) && pluginFilter(plugin.itemIds, item.itemId));
-    const questActions = interactionActions.filter(plugin => plugin.quest !== undefined);
+    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
 
     if(questActions.length !== 0) {
         interactionActions = questActions;

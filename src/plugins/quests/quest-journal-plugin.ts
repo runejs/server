@@ -3,8 +3,6 @@ import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { widgets } from '@server/world/config/widget';
 import { quests } from '@server/world/config/quests';
 
-const buttonIds = Object.keys(quests).map(questKey => quests[questKey].questTabId);
-
 export const action: buttonAction = (details) => {
     const { player, buttonId } = details;
 
@@ -55,4 +53,4 @@ export const action: buttonAction = (details) => {
     };
 };
 
-export default new RunePlugin({ type: ActionType.BUTTON, widgetId: widgets.questTab, buttonIds, action });
+export default new RunePlugin({ type: ActionType.BUTTON, widgetId: widgets.questTab, action });

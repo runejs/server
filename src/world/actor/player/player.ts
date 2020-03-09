@@ -28,7 +28,7 @@ import { dialogueAction } from '@server/world/actor/player/action/dialogue-actio
 import { ActionPlugin } from '@server/plugins/plugin';
 import { songs } from '@server/world/config/songs';
 import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
-import { QuestData, quests } from '@server/world/config/quests';
+import { Quest, quests } from '@server/world/config/quests';
 import { NewFormatItemDefinition } from '@runejs/cache-parser';
 
 const DEFAULT_TAB_WIDGET_IDS = [
@@ -382,19 +382,11 @@ export class Player extends Actor {
 
     /**
      * Sets a player's quest stage to the specified value.
-     * @param quest The quest or ID of the quest to set the stage of.
+     * @param questId The ID of the quest to set the stage of.
      * @param stage The stage to set the quest to.
      */
-    public setQuestStage(quest: number | QuestData, stage: string): void {
-        let questId;
-        let questData: QuestData;
-        if(typeof quest === 'number') {
-            questId = quest;
-            questData = Object.keys(quests).map(key => quests[key]).find(quest => quest.id === questId);
-        } else {
-            questId = quest.id;
-            questData = quest;
-        }
+    public setQuestStage(questId: string, stage: string): void {
+        const questData = quests[questId];
 
         let playerQuest = this.quests.find(quest => quest.questId === questId);
         if(!playerQuest) {

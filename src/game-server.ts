@@ -23,6 +23,7 @@ import { setItemOnObjectPlugins } from '@server/world/actor/player/action/item-o
 import { setItemOnNpcPlugins } from '@server/world/actor/player/action/item-on-npc-action';
 import { setPlayerInitPlugins } from '@server/world/actor/player/player';
 import { setNpcInitPlugins } from '@server/world/actor/npc/npc';
+import { setQuestPlugins } from '@server/world/config/quests';
 
 export let serverConfig: ServerConfig;
 export let gameCache377: EarlyFormatGameCache;
@@ -43,6 +44,7 @@ export async function injectPlugins(): Promise<void> {
 
     Object.keys(actionTypes).forEach(key => actionTypes[key] = sort(actionTypes[key]));
 
+    setQuestPlugins(actionTypes[ActionType.QUEST]);
     setButtonPlugins(actionTypes[ActionType.BUTTON]);
     setNpcPlugins(actionTypes[ActionType.NPC_ACTION]);
     setObjectPlugins(actionTypes[ActionType.OBJECT_ACTION]);

@@ -1,8 +1,33 @@
 import { npcAction } from '@server/world/actor/player/action/npc-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { npcIds } from '@server/world/config/npc-ids';
-import { quests } from '@server/world/config/quests';
+import { Quest, quests } from '@server/world/config/quests';
 import { dialogue, Emote, execute, goto } from '@server/world/actor/dialogue';
+import { Player } from '@server/world/actor/player/player';
+import { Skill } from '@server/world/actor/skills';
+
+const quest: Quest = {
+    id: 'cooksAssistant',
+    questTabId: 27,
+    name: `Cook's Assistant`,
+    points: 1,
+    stages: {
+        NOT_STARTED: `I can start this quest by speaking to the <col=800000>Cook</col> in the<br>` +
+            `<col=800000>Kitchen</col> on the ground floor of <col=800000>Lumbridge Castle</col>.`,
+        COLLECTING: (attr) => `collecting stuff`,
+        COMPLETE: `completed`
+    },
+    completion: {
+        rewards: [ '300 Cooking XP' ],
+        onComplete: (player: Player): void => {
+            player.skills.addExp(Skill.COOKING, 300);
+        },
+        itemId: 1891,
+        modelZoom: 240,
+        modelRotationX: 180,
+        modelRotationY: 180
+    }
+};
 
 const startQuestAction: npcAction = (details) => {
     const { player, npc } = details;
@@ -54,7 +79,7 @@ const startQuestAction: npcAction = (details) => {
         options => [
             `I'm always happy to help a cook in distress.`, [
                 execute(() => {
-                    player.setQuestStage(quests.cooksAssistant.id, 'COLLECTING');
+                    player.setQuestStage('cooksAssistant', 'COLLECTING');
                 }),
                 player => [ Emote.GENERIC, `Yes, I'll help you.` ],
                 cook => [ Emote.HAPPY, `Oh thank you, thank you. I need milk, an egg and flour. I'd be very grateful ` +
@@ -103,20 +128,23 @@ const talkToCookDuringQuestAction: npcAction = (details) => {
     dialogue([ player, { npc, key: 'cook' }], [
         cook => [ Emote.HAPPY, `Hey fam, how's the ingredient hunt going?` ]
     ]).then(() => {
-        player.setQuestStage(quests.cooksAssistant, 'COMPLETE');
+        player.setQuestStage('cooksAssistant', 'COMPLETE');
     });
 };
 
 export default new RunePlugin([{
+    type: ActionType.QUEST,
+    quest
+}, {
     type: ActionType.NPC_ACTION,
-    quest: { questId: quests.cooksAssistant.id, stage: 'NOT_STARTED' },
+    questAction: { questId: 'cooksAssistant', stage: 'NOT_STARTED' },
     npcIds: npcIds.lumbridgeCook,
     options: 'talk-to',
     walkTo: true,
     action: startQuestAction
 }, {
     type: ActionType.NPC_ACTION,
-    quest: { questId: quests.cooksAssistant.id, stage: 'COLLECTING' },
+    questAction: { questId: 'cooksAssistant', stage: 'COLLECTING' },
     npcIds: npcIds.lumbridgeCook,
     options: 'talk-to',
     walkTo: true,

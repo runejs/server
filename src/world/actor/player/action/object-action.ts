@@ -57,7 +57,7 @@ export const objectAction = (player: Player, landscapeObject: LandscapeObject, l
 
     // Find all object action plugins that reference this landscape object
     let interactionActions = objectInteractions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, landscapeObject.objectId, plugin.options, option));
-    const questActions = interactionActions.filter(plugin => plugin.quest !== undefined);
+    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
 
     if(questActions.length !== 0) {
         interactionActions = questActions;
