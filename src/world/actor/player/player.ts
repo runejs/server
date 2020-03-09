@@ -4,7 +4,7 @@ import { Isaac } from '@server/net/isaac';
 import { PlayerUpdateTask } from './updating/player-update-task';
 import { Actor } from '../actor';
 import { Position } from '@server/world/position';
-import { serverConfig, world } from '@server/game-server';
+import { gameCache, serverConfig, world } from '@server/game-server';
 import { logger } from '@runejs/logger';
 import {
     Appearance,
@@ -29,6 +29,7 @@ import { ActionPlugin } from '@server/plugins/plugin';
 import { songs } from '@server/world/config/songs';
 import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 import { QuestData, quests } from '@server/world/config/quests';
+import { NewFormatItemDefinition } from '@runejs/cache-parser';
 
 const DEFAULT_TAB_WIDGET_IDS = [
     92, widgets.skillsTab, 274, widgets.inventory.widgetId, widgets.equipment.widgetId, 271, 192, -1, 131, 148,
@@ -409,6 +410,39 @@ export class Player extends Actor {
         if(playerQuest.stage === 'NOT_STARTED' && stage !== 'COMPLETE') {
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
         } else if(playerQuest.stage !== 'COMPLETE' && stage === 'COMPLETE') {
+            // @TODO player quest points
+
+            this.modifyWidget(widgets.questReward, { childId: 2, text: `You have completed ${questData.name}!` });
+            this.modifyWidget(widgets.questReward, { childId: 5, text: `${questData.points}` });
+            this.modifyWidget(widgets.questReward, { childId: 8, text: `${questData.points} Quest Point${questData.points > 1 ? 's' : ''}` });
+
+            for(let i = 0; i < 5; i++) {
+                if(i >= questData.completion.rewards.length) {
+                    this.modifyWidget(widgets.questReward, { childId: 9 + i, text: '' });
+                } else {
+                    this.modifyWidget(widgets.questReward, { childId: 9 + i, text: questData.completion.rewards[i] });
+                }
+            }
+
+            if(questData.completion.itemId) {
+                this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3,
+                    (gameCache.itemDefinitions.get(questData.completion.itemId) as NewFormatItemDefinition).inventoryModelId);
+            } else if(questData.completion.modelId) {
+                this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.completion.modelId);
+            }
+
+            this.outgoingPackets.setWidgetModelRotationAndZoom(widgets.questReward, 3,
+                questData.completion.modelRotationX || 0, questData.completion.modelRotationY || 0,
+                questData.completion.modelZoom || 0);
+
+            questData.completion.onComplete(this);
+
+            this.activeWidget = {
+                widgetId: widgets.questReward,
+                type: 'SCREEN',
+                closeOnWalk: true
+            };
+
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.green });
         }
 

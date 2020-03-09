@@ -102,7 +102,9 @@ const talkToCookDuringQuestAction: npcAction = (details) => {
 
     dialogue([ player, { npc, key: 'cook' }], [
         cook => [ Emote.HAPPY, `Hey fam, how's the ingredient hunt going?` ]
-    ]);
+    ]).then(() => {
+        player.setQuestStage(quests.cooksAssistant, 'COMPLETE');
+    });
 };
 
 export default new RunePlugin([{

@@ -33,6 +33,7 @@ export const widgets: any = {
         containerId: 0
     },
     questJournal: 275,
+    questReward: 277,
     welcomeScreen: 378,
     welcomeScreenChildren: {
         cogs: 16,

@@ -227,6 +227,24 @@ export class OutgoingPackets {
         this.queue(packet);
     }
 
+    public setWidgetModelRotationAndZoom(widgetId: number, childId: number, rotationX: number, rotationY: number, zoom: number): void {
+        const packet = new Packet(142);
+        packet.writeUnsignedShortBE(rotationX);
+        packet.writeUnsignedShortLE(zoom);
+        packet.writeUnsignedShortBE(rotationY);
+        packet.writeIntLE(widgetId << 16 | childId);
+
+        this.queue(packet);
+    }
+
+    public updateWidgetModel1(widgetId: number, childId: number, modelId: number): void {
+        const packet = new Packet(250);
+        packet.writeUnsignedShortLE(modelId);
+        packet.writeIntME2(widgetId << 16 | childId);
+
+        this.queue(packet);
+    }
+
     public updateWidgetItemModel(widgetId: number, itemId: number, scale?: number): void {
         const packet = new Packet(21);
         packet.writeShortBE(scale);
