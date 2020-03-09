@@ -17,11 +17,7 @@ export const action: buttonAction = (details) => {
     let stageText = questData.stages[playerStage];
 
     if(typeof stageText === 'function') {
-        if(playerQuest && playerQuest.attributes) {
-            stageText = stageText(playerQuest.attributes);
-        } else {
-            stageText = stageText({});
-        }
+        stageText = stageText(player);
     }
 
     let lines;

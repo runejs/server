@@ -1,7 +1,7 @@
 import { npcAction } from '@server/world/actor/player/action/npc-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { npcIds } from '@server/world/config/npc-ids';
-import { Quest, quests } from '@server/world/config/quests';
+import { Quest } from '@server/world/config/quests';
 import { dialogue, Emote, execute, goto } from '@server/world/actor/dialogue';
 import { Player } from '@server/world/actor/player/player';
 import { Skill } from '@server/world/actor/skills';
@@ -14,7 +14,17 @@ const quest: Quest = {
     stages: {
         NOT_STARTED: `I can start this quest by speaking to the <col=800000>Cook</col> in the<br>` +
             `<col=800000>Kitchen</col> on the ground floor of <col=800000>Lumbridge Castle</col>.`,
-        COLLECTING: (attr) => `collecting stuff`,
+        COLLECTING: (player) => `It's the <col=800000>Duke of Lumbridge's</col> birthday and I have to help<br>` +
+            `his <col=800000>Cook</col> make him a <col=800000>birthday cake.</col> To do this I need to<br>` +
+            `bring him the following ingredients:<br>` +
+            `I need to find a <col=800000>bucket of milk.</col> There's a cattle field east<br>` +
+            `of Lumbridge, I should make sure I take an empty bucket<br>` +
+            `with me.<br>` +
+            `I need a <col=800000>pot of flour.</col> There's a mill found north-<br>` +
+            `west of Lumbridge, I should take an empty pot with me.<br>` +
+            `I need to find an <col=800000>egg.</col> The cook normally gets his eggs from<br>` +
+            `the Groats' farm, found just to the west of the cattle<br>` +
+            `field.`,
         COMPLETE: `completed`
     },
     completion: {
@@ -28,6 +38,36 @@ const quest: Quest = {
         modelRotationY: 180
     }
 };
+
+function dialogueIngredientQuestions(): Function {
+    return (options, tag_Ingredient_Questions) => [
+        `Where do I find some flour?`, [
+            player => [ Emote.GENERIC, `Where do I find some flour?` ],
+            cook => [ Emote.GENERIC, `There is a Mill fairly close, go North and then West. Mill Lane Mill ` +
+            `is just off the road to Draynor. I usually get my flour from there.` ],
+            cook => [ Emote.HAPPY, `Talk to Millie, she'll help, she's a lovely girl and a fine Miller.` ],
+            goto('tag_Ingredient_Questions')
+        ],
+        `How about milk?`, [
+            player => [ Emote.GENERIC, `How about milk?` ],
+            cook => [ Emote.GENERIC, `There is a cattle field on the other side of the river, just across ` +
+            `the road from Groats' Farm.` ],
+            cook => [ Emote.HAPPY, `Talk to Gillie Groats, she look after the Dairy Cows - ` +
+            `she'll tell you everything you need to know about milking cows!` ],
+            goto('tag_Ingredient_Questions')
+        ],
+        `And eggs? Where are they found?`, [
+            player => [ Emote.GENERIC, `And eggs? Where are they found?` ],
+            cook => [ Emote.GENERIC, `I normally get my eggs from the Groats' farm, on the other side of ` +
+            `the river.` ],
+            cook => [ Emote.GENERIC, `But any chicken should lay eggs.` ],
+            goto('tag_Ingredient_Questions')
+        ],
+        `Actually, I know where to find this stuff.`, [
+            player => [ Emote.GENERIC, `I've got all the information I need. Thanks.` ]
+        ]
+    ];
+}
 
 const startQuestAction: npcAction = (details) => {
     const { player, npc } = details;
@@ -85,33 +125,7 @@ const startQuestAction: npcAction = (details) => {
                 cook => [ Emote.HAPPY, `Oh thank you, thank you. I need milk, an egg and flour. I'd be very grateful ` +
                     `if you can get them for me.` ],
                 player => [ Emote.GENERIC, `So where do I find these ingredients then?` ],
-                (options, tag_Ingredient_Questions) => [
-                    `Where do I find some flour?`, [
-                        player => [ Emote.GENERIC, `Where do I find some flour?` ],
-                        cook => [ Emote.GENERIC, `There is a Mill fairly close, go North and then West. Mill Lane Mill ` +
-                        `is just off the road to Draynor. I usually get my flour from there.` ],
-                        cook => [ Emote.HAPPY, `Talk to Millie, she'll help, she's a lovely girl and a fine Miller.` ],
-                        goto('tag_Ingredient_Questions')
-                    ],
-                    `How about milk?`, [
-                        player => [ Emote.GENERIC, `How about milk?` ],
-                        cook => [ Emote.GENERIC, `There is a cattle field on the other side of the river, just across ` +
-                        `the road from Groats' Farm.` ],
-                        cook => [ Emote.HAPPY, `Talk to Gillie Groats, she look after the Dairy Cows - ` +
-                        `she'll tell you everything you need to know about milking cows!` ],
-                        goto('tag_Ingredient_Questions')
-                    ],
-                    `And eggs? Where are they found?`, [
-                        player => [ Emote.GENERIC, `And eggs? Where are they found?` ],
-                        cook => [ Emote.GENERIC, `I normally get my eggs from the Groats' farm, on the other side of ` +
-                        `the river.` ],
-                        cook => [ Emote.GENERIC, `But any chicken should lay eggs.` ],
-                        goto('tag_Ingredient_Questions')
-                    ],
-                    `Actually, I know where to find this stuff.`, [
-                        player => [ Emote.GENERIC, `I've got all the information I need. Thanks.` ]
-                    ]
-                ]
+                dialogueIngredientQuestions()
             ],
             `I can't right now, maybe later.`, [
                 player => [ Emote.GENERIC, `No, I don't feel like it. Maybe later.` ],
@@ -126,10 +140,22 @@ const talkToCookDuringQuestAction: npcAction = (details) => {
     const { player, npc } = details;
 
     dialogue([ player, { npc, key: 'cook' }], [
-        cook => [ Emote.HAPPY, `Hey fam, how's the ingredient hunt going?` ]
-    ]).then(() => {
-        player.setQuestStage('cooksAssistant', 'COMPLETE');
-    });
+        cook => [ Emote.GENERIC, `How are you getting on with finding the ingredients?` ],
+        player => [ Emote.GENERIC, `I haven't got any of them yet, I'm still looking.` ],
+        cook => [ Emote.SAD, `Please get the ingredients quickly. I'm running out of time! ` +
+            `The Duke will throw me into the streets!` ],
+        text => `You still need to get\n` +
+            `A bucket of milk. A pot of flour. An egg.`,
+        options => [
+            `I'll get right on it.`, [
+                player => [ Emote.GENERIC, `I'll get right on it.` ]
+            ],
+            `Can you remind me how to find these things again?`, [
+                player => [ Emote.GENERIC, `So where do I find these ingredients then?` ],
+                dialogueIngredientQuestions()
+            ]
+        ]
+    ]);
 };
 
 export default new RunePlugin([{

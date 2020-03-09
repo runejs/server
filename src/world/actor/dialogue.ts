@@ -3,7 +3,6 @@ import { Player } from '@server/world/actor/player/player';
 import { Subscription } from 'rxjs';
 import { gameCache } from '@server/game-server';
 import { logger } from '@runejs/logger/dist/logger';
-import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
 
 export enum Emote {
     POMPOUS = 'POMPOUS',
@@ -105,6 +104,7 @@ const nonLineEmotes = [ Emote.BLANK_STARE, Emote.SINGLE_WORD, Emote.EVIL_STARE, 
 const playerWidgetIds = [ 64, 65, 66, 67 ];
 const npcWidgetIds = [ 241, 242, 243, 244 ];
 const optionWidgetIds = [ 228, 230, 232, 234 ];
+const textWidgetIds = [ 210, 211, 212, 213, 214 ];
 
 // Thank you to the Apollo team for these values. :)
 const charWidths = [ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
@@ -212,6 +212,10 @@ interface PlayerDialogueAction extends ActorDialogueAction {
     player: Player;
 }
 
+interface TextDialogueAction extends DialogueAction {
+    lines: string[];
+}
+
 interface OptionsDialogueAction extends DialogueAction {
     options: { [key: string]: ParsedDialogueTree };
 }
@@ -290,6 +294,12 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
 
                 parsedDialogueTree.push(optionsDialogueAction);
             }
+        } else if(dialogueType === 'text') {
+            // Text-only dialogue.
+
+            const text: string = dialogueAction();
+            const lines = wrapText(text, 'TEXT');
+            parsedDialogueTree.push({ lines, tag, type: 'TEXT' } as TextDialogueAction);
         } else {
             // Player or Npc dialogue.
 
@@ -405,6 +415,22 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
                             resolve();
                         }
                     }
+                }
+            } else if(dialogueAction.type === 'TEXT') {
+                // Text-only dialogue.
+
+                if(tag === undefined || dialogueAction.tag === tag) {
+                    tag = undefined;
+
+                    const textDialogueAction = dialogueAction as TextDialogueAction;
+                    const lines = textDialogueAction.lines;
+                    widgetId = textWidgetIds[lines.length - 1];
+
+                    for(let i = 0; i < lines.length; i++) {
+                        player.outgoingPackets.updateWidgetString(widgetId, i, lines[i]);
+                    }
+                } else if(tag !== undefined) {
+                    resolve();
                 }
             } else {
                 // Player or Npc dialogue.
