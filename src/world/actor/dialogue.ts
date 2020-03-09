@@ -2,6 +2,8 @@ import { Npc } from '@server/world/actor/npc/npc';
 import { Player } from '@server/world/actor/player/player';
 import { Subscription } from 'rxjs';
 import { gameCache } from '@server/game-server';
+import { logger } from '@runejs/logger/dist/logger';
+import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
 
 export enum Emote {
     POMPOUS = 'POMPOUS',
@@ -183,24 +185,164 @@ class DialogueFunction {
     constructor(public type: string, public execute: Function) {}
 }
 
+class GoToAction {
+    constructor(public to: string) {}
+}
+
 export const execute = (execute: Function): DialogueFunction => new DialogueFunction('execute', execute);
+export const goto = (to: string): GoToAction => new GoToAction(to);
 
-export const goBack = (to: string): Function => goBackTo => to;
+type ParsedDialogueTree = (DialogueAction | DialogueFunction | string)[];
 
-// @TODO level-up, plain text
-export async function dialogue(participants: (Player | NpcParticipant)[], dialogueTree: DialogueTree, parent: boolean = true): Promise<void> {
-    const player = participants.find(p => p instanceof Player) as Player;
+interface DialogueAction {
+    tag: string;
+    type: string;
+}
 
-    if(!player) {
-        return Promise.reject('Player instance not provided to dialogue action.');
+interface ActorDialogueAction extends DialogueAction {
+    animation: number;
+    lines: string[];
+}
+
+interface NpcDialogueAction extends ActorDialogueAction {
+    npcId: number;
+}
+
+interface PlayerDialogueAction extends ActorDialogueAction {
+    player: Player;
+}
+
+interface OptionsDialogueAction extends DialogueAction {
+    options: { [key: string]: ParsedDialogueTree };
+}
+
+function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], dialogueTree: DialogueTree): ParsedDialogueTree {
+    const parsedDialogueTree: ParsedDialogueTree = [];
+
+    for(let i = 0; i < dialogueTree.length; i++) {
+        const dialogueAction = dialogueTree[i];
+
+        if(dialogueAction instanceof DialogueFunction) {
+            // Code execution dialogue.
+            parsedDialogueTree.push(dialogueAction as DialogueFunction);
+            continue;
+        }
+
+        if(dialogueAction instanceof GoToAction) {
+            parsedDialogueTree.push(dialogueAction.to);
+            continue;
+        }
+
+        const args = parseDialogueFunctionArgs(dialogueAction);
+        const dialogueType = args[0];
+        let tag: string = null;
+
+        if(args.length === 2 && typeof args[1] === 'string') {
+            player.metadata.dialogueIndices[args[1]] = i;
+            tag = args[1];
+        }
+
+        if(!dialogueType) {
+            logger.error('No arguments passed to dialogue function.');
+            continue;
+        }
+
+        let isOptions = false;
+
+        if(dialogueType === 'options' || dialogueType === '()') {
+            // Options or custom function dialogue.
+
+            let result = dialogueAction();
+
+            if(dialogueType === '()') {
+                const funcResult = result();
+
+                if(!Array.isArray(funcResult) || funcResult.length === 0) {
+                    logger.error('Invalid dialogue function response type.');
+                    continue;
+                }
+
+                if(typeof funcResult[0] === 'function') {
+                    // given function returned a dialogue tree
+                    parsedDialogueTree.push(...parseDialogueTree(player, npcParticipants, funcResult));
+                } else {
+                    // given function returned an option list
+                    result = funcResult;
+                    isOptions = true;
+                }
+            } else {
+                isOptions = true;
+            }
+
+            if(isOptions) {
+                const options = (result as any[]).filter((option, index) => index % 2 === 0);
+                const trees = (result as any[]).filter((option, index) => index % 2 !== 0);
+                const optionsDialogueAction: OptionsDialogueAction = {
+                    options: {},
+                    tag, type: 'OPTIONS'
+                };
+
+                for(let j = 0; j < options.length; j++) {
+                    const option = options[j];
+                    const tree = parseDialogueTree(player, npcParticipants, trees[j]);
+                    optionsDialogueAction.options[option] = tree;
+                }
+
+                parsedDialogueTree.push(optionsDialogueAction);
+            }
+        } else {
+            // Player or Npc dialogue.
+
+            let dialogueDetails: [ Emote, string ];
+            let npc: Npc | number;
+
+            if(dialogueType !== 'player') {
+                const participant = npcParticipants.find(p => p.key === dialogueType) as NpcParticipant;
+                if(!participant || !participant.npc) {
+                    logger.error('No matching npc found for npc dialogue action.');
+                    continue;
+                }
+
+                npc = participant.npc;
+                if(typeof npc !== 'number') {
+                    npc = npc.id;
+                }
+
+                dialogueDetails = dialogueAction(npc);
+            } else {
+                dialogueDetails = dialogueAction(player);
+            }
+
+            const emote = dialogueDetails[0] as Emote;
+            const text = dialogueDetails[1] as string;
+            const lines = wrapText(text, 'ACTOR');
+            const animation = nonLineEmotes.indexOf(emote) !== -1 ? EmoteAnimation[emote] : EmoteAnimation[`${emote}_${lines.length}LINE`];
+
+            if(dialogueType !== 'player') {
+                const npcDialogueAction: NpcDialogueAction = {
+                    npcId: npc as number, animation, lines, tag, type: 'NPC'
+                };
+
+                parsedDialogueTree.push(npcDialogueAction);
+            } else {
+                const playerDialogueAction: PlayerDialogueAction = {
+                    player, animation, lines, tag, type: 'PLAYER'
+                };
+
+                parsedDialogueTree.push(playerDialogueAction);
+            }
+        }
     }
+
+    return parsedDialogueTree;
+}
+
+async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTree, tag?: string): Promise<boolean> {
+    // if we reach a "goTo"...
+    // 1. re-run entire tree, skipping all dialogues until we find "tag"
+    // 2. continue as normal
 
     let stopLoop = false;
-
-    if(parent) {
-        // dis aint gonna work
-        player.metadata.goBackIndexes = {};
-    }
 
     for(let i = 0; i < dialogueTree.length; i++) {
         if(stopLoop) {
@@ -210,63 +352,36 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
         let sub: Subscription[] = [];
 
         await new Promise((resolve, reject) => {
-            const dialogueAction = dialogueTree[i];
+            let dialogueAction = dialogueTree[i];
 
-            if(dialogueAction instanceof DialogueFunction) {
+            if(dialogueAction instanceof DialogueFunction && !tag) {
                 // Code execution dialogue.
-
                 dialogueAction.execute();
                 resolve();
                 return;
             }
 
-            const args = parseDialogueFunctionArgs(dialogueAction);
-            const dialogueType = args[0];
-
-            if(args.length === 2 && typeof args[1] === 'string') {
-                console.log(args[1]);
-                player.metadata.goBackIndexes[args[1]] = i;
-                console.log(player.metadata.goBackIndexes);
-            }
-
-            if(!dialogueType) {
-                console.error('No arguments passed to dialogue function.');
-                resolve();
+            if(typeof dialogueAction === 'string' && !tag) {
+                // Goto dialogue.
+                runParsedDialogue(player, player.metadata.dialogueTree, dialogueAction).then(() => resolve());
                 return;
             }
+
+            dialogueAction = dialogueAction as DialogueAction;
 
             let widgetId: number;
             let isOptions = false;
 
-            if(dialogueType === 'options' || dialogueType === '()') {
-                // Options or custom function dialogue.
+            if(dialogueAction.type === 'OPTIONS') {
+                // Option dialogue.
+                const optionsAction = dialogueAction as OptionsDialogueAction;
+                isOptions = true;
+                const options = Object.keys(optionsAction.options);
+                const trees = options.map(option => optionsAction.options[option]);
 
-                let result = dialogueAction();
+                if(tag === undefined || dialogueAction.tag === tag) {
+                    tag = undefined;
 
-                if(dialogueType === '()') {
-                    const funcResult = result();
-
-                    if(!Array.isArray(funcResult) || funcResult.length === 0) {
-                        reject('Invalid dialogue function response type.');
-                        return;
-                    }
-
-                    if(typeof funcResult[0] === 'function') {
-                        // given function returned a dialogue tree
-                        dialogue(participants, funcResult, false).then(() => resolve());
-                    } else {
-                        // given function returned an option list
-                        result = funcResult;
-                        isOptions = true;
-                    }
-                } else {
-                    isOptions = true;
-                }
-
-                if(isOptions) {
-                    const options = (result as any[]).filter((option, index) => index % 2 === 0);
-                    const trees = (result as any[]).filter((option, index) => index % 2 !== 0);
-                    isOptions = true;
                     widgetId = optionWidgetIds[options.length - 2];
 
                     for(let i = 0; i < options.length; i++) {
@@ -275,87 +390,73 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
 
                     sub.push(player.dialogueInteractionEvent.subscribe(choice => {
                         sub.forEach(s => s.unsubscribe());
-                        const tree: DialogueTree = trees[choice - 1];
+                        const tree: ParsedDialogueTree = trees[choice - 1];
                         if(!tree || tree.length === 0) {
                             resolve();
                         } else {
-                            dialogue(participants, tree, false).then(() => resolve());
+                            runParsedDialogue(player, tree, tag).then(() => resolve());
                         }
                     }));
+                } else if(tag !== undefined) {
+                    for(let i = 0; i < options.length; i++) {
+                        const tree = trees[i];
+                        const didRun = runParsedDialogue(player, tree, tag);
+                        if(didRun) {
+                            resolve();
+                        }
+                    }
                 }
-            } else if(dialogueType === 'goBackTo') {
-                console.log('goBackTo');
-                const goBackTo = dialogueAction();
-                console.log('goBackTo ' + goBackTo);
-                console.log(player.metadata.goBackIndexes);
-                if(!goBackTo || player.metadata.goBackIndexes[goBackTo] === undefined) {
-                    console.log('not find gobackto');
-                    resolve();
-                    return;
-                }
-                console.log('goBackTo valid ' + goBackTo);
-
-                i = player.metadata.goBackIndexes[goBackTo];
-                resolve();
-                return;
             } else {
                 // Player or Npc dialogue.
 
-                let dialogueDetails: [ Emote, string ];
-                let npc: Npc | number;
+                if(tag === undefined || dialogueAction.tag === tag) {
+                    tag = undefined;
 
-                if(dialogueType !== 'player') {
-                    const participant = participants.find(p => (!(p instanceof Player) && p.key === dialogueType) ? p.npc : null) as NpcParticipant;
-                    if(!participant || !participant.npc) {
-                        resolve();
-                        return;
+                    let npcId: number;
+
+                    if(dialogueAction.type === 'NPC') {
+                        npcId = (dialogueAction as NpcDialogueAction).npcId;
                     }
 
-                    npc = participant.npc;
-                    if(typeof npc !== 'number') {
-                        npc = npc.id;
+                    const actorDialogueAction = dialogueAction as ActorDialogueAction;
+                    const lines = actorDialogueAction.lines;
+                    const animation = actorDialogueAction.animation;
+
+                    if(dialogueAction.type === 'NPC') {
+                        widgetId = npcWidgetIds[lines.length - 1];
+                        player.outgoingPackets.setWidgetNpcHead(widgetId, 0, npcId as number);
+                        player.outgoingPackets.updateWidgetString(widgetId, 1, gameCache.npcDefinitions.get(npcId as number).name);
+                    } else {
+                        widgetId = playerWidgetIds[lines.length - 1];
+                        player.outgoingPackets.setWidgetPlayerHead(widgetId, 0);
+                        player.outgoingPackets.updateWidgetString(widgetId, 1, player.username);
                     }
 
-                    dialogueDetails = dialogueAction(npc);
-                } else {
-                    dialogueDetails = dialogueAction(player);
-                }
+                    player.outgoingPackets.playWidgetAnimation(widgetId, 0, animation);
 
-                const emote = dialogueDetails[0] as Emote;
-                const text = dialogueDetails[1] as string;
-                const lines = wrapText(text, 'ACTOR');
-                const animation = nonLineEmotes.indexOf(emote) !== -1 ? EmoteAnimation[emote] : EmoteAnimation[`${emote}_${lines.length}LINE`];
-
-                if(dialogueType !== 'player') {
-                    widgetId = npcWidgetIds[lines.length - 1];
-                    player.outgoingPackets.setWidgetNpcHead(widgetId, 0, npc as number);
-                    player.outgoingPackets.updateWidgetString(widgetId, 1, gameCache.npcDefinitions.get(npc as number).name);
-                } else {
-                    widgetId = playerWidgetIds[lines.length - 1];
-                    player.outgoingPackets.setWidgetPlayerHead(widgetId, 0);
-                    player.outgoingPackets.updateWidgetString(widgetId, 1, player.username);
-                }
-
-                player.outgoingPackets.playWidgetAnimation(widgetId, 0, animation);
-
-                for(let i = 0; i < lines.length; i++) {
-                    player.outgoingPackets.updateWidgetString(widgetId, 2 + i, lines[i]);
-                }
-            }
-
-            if(!isOptions) {
-                sub.push(player.dialogueInteractionEvent.subscribe(() => {
-                    sub.forEach(s => s.unsubscribe());
+                    for(let i = 0; i < lines.length; i++) {
+                        player.outgoingPackets.updateWidgetString(widgetId, 2 + i, lines[i]);
+                    }
+                } else if(tag !== undefined) {
                     resolve();
-                }));
+                }
             }
 
-            player.activeWidget = {
-                widgetId: widgetId,
-                type: 'CHAT',
-                closeOnWalk: true,
-                forceClosed: () => reject('WIDGET_CLOSED')
-            };
+            if(tag === undefined) {
+                if(!isOptions) {
+                    sub.push(player.dialogueInteractionEvent.subscribe(() => {
+                        sub.forEach(s => s.unsubscribe());
+                        resolve();
+                    }));
+                }
+
+                player.activeWidget = {
+                    widgetId: widgetId,
+                    type: 'CHAT',
+                    closeOnWalk: true,
+                    forceClosed: () => reject('WIDGET_CLOSED')
+                };
+            }
         }).then(() => {
             sub.forEach(s => s.unsubscribe());
         }).catch(() => {
@@ -363,4 +464,25 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
             stopLoop = true;
         });
     }
+
+    return tag === undefined;
+}
+
+// @TODO level-up, plain text
+export async function dialogue(participants: (Player | NpcParticipant)[], dialogueTree: DialogueTree): Promise<void> {
+    const player = participants.find(p => p instanceof Player) as Player;
+
+    if(!player) {
+        return Promise.reject('Player instance not provided to dialogue action.');
+    }
+
+    let npcParticipants = participants.filter(p => !(p instanceof Player)) as NpcParticipant[];
+    if(!npcParticipants) {
+        npcParticipants = [];
+    }
+
+    player.metadata.dialogueIndices = {};
+    const parsedDialogueTree = parseDialogueTree(player, npcParticipants, dialogueTree);
+    player.metadata.dialogueTree = parsedDialogueTree;
+    await runParsedDialogue(player, parsedDialogueTree);
 }
