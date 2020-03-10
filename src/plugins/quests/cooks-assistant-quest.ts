@@ -2,9 +2,11 @@ import { npcAction } from '@server/world/actor/player/action/npc-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { npcIds } from '@server/world/config/npc-ids';
 import { Quest } from '@server/world/config/quests';
-import { dialogue, Emote, execute, goto } from '@server/world/actor/dialogue';
+import { dialogue, DialogueTree, Emote, execute, goto } from '@server/world/actor/dialogue';
 import { Player } from '@server/world/actor/player/player';
 import { Skill } from '@server/world/actor/skills';
+import { itemIds } from '@server/world/config/item-ids';
+import { logger } from '@runejs/logger/dist/logger';
 
 const quest: Quest = {
     id: 'cooksAssistant',
@@ -14,17 +16,35 @@ const quest: Quest = {
     stages: {
         NOT_STARTED: `I can start this quest by speaking to the <col=800000>Cook</col> in the<br>` +
             `<col=800000>Kitchen</col> on the ground floor of <col=800000>Lumbridge Castle</col>.`,
-        COLLECTING: (player) => `It's the <col=800000>Duke of Lumbridge's</col> birthday and I have to help<br>` +
-            `his <col=800000>Cook</col> make him a <col=800000>birthday cake.</col> To do this I need to<br>` +
-            `bring him the following ingredients:<br>` +
-            `I need to find a <col=800000>bucket of milk.</col> There's a cattle field east<br>` +
-            `of Lumbridge, I should make sure I take an empty bucket<br>` +
-            `with me.<br>` +
-            `I need a <col=800000>pot of flour.</col> There's a mill found north-<br>` +
-            `west of Lumbridge, I should take an empty pot with me.<br>` +
-            `I need to find an <col=800000>egg.</col> The cook normally gets his eggs from<br>` +
-            `the Groats' farm, found just to the west of the cattle<br>` +
-            `field.`,
+        COLLECTING: (player: Player) => {
+            let questLog = `It's the <col=800000>Duke of Lumbridge's</col> birthday and I have to help<br>` +
+                `his <col=800000>Cook</col> make him a <col=800000>birthday cake.</col> To do this I need to<br>` +
+                `bring him the following ingredients:<br>`;
+
+            if(player.hasItemInInventory(itemIds.bucketOfMilk)) {
+                questLog += `I have found a <col=800000>bucket of milk</col> to give to the cook.<br>`;
+            } else {
+                questLog += `I need to find a <col=800000>bucket of milk.</col> There's a cattle field east<br>` +
+                    `of Lumbridge, I should make sure I take an empty bucket<br>`;
+            }
+
+            if(player.hasItemInInventory(itemIds.potOfFlour)) {
+                questLog += `I have found a <col=800000>pot of flour</col> to give to the cook.<br>`;
+            } else {
+                questLog += `I need a <col=800000>pot of flour.</col> There's a mill found north-<br>` +
+                    `west of Lumbridge, I should take an empty pot with me.<br>`;
+            }
+
+            if(player.hasItemInInventory(itemIds.egg)) {
+                questLog += `I have found an <col=800000>egg</col> to give to the cook.`;
+            } else {
+                questLog += `I need to find an <col=800000>egg.</col> The cook normally gets his eggs from<br>` +
+                    `the Groats' farm, found just to the west of the cattle<br>` +
+                    `field.`;
+            }
+
+            return questLog;
+        },
         COMPLETE: `completed`
     },
     completion: {
@@ -136,26 +156,96 @@ const startQuestAction: npcAction = (details) => {
     ]).catch(error => console.error(error));
 };
 
-const talkToCookDuringQuestAction: npcAction = (details) => {
+const handInIngredientsAction: npcAction = (details) => {
     const { player, npc } = details;
 
-    dialogue([ player, { npc, key: 'cook' }], [
-        cook => [ Emote.GENERIC, `How are you getting on with finding the ingredients?` ],
-        player => [ Emote.GENERIC, `I haven't got any of them yet, I'm still looking.` ],
-        cook => [ Emote.SAD, `Please get the ingredients quickly. I'm running out of time! ` +
-            `The Duke will throw me into the streets!` ],
-        text => `You still need to get\n` +
-            `A bucket of milk. A pot of flour. An egg.`,
-        options => [
-            `I'll get right on it.`, [
-                player => [ Emote.GENERIC, `I'll get right on it.` ]
-            ],
-            `Can you remind me how to find these things again?`, [
-                player => [ Emote.GENERIC, `So where do I find these ingredients then?` ],
-                dialogueIngredientQuestions()
-            ]
-        ]
-    ]);
+    const dialogueTree: DialogueTree = [
+        cook => [Emote.GENERIC, `How are you getting on with finding the ingredients?`]
+    ];
+
+    const quest = player.quests.find(quest => quest.questId === 'cooksAssistant');
+
+    const ingredients = [
+        { itemId: itemIds.bucketOfMilk, text: `Here's a bucket of milk.`, attr: 'givenMilk' },
+        { itemId: itemIds.potOfFlour, text: `Here's a pot of flour.`, attr: 'givenFlour' },
+        { itemId: itemIds.egg, text: `Here's a fresh egg.`, attr: 'givenEgg' }
+    ];
+
+    for(const ingredient of ingredients) {
+        if(quest.attributes[ingredient.attr]) {
+            quest.attributes.ingredientCount++;
+            continue;
+        }
+
+        if(!player.hasItemInInventory(ingredient.itemId)) {
+            continue;
+        }
+
+        dialogueTree.push(
+            player => [Emote.GENERIC, ingredient.text],
+            execute(() => {
+                const quest = player.quests.find(quest => quest.questId === 'cooksAssistant');
+
+                if(player.removeFirstItem(ingredient.itemId) !== -1) {
+                    quest.attributes[ingredient.attr] = true;
+                }
+            })
+        );
+    }
+
+    dialogue([player, { npc, key: 'cook' }], dialogueTree)
+        .then(() => {
+            const subTree: DialogueTree = [];
+
+            if(quest.attributes.givenMilk && quest.attributes.givenFlour && quest.attributes.givenEgg) {
+                // Player has brought all 3 ingredients
+
+                subTree.push(
+                    cook => [Emote.HAPPY, `You've brought me everything I need! I am saved! Thank you!`],
+                    player => [Emote.WONDERING, `So do I get to go to the Duke's Party?`],
+                    cook => [Emote.SAD, `I'm afraid not, only the big cheeses get to dine with the Duke.`],
+                    player => [Emote.GENERIC, `Well, maybe one day I'll be important enough to sit on the Duke's table.`],
+                    cook => [Emote.SKEPTICAL, `Maybe, but I won't be holding my breath.`],
+                    execute(() => {
+                        player.setQuestStage('cooksAssistant', 'COMPLETE');
+                    })
+                );
+            } else {
+                if(!quest.attributes.givenMilk && !quest.attributes.givenFlour && !quest.attributes.givenEgg) {
+                    // Player has not brought any ingredients
+
+                    subTree.push(
+                        player => [Emote.GENERIC, `I haven't got any of them yet, I'm still looking.`],
+                        cook => [Emote.SAD, `Please get the ingredients quickly. I'm running out of time! ` +
+                        `The Duke will throw me into the streets!`]
+                    );
+                } else {
+                    // Player has brought 1 or 2 ingredients
+
+                    subTree.push(
+                        cook => [Emote.SAD, `Thanks for the ingredients you have got so far, please get the rest quickly. ` +
+                        `I'm running out of time! The Duke will throw me into the streets!`]
+                    );
+                }
+
+                subTree.push(
+                    text => `You still need to get\n` +
+                        `${!quest.attributes.givenMilk ? `A bucket of milk. `: ``}${!quest.attributes.givenFlour ? `A pot of flour. ` : ``}${!quest.attributes.givenEgg ? `An egg.` : ``}`,
+                    options => [
+                        `I'll get right on it.`, [
+                            player => [Emote.GENERIC, `I'll get right on it.`]
+                        ],
+                        `Can you remind me how to find these things again?`, [
+                            player => [Emote.GENERIC, `So where do I find these ingredients then?`],
+                            dialogueIngredientQuestions()
+                        ]
+                    ]
+                );
+            }
+
+            dialogue([player, { npc, key: 'cook' }], subTree).catch(error => logger.error(error));
+        })
+        .catch(error => logger.error(error));
 };
 
 export default new RunePlugin([{
@@ -174,5 +264,5 @@ export default new RunePlugin([{
     npcIds: npcIds.lumbridgeCook,
     options: 'talk-to',
     walkTo: true,
-    action: talkToCookDuringQuestAction
+    action: handInIngredientsAction
 }]);

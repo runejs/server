@@ -174,7 +174,7 @@ function parseDialogueFunctionArgs(func): string[] {
     return arg.split(',');
 }
 
-type DialogueTree = (Function | DialogueFunction)[];
+export type DialogueTree = (Function | DialogueFunction)[];
 
 interface NpcParticipant {
     npc: Npc | number;
@@ -237,7 +237,10 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
             continue;
         }
 
-        const args = parseDialogueFunctionArgs(dialogueAction);
+        let args = parseDialogueFunctionArgs(dialogueAction);
+        if(args === null) {
+            args = ['()'];
+        }
         const dialogueType = args[0];
         let tag: string = null;
 
