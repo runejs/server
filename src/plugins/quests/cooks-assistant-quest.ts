@@ -45,7 +45,16 @@ const quest: Quest = {
 
             return questLog;
         },
-        COMPLETE: `completed`
+        COMPLETE: `<col=000000><str=000000>It was the Duke of Lumbridge's birthday, but his cook had</str></col><br>` +
+                `<col=000000><str=000000>forgotten to buy the ingredients he needed to make him a</str></col><br>` +
+                `<col=000000><str=000000>cake. I brought the cook an egg, some flour and some milk</str></col><br>` +
+                `<col=000000><str=000000>and the cook made a delicious looking cake with them.</str></col><br>` +
+                ` <br>` +
+                `<col=000000><str=000000>As a reward he now lets me use his high quality range</str></col><br>` +
+                `<col=000000><str=000000>which lets me burn things less whenever I wish to cook</str></col><br>` +
+                `<col=000000><str=000000>there.</str></col><br>` +
+                ` <br>` +
+                `<col=ff0000>QUEST COMPLETE!</col>`
     },
     completion: {
         rewards: [ '300 Cooking XP' ],
@@ -247,6 +256,8 @@ const handInIngredientsAction: npcAction = (details) => {
         })
         .catch(error => logger.error(error));
 };
+
+// @TODO quest journal auto new-line?
 
 export default new RunePlugin([{
     type: ActionType.QUEST,
