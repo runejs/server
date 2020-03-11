@@ -232,32 +232,29 @@ const handInIngredientsAction: npcAction = (details) => {
             } else {
                 return 'tag_SOME_INGREDIENTS';
             }
-        })
+        }),
+        (subtree, tag_ALL_INGREDIENTS) => [
+            cook => [Emote.HAPPY, `You've brought me everything I need! I am saved! Thank you!`],
+            player => [Emote.WONDERING, `So do I get to go to the Duke's Party?`],
+            cook => [Emote.SAD, `I'm afraid not, only the big cheeses get to dine with the Duke.`],
+            player => [Emote.GENERIC, `Well, maybe one day I'll be important enough to sit on the Duke's table.`],
+            cook => [Emote.SKEPTICAL, `Maybe, but I won't be holding my breath.`],
+            execute(() => {
+                player.setQuestStage('cooksAssistant', 'COMPLETE');
+            })
+        ],
+        (subtree, tag_NO_INGREDIENTS) => [
+            player => [Emote.GENERIC, `I haven't got any of them yet, I'm still looking.`],
+            cook => [Emote.SAD, `Please get the ingredients quickly. I'm running out of time! ` +
+            `The Duke will throw me into the streets!`],
+            ...youStillNeed(quest)
+        ],
+        (subtree, tag_SOME_INGREDIENTS) => [
+            cook => [Emote.SAD, `Thanks for the ingredients you have got so far, please get the rest quickly. ` +
+            `I'm running out of time! The Duke will throw me into the streets!`],
+            ...youStillNeed(quest)
+        ]
     );
-
-    dialogueTree.push((subtree, tag_ALL_INGREDIENTS) => [
-        cook => [Emote.HAPPY, `You've brought me everything I need! I am saved! Thank you!`],
-        player => [Emote.WONDERING, `So do I get to go to the Duke's Party?`],
-        cook => [Emote.SAD, `I'm afraid not, only the big cheeses get to dine with the Duke.`],
-        player => [Emote.GENERIC, `Well, maybe one day I'll be important enough to sit on the Duke's table.`],
-        cook => [Emote.SKEPTICAL, `Maybe, but I won't be holding my breath.`],
-        execute(() => {
-            player.setQuestStage('cooksAssistant', 'COMPLETE');
-        })
-    ]);
-
-    dialogueTree.push((subtree, tag_NO_INGREDIENTS) => [
-        player => [Emote.GENERIC, `I haven't got any of them yet, I'm still looking.`],
-        cook => [Emote.SAD, `Please get the ingredients quickly. I'm running out of time! ` +
-        `The Duke will throw me into the streets!`],
-        ...youStillNeed(quest)
-    ]);
-
-    dialogueTree.push((subtree, tag_SOME_INGREDIENTS) => [
-        cook => [Emote.SAD, `Thanks for the ingredients you have got so far, please get the rest quickly. ` +
-        `I'm running out of time! The Duke will throw me into the streets!`],
-        ...youStillNeed(quest)
-    ]);
 
     dialogue([ player, { npc, key: 'cook' }], dialogueTree);
 };

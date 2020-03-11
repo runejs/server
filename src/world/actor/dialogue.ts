@@ -368,8 +368,6 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
 async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTree, tag?: string): Promise<boolean> {
     let stopLoop = false;
 
-    console.log('find ' + tag);
-
     for(let i = 0; i < dialogueTree.length; i++) {
         if(stopLoop) {
             return Promise.reject('Action cancelled.');
@@ -414,7 +412,6 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
 
                 if(tag === undefined || dialogueAction.tag === tag) {
                     tag = undefined;
-                    console.log('tag reset 1');
 
                     widgetId = optionWidgetIds[options.length - 2];
 
@@ -445,7 +442,6 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
 
                 if(tag === undefined || dialogueAction.tag === tag) {
                     tag = undefined;
-                    console.log('tag reset 2');
 
                     const textDialogueAction = dialogueAction as TextDialogueAction;
                     const lines = textDialogueAction.lines;
@@ -459,8 +455,6 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
                 }
             } else if(dialogueAction.type === 'SUBTREE') {
                 // Dialogue sub-tree.
-
-                console.log('SUBTREE ' + tag);
 
                 const action = (dialogueAction as SubDialogueTreeAction);
 
@@ -494,7 +488,6 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
 
                 if(tag === undefined || dialogueAction.tag === tag) {
                     tag = undefined;
-                    console.log('tag reset 4');
 
                     let npcId: number;
 
