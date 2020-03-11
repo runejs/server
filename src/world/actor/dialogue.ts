@@ -3,6 +3,7 @@ import { Player } from '@server/world/actor/player/player';
 import { Subscription } from 'rxjs';
 import { gameCache } from '@server/game-server';
 import { logger } from '@runejs/logger/dist/logger';
+import _ from 'lodash';
 
 export enum Emote {
     POMPOUS = 'POMPOUS',
@@ -174,7 +175,7 @@ function parseDialogueFunctionArgs(func): string[] {
     return arg.split(',');
 }
 
-export type DialogueTree = (Function | DialogueFunction)[];
+export type DialogueTree = (Function | DialogueFunction | GoToAction)[];
 
 interface NpcParticipant {
     npc: Npc | number;
@@ -185,18 +186,22 @@ class DialogueFunction {
     constructor(public type: string, public execute: Function) {}
 }
 
-class GoToAction {
-    constructor(public to: string) {}
-}
-
 export const execute = (execute: Function): DialogueFunction => new DialogueFunction('execute', execute);
-export const goto = (to: string): GoToAction => new GoToAction(to);
+export const goto = (to: string | Function): GoToAction => new GoToAction(to);
 
 type ParsedDialogueTree = (DialogueAction | DialogueFunction | string)[];
 
 interface DialogueAction {
     tag: string;
     type: string;
+}
+
+class GoToAction implements DialogueAction {
+    constructor(public to: string | Function) {
+    }
+
+    public tag: string;
+    public type = 'GOTO';
 }
 
 interface ActorDialogueAction extends DialogueAction {
@@ -220,6 +225,11 @@ interface OptionsDialogueAction extends DialogueAction {
     options: { [key: string]: ParsedDialogueTree };
 }
 
+interface SubDialogueTreeAction extends DialogueAction {
+    subTree: DialogueTree;
+    npcParticipants?: NpcParticipant[];
+}
+
 function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], dialogueTree: DialogueTree): ParsedDialogueTree {
     const parsedDialogueTree: ParsedDialogueTree = [];
 
@@ -233,7 +243,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
         }
 
         if(dialogueAction instanceof GoToAction) {
-            parsedDialogueTree.push(dialogueAction.to);
+            parsedDialogueTree.push(dialogueAction);
             continue;
         }
 
@@ -303,6 +313,11 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
             const text: string = dialogueAction();
             const lines = wrapText(text, 'TEXT');
             parsedDialogueTree.push({ lines, tag, type: 'TEXT' } as TextDialogueAction);
+        } else if(dialogueType === 'subtree') {
+            // Dialogue sub-tree.
+
+            const subTree: DialogueTree = dialogueAction();
+            parsedDialogueTree.push({ tag, type: 'SUBTREE', subTree, npcParticipants } as SubDialogueTreeAction);
         } else {
             // Player or Npc dialogue.
 
@@ -351,11 +366,9 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
 }
 
 async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTree, tag?: string): Promise<boolean> {
-    // if we reach a "goTo"...
-    // 1. re-run entire tree, skipping all dialogues until we find "tag"
-    // 2. continue as normal
-
     let stopLoop = false;
+
+    console.log('find ' + tag);
 
     for(let i = 0; i < dialogueTree.length; i++) {
         if(stopLoop) {
@@ -374,13 +387,20 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
                 return;
             }
 
-            if(typeof dialogueAction === 'string' && !tag) {
+            dialogueAction = dialogueAction as DialogueAction;
+
+            if(dialogueAction.type === 'GOTO' && !tag) {
                 // Goto dialogue.
-                runParsedDialogue(player, player.metadata.dialogueTree, dialogueAction).then(() => resolve());
+                const goToAction = (dialogueAction as GoToAction);
+                if(typeof goToAction.to === 'function') {
+                    const goto: string = goToAction.to();
+                    console.log('goto ' + goto);
+                    runParsedDialogue(player, player.metadata.dialogueTree, goto).then(() => resolve());
+                } else {
+                    runParsedDialogue(player, player.metadata.dialogueTree, goToAction.to).then(() => resolve());
+                }
                 return;
             }
-
-            dialogueAction = dialogueAction as DialogueAction;
 
             let widgetId: number;
             let isOptions = false;
@@ -394,6 +414,7 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
 
                 if(tag === undefined || dialogueAction.tag === tag) {
                     tag = undefined;
+                    console.log('tag reset 1');
 
                     widgetId = optionWidgetIds[options.length - 2];
 
@@ -424,6 +445,7 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
 
                 if(tag === undefined || dialogueAction.tag === tag) {
                     tag = undefined;
+                    console.log('tag reset 2');
 
                     const textDialogueAction = dialogueAction as TextDialogueAction;
                     const lines = textDialogueAction.lines;
@@ -435,11 +457,44 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
                 } else if(tag !== undefined) {
                     resolve();
                 }
+            } else if(dialogueAction.type === 'SUBTREE') {
+                // Dialogue sub-tree.
+
+                console.log('SUBTREE ' + tag);
+
+                const action = (dialogueAction as SubDialogueTreeAction);
+
+                if(dialogueAction.tag === tag) {
+                    const originalIndices = _.cloneDeep(player.metadata.dialogueIndices || {});
+                    const originalTree = _.cloneDeep(player.metadata.dialogueTree || []);
+                    player.metadata.dialogueIndices = {};
+                    const parsedSubTree = parseDialogueTree(player, action.npcParticipants, action.subTree);
+                    player.metadata.dialogueTree = parsedSubTree;
+                    runParsedDialogue(player, parsedSubTree).then(() => {
+                        player.metadata.dialogueIndices = originalIndices;
+                        player.metadata.dialogueTree = originalTree;
+                        resolve();
+                    });
+                } else if(tag && dialogueAction.tag !== tag) {
+                    const originalIndices = _.cloneDeep(player.metadata.dialogueIndices || {});
+                    const originalTree = _.cloneDeep(player.metadata.dialogueTree || []);
+                    player.metadata.dialogueIndices = {};
+                    const parsedSubTree = parseDialogueTree(player, action.npcParticipants, action.subTree);
+                    player.metadata.dialogueTree = parsedSubTree;
+                    runParsedDialogue(player, parsedSubTree, tag).then(() => {
+                        player.metadata.dialogueIndices = originalIndices;
+                        player.metadata.dialogueTree = originalTree;
+                        resolve();
+                    });
+                } else {
+                    resolve();
+                }
             } else {
                 // Player or Npc dialogue.
 
                 if(tag === undefined || dialogueAction.tag === tag) {
                     tag = undefined;
+                    console.log('tag reset 4');
 
                     let npcId: number;
 
@@ -471,7 +526,7 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
                 }
             }
 
-            if(tag === undefined) {
+            if(tag === undefined && widgetId) {
                 if(!isOptions) {
                     sub.push(player.dialogueInteractionEvent.subscribe(() => {
                         sub.forEach(s => s.unsubscribe());
@@ -488,7 +543,8 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
             }
         }).then(() => {
             sub.forEach(s => s.unsubscribe());
-        }).catch(() => {
+        }).catch(error => {
+            logger.error(error);
             sub.forEach(s => s.unsubscribe());
             stopLoop = true;
         });

@@ -6,7 +6,7 @@ import { dialogue, DialogueTree, Emote, execute, goto } from '@server/world/acto
 import { Player } from '@server/world/actor/player/player';
 import { Skill } from '@server/world/actor/skills';
 import { itemIds } from '@server/world/config/item-ids';
-import { logger } from '@runejs/logger/dist/logger';
+import { QuestProgress } from '@server/world/actor/player/player-data';
 
 const quest: Quest = {
     id: 'cooksAssistant',
@@ -69,13 +69,13 @@ const quest: Quest = {
 };
 
 function dialogueIngredientQuestions(): Function {
-    return (options, tag_Ingredient_Questions) => [
+    return (options, tag_INGREDIENT_QUESTIONS) => [
         `Where do I find some flour?`, [
             player => [ Emote.GENERIC, `Where do I find some flour?` ],
             cook => [ Emote.GENERIC, `There is a Mill fairly close, go North and then West. Mill Lane Mill ` +
             `is just off the road to Draynor. I usually get my flour from there.` ],
             cook => [ Emote.HAPPY, `Talk to Millie, she'll help, she's a lovely girl and a fine Miller.` ],
-            goto('tag_Ingredient_Questions')
+            goto('tag_INGREDIENT_QUESTIONS')
         ],
         `How about milk?`, [
             player => [ Emote.GENERIC, `How about milk?` ],
@@ -83,14 +83,14 @@ function dialogueIngredientQuestions(): Function {
             `the road from Groats' Farm.` ],
             cook => [ Emote.HAPPY, `Talk to Gillie Groats, she look after the Dairy Cows - ` +
             `she'll tell you everything you need to know about milking cows!` ],
-            goto('tag_Ingredient_Questions')
+            goto('tag_INGREDIENT_QUESTIONS')
         ],
         `And eggs? Where are they found?`, [
             player => [ Emote.GENERIC, `And eggs? Where are they found?` ],
             cook => [ Emote.GENERIC, `I normally get my eggs from the Groats' farm, on the other side of ` +
             `the river.` ],
             cook => [ Emote.GENERIC, `But any chicken should lay eggs.` ],
-            goto('tag_Ingredient_Questions')
+            goto('tag_INGREDIENT_QUESTIONS')
         ],
         `Actually, I know where to find this stuff.`, [
             player => [ Emote.GENERIC, `I've got all the information I need. Thanks.` ]
@@ -165,6 +165,22 @@ const startQuestAction: npcAction = (details) => {
     ]).catch(error => console.error(error));
 };
 
+function youStillNeed(quest: QuestProgress) {
+    return [
+        text => `You still need to get\n` +
+            `${!quest.attributes.givenMilk ? `A bucket of milk. `: ``}${!quest.attributes.givenFlour ? `A pot of flour. ` : ``}${!quest.attributes.givenEgg ? `An egg.` : ``}`,
+        options => [
+            `I'll get right on it.`, [
+                player => [Emote.GENERIC, `I'll get right on it.`]
+            ],
+            `Can you remind me how to find these things again?`, [
+                player => [Emote.GENERIC, `So where do I find these ingredients then?`],
+                dialogueIngredientQuestions()
+            ]
+        ]
+    ];
+}
+
 const handInIngredientsAction: npcAction = (details) => {
     const { player, npc } = details;
 
@@ -202,59 +218,48 @@ const handInIngredientsAction: npcAction = (details) => {
         );
     }
 
-    dialogue([player, { npc, key: 'cook' }], dialogueTree)
-        .then(() => {
-            const subTree: DialogueTree = [];
+    dialogueTree.push(
+        goto(() => {
+            const count = [ quest.attributes.givenMilk, quest.attributes.givenFlour, quest.attributes.givenEgg ]
+                .filter(value => value === true).length;
 
-            if(quest.attributes.givenMilk && quest.attributes.givenFlour && quest.attributes.givenEgg) {
-                // Player has brought all 3 ingredients
+            console.log(count);
 
-                subTree.push(
-                    cook => [Emote.HAPPY, `You've brought me everything I need! I am saved! Thank you!`],
-                    player => [Emote.WONDERING, `So do I get to go to the Duke's Party?`],
-                    cook => [Emote.SAD, `I'm afraid not, only the big cheeses get to dine with the Duke.`],
-                    player => [Emote.GENERIC, `Well, maybe one day I'll be important enough to sit on the Duke's table.`],
-                    cook => [Emote.SKEPTICAL, `Maybe, but I won't be holding my breath.`],
-                    execute(() => {
-                        player.setQuestStage('cooksAssistant', 'COMPLETE');
-                    })
-                );
+            if(count === 3) {
+                return 'tag_ALL_INGREDIENTS';
+            } else if(count === 0) {
+                return 'tag_NO_INGREDIENTS';
             } else {
-                if(!quest.attributes.givenMilk && !quest.attributes.givenFlour && !quest.attributes.givenEgg) {
-                    // Player has not brought any ingredients
-
-                    subTree.push(
-                        player => [Emote.GENERIC, `I haven't got any of them yet, I'm still looking.`],
-                        cook => [Emote.SAD, `Please get the ingredients quickly. I'm running out of time! ` +
-                        `The Duke will throw me into the streets!`]
-                    );
-                } else {
-                    // Player has brought 1 or 2 ingredients
-
-                    subTree.push(
-                        cook => [Emote.SAD, `Thanks for the ingredients you have got so far, please get the rest quickly. ` +
-                        `I'm running out of time! The Duke will throw me into the streets!`]
-                    );
-                }
-
-                subTree.push(
-                    text => `You still need to get\n` +
-                        `${!quest.attributes.givenMilk ? `A bucket of milk. `: ``}${!quest.attributes.givenFlour ? `A pot of flour. ` : ``}${!quest.attributes.givenEgg ? `An egg.` : ``}`,
-                    options => [
-                        `I'll get right on it.`, [
-                            player => [Emote.GENERIC, `I'll get right on it.`]
-                        ],
-                        `Can you remind me how to find these things again?`, [
-                            player => [Emote.GENERIC, `So where do I find these ingredients then?`],
-                            dialogueIngredientQuestions()
-                        ]
-                    ]
-                );
+                return 'tag_SOME_INGREDIENTS';
             }
-
-            dialogue([player, { npc, key: 'cook' }], subTree).catch(error => logger.error(error));
         })
-        .catch(error => logger.error(error));
+    );
+
+    dialogueTree.push((subtree, tag_ALL_INGREDIENTS) => [
+        cook => [Emote.HAPPY, `You've brought me everything I need! I am saved! Thank you!`],
+        player => [Emote.WONDERING, `So do I get to go to the Duke's Party?`],
+        cook => [Emote.SAD, `I'm afraid not, only the big cheeses get to dine with the Duke.`],
+        player => [Emote.GENERIC, `Well, maybe one day I'll be important enough to sit on the Duke's table.`],
+        cook => [Emote.SKEPTICAL, `Maybe, but I won't be holding my breath.`],
+        execute(() => {
+            player.setQuestStage('cooksAssistant', 'COMPLETE');
+        })
+    ]);
+
+    dialogueTree.push((subtree, tag_NO_INGREDIENTS) => [
+        player => [Emote.GENERIC, `I haven't got any of them yet, I'm still looking.`],
+        cook => [Emote.SAD, `Please get the ingredients quickly. I'm running out of time! ` +
+        `The Duke will throw me into the streets!`],
+        ...youStillNeed(quest)
+    ]);
+
+    dialogueTree.push((subtree, tag_SOME_INGREDIENTS) => [
+        cook => [Emote.SAD, `Thanks for the ingredients you have got so far, please get the rest quickly. ` +
+        `I'm running out of time! The Duke will throw me into the streets!`],
+        ...youStillNeed(quest)
+    ]);
+
+    dialogue([ player, { npc, key: 'cook' }], dialogueTree);
 };
 
 // @TODO quest journal auto new-line?
