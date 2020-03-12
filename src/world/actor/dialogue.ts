@@ -392,7 +392,6 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
                 const goToAction = (dialogueAction as GoToAction);
                 if(typeof goToAction.to === 'function') {
                     const goto: string = goToAction.to();
-                    console.log('goto ' + goto);
                     runParsedDialogue(player, player.metadata.dialogueTree, goto).then(() => resolve());
                 } else {
                     runParsedDialogue(player, player.metadata.dialogueTree, goToAction.to).then(() => resolve());

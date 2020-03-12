@@ -223,8 +223,6 @@ const handInIngredientsAction: npcAction = (details) => {
             const count = [ quest.attributes.givenMilk, quest.attributes.givenFlour, quest.attributes.givenEgg ]
                 .filter(value => value === true).length;
 
-            console.log(count);
-
             if(count === 3) {
                 return 'tag_ALL_INGREDIENTS';
             } else if(count === 0) {
