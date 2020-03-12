@@ -49,7 +49,7 @@ export const widgets: any = {
     whatWouldYouLikeToSpin: 459
 };
 
-export const widgetSettings = {
+export const widgetScripts = {
     musicPlayer: 18,
     attackStyle: 43,
     brightness: 166,
@@ -64,6 +64,7 @@ export const widgetSettings = {
     bankInsertMode: 304,
     acceptAid: 427,
     areaEffectVolume: 872,
+    questPoints: 101
 };
 
 export interface ActiveWidget {

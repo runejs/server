@@ -13,7 +13,7 @@ import {
     PlayerSave, PlayerSettings, QuestProgress,
     savePlayerData
 } from './player-data';
-import { ActiveWidget, widgets } from '../../config/widget';
+import { ActiveWidget, widgets, widgetScripts } from '../../config/widget';
 import { ContainerUpdateEvent, ItemContainer } from '../../items/item-container';
 import { EquipmentBonuses, ItemDetails } from '../../config/item-data';
 import { Item } from '../../items/item';
@@ -369,6 +369,8 @@ export class Player extends Actor {
      * Updates the player's quest tab progress.
      */
     private updateQuestTab(): void {
+        this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, this.getQuestPoints());
+
         Object.keys(quests).forEach(questKey => {
             const questData = quests[questKey];
             const playerQuest = this.quests.find(quest => quest.questId === questData.id);
@@ -383,6 +385,19 @@ export class Player extends Actor {
         })
     }
 
+    /**
+     * Fetches the player's number of quest points based off of their completed quests.
+     */
+    public getQuestPoints(): number {
+        let questPoints = 0;
+
+        if(this.quests && this.quests.length !== 0) {
+            this.quests.filter(quest => quest.stage === 'COMPLETE')
+                .forEach(quest => questPoints += quests[quest.questId].points);
+        }
+
+        return questPoints;
+    }
     /**
      * Fetches a player's quest progression details.
      * @param questId The ID of the quest to find the player's status on.
@@ -424,10 +439,8 @@ export class Player extends Actor {
         if(playerQuest.stage === 'NOT_STARTED' && stage !== 'COMPLETE') {
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
         } else if(playerQuest.stage !== 'COMPLETE' && stage === 'COMPLETE') {
-            // @TODO player quest points
-
+            this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, questData.points + this.getQuestPoints());
             this.modifyWidget(widgets.questReward, { childId: 2, text: `You have completed ${questData.name}!` });
-            this.modifyWidget(widgets.questReward, { childId: 5, text: `${questData.points}` });
             this.modifyWidget(widgets.questReward, { childId: 8, text: `${questData.points} Quest Point${questData.points > 1 ? 's' : ''}` });
 
             for(let i = 0; i < 5; i++) {
