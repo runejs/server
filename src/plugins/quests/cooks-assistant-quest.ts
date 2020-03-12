@@ -14,47 +14,44 @@ const quest: Quest = {
     name: `Cook's Assistant`,
     points: 1,
     stages: {
-        NOT_STARTED: `I can start this quest by speaking to the <col=800000>Cook</col> in the<br>` +
+        NOT_STARTED: `I can start this quest by speaking to the <col=800000>Cook</col> in the ` +
             `<col=800000>Kitchen</col> on the ground floor of <col=800000>Lumbridge Castle</col>.`,
         COLLECTING: (player: Player) => {
-            let questLog = `It's the <col=800000>Duke of Lumbridge's</col> birthday and I have to help<br>` +
-                `his <col=800000>Cook</col> make him a <col=800000>birthday cake.</col> To do this I need to<br>` +
-                `bring him the following ingredients:<br>`;
+            let questLog = `It's the <col=800000>Duke of Lumbridge's</col> birthday and I have to help ` +
+                `his <col=800000>Cook</col> make him a <col=800000>birthday cake.</col> To do this I need to ` +
+                `bring him the following ingredients:\n`;
 
             if(player.hasItemInInventory(itemIds.bucketOfMilk)) {
-                questLog += `I have found a <col=800000>bucket of milk</col> to give to the cook.<br>`;
+                questLog += `I have found a <col=800000>bucket of milk</col> to give to the cook.\n`;
             } else {
-                questLog += `I need to find a <col=800000>bucket of milk.</col> There's a cattle field east<br>` +
-                    `of Lumbridge, I should make sure I take an empty bucket<br>`;
+                questLog += `I need to find a <col=800000>bucket of milk.</col> There's a cattle field east ` +
+                    `of Lumbridge, I should make sure I take an empty bucket with me.\n`;
             }
 
             if(player.hasItemInInventory(itemIds.potOfFlour)) {
-                questLog += `I have found a <col=800000>pot of flour</col> to give to the cook.<br>`;
+                questLog += `I have found a <col=800000>pot of flour</col> to give to the cook.\n`;
             } else {
-                questLog += `I need a <col=800000>pot of flour.</col> There's a mill found north-<br>` +
-                    `west of Lumbridge, I should take an empty pot with me.<br>`;
+                questLog += `I need to find a <col=800000>pot of flour.</col> There's a mill found north-` +
+                    `west of Lumbridge, I should take an empty pot with me.\n`;
             }
 
             if(player.hasItemInInventory(itemIds.egg)) {
-                questLog += `I have found an <col=800000>egg</col> to give to the cook.`;
+                questLog += `I have found an <col=800000>egg</col> to give to the cook.\n`;
             } else {
-                questLog += `I need to find an <col=800000>egg.</col> The cook normally gets his eggs from<br>` +
-                    `the Groats' farm, found just to the west of the cattle<br>` +
-                    `field.`;
+                questLog += `I need to find an <col=800000>egg.</col> The cook normally gets his eggs from ` +
+                    `the Groats' farm, found just to the west of the cattle field.`;
             }
 
             return questLog;
         },
-        COMPLETE: `<col=000000><str=000000>It was the Duke of Lumbridge's birthday, but his cook had</str></col><br>` +
-                `<col=000000><str=000000>forgotten to buy the ingredients he needed to make him a</str></col><br>` +
-                `<col=000000><str=000000>cake. I brought the cook an egg, some flour and some milk</str></col><br>` +
-                `<col=000000><str=000000>and the cook made a delicious looking cake with them.</str></col><br>` +
-                ` <br>` +
-                `<col=000000><str=000000>As a reward he now lets me use his high quality range</str></col><br>` +
-                `<col=000000><str=000000>which lets me burn things less whenever I wish to cook</str></col><br>` +
-                `<col=000000><str=000000>there.</str></col><br>` +
-                ` <br>` +
-                `<col=ff0000>QUEST COMPLETE!</col>`
+        COMPLETE: { color: 0, text: `It was the Duke of Lumbridge's birthday, but his cook had ` +
+                `forgotten to buy the ingredients he needed to make him a ` +
+                `cake. I brought the cook an egg, some flour and some milk ` +
+                `and the cook made a delicious looking cake with them.\n\n` +
+                `As a reward he now lets me use his high quality range ` +
+                `which lets me burn things less whenever I wish to cook ` +
+                `there.\n\n` +
+                `<col=ff0000>QUEST COMPLETE!</col>` }
     },
     completion: {
         rewards: [ '300 Cooking XP' ],

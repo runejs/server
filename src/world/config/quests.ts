@@ -5,8 +5,16 @@ export interface Quest {
     questTabId: number;
     name: string;
     points: number;
-    stages: { [key: string]: Function | string };
-    completion: { rewards: string[], onComplete: Function, modelId?: number, itemId?: number, modelRotationX?: number, modelRotationY?: number, modelZoom?: number }
+    stages: { [key: string]: Function | string | { color: number, text: string } };
+    completion: {
+        rewards: string[];
+        onComplete: Function;
+        modelId?: number;
+        itemId?: number;
+        modelRotationX?: number;
+        modelRotationY?: number;
+        modelZoom?: number;
+    }
 }
 
 export interface QuestPlugin extends ActionPlugin {

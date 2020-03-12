@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { gameCache } from '@server/game-server';
 import { logger } from '@runejs/logger/dist/logger';
 import _ from 'lodash';
+import { wrapText } from '@server/util/strings';
 
 export enum Emote {
     POMPOUS = 'POMPOUS',
@@ -107,51 +108,8 @@ const npcWidgetIds = [ 241, 242, 243, 244 ];
 const optionWidgetIds = [ 228, 230, 232, 234 ];
 const textWidgetIds = [ 210, 211, 212, 213, 214 ];
 
-// Thank you to the Apollo team for these values. :)
-const charWidths = [ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 7, 14, 9, 12, 12, 4, 5,
-    5, 10, 8, 4, 8, 4, 7, 9, 7, 9, 8, 8, 8, 9, 7, 9, 9, 4, 5, 7,
-    9, 7, 9, 14, 9, 8, 8, 8, 7, 7, 9, 8, 6, 8, 8, 7, 10, 9, 9, 8,
-    9, 8, 8, 6, 9, 8, 10, 8, 8, 8, 6, 7, 6, 9, 10, 5, 8, 8, 7, 8,
-    8, 7, 8, 8, 4, 7, 7, 4, 10, 8, 8, 8, 8, 6, 8, 6, 8, 8, 9, 8,
-    8, 8, 6, 4, 6, 12, 3, 10, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-    4, 8, 11, 8, 8, 4, 8, 7, 12, 6, 7, 9, 5, 12, 5, 6, 10, 6, 6, 6,
-    8, 8, 4, 5, 5, 6, 7, 11, 11, 11, 9, 9, 9, 9, 9, 9, 9, 13, 8, 8,
-    8, 8, 8, 4, 4, 5, 4, 8, 9, 9, 9, 9, 9, 9, 8, 10, 9, 9, 9, 9,
-    8, 8, 8, 8, 8, 8, 8, 8, 8, 13, 6, 8, 8, 8, 8, 4, 4, 5, 4, 8,
-    8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 ];
-
-function wrapText(text: string, type: 'ACTOR' | 'TEXT'): string[] {
-    const maxWidth = type === 'ACTOR' ? 350 : 430;
-    const lines = [];
-
-    let lineStartIdx = 0;
-    let width = 0;
-    let lastSpace = 0;
-    let widthAfterSpace = 0;
-    for(let i = 0; i < text.length; i++) {
-        const charWidth = charWidths[text.charCodeAt(i)];
-        width += charWidth;
-        widthAfterSpace += charWidth;
-
-        if(text.charAt(i) === ' ' || text.charAt(i) === '\n') {
-            lastSpace = i;
-            widthAfterSpace = 0;
-        }
-
-        if(width >= maxWidth || text.charAt(i) === '\n') {
-            lines.push(text.substring(lineStartIdx, lastSpace));
-            lineStartIdx = lastSpace + 1;
-            width = widthAfterSpace;
-        }
-    }
-
-    if(lineStartIdx !== text.length - 1) {
-        lines.push(text.substring(lineStartIdx, text.length));
-    }
-
-    return lines;
+function wrapDialogueText(text: string, type: 'ACTOR' | 'TEXT'): string[] {
+    return wrapText(text, type === 'ACTOR' ? 350 : 430);
 }
 
 function parseDialogueFunctionArgs(func): string[] {
@@ -311,7 +269,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
             // Text-only dialogue.
 
             const text: string = dialogueAction();
-            const lines = wrapText(text, 'TEXT');
+            const lines = wrapDialogueText(text, 'TEXT');
             parsedDialogueTree.push({ lines, tag, type: 'TEXT' } as TextDialogueAction);
         } else if(dialogueType === 'subtree') {
             // Dialogue sub-tree.
@@ -343,7 +301,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
 
             const emote = dialogueDetails[0] as Emote;
             const text = dialogueDetails[1] as string;
-            const lines = wrapText(text, 'ACTOR');
+            const lines = wrapDialogueText(text, 'ACTOR');
             const animation = nonLineEmotes.indexOf(emote) !== -1 ? EmoteAnimation[emote] : EmoteAnimation[`${emote}_${lines.length}LINE`];
 
             if(dialogueType !== 'player') {
