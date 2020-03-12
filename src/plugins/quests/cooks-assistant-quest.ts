@@ -20,22 +20,23 @@ const quest: Quest = {
             let questLog = `It's the <col=800000>Duke of Lumbridge's</col> birthday and I have to help ` +
                 `his <col=800000>Cook</col> make him a <col=800000>birthday cake.</col> To do this I need to ` +
                 `bring him the following ingredients:\n`;
+            const quest = player.getQuest('cooksAssistant');
 
-            if(player.hasItemInInventory(itemIds.bucketOfMilk)) {
+            if(player.hasItemInInventory(itemIds.bucketOfMilk) || quest.attributes.givenMilk) {
                 questLog += `I have found a <col=800000>bucket of milk</col> to give to the cook.\n`;
             } else {
                 questLog += `I need to find a <col=800000>bucket of milk.</col> There's a cattle field east ` +
                     `of Lumbridge, I should make sure I take an empty bucket with me.\n`;
             }
 
-            if(player.hasItemInInventory(itemIds.potOfFlour)) {
+            if(player.hasItemInInventory(itemIds.potOfFlour) || quest.attributes.givenFlour) {
                 questLog += `I have found a <col=800000>pot of flour</col> to give to the cook.\n`;
             } else {
                 questLog += `I need to find a <col=800000>pot of flour.</col> There's a mill found north-` +
                     `west of Lumbridge, I should take an empty pot with me.\n`;
             }
 
-            if(player.hasItemInInventory(itemIds.egg)) {
+            if(player.hasItemInInventory(itemIds.egg) || quest.attributes.givenEgg) {
                 questLog += `I have found an <col=800000>egg</col> to give to the cook.\n`;
             } else {
                 questLog += `I need to find an <col=800000>egg.</col> The cook normally gets his eggs from ` +

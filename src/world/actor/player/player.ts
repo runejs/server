@@ -365,6 +365,9 @@ export class Player extends Actor {
         });
     }
 
+    /**
+     * Updates the player's quest tab progress.
+     */
     private updateQuestTab(): void {
         Object.keys(quests).forEach(questKey => {
             const questData = quests[questKey];
@@ -378,6 +381,21 @@ export class Player extends Actor {
 
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: color });
         })
+    }
+
+    public getQuest(questId: string) {
+        let playerQuest = this.quests.find(quest => quest.questId === questId);
+        if(!playerQuest) {
+            playerQuest = {
+                questId,
+                stage: 'NOT_STARTED',
+                attributes: {}
+            };
+
+            this.quests.push(playerQuest);
+        }
+
+        return playerQuest;
     }
 
     /**
