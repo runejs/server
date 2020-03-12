@@ -503,7 +503,6 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
     return tag === undefined;
 }
 
-// @TODO level-up, plain text
 export async function dialogue(participants: (Player | NpcParticipant)[], dialogueTree: DialogueTree): Promise<void> {
     const player = participants.find(p => p instanceof Player) as Player;
 
