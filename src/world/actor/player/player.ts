@@ -383,7 +383,11 @@ export class Player extends Actor {
         })
     }
 
-    public getQuest(questId: string) {
+    /**
+     * Fetches a player's quest progression details.
+     * @param questId The ID of the quest to find the player's status on.
+     */
+    public getQuest(questId: string): QuestProgress {
         let playerQuest = this.quests.find(quest => quest.questId === questId);
         if(!playerQuest) {
             playerQuest = {

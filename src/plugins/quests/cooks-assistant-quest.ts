@@ -255,8 +255,6 @@ const handInIngredientsAction: npcAction = (details) => {
     dialogue([ player, { npc, key: 'cook' }], dialogueTree);
 };
 
-// @TODO quest journal auto new-line?
-
 export default new RunePlugin([{
     type: ActionType.QUEST,
     quest
