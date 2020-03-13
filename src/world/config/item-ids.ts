@@ -30,6 +30,6 @@ export const itemIds = {
     recruitmentDrive: {
         shears: 5603,
     },
-
+    knife: 946,
 
 };
