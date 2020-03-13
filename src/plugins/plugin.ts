@@ -15,7 +15,7 @@ import { QuestPlugin } from '@server/world/config/quests';
 export enum ActionType {
     BUTTON = 'button',
     WIDGET_ACTION = 'widget_action',
-    ITEM_ON_ITEM = 'item_on_item',
+    ITEM_ON_ITEM_ACTION = 'item_on_item_action',
     ITEM_ACTION = 'item_action',
     WORLD_ITEM_ACTION = 'world_item_action',
     NPC_ACTION = 'npc_action',

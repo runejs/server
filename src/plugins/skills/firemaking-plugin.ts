@@ -134,4 +134,4 @@ const action: itemOnItemAction = (details) => {
     }
 };
 
-export default new RunePlugin({ type: ActionType.ITEM_ON_ITEM, items: logs.map(log => ({item1: itemIds.tinderbox, item2: log.logId})), action });
+export default new RunePlugin({ type: ActionType.ITEM_ON_ITEM_ACTION, items: logs.map(log => ({item1: itemIds.tinderbox, item2: log.logId})), action });

@@ -15,8 +15,11 @@ export type npcAction = (details: NpcActionDetails) => void;
  * Details about an NPC being interacted with.
  */
 export interface NpcActionDetails {
+    // The player performing the action.
     player: Player;
+    // The NPC the action is being performed on.
     npc: Npc;
+    // The position that the NPC was at when the action was initiated.
     position: Position;
 }
 
@@ -26,9 +29,13 @@ export interface NpcActionDetails {
  * and whether or not the player must first walk to the NPC.
  */
 export interface NpcActionPlugin extends ActionPlugin {
+    // A single NPC ID or a list of NPC IDs that this action applies to.
     npcIds: number | number[];
+    // A single option name or a list of option names that this action applies to.
     options: string | string[];
+    // Whether or not the player needs to walk to this NPC before performing the action.
     walkTo: boolean;
+    // The action function to be performed.
     action: npcAction;
 }
 

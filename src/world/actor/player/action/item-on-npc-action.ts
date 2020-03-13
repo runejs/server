@@ -16,11 +16,17 @@ export type itemOnNpcAction = (details: ItemOnNpcActionDetails) => void;
  * Details about an npc being interacted with. and the item being used.
  */
 export interface ItemOnNpcActionDetails {
+    // The player performing the action.
     player: Player;
+    // The NPC the action is being performed on.
     npc: Npc;
+    // The position that the NPC was at when the action was initiated.
     position: Position;
+    // The item being used.
     item: Item;
+    // The ID of the UI widget that the item being used is in.
     itemWidgetId: number;
+    // The ID of the UI container that the item being used is in.
     itemContainerId: number;
 }
 
@@ -30,9 +36,13 @@ export interface ItemOnNpcActionDetails {
  * and whether or not the player must first walk to the npc.
  */
 export interface ItemOnNpcActionPlugin extends ActionPlugin {
+    // A single NPC ID or a list of NPC IDs that this action applies to.
     npcsIds: number | number[];
+    // A single game item ID or a list of item IDs that this action applies to.
     itemIds: number | number[];
+    // Whether or not the player needs to walk to this NPC before performing the action.
     walkTo: boolean;
+    // The action function to be performed.
     action: itemOnNpcAction;
 }
 

@@ -50,7 +50,7 @@ export async function injectPlugins(): Promise<void> {
     setObjectPlugins(actionTypes[ActionType.OBJECT_ACTION]);
     setItemOnObjectPlugins(actionTypes[ActionType.ITEM_ON_OBJECT_ACTION]);
     setItemOnNpcPlugins(actionTypes[ActionType.ITEM_ON_NPC_ACTION]);
-    setItemOnItemPlugins(actionTypes[ActionType.ITEM_ON_ITEM]);
+    setItemOnItemPlugins(actionTypes[ActionType.ITEM_ON_ITEM_ACTION]);
     setItemPlugins(actionTypes[ActionType.ITEM_ACTION]);
     setWorldItemPlugins(actionTypes[ActionType.WORLD_ITEM_ACTION]);
     setCommandPlugins(actionTypes[ActionType.COMMAND]);

@@ -15,11 +15,17 @@ export type objectAction = (details: ObjectActionDetails) => void;
  * Details about an object being interacted with.
  */
 export interface ObjectActionDetails {
+    // The player performing the action.
     player: Player;
+    // The object the action is being performed on.
     object: LandscapeObject;
+    // Additional details about the object that the action is being performed on.
     objectDefinition: LandscapeObjectDefinition;
+    // The position that the game object was at when the action was initiated.
     position: Position;
+    // Whether or not this game object is an original map object or if it has been added/replaced.
     cacheOriginal: boolean;
+    // The option that the player used (ie "cut" tree, or "smelt" furnace).
     option: string;
 }
 
@@ -29,9 +35,13 @@ export interface ObjectActionDetails {
  * and whether or not the player must first walk to the object.
  */
 export interface ObjectActionPlugin extends ActionPlugin {
+    // A single game object ID or a list of object IDs that this action applies to.
     objectIds: number | number[];
+    // A single option name or a list of option names that this action applies to.
     options: string | string[];
+    // Whether or not the player needs to walk to this object before performing the action.
     walkTo: boolean;
+    // The action function to be performed.
     action: objectAction;
 }
 

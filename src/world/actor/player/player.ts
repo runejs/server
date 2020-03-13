@@ -28,7 +28,7 @@ import { dialogueAction } from '@server/world/actor/player/action/dialogue-actio
 import { ActionPlugin } from '@server/plugins/plugin';
 import { songs } from '@server/world/config/songs';
 import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
-import { Quest, quests } from '@server/world/config/quests';
+import { quests } from '@server/world/config/quests';
 import { NewFormatItemDefinition } from '@runejs/cache-parser';
 
 const DEFAULT_TAB_WIDGET_IDS = [
@@ -51,6 +51,7 @@ export const setPlayerInitPlugins = (plugins: ActionPlugin[]): void => {
 };
 
 export interface PlayerInitPlugin extends ActionPlugin {
+    // The action function to be performed.
     action: playerInitAction;
 }
 

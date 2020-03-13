@@ -11,8 +11,11 @@ export type buttonAction = (details: ButtonActionDetails) => void;
  * Details about a button action.
  */
 export interface ButtonActionDetails {
+    // The player performing the action.
     player: Player;
+    // The ID of the UI widget that the button is on.
     widgetId: number;
+    // The child ID of the button within the UI widget.
     buttonId: number;
 }
 
@@ -20,9 +23,13 @@ export interface ButtonActionDetails {
  * Defines a button interaction plugin.
  */
 export interface ButtonActionPlugin extends ActionPlugin {
+    // The ID of the UI widget that the button is on.
     widgetId: number;
+    // The child ID or list of child IDs of the button(s) within the UI widget.
     buttonIds?: number | number[];
+    // The action function to be performed.
     action: buttonAction;
+    // Whether or not this item action should cancel other running or queued actions.
     cancelActions?: boolean;
 }
 

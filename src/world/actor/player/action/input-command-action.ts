@@ -10,8 +10,11 @@ export type commandAction = (details: CommandActionDetails) => void;
  * Details about a command action.
  */
 export interface CommandActionDetails {
+    // The player performing the action.
     player: Player;
+    // The command that the player entered.
     command: string;
+    // The arguments that the player entered for their command.
     args: { [key: string]: number | string };
 }
 
@@ -19,12 +22,15 @@ export interface CommandActionDetails {
  * Defines a command interaction plugin.
  */
 export interface CommandActionPlugin extends ActionPlugin {
+    // The single command or list of commands that this action applies to.
     commands: string | string[];
+    // The potential arguments for this command action.
     args?: {
         name: string;
         type: 'number' | 'string';
         defaultValue?: number | string;
     }[];
+    // The action function to be performed.
     action: commandAction;
 }
 

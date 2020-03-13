@@ -17,13 +17,21 @@ export type itemOnObjectAction = (details: ItemOnObjectActionDetails) => void;
  * Details about an object being interacted with. and the item being used.
  */
 export interface ItemOnObjectActionDetails {
+    // The player performing the action.
     player: Player;
+    // The object the action is being performed on.
     object: LandscapeObject;
+    // Additional details about the object that the action is being performed on.
     objectDefinition: LandscapeObjectDefinition;
+    // The position that the game object was at when the action was initiated.
     position: Position;
+    // The item being used.
     item: Item;
+    // The ID of the UI widget that the item being used is in.
     itemWidgetId: number;
+    // The ID of the UI container that the item being used is in.
     itemContainerId: number;
+    // Whether or not this game object is an original map object or if it has been added/replaced.
     cacheOriginal: boolean;
 }
 
@@ -33,9 +41,13 @@ export interface ItemOnObjectActionDetails {
  * and whether or not the player must first walk to the object.
  */
 export interface ItemOnObjectActionPlugin extends ActionPlugin {
+    // A single game object ID or a list of object IDs that this action applies to.
     objectIds: number | number[];
+    // A single game item ID or a list of item IDs that this action applies to.
     itemIds: number | number[];
+    // Whether or not the player needs to walk to this object before performing the action.
     walkTo: boolean;
+    // The action function to be performed.
     action: itemOnObjectAction;
 }
 

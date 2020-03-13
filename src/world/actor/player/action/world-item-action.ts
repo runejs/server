@@ -14,7 +14,9 @@ export type worldItemAction = (details: WorldItemActionDetails) => void;
  * Details about a world item being interacted with.
  */
 export interface WorldItemActionDetails {
+    // The player performing the action.
     player: Player;
+    // The world item that the player is interacting with.
     worldItem: WorldItem;
 }
 
@@ -22,9 +24,13 @@ export interface WorldItemActionDetails {
  * Defines an world item interaction plugin.
  */
 export interface WorldItemActionPlugin extends ActionPlugin {
+    // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
+    // A single option name or a list of option names that this action applies to.
     options: string | string[];
+    // Whether or not the player needs to walk to this world item before performing the action.
     walkTo: boolean;
+    // The action function to be performed.
     action: worldItemAction;
 }
 

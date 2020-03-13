@@ -15,12 +15,19 @@ export type itemAction = (details: ItemActionDetails) => void;
  * Details about an item being interacted with.
  */
 export interface ItemActionDetails {
+    // The player performing the action.
     player: Player;
+    // The ID of the item being interacted with.
     itemId: number;
+    // The container slot that the item being interacted with is in.
     itemSlot: number;
+    // The ID of the UI widget that the item is in.
     widgetId: number;
+    // The ID of the UI container that the item is in.
     containerId: number;
+    // Additional details about the item.
     itemDetails: ItemDetails;
+    // The option that the player used (ie "equip"  or "drop").
     option: string;
 }
 
@@ -28,10 +35,15 @@ export interface ItemActionDetails {
  * Defines an item interaction plugin.
  */
 export interface ItemActionPlugin extends ActionPlugin {
+    // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
+    // A single UI widget ID or a list of widget IDs that this action applies to.
     widgets?: { widgetId: number, containerId: number } | { widgetId: number, containerId: number }[];
+    // A single option name or a list of option names that this action applies to.
     options?: string | string[];
+    // The action function to be performed.
     action: itemAction;
+    // Whether or not this item action should cancel other running or queued actions.
     cancelOtherActions?: boolean;
 }
 

@@ -11,12 +11,19 @@ export type itemOnItemAction = (details: ItemOnItemActionDetails) => void;
  * Details about an item on item action.
  */
 export interface ItemOnItemActionDetails {
+    // The player performing the action.
     player: Player;
+    // The item being used.
     usedItem: Item;
+    // The item that the first item is being used on.
     usedWithItem: Item;
+    // The container slot that the item being used is in.
     usedSlot: number;
+    // The container slot that the second item is in.
     usedWithSlot: number;
+    // The ID of the UI widget that the item being used is in.
     usedWidgetId: number;
+    // The ID of the UI widget that the second item is in.
     usedWithWidgetId: number;
 }
 
@@ -24,7 +31,9 @@ export interface ItemOnItemActionDetails {
  * Defines an item on item interaction plugin.
  */
 export interface ItemOnItemActionPlugin extends ActionPlugin {
+    // The item pairs being used. Each item can be used on the other, so item order does not matter.
     items: { item1: number, item2: number }[];
+    // The action function to be performed.
     action: itemOnItemAction;
 }
 
