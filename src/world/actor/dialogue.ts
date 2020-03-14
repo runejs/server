@@ -109,7 +109,7 @@ const optionWidgetIds = [ 228, 230, 232, 234 ];
 const textWidgetIds = [ 210, 211, 212, 213, 214 ];
 
 function wrapDialogueText(text: string, type: 'ACTOR' | 'TEXT'): string[] {
-    return wrapText(text, type === 'ACTOR' ? 350 : 430);
+    return wrapText(text, type === 'ACTOR' ? 340 : 430);
 }
 
 function parseDialogueFunctionArgs(func): string[] {

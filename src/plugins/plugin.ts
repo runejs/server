@@ -34,7 +34,9 @@ export interface QuestAction {
 }
 
 export interface ActionPlugin {
+    // The type of action to perform.
     type: ActionType;
+    // [optional] Details regarding what quest this action is for.
     questAction?: QuestAction;
 }
 

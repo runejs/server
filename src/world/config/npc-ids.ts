@@ -12,5 +12,6 @@ export const npcIds = {
     louieLegs: 542,
     gemTrader: 540,
     gillieGroats: 3807,
-    ranael: 544
+    ranael: 544,
+    millieMiller: 3806
 };
