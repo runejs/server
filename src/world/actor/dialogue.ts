@@ -402,6 +402,11 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
 
                     const textDialogueAction = dialogueAction as TextDialogueAction;
                     const lines = textDialogueAction.lines;
+
+                    if(lines.length > 5) {
+                        throw `Too many lines for text dialogue! Dialogue has ${lines.length} lines but the maximum is 5: ${JSON.stringify(lines)}`;
+                    }
+
                     widgetId = textWidgetIds[lines.length - 1];
 
                     for(let i = 0; i < lines.length; i++) {
@@ -454,6 +459,11 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
 
                     const actorDialogueAction = dialogueAction as ActorDialogueAction;
                     const lines = actorDialogueAction.lines;
+
+                    if(lines.length > 4) {
+                        throw `Too many lines for actor dialogue! Dialogue has ${lines.length} lines but the maximum is 4: ${JSON.stringify(lines)}`;
+                    }
+
                     const animation = actorDialogueAction.animation;
 
                     if(dialogueAction.type === 'NPC') {
