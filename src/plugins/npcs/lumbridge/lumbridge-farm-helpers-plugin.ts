@@ -50,7 +50,7 @@ const millieDialogue: npcAction = (details) => {
                 player => [ Emote.GENERIC, `Then I bring my wheat here?` ]
             ]
         ]
-    ]).catch(error => console.error(error));
+    ]).catch(() => {});
 };
 
 const gillieDialogue: npcAction = (details) => {
@@ -82,7 +82,7 @@ const gillieDialogue: npcAction = (details) => {
                 player => [ Emote.GENERIC, `I'm fine, thanks.` ],
             ]
         ]
-    ]);
+    ]).catch(() => {});
 };
 
 export default new RunePlugin([{
