@@ -4,7 +4,7 @@ import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/logger/dist/logger';
-import { ActionPlugin } from '@server/plugins/plugin';
+import { ActionPlugin, questFilter } from '@server/plugins/plugin';
 
 /**
  * The definition for an object action function.
@@ -15,11 +15,17 @@ export type objectAction = (details: ObjectActionDetails) => void;
  * Details about an object being interacted with.
  */
 export interface ObjectActionDetails {
+    // The player performing the action.
     player: Player;
+    // The object the action is being performed on.
     object: LandscapeObject;
+    // Additional details about the object that the action is being performed on.
     objectDefinition: LandscapeObjectDefinition;
+    // The position that the game object was at when the action was initiated.
     position: Position;
+    // Whether or not this game object is an original map object or if it has been added/replaced.
     cacheOriginal: boolean;
+    // The option that the player used (ie "cut" tree, or "smelt" furnace).
     option: string;
 }
 
@@ -29,9 +35,13 @@ export interface ObjectActionDetails {
  * and whether or not the player must first walk to the object.
  */
 export interface ObjectActionPlugin extends ActionPlugin {
+    // A single game object ID or a list of object IDs that this action applies to.
     objectIds: number | number[];
+    // A single option name or a list of option names that this action applies to.
     options: string | string[];
+    // Whether or not the player needs to walk to this object before performing the action.
     walkTo: boolean;
+    // The action function to be performed.
     action: objectAction;
 }
 
@@ -56,9 +66,14 @@ export const objectAction = (player: Player, landscapeObject: LandscapeObject, l
     }
 
     // Find all object action plugins that reference this landscape object
-    const interactionPlugins = objectInteractions.filter(plugin => pluginFilter(plugin.objectIds, landscapeObject.objectId, plugin.options, option));
+    let interactionActions = objectInteractions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, landscapeObject.objectId, plugin.options, option));
+    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
 
-    if(interactionPlugins.length === 0) {
+    if(questActions.length !== 0) {
+        interactionActions = questActions;
+    }
+
+    if(interactionActions.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled object interaction: ${option} ${landscapeObjectDefinition.name} ` +
             `(id-${landscapeObject.objectId}) @ ${position.x},${position.y},${position.level}`);
         return;
@@ -67,8 +82,8 @@ export const objectAction = (player: Player, landscapeObject: LandscapeObject, l
     player.actionsCancelled.next();
 
     // Separate out walk-to actions from immediate actions
-    const walkToPlugins = interactionPlugins.filter(plugin => plugin.walkTo);
-    const immediatePlugins = interactionPlugins.filter(plugin => !plugin.walkTo);
+    const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);
+    const immediatePlugins = interactionActions.filter(plugin => !plugin.walkTo);
 
     // Make sure we walk to the object before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {

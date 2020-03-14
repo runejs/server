@@ -10,6 +10,7 @@ export const itemIds = {
     jugOfWater: 1937,
     pot: 1931,
     potOfFlour: 1933,
+    egg: 1944,
     grain: 1947,
     wool: 1737,
     ballOfWool: 1759,

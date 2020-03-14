@@ -4,16 +4,16 @@ import { Isaac } from '@server/net/isaac';
 import { PlayerUpdateTask } from './updating/player-update-task';
 import { Actor } from '../actor';
 import { Position } from '@server/world/position';
-import { serverConfig, world } from '@server/game-server';
+import { gameCache, serverConfig, world } from '@server/game-server';
 import { logger } from '@runejs/logger';
 import {
     Appearance,
     defaultAppearance, defaultSettings,
     loadPlayerSave,
-    PlayerSave, PlayerSettings,
+    PlayerSave, PlayerSettings, QuestProgress,
     savePlayerData
 } from './player-data';
-import { ActiveWidget, widgets } from '../../config/widget';
+import { ActiveWidget, widgets, widgetScripts } from '../../config/widget';
 import { ContainerUpdateEvent, ItemContainer } from '../../items/item-container';
 import { EquipmentBonuses, ItemDetails } from '../../config/item-data';
 import { Item } from '../../items/item';
@@ -28,6 +28,8 @@ import { dialogueAction } from '@server/world/actor/player/action/dialogue-actio
 import { ActionPlugin } from '@server/plugins/plugin';
 import { songs } from '@server/world/config/songs';
 import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
+import { quests } from '@server/world/config/quests';
+import { NewFormatItemDefinition } from '@runejs/cache-parser';
 
 const DEFAULT_TAB_WIDGET_IDS = [
     92, widgets.skillsTab, 274, widgets.inventory.widgetId, widgets.equipment.widgetId, 271, 192, -1, 131, 148,
@@ -49,6 +51,7 @@ export const setPlayerInitPlugins = (plugins: ActionPlugin[]): void => {
 };
 
 export interface PlayerInitPlugin extends ActionPlugin {
+    // The action function to be performed.
     action: playerInitAction;
 }
 
@@ -87,6 +90,7 @@ export class Player extends Actor {
     public readonly actionsCancelled: Subject<boolean>;
     private quadtreeKey: QuadtreeKey = null;
     public savedMetadata: { [key: string]: any } = {};
+    public quests: QuestProgress[] = [];
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -144,6 +148,10 @@ export class Player extends Actor {
                 this._loginDate = new Date();
             } else {
                 this._loginDate = new Date(lastLogin);
+            }
+
+            if(playerSave.quests) {
+                this.quests = playerSave.quests;
             }
 
             this._lastAddress = playerSave.lastLogin?.address || (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
@@ -228,6 +236,7 @@ export class Player extends Actor {
         this.updateCarryWeight(true);
         this.modifyWidget(widgets.musicPlayerTab, { childId: 82, textColor: colors.green }); // Set "Harmony" to green/unlocked on the music tab
         this.playSong(songs.harmony);
+        this.updateQuestTab();
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
 
@@ -355,6 +364,117 @@ export class Player extends Actor {
 
             resolve();
         });
+    }
+
+    /**
+     * Updates the player's quest tab progress.
+     */
+    private updateQuestTab(): void {
+        this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, this.getQuestPoints());
+
+        Object.keys(quests).forEach(questKey => {
+            const questData = quests[questKey];
+            const playerQuest = this.quests.find(quest => quest.questId === questData.id);
+            let stage = 'NOT_STARTED';
+            let color = colors.red;
+            if(playerQuest && playerQuest.stage) {
+                stage = playerQuest.stage;
+                color = stage === 'COMPLETE' ? colors.green : colors.yellow;
+            }
+
+            this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: color });
+        })
+    }
+
+    /**
+     * Fetches the player's number of quest points based off of their completed quests.
+     */
+    public getQuestPoints(): number {
+        let questPoints = 0;
+
+        if(this.quests && this.quests.length !== 0) {
+            this.quests.filter(quest => quest.stage === 'COMPLETE')
+                .forEach(quest => questPoints += quests[quest.questId].points);
+        }
+
+        return questPoints;
+    }
+    /**
+     * Fetches a player's quest progression details.
+     * @param questId The ID of the quest to find the player's status on.
+     */
+    public getQuest(questId: string): QuestProgress {
+        let playerQuest = this.quests.find(quest => quest.questId === questId);
+        if(!playerQuest) {
+            playerQuest = {
+                questId,
+                stage: 'NOT_STARTED',
+                attributes: {}
+            };
+
+            this.quests.push(playerQuest);
+        }
+
+        return playerQuest;
+    }
+
+    /**
+     * Sets a player's quest stage to the specified value.
+     * @param questId The ID of the quest to set the stage of.
+     * @param stage The stage to set the quest to.
+     */
+    public setQuestStage(questId: string, stage: string): void {
+        const questData = quests[questId];
+
+        let playerQuest = this.quests.find(quest => quest.questId === questId);
+        if(!playerQuest) {
+            playerQuest = {
+                questId,
+                stage: 'NOT_STARTED',
+                attributes: {}
+            };
+
+            this.quests.push(playerQuest);
+        }
+
+        if(playerQuest.stage === 'NOT_STARTED' && stage !== 'COMPLETE') {
+            this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
+        } else if(playerQuest.stage !== 'COMPLETE' && stage === 'COMPLETE') {
+            this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, questData.points + this.getQuestPoints());
+            this.modifyWidget(widgets.questReward, { childId: 2, text: `You have completed ${questData.name}!` });
+            this.modifyWidget(widgets.questReward, { childId: 8, text: `${questData.points} Quest Point${questData.points > 1 ? 's' : ''}` });
+
+            for(let i = 0; i < 5; i++) {
+                if(i >= questData.completion.rewards.length) {
+                    this.modifyWidget(widgets.questReward, { childId: 9 + i, text: '' });
+                } else {
+                    this.modifyWidget(widgets.questReward, { childId: 9 + i, text: questData.completion.rewards[i] });
+                }
+            }
+
+            if(questData.completion.itemId) {
+                this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3,
+                    (gameCache.itemDefinitions.get(questData.completion.itemId) as NewFormatItemDefinition).inventoryModelId);
+            } else if(questData.completion.modelId) {
+                this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.completion.modelId);
+            }
+
+            this.outgoingPackets.setWidgetModelRotationAndZoom(widgets.questReward, 3,
+                questData.completion.modelRotationX || 0, questData.completion.modelRotationY || 0,
+                questData.completion.modelZoom || 0);
+
+            questData.completion.onComplete(this);
+
+            this.activeWidget = {
+                widgetId: widgets.questReward,
+                type: 'SCREEN',
+                closeOnWalk: true
+            };
+
+            this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.green });
+        }
+
+        playerQuest.stage = stage;
     }
 
     /**

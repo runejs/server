@@ -9,7 +9,7 @@ import { EarlyFormatGameCache, NewFormatGameCache } from '@runejs/cache-parser';
 import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
 
 import { loadPlugins } from '@server/plugins/plugin-loader';
-import { ActionPlugin, ActionType } from '@server/plugins/plugin';
+import { ActionPlugin, ActionType, sort } from '@server/plugins/plugin';
 
 import { setNpcPlugins } from '@server/world/actor/player/action/npc-action';
 import { setObjectPlugins } from '@server/world/actor/player/action/object-action';
@@ -23,6 +23,7 @@ import { setItemOnObjectPlugins } from '@server/world/actor/player/action/item-o
 import { setItemOnNpcPlugins } from '@server/world/actor/player/action/item-on-npc-action';
 import { setPlayerInitPlugins } from '@server/world/actor/player/player';
 import { setNpcInitPlugins } from '@server/world/actor/npc/npc';
+import { setQuestPlugins } from '@server/world/config/quests';
 
 export let serverConfig: ServerConfig;
 export let gameCache377: EarlyFormatGameCache;
@@ -41,12 +42,15 @@ export async function injectPlugins(): Promise<void> {
         actionTypes[action.type].push(action);
     });
 
+    Object.keys(actionTypes).forEach(key => actionTypes[key] = sort(actionTypes[key]));
+
+    setQuestPlugins(actionTypes[ActionType.QUEST]);
     setButtonPlugins(actionTypes[ActionType.BUTTON]);
     setNpcPlugins(actionTypes[ActionType.NPC_ACTION]);
     setObjectPlugins(actionTypes[ActionType.OBJECT_ACTION]);
     setItemOnObjectPlugins(actionTypes[ActionType.ITEM_ON_OBJECT_ACTION]);
     setItemOnNpcPlugins(actionTypes[ActionType.ITEM_ON_NPC_ACTION]);
-    setItemOnItemPlugins(actionTypes[ActionType.ITEM_ON_ITEM]);
+    setItemOnItemPlugins(actionTypes[ActionType.ITEM_ON_ITEM_ACTION]);
     setItemPlugins(actionTypes[ActionType.ITEM_ACTION]);
     setWorldItemPlugins(actionTypes[ActionType.WORLD_ITEM_ACTION]);
     setCommandPlugins(actionTypes[ActionType.COMMAND]);

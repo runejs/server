@@ -65,6 +65,7 @@ export interface DialogueOptions {
     lines: string[];
 }
 
+// @DEPRECATED
 export class DialogueAction {
 
     private _action: number = null;
@@ -152,7 +153,8 @@ export class DialogueAction {
                 forceClosed: () => reject('WIDGET_CLOSED')
             };
 
-            this.p.dialogueInteractionEvent.subscribe(action => {
+            const sub = this.p.dialogueInteractionEvent.subscribe(action => {
+                sub.unsubscribe();
                 this._action = action;
                 resolve(this);
             });

@@ -5,6 +5,12 @@ import { logger } from '@runejs/logger/dist/logger';
 import { Player } from './player';
 import { SkillValue } from '@server/world/actor/skills';
 
+export interface QuestProgress {
+    questId: string;
+    stage: string;
+    attributes: { [key: string]: any };
+}
+
 export interface Appearance {
     gender: number;
     head: number;
@@ -54,6 +60,7 @@ export interface PlayerSave {
     skills: SkillValue[];
     settings: PlayerSettings;
     savedMetadata: { [key: string]: any };
+    quests: QuestProgress[];
 }
 
 export const defaultAppearance = (): Appearance => {
@@ -114,7 +121,8 @@ export function savePlayerData(player: Player): boolean {
         equipment: player.equipment.items,
         skills: player.skills.values,
         settings: player.settings,
-        savedMetadata: player.savedMetadata
+        savedMetadata: player.savedMetadata,
+        quests: player.quests,
     };
 
     try {

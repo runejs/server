@@ -2,7 +2,7 @@ import { Player } from '@server/world/actor/player/player';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/logger/dist/logger';
-import { ActionPlugin } from '@server/plugins/plugin';
+import { ActionPlugin, questFilter } from '@server/plugins/plugin';
 import { WorldItem } from '@server/world/items/world-item';
 
 /**
@@ -14,7 +14,9 @@ export type worldItemAction = (details: WorldItemActionDetails) => void;
  * Details about a world item being interacted with.
  */
 export interface WorldItemActionDetails {
+    // The player performing the action.
     player: Player;
+    // The world item that the player is interacting with.
     worldItem: WorldItem;
 }
 
@@ -22,9 +24,13 @@ export interface WorldItemActionDetails {
  * Defines an world item interaction plugin.
  */
 export interface WorldItemActionPlugin extends ActionPlugin {
+    // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
+    // A single option name or a list of option names that this action applies to.
     options: string | string[];
+    // Whether or not the player needs to walk to this world item before performing the action.
     walkTo: boolean;
+    // The action function to be performed.
     action: worldItemAction;
 }
 
@@ -49,7 +55,11 @@ export const worldItemAction = (player: Player, worldItem: WorldItem, option: st
     }
 
     // Find all world item action plugins that reference this world item
-    const interactionPlugins = worldItemInteractions.filter(plugin => {
+    let interactionActions = worldItemInteractions.filter(plugin => {
+        if(!questFilter(player, plugin)) {
+            return false;
+        }
+
         if(plugin.itemIds !== undefined) {
             if(!basicNumberFilter(plugin.itemIds, worldItem.itemId)) {
                 return false;
@@ -62,8 +72,13 @@ export const worldItemAction = (player: Player, worldItem: WorldItem, option: st
 
         return true;
     });
+    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
 
-    if(interactionPlugins.length === 0) {
+    if(questActions.length !== 0) {
+        interactionActions = questActions;
+    }
+
+    if(interactionActions.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled world item interaction: ${option} ${worldItem.itemId}`);
         return;
     }
@@ -71,8 +86,8 @@ export const worldItemAction = (player: Player, worldItem: WorldItem, option: st
     player.actionsCancelled.next();
 
     // Separate out walk-to actions from immediate actions
-    const walkToPlugins = interactionPlugins.filter(plugin => plugin.walkTo);
-    const immediatePlugins = interactionPlugins.filter(plugin => !plugin.walkTo);
+    const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);
+    const immediatePlugins = interactionActions.filter(plugin => !plugin.walkTo);
 
     // Make sure we walk to the NPC before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {

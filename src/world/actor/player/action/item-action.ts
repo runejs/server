@@ -1,5 +1,5 @@
 import { Player } from '@server/world/actor/player/player';
-import { ActionPlugin } from '@server/plugins/plugin';
+import { ActionPlugin, questFilter } from '@server/plugins/plugin';
 import { ItemContainer } from '@server/world/items/item-container';
 import { Item } from '@server/world/items/item';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
@@ -15,12 +15,19 @@ export type itemAction = (details: ItemActionDetails) => void;
  * Details about an item being interacted with.
  */
 export interface ItemActionDetails {
+    // The player performing the action.
     player: Player;
+    // The ID of the item being interacted with.
     itemId: number;
+    // The container slot that the item being interacted with is in.
     itemSlot: number;
+    // The ID of the UI widget that the item is in.
     widgetId: number;
+    // The ID of the UI container that the item is in.
     containerId: number;
+    // Additional details about the item.
     itemDetails: ItemDetails;
+    // The option that the player used (ie "equip"  or "drop").
     option: string;
 }
 
@@ -28,10 +35,15 @@ export interface ItemActionDetails {
  * Defines an item interaction plugin.
  */
 export interface ItemActionPlugin extends ActionPlugin {
+    // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
+    // A single UI widget ID or a list of widget IDs that this action applies to.
     widgets?: { widgetId: number, containerId: number } | { widgetId: number, containerId: number }[];
+    // A single option name or a list of option names that this action applies to.
     options?: string | string[];
+    // The action function to be performed.
     action: itemAction;
+    // Whether or not this item action should cancel other running or queued actions.
     cancelOtherActions?: boolean;
 }
 
@@ -70,7 +82,11 @@ export const itemAction = (player: Player, itemId: number, slot: number, widgetI
     let cancelActions = false;
 
     // Find all object action plugins that reference this landscape object
-    const interactionPlugins = itemInteractions.filter(plugin => {
+    let interactionActions = itemInteractions.filter(plugin => {
+        if(!questFilter(player, plugin)) {
+            return false;
+        }
+
         if(plugin.itemIds !== undefined) {
             if(!basicNumberFilter(plugin.itemIds, itemId)) {
                 return false;
@@ -109,7 +125,13 @@ export const itemAction = (player: Player, itemId: number, slot: number, widgetI
         return true;
     });
 
-    if(interactionPlugins.length === 0) {
+    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
+
+    if(questActions.length !== 0) {
+        interactionActions = questActions;
+    }
+
+    if(interactionActions.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled item option: ${option} ${itemId} in slot ${slot} within widget ${widgetId}:${containerId}`);
         return;
     }
@@ -118,7 +140,7 @@ export const itemAction = (player: Player, itemId: number, slot: number, widgetI
         player.actionsCancelled.next();
     }
 
-    interactionPlugins.forEach(plugin =>
+    for(const plugin of interactionActions) {
         plugin.action({
             player,
             itemId,
@@ -127,5 +149,7 @@ export const itemAction = (player: Player, itemId: number, slot: number, widgetI
             containerId,
             itemDetails: world.itemData.get(itemId),
             option
-        }));
+        });
+    }
+
 };

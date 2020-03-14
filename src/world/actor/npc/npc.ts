@@ -26,7 +26,9 @@ export const setNpcInitPlugins = (plugins: ActionPlugin[]): void => {
 };
 
 export interface NpcInitPlugin extends ActionPlugin {
+    // The action function to be performed.
     action: npcInitAction;
+    // A single NPC ID or a list of NPC IDs that this action applies to.
     npcIds: number | number[];
 }
 

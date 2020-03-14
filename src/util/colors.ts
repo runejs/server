@@ -12,5 +12,6 @@ export function rgbTo16Bit(r: number, g: number, b: number): number {
 
 export const colors = {
     green: 0x00ff00,
-    yellow: 0xffff00
+    yellow: 0xffff00,
+    red: 0xff0000
 };
