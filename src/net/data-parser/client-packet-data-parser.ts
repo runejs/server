@@ -64,8 +64,6 @@ export class ClientPacketDataParser extends DataParser {
         }
 
         if(this.activeBuffer.getReadable() < this.activePacketSize) {
-            //console.error('Not enough readable data for packet ' + this.activePacketId + ' with size ' + this.activePacketSize + ', but only ' +
-            //    this.activeBuffer.getReadable() + ' data is left of ' + this.activeBuffer.getBuffer().length);
             return;
         }
 
