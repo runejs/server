@@ -24,8 +24,7 @@ export class UpdateServerParser extends DataParser {
                     this.files.push({ index, file });
                     break;
                 case 1: // immediate
-                    const data = this.generateFile(index, file).getBuffer();
-                    this.clientConnection.socket.write(data);
+                    this.clientConnection.socket.write(this.generateFile(index, file));
                     break;
                 case 2:
                 case 3: // clear queue
@@ -37,13 +36,12 @@ export class UpdateServerParser extends DataParser {
 
             while(this.files.length > 0) {
                 const info = this.files.shift();
-                const data = this.generateFile(info.index, info.file);
-                this.clientConnection.socket.write(data.getBuffer());
+                this.clientConnection.socket.write(this.generateFile(info.index, info.file));
             }
         }
     }
 
-    private generateFile(index: number, file: number): RsBuffer {
+    private generateFile(index: number, file: number): Buffer {
         let cacheFile;
 
         if(index === 255 && file === 255) {
@@ -81,6 +79,6 @@ export class UpdateServerParser extends DataParser {
             c++;
         }
 
-        return new RsBuffer(buffer.getData());
+        return buffer.getData();
     }
 }
