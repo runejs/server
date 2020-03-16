@@ -25,7 +25,9 @@ Currently the server is set up for the 435 revision of the game, which was a gam
   - NPC spawn loading via YAML configuration.
 - Player & NPC pathing validation via collision and tile maps generated from the 377 game cache.
 - A basic REST service for polling logged in users.
+- Full functional update server.
 - A diverse TypeScript plugin system for easily writing new content based off of in-game actions.
+- Flexible quest and dialogue systems for easy content development.
 
 ## Usage
 
@@ -69,4 +71,4 @@ RuneJS supports the 435 RuneScape game client being renamed by [Promises](https:
 
 #### Update Server
 
-RuneJS does not provide a fully working update server for revision 435. While this is planned for a future release, the [refactored-client-435](https://github.com/Promises/refactored-client-435) currently has the update server disabled. Due to this, we can only recommend this client at this time.
+RuneJS provides a fully working update server for the 435 client to use. The update server runs alongside the regular game server using the same port, so no additional configuration is required. Simply start the server and then your game client.
