@@ -1,5 +1,6 @@
 import * as net from 'net';
 import { watch } from 'chokidar';
+import * as CRC32 from 'crc-32';
 
 import { RsBuffer } from './net/rs-buffer';
 import { World } from './world/world';
@@ -25,10 +26,12 @@ import { setPlayerInitPlugins } from '@server/world/actor/player/player';
 import { setNpcInitPlugins } from '@server/world/actor/npc/npc';
 import { setQuestPlugins } from '@server/world/config/quests';
 
+
 export let serverConfig: ServerConfig;
 export let gameCache377: EarlyFormatGameCache;
 export let gameCache: NewFormatGameCache;
 export let world: World;
+export let crcTable: Buffer;
 
 export async function injectPlugins(): Promise<void> {
     const actionTypes: { [key: string]: ActionPlugin[] } = {};
@@ -59,6 +62,20 @@ export async function injectPlugins(): Promise<void> {
     setNpcInitPlugins(actionTypes[ActionType.NPC_INIT]);
 }
 
+function generateCrcTable(): void {
+    const index = gameCache.metaChannel;
+    const indexLength = index.getBuffer().length;
+    const buffer = RsBuffer.create(4048);
+    buffer.writeByte(0);
+    buffer.writeIntBE(indexLength);
+    for(let file = 0; file < (indexLength / 6); file++) {
+        const crcValue = CRC32.buf(gameCache.getRawCacheFile(255, file).getBuffer());
+        buffer.writeIntBE(crcValue);
+    }
+
+    crcTable = buffer.getBuffer();
+}
+
 export function runGameServer(): void {
     serverConfig = parseServerConfig();
 
@@ -69,6 +86,7 @@ export function runGameServer(): void {
 
     gameCache377 = new EarlyFormatGameCache('cache/377', { loadMaps: true, loadDefinitions: false, loadWidgets: false });
     gameCache = new NewFormatGameCache('cache/435');
+    generateCrcTable();
     world = new World();
     injectPlugins().then(() => {
         world.init();
@@ -87,7 +105,11 @@ export function runGameServer(): void {
 
         net.createServer(socket => {
             logger.info('Socket opened');
-            // socket.setNoDelay(true);
+
+            socket.setNoDelay(true);
+            socket.setKeepAlive(true);
+            socket.setTimeout(30000);
+
             let clientConnection = new ClientConnection(socket);
 
             socket.on('data', data => {
@@ -104,6 +126,7 @@ export function runGameServer(): void {
             });
 
             socket.on('error', error => {
+                logger.error(error.message);
                 socket.destroy();
                 logger.error('Socket destroyed due to connection error.');
             });
