@@ -13,7 +13,7 @@ import {
     PlayerSave, PlayerSettings, QuestProgress,
     savePlayerData
 } from './player-data';
-import { ActiveWidget, widgets, widgetScripts } from '../../config/widget';
+import { PlayerWidget, widgets, widgetScripts } from '../../config/widget';
 import { ContainerUpdateEvent, ItemContainer } from '../../items/item-container';
 import { EquipmentBonuses, ItemDetails } from '../../config/item-data';
 import { Item } from '../../items/item';
@@ -78,7 +78,8 @@ export class Player extends Actor {
     public trackedPlayers: Player[];
     public trackedNpcs: Npc[];
     private _appearance: Appearance;
-    private _activeWidget: ActiveWidget;
+    private _activeWidget: PlayerWidget;
+    private queuedWidgets: PlayerWidget[];
     private readonly _equipment: ItemContainer;
     private _bonuses: EquipmentBonuses;
     private _carryWeight: number;
@@ -108,6 +109,7 @@ export class Player extends Actor {
         this.trackedPlayers = [];
         this.trackedNpcs = [];
         this._activeWidget = null;
+        this.queuedWidgets = [];
         this._carryWeight = 0;
         this._equipment = new ItemContainer(14);
         this.dialogueInteractionEvent = new Subject<number>();
@@ -463,8 +465,6 @@ export class Player extends Actor {
                 questData.completion.modelRotationX || 0, questData.completion.modelRotationY || 0,
                 questData.completion.modelZoom || 0);
 
-            questData.completion.onComplete(this);
-
             this.activeWidget = {
                 widgetId: widgets.questReward,
                 type: 'SCREEN',
@@ -472,6 +472,8 @@ export class Player extends Actor {
             };
 
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.green });
+
+            questData.completion.onComplete(this);
         }
 
         playerQuest.stage = stage;
@@ -485,7 +487,7 @@ export class Player extends Actor {
     public modifyWidget(widgetId: number, options: { childId?: number, text?: string, hidden?: boolean, textColor?: number }): void {
         const { childId, text, hidden, textColor } = options;
 
-        if(childId) {
+        if(childId !== undefined) {
             if(text !== undefined) {
                 this.outgoingPackets.updateWidgetString(widgetId, childId, text);
             }
@@ -612,6 +614,10 @@ export class Player extends Actor {
         this.updateCarryWeight();
     }
 
+    /**
+     * Updates the player's carry weight based off of their held items (inventory + equipment).
+     * @param force Whether or not to force send an updated carry weight to the game client.
+     */
     public updateCarryWeight(force: boolean = false): void {
         const oldWeight = this._carryWeight;
         this._carryWeight = Math.round(this.inventory.weight() + this.equipment.weight());
@@ -621,6 +627,11 @@ export class Player extends Actor {
         }
     }
 
+    /**
+     * Updates a player's client settings based off of which setting button they've clicked.
+     * @param buttonId The ID of the setting button.
+     * @TODO refactor to better match the 400+ widget system
+     */
     public settingChanged(buttonId: number): void {
         const settingsMappings = {
             0: {setting: 'runEnabled', value: !this.settings['runEnabled']},
@@ -661,6 +672,9 @@ export class Player extends Actor {
         this.settings[config.setting] = config.value;
     }
 
+    /**
+     * Updates the player's combat bonuses based off of their equipped items.
+     */
     public updateBonuses(): void {
         this.clearBonuses();
 
@@ -709,15 +723,46 @@ export class Player extends Actor {
         };
     }
 
-    public closeActiveWidget(notifyClient: boolean = true): void {
-        if(notifyClient) {
-            this.activeWidget = null;
+    /**
+     * Queues up a widget to be displayed when the active widget is closed.
+     * If there is no active widget, the provided widget will be automatically displayed.
+     * @param widget The widget to queue.
+     */
+    public queueWidget(widget: PlayerWidget): void {
+        if(this.activeWidget === null) {
+            this.activeWidget = widget;
         } else {
-            this.actionsCancelled.next(true);
-            this._activeWidget = null;
+            this.queuedWidgets.push(widget);
+            console.log(this.queuedWidgets);
         }
     }
 
+    /**
+     * Closes the currently active widget or widget pair.
+     * @param notifyClient [optional] Whether or not to notify the game client that widgets should be cleared. Defaults to true.
+     */
+    public closeActiveWidgets(notifyClient: boolean = true): void {
+        if(notifyClient) {
+            if(this.queuedWidgets.length !== 0) {
+                this.activeWidget = this.queuedWidgets.shift();
+            } else {
+                this.activeWidget = null;
+            }
+        } else {
+            this._activeWidget = null;
+
+            if(this.queuedWidgets.length !== 0) {
+                this.activeWidget = this.queuedWidgets.shift();
+            } else {
+                this.actionsCancelled.next(true);
+            }
+        }
+    }
+
+    /**
+     * Checks to see if the player has the specified widget ID open on their screen or not.
+     * @param widgetId The ID of the widget to look for.
+     */
     public hasWidgetOpen(widgetId: number): boolean {
         return this.activeWidget && this.activeWidget.widgetId === widgetId;
     }
@@ -777,12 +822,16 @@ export class Player extends Actor {
         this._appearance = value;
     }
 
-    public get activeWidget(): ActiveWidget {
+    public get activeWidget(): PlayerWidget {
         return this._activeWidget;
     }
 
-    public set activeWidget(value: ActiveWidget) {
+    public set activeWidget(value: PlayerWidget) {
         if(value !== null) {
+            if(value.beforeOpened !== undefined) {
+                value.beforeOpened();
+            }
+
             if(value.type === 'SCREEN') {
                 this.outgoingPackets.showScreenWidget(value.widgetId);
             } else if(value.type === 'CHAT') {
@@ -791,6 +840,10 @@ export class Player extends Actor {
                 this.outgoingPackets.showFullscreenWidget(value.widgetId, value.secondaryWidgetId);
             } else if(value.type === 'SCREEN_AND_TAB') {
                 this.outgoingPackets.showScreenAndTabWidgets(value.widgetId, value.secondaryWidgetId);
+            }
+
+            if(value.afterOpened !== undefined) {
+                value.afterOpened();
             }
         } else {
             this.outgoingPackets.closeActiveWidgets();

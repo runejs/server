@@ -141,17 +141,17 @@ export async function itemSelectionAction(player: Player, type: 'COOKING' | 'MAK
                     interactionSub.unsubscribe();
 
                     if(input < 1 || input > 2147483647) {
-                        player.closeActiveWidget();
+                        player.closeActiveWidgets();
                         reject('Invalid User Amount Input');
                     } else {
-                        player.closeActiveWidget();
+                        player.closeActiveWidgets();
                         resolve({itemId, amount: input} as ItemSelection);
                     }
                 });
             } else {
                 actionsSub.unsubscribe();
                 interactionSub.unsubscribe();
-                player.closeActiveWidget();
+                player.closeActiveWidgets();
                 resolve({itemId, amount} as ItemSelection);
             }
         });
