@@ -13,7 +13,7 @@ import {
     PlayerSave, PlayerSettings, QuestProgress,
     savePlayerData
 } from './player-data';
-import { ActiveWidget, widgets, widgetScripts } from '../../config/widget';
+import { PlayerWidget, widgets, widgetScripts } from '../../config/widget';
 import { ContainerUpdateEvent, ItemContainer } from '../../items/item-container';
 import { EquipmentBonuses, ItemDetails } from '../../config/item-data';
 import { Item } from '../../items/item';
@@ -78,7 +78,8 @@ export class Player extends Actor {
     public trackedPlayers: Player[];
     public trackedNpcs: Npc[];
     private _appearance: Appearance;
-    private _activeWidget: ActiveWidget;
+    private _activeWidget: PlayerWidget;
+    private queuedWidgets: PlayerWidget[];
     private readonly _equipment: ItemContainer;
     private _bonuses: EquipmentBonuses;
     private _carryWeight: number;
@@ -108,6 +109,7 @@ export class Player extends Actor {
         this.trackedPlayers = [];
         this.trackedNpcs = [];
         this._activeWidget = null;
+        this.queuedWidgets = [];
         this._carryWeight = 0;
         this._equipment = new ItemContainer(14);
         this.dialogueInteractionEvent = new Subject<number>();
@@ -777,11 +779,11 @@ export class Player extends Actor {
         this._appearance = value;
     }
 
-    public get activeWidget(): ActiveWidget {
+    public get activeWidget(): PlayerWidget {
         return this._activeWidget;
     }
 
-    public set activeWidget(value: ActiveWidget) {
+    public set activeWidget(value: PlayerWidget) {
         if(value !== null) {
             if(value.type === 'SCREEN') {
                 this.outgoingPackets.showScreenWidget(value.widgetId);

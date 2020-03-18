@@ -67,7 +67,7 @@ export const widgetScripts = {
     questPoints: 101
 };
 
-export interface ActiveWidget {
+export interface PlayerWidget {
     widgetId: number;
     secondaryWidgetId?: number;
     type: 'SCREEN' | 'CHAT' | 'FULLSCREEN' | 'SCREEN_AND_TAB';
