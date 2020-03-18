@@ -74,4 +74,6 @@ export interface PlayerWidget {
     disablePlayerMovement?: boolean;
     closeOnWalk?: boolean;
     forceClosed?: Function;
+    beforeOpened?: Function;
+    afterOpened?: Function;
 }

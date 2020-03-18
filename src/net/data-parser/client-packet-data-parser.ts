@@ -67,14 +67,12 @@ export class ClientPacketDataParser extends DataParser {
             return;
         }
 
-        if(this.activePacketSize !== 0) {
-            // read packet data
-            const packetData = this.activeBuffer.readBytes(this.activePacketSize);
-            handlePacket(this.clientConnection.player, this.activePacketId, this.activePacketSize, packetData);
+        // read packet data
+        const packetData = this.activePacketSize !== 0 ? this.activeBuffer.readBytes(this.activePacketSize) : null;
+        handlePacket(this.clientConnection.player, this.activePacketId, this.activePacketSize, packetData);
 
-            if(clearBuffer) {
-                this.activeBuffer = null;
-            }
+        if(clearBuffer) {
+            this.activeBuffer = null;
         }
 
         this.activePacketId = null;

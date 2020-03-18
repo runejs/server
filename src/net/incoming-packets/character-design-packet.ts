@@ -39,5 +39,5 @@ export const characterDesignPacket: incomingPacket = (player: Player, packetId: 
     };
 
     player.updateFlags.appearanceUpdateRequired = true;
-    player.closeActiveWidget();
+    player.closeActiveWidgets();
 };

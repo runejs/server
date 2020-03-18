@@ -22,7 +22,7 @@ import { itemOnObjectPacket } from '@server/net/incoming-packets/item-on-object-
 import { numberInputPacket } from '@server/net/incoming-packets/number-input-packet';
 import { itemOnNpcPacket } from '@server/net/incoming-packets/item-on-npc-packet';
 
-const ignore = [ 234, 160, 58 /* camera move */ ];
+const ignore = [ 234, 160, 216, 13, 58 /* camera move */ ];
 
 const packets: { [key: number]: incomingPacket } = {
     75:  chatPacket,

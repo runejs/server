@@ -1,7 +1,6 @@
 import { Player } from '@server/world/actor/player/player';
 import { gameCache } from '@server/game-server';
 import { Npc } from '@server/world/actor/npc/npc';
-import { skillDetails } from '@server/world/actor/skills';
 
 export const dialogueWidgetIds = {
     PLAYER: [ 64, 65, 66, 67 ],
@@ -17,7 +16,6 @@ const lineConstraints = {
     PLAYER: [ 1, 4 ],
     NPC: [ 1, 4 ],
     OPTIONS: [ 2, 5 ],
-    LEVEL_UP: [ 2, 2 ],
     TEXT: [ 1, 5 ]
 };
 
@@ -54,7 +52,7 @@ export enum DialogueEmote {
     ANGRY_4 = 617
 }
 
-export type DialogueType = 'PLAYER' | 'NPC' | 'OPTIONS' | 'LEVEL_UP' | 'TEXT';
+export type DialogueType = 'PLAYER' | 'NPC' | 'OPTIONS' | 'TEXT';
 
 export interface DialogueOptions {
     type: DialogueType;
@@ -94,10 +92,6 @@ export class DialogueAction {
             throw 'NPC not supplied.';
         }
 
-        if(options.type === 'LEVEL_UP' && options.skillId === undefined) {
-            throw 'Skill ID not supplied.';
-        }
-
         this._action = null;
 
         let widgetIndex = options.lines.length - 1;
@@ -105,13 +99,7 @@ export class DialogueAction {
             widgetIndex--;
         }
 
-        let widgetId = -1;
-
-        if(options.type === 'LEVEL_UP') {
-            widgetId = skillDetails.map(skill => !skill || !skill.advancementWidgetId ? -1 : skill.advancementWidgetId)[options.skillId];
-        } else {
-            widgetId = dialogueWidgetIds[options.type][widgetIndex];
-        }
+        const widgetId = dialogueWidgetIds[options.type][widgetIndex];
 
         if(widgetId === undefined || widgetId === null || widgetId === -1) {
             return Promise.resolve(this);
@@ -137,7 +125,7 @@ export class DialogueAction {
         } else if(options.type === 'OPTIONS') {
             this.p.outgoingPackets.updateWidgetString(widgetId, 0, options.title);
             textOffset = 1;
-        } else if(options.type === 'LEVEL_UP' || options.type === 'TEXT') {
+        } else if(options.type === 'TEXT') {
             textOffset = 0;
         }
 

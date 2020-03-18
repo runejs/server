@@ -120,7 +120,7 @@ export class Skills {
 
         if(currentLevel !== finalLevel) {
             this.setLevel(skillId, finalLevel);
-            this.actor.playGraphics({ id: 199, delay: 0, height: 125 });
+            // this.actor.playGraphics({ id: 199, delay: 0, height: 125 });
 
             if(this.actor instanceof Player) {
                 const achievementDetails = skillDetails[skillId];
@@ -128,17 +128,42 @@ export class Skills {
                     return;
                 }
 
-                this.actor.outgoingPackets.chatboxMessage(`Congratulations, you just advanced a ${achievementDetails.name.toLowerCase()} level.`);
-
-                if(achievementDetails.advancementWidgetId) {
-                    dialogueAction(this.actor, { type: 'LEVEL_UP', skillId, lines: [
-                        `<col=000080>Congratulations, you just advanced ${startsWithVowel(achievementDetails.name) ? 'an' : 'a'} ` +
-                            `${achievementDetails.name.toLowerCase()} level.</col>`,
-                            `Your ${achievementDetails.name.toLowerCase()} level is now ${finalLevel}.` ] }).then(d => d.close());
-                    // @TODO sounds
-                }
+                this.actor.sendMessage(`Congratulations, you just advanced a ${achievementDetails.name.toLowerCase()} level.`);
+                this.showLevelUpDialogue(skillId, finalLevel);
             }
         }
+    }
+
+    public showLevelUpDialogue(skillId: number, level: number): void {
+        if(!(this.actor instanceof Player)) {
+            return;
+        }
+
+        const player = this.actor as Player;
+        const achievementDetails = skillDetails[skillId];
+        const widgetId = achievementDetails.advancementWidgetId;
+
+        if(!widgetId) {
+            return;
+        }
+
+        const skillName = achievementDetails.name.toLowerCase();
+
+        player.queueWidget({
+            widgetId,
+            type: 'CHAT',
+            closeOnWalk: true,
+            beforeOpened: () => {
+                player.modifyWidget(widgetId, { childId: 0,
+                    text: `<col=000080>Congratulations, you just advanced ${startsWithVowel(skillName) ? 'an' : 'a'} ${skillName} level.</col>` });
+                player.modifyWidget(widgetId, { childId: 1,
+                    text: `Your ${skillName} level is now ${level}.` });
+            },
+            afterOpened: () => {
+                player.playGraphics({ id: 199, delay: 0, height: 125 });
+                // @TODO sounds
+            }
+        });
     }
 
     public setExp(skillId: number, exp: number): void {
