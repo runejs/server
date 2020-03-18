@@ -13,7 +13,7 @@ const talkToAction : npcAction = (details) => {
     dialogueAction(player)
         .then(d => d.npc(npc, DialogueEmote.CALM_TALK_1, [ 'Good day to you, traveller.', 'Would you be interested in buying some gems?']))
         .then(d => d.options('Would you be interested in buying some gems?', ['Yes, please.', 'No, thank you.']))
-        .then(d => {
+        .then(async d => {
             switch (d.action) {
                 case 1:
                     return d.player(DialogueEmote.JOYFUL, [ 'Yes, please!' ])

@@ -1,5 +1,5 @@
-import { join } from "path";
-import { writeFileSync } from "fs";
+import { join } from 'path';
+import { writeFileSync } from 'fs';
 import { gameCache } from '@server/game-server';
 import { logger } from '@runejs/logger/dist/logger';
 import { ItemDefinition, NpcDefinition } from '@runejs/cache-parser';

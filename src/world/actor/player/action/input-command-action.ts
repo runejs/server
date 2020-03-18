@@ -69,7 +69,7 @@ export const inputCommandAction = (player: Player, command: string, inputArgs: s
                 let syntaxError = `Syntax error. Try ::${command}`;
 
                 pluginArgs.forEach(pluginArg => {
-                    syntaxError += ` ${pluginArg.name}:${pluginArg.type}${pluginArg.defaultValue === undefined ? '' : '?'}`
+                    syntaxError += ` ${pluginArg.name}:${pluginArg.type}${pluginArg.defaultValue === undefined ? '' : '?'}`;
                 });
 
                 const requiredArgLength = plugin.args.filter(arg => arg.defaultValue !== undefined).length;

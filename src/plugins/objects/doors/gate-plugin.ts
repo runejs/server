@@ -26,7 +26,8 @@ const gates = [
 
 // @TODO clean up this disgusting code
 const action: objectAction = (details) => {
-    let {object: gate, position, player, cacheOriginal} = details;
+    const { player, cacheOriginal } = details;
+    let { object: gate, position } = details;
 
     if((gate as ModifiedLandscapeObject).metadata) {
         const metadata = (gate as ModifiedLandscapeObject).metadata;
@@ -138,13 +139,13 @@ const action: objectAction = (details) => {
             }
         }
 
-        let leftHingeDirections: { [key: string]: string } = {
+        const leftHingeDirections: { [key: string]: string } = {
             'NORTH': 'WEST',
             'SOUTH': 'EAST',
             'WEST': 'SOUTH',
             'EAST': 'NORTH'
         };
-        let rightHingeDirections: { [key: string]: string } = {
+        const rightHingeDirections: { [key: string]: string } = {
             'NORTH': 'EAST',
             'SOUTH': 'WEST',
             'WEST': 'NORTH',

@@ -21,7 +21,7 @@ export interface Quest {
         modelRotationX?: number;
         modelRotationY?: number;
         modelZoom?: number;
-    }
+    };
 }
 
 export interface QuestPlugin extends ActionPlugin {

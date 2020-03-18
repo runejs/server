@@ -385,7 +385,7 @@ export class Player extends Actor {
             }
 
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: color });
-        })
+        });
     }
 
     /**
@@ -526,7 +526,7 @@ export class Player extends Actor {
      * @returns A Promise<void> that resolves when the player has clicked the "click to continue" button or
      * after their chat messages have been sent.
      */
-    public sendMessage(messages: string | string[], showDialogue: boolean = false): Promise<void> {
+    public async sendMessage(messages: string | string[], showDialogue: boolean = false): Promise<void> {
         if(!Array.isArray(messages)) {
             messages = [ messages ];
         }
@@ -539,7 +539,7 @@ export class Player extends Actor {
                 throw `Dialogues have a maximum of 5 lines!`;
             }
 
-            return dialogueAction(this, { type: 'TEXT', lines: messages }).then(d => {
+            return dialogueAction(this, { type: 'TEXT', lines: messages }).then(async d => {
                 d.close();
                 return Promise.resolve();
             }).catch(() => {});

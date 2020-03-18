@@ -145,7 +145,7 @@ export class Skills {
         this._values[skillId].exp = exp;
     }
 
-    public setLevel(skillId, level: number): void {
+    public setLevel(skillId: number, level: number): void {
         this._values[skillId].level = level;
     }
 

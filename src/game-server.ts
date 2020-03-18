@@ -96,11 +96,11 @@ export function runGameServer(): void {
         }
 
         process.on('unhandledRejection', (err, promise) => {
-            if(err === 'WIDGET_CLOSED') {
+            if(err === 'WIDGET_CLOSED' || err === 'ACTION_CANCELLED') {
                 return;
             }
 
-            console.error('Unhandled rejection (promise: ', promise, ', reason: ', err, ').');
+            logger.error(`Unhandled promise rejection from ${promise}, reason: ${err}`);
         });
 
         net.createServer(socket => {
@@ -136,11 +136,13 @@ export function runGameServer(): void {
     });
 
     const watcher = watch('dist/plugins/');
-    watcher.on('ready', function() {
-        watcher.on('all', function() {
-            Object.keys(require.cache).forEach(function(id) {
-                if (/[\/\\]plugins[\/\\]/.test(id)) delete require.cache[id];
+    watcher.on('ready', () => {
+        watcher.on('all', () => {
+            Object.keys(require.cache).forEach((id) => {
+                if(/[\/\\]plugins[\/\\]/.test(id)) {
+                    delete require.cache[id];
+                }
             });
-        })
+        });
     });
 }

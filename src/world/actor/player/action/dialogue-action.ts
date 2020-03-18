@@ -73,19 +73,19 @@ export class DialogueAction {
     public constructor(private readonly p: Player) {
     }
 
-    public player(emote: DialogueEmote, lines: string[]): Promise<DialogueAction> {
+    public async player(emote: DialogueEmote, lines: string[]): Promise<DialogueAction> {
         return this.dialogue({ emote, lines, type: 'PLAYER' });
     }
 
-    public npc(npc: Npc | number, emote: DialogueEmote, lines: string[]): Promise<DialogueAction> {
+    public async npc(npc: Npc | number, emote: DialogueEmote, lines: string[]): Promise<DialogueAction> {
         return this.dialogue({ emote, lines, type: 'NPC', npc: typeof npc === 'number' ? npc : npc.id });
     }
 
-    public options(title: string, options: string[]): Promise<DialogueAction> {
+    public async options(title: string, options: string[]): Promise<DialogueAction> {
         return this.dialogue({ type: 'OPTIONS', title, lines: options });
     }
 
-    public dialogue(options: DialogueOptions): Promise<DialogueAction> {
+    public async dialogue(options: DialogueOptions): Promise<DialogueAction> {
         if(options.lines.length < lineConstraints[options.type][0] || options.lines.length > lineConstraints[options.type][1]) {
             throw 'Invalid line length.';
         }
@@ -174,7 +174,7 @@ export class DialogueAction {
     }
 }
 
-export const dialogueAction = (player: Player, options?: DialogueOptions): Promise<DialogueAction> => {
+export const dialogueAction = async (player: Player, options?: DialogueOptions): Promise<DialogueAction> => {
     if(options) {
         return new DialogueAction(player).dialogue(options);
     } else {
