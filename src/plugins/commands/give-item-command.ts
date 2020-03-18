@@ -16,12 +16,12 @@ const action: commandAction = (details) => {
     let amount: number = args.amount as number;
 
     if(amount > 2000000000) {
-        throw `Unable to give more than 2,000,000,000.`;
+        throw new Error(`Unable to give more than 2,000,000,000.`);
     }
 
     const itemDefinition = gameCache.itemDefinitions.get(itemId);
     if(!itemDefinition) {
-        throw `Item ID ${itemId} not found!`;
+        throw new Error(`Item ID ${itemId} not found!`);
     }
 
     let actualAmount = 0;

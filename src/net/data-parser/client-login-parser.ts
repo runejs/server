@@ -34,25 +34,25 @@ export class ClientLoginParser extends DataParser {
 
     public parse(buffer?: RsBuffer): void {
         if(!buffer) {
-            throw ('No data supplied for login');
+            throw new Error('No data supplied for login');
         }
 
         const loginType = buffer.readUnsignedByte();
 
         if(loginType !== 16 && loginType !== 18) {
-            throw ('Invalid login type ' + loginType);
+            throw new Error('Invalid login type ' + loginType);
         }
 
         let loginEncryptedSize = buffer.readUnsignedByte() - (36 + 1 + 1 + 2);
 
         if(loginEncryptedSize <= 0) {
-            throw ('Invalid login packet length ' + loginEncryptedSize);
+            throw new Error('Invalid login packet length ' + loginEncryptedSize);
         }
 
         const gameVersion = buffer.readIntBE();
 
         if(gameVersion !== 435) {
-            throw ('Invalid game version ' + gameVersion);
+            throw new Error('Invalid game version ' + gameVersion);
         }
 
         const isLowDetail: boolean = buffer.readByte() === 1;
@@ -72,7 +72,7 @@ export class ClientLoginParser extends DataParser {
         const blockId = decrypted.readByte();
 
         if(blockId !== 10) {
-            throw ('Invalid block id ' + blockId);
+            throw new Error('Invalid block id ' + blockId);
         }
 
         const clientKey1 = decrypted.readIntBE();
@@ -80,7 +80,7 @@ export class ClientLoginParser extends DataParser {
         const incomingServerKey = decrypted.readLongBE();
 
         if(this.clientConnection.serverKey !== incomingServerKey) {
-            throw (`Server key mismatch - ${this.clientConnection.serverKey} != ${incomingServerKey}`);
+            throw new Error(`Server key mismatch - ${this.clientConnection.serverKey} != ${incomingServerKey}`);
         }
 
         const clientUuid = decrypted.readIntBE();

@@ -58,7 +58,7 @@ export async function itemSelectionAction(player: Player, type: 'COOKING' | 'MAK
             widgetId = 309;
         } else {
             if(items.length > 5) {
-                throw `Too many items provided to the item selection action!`;
+                throw new Error(`Too many items provided to the item selection action!`);
             }
 
             widgetId = (301 + items.length);

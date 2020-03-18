@@ -32,7 +32,7 @@ function parseSkillGuides(): SkillGuide[] {
         const skillGuides = safeLoad(readFileSync('data/config/skill-guides.yaml', 'utf8'), { schema: JSON_SCHEMA }) as SkillGuide[];
 
         if(!skillGuides || skillGuides.length === 0) {
-            throw 'Unable to read skill guides.';
+            throw new Error('Unable to read skill guides.');
         }
 
         logger.info(`${skillGuides.length} skill guides found.`);

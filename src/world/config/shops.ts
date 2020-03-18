@@ -30,7 +30,7 @@ export function parseShops(): Shop[] {
         const shops = safeLoad(readFileSync('data/config/shops.yaml', 'utf8'), { schema: JSON_SCHEMA }) as Shop[];
 
         if(!shops || shops.length === 0) {
-            throw 'Unable to read shops.';
+            throw new Error('Unable to read shops.');
         }
 
         logger.info(`${shops.length} shops found.`);

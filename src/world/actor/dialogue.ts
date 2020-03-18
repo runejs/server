@@ -5,6 +5,7 @@ import { gameCache } from '@server/game-server';
 import { logger } from '@runejs/logger/dist/logger';
 import _ from 'lodash';
 import { wrapText } from '@server/util/strings';
+import { ActionsCancelledWarning, WidgetsClosedWarning } from '@server/error-handling';
 
 export enum Emote {
     POMPOUS = 'POMPOUS',
@@ -328,7 +329,7 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
 
     for(let i = 0; i < dialogueTree.length; i++) {
         if(stopLoop) {
-            return Promise.reject('ACTION_CANCELLED');
+            throw new ActionsCancelledWarning();
         }
 
         const sub: Subscription[] = [];
@@ -404,7 +405,8 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
                     const lines = textDialogueAction.lines;
 
                     if(lines.length > 5) {
-                        throw `Too many lines for text dialogue! Dialogue has ${lines.length} lines but the maximum is 5: ${JSON.stringify(lines)}`;
+                        throw new Error(`Too many lines for text dialogue! Dialogue has ${lines.length} lines but ` +
+                            `the maximum is 5: ${JSON.stringify(lines)}`);
                     }
 
                     widgetId = textWidgetIds[lines.length - 1];
@@ -461,7 +463,8 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
                     const lines = actorDialogueAction.lines;
 
                     if(lines.length > 4) {
-                        throw `Too many lines for actor dialogue! Dialogue has ${lines.length} lines but the maximum is 4: ${JSON.stringify(lines)}`;
+                        throw new Error(`Too many lines for actor dialogue! Dialogue has ${lines.length} lines but ` +
+                            `the maximum is 4: ${JSON.stringify(lines)}`);
                     }
 
                     const animation = actorDialogueAction.animation;
@@ -498,7 +501,7 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
                     widgetId: widgetId,
                     type: 'CHAT',
                     closeOnWalk: true,
-                    forceClosed: () => reject('WIDGET_CLOSED')
+                    forceClosed: () => reject(new WidgetsClosedWarning())
                 };
             }
         }).then(() => {
@@ -506,6 +509,10 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
         }).catch(error => {
             sub.forEach(s => s.unsubscribe());
             stopLoop = true;
+
+            if(!(error instanceof ActionsCancelledWarning) && !(error instanceof WidgetsClosedWarning)) {
+                throw error;
+            }
         });
     }
 
@@ -516,7 +523,7 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
     const player = participants.find(p => p instanceof Player) as Player;
 
     if(!player) {
-        return Promise.reject('Player instance not provided to dialogue action.');
+        throw new Error('Player instance not provided to dialogue action.');
     }
 
     let npcParticipants = participants.filter(p => !(p instanceof Player)) as NpcParticipant[];
