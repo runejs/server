@@ -53,7 +53,7 @@ const rightHingeDir: { [key: string]: string } = {
 };
 
 export const action: objectAction = (details): void => {
-    let { player, object: door, position, cacheOriginal } = details;
+    const { player, object: door, position, cacheOriginal } = details;
     let opening = true;
     let doorConfig = doors.find(d => d.closed === door.objectId);
     let hingeConfig;
@@ -75,7 +75,7 @@ export const action: objectAction = (details): void => {
     const startDoorChunk: Chunk = world.chunkManager.getChunkForWorldPosition(position);
     const startDir = WNES[door.rotation];
     const endDir = hingeConfig[startDir];
-    const endPosition = position.step(opening ? 1 : -1, opening? startDir : endDir);
+    const endPosition = position.step(opening ? 1 : -1, opening ? startDir : endDir);
 
     const replacementDoor = {
         objectId: replacementDoorId,

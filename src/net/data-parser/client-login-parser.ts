@@ -13,11 +13,10 @@ const VALID_CHARS = ['_', 'a', 'b', 'c', 'd',
     '*', '(', ')', '-', '+', '=', ':', ';', '.', '>', '<', ',', '"',
     '[', ']', '|', '?', '/', '`'];
 
-function longToName(nameLong: BigInt) {
-    let i = 0;
+function longToName(nameLong: BigInt): string {
     let ac: string = '';
     while(nameLong !== BigInt(0)) {
-        let l1 = nameLong;
+        const l1 = nameLong;
         nameLong = BigInt(nameLong) / BigInt(37);
         ac += VALID_CHARS[parseInt(l1.toString()) - parseInt(nameLong.toString()) * 37];
     }

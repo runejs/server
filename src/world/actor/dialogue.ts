@@ -112,7 +112,7 @@ function wrapDialogueText(text: string, type: 'ACTOR' | 'TEXT'): string[] {
     return wrapText(text, type === 'ACTOR' ? 340 : 430);
 }
 
-function parseDialogueFunctionArgs(func): string[] {
+function parseDialogueFunctionArgs(func: Function): string[] {
     const str = func.toString();
 
     if(!str) {
@@ -125,7 +125,7 @@ function parseDialogueFunctionArgs(func): string[] {
         return null;
     }
 
-    let arg = str.substring(0, argEndIndex).replace(/[\\(\\) ]/g, '').trim();
+    const arg = str.substring(0, argEndIndex).replace(/[\\(\\) ]/g, '').trim();
     if(!arg || arg.length === 0) {
         return null;
     }
@@ -155,11 +155,11 @@ interface DialogueAction {
 }
 
 class GoToAction implements DialogueAction {
-    constructor(public to: string | Function) {
-    }
-
     public tag: string;
     public type = 'GOTO';
+
+    constructor(public to: string | Function) {
+    }
 }
 
 interface ActorDialogueAction extends DialogueAction {
@@ -328,10 +328,10 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
 
     for(let i = 0; i < dialogueTree.length; i++) {
         if(stopLoop) {
-            return Promise.reject('Action cancelled.');
+            return Promise.reject('ACTION_CANCELLED');
         }
 
-        let sub: Subscription[] = [];
+        const sub: Subscription[] = [];
 
         await new Promise((resolve, reject) => {
             let dialogueAction = dialogueTree[i];
@@ -504,7 +504,6 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
         }).then(() => {
             sub.forEach(s => s.unsubscribe());
         }).catch(error => {
-            logger.error(error);
             sub.forEach(s => s.unsubscribe());
             stopLoop = true;
         });

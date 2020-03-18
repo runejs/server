@@ -7,9 +7,9 @@ import { Npc } from '../actor/npc/npc';
 import { WorldItem } from '@server/world/items/world-item';
 
 export interface ChunkUpdateItem {
-    object?: LandscapeObject,
-    worldItem?: WorldItem,
-    type: 'ADD' | 'REMOVE'
+    object?: LandscapeObject;
+    worldItem?: WorldItem;
+    type: 'ADD' | 'REMOVE';
 }
 
 /**
@@ -72,7 +72,7 @@ export class Chunk {
         const key = worldItem.position.key;
 
         if(this._worldItems.has(key)) {
-            let list = this._worldItems.get(key);
+            const list = this._worldItems.get(key);
             list.splice(list.indexOf(worldItem), 1);
             this._worldItems.set(key, list);
         }

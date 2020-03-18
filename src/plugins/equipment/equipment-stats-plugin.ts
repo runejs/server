@@ -3,7 +3,7 @@ import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { widgets } from '@server/world/config/widget';
 import { Player } from '@server/world/actor/player/player';
 
-export function updateBonusStrings(player: Player) {
+export function updateBonusStrings(player: Player): void {
     [
         { id: 108, text: 'Stab', value: player.bonuses.offencive.stab },
         { id: 109, text: 'Slash', value: player.bonuses.offencive.slash },

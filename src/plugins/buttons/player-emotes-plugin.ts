@@ -10,7 +10,7 @@ interface Emote {
     graphicId?: number;
 }
 
-export const emotes: { [key:number]: Emote } = {
+export const emotes: { [key: number]: Emote } = {
     1:  { animationId: 855,  name: 'YES' },
     2:  { animationId: 856,  name: 'NO' },
     3:  { animationId: 858,  name: 'BOW' },

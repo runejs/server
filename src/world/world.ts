@@ -154,7 +154,7 @@ export class World {
      * @param chunk The main central chunk that the WorldItem will spawn in.
      * @param excludePlayer [optional] A player to be excluded from the world item spawn.
      */
-    private spawnWorldItemForPlayers(worldItem: WorldItem, chunk: Chunk, excludePlayer?: Player): Promise<void> {
+    private async spawnWorldItemForPlayers(worldItem: WorldItem, chunk: Chunk, excludePlayer?: Player): Promise<void> {
         return new Promise(resolve => {
             const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
@@ -175,7 +175,7 @@ export class World {
      * @param worldItem The WorldItem object to de-spawn.
      * @param chunk The main central chunk that the WorldItem will de-spawn from.
      */
-    private deleteWorldItemForPlayers(worldItem: WorldItem, chunk: Chunk): Promise<void> {
+    private async deleteWorldItemForPlayers(worldItem: WorldItem, chunk: Chunk): Promise<void> {
         return new Promise(resolve => {
             const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
@@ -267,7 +267,7 @@ export class World {
      * @param position The position to spawn the object at.
      * @param expireTicks The number of game cycles/ticks before the object will de-spawn.
      */
-    public addTemporaryLandscapeObject(object: LandscapeObject, position: Position, expireTicks: number): Promise<void> {
+    public async addTemporaryLandscapeObject(object: LandscapeObject, position: Position, expireTicks: number): Promise<void> {
         return new Promise(resolve => {
             this.addLandscapeObject(object, position);
 
@@ -285,7 +285,7 @@ export class World {
      * @param position The position of the landscape object.
      * @param expireTicks The number of game cycles/ticks before the object will re-spawn.
      */
-    public removeLandscapeObjectTemporarily(object: LandscapeObject, position: Position, expireTicks: number): Promise<void> {
+    public async removeLandscapeObjectTemporarily(object: LandscapeObject, position: Position, expireTicks: number): Promise<void> {
         const chunk = this.chunkManager.getChunkForWorldPosition(position);
         chunk.removeObject(object, position);
 
@@ -311,7 +311,7 @@ export class World {
      * @param markRemoved [optional] Whether or not to mark the object as removed within it's map chunk. If not provided,
      * the object will be marked as removed.
      */
-    public removeLandscapeObject(object: LandscapeObject, position: Position, markRemoved: boolean = true): Promise<Chunk> {
+    public async removeLandscapeObject(object: LandscapeObject, position: Position, markRemoved: boolean = true): Promise<Chunk> {
         const chunk = this.chunkManager.getChunkForWorldPosition(position);
         chunk.removeObject(object, position, markRemoved);
 
@@ -331,7 +331,7 @@ export class World {
      * @param object The landscape object to spawn.
      * @param position The position at which to spawn the object.
      */
-    public addLandscapeObject(object: LandscapeObject, position: Position): Promise<void> {
+    public async addLandscapeObject(object: LandscapeObject, position: Position): Promise<void> {
         const chunk = this.chunkManager.getChunkForWorldPosition(position);
         chunk.addObject(object, position);
 
@@ -402,8 +402,8 @@ export class World {
     }
 
     public generateFakePlayers(): void {
-        let x: number = 3222;
-        let y: number = 3222;
+        const x: number = 3222;
+        const y: number = 3222;
         let xOffset: number = 0;
         let yOffset: number = 0;
 

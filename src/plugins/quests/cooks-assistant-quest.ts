@@ -163,10 +163,10 @@ const startQuestAction: npcAction = (details) => {
     ]).catch(error => console.error(error));
 };
 
-function youStillNeed(quest: QuestProgress) {
+function youStillNeed(quest: QuestProgress): DialogueTree {
     return [
         text => `You still need to get\n` +
-            `${!quest.attributes.givenMilk ? `A bucket of milk. `: ``}${!quest.attributes.givenFlour ? `A pot of flour. ` : ``}${!quest.attributes.givenEgg ? `An egg.` : ``}`,
+            `${!quest.attributes.givenMilk ? `A bucket of milk. ` : ``}${!quest.attributes.givenFlour ? `A pot of flour. ` : ``}${!quest.attributes.givenEgg ? `An egg.` : ``}`,
         options => [
             `I'll get right on it.`, [
                 player => [Emote.GENERIC, `I'll get right on it.`]

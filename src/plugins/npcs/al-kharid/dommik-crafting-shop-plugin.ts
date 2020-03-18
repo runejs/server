@@ -9,11 +9,11 @@ const tradeAction: npcAction = (details) => {
 };
 
 const talkToAction : npcAction = (details) => {
-    const {player, npc} = details;
+    const { player, npc } = details;
     dialogueAction(player)
         .then(d => d.npc(npc, DialogueEmote.CALM_TALK_1, ['Would you like to buy some crafting equipment?']))
         .then(d => d.options('Would you like to buy some crafting equipment?', ['No thanks. I\'ve got all the Crafting equipment I need.', 'Let\'s see what you\'ve got, then.']))
-        .then(d => {
+        .then(async d => {
             switch (d.action) {
                 case 1:
                     return d.player(DialogueEmote.JOYFUL, [ 'No thanks; I\'ve got all the Crafting equipment I need.' ])

@@ -55,6 +55,6 @@
         "concurrently": "^5.1.0",
         "nodemon": "^2.0.2",
         "tsconfig-paths": "^3.9.0",
-        "tslint": "^5.20.1"
+        "tslint": "^6.1.0"
     }
 }

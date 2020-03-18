@@ -50,8 +50,7 @@ export interface ItemSelection {
     amount: number;
 }
 
-// @TODO Make-X
-export function itemSelectionAction(player: Player, type: 'COOKING' | 'MAKING', items: SelectableItem[]): Promise<ItemSelection> {
+export async function itemSelectionAction(player: Player, type: 'COOKING' | 'MAKING', items: SelectableItem[]): Promise<ItemSelection> {
     let widgetId = 307;
 
     if(type === 'MAKING') {

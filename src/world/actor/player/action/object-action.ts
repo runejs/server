@@ -99,7 +99,7 @@ export const objectAction = (player: Player, landscapeObject: LandscapeObject, l
                         option,
                         position,
                         cacheOriginal
-                    }))
+                    }));
             })
             .catch(() => logger.warn(`Unable to complete walk-to action.`));
     }
