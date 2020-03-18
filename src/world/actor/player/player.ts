@@ -536,13 +536,13 @@ export class Player extends Actor {
             return Promise.resolve();
         } else {
             if(messages.length > 5) {
-                throw `Dialogues have a maximum of 5 lines!`;
+                throw new Error(`Dialogues have a maximum of 5 lines!`);
             }
 
             return dialogueAction(this, { type: 'TEXT', lines: messages }).then(async d => {
                 d.close();
                 return Promise.resolve();
-            }).catch(() => {});
+            });
         }
     }
 
@@ -733,7 +733,6 @@ export class Player extends Actor {
             this.activeWidget = widget;
         } else {
             this.queuedWidgets.push(widget);
-            console.log(this.queuedWidgets);
         }
     }
 

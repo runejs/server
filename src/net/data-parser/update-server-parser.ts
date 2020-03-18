@@ -53,7 +53,7 @@ export class UpdateServerParser extends DataParser {
         }
 
         if(!cacheFile || cacheFile.getBuffer().length === 0) {
-            throw `Cache file not found; file(${file}) with index(${index})`;
+            throw new Error(`Cache file not found; file(${file}) with index(${index})`);
         }
 
         const cacheFileBuffer = cacheFile.getBuffer();

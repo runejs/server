@@ -95,14 +95,6 @@ export function runGameServer(): void {
             world.generateFakePlayers();
         }
 
-        process.on('unhandledRejection', (err, promise) => {
-            if(err === 'WIDGET_CLOSED' || err === 'ACTION_CANCELLED') {
-                return;
-            }
-
-            logger.error(`Unhandled promise rejection from ${promise}, reason: ${err}`);
-        });
-
         net.createServer(socket => {
             logger.info('Socket opened');
 

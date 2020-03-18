@@ -47,10 +47,10 @@ const millieDialogue: npcAction = (details) => {
                 player => [ Emote.HAPPY, `Great! Thanks for your help.` ]
             ],
             `I'm fine, thanks.`, [
-                player => [ Emote.GENERIC, `Then I bring my wheat here?` ]
+                player => [ Emote.GENERIC, `I'm fine, thanks.` ]
             ]
         ]
-    ]).catch(() => {});
+    ]);
 };
 
 const gillieDialogue: npcAction = (details) => {
@@ -82,7 +82,7 @@ const gillieDialogue: npcAction = (details) => {
                 player => [ Emote.GENERIC, `I'm fine, thanks.` ],
             ]
         ]
-    ]).catch(() => {});
+    ]);
 };
 
 export default new RunePlugin([{

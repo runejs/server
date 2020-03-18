@@ -8,7 +8,7 @@ export class VersionHandshakeParser extends DataParser {
 
     public parse(buffer: RsBuffer, packetId: number): void {
         if(!buffer) {
-            throw ('No data supplied for version handshake');
+            throw new Error('No data supplied for version handshake');
         }
 
         if(packetId === 15) {
@@ -18,7 +18,7 @@ export class VersionHandshakeParser extends DataParser {
             outputBuffer.writeByte(gameVersion === 435 ? 0 : 6);
             this.clientConnection.socket.write(outputBuffer.getData());
         } else {
-            throw 'Invalid version handshake packet id.';
+            throw new Error('Invalid version handshake packet id.');
         }
     }
 }

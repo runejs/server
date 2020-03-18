@@ -8,7 +8,7 @@ export class LoginHandshakeParser extends DataParser {
 
     public parse(buffer: RsBuffer, packetId: number): void {
         if(!buffer) {
-            throw ('No data supplied for login handshake');
+            throw new Error('No data supplied for login handshake');
         }
 
         if(packetId === 14) {
@@ -23,7 +23,7 @@ export class LoginHandshakeParser extends DataParser {
 
             this.clientConnection.serverKey = serverKey;
         } else {
-            throw 'Invalid login handshake packet id.';
+            throw new Error('Invalid login handshake packet id.');
         }
     }
 }

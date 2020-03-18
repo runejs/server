@@ -32,7 +32,7 @@ const action: commandAction = (details) => {
         player => [ Emote.GENERIC, `See ya around.` ]
     ]).then(() => {
         // do something with dialogue result.
-    }).catch(() => {});
+    });
 };
 
 export default new RunePlugin({ type: ActionType.COMMAND, commands: 'd', action });

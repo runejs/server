@@ -160,7 +160,7 @@ const startQuestAction: npcAction = (details) => {
                     `Go on your merry way!` ]
             ]
         ]
-    ]).catch(error => console.error(error));
+    ]);
 };
 
 function youStillNeed(quest: QuestProgress): DialogueTree {

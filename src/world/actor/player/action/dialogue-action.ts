@@ -1,6 +1,7 @@
 import { Player } from '@server/world/actor/player/player';
 import { gameCache } from '@server/game-server';
 import { Npc } from '@server/world/actor/npc/npc';
+import { WidgetsClosedWarning } from '@server/error-handling';
 
 export const dialogueWidgetIds = {
     PLAYER: [ 64, 65, 66, 67 ],
@@ -85,11 +86,11 @@ export class DialogueAction {
 
     public async dialogue(options: DialogueOptions): Promise<DialogueAction> {
         if(options.lines.length < lineConstraints[options.type][0] || options.lines.length > lineConstraints[options.type][1]) {
-            throw 'Invalid line length.';
+            throw new Error('Invalid line length.');
         }
 
         if(options.type === 'NPC' && options.npc === undefined) {
-            throw 'NPC not supplied.';
+            throw new Error('NPC not supplied.');
         }
 
         this._action = null;
@@ -138,7 +139,7 @@ export class DialogueAction {
                 widgetId: widgetId,
                 type: 'CHAT',
                 closeOnWalk: true,
-                forceClosed: () => reject('WIDGET_CLOSED')
+                forceClosed: () => reject(new WidgetsClosedWarning())
             };
 
             const sub = this.p.dialogueInteractionEvent.subscribe(action => {

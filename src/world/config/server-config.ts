@@ -19,7 +19,7 @@ export function parseServerConfig(useDefault?: boolean): ServerConfig {
                 logger.warn('Server config not provided, using default...');
                 return parseServerConfig(true);
             } else {
-                throw 'Syntax Error';
+                throw new Error('Syntax Error');
             }
         }
 
