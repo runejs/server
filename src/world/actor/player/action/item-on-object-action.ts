@@ -70,7 +70,7 @@ export const itemOnObjectAction = (player: Player, locationObject: LocationObjec
         return;
     }
 
-    // Find all item on object action plugins that reference this landscape object
+    // Find all item on object action plugins that reference this location object
     let interactionActions = itemOnObjectInteractions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, locationObject.objectId));
     const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
 

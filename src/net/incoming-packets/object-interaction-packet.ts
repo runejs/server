@@ -63,12 +63,12 @@ export const objectInteractionPacket: incomingPacket = (player: Player, packetId
     const objectChunk = world.chunkManager.getChunkForWorldPosition(objectPosition);
     let cacheOriginal: boolean = true;
 
-    let landscapeObject = objectChunk.getCacheObject(objectId, objectPosition);
-    if(!landscapeObject) {
-        landscapeObject = objectChunk.getAddedObject(objectId, objectPosition);
+    let locationObject = objectChunk.getCacheObject(objectId, objectPosition);
+    if(!locationObject) {
+        locationObject = objectChunk.getAddedObject(objectId, objectPosition);
         cacheOriginal = false;
 
-        if(!landscapeObject) {
+        if(!locationObject) {
             return;
         }
     }
@@ -95,5 +95,5 @@ export const objectInteractionPacket: incomingPacket = (player: Player, packetId
         return;
     }
 
-    objectAction(player, landscapeObject, locationObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
+    objectAction(player, locationObject, locationObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
 };

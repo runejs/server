@@ -139,23 +139,23 @@ export class OutgoingPackets {
         this.queue(packet);
     }
 
-    public setLocationObject(landscapeObject: LocationObject, position: Position, offset: number = 0): void {
+    public setLocationObject(locationObject: LocationObject, position: Position, offset: number = 0): void {
         this.updateReferencePosition(position);
 
         const packet = new Packet(241);
-        packet.writeByteInverted((landscapeObject.type << 2) + (landscapeObject.orientation & 3));
-        packet.writeUnsignedShortBE(landscapeObject.objectId);
+        packet.writeByteInverted((locationObject.type << 2) + (locationObject.orientation & 3));
+        packet.writeUnsignedShortBE(locationObject.objectId);
         packet.writeUnsignedOffsetByte(offset);
 
         this.queue(packet);
     }
 
-    public removeLocationObject(landscapeObject: LocationObject, position: Position, offset: number = 0): void {
+    public removeLocationObject(locationObject: LocationObject, position: Position, offset: number = 0): void {
         this.updateReferencePosition(position);
 
         const packet = new Packet(143);
         packet.writeUnsignedOffsetByte(offset);
-        packet.writeByteInverted((landscapeObject.type << 2) + (landscapeObject.orientation & 3));
+        packet.writeByteInverted((locationObject.type << 2) + (locationObject.orientation & 3));
 
         this.queue(packet);
     }

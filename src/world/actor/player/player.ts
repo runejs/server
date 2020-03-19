@@ -295,7 +295,7 @@ export class Player extends Actor {
     }
 
     /**
-     * Sends chunk updates to notify the client of added & removed landscape objects
+     * Sends chunk updates to notify the client of added & removed location objects
      * @param chunks The chunks to update.
      */
     private sendChunkUpdates(chunks: Chunk[]): void {
