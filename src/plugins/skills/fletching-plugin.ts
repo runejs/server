@@ -1,6 +1,7 @@
 import { itemOnItemAction } from '@server/world/actor/player/action/item-on-item-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { itemIds } from '@server/world/config/item-ids';
+import { animationIds } from '@server/world/config/animation-ids';
 import { Skill } from '@server/world/actor/skills';
 import { gameCache } from '@server/game-server';
 import { itemSelectionAction } from '@server/world/actor/player/action/item-selection-action';
@@ -8,38 +9,38 @@ import { Item } from '@server/world/items/item';
 import { loopingAction } from '@server/world/actor/player/action/action';
 
 const arrows = {
-    HEADLESS_ARROW: {level: 1, exp: 1.0, tip: 52, with: 314, id: 53},
-    BRONZE_ARROW: {level: 1, exp: 1.3, tip: 39, id: 882},
-    IRON_ARROW: {level: 15, exp: 2.5, tip: 40, id: 884},
-    STEEL_ARROW: {level: 30, exp: 5.0, tip: 41, id: 886},
-    MITHRIL_ARROW: {level: 45, exp: 7.5, tip: 42, id: 888},
-    ADAMANT_ARROW: {level: 60, exp: 10.0, tip: 43, id: 890},
-    RUNE_ARROW: {level: 75, exp: 12.5, tip: 44, id: 892}
+    HEADLESS_ARROW: {level: 1, exp: 1.0, tip: itemIds.arrowShaft, with: itemIds.feather, id: itemIds.arrows.headless},
+    BRONZE_ARROW: {level: 1, exp: 1.3, tip: itemIds.arrowTips.bronze, id: itemIds.arrows.bronze},
+    IRON_ARROW: {level: 15, exp: 2.5, tip: itemIds.arrowTips.iron, id: itemIds.arrows.iron},
+    STEEL_ARROW: {level: 30, exp: 5.0, tip: itemIds.arrowTips.steel, id: itemIds.arrows.steel},
+    MITHRIL_ARROW: {level: 45, exp: 7.5, tip: itemIds.arrowTips.mithril, id: itemIds.arrows.mithril},
+    ADAMANT_ARROW: {level: 60, exp: 10.0, tip: itemIds.arrowTips.adamant, id: itemIds.arrows.adamant},
+    RUNE_ARROW: {level: 75, exp: 12.5, tip: itemIds.arrowTips.rune, id: itemIds.arrows.rune}
 };
 
 const bows = {
-    ARROW_SHAFT: {level: 1, exp: 5.0, unstrung: 52, strung: -1},
-    SHORTBOW: {level: 5, exp: 5.0, unstrung: 50, strung: 841},
-    LONGBOW: {level: 10, exp: 10.0, unstrung: 48, strung: 839},
-    OAK_SHORTBOW: {level: 20, exp: 16.5, unstrung: 54, strung: 843},
-    OAK_LONGBOW: {level: 25, exp: 25.0, unstrung: 56, strung: 845},
-    WILLOW_SHORTBOW: {level: 35, exp: 33.3, unstrung: 60, strung: 847},
-    WILLOW_LONGBOW: {level: 40, exp: 41.5, unstrung: 58, strung: 849},
-    MAPLE_SHORTBOW: {level: 50, exp: 50.0, unstrung: 64, strung: 853},
-    MAPLE_LONGBOW: {level: 55, exp: 58.3, unstrung: 62, strung: 851},
-    YEW_SHORTBOW: {level: 65, exp: 67.5, unstrung: 68, strung: 857},
-    YEW_LONGBOW: {level: 70, exp: 75.0, unstrung: 66, strung: 855},
-    MAGIC_SHORTBOW: {level: 80, exp: 83.3, unstrung: 72, strung: 861},
-    MAGIC_LONGBOW: {level: 85, exp: 91.5, unstrung: 70, strung: 859}
+    ARROW_SHAFT: {level: 1, exp: 5.0, unstrung: itemIds.arrowShaft, strung: -1},
+    SHORTBOW: {level: 5, exp: 5.0, unstrung: itemIds.unstrungShortBows.normal, strung: itemIds.shortBows.normal},
+    LONGBOW: {level: 10, exp: 10.0, unstrung: itemIds.unstrungLongBows.normal, strung: itemIds.longBows.normal},
+    OAK_SHORTBOW: {level: 20, exp: 16.5, unstrung: itemIds.unstrungShortBows.oak, strung: itemIds.shortBows.oak},
+    OAK_LONGBOW: {level: 25, exp: 25.0, unstrung: itemIds.unstrungLongBows.oak, strung: itemIds.longBows.oak},
+    WILLOW_SHORTBOW: {level: 35, exp: 33.3, unstrung: itemIds.unstrungShortBows.willow, strung: itemIds.shortBows.willow},
+    WILLOW_LONGBOW: {level: 40, exp: 41.5, unstrung: itemIds.unstrungLongBows.willow, strung: itemIds.longBows.willow},
+    MAPLE_SHORTBOW: {level: 50, exp: 50.0, unstrung: itemIds.unstrungShortBows.maple, strung: itemIds.shortBows.maple},
+    MAPLE_LONGBOW: {level: 55, exp: 58.3, unstrung: itemIds.unstrungLongBows.maple, strung: itemIds.longBows.maple},
+    YEW_SHORTBOW: {level: 65, exp: 67.5, unstrung: itemIds.unstrungShortBows.yew, strung: itemIds.shortBows.yew},
+    YEW_LONGBOW: {level: 70, exp: 75.0, unstrung: itemIds.unstrungLongBows.yew, strung: itemIds.longBows.yew},
+    MAGIC_SHORTBOW: {level: 80, exp: 83.3, unstrung: itemIds.unstrungShortBows.magic, strung: itemIds.shortBows.magic},
+    MAGIC_LONGBOW: {level: 85, exp: 91.5, unstrung: itemIds.unstrungLongBows.magic, strung: itemIds.longBows.magic}
 };
 
 const logs = {
-    NORMAL: {logId: 1511, makeableItems: [bows.SHORTBOW, bows.LONGBOW, bows.ARROW_SHAFT], animationId: 1248},
-    OAK: {logId: 1521, makeableItems: [bows.OAK_SHORTBOW, bows.OAK_LONGBOW]},
-    WILLOW: {logId: 1519, makeableItems: [bows.WILLOW_SHORTBOW, bows.WILLOW_LONGBOW]},
-    MAPLE: {logId: 1517, makeableItems: [bows.MAPLE_SHORTBOW, bows.MAPLE_LONGBOW]},
-    YEW: {logId: 1515, makeableItems: [bows.YEW_SHORTBOW, bows.YEW_LONGBOW]},
-    MAGIC: {logId: 1513, makeableItems: [bows.MAGIC_SHORTBOW, bows.MAGIC_LONGBOW]}
+    NORMAL: {logId: itemIds.logs.normal, makeableItems: [bows.SHORTBOW, bows.LONGBOW, bows.ARROW_SHAFT]},
+    OAK: {logId: itemIds.logs.oak, makeableItems: [bows.OAK_SHORTBOW, bows.OAK_LONGBOW]},
+    WILLOW: {logId: itemIds.logs.willow, makeableItems: [bows.WILLOW_SHORTBOW, bows.WILLOW_LONGBOW]},
+    MAPLE: {logId: itemIds.logs.maple, makeableItems: [bows.MAPLE_SHORTBOW, bows.MAPLE_LONGBOW]},
+    YEW: {logId: itemIds.logs.yew, makeableItems: [bows.YEW_SHORTBOW, bows.YEW_LONGBOW]},
+    MAGIC: {logId: itemIds.logs.magic, makeableItems: [bows.MAGIC_SHORTBOW, bows.MAGIC_LONGBOW]}
 };
 
 const cycle = (player, i, max) => {
@@ -48,7 +49,7 @@ const cycle = (player, i, max) => {
 };
 
 const cutLogAction: itemOnItemAction = (details) => {
-    const {player, usedItem, usedWithItem, usedSlot, usedWithSlot} = details;
+    const {player, usedItem, usedWithItem} = details;
     const log = usedItem.itemId !== itemIds.knife ? usedItem : usedWithItem;
     const skillInfo = Object.keys(logs).find(l => logs[l].logId === log.itemId);
     const makeableItems = logs[skillInfo].makeableItems;
@@ -77,9 +78,10 @@ const cutLogAction: itemOnItemAction = (details) => {
                 let elapsedTicks = 0;
                 const loop = loopingAction({player: player});
                 loop.event.subscribe(() => {
-                    if (elapsedTicks === 1) {
-                        player.playAnimation(logs[requiredLog].animationId);
-                    } else if (elapsedTicks === 2) {
+                    if (elapsedTicks % 6 === 0) {
+                        player.playAnimation(animationIds.cutLogAnimation);
+                    }
+                    if (elapsedTicks % 3 === 0) {
                         if (player.hasItemInInventory(logs[requiredLog].logId)) {
                             player.removeFirstItem(logs[requiredLog].logId);
                             const itemMade = makingItem.unstrung;
@@ -95,8 +97,6 @@ const cutLogAction: itemOnItemAction = (details) => {
                                 return;
                             }
                         }
-                    } else if (elapsedTicks === 3) {
-                        elapsedTicks = 0;
                     }
                     elapsedTicks++;
                 });
@@ -106,7 +106,7 @@ const cutLogAction: itemOnItemAction = (details) => {
 };
 
 const attachArrowAction: itemOnItemAction = (details) => {
-    const {player, usedItem, usedWithItem, usedSlot, usedWithSlot} = details;
+    const {player, usedItem, usedWithItem} = details;
     const skillInfo = Object.keys(arrows).find(l => (arrows[l].tip === usedItem.itemId && arrows[l].with === usedWithItem.itemId) || (arrows[l].tip === usedWithItem.itemId && arrows[l].with === usedItem.itemId));
     const arrow = arrows[skillInfo];
     if (player.skills.values[Skill.FLETCHING].level < arrow.level) {

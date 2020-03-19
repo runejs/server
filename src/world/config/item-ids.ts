@@ -5,7 +5,6 @@ export const itemIds = {
     bucketOfWater: 1929,
     ashes: 592,
     tinderbox: 590,
-    logs: 1511,
     jug: 1935,
     jugOfWater: 1937,
     pot: 1931,
@@ -32,5 +31,13 @@ export const itemIds = {
         shears: 5603,
     },
     knife: 946,
-
+    feather: 314,
+    arrowShaft: 52,
+    arrowTips: {bronze: 39, iron: 40, steel: 41, mithril: 42, adamant: 43, rune: 44},
+    arrows: {headless: 53, bronze: 882, iron: 884, steel: 886, mithril: 888, adamant: 890, rune: 892},
+    logs: {normal: 1511, oak: 1521, willow: 1519, maple: 1517, yew: 1515, magic: 1513},
+    shortBows: {normal: 841, oak: 843, willow: 847, maple: 853, yew: 857, magic: 861},
+    longBows: {normal: 839, oak: 845, willow: 849, maple: 851, yew: 855, magic: 859},
+    unstrungShortBows: {normal: 50, oak: 54, willow: 60, maple: 64, yew: 68, magic: 72},
+    unstrungLongBows: {normal: 48, oak: 56, willow: 58, maple: 62, yew: 66, magic: 70},
 };

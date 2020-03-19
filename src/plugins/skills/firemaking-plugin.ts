@@ -15,7 +15,7 @@ import { animationIds } from '@server/world/config/animation-ids';
 
 const logs = [
     {
-        logId: itemIds.logs,
+        logId: itemIds.logs.normal,
         requiredLevel: 1,
         burnExp: 40
     }
