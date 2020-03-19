@@ -6,7 +6,7 @@ import { RsBuffer } from './net/rs-buffer';
 import { World } from './world/world';
 import { ClientConnection } from './net/client-connection';
 import { logger } from '@runejs/logger';
-import { EarlyFormatGameCache, NewFormatGameCache } from '@runejs/cache-parser';
+import { Cache } from '@runejs/cache-parser';
 import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
 
 import { loadPlugins } from '@server/plugins/plugin-loader';
@@ -28,8 +28,7 @@ import { setQuestPlugins } from '@server/world/config/quests';
 
 
 export let serverConfig: ServerConfig;
-export let gameCache377: EarlyFormatGameCache;
-export let gameCache: NewFormatGameCache;
+export let cache: Cache;
 export let world: World;
 export let crcTable: Buffer;
 
@@ -63,13 +62,13 @@ export async function injectPlugins(): Promise<void> {
 }
 
 function generateCrcTable(): void {
-    const index = gameCache.metaChannel;
+    const index = cache.metaChannel;
     const indexLength = index.getBuffer().length;
     const buffer = RsBuffer.create(4048);
     buffer.writeByte(0);
     buffer.writeIntBE(indexLength);
     for(let file = 0; file < (indexLength / 6); file++) {
-        const crcValue = CRC32.buf(gameCache.getRawCacheFile(255, file).getBuffer());
+        const crcValue = CRC32.buf(cache.getRawFile(255, file).getBuffer());
         buffer.writeIntBE(crcValue);
     }
 
@@ -84,9 +83,11 @@ export function runGameServer(): void {
         return;
     }
 
-    gameCache377 = new EarlyFormatGameCache('cache/377', { loadMaps: true, loadDefinitions: false, loadWidgets: false });
-    gameCache = new NewFormatGameCache('cache/435');
+    cache = new Cache('cache', {
+        items: true, npcs: true, locationObjects: true, mapData: true, widgets: true
+    });
     generateCrcTable();
+
     world = new World();
     injectPlugins().then(() => {
         world.init();

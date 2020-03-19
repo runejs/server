@@ -1,13 +1,13 @@
 import { Position } from '../position';
 import { Player } from '../actor/player/player';
 import { CollisionMap } from './collision-map';
-import { gameCache } from '../../game-server';
-import { LandscapeObject, LandscapeObjectDefinition, MapRegionTile } from '@runejs/cache-parser';
+import { cache } from '../../game-server';
+import { LocationObject, LocationObjectDefinition, Tile } from '@runejs/cache-parser';
 import { Npc } from '../actor/npc/npc';
 import { WorldItem } from '@server/world/items/world-item';
 
 export interface ChunkUpdateItem {
-    object?: LandscapeObject;
+    object?: LocationObject;
     worldItem?: WorldItem;
     type: 'ADD' | 'REMOVE';
 }
@@ -21,10 +21,10 @@ export class Chunk {
     private readonly _players: Player[];
     private readonly _npcs: Npc[];
     private readonly _collisionMap: CollisionMap;
-    private readonly _tileList: MapRegionTile[];
-    private readonly _cacheLandscapeObjects: Map<string, LandscapeObject>;
-    private readonly _addedLandscapeObjects: Map<string, LandscapeObject>;
-    private readonly _removedLandscapeObjects: Map<string, LandscapeObject>;
+    private readonly _tileList: Tile[];
+    private readonly _cacheLocationObjects: Map<string, LocationObject>;
+    private readonly _addedLocationObjects: Map<string, LocationObject>;
+    private readonly _removedLocationObjects: Map<string, LocationObject>;
     private readonly _worldItems: Map<string, WorldItem[]>;
 
     public constructor(position: Position) {
@@ -33,9 +33,9 @@ export class Chunk {
         this._npcs = [];
         this._collisionMap = new CollisionMap(8, 8, (position.x + 6) * 8, (position.y + 6) * 8, this);
         this._tileList = [];
-        this._cacheLandscapeObjects = new Map<string, LandscapeObject>();
-        this._addedLandscapeObjects = new Map<string, LandscapeObject>();
-        this._removedLandscapeObjects = new Map<string, LandscapeObject>();
+        this._cacheLocationObjects = new Map<string, LocationObject>();
+        this._addedLocationObjects = new Map<string, LocationObject>();
+        this._removedLocationObjects = new Map<string, LocationObject>();
         this._worldItems = new Map<string, WorldItem[]>();
     }
 
@@ -78,19 +78,20 @@ export class Chunk {
         }
     }
 
-    public setCacheLandscapeObject(landscapeObject: LandscapeObject, objectPosition: Position): void {
+    public setCacheLocationObject(locationObject: LocationObject, objectPosition: Position): void {
         let tile = this.getTile(objectPosition);
 
         if(!tile) {
-            tile = new MapRegionTile(objectPosition.x, objectPosition.y, objectPosition.level, 0);
+            tile = new Tile(objectPosition.x, objectPosition.y, objectPosition.level);
+            tile.flags = 0;
             this.addTile(tile, objectPosition);
         }
 
-        this.markOnCollisionMap(landscapeObject, objectPosition, true);
-        this._cacheLandscapeObjects.set(`${objectPosition.x},${objectPosition.y},${landscapeObject.objectId}`, landscapeObject);
+        this.markOnCollisionMap(locationObject, objectPosition, true);
+        this._cacheLocationObjects.set(`${objectPosition.x},${objectPosition.y},${locationObject.objectId}`, locationObject);
     }
 
-    public addTile(tile: MapRegionTile, tilePosition: Position): void {
+    public addTile(tile: Tile, tilePosition: Position): void {
         const existingTile = this.getTile(tilePosition);
         if(existingTile) {
             return;
@@ -99,7 +100,7 @@ export class Chunk {
         this._tileList.push(tile);
     }
 
-    public getTile(position: Position): MapRegionTile {
+    public getTile(position: Position): Tile {
         for(const tile of this._tileList) {
             if(position.equalsIgnoreLevel({ x: tile.x, y: tile.y })) {
                 return tile;
@@ -135,12 +136,16 @@ export class Chunk {
         }
     }
 
-    public markOnCollisionMap(landscapeObject: LandscapeObject, position: Position, mark: boolean): void {
+    public markOnCollisionMap(locationObject: LocationObject, position: Position, mark: boolean): void {
         const x: number = position.x;
         const y: number = position.y;
-        const objectType = landscapeObject.type;
-        const objectRotation = landscapeObject.rotation;
-        const objectDetails: LandscapeObjectDefinition = gameCache.landscapeObjectDefinitions.get(landscapeObject.objectId);
+        const objectType = locationObject.type;
+        const objectOrientation = locationObject.orientation;
+        const objectDetails: LocationObjectDefinition = cache.locationObjectDefinitions.get(locationObject.objectId);
+
+        if(x === 3223 && y === 3217) {
+            console.log(`${x},${y} is type ${objectType} with orientation ${objectOrientation}`);
+        }
 
         if(objectDetails.solid) {
             if(objectType === 22) {
@@ -148,46 +153,46 @@ export class Chunk {
                     this.collisionMap.markBlocked(x, y, mark);
                 }
             } else if(objectType >= 9) {
-                this.collisionMap.markSolidOccupant(x, y, objectDetails.sizeX, objectDetails.sizeY, objectRotation, objectDetails.nonWalkable, mark);
+                this.collisionMap.markSolidOccupant(x, y, objectDetails.sizeX, objectDetails.sizeY, objectOrientation, objectDetails.nonWalkable, mark);
             } else if(objectType >= 0 && objectType <= 3) {
                 if(mark) {
-                    this.collisionMap.markWall(x, y, objectType, objectRotation, objectDetails.nonWalkable);
+                    this.collisionMap.markWall(x, y, objectType, objectOrientation, objectDetails.nonWalkable);
                 } else {
-                    this.collisionMap.unmarkWall(x, y, objectType, objectRotation, objectDetails.nonWalkable);
+                    this.collisionMap.unmarkWall(x, y, objectType, objectOrientation, objectDetails.nonWalkable);
                 }
             }
         }
     }
 
-    public removeObject(object: LandscapeObject, position: Position, markRemoved: boolean = true): void {
+    public removeObject(object: LocationObject, position: Position, markRemoved: boolean = true): void {
         if(markRemoved && this.getCacheObject(object.objectId, position)) {
             // Only add this as an "removed" object if it's from the cache, as that's all we care about
-            this.removedLandscapeObjects.set(`${position.x},${position.y},${object.objectId}`, object);
+            this.removedLocationObjects.set(`${position.x},${position.y},${object.objectId}`, object);
         }
 
         this.markOnCollisionMap(object, position, false);
     }
 
-    public addObject(object: LandscapeObject, position: Position): void {
+    public addObject(object: LocationObject, position: Position): void {
         if(!this.getCacheObject(object.objectId, position)) {
             // Only add this as an "added" object if there's not a cache object with the same id and position
             // This becomes a "custom" added object
-            this.addedLandscapeObjects.set(`${position.x},${position.y},${object.objectId}`, object);
+            this.addedLocationObjects.set(`${position.x},${position.y},${object.objectId}`, object);
         }
 
         this.markOnCollisionMap(object, position, true);
     }
 
-    public getCacheObject(objectId: number, position: Position): LandscapeObject {
-        return this.cacheLandscapeObjects.get(`${position.x},${position.y},${objectId}`);
+    public getCacheObject(objectId: number, position: Position): LocationObject {
+        return this.cacheLocationObjects.get(`${position.x},${position.y},${objectId}`);
     }
 
-    public getAddedObject(objectId: number, position: Position): LandscapeObject {
-        return this.addedLandscapeObjects.get(`${position.x},${position.y},${objectId}`);
+    public getAddedObject(objectId: number, position: Position): LocationObject {
+        return this.addedLocationObjects.get(`${position.x},${position.y},${objectId}`);
     }
 
-    public getRemovedObject(objectId: number, position: Position): LandscapeObject {
-        return this.removedLandscapeObjects.get(`${position.x},${position.y},${objectId}`);
+    public getRemovedObject(objectId: number, position: Position): LocationObject {
+        return this.removedLocationObjects.get(`${position.x},${position.y},${objectId}`);
     }
 
     public equals(chunk: Chunk): boolean {
@@ -210,20 +215,20 @@ export class Chunk {
         return this._collisionMap;
     }
 
-    public get tileList(): MapRegionTile[] {
+    public get tileList(): Tile[] {
         return this._tileList;
     }
 
-    public get cacheLandscapeObjects(): Map<string, LandscapeObject> {
-        return this._cacheLandscapeObjects;
+    public get cacheLocationObjects(): Map<string, LocationObject> {
+        return this._cacheLocationObjects;
     }
 
-    public get addedLandscapeObjects(): Map<string, LandscapeObject> {
-        return this._addedLandscapeObjects;
+    public get addedLocationObjects(): Map<string, LocationObject> {
+        return this._addedLocationObjects;
     }
 
-    public get removedLandscapeObjects(): Map<string, LandscapeObject> {
-        return this._removedLandscapeObjects;
+    public get removedLocationObjects(): Map<string, LocationObject> {
+        return this._removedLocationObjects;
     }
 
     public get worldItems(): Map<string, WorldItem[]> {

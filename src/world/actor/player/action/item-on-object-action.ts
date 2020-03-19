@@ -1,12 +1,11 @@
 import { Player } from '@server/world/actor/player/player';
-import { LandscapeObject, LandscapeObjectDefinition } from '@runejs/cache-parser';
+import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/logger/dist/logger';
 import { ActionPlugin, questFilter } from '@server/plugins/plugin';
 import { Item } from '@server/world/items/item';
-import { soundIds } from '@server/world/config/sound-ids';
 
 /**
  * The definition for an item on object action function.
@@ -20,9 +19,9 @@ export interface ItemOnObjectActionDetails {
     // The player performing the action.
     player: Player;
     // The object the action is being performed on.
-    object: LandscapeObject;
+    object: LocationObject;
     // Additional details about the object that the action is being performed on.
-    objectDefinition: LandscapeObjectDefinition;
+    objectDefinition: LocationObjectDefinition;
     // The position that the game object was at when the action was initiated.
     position: Position;
     // The item being used.
@@ -65,14 +64,14 @@ export const setItemOnObjectPlugins = (plugins: ActionPlugin[]): void => {
 };
 
 // @TODO priority and cancelling other (lower priority) actions
-export const itemOnObjectAction = (player: Player, landscapeObject: LandscapeObject, landscapeObjectDefinition: LandscapeObjectDefinition,
+export const itemOnObjectAction = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
                                    position: Position, item: Item, itemWidgetId: number, itemContainerId: number, cacheOriginal: boolean): void => {
     if(player.busy) {
         return;
     }
 
     // Find all item on object action plugins that reference this landscape object
-    let interactionActions = itemOnObjectInteractions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, landscapeObject.objectId));
+    let interactionActions = itemOnObjectInteractions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, locationObject.objectId));
     const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
 
     if(questActions.length !== 0) {
@@ -85,8 +84,8 @@ export const itemOnObjectAction = (player: Player, landscapeObject: LandscapeObj
     }
 
     if(interactionActions.length === 0) {
-        player.outgoingPackets.chatboxMessage(`Unhandled item on object interaction: ${ item.itemId } on ${ landscapeObjectDefinition.name } ` +
-            `(id-${ landscapeObject.objectId }) @ ${ position.x },${ position.y },${ position.level }`);
+        player.outgoingPackets.chatboxMessage(`Unhandled item on object interaction: ${ item.itemId } on ${ locationObjectDefinition.name } ` +
+            `(id-${ locationObject.objectId }) @ ${ position.x },${ position.y },${ position.level }`);
         return;
     }
 
@@ -98,15 +97,15 @@ export const itemOnObjectAction = (player: Player, landscapeObject: LandscapeObj
 
     // Make sure we walk to the object before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
-        walkToAction(player, position, { interactingObject: landscapeObject })
+        walkToAction(player, position, { interactingObject: locationObject })
             .then(() => {
                 player.face(position);
 
                 walkToPlugins.forEach(plugin =>
                     plugin.action({
                         player,
-                        object: landscapeObject,
-                        objectDefinition: landscapeObjectDefinition,
+                        object: locationObject,
+                        objectDefinition: locationObjectDefinition,
                         position,
                         item,
                         itemWidgetId,
@@ -122,8 +121,8 @@ export const itemOnObjectAction = (player: Player, landscapeObject: LandscapeObj
         immediatePlugins.forEach(plugin =>
             plugin.action({
                 player,
-                object: landscapeObject,
-                objectDefinition: landscapeObjectDefinition,
+                object: locationObject,
+                objectDefinition: locationObjectDefinition,
                 position,
                 item,
                 itemWidgetId,

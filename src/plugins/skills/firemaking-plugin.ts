@@ -2,7 +2,7 @@ import { itemOnItemAction } from '@server/world/actor/player/action/item-on-item
 import { world } from '@server/game-server';
 import { Skill } from '@server/world/actor/skills';
 import { loopingAction } from '@server/world/actor/player/action/action';
-import { LandscapeObject } from '@runejs/cache-parser';
+import { LocationObject } from '@runejs/cache-parser';
 import { Player } from '@server/world/actor/player/player';
 import { WorldItem } from '@server/world/items/world-item';
 import { Position } from '@server/world/position';
@@ -41,13 +41,13 @@ const fireDuration = (): number => {
 
 const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, burnExp: number): void => {
     world.removeWorldItem(worldItemLog);
-    const fireObject: LandscapeObject = {
+    const fireObject: LocationObject = {
         objectId: objectIds.fire,
         x: position.x,
         y: position.y,
         level: position.level,
         type: 10,
-        rotation: 0
+        orientation: 0
     };
 
     player.playAnimation(null);
@@ -61,7 +61,7 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
             }
         }
     }
-    world.addTemporaryLandscapeObject(fireObject, position, fireDuration()).then(() => {
+    world.addTemporaryLocationObject(fireObject, position, fireDuration()).then(() => {
         world.spawnWorldItem({ itemId: itemIds.ashes, amount: 1 }, position, null, 300);
     });
 

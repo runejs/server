@@ -3,10 +3,8 @@ import { Player } from '../../world/actor/player/player';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { widgets } from '@server/world/config/widget';
 import { logger } from '@runejs/logger/dist/logger';
-import { itemOnItemAction } from '@server/world/actor/player/action/item-on-item-action';
 import { Position } from '@server/world/position';
-import { gameCache, world } from '@server/game-server';
-import { objectAction } from '@server/world/actor/player/action/object-action';
+import { cache, world } from '@server/game-server';
 import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
 
 export const itemOnObjectPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
@@ -41,12 +39,12 @@ export const itemOnObjectPacket: incomingPacket = (player: Player, packetId: num
     const objectChunk = world.chunkManager.getChunkForWorldPosition(objectPosition);
     let cacheOriginal: boolean = true;
 
-    let landscapeObject = objectChunk.getCacheObject(objectId, objectPosition);
-    if (!landscapeObject) {
-        landscapeObject = objectChunk.getAddedObject(objectId, objectPosition);
+    let locationObject = objectChunk.getCacheObject(objectId, objectPosition);
+    if (!locationObject) {
+        locationObject = objectChunk.getAddedObject(objectId, objectPosition);
         cacheOriginal = false;
 
-        if (!landscapeObject) {
+        if (!locationObject) {
             return;
         }
     }
@@ -55,9 +53,9 @@ export const itemOnObjectPacket: incomingPacket = (player: Player, packetId: num
         return;
     }
 
-    const landscapeObjectDefinition = gameCache.landscapeObjectDefinitions.get(objectId);
+    const locationObjectDefinition = cache.locationObjectDefinitions.get(objectId);
 
 
-    itemOnObjectAction(player, landscapeObject, landscapeObjectDefinition, objectPosition, usedItem, itemWidgetId, itemContainerId, cacheOriginal);
+    itemOnObjectAction(player, locationObject, locationObjectDefinition, objectPosition, usedItem, itemWidgetId, itemContainerId, cacheOriginal);
 
 };

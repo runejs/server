@@ -1,6 +1,6 @@
 import { RsBuffer } from '@server/net/rs-buffer';
 import { DataParser } from './data-parser';
-import { crcTable, gameCache } from '@server/game-server';
+import { crcTable, cache } from '@server/game-server';
 
 /**
  * Handles the cache update server.
@@ -49,7 +49,7 @@ export class UpdateServerParser extends DataParser {
             crcTable.copy(crcBuffer, 0, 0);
             cacheFile = new RsBuffer(crcBuffer);
         } else {
-            cacheFile = gameCache.getRawCacheFile(index, file);
+            cacheFile = cache.getRawFile(index, file);
         }
 
         if(!cacheFile || cacheFile.getBuffer().length === 0) {

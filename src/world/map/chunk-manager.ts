@@ -1,12 +1,7 @@
 import { Chunk } from './chunk';
 import { Position } from '../position';
-import { gameCache377 } from '../../game-server';
 import { logger } from '@runejs/logger';
-import { LandscapeObject } from '@runejs/cache-parser';
-import { Item } from '@server/world/items/item';
-import { Player } from '@server/world/actor/player/player';
-import { WorldItem } from '@server/world/items/world-item';
-import { World } from '@server/world/world';
+import { cache } from '@server/game-server';
 
 /**
  * Controls all of the game world's map chunks.
@@ -22,7 +17,7 @@ export class ChunkManager {
     public generateCollisionMaps(): void {
         logger.info('Generating game world collision maps...');
 
-        const tileList = gameCache377.mapRegions.mapRegionTileList;
+        const tileList = cache.mapData.tiles;
 
         for(const tile of tileList) {
             const position = new Position(tile.x, tile.y, tile.level);
@@ -30,12 +25,12 @@ export class ChunkManager {
             chunk.addTile(tile, position);
         }
 
-        const objectList = gameCache377.mapRegions.landscapeObjectList;
+        const objectList = cache.mapData.locationObjects;
 
-        for(const landscapeObject of objectList) {
-            const position = new Position(landscapeObject.x, landscapeObject.y, landscapeObject.level);
+        for(const locationObject of objectList) {
+            const position = new Position(locationObject.x, locationObject.y, locationObject.level);
             const chunk = this.getChunkForWorldPosition(position);
-            chunk.setCacheLandscapeObject(landscapeObject, position);
+            chunk.setCacheLocationObject(locationObject, position);
         }
 
         logger.info('Game world collision maps generated.', true);

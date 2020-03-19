@@ -1,5 +1,5 @@
 import { Player } from '@server/world/actor/player/player';
-import { LandscapeObject, LandscapeObjectDefinition } from '@runejs/cache-parser';
+import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
@@ -18,9 +18,9 @@ export interface ObjectActionDetails {
     // The player performing the action.
     player: Player;
     // The object the action is being performed on.
-    object: LandscapeObject;
+    object: LocationObject;
     // Additional details about the object that the action is being performed on.
-    objectDefinition: LandscapeObjectDefinition;
+    objectDefinition: LocationObjectDefinition;
     // The position that the game object was at when the action was initiated.
     position: Position;
     // Whether or not this game object is an original map object or if it has been added/replaced.
@@ -59,14 +59,14 @@ export const setObjectPlugins = (plugins: ActionPlugin[]): void => {
 };
 
 // @TODO priority and cancelling other (lower priority) actions
-export const objectAction = (player: Player, landscapeObject: LandscapeObject, landscapeObjectDefinition: LandscapeObjectDefinition,
+export const objectAction = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
                              position: Position, option: string, cacheOriginal: boolean): void => {
     if(player.busy) {
         return;
     }
 
     // Find all object action plugins that reference this landscape object
-    let interactionActions = objectInteractions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, landscapeObject.objectId, plugin.options, option));
+    let interactionActions = objectInteractions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, locationObject.objectId, plugin.options, option));
     const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
 
     if(questActions.length !== 0) {
@@ -74,8 +74,8 @@ export const objectAction = (player: Player, landscapeObject: LandscapeObject, l
     }
 
     if(interactionActions.length === 0) {
-        player.outgoingPackets.chatboxMessage(`Unhandled object interaction: ${option} ${landscapeObjectDefinition.name} ` +
-            `(id-${landscapeObject.objectId}) @ ${position.x},${position.y},${position.level}`);
+        player.outgoingPackets.chatboxMessage(`Unhandled object interaction: ${option} ${locationObjectDefinition.name} ` +
+            `(id-${locationObject.objectId}) @ ${position.x},${position.y},${position.level}`);
         return;
     }
 
@@ -87,15 +87,15 @@ export const objectAction = (player: Player, landscapeObject: LandscapeObject, l
 
     // Make sure we walk to the object before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
-        walkToAction(player, position, { interactingObject: landscapeObject })
+        walkToAction(player, position, { interactingObject: locationObject })
             .then(() => {
                 player.face(position);
 
                 walkToPlugins.forEach(plugin =>
                     plugin.action({
                         player,
-                        object: landscapeObject,
-                        objectDefinition: landscapeObjectDefinition,
+                        object: locationObject,
+                        objectDefinition: locationObjectDefinition,
                         option,
                         position,
                         cacheOriginal
@@ -109,8 +109,8 @@ export const objectAction = (player: Player, landscapeObject: LandscapeObject, l
         immediatePlugins.forEach(plugin =>
             plugin.action({
                 player,
-                object: landscapeObject,
-                objectDefinition: landscapeObjectDefinition,
+                object: locationObject,
+                objectDefinition: locationObjectDefinition,
                 option,
                 position,
                 cacheOriginal

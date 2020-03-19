@@ -1,6 +1,6 @@
 import { Direction, directionData } from '@server/world/direction';
-import { LandscapeObject } from '@runejs/cache-parser';
-import { gameCache } from '@server/game-server';
+import { LocationObject } from '@runejs/cache-parser';
+import { cache } from '@server/game-server';
 
 const directionDeltaX = [-1, 0, 1, -1, 1, -1, 0, 1];
 const directionDeltaY = [1, 1, 1, 0, 0, -1, -1, -1];
@@ -19,10 +19,10 @@ export class Position {
         this.move(x, y, level);
     }
 
-    public withinInteractionDistance(landscapeObject: LandscapeObject): boolean {
-        const definition = gameCache.landscapeObjectDefinitions.get(landscapeObject.objectId);
-        const occupantX = landscapeObject.x;
-        const occupantY = landscapeObject.y;
+    public withinInteractionDistance(locationObject: LocationObject): boolean {
+        const definition = cache.locationObjectDefinitions.get(locationObject.objectId);
+        const occupantX = locationObject.x;
+        const occupantY = locationObject.y;
         let width = definition.sizeX;
         let height = definition.sizeY;
 
@@ -34,9 +34,9 @@ export class Position {
         }
 
         if(width === 1 && height === 1) {
-            return this.distanceBetween(new Position(occupantX, occupantY, landscapeObject.level)) <= 1;
+            return this.distanceBetween(new Position(occupantX, occupantY, locationObject.level)) <= 1;
         } else {
-            if(landscapeObject.rotation == 1 || landscapeObject.rotation == 3) {
+            if(locationObject.orientation == 1 || locationObject.orientation == 3) {
                 const off = width;
                 width = height;
                 height = off;
@@ -44,7 +44,7 @@ export class Position {
 
             for(let x = occupantX; x < occupantX + width; x++) {
                 for(let y = occupantY; y < occupantY + height; y++) {
-                    if(this.distanceBetween(new Position(x, y, landscapeObject.level)) <= 1) {
+                    if(this.distanceBetween(new Position(x, y, locationObject.level)) <= 1) {
                         return true;
                     }
                 }

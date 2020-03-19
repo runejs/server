@@ -1,5 +1,5 @@
 import express, { Request } from 'express';
-import { gameCache, world } from './game-server';
+import { cache, world } from './game-server';
 import { Player } from './world/actor/player/player';
 import { constants } from 'http2';
 import { logger } from '@runejs/logger';
@@ -153,7 +153,7 @@ export function runWebServer(): void {
             }
 
             const itemData = req.body as ItemData;
-            const itemDefinition = gameCache.itemDefinitions.get(itemId);
+            const itemDefinition = cache.itemDefinitions.get(itemId);
             const itemDetails = { ...itemDefinition, ...itemData } as ItemDetails;
             world.itemData.set(itemId, itemDetails);
             saveItemData(world.itemData);

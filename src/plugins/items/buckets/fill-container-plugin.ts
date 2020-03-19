@@ -1,5 +1,5 @@
 import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
-import { gameCache } from '@server/game-server';
+import { cache } from '@server/game-server';
 import { itemIds } from '@server/world/config/item-ids';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
@@ -10,7 +10,7 @@ const SinkIds: number[] = [14878, 873];
 const WellIds: number[] = [878];
 export const action: itemOnObjectAction = (details) => {
     const {player, objectDefinition, item} = details;
-    const itemDef = gameCache.itemDefinitions.get(item.itemId);
+    const itemDef = cache.itemDefinitions.get(item.itemId);
     if (item.itemId !== itemIds.bucket && WellIds.indexOf(objectDefinition.id) > -1) {
         player.sendMessage(`If I drop my ${itemDef.name.toLowerCase()} down there, I don't think I'm likely to get it back.`);
         return;

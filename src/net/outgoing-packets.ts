@@ -4,7 +4,7 @@ import { Packet, PacketType } from '@server/net/packet';
 import { ItemContainer } from '@server/world/items/item-container';
 import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
-import { LandscapeObject } from '@runejs/cache-parser';
+import { LocationObject } from '@runejs/cache-parser';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { WorldItem } from '@server/world/items/world-item';
 
@@ -87,7 +87,7 @@ export class OutgoingPackets {
                 if(update.object) {
                     const offset = this.getChunkPositionOffset(update.object.x, update.object.y, chunk);
                     packet.writeUnsignedByte(241);
-                    packet.writeByteInverted((update.object.type << 2) + (update.object.rotation & 3));
+                    packet.writeByteInverted((update.object.type << 2) + (update.object.orientation & 3));
                     packet.writeUnsignedShortBE(update.object.objectId);
                     packet.writeUnsignedOffsetByte(offset);
                 } else if(update.worldItem) {
@@ -101,7 +101,7 @@ export class OutgoingPackets {
                 const offset = this.getChunkPositionOffset(update.object.x, update.object.y, chunk);
                 packet.writeUnsignedByte(143);
                 packet.writeUnsignedOffsetByte(offset);
-                packet.writeByteInverted((update.object.type << 2) + (update.object.rotation & 3));
+                packet.writeByteInverted((update.object.type << 2) + (update.object.orientation & 3));
             }
         });
 
@@ -139,23 +139,23 @@ export class OutgoingPackets {
         this.queue(packet);
     }
 
-    public setLandscapeObject(landscapeObject: LandscapeObject, position: Position, offset: number = 0): void {
+    public setLocationObject(landscapeObject: LocationObject, position: Position, offset: number = 0): void {
         this.updateReferencePosition(position);
 
         const packet = new Packet(241);
-        packet.writeByteInverted((landscapeObject.type << 2) + (landscapeObject.rotation & 3));
+        packet.writeByteInverted((landscapeObject.type << 2) + (landscapeObject.orientation & 3));
         packet.writeUnsignedShortBE(landscapeObject.objectId);
         packet.writeUnsignedOffsetByte(offset);
 
         this.queue(packet);
     }
 
-    public removeLandscapeObject(landscapeObject: LandscapeObject, position: Position, offset: number = 0): void {
+    public removeLocationObject(landscapeObject: LocationObject, position: Position, offset: number = 0): void {
         this.updateReferencePosition(position);
 
         const packet = new Packet(143);
         packet.writeUnsignedOffsetByte(offset);
-        packet.writeByteInverted((landscapeObject.type << 2) + (landscapeObject.rotation & 3));
+        packet.writeByteInverted((landscapeObject.type << 2) + (landscapeObject.orientation & 3));
 
         this.queue(packet);
     }

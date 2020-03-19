@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { itemIds } from '@server/world/config/item-ids';
 import { loopingAction } from '@server/world/actor/player/action/action';
 import { Skill } from '@server/world/actor/skills';
-import { gameCache } from '@server/game-server';
+import { cache } from '@server/game-server';
 import { widgets } from '@server/world/config/widget';
 import { animationIds } from '@server/world/config/animation-ids';
 import { objectIds } from '@server/world/config/object-ids';
@@ -116,7 +116,7 @@ const spinProduct: any = (details: ButtonActionDetails, spinnable: Spinnable, co
                 cancel = true;
             }
             if (cancel) {
-                details.player.sendMessage(`You don't have any ${gameCache.itemDefinitions.get(currentItem).name.toLowerCase()}.`);
+                details.player.sendMessage(`You don't have any ${cache.itemDefinitions.get(currentItem).name.toLowerCase()}.`);
                 loop.cancel();
                 return;
             }
@@ -149,7 +149,7 @@ export const buttonClicked: buttonAction = (details) => {
     details.player.closeActiveWidgets();
 
     if (!details.player.skills.hasSkillLevel(Skill.CRAFTING, product.spinnable.requiredLevel)) {
-        details.player.sendMessage(`You need a crafting level of ${product.spinnable.requiredLevel} to craft ${gameCache.itemDefinitions.get(product.spinnable.output).name.toLowerCase()}.`, true);
+        details.player.sendMessage(`You need a crafting level of ${product.spinnable.requiredLevel} to craft ${cache.itemDefinitions.get(product.spinnable.output).name.toLowerCase()}.`, true);
         return;
     }
 
