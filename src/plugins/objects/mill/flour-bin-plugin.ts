@@ -3,11 +3,11 @@ import { itemIds } from '@server/world/config/item-ids';
 import { objectAction } from '@server/world/actor/player/action/object-action';
 import { soundIds } from '@server/world/config/sound-ids';
 import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
-import { LandscapeObjectDefinition } from '@runejs/cache-parser';
+import { LocationObjectDefinition } from '@runejs/cache-parser';
 import { Player } from '@server/world/actor/player/player';
 
 
-function flourBin(details: {objectDefinition: LandscapeObjectDefinition, player: Player}): void {
+function flourBin(details: { objectDefinition: LocationObjectDefinition, player: Player }): void {
     const { player, objectDefinition } = details;
 
     if (!details.player.metadata['flour']) {

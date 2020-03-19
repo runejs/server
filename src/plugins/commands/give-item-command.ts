@@ -1,6 +1,6 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { commandAction } from '@server/world/actor/player/action/input-command-action';
-import { gameCache } from '@server/game-server';
+import { cache } from '@server/game-server';
 
 const action: commandAction = (details) => {
     const { player, args } = details;
@@ -19,7 +19,7 @@ const action: commandAction = (details) => {
         throw new Error(`Unable to give more than 2,000,000,000.`);
     }
 
-    const itemDefinition = gameCache.itemDefinitions.get(itemId);
+    const itemDefinition = cache.itemDefinitions.get(itemId);
     if(!itemDefinition) {
         throw new Error(`Item ID ${itemId} not found!`);
     }

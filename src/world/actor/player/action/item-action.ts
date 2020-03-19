@@ -81,7 +81,7 @@ export const itemAction = (player: Player, itemId: number, slot: number, widgetI
 
     let cancelActions = false;
 
-    // Find all object action plugins that reference this landscape object
+    // Find all object action plugins that reference this location object
     let interactionActions = itemInteractions.filter(plugin => {
         if(!questFilter(player, plugin)) {
             return false;

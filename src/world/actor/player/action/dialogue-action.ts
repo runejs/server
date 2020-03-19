@@ -1,5 +1,5 @@
 import { Player } from '@server/world/actor/player/player';
-import { gameCache } from '@server/game-server';
+import { cache } from '@server/game-server';
 import { Npc } from '@server/world/actor/npc/npc';
 import { WidgetsClosedWarning } from '@server/error-handling';
 
@@ -115,7 +115,7 @@ export class DialogueAction {
 
             if(options.type === 'NPC') {
                 this.p.outgoingPackets.setWidgetNpcHead(widgetId, 0, options.npc);
-                this.p.outgoingPackets.updateWidgetString(widgetId, 1, gameCache.npcDefinitions.get(options.npc).name);
+                this.p.outgoingPackets.updateWidgetString(widgetId, 1, cache.npcDefinitions.get(options.npc).name);
             } else if(options.type === 'PLAYER') {
                 this.p.outgoingPackets.setWidgetPlayerHead(widgetId, 0);
                 this.p.outgoingPackets.updateWidgetString(widgetId, 1, this.p.username);

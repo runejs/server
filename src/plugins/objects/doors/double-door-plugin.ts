@@ -55,7 +55,7 @@ const action: objectAction = (details) => {
     const leftDoorId = doorIds[0];
     const rightDoorId = doorIds[1];
     const hinge = leftDoorId === door.objectId ? 'LEFT' : 'RIGHT';
-    const direction = WNES[door.rotation];
+    const direction = WNES[door.orientation];
     let deltaX = 0;
     let deltaY = 0;
     const otherDoorId = hinge === 'LEFT' ? rightDoorId : leftDoorId;

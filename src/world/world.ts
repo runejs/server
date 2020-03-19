@@ -2,7 +2,7 @@ import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { logger } from '@runejs/logger';
 import { ItemDetails, parseItemData } from './config/item-data';
-import { gameCache, world } from '@server/game-server';
+import { cache } from '@server/game-server';
 import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './actor/npc/npc';
@@ -13,7 +13,7 @@ import { Actor } from '@server/world/actor/actor';
 import { WorldItem } from '@server/world/items/world-item';
 import { Item } from '@server/world/items/item';
 import { Chunk } from '@server/world/map/chunk';
-import { LandscapeObject } from '@runejs/cache-parser';
+import { LocationObject } from '@runejs/cache-parser';
 import { schedule } from '@server/task/task';
 
 export interface QuadtreeKey {
@@ -42,7 +42,7 @@ export class World {
     public readonly npcTree: Quadtree<any>;
 
     public constructor() {
-        this.itemData = parseItemData(gameCache.itemDefinitions);
+        this.itemData = parseItemData(cache.itemDefinitions);
         this.npcSpawns = parseNpcSpawns();
         this.shops = parseShops();
         this.playerTree = new Quadtree<any>({
@@ -188,16 +188,16 @@ export class World {
     }
 
     /**
-     * Replaces a landscape object within the world with a different object of the same object type, orientation, and position.
+     * Replaces a location object within the world with a different object of the same object type, orientation, and position.
      * NOT to be confused with `toggleObjects`, which removes one object and adds a different one that may have a differing
      * type, orientation, or position (such as a door being opened).
-     * @param newObject The new landscape object to spawn, or the id of the landscape object to spawn.
-     * @param oldObject The landscape object being replaced. Usually a game-cache-stored object.
-     * @param respawnTicks [optional] How many ticks it will take before the original landscape object respawns.
-     * If not provided, the original landscape object will never re-spawn and the new landscape object will forever
+     * @param newObject The new location object to spawn, or the id of the location object to spawn.
+     * @param oldObject The location object being replaced. Usually a game-cache-stored object.
+     * @param respawnTicks [optional] How many ticks it will take before the original location object respawns.
+     * If not provided, the original location object will never re-spawn and the new location object will forever
      * remain in it's place.
      */
-    public replaceObject(newObject: LandscapeObject | number, oldObject: LandscapeObject, respawnTicks: number = -1): void {
+    public replaceLocationObject(newObject: LocationObject | number, oldObject: LocationObject, respawnTicks: number = -1): void {
         if(typeof newObject === 'number') {
             newObject = {
                 objectId: newObject,
@@ -205,87 +205,87 @@ export class World {
                 y: oldObject.y,
                 level: oldObject.level,
                 type: oldObject.type,
-                rotation: oldObject.rotation
-            } as LandscapeObject;
+                orientation: oldObject.orientation
+            } as LocationObject;
         }
 
         const position = new Position(newObject.x, newObject.y, newObject.level);
 
-        this.addLandscapeObject(newObject, position);
+        this.addLocationObject(newObject, position);
 
         if(respawnTicks !== -1) {
-            schedule(respawnTicks).then(() => this.addLandscapeObject(oldObject, position));
+            schedule(respawnTicks).then(() => this.addLocationObject(oldObject, position));
         }
     }
 
     /**
-     * Removes one landscape object and adds another to the game world. The new object may be completely different from
+     * Removes one location object and adds another to the game world. The new object may be completely different from
      * the one being removed, and in different positions. NOT to be confused with `replaceObject`, which will replace
      * and existing object with another object of the same type, orientation, and position.
-     * @param newObject The landscape object being spawned.
-     * @param oldObject The landscape object being removed.
-     * @param newPosition The position of the landscape object being added.
-     * @param oldPosition The position of the landscape object being removed.
-     * @param newChunk The chunk which the landscape object being added resides in.
-     * @param oldChunk The chunk which the landscape object being removed resides in.
+     * @param newObject The location object being spawned.
+     * @param oldObject The location object being removed.
+     * @param newPosition The position of the location object being added.
+     * @param oldPosition The position of the location object being removed.
+     * @param newChunk The chunk which the location object being added resides in.
+     * @param oldChunk The chunk which the location object being removed resides in.
      * @param newObjectInCache Whether or not the object being added is the original game-cache object.
      */
-    public toggleObjects(newObject: LandscapeObject, oldObject: LandscapeObject, newPosition: Position, oldPosition: Position,
-                         newChunk: Chunk, oldChunk: Chunk, newObjectInCache: boolean): void {
+    public toggleLocationObjects(newObject: LocationObject, oldObject: LocationObject, newPosition: Position, oldPosition: Position,
+                                 newChunk: Chunk, oldChunk: Chunk, newObjectInCache: boolean): void {
         if(newObjectInCache) {
-            this.deleteRemovedObjectMarker(newObject, newPosition, newChunk);
-            this.deleteAddedObjectMarker(oldObject, oldPosition, oldChunk);
+            this.deleteRemovedLocationObjectMarker(newObject, newPosition, newChunk);
+            this.deleteAddedLocationObjectMarker(oldObject, oldPosition, oldChunk);
         }
 
-        this.addLandscapeObject(newObject, newPosition);
-        this.removeLandscapeObject(oldObject, oldPosition);
+        this.addLocationObject(newObject, newPosition);
+        this.removeLocationObject(oldObject, oldPosition);
     }
 
     /**
-     * Deletes the tracked record of a spawned landscape object within a single game chunk.
-     * @param object The landscape object to delete the record of.
-     * @param position The position which the landscape object was spawned.
-     * @param chunk The map chunk which the landscape object was spawned.
+     * Deletes the tracked record of a spawned location object within a single game chunk.
+     * @param object The location object to delete the record of.
+     * @param position The position which the location object was spawned.
+     * @param chunk The map chunk which the location object was spawned.
      */
-    public deleteAddedObjectMarker(object: LandscapeObject, position: Position, chunk: Chunk): void {
-        chunk.addedLandscapeObjects.delete(`${position.x},${position.y},${object.objectId}`);
+    public deleteAddedLocationObjectMarker(object: LocationObject, position: Position, chunk: Chunk): void {
+        chunk.addedLocationObjects.delete(`${position.x},${position.y},${object.objectId}`);
     }
 
     /**
-     * Deletes the tracked record of a removed/de-spawned landscape object within a single game chunk.
-     * @param object The landscape object to delete the record of.
-     * @param position The position which the landscape object was removed.
-     * @param chunk The map chunk which the landscape object was removed.
+     * Deletes the tracked record of a removed/de-spawned location object within a single game chunk.
+     * @param object The location object to delete the record of.
+     * @param position The position which the location object was removed.
+     * @param chunk The map chunk which the location object was removed.
      */
-    public deleteRemovedObjectMarker(object: LandscapeObject, position: Position, chunk: Chunk): void {
-        chunk.removedLandscapeObjects.delete(`${position.x},${position.y},${object.objectId}`);
+    public deleteRemovedLocationObjectMarker(object: LocationObject, position: Position, chunk: Chunk): void {
+        chunk.removedLocationObjects.delete(`${position.x},${position.y},${object.objectId}`);
     }
 
     /**
-     * Spawns a temporary landscape object within the game world.
-     * @param object The landscape object to spawn.
+     * Spawns a temporary location object within the game world.
+     * @param object The location object to spawn.
      * @param position The position to spawn the object at.
      * @param expireTicks The number of game cycles/ticks before the object will de-spawn.
      */
-    public async addTemporaryLandscapeObject(object: LandscapeObject, position: Position, expireTicks: number): Promise<void> {
+    public async addTemporaryLocationObject(object: LocationObject, position: Position, expireTicks: number): Promise<void> {
         return new Promise(resolve => {
-            this.addLandscapeObject(object, position);
+            this.addLocationObject(object, position);
 
             setTimeout(() => {
-                this.removeLandscapeObject(object, position, false)
-                    .then(chunk => this.deleteAddedObjectMarker(object, position, chunk));
+                this.removeLocationObject(object, position, false)
+                    .then(chunk => this.deleteAddedLocationObjectMarker(object, position, chunk));
                 resolve();
             }, expireTicks * World.TICK_LENGTH);
         });
     }
 
     /**
-     * Temporarily de-spawns a landscape object from the game world.
-     * @param object The landscape object to de-spawn temporarily.
-     * @param position The position of the landscape object.
+     * Temporarily de-spawns a location object from the game world.
+     * @param object The location object to de-spawn temporarily.
+     * @param position The position of the location object.
      * @param expireTicks The number of game cycles/ticks before the object will re-spawn.
      */
-    public async removeLandscapeObjectTemporarily(object: LandscapeObject, position: Position, expireTicks: number): Promise<void> {
+    public async removeLocationObjectTemporarily(object: LocationObject, position: Position, expireTicks: number): Promise<void> {
         const chunk = this.chunkManager.getChunkForWorldPosition(position);
         chunk.removeObject(object, position);
 
@@ -293,25 +293,25 @@ export class World {
             const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
             nearbyPlayers.forEach(player => {
-                player.outgoingPackets.removeLandscapeObject(object, position);
+                player.outgoingPackets.removeLocationObject(object, position);
             });
 
             setTimeout(() => {
-                this.deleteRemovedObjectMarker(object, position, chunk);
-                this.addLandscapeObject(object, position);
+                this.deleteRemovedLocationObjectMarker(object, position, chunk);
+                this.addLocationObject(object, position);
                 resolve();
             }, expireTicks * World.TICK_LENGTH);
         });
     }
 
     /**
-     * Removes/de-spawns a landscape object from the game world.
-     * @param object The landscape object to de-spawn.
-     * @param position The position of the landscape object.
+     * Removes/de-spawns a location object from the game world.
+     * @param object The location object to de-spawn.
+     * @param position The position of the location object.
      * @param markRemoved [optional] Whether or not to mark the object as removed within it's map chunk. If not provided,
      * the object will be marked as removed.
      */
-    public async removeLandscapeObject(object: LandscapeObject, position: Position, markRemoved: boolean = true): Promise<Chunk> {
+    public async removeLocationObject(object: LocationObject, position: Position, markRemoved: boolean = true): Promise<Chunk> {
         const chunk = this.chunkManager.getChunkForWorldPosition(position);
         chunk.removeObject(object, position, markRemoved);
 
@@ -319,7 +319,7 @@ export class World {
             const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
             nearbyPlayers.forEach(player => {
-                player.outgoingPackets.removeLandscapeObject(object, position);
+                player.outgoingPackets.removeLocationObject(object, position);
             });
 
             resolve(chunk);
@@ -327,11 +327,11 @@ export class World {
     }
 
     /**
-     * Spawns a new landscape object within the game world.
-     * @param object The landscape object to spawn.
+     * Spawns a new location object within the game world.
+     * @param object The location object to spawn.
      * @param position The position at which to spawn the object.
      */
-    public async addLandscapeObject(object: LandscapeObject, position: Position): Promise<void> {
+    public async addLocationObject(object: LocationObject, position: Position): Promise<void> {
         const chunk = this.chunkManager.getChunkForWorldPosition(position);
         chunk.addObject(object, position);
 
@@ -339,7 +339,7 @@ export class World {
             const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
             nearbyPlayers.forEach(player => {
-                player.outgoingPackets.setLandscapeObject(object, position);
+                player.outgoingPackets.setLocationObject(object, position);
             });
 
             resolve();
@@ -391,7 +391,7 @@ export class World {
 
     public spawnNpcs(): void {
         this.npcSpawns.forEach(npcSpawn => {
-            const npcDefinition = gameCache.npcDefinitions.get(npcSpawn.npcId);
+            const npcDefinition = cache.npcDefinitions.get(npcSpawn.npcId);
             const npc = new Npc(npcSpawn, npcDefinition);
             this.registerNpc(npc);
         });

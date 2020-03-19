@@ -1,7 +1,7 @@
 import { Npc } from '@server/world/actor/npc/npc';
 import { Player } from '@server/world/actor/player/player';
 import { Subscription } from 'rxjs';
-import { gameCache } from '@server/game-server';
+import { cache } from '@server/game-server';
 import { logger } from '@runejs/logger/dist/logger';
 import _ from 'lodash';
 import { wrapText } from '@server/util/strings';
@@ -472,7 +472,7 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
                     if(dialogueAction.type === 'NPC') {
                         widgetId = npcWidgetIds[lines.length - 1];
                         player.outgoingPackets.setWidgetNpcHead(widgetId, 0, npcId as number);
-                        player.outgoingPackets.updateWidgetString(widgetId, 1, gameCache.npcDefinitions.get(npcId as number).name);
+                        player.outgoingPackets.updateWidgetString(widgetId, 1, cache.npcDefinitions.get(npcId as number).name);
                     } else {
                         widgetId = playerWidgetIds[lines.length - 1];
                         player.outgoingPackets.setWidgetPlayerHead(widgetId, 0);
