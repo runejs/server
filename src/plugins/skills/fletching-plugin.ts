@@ -3,7 +3,7 @@ import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { itemIds } from '@server/world/config/item-ids';
 import { animationIds } from '@server/world/config/animation-ids';
 import { Skill } from '@server/world/actor/skills';
-import { gameCache } from '@server/game-server';
+import { cache } from '@server/game-server';
 import { itemSelectionAction } from '@server/world/actor/player/action/item-selection-action';
 import { Item } from '@server/world/items/item';
 import { loopingAction } from '@server/world/actor/player/action/action';
@@ -24,7 +24,12 @@ const bows = {
     LONGBOW: {level: 10, exp: 10.0, unstrung: itemIds.unstrungLongBows.normal, strung: itemIds.longBows.normal},
     OAK_SHORTBOW: {level: 20, exp: 16.5, unstrung: itemIds.unstrungShortBows.oak, strung: itemIds.shortBows.oak},
     OAK_LONGBOW: {level: 25, exp: 25.0, unstrung: itemIds.unstrungLongBows.oak, strung: itemIds.longBows.oak},
-    WILLOW_SHORTBOW: {level: 35, exp: 33.3, unstrung: itemIds.unstrungShortBows.willow, strung: itemIds.shortBows.willow},
+    WILLOW_SHORTBOW: {
+        level: 35,
+        exp: 33.3,
+        unstrung: itemIds.unstrungShortBows.willow,
+        strung: itemIds.shortBows.willow
+    },
     WILLOW_LONGBOW: {level: 40, exp: 41.5, unstrung: itemIds.unstrungLongBows.willow, strung: itemIds.longBows.willow},
     MAPLE_SHORTBOW: {level: 50, exp: 50.0, unstrung: itemIds.unstrungShortBows.maple, strung: itemIds.shortBows.maple},
     MAPLE_LONGBOW: {level: 55, exp: 58.3, unstrung: itemIds.unstrungLongBows.maple, strung: itemIds.longBows.maple},
@@ -43,11 +48,6 @@ const logs = {
     MAGIC: {logId: itemIds.logs.magic, makeableItems: [bows.MAGIC_SHORTBOW, bows.MAGIC_LONGBOW]}
 };
 
-const cycle = (player, i, max) => {
-    player.playAnimation(6782);
-    return i < max;
-};
-
 const cutLogAction: itemOnItemAction = (details) => {
     const {player, usedItem, usedWithItem} = details;
     const log = usedItem.itemId !== itemIds.knife ? usedItem : usedWithItem;
@@ -56,7 +56,7 @@ const cutLogAction: itemOnItemAction = (details) => {
     const makeableItemsInfo = [];
     makeableItems.forEach(item => makeableItemsInfo.push({
         itemId: item.unstrung,
-        itemName: gameCache.itemDefinitions.get(item.unstrung).name
+        itemName: cache.itemDefinitions.get(item.unstrung).name
     }));
     itemSelectionAction(player, 'MAKING', makeableItemsInfo).then(choice => {
         if (!choice) {
@@ -65,7 +65,7 @@ const cutLogAction: itemOnItemAction = (details) => {
             const skillInfo = Object.keys(bows).find(l => (bows[l].unstrung === choice.itemId));
             const makingItem = bows[skillInfo];
             if (player.skills.values[Skill.FLETCHING].level > makingItem.level) {
-                player.sendMessage(`You need a Fletching level of ${makingItem.level} to cut this.`);
+                player.sendMessage(`You need a Fletching level of ${makingItem.level} to cut this.`).then(r => console.log(r));
             } else {
                 const requiredLog = Object.keys(logs).find(log => logs[log].makeableItems.includes(makingItem));
                 const logCount = player.inventory.items.filter((item: Item) => {
@@ -110,7 +110,7 @@ const attachArrowAction: itemOnItemAction = (details) => {
     const skillInfo = Object.keys(arrows).find(l => (arrows[l].tip === usedItem.itemId && arrows[l].with === usedWithItem.itemId) || (arrows[l].tip === usedWithItem.itemId && arrows[l].with === usedItem.itemId));
     const arrow = arrows[skillInfo];
     if (player.skills.values[Skill.FLETCHING].level < arrow.level) {
-        player.sendMessage(`You need a Fletching level of ${arrow.level} to attach this.`);
+        player.sendMessage(`You need a Fletching level of ${arrow.level} to attach this.`).then(r => console.log(r));
     } else {
         const tipItem: number = arrow.tip;
         const withItem: number = arrow.with;
@@ -131,17 +131,17 @@ const attachArrowAction: itemOnItemAction = (details) => {
                 player.giveItem({itemId: withItem, amount: newWithCount});
             }
             player.giveItem({itemId: createdItem, amount: setAmount});
-            player.sendMessage(`You attach the ${gameCache.itemDefinitions.get(tipItem).name} to the ${gameCache.itemDefinitions.get(withItem).name}.`);
+            player.sendMessage(`You attach the ${cache.itemDefinitions.get(tipItem).name} to the ${cache.itemDefinitions.get(withItem).name}.`).then(r => console.log(r));
             player.skills.addExp(Skill.FLETCHING, arrow.exp * setAmount);
         }
     }
 };
 export default new RunePlugin([{
-    type: ActionType.ITEM_ON_ITEM,
+    type: ActionType.ITEM_ON_ITEM_ACTION,
     items: Object.keys(logs).map(log => ({item1: itemIds.knife, item2: logs[log].logId})),
     action: cutLogAction
 }, {
-    type: ActionType.ITEM_ON_ITEM,
+    type: ActionType.ITEM_ON_ITEM_ACTION,
     items: Object.keys(arrows).map(arrow => ({item1: arrows[arrow].tip, item2: arrows[arrow].with})),
     action: attachArrowAction
 }]);
