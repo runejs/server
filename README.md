@@ -43,7 +43,7 @@ The game server will spin up and be accessible via port 43594. The REST service 
 
 ## Cache Parsing
 
-A separate package was created that RuneJS uses to parse the 377 and 435 game caches. This package parses item definitions, npc definitions, and landscape object definitions for both 377 and 435 caches. It also parses map region tiles and map region landscape objects for revision 377. 
+A separate package was created that RuneJS uses to parse the 435 game cache. This package decodes item definitions, npc definitions, location object definitions, widgets, sprites, and map data (tiles and location objects) for any implementing app to make use of.
 
 The RuneJS `cache-parser` package can be found here:
 
