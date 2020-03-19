@@ -70,7 +70,7 @@ export class Npc extends Actor {
 
     public init(): void {
         world.chunkManager.getChunkForWorldPosition(this.position).addNpc(this);
-        this.initiateRandomMovement();
+        // this.initiateRandomMovement();
 
         new Promise(resolve => {
             npcInitPlugins

@@ -2,7 +2,7 @@ import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../world/actor/player/player';
 import { RsBuffer } from '@server/net/rs-buffer';
 import { Position } from '@server/world/position';
-import { gameCache, world } from '@server/game-server';
+import { cache, world } from '@server/game-server';
 import { objectAction } from '@server/world/actor/player/action/object-action';
 import { logger } from '@runejs/logger/dist/logger';
 
@@ -63,12 +63,12 @@ export const objectInteractionPacket: incomingPacket = (player: Player, packetId
     const objectChunk = world.chunkManager.getChunkForWorldPosition(objectPosition);
     let cacheOriginal: boolean = true;
 
-    let landscapeObject = objectChunk.getCacheObject(objectId, objectPosition);
-    if(!landscapeObject) {
-        landscapeObject = objectChunk.getAddedObject(objectId, objectPosition);
+    let locationObject = objectChunk.getCacheObject(objectId, objectPosition);
+    if(!locationObject) {
+        locationObject = objectChunk.getAddedObject(objectId, objectPosition);
         cacheOriginal = false;
 
-        if(!landscapeObject) {
+        if(!locationObject) {
             return;
         }
     }
@@ -77,23 +77,23 @@ export const objectInteractionPacket: incomingPacket = (player: Player, packetId
         return;
     }
 
-    const landscapeObjectDefinition = gameCache.landscapeObjectDefinitions.get(objectId);
+    const locationObjectDefinition = cache.locationObjectDefinitions.get(objectId);
 
     const actionIdx = options[packetId].index;
     let optionName = `action-${actionIdx + 1}`;
-    if(landscapeObjectDefinition.options && landscapeObjectDefinition.options.length >= actionIdx) {
-        if(!landscapeObjectDefinition.options[actionIdx] || landscapeObjectDefinition.options[actionIdx].toLowerCase() === 'hidden') {
+    if(locationObjectDefinition.options && locationObjectDefinition.options.length >= actionIdx) {
+        if(!locationObjectDefinition.options[actionIdx] || locationObjectDefinition.options[actionIdx].toLowerCase() === 'hidden') {
             // Invalid action
-            logger.error(`1: Invalid object ${objectId} option ${actionIdx + 1}, options: ${JSON.stringify(landscapeObjectDefinition.options)}`);
+            logger.error(`1: Invalid object ${objectId} option ${actionIdx + 1}, options: ${JSON.stringify(locationObjectDefinition.options)}`);
             return;
         }
 
-        optionName = landscapeObjectDefinition.options[actionIdx];
+        optionName = locationObjectDefinition.options[actionIdx];
     } else {
         // Invalid action
-        logger.error(`2: Invalid object ${objectId} option ${actionIdx + 1}, options: ${JSON.stringify(landscapeObjectDefinition.options)}`);
+        logger.error(`2: Invalid object ${objectId} option ${actionIdx + 1}, options: ${JSON.stringify(locationObjectDefinition.options)}`);
         return;
     }
 
-    objectAction(player, landscapeObject, landscapeObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
+    objectAction(player, locationObject, locationObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
 };

@@ -4,7 +4,7 @@ import { Isaac } from '@server/net/isaac';
 import { PlayerUpdateTask } from './updating/player-update-task';
 import { Actor } from '../actor';
 import { Position } from '@server/world/position';
-import { gameCache, serverConfig, world } from '@server/game-server';
+import { cache, serverConfig, world } from '@server/game-server';
 import { logger } from '@runejs/logger';
 import {
     Appearance,
@@ -295,7 +295,7 @@ export class Player extends Actor {
     }
 
     /**
-     * Sends chunk updates to notify the client of added & removed landscape objects
+     * Sends chunk updates to notify the client of added & removed location objects
      * @param chunks The chunks to update.
      */
     private sendChunkUpdates(chunks: Chunk[]): void {
@@ -304,12 +304,12 @@ export class Player extends Actor {
 
             const chunkUpdateItems: ChunkUpdateItem[] = [];
 
-            if(chunk.removedLandscapeObjects.size !== 0) {
-                chunk.removedLandscapeObjects.forEach(object => chunkUpdateItems.push({ object, type: 'REMOVE' }));
+            if(chunk.removedLocationObjects.size !== 0) {
+                chunk.removedLocationObjects.forEach(object => chunkUpdateItems.push({ object, type: 'REMOVE' }));
             }
 
-            if(chunk.addedLandscapeObjects.size !== 0) {
-                chunk.addedLandscapeObjects.forEach(object => chunkUpdateItems.push({ object, type: 'ADD' }));
+            if(chunk.addedLocationObjects.size !== 0) {
+                chunk.addedLocationObjects.forEach(object => chunkUpdateItems.push({ object, type: 'ADD' }));
             }
 
             if(chunk.worldItems.size !== 0) {
@@ -456,7 +456,7 @@ export class Player extends Actor {
 
             if(questData.completion.itemId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3,
-                    (gameCache.itemDefinitions.get(questData.completion.itemId) as NewFormatItemDefinition).inventoryModelId);
+                    (cache.itemDefinitions.get(questData.completion.itemId) as NewFormatItemDefinition).inventoryModelId);
             } else if(questData.completion.modelId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.completion.modelId);
             }

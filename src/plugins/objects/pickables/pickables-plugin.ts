@@ -1,5 +1,5 @@
 import { objectAction } from '@server/world/actor/player/action/object-action';
-import { gameCache, world } from '@server/game-server';
+import { cache, world } from '@server/game-server';
 import { World } from '@server/world/world';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { itemIds } from '@server/world/config/item-ids';
@@ -30,12 +30,12 @@ export const action: objectAction = (details) => {
             itemId = itemIds.cabbage;
             break;
     }
-    const pickedItem = gameCache.itemDefinitions.get(itemId);
+    const pickedItem = cache.itemDefinitions.get(itemId);
     setTimeout(() => {
         details.player.sendMessage(`You ${details.option} the ${details.objectDefinition.name.toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`);
         details.player.playSound(2581, 7);
         if (details.objectDefinition.name !== 'Flax' || Math.floor(Math.random() * 10) === 1) {
-            world.removeLandscapeObjectTemporarily(details.object, details.position, 30);
+            world.removeLocationObjectTemporarily(details.object, details.position, 30);
         }
         details.player.giveItem(pickedItem.id);
         details.player.busy = false;

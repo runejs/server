@@ -2,14 +2,14 @@ import { Player } from '@server/world/actor/player/player';
 import { Position } from '@server/world/position';
 import { Subject, timer } from 'rxjs';
 import { World } from '@server/world/world';
-import { LandscapeObject } from '@runejs/cache-parser';
+import { LocationObject } from '@runejs/cache-parser';
 import { Npc } from '@server/world/actor/npc/npc';
 
 /**
  * A type of action where something is being interacted with.
  */
 export interface InteractingAction {
-    interactingObject?: LandscapeObject;
+    interactingObject?: LocationObject;
 }
 
 /**
@@ -89,8 +89,8 @@ export const walkToAction = async (player: Player, position: Position, interacti
                     }
                 } else {
                     if(interactingAction.interactingObject) {
-                        const landscapeObject = interactingAction.interactingObject;
-                        if(player.position.withinInteractionDistance(landscapeObject)) {
+                        const locationObject = interactingAction.interactingObject;
+                        if(player.position.withinInteractionDistance(locationObject)) {
                             resolve();
                         } else {
                             reject();
