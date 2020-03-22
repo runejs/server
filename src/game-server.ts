@@ -2,12 +2,12 @@ import * as net from 'net';
 import { watch } from 'chokidar';
 import * as CRC32 from 'crc-32';
 
-import { RsBuffer } from './net/rs-buffer';
 import { World } from './world/world';
 import { ClientConnection } from './net/client-connection';
 import { logger } from '@runejs/logger';
 import { Cache } from '@runejs/cache-parser';
 import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
 import { loadPlugins } from '@server/plugins/plugin-loader';
 import { ActionPlugin, ActionType, sort } from '@server/plugins/plugin';
@@ -30,7 +30,7 @@ import { setQuestPlugins } from '@server/world/config/quests';
 export let serverConfig: ServerConfig;
 export let cache: Cache;
 export let world: World;
-export let crcTable: Buffer;
+export let crcTable: ByteBuffer;
 
 export async function injectPlugins(): Promise<void> {
     const actionTypes: { [key: string]: ActionPlugin[] } = {};
@@ -63,16 +63,16 @@ export async function injectPlugins(): Promise<void> {
 
 function generateCrcTable(): void {
     const index = cache.metaChannel;
-    const indexLength = index.getBuffer().length;
-    const buffer = RsBuffer.create(4048);
-    buffer.writeByte(0);
-    buffer.writeIntBE(indexLength);
+    const indexLength = index.length;
+    const buffer = new ByteBuffer(4048);
+    buffer.put(0, 'BYTE');
+    buffer.put(indexLength, 'INT');
     for(let file = 0; file < (indexLength / 6); file++) {
-        const crcValue = CRC32.buf(cache.getRawFile(255, file).getBuffer());
-        buffer.writeIntBE(crcValue);
+        const crcValue = CRC32.buf(cache.getRawFile(255, file));
+        buffer.put(crcValue, 'INT');
     }
 
-    crcTable = buffer.getBuffer();
+    crcTable = buffer;
 }
 
 export function runGameServer(): void {
@@ -107,7 +107,7 @@ export function runGameServer(): void {
 
             socket.on('data', data => {
                 if(clientConnection) {
-                    clientConnection.parseIncomingData(new RsBuffer(data));
+                    clientConnection.parseIncomingData(new ByteBuffer(data));
                 }
             });
 

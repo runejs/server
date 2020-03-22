@@ -29,7 +29,7 @@ import { ActionPlugin } from '@server/plugins/plugin';
 import { songs } from '@server/world/config/songs';
 import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 import { quests } from '@server/world/config/quests';
-import { NewFormatItemDefinition } from '@runejs/cache-parser';
+import { ItemDefinition } from '@runejs/cache-parser';
 
 const DEFAULT_TAB_WIDGET_IDS = [
     92, widgets.skillsTab, 274, widgets.inventory.widgetId, widgets.equipment.widgetId, 271, 192, -1, 131, 148,
@@ -456,7 +456,7 @@ export class Player extends Actor {
 
             if(questData.completion.itemId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3,
-                    (cache.itemDefinitions.get(questData.completion.itemId) as NewFormatItemDefinition).inventoryModelId);
+                    (cache.itemDefinitions.get(questData.completion.itemId) as ItemDefinition).inventoryModelId);
             } else if(questData.completion.modelId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.completion.modelId);
             }

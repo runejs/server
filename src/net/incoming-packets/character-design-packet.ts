@@ -1,25 +1,25 @@
 import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../world/actor/player/player';
-import { RsBuffer } from '@server/net/rs-buffer';
 import { widgets } from '../../world/config/widget';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
-export const characterDesignPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
+export const characterDesignPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {
     if(!player.activeWidget || player.activeWidget.widgetId !== widgets.characterDesign) {
         return;
     }
 
     // @TODO verify validity of selections
 
-    const gender: number = packet.readByte();
+    const gender: number = packet.get();
     const models: number[] = new Array(7);
     const colors: number[] = new Array(5);
 
     for(let i = 0; i < models.length; i++) {
-        models[i] = packet.readByte();
+        models[i] = packet.get();
     }
 
     for(let i = 0; i < colors.length; i++) {
-        colors[i] = packet.readByte();
+        colors[i] = packet.get();
     }
 
     player.appearance = {

@@ -24,7 +24,8 @@
     "license": "GPL-3.0",
     "dependencies": {
         "@hapi/joi": "^16.1.8",
-        "@runejs/cache-parser": "0.5.0",
+        "@runejs/cache-parser": "0.6.2",
+        "@runejs/byte-buffer": "1.0.4",
         "@runejs/logger": "^1.0.0",
         "bigi": "^1.4.2",
         "body-parser": "^1.19.0",

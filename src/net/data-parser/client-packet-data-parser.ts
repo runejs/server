@@ -1,7 +1,7 @@
-import { RsBuffer } from '@server/net/rs-buffer';
 import { incomingPacketSizes } from '@server/net/incoming-packet-sizes';
 import { handlePacket } from '@server/net/incoming-packet-directory';
 import { DataParser } from './data-parser';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
 /**
  * Parses incoming packet data from the game client once the user is fully authenticated.
@@ -10,16 +10,16 @@ export class ClientPacketDataParser extends DataParser {
 
     private activePacketId: number = null;
     private activePacketSize: number = null;
-    private activeBuffer: RsBuffer;
+    private activeBuffer: ByteBuffer;
 
-    public parse(buffer?: RsBuffer): void {
+    public parse(buffer?: ByteBuffer): void {
         if(!this.activeBuffer) {
             this.activeBuffer = buffer;
         } else if(buffer) {
-            const newBuffer = new RsBuffer(this.activeBuffer.getUnreadData());
-            const activeLength = newBuffer.getBuffer().length;
-            newBuffer.ensureCapacity(activeLength + buffer.getBuffer().length);
-            buffer.getBuffer().copy(newBuffer.getBuffer(), activeLength, 0);
+            const readable = this.activeBuffer.readable;
+            const newBuffer = new ByteBuffer(readable + buffer.length);
+            this.activeBuffer.copy(newBuffer, 0, this.activeBuffer.readerIndex);
+            buffer.copy(newBuffer, readable, 0);
             this.activeBuffer = newBuffer;
         }
 
@@ -34,41 +34,46 @@ export class ClientPacketDataParser extends DataParser {
         const inCipher = this.clientConnection.player.inCipher;
 
         if(this.activePacketId === -1) {
-            if(this.activeBuffer.getReadable() < 1) {
+            if(this.activeBuffer.readable < 1) {
                 return;
             }
 
-            this.activePacketId = this.activeBuffer.readByte() & 0xff;
+            this.activePacketId = this.activeBuffer.get('BYTE', 'UNSIGNED');
             this.activePacketId = (this.activePacketId - inCipher.rand()) & 0xff;
             this.activePacketSize = incomingPacketSizes[this.activePacketId];
         }
 
         // Packet will provide the size
         if(this.activePacketSize === -1) {
-            if(this.activeBuffer.getReadable() < 1) {
+            if(this.activeBuffer.readable < 1) {
                 return;
             }
 
-            this.activePacketSize = this.activeBuffer.readUnsignedByte();
+            this.activePacketSize = this.activeBuffer.get('BYTE', 'UNSIGNED');
         }
 
         // Packet has no set size
         let clearBuffer = false;
         if(this.activePacketSize === -3) {
-            if(this.activeBuffer.getReadable() < 1) {
+            if(this.activeBuffer.readable < 1) {
                 return;
             }
 
-            this.activePacketSize = this.activeBuffer.getReadable();
+            this.activePacketSize = this.activeBuffer.readable;
             clearBuffer = true;
         }
 
-        if(this.activeBuffer.getReadable() < this.activePacketSize) {
+        if(this.activeBuffer.readable < this.activePacketSize) {
             return;
         }
 
         // read packet data
-        const packetData = this.activePacketSize !== 0 ? this.activeBuffer.readBytes(this.activePacketSize) : null;
+        let packetData = null;
+        if(this.activePacketSize !== 0) {
+            packetData = new ByteBuffer(this.activePacketSize);
+            this.activeBuffer.copy(packetData, 0, this.activeBuffer.readerIndex, this.activeBuffer.readerIndex + this.activePacketSize);
+            this.activeBuffer.readerIndex += this.activePacketSize;
+        }
         handlePacket(this.clientConnection.player, this.activePacketId, this.activePacketSize, packetData);
 
         if(clearBuffer) {
@@ -78,7 +83,7 @@ export class ClientPacketDataParser extends DataParser {
         this.activePacketId = null;
         this.activePacketSize = null;
 
-        if(this.activeBuffer !== null && this.activeBuffer.getReadable() > 0) {
+        if(this.activeBuffer !== null && this.activeBuffer.readable > 0) {
             this.parse();
         }
     }

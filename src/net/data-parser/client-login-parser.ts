@@ -1,10 +1,10 @@
 import BigInteger from 'bigi';
-import { RsBuffer } from '@server/net/rs-buffer';
 import { Player } from '@server/world/actor/player/player';
 import { Isaac } from '@server/net/isaac';
 import { serverConfig, world } from '@server/game-server';
 import { DataParser } from './data-parser';
 import { logger } from '@runejs/logger/dist/logger';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
 const VALID_CHARS = ['_', 'a', 'b', 'c', 'd',
     'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
@@ -32,61 +32,61 @@ export class ClientLoginParser extends DataParser {
     private readonly rsaModulus = BigInteger(serverConfig.rsaMod);
     private readonly rsaExponent = BigInteger(serverConfig.rsaExp);
 
-    public parse(buffer?: RsBuffer): void {
+    public parse(buffer?: ByteBuffer): void {
         if(!buffer) {
             throw new Error('No data supplied for login');
         }
 
-        const loginType = buffer.readUnsignedByte();
+        const loginType = buffer.get('BYTE', 'UNSIGNED');
 
         if(loginType !== 16 && loginType !== 18) {
             throw new Error('Invalid login type ' + loginType);
         }
 
-        let loginEncryptedSize = buffer.readUnsignedByte() - (36 + 1 + 1 + 2);
+        let loginEncryptedSize = buffer.get('BYTE', 'UNSIGNED') - (36 + 1 + 1 + 2);
 
         if(loginEncryptedSize <= 0) {
             throw new Error('Invalid login packet length ' + loginEncryptedSize);
         }
 
-        const gameVersion = buffer.readIntBE();
+        const gameVersion = buffer.get('INT');
 
         if(gameVersion !== 435) {
             throw new Error('Invalid game version ' + gameVersion);
         }
 
-        const isLowDetail: boolean = buffer.readByte() === 1;
+        const isLowDetail: boolean = buffer.get('BYTE') === 1;
 
         for(let i = 0; i < 13; i++) {
-            buffer.readIntBE(); // Cache indices
+            buffer.get('INT'); // Cache indices
         }
 
         loginEncryptedSize--;
 
-        const rsaBytes = buffer.readUnsignedByte();
+        const rsaBytes = buffer.get('BYTE', 'UNSIGNED');
 
         const encryptedBytes: Buffer = Buffer.alloc(rsaBytes);
-        buffer.getBuffer().copy(encryptedBytes, 0, buffer.getReaderIndex());
-        const decrypted: RsBuffer = new RsBuffer(BigInteger.fromBuffer(encryptedBytes).modPow(this.rsaExponent, this.rsaModulus).toBuffer());
+        buffer.copy(encryptedBytes, 0, buffer.readerIndex);
+        const decrypted = new ByteBuffer(BigInteger.fromBuffer(encryptedBytes).modPow(this.rsaExponent, this.rsaModulus).toBuffer());
 
-        const blockId = decrypted.readByte();
+        const blockId = decrypted.get('BYTE');
 
         if(blockId !== 10) {
             throw new Error('Invalid block id ' + blockId);
         }
 
-        const clientKey1 = decrypted.readIntBE();
-        const clientKey2 = decrypted.readIntBE();
-        const incomingServerKey = decrypted.readLongBE();
+        const clientKey1 = decrypted.get('INT');
+        const clientKey2 = decrypted.get('INT');
+        const incomingServerKey = BigInt(decrypted.get('LONG'));
 
         if(this.clientConnection.serverKey !== incomingServerKey) {
             throw new Error(`Server key mismatch - ${this.clientConnection.serverKey} != ${incomingServerKey}`);
         }
 
-        const clientUuid = decrypted.readIntBE();
-        const usernameLong = decrypted.readLongBE();
+        const clientUuid = decrypted.get('INT');
+        const usernameLong = BigInt(decrypted.get('LONG'));
         const username = longToName(usernameLong);
-        const password = decrypted.readNewString();
+        const password = decrypted.getString();
 
         logger.info(`Login request: ${username}/${password}`);
 
@@ -106,13 +106,13 @@ export class ClientLoginParser extends DataParser {
 
         world.registerPlayer(player);
 
-        const outputBuffer = RsBuffer.create();
-        outputBuffer.writeByte(2); // login response code
-        outputBuffer.writeByte(player.rights.valueOf());
-        outputBuffer.writeByte(0); // ???
-        outputBuffer.writeShortBE(player.worldIndex + 1);
-        outputBuffer.writeByte(0); // ???
-        this.clientConnection.socket.write(outputBuffer.getData());
+        const outputBuffer = new ByteBuffer(6);
+        outputBuffer.put(2, 'BYTE'); // login response code
+        outputBuffer.put(player.rights.valueOf(), 'BYTE');
+        outputBuffer.put(0, 'BYTE'); // ???
+        outputBuffer.put(player.worldIndex + 1, 'SHORT');
+        outputBuffer.put(0, 'BYTE'); // ???
+        this.clientConnection.socket.write(outputBuffer);
 
         player.init();
 

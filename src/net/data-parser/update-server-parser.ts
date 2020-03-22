@@ -1,4 +1,4 @@
-import { RsBuffer } from '@server/net/rs-buffer';
+import { ByteBuffer } from '@runejs/byte-buffer';
 import { DataParser } from './data-parser';
 import { crcTable, cache } from '@server/game-server';
 
@@ -9,15 +9,15 @@ export class UpdateServerParser extends DataParser {
 
     private files: { file: number, index: number }[] = [];
 
-    public parse(buffer?: RsBuffer): void {
+    public parse(buffer?: ByteBuffer): void {
         if(!buffer) {
             return;
         }
 
-        while(buffer.getReadable() >= 4) {
-            const type = buffer.readUnsignedByte();
-            const index = buffer.readUnsignedByte();
-            const file = buffer.readUnsignedShortBE();
+        while(buffer.readable >= 4) {
+            const type = buffer.get('BYTE', 'UNSIGNED');
+            const index = buffer.get('BYTE', 'UNSIGNED');
+            const file = buffer.get('SHORT', 'UNSIGNED');
 
             switch(type) {
                 case 0: // queue
@@ -42,43 +42,40 @@ export class UpdateServerParser extends DataParser {
     }
 
     private generateFile(index: number, file: number): Buffer {
-        let cacheFile;
+        let cacheFile: ByteBuffer;
 
         if(index === 255 && file === 255) {
-            const crcBuffer = Buffer.alloc(crcTable.length);
-            crcTable.copy(crcBuffer, 0, 0);
-            cacheFile = new RsBuffer(crcBuffer);
+            cacheFile = new ByteBuffer(crcTable.length);
+            crcTable.copy(cacheFile, 0, 0);
         } else {
             cacheFile = cache.getRawFile(index, file);
         }
 
-        if(!cacheFile || cacheFile.getBuffer().length === 0) {
+        if(!cacheFile || cacheFile.length === 0) {
             throw new Error(`Cache file not found; file(${file}) with index(${index})`);
         }
 
-        const cacheFileBuffer = cacheFile.getBuffer();
+        const buffer = new ByteBuffer((cacheFile.length - 2) + ((cacheFile.length - 2) / 511) + 8);
+        buffer.put(index, 'BYTE', 'UNSIGNED');
+        buffer.put(file, 'SHORT', 'UNSIGNED');
 
-        const buffer = RsBuffer.create((cacheFileBuffer.length - 2) + ((cacheFileBuffer.length - 2) / 511) + 8);
-        buffer.writeUnsignedByte(index);
-        buffer.writeUnsignedShortBE(file);
-
-        let length: number = ((cacheFileBuffer.readUInt8(1) << 24) + (cacheFileBuffer.readUInt8(2) << 16) +
-            (cacheFileBuffer.readUInt8(3) << 8) + cacheFileBuffer.readUInt8(4)) + 9;
-        if(cacheFileBuffer[0] == 0) {
+        let length: number = ((cacheFile.at(1, 'UNSIGNED') << 24) + (cacheFile.at(2, 'UNSIGNED') << 16) +
+            (cacheFile.at(3, 'UNSIGNED') << 8) + cacheFile.at(4, 'UNSIGNED')) + 9;
+        if(cacheFile.at(0) === 0) {
             length -= 4;
         }
 
         let c = 3;
         for(let i = 0; i < length; i++) {
-            if(c == 512) {
-                buffer.writeUnsignedByte(255);
+            if(c === 512) {
+                buffer.put(255, 'BYTE', 'UNSIGNED');
                 c = 1;
             }
 
-            buffer.writeByte(cacheFileBuffer.readInt8(i));
+            buffer.put(cacheFile.at(i), 'BYTE');
             c++;
         }
 
-        return buffer.getData();
+        return Buffer.from(buffer.flipWriter());
     }
 }

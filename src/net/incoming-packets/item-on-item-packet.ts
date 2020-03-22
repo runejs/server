@@ -1,19 +1,19 @@
 import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../world/actor/player/player';
-import { RsBuffer } from '@server/net/rs-buffer';
 import { widgets } from '@server/world/config/widget';
 import { logger } from '@runejs/logger/dist/logger';
 import { itemOnItemAction } from '@server/world/actor/player/action/item-on-item-action';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
-export const itemOnItemPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
-    const usedWithItemId = packet.readNegativeOffsetShortLE();
-    const usedWithSlot = packet.readNegativeOffsetShortLE();
-    const usedWithContainerId = packet.readUnsignedShortLE();
-    const usedWithWidgetId = packet.readUnsignedShortLE();
-    const usedContainerId = packet.readUnsignedShortLE();
-    const usedWidgetId = packet.readUnsignedShortLE();
-    const usedItemId = packet.readUnsignedShortLE();
-    const usedSlot = packet.readNegativeOffsetShortBE();
+export const itemOnItemPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {
+    const usedWithItemId = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const usedWithSlot = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const usedWithContainerId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const usedWithWidgetId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const usedContainerId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const usedWidgetId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const usedItemId = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const usedSlot = packet.get('SHORT', 'UNSIGNED');
 
     if(usedWidgetId === widgets.inventory.widgetId && usedContainerId === widgets.inventory.containerId &&
         usedWithWidgetId === widgets.inventory.widgetId && usedWithContainerId === widgets.inventory.containerId) {
