@@ -1,5 +1,4 @@
 import { Player } from '../player';
-import { stringToLong } from '@server/net/rs-buffer';
 import { Task } from '@server/task/task';
 import { UpdateFlags } from '@server/world/actor/update-flags';
 import { Packet, PacketType } from '@server/net/packet';
@@ -8,6 +7,7 @@ import { EquipmentSlot, HelmetType, ItemDetails, TorsoType } from '@server/world
 import { ItemContainer } from '@server/world/items/item-container';
 import { appendMovement, updateTrackedActors, registerNewActors } from './actor-updating';
 import { ByteBuffer } from '@runejs/byte-buffer';
+import { stringToLong } from '@server/util/strings';
 
 /**
  * Handles the chonky player updating packet.

@@ -63,3 +63,18 @@ export function wrapText(text: string, maxWidth: number): string[] {
 
     return lines;
 }
+
+export function stringToLong(s: string): bigint {
+    let l: bigint = BigInt(0);
+
+    for(let i = 0; i < s.length && i < 12; i++) {
+        const c = s.charAt(i);
+        const cc = s.charCodeAt(i);
+        l *= BigInt(37);
+        if(c >= 'A' && c <= 'Z') l += BigInt((1 + cc) - 65);
+        else if(c >= 'a' && c <= 'z') l += BigInt((1 + cc) - 97);
+        else if(c >= '0' && c <= '9') l += BigInt((27 + cc) - 48);
+    }
+    while(l % BigInt(37) == BigInt(0) && l != BigInt(0)) l /= BigInt(37);
+    return l;
+}
