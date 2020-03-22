@@ -56,8 +56,8 @@ export class UpdateServerParser extends DataParser {
         }
 
         const buffer = new ByteBuffer((cacheFile.length - 2) + ((cacheFile.length - 2) / 511) + 8);
-        buffer.put(index, 'BYTE', 'UNSIGNED');
-        buffer.put(file, 'SHORT', 'UNSIGNED');
+        buffer.put(index, 'BYTE');
+        buffer.put(file, 'SHORT');
 
         let length: number = ((cacheFile.at(1, 'UNSIGNED') << 24) + (cacheFile.at(2, 'UNSIGNED') << 16) +
             (cacheFile.at(3, 'UNSIGNED') << 8) + cacheFile.at(4, 'UNSIGNED')) + 9;
@@ -68,7 +68,7 @@ export class UpdateServerParser extends DataParser {
         let c = 3;
         for(let i = 0; i < length; i++) {
             if(c === 512) {
-                buffer.put(255, 'BYTE', 'UNSIGNED');
+                buffer.put(255, 'BYTE');
                 c = 1;
             }
 
