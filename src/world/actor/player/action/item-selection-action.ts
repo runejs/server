@@ -50,8 +50,7 @@ export interface ItemSelection {
     amount: number;
 }
 
-// @TODO Make-X
-export function itemSelectionAction(player: Player, type: 'COOKING' | 'MAKING', items: SelectableItem[]): Promise<ItemSelection> {
+export async function itemSelectionAction(player: Player, type: 'COOKING' | 'MAKING', items: SelectableItem[]): Promise<ItemSelection> {
     let widgetId = 307;
 
     if(type === 'MAKING') {
@@ -59,7 +58,7 @@ export function itemSelectionAction(player: Player, type: 'COOKING' | 'MAKING', 
             widgetId = 309;
         } else {
             if(items.length > 5) {
-                throw `Too many items provided to the item selection action!`;
+                throw new Error(`Too many items provided to the item selection action!`);
             }
 
             widgetId = (301 + items.length);
@@ -142,17 +141,17 @@ export function itemSelectionAction(player: Player, type: 'COOKING' | 'MAKING', 
                     interactionSub.unsubscribe();
 
                     if(input < 1 || input > 2147483647) {
-                        player.closeActiveWidget();
+                        player.closeActiveWidgets();
                         reject('Invalid User Amount Input');
                     } else {
-                        player.closeActiveWidget();
+                        player.closeActiveWidgets();
                         resolve({itemId, amount: input} as ItemSelection);
                     }
                 });
             } else {
                 actionsSub.unsubscribe();
                 interactionSub.unsubscribe();
-                player.closeActiveWidget();
+                player.closeActiveWidgets();
                 resolve({itemId, amount} as ItemSelection);
             }
         });

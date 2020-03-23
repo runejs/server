@@ -3,7 +3,7 @@ import { Position } from '../position';
 import { Player } from './player/player';
 import { world } from '@server/game-server';
 import { Chunk } from '../map/chunk';
-import { MapRegionTile } from '@runejs/cache-parser';
+import { Tile } from '@runejs/cache-parser';
 import { Npc } from './npc/npc';
 
 /**
@@ -99,7 +99,7 @@ export class WalkingQueue {
         let destinationChunk: Chunk = world.chunkManager.getChunkForWorldPosition(destination);
         const positionAbove: Position = new Position(destination.x, destination.y, destination.level + 1);
         const chunkAbove: Chunk = world.chunkManager.getChunkForWorldPosition(positionAbove);
-        let tile: MapRegionTile = chunkAbove.getTile(positionAbove);
+        let tile: Tile = chunkAbove.getTile(positionAbove);
 
         if(!tile || !tile.bridge) {
             tile = destinationChunk.getTile(destination);
@@ -212,7 +212,7 @@ export class WalkingQueue {
     private calculateLocalCornerPosition(cornerX: number, cornerY: number, origin: Position): { localX: number, localY: number, chunk: Chunk } {
         const cornerPosition: Position = new Position(cornerX, cornerY, origin.level + 1);
         let cornerChunk: Chunk = world.chunkManager.getChunkForWorldPosition(cornerPosition);
-        const tileAbove: MapRegionTile = cornerChunk.getTile(cornerPosition);
+        const tileAbove: Tile = cornerChunk.getTile(cornerPosition);
         if(!tileAbove || !tileAbove.bridge) {
             cornerPosition.level = cornerPosition.level - 1;
             cornerChunk = world.chunkManager.getChunkForWorldPosition(cornerPosition);

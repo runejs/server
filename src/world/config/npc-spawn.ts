@@ -19,7 +19,7 @@ export function parseNpcSpawns(): NpcSpawn[] {
         const npcSpawns = safeLoad(readFileSync('data/config/npc-spawns.yaml', 'utf8'), { schema: JSON_SCHEMA }) as NpcSpawn[];
 
         if(!npcSpawns || npcSpawns.length === 0) {
-            throw 'Unable to read npc spawns.';
+            throw new Error('Unable to read npc spawns.');
         }
 
         logger.info(`${npcSpawns.length} npc spawns found.`);

@@ -1,29 +1,29 @@
-import { RsBuffer } from '@server/net/rs-buffer';
 import { DataParser } from './data-parser';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
 /**
  * Controls the initial login handshake with the server.
  */
 export class LoginHandshakeParser extends DataParser {
 
-    public parse(buffer: RsBuffer, packetId: number): void {
+    public parse(buffer: ByteBuffer, packetId: number): void {
         if(!buffer) {
-            throw ('No data supplied for login handshake');
+            throw new Error('No data supplied for login handshake');
         }
 
         if(packetId === 14) {
-            buffer.readUnsignedByte(); // Name hash
+            buffer.get('BYTE', 'UNSIGNED'); // Name hash
 
             const serverKey = BigInt(13371337); // TODO generate server_key
 
-            const outputBuffer = RsBuffer.create();
-            outputBuffer.writeByte(0); // Initial server login response -> 0 for OK
-            outputBuffer.writeLongBE(serverKey);
-            this.clientConnection.socket.write(outputBuffer.getData());
+            const outputBuffer = new ByteBuffer(9);
+            outputBuffer.put(0, 'BYTE'); // Initial server login response -> 0 for OK
+            outputBuffer.put(serverKey, 'LONG');
+            this.clientConnection.socket.write(outputBuffer);
 
             this.clientConnection.serverKey = serverKey;
         } else {
-            throw 'Invalid login handshake packet id.';
+            throw new Error('Invalid login handshake packet id.');
         }
     }
 }

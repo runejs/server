@@ -2,7 +2,7 @@ import { Position } from '@server/world/position';
 import { directionData, WNES } from '@server/world/direction';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
-import { ModifiedLandscapeObject } from '@server/world/map/landscape-object';
+import { ModifiedLocationObject } from '@server/world/map/location-object';
 import { objectAction } from '@server/world/actor/player/action/object-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { soundIds } from '@server/world/config/sound-ids';
@@ -26,20 +26,21 @@ const gates = [
 
 // @TODO clean up this disgusting code
 const action: objectAction = (details) => {
-    let {object: gate, position, player, cacheOriginal} = details;
+    const { player, cacheOriginal } = details;
+    let { object: gate, position } = details;
 
-    if((gate as ModifiedLandscapeObject).metadata) {
-        const metadata = (gate as ModifiedLandscapeObject).metadata;
+    if((gate as ModifiedLocationObject).metadata) {
+        const metadata = (gate as ModifiedLocationObject).metadata;
 
-        world.toggleObjects(metadata.originalMain, metadata.main, metadata.originalMainPosition, metadata.mainPosition, metadata.originalMainChunk, metadata.mainChunk, true);
-        world.toggleObjects(metadata.originalSecond, metadata.second, metadata.originalSecondPosition, metadata.secondPosition, metadata.originalSecondChunk, metadata.secondChunk, true);
+        world.toggleLocationObjects(metadata.originalMain, metadata.main, metadata.originalMainPosition, metadata.mainPosition, metadata.originalMainChunk, metadata.mainChunk, true);
+        world.toggleLocationObjects(metadata.originalSecond, metadata.second, metadata.originalSecondPosition, metadata.secondPosition, metadata.originalSecondChunk, metadata.secondChunk, true);
         player.playSound(soundIds.closeGate, 7);
     } else {
         let details = gates.find(g => g.main === gate.objectId);
         let clickedSecondary = false;
         let secondGate;
         let hinge;
-        let direction = WNES[gate.rotation];
+        let direction = WNES[gate.orientation];
         let hingeChunk, gateSecondPosition;
 
         if(!details) {
@@ -87,7 +88,7 @@ const action: objectAction = (details) => {
             const pos = new Position(gate.x + deltaX, gate.y + deltaY, gate.level);
             hingeChunk = world.chunkManager.getChunkForWorldPosition(pos);
             gate = hingeChunk.getCacheObject(details.main, pos);
-            direction = WNES[gate.rotation];
+            direction = WNES[gate.orientation];
             position = pos;
         } else {
             hinge = details.hinge;
@@ -138,13 +139,13 @@ const action: objectAction = (details) => {
             }
         }
 
-        let leftHingeDirections: { [key: string]: string } = {
+        const leftHingeDirections: { [key: string]: string } = {
             'NORTH': 'WEST',
             'SOUTH': 'EAST',
             'WEST': 'SOUTH',
             'EAST': 'NORTH'
         };
-        let rightHingeDirections: { [key: string]: string } = {
+        const rightHingeDirections: { [key: string]: string } = {
             'NORTH': 'EAST',
             'SOUTH': 'WEST',
             'WEST': 'NORTH',
@@ -180,16 +181,16 @@ const action: objectAction = (details) => {
             y: newPosition.y,
             level: newPosition.level,
             type: gate.type,
-            rotation: directionData[newDirection].rotation
-        } as ModifiedLandscapeObject;
+            orientation: directionData[newDirection].rotation
+        } as ModifiedLocationObject;
         const newSecond = {
             objectId: details.secondaryOpen,
             x: newSecondPosition.x,
             y: newSecondPosition.y,
             level: newSecondPosition.level,
             type: gate.type,
-            rotation: directionData[newDirection].rotation
-        } as ModifiedLandscapeObject;
+            orientation: directionData[newDirection].rotation
+        } as ModifiedLocationObject;
 
         const metadata = {
             second: JSON.parse(JSON.stringify(newSecond)),
@@ -209,8 +210,8 @@ const action: objectAction = (details) => {
         newHinge.metadata = metadata;
         newSecond.metadata = metadata;
 
-        world.toggleObjects(newHinge, gate, newPosition, position, newHingeChunk, hingeChunk, !cacheOriginal);
-        world.toggleObjects(newSecond, secondGate, newSecondPosition, gateSecondPosition, newSecondChunk, gateSecondChunk, !cacheOriginal);
+        world.toggleLocationObjects(newHinge, gate, newPosition, position, newHingeChunk, hingeChunk, !cacheOriginal);
+        world.toggleLocationObjects(newSecond, secondGate, newSecondPosition, gateSecondPosition, newSecondChunk, gateSecondChunk, !cacheOriginal);
         player.playSound(soundIds.openGate, 7);
     }
 };

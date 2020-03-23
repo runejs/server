@@ -1,8 +1,8 @@
 import { incomingPacket } from '../incoming-packet';
-import { RsBuffer } from '@server/net/rs-buffer';
 import { Player } from '../../world/actor/player/player';
 import { itemAction } from '@server/world/actor/player/action/item-action';
 import { getItemOption } from '@server/world/items/item';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
 interface ItemInteraction {
     widgetId: number;
@@ -11,47 +11,47 @@ interface ItemInteraction {
     slot: number;
 }
 
-const option1 = (packet: RsBuffer): ItemInteraction => {
-    const itemId = packet.readNegativeOffsetShortBE();
-    const slot = packet.readShortLE();
-    const widgetId = packet.readShortLE();
-    const containerId = packet.readShortLE();
+const option1 = (packet: ByteBuffer): ItemInteraction => {
+    const itemId = packet.get('SHORT', 'UNSIGNED');
+    const slot = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const widgetId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const containerId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
     return { widgetId, containerId, itemId, slot };
 };
 
-const option2 = (packet: RsBuffer): ItemInteraction => {
-    const itemId = packet.readUnsignedShortLE();
-    const containerId = packet.readShortLE();
-    const widgetId = packet.readShortLE();
-    const slot = packet.readUnsignedShortLE();
+const option2 = (packet: ByteBuffer): ItemInteraction => {
+    const itemId = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const containerId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const widgetId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const slot = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
     return { widgetId, containerId, itemId, slot };
 };
 
-const option3 = (packet: RsBuffer): ItemInteraction => {
-    const slot = packet.readNegativeOffsetShortBE();
-    const containerId = packet.readShortLE();
-    const widgetId = packet.readShortLE();
-    const itemId = packet.readNegativeOffsetShortBE();
+const option3 = (packet: ByteBuffer): ItemInteraction => {
+    const slot = packet.get('SHORT', 'UNSIGNED');
+    const containerId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const widgetId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const itemId = packet.get('SHORT', 'UNSIGNED');
     return { widgetId, containerId, itemId, slot };
 };
 
-const option4 = (packet: RsBuffer): ItemInteraction => {
-    const itemId = packet.readNegativeOffsetShortBE();
-    const slot = packet.readUnsignedShortLE();
-    const containerId = packet.readShortLE();
-    const widgetId = packet.readShortLE();
+const option4 = (packet: ByteBuffer): ItemInteraction => {
+    const itemId = packet.get('SHORT', 'UNSIGNED');
+    const slot = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const containerId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const widgetId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
     return { widgetId, containerId, itemId, slot };
 };
 
-const inventoryOption4 = (packet: RsBuffer): ItemInteraction => {
-    const slot = packet.readShortBE();
-    const widgetId = packet.readShortLE();
-    const containerId = packet.readShortLE();
-    const itemId = packet.readShortBE();
+const inventoryOption4 = (packet: ByteBuffer): ItemInteraction => {
+    const slot = packet.get('SHORT', 'UNSIGNED');
+    const widgetId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const containerId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const itemId = packet.get('SHORT', 'UNSIGNED');
     return { widgetId, containerId, itemId, slot };
 };
 
-export const itemInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
+export const itemInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {
     const packets = {
         38: { packetDef: option1, optionNumber: 1 },
         228: { packetDef: option2, optionNumber: 2 },

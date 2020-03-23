@@ -1,20 +1,20 @@
 import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../world/actor/player/player';
-import { RsBuffer } from '@server/net/rs-buffer';
 import { world } from '@server/game-server';
 import { World } from '@server/world/world';
 import { npcAction } from '@server/world/actor/player/action/npc-action';
 import { logger } from '@runejs/logger/dist/logger';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
-export const npcInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
-    const methods = {
-        63: 'readNegativeOffsetShortLE',
-        116: 'readUnsignedShortLE',
+export const npcInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {
+    const args = {
+        63: [ 'SHORT', 'UNSIGNED', 'LITTLE_ENDIAN' ],
+        116: [ 'SHORT', 'UNSIGNED', 'LITTLE_ENDIAN' ],
         /*13: 'readNegativeOffsetShortLE',
         42: 'readUnsignedShortLE',
         8: 'readUnsignedShortLE'*/
     };
-    const npcIndex = packet[methods[packetId]]();
+    const npcIndex = packet.get(...args[packetId]);
 
     if(npcIndex < 0 || npcIndex > World.MAX_NPCS - 1) {
         return;

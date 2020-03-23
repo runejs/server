@@ -36,7 +36,7 @@ const openingDelta = {
 };
 
 const action: objectAction = (details) => {
-    let { player, object: door, position, cacheOriginal } = details;
+    const { player, object: door, position, cacheOriginal } = details;
     let doorConfig = doubleDoors.find(d => d.closed.indexOf(door.objectId) !== -1);
     let doorIds: number[];
     let opening = true;
@@ -55,7 +55,7 @@ const action: objectAction = (details) => {
     const leftDoorId = doorIds[0];
     const rightDoorId = doorIds[1];
     const hinge = leftDoorId === door.objectId ? 'LEFT' : 'RIGHT';
-    const direction = WNES[door.rotation];
+    const direction = WNES[door.orientation];
     let deltaX = 0;
     let deltaY = 0;
     const otherDoorId = hinge === 'LEFT' ? rightDoorId : leftDoorId;

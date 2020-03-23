@@ -7,14 +7,14 @@ const action: commandAction = (details) => {
 
     const x: number = args.x as number;
     const y: number = args.y as number;
-    let level: number = args.level as number;
+    const level: number = args.level as number;
 
     player.teleport(new Position(x, y, level));
 };
 
 export default new RunePlugin({
     type: ActionType.COMMAND,
-    commands: [ 'move', 'goto', 'teleport', 'tele', 'moveto' ],
+    commands: [ 'move', 'goto', 'teleport', 'tele', 'moveto', 'setpos' ],
     args: [
         {
             name: 'x',

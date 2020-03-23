@@ -32,7 +32,7 @@ function parseSkillGuides(): SkillGuide[] {
         const skillGuides = safeLoad(readFileSync('data/config/skill-guides.yaml', 'utf8'), { schema: JSON_SCHEMA }) as SkillGuide[];
 
         if(!skillGuides || skillGuides.length === 0) {
-            throw 'Unable to read skill guides.';
+            throw new Error('Unable to read skill guides.');
         }
 
         logger.info(`${skillGuides.length} skill guides found.`);
@@ -46,12 +46,12 @@ function parseSkillGuides(): SkillGuide[] {
 
 const guides = parseSkillGuides();
 
-const sidebarTextIds = [131,108,109,112,122,125,128,143,146,149,159,162,165];
-const sidebarIds = [129,98,-1,110,113,123,126,134,144,147,150,160,163];
+const sidebarTextIds = [131, 108, 109, 112, 122, 125, 128, 143, 146, 149, 159, 162, 165];
+const sidebarIds = [129, 98, -1, 110, 113, 123, 126, 134, 144, 147, 150, 160, 163];
 const buttonIds = guides.map(g => g.id);
 
 function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refreshSidebar: boolean = true): void {
-    let guide: SkillGuide = guides.find(g => g.id === guideId);
+    const guide: SkillGuide = guides.find(g => g.id === guideId);
 
     if(refreshSidebar) {
         player.modifyWidget(widgets.skillGuide, { childId: 133, text: (guide.members ? 'Members only skill' : '') });

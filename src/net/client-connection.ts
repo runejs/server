@@ -1,17 +1,17 @@
 import { Socket } from 'net';
 import { Player } from '@server/world/actor/player/player';
 import { world } from '@server/game-server';
-import { RsBuffer } from './rs-buffer';
 import { LoginHandshakeParser } from './data-parser/login-handshake-parser';
 import { ClientLoginParser } from './data-parser/client-login-parser';
 import { ClientPacketDataParser } from './data-parser/client-packet-data-parser';
 import { DataParser } from './data-parser/data-parser';
 import { VersionHandshakeParser } from '@server/net/data-parser/version-handshake-parser';
-import { VersionListParser } from '@server/net/data-parser/version-list-parser';
+import { UpdateServerParser } from '@server/net/data-parser/update-server-parser';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
 enum ConnectionStage {
     VERSION_HANDSHAKE = 'VERSION_HANDSHAKE',
-    VERSION_LIST = 'VERSION_LIST',
+    UPDATE_SERVER = 'UPDATE_SERVER',
     LOGIN_HANDSHAKE = 'LOGIN_HANDSHAKE',
     LOGIN = 'LOGIN',
     LOGGED_IN = 'LOGGED_IN'
@@ -35,10 +35,10 @@ export class ClientConnection {
         this.dataParser = null;
     }
 
-    public parseIncomingData(buffer?: RsBuffer): void {
+    public parseIncomingData(buffer?: ByteBuffer): void {
         try {
             if(!this.connectionStage) {
-                const packetId = buffer.readUnsignedByte();
+                const packetId = buffer.get('BYTE', 'UNSIGNED');
 
                 if(packetId === 15) {
                     this.connectionStage = ConnectionStage.VERSION_HANDSHAKE;
@@ -54,8 +54,8 @@ export class ClientConnection {
             }
 
             if(this.connectionStage === ConnectionStage.VERSION_HANDSHAKE) {
-                this.connectionStage = ConnectionStage.VERSION_LIST;
-                this.dataParser = new VersionListParser(this);
+                this.connectionStage = ConnectionStage.UPDATE_SERVER;
+                this.dataParser = new UpdateServerParser(this);
             } else if(this.connectionStage === ConnectionStage.LOGIN_HANDSHAKE) {
                 this.connectionStage = ConnectionStage.LOGIN;
                 this.dataParser = new ClientLoginParser(this);
@@ -64,9 +64,9 @@ export class ClientConnection {
                 this.dataParser = new ClientPacketDataParser(this);
             }
         } catch(err) {
-            this.socket.destroy();
             console.error('Error decoding client data');
             console.error(err);
+            this.socket.destroy();
         }
     }
 

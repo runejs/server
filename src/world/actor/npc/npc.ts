@@ -26,7 +26,9 @@ export const setNpcInitPlugins = (plugins: ActionPlugin[]): void => {
 };
 
 export interface NpcInitPlugin extends ActionPlugin {
+    // The action function to be performed.
     action: npcInitAction;
+    // A single NPC ID or a list of NPC IDs that this action applies to.
     npcIds: number | number[];
 }
 
@@ -68,7 +70,7 @@ export class Npc extends Actor {
 
     public init(): void {
         world.chunkManager.getChunkForWorldPosition(this.position).addNpc(this);
-        this.initiateRandomMovement();
+        // this.initiateRandomMovement();
 
         new Promise(resolve => {
             npcInitPlugins

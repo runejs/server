@@ -1,6 +1,6 @@
 import { Player } from '../world/actor/player/player';
-import { RsBuffer } from '@server/net/rs-buffer';
 import { logger } from '@runejs/logger';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
 import { incomingPacket } from './incoming-packet';
 import { characterDesignPacket } from './incoming-packets/character-design-packet';
@@ -22,7 +22,7 @@ import { itemOnObjectPacket } from '@server/net/incoming-packets/item-on-object-
 import { numberInputPacket } from '@server/net/incoming-packets/number-input-packet';
 import { itemOnNpcPacket } from '@server/net/incoming-packets/item-on-npc-packet';
 
-const ignore = [ 234, 160, 58 /* camera move */ ];
+const ignore = [ 234, 160, 216, 13, 58 /* camera move */ ];
 
 const packets: { [key: number]: incomingPacket } = {
     75:  chatPacket,
@@ -41,6 +41,8 @@ const packets: { [key: number]: incomingPacket } = {
 
     83:  itemSwapPacket,
     40:  itemOnItemPacket,
+    24:  itemOnObjectPacket,
+    208: itemOnNpcPacket,
     102: itemEquipPacket,
     38:  itemInteractionPacket,
     98:  itemInteractionPacket,
@@ -52,8 +54,6 @@ const packets: { [key: number]: incomingPacket } = {
 
     63:  npcInteractionPacket,
     116: npcInteractionPacket,
-    24:  itemOnObjectPacket,
-    208:  itemOnNpcPacket,
 
     30:  objectInteractionPacket,
     164: objectInteractionPacket,
@@ -73,7 +73,7 @@ export function handlePacket(player: Player, packetId: number, packetSize: numbe
     }
 
     new Promise(resolve => {
-        packetFunction(player, packetId, packetSize, new RsBuffer(buffer));
+        packetFunction(player, packetId, packetSize, new ByteBuffer(buffer));
         resolve();
     }).catch(error => logger.error(`Error handling inbound packet: ${error}`));
 }

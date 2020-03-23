@@ -41,7 +41,7 @@ export default new RunePlugin([{
         }
     ],
     action: soundAction
-},{
+}, {
     type: ActionType.COMMAND,
     commands: 'quicksong',
     args: [

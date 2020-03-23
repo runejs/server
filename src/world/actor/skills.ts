@@ -2,6 +2,7 @@ import { Actor } from '@server/world/actor/actor';
 import { Player } from '@server/world/actor/player/player';
 import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
 import { startsWithVowel } from '@server/util/strings';
+import { serverConfig } from '@server/game-server';
 
 export enum Skill {
     ATTACK,
@@ -105,7 +106,7 @@ export class Skills {
     public addExp(skillId: number, exp: number): void {
         const currentExp = this._values[skillId].exp;
         const currentLevel = this.getLevelForExp(currentExp);
-        let finalExp = currentExp + exp;
+        let finalExp = currentExp + (exp * serverConfig.expRate);
         if(finalExp > 200000000) {
             finalExp = 200000000;
         }
@@ -120,7 +121,6 @@ export class Skills {
 
         if(currentLevel !== finalLevel) {
             this.setLevel(skillId, finalLevel);
-            this.actor.playGraphics({ id: 199, delay: 0, height: 125 });
 
             if(this.actor instanceof Player) {
                 const achievementDetails = skillDetails[skillId];
@@ -128,24 +128,49 @@ export class Skills {
                     return;
                 }
 
-                this.actor.outgoingPackets.chatboxMessage(`Congratulations, you just advanced a ${achievementDetails.name.toLowerCase()} level.`);
-
-                if(achievementDetails.advancementWidgetId) {
-                    dialogueAction(this.actor, { type: 'LEVEL_UP', skillId, lines: [
-                        `<col=000080>Congratulations, you just advanced ${startsWithVowel(achievementDetails.name) ? 'an' : 'a'} ` +
-                            `${achievementDetails.name.toLowerCase()} level.</col>`,
-                            `Your ${achievementDetails.name.toLowerCase()} level is now ${finalLevel}.` ] }).then(d => d.close());
-                    // @TODO sounds
-                }
+                this.actor.sendMessage(`Congratulations, you just advanced a ${achievementDetails.name.toLowerCase()} level.`);
+                this.showLevelUpDialogue(skillId, finalLevel);
             }
         }
+    }
+
+    public showLevelUpDialogue(skillId: number, level: number): void {
+        if(!(this.actor instanceof Player)) {
+            return;
+        }
+
+        const player = this.actor as Player;
+        const achievementDetails = skillDetails[skillId];
+        const widgetId = achievementDetails.advancementWidgetId;
+
+        if(!widgetId) {
+            return;
+        }
+
+        const skillName = achievementDetails.name.toLowerCase();
+
+        player.queueWidget({
+            widgetId,
+            type: 'CHAT',
+            closeOnWalk: true,
+            beforeOpened: () => {
+                player.modifyWidget(widgetId, { childId: 0,
+                    text: `<col=000080>Congratulations, you just advanced ${startsWithVowel(skillName) ? 'an' : 'a'} ${skillName} level.</col>` });
+                player.modifyWidget(widgetId, { childId: 1,
+                    text: `Your ${skillName} level is now ${level}.` });
+            },
+            afterOpened: () => {
+                player.playGraphics({ id: 199, delay: 0, height: 125 });
+                // @TODO sounds
+            }
+        });
     }
 
     public setExp(skillId: number, exp: number): void {
         this._values[skillId].exp = exp;
     }
 
-    public setLevel(skillId, level: number): void {
+    public setLevel(skillId: number, level: number): void {
         this._values[skillId].level = level;
     }
 

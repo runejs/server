@@ -4,7 +4,6 @@ import { unlockEmotes } from '@server/plugins/buttons/player-emotes-plugin';
 
 export const action: playerInitAction = (details) => {
     const { player } = details;
-
     unlockEmotes(player);
 };
 

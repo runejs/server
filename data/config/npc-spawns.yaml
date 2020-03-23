@@ -54,3 +54,23 @@
   x: 3209
   y: 3260
   radius: 10
+- npcId: 278
+  x: 3210
+  y: 3215
+  radius: 5
+- npcId: 545
+  x: 3320
+  y: 3194
+  radius: 3
+- npcId: 542
+  x: 3317
+  y: 3174
+  radius: 3
+- npcId: 544
+  x: 3315
+  y: 3161
+  radius: 3
+- npcId: 3806
+  x: 3168
+  y: 3306
+  radius: 3

@@ -1,11 +1,10 @@
 import { Task } from '@server/task/task';
 import { Player } from '../player';
 import { Packet, PacketType } from '@server/net/packet';
-import { RsBuffer } from '@server/net/rs-buffer';
 import { Npc } from '@server/world/actor/npc/npc';
 import { world } from '@server/game-server';
 import { registerNewActors, updateTrackedActors } from './actor-updating';
-import { directionData } from '@server/world/direction';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
 /**
  * Handles the chonky npc updating packet for a specific player.
@@ -22,9 +21,9 @@ export class NpcUpdateTask extends Task<void> {
     public async execute(): Promise<void> {
         return new Promise<void>(resolve => {
             const npcUpdatePacket: Packet = new Packet(128, PacketType.DYNAMIC_LARGE);
-            npcUpdatePacket.openBitChannel();
+            npcUpdatePacket.openBitBuffer();
 
-            const updateMaskData = RsBuffer.create();
+            const updateMaskData = new ByteBuffer(5000);
 
             const nearbyNpcs = world.npcTree.colliding({
                 x: this.player.position.x - 15,
@@ -45,25 +44,25 @@ export class NpcUpdateTask extends Task<void> {
                 this.player.trackedNpcs.push(newNpc);
 
                 // Notify the client of the new npc and their worldIndex
-                npcUpdatePacket.writeBits(15, newNpc.worldIndex);
-                npcUpdatePacket.writeBits(3, newNpc.faceDirection);
-                npcUpdatePacket.writeBits(5, positionOffsetX); // World Position X axis offset relative to the player
-                npcUpdatePacket.writeBits(5, positionOffsetY); // World Position Y axis offset relative to the player
-                npcUpdatePacket.writeBits(1, newNpc.updateFlags.updateBlockRequired ? 1 : 0); // Update is required
-                npcUpdatePacket.writeBits(1, 1); // Discard client walking queues
-                npcUpdatePacket.writeBits(13, newNpc.id);
+                npcUpdatePacket.putBits(15, newNpc.worldIndex);
+                npcUpdatePacket.putBits(3, newNpc.faceDirection);
+                npcUpdatePacket.putBits(5, positionOffsetX); // World Position X axis offset relative to the player
+                npcUpdatePacket.putBits(5, positionOffsetY); // World Position Y axis offset relative to the player
+                npcUpdatePacket.putBits(1, newNpc.updateFlags.updateBlockRequired ? 1 : 0); // Update is required
+                npcUpdatePacket.putBits(1, 1); // Discard client walking queues
+                npcUpdatePacket.putBits(13, newNpc.id);
 
                 this.appendUpdateMaskData(newNpc, updateMaskData);
             });
 
-            if(updateMaskData.getWriterIndex() !== 0) {
-                npcUpdatePacket.writeBits(15, 32767);
-                npcUpdatePacket.closeBitChannel();
+            if(updateMaskData.writerIndex !== 0) {
+                npcUpdatePacket.putBits(15, 32767);
+                npcUpdatePacket.closeBitBuffer();
 
-                npcUpdatePacket.writeBytes(updateMaskData);
+                npcUpdatePacket.putBytes(updateMaskData.flipWriter());
             } else {
                 // No npc updates were appended, so just end the packet here
-                npcUpdatePacket.closeBitChannel();
+                npcUpdatePacket.closeBitBuffer();
             }
 
             this.player.outgoingPackets.queue(npcUpdatePacket, true);
@@ -71,7 +70,7 @@ export class NpcUpdateTask extends Task<void> {
         });
     }
 
-    private appendUpdateMaskData(npc: Npc, updateMaskData: RsBuffer): void {
+    private appendUpdateMaskData(npc: Npc, updateMaskData: ByteBuffer): void {
         const updateFlags = npc.updateFlags;
         if(!updateFlags.updateBlockRequired) {
             return;
@@ -95,14 +94,14 @@ export class NpcUpdateTask extends Task<void> {
             mask |= 0x10;
         }
 
-        updateMaskData.writeUnsignedByte(mask);
+        updateMaskData.put(mask, 'BYTE');
 
         if(updateFlags.faceActor !== undefined) {
             const actor = updateFlags.faceActor;
 
             if(actor === null) {
                 // Reset faced actor
-                updateMaskData.writeUnsignedOffsetShortBE(65535);
+                updateMaskData.put(65535, 'SHORT');
             } else {
                 let worldIndex = actor.worldIndex;
 
@@ -113,7 +112,7 @@ export class NpcUpdateTask extends Task<void> {
                     worldIndex += 32768 + 1;
                 }
 
-                updateMaskData.writeUnsignedOffsetShortBE(worldIndex);
+                updateMaskData.put(worldIndex, 'SHORT');
             }
         }
 
@@ -121,20 +120,20 @@ export class NpcUpdateTask extends Task<void> {
             const message = updateFlags.chatMessages[0];
 
             if(message.message) {
-                updateMaskData.writeNewString(message.message);
+                updateMaskData.putString(message.message);
             } else {
-                updateMaskData.writeNewString('Undefined Message');
+                updateMaskData.putString('Undefined Message');
             }
         }
 
         if(updateFlags.appearanceUpdateRequired) {
-            updateMaskData.writeOffsetShortBE(npc.id);
+            updateMaskData.put(npc.id, 'SHORT');
         }
 
         if(updateFlags.facePosition) {
             const position = updateFlags.facePosition;
-            updateMaskData.writeOffsetShortBE(position.x * 2 + 1);
-            updateMaskData.writeShortLE(position.y * 2 + 1);
+            updateMaskData.put(position.x * 2 + 1, 'SHORT');
+            updateMaskData.put(position.y * 2 + 1, 'SHORT', 'LITTLE_ENDIAN');
         }
 
         if(updateFlags.animation) {
@@ -142,12 +141,12 @@ export class NpcUpdateTask extends Task<void> {
 
             if(animation === null || animation.id === -1) {
                 // Reset animation
-                updateMaskData.writeOffsetShortBE(-1);
-                updateMaskData.writeByteInverted(0);
+                updateMaskData.put(65535, 'SHORT');
+                updateMaskData.put(0);
             } else {
                 const delay = updateFlags.animation.delay || 0;
-                updateMaskData.writeOffsetShortBE(animation.id);
-                updateMaskData.writeByteInverted(delay);
+                updateMaskData.put(animation.id, 'SHORT');
+                updateMaskData.put(delay);
             }
         }
     }

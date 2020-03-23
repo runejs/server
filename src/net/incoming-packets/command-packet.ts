@@ -1,10 +1,10 @@
 import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../world/actor/player/player';
-import { RsBuffer } from '@server/net/rs-buffer';
 import { inputCommandAction } from '../../world/actor/player/action/input-command-action';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
-export const commandPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
-    const input = packet.readNewString();
+export const commandPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {
+    const input = packet.getString();
 
     if(!input || input.trim().length === 0) {
         return;

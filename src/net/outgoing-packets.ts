@@ -4,11 +4,9 @@ import { Packet, PacketType } from '@server/net/packet';
 import { ItemContainer } from '@server/world/items/item-container';
 import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
-import { LandscapeObject } from '@runejs/cache-parser';
+import { LocationObject } from '@runejs/cache-parser';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { WorldItem } from '@server/world/items/world-item';
-import { rsTime } from '@server/util/time';
-import { addressToInt } from '@server/util/address';
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -29,24 +27,24 @@ export class OutgoingPackets {
 
     public playSong(songId: number): void {
         const packet = new Packet(217);
-        packet.writeShortLE(songId);
+        packet.put(songId, 'SHORT', 'LITTLE_ENDIAN');
 
         this.queue(packet);
     }
 
     public playQuickSong(songId: number, previousSongId: number): void {
-        const packet = new Packet(249);
-        packet.writeShortLE(songId);
-        packet.writeMediumME(previousSongId);
+        const packet = new Packet(40);
+        packet.put(previousSongId, 'INT24');
+        packet.put(songId, 'SHORT');
 
         this.queue(packet);
     }
 
     public playSound(soundId: number, volume: number, delay: number = 0): void {
         const packet = new Packet(131);
-        packet.writeShortBE(soundId);
-        packet.writeByte(volume);
-        packet.writeShortBE(delay);
+        packet.put(soundId, 'SHORT');
+        packet.put(volume);
+        packet.put(delay, 'SHORT');
 
         this.queue(packet);
     }
@@ -54,10 +52,10 @@ export class OutgoingPackets {
     public playSoundAtPosition(soundId: number, soundX: number, soundY: number, volume: number, radius: number = 5, delay: number = 0): void {
         const packet = new Packet(9);
         const offset = 0;
-        packet.writeUnsignedByte(offset);
-        packet.writeUnsignedShortBE(soundId);
-        packet.writeUnsignedByte((volume & 7) + (radius << 4));
-        packet.writeUnsignedByte(delay);
+        packet.put(offset, 'BYTE');
+        packet.put(soundId, 'SHORT');
+        packet.put((volume & 7) + (radius << 4), 'BYTE');
+        packet.put(delay, 'BYTE');
 
         this.queue(packet);
     }
@@ -74,36 +72,36 @@ export class OutgoingPackets {
         offsetX -= (this.player.lastMapRegionUpdatePosition.chunkX * 8);
         offsetY -= (this.player.lastMapRegionUpdatePosition.chunkY * 8);
 
-        return {offsetX, offsetY};
+        return { offsetX, offsetY };
     }
 
     public updateChunk(chunk: Chunk, chunkUpdates: ChunkUpdateItem[]): void {
-        const {offsetX, offsetY} = this.getChunkOffset(chunk);
+        const { offsetX, offsetY } = this.getChunkOffset(chunk);
 
         const packet = new Packet(63, PacketType.DYNAMIC_LARGE);
-        packet.writeByteInverted(offsetX);
-        packet.writeNegativeOffsetByte(offsetY);
+        packet.put(offsetX);
+        packet.put(offsetY);
 
         chunkUpdates.forEach(update => {
-            if (update.type === 'ADD') {
-                if (update.object) {
+            if(update.type === 'ADD') {
+                if(update.object) {
                     const offset = this.getChunkPositionOffset(update.object.x, update.object.y, chunk);
-                    packet.writeUnsignedByte(241);
-                    packet.writeByteInverted((update.object.type << 2) + (update.object.rotation & 3));
-                    packet.writeUnsignedShortBE(update.object.objectId);
-                    packet.writeUnsignedOffsetByte(offset);
-                } else if (update.worldItem) {
+                    packet.put(241, 'BYTE');
+                    packet.put((update.object.type << 2) + (update.object.orientation & 3));
+                    packet.put(update.object.objectId, 'SHORT');
+                    packet.put(offset);
+                } else if(update.worldItem) {
                     const offset = this.getChunkPositionOffset(update.worldItem.position.x, update.worldItem.position.y, chunk);
-                    packet.writeUnsignedByte(175);
-                    packet.writeUnsignedShortLE(update.worldItem.itemId);
-                    packet.writeUnsignedShortBE(update.worldItem.amount);
-                    packet.writeUnsignedByte(offset);
+                    packet.put(175, 'BYTE');
+                    packet.put(update.worldItem.itemId, 'SHORT', 'LITTLE_ENDIAN');
+                    packet.put(update.worldItem.amount, 'SHORT');
+                    packet.put(offset, 'BYTE');
                 }
-            } else if (update.type === 'REMOVE') {
+            } else if(update.type === 'REMOVE') {
                 const offset = this.getChunkPositionOffset(update.object.x, update.object.y, chunk);
-                packet.writeUnsignedByte(143);
-                packet.writeUnsignedOffsetByte(offset);
-                packet.writeByteInverted((update.object.type << 2) + (update.object.rotation & 3));
+                packet.put(143, 'BYTE');
+                packet.put(offset);
+                packet.put((update.object.type << 2) + (update.object.orientation & 3));
             }
         });
 
@@ -111,11 +109,11 @@ export class OutgoingPackets {
     }
 
     public clearChunk(chunk: Chunk): void {
-        const {offsetX, offsetY} = this.getChunkOffset(chunk);
+        const { offsetX, offsetY } = this.getChunkOffset(chunk);
 
         const packet = new Packet(64);
-        packet.writeUnsignedByte(offsetY);
-        packet.writeUnsignedOffsetByte(offsetX);
+        packet.put(offsetY, 'BYTE');
+        packet.put(offsetX);
 
         this.queue(packet);
     }
@@ -124,9 +122,9 @@ export class OutgoingPackets {
         this.updateReferencePosition(position);
 
         const packet = new Packet(175);
-        packet.writeUnsignedShortLE(worldItem.itemId);
-        packet.writeUnsignedShortBE(worldItem.amount);
-        packet.writeUnsignedByte(offset);
+        packet.put(worldItem.itemId, 'SHORT', 'LITTLE_ENDIAN');
+        packet.put(worldItem.amount, 'SHORT');
+        packet.put(offset, 'BYTE');
 
         this.queue(packet);
     }
@@ -135,29 +133,29 @@ export class OutgoingPackets {
         this.updateReferencePosition(position);
 
         const packet = new Packet(74);
-        packet.writeUnsignedByte(offset);
-        packet.writeUnsignedOffsetShortBE(worldItem.itemId);
+        packet.put(offset, 'BYTE');
+        packet.put(worldItem.itemId, 'SHORT');
 
         this.queue(packet);
     }
 
-    public setLandscapeObject(landscapeObject: LandscapeObject, position: Position, offset: number = 0): void {
+    public setLocationObject(locationObject: LocationObject, position: Position, offset: number = 0): void {
         this.updateReferencePosition(position);
 
         const packet = new Packet(241);
-        packet.writeByteInverted((landscapeObject.type << 2) + (landscapeObject.rotation & 3));
-        packet.writeUnsignedShortBE(landscapeObject.objectId);
-        packet.writeUnsignedOffsetByte(offset);
+        packet.put((locationObject.type << 2) + (locationObject.orientation & 3));
+        packet.put(locationObject.objectId, 'SHORT');
+        packet.put(offset);
 
         this.queue(packet);
     }
 
-    public removeLandscapeObject(landscapeObject: LandscapeObject, position: Position, offset: number = 0): void {
+    public removeLocationObject(locationObject: LocationObject, position: Position, offset: number = 0): void {
         this.updateReferencePosition(position);
 
         const packet = new Packet(143);
-        packet.writeUnsignedOffsetByte(offset);
-        packet.writeByteInverted((landscapeObject.type << 2) + (landscapeObject.rotation & 3));
+        packet.put(offset);
+        packet.put((locationObject.type << 2) + (locationObject.orientation & 3));
 
         this.queue(packet);
     }
@@ -167,8 +165,8 @@ export class OutgoingPackets {
         const offsetY = position.y - (this.player.lastMapRegionUpdatePosition.chunkY * 8);
 
         const packet = new Packet(254);
-        packet.writeNegativeOffsetByte(offsetY);
-        packet.writeByteInverted(offsetX);
+        packet.put(offsetY);
+        packet.put(offsetX);
 
         this.queue(packet);
     }
@@ -178,70 +176,96 @@ export class OutgoingPackets {
     // Statements (no click to continue) = 210, 211, 212, 213, 214
     public showChatboxWidget(widgetId: number): void {
         const packet = new Packet(208);
-        packet.writeUnsignedOffsetShortBE(widgetId);
+        packet.put(widgetId, 'SHORT');
 
         this.queue(packet);
     }
 
     public setWidgetNpcHead(widgetId: number, childId: number, modelId: number): void {
         const packet = new Packet(160);
-        packet.writeUnsignedShortLE(modelId);
-        packet.writeIntLE(widgetId << 16 | childId);
+        packet.put(modelId, 'SHORT', 'LITTLE_ENDIAN');
+        packet.put(widgetId << 16 | childId, 'INT', 'LITTLE_ENDIAN');
 
         this.queue(packet);
     }
 
     public setWidgetPlayerHead(widgetId: number, childId: number): void {
         const packet = new Packet(210);
-        packet.writeIntLE(widgetId << 16 | childId);
+        packet.put(widgetId << 16 | childId, 'INT', 'LITTLE_ENDIAN');
 
         this.queue(packet);
     }
 
     public playWidgetAnimation(widgetId: number, childId: number, animationId: number): void {
         const packet = new Packet(24);
-        packet.writeShortBE(animationId);
-        packet.writeIntBE(widgetId << 16 | childId);
+        packet.put(animationId, 'SHORT');
+        packet.put(widgetId << 16 | childId, 'INT');
 
         this.queue(packet);
     }
 
     public showScreenAndTabWidgets(widgetId: number, tabWidgetId: number): void {
         const packet = new Packet(84);
-        packet.writeUnsignedShortBE(tabWidgetId);
-        packet.writeUnsignedOffsetShortLE(widgetId);
+        packet.put(tabWidgetId, 'SHORT');
+        packet.put(widgetId, 'SHORT', 'LITTLE_ENDIAN');
         this.queue(packet);
     }
 
     public updateClientConfig(configId: number, value: number): void {
         let packet: Packet;
 
-        if (value > 128) {
+        if(value > 128) {
             packet = new Packet(2);
-            packet.writeIntME2(value);
-            packet.writeUnsignedShortBE(configId);
+            packet.put(value, 'INT');
+            packet.put(configId, 'SHORT');
         } else {
             packet = new Packet(222);
-            packet.writeNegativeOffsetByte(value);
-            packet.writeUnsignedOffsetShortBE(configId);
+            packet.put(value);
+            packet.put(configId, 'SHORT');
         }
+
+        this.queue(packet);
+    }
+
+    public setWidgetModelRotationAndZoom(widgetId: number, childId: number, rotationX: number, rotationY: number, zoom: number): void {
+        const packet = new Packet(142);
+        packet.put(rotationX, 'SHORT');
+        packet.put(zoom, 'SHORT', 'LITTLE_ENDIAN');
+        packet.put(rotationY, 'SHORT');
+        packet.put(widgetId << 16 | childId, 'INT', 'LITTLE_ENDIAN');
+
+        this.queue(packet);
+    }
+
+    public updateWidgetModel1(widgetId: number, childId: number, modelId: number): void {
+        const packet = new Packet(250);
+        packet.put(modelId, 'SHORT', 'LITTLE_ENDIAN');
+        packet.put(widgetId << 16 | childId, 'INT', 'LITTLE_ENDIAN');
 
         this.queue(packet);
     }
 
     public updateWidgetItemModel(widgetId: number, itemId: number, scale?: number): void {
         const packet = new Packet(21);
-        packet.writeShortBE(scale);
-        packet.writeShortLE(itemId);
-        packet.writeOffsetShortLE(widgetId);
+        packet.put(scale, 'SHORT');
+        packet.put(itemId, 'SHORT', 'LITTLE_ENDIAN');
+        packet.put(widgetId, 'SHORT', 'LITTLE_ENDIAN');
 
         this.queue(packet);
     }
 
     public updateWidgetString(widgetId: number, childId: number, value: string): void {
         const packet = new Packet(110, PacketType.DYNAMIC_LARGE);
-        packet.writeIntLE(widgetId << 16 | childId);
-        packet.writeNewString(value);
+        packet.put(widgetId << 16 | childId, 'INT', 'LITTLE_ENDIAN');
+        packet.putString(value);
+
+        this.queue(packet);
+    }
+
+    public updateWidgetColor(widgetId: number, childId: number, color: number): void {
+        const packet = new Packet(231);
+        packet.put(color, 'SHORT');
+        packet.put(widgetId << 16 | childId, 'INT', 'LITTLE_ENDIAN');
 
         this.queue(packet);
     }
@@ -252,7 +276,7 @@ export class OutgoingPackets {
 
     public showScreenWidget(widgetId: number): void {
         const packet = new Packet(118);
-        packet.writeUnsignedShortBE(widgetId);
+        packet.put(widgetId, 'SHORT');
 
         this.queue(packet);
     }
@@ -260,19 +284,19 @@ export class OutgoingPackets {
     // @TODO this can support multiple items/slots !!!
     public sendUpdateSingleWidgetItem(widget: { widgetId: number, containerId: number }, slot: number, item: Item): void {
         const packet = new Packet(214, PacketType.DYNAMIC_LARGE);
-        packet.writeIntBE(widget.widgetId << 16 | widget.containerId);
-        packet.writeSmart(slot);
+        packet.put(widget.widgetId << 16 | widget.containerId, 'INT');
+        packet.put(slot, 'SMART');
 
-        if (!item) {
-            packet.writeUnsignedShortBE(0);
+        if(!item) {
+            packet.put(0, 'SHORT');
         } else {
-            packet.writeUnsignedShortBE(item.itemId + 1); // +1 because 0 means an empty slot
+            packet.put(item.itemId + 1, 'SHORT'); // +1 because 0 means an empty slot
 
-            if (item.amount >= 255) {
-                packet.writeUnsignedByte(255);
-                packet.writeIntBE(item.amount);
+            if(item.amount >= 255) {
+                packet.put(255, 'BYTE');
+                packet.put(item.amount, 'INT');
             } else {
-                packet.writeUnsignedByte(item.amount);
+                packet.put(item.amount, 'BYTE');
             }
         }
 
@@ -281,24 +305,24 @@ export class OutgoingPackets {
 
     public sendUpdateAllWidgetItems(widget: { widgetId: number, containerId: number }, container: ItemContainer): void {
         const packet = new Packet(12, PacketType.DYNAMIC_LARGE);
-        packet.writeIntBE(widget.widgetId << 16 | widget.containerId);
-        packet.writeShortBE(container.size);
+        packet.put(widget.widgetId << 16 | widget.containerId, 'INT');
+        packet.put(container.size, 'SHORT');
 
         const items = container.items;
         items.forEach(item => {
-            if (!item) {
+            if(!item) {
                 // Empty slot
-                packet.writeUnsignedOffsetByte(0);
-                packet.writeOffsetShortBE(0);
+                packet.put(0);
+                packet.put(0, 'SHORT');
             } else {
-                if (item.amount >= 255) {
-                    packet.writeUnsignedByteOffset(255);
-                    packet.writeIntBE(item.amount);
+                if(item.amount >= 255) {
+                    packet.put(255);
+                    packet.put(item.amount, 'INT');
                 } else {
-                    packet.writeUnsignedOffsetByte(item.amount);
+                    packet.put(item.amount);
                 }
 
-                packet.writeOffsetShortBE(item.itemId + 1); // +1 because 0 means an empty slot
+                packet.put(item.itemId + 1, 'SHORT'); // +1 because 0 means an empty slot
             }
         });
 
@@ -307,17 +331,17 @@ export class OutgoingPackets {
 
     public sendUpdateAllWidgetItemsById(widget: { widgetId: number, containerId: number }, itemIds: number[]): void {
         const packet = new Packet(12, PacketType.DYNAMIC_LARGE);
-        packet.writeIntBE(widget.widgetId << 16 | widget.containerId);
-        packet.writeShortBE(itemIds.length);
+        packet.put(widget.widgetId << 16 | widget.containerId, 'INT');
+        packet.put(itemIds.length, 'SHORT');
 
         itemIds.forEach(itemId => {
-            if (!itemId) {
+            if(!itemId) {
                 // Empty slot
-                packet.writeUnsignedOffsetByte(0);
-                packet.writeOffsetShortBE(0);
+                packet.put(0);
+                packet.put(0, 'SHORT');
             } else {
-                packet.writeUnsignedOffsetByte(1);
-                packet.writeOffsetShortBE(itemId + 1); // +1 because 0 means an empty slot
+                packet.put(1);
+                packet.put(itemId + 1, 'SHORT'); // +1 because 0 means an empty slot
             }
         });
 
@@ -326,42 +350,42 @@ export class OutgoingPackets {
 
     public setItemOnWidget(widgetId: number, childId: number, itemId: number, zoom: number): void {
         const packet = new Packet(120);
-        packet.writeUnsignedShortBE(zoom);
-        packet.writeUnsignedShortLE(itemId);
-        packet.writeIntLE(widgetId << 16 | childId);
+        packet.put(zoom, 'SHORT');
+        packet.put(itemId, 'SHORT', 'LITTLE_ENDIAN');
+        packet.put(widgetId << 16 | childId, 'INT', 'LITTLE_ENDIAN');
 
         this.queue(packet);
     }
 
     public toggleWidgetVisibility(widgetId: number, childId: number, hidden: boolean): void {
         const packet = new Packet(115);
-        packet.writeUnsignedByte(hidden ? 1 : 0);
-        packet.writeIntME2(widgetId << 16 | childId);
+        packet.put(hidden ? 1 : 0, 'BYTE');
+        packet.put(widgetId << 16 | childId, 'INT', 'LITTLE_ENDIAN');
 
         this.queue(packet);
     }
 
     public moveWidgetChild(widgetId: number, childId: number, offsetX: number, offsetY: number): void {
         const packet = new Packet(3);
-        packet.writeIntBE(widgetId << 16 | childId);
-        packet.writeUnsignedOffsetShortLE(offsetY);
-        packet.writeUnsignedOffsetShortLE(offsetX);
+        packet.put(widgetId << 16 | childId, 'INT');
+        packet.put(offsetY, 'SHORT', 'LITTLE_ENDIAN');
+        packet.put(offsetX, 'SHORT', 'LITTLE_ENDIAN');
 
         this.queue(packet);
     }
 
     public sendTabWidget(tabIndex: number, widgetId: number): void {
         const packet = new Packet(140);
-        packet.writeShortBE(widgetId);
-        packet.writeByte(tabIndex);
+        packet.put(widgetId, 'SHORT');
+        packet.put(tabIndex);
 
         this.queue(packet);
     }
 
     public showFullscreenWidget(widgetId: number, secondaryWidgetId: number): void {
         const packet = new Packet(195);
-        packet.writeUnsignedOffsetShortBE(secondaryWidgetId);
-        packet.writeUnsignedShortBE(widgetId);
+        packet.put(secondaryWidgetId, 'SHORT');
+        packet.put(widgetId, 'SHORT');
 
         this.queue(packet);
     }
@@ -378,30 +402,30 @@ export class OutgoingPackets {
 
     public updateCarryWeight(weight: number): void {
         const packet = new Packet(171);
-        packet.writeShortBE(weight);
+        packet.put(weight, 'SHORT');
 
         this.queue(packet);
     }
 
     public showHintIcon(iconType: 2 | 3 | 4 | 5 | 6, position: Position, offset: number = 0): void {
         const packet = new Packet(199);
-        packet.writeUnsignedByte(iconType);
-        packet.writeUnsignedShortBE(position.x);
-        packet.writeUnsignedShortBE(position.y);
-        packet.writeUnsignedByte(offset);
+        packet.put(iconType, 'BYTE');
+        packet.put(position.x, 'SHORT');
+        packet.put(position.y, 'SHORT');
+        packet.put(offset, 'BYTE');
 
         this.queue(packet);
     }
 
     public showPlayerHintIcon(player: Player): void {
         const packet = new Packet(199);
-        packet.writeUnsignedByte(10);
-        packet.writeUnsignedShortBE(player.worldIndex);
+        packet.put(10, 'BYTE');
+        packet.put(player.worldIndex, 'SHORT');
 
         // Packet requires a length of 6, so send some extra junk
-        packet.writeByte(0);
-        packet.writeByte(0);
-        packet.writeByte(0);
+        packet.put(0);
+        packet.put(0);
+        packet.put(0);
 
         this.queue(packet);
     }
@@ -415,32 +439,32 @@ export class OutgoingPackets {
 
     public chatboxMessage(message: string): void {
         const packet = new Packet(82, PacketType.DYNAMIC_SMALL);
-        packet.writeNewString(message);
+        packet.putString(message);
 
         this.queue(packet);
     }
 
     public updateSkill(skillId: number, level: number, exp: number): void {
         const packet = new Packet(34);
-        packet.writeUnsignedOffsetByte(level);
-        packet.writeByte(skillId);
-        packet.writeIntME2(exp);
+        packet.put(level);
+        packet.put(skillId);
+        packet.put(exp, 'INT', 'LITTLE_ENDIAN');
 
         this.queue(packet);
     }
 
     public updateCurrentMapChunk(): void {
         const packet = new Packet(166, PacketType.DYNAMIC_LARGE);
-        packet.writeShortBE(this.player.position.chunkLocalY);
-        packet.writeShortLE(this.player.position.chunkX + 6);
-        packet.writeOffsetShortBE(this.player.position.chunkLocalX);
-        packet.writeOffsetShortLE(this.player.position.chunkY + 6);
-        packet.writeByteInverted(this.player.position.level);
+        packet.put(this.player.position.chunkLocalY, 'SHORT');
+        packet.put(this.player.position.chunkX + 6, 'SHORT', 'LITTLE_ENDIAN');
+        packet.put(this.player.position.chunkLocalX, 'SHORT');
+        packet.put(this.player.position.chunkY + 6, 'SHORT', 'LITTLE_ENDIAN');
+        packet.put(this.player.position.level);
 
-        for (let xCalc = Math.floor(this.player.position.chunkX / 8); xCalc <= Math.floor((this.player.position.chunkX + 12) / 8); xCalc++) {
-            for (let yCalc = Math.floor(this.player.position.chunkY / 8); yCalc <= Math.floor((this.player.position.chunkY + 12) / 8); yCalc++) {
-                for (let seeds = 0; seeds < 4; seeds++) {
-                    packet.writeIntME1(0);
+        for(let xCalc = Math.floor(this.player.position.chunkX / 8); xCalc <= Math.floor((this.player.position.chunkX + 12) / 8); xCalc++) {
+            for(let yCalc = Math.floor(this.player.position.chunkY / 8); yCalc <= Math.floor((this.player.position.chunkY + 12) / 8); yCalc++) {
+                for(let seeds = 0; seeds < 4; seeds++) {
+                    packet.put(0, 'INT');
                 }
             }
         }
@@ -449,12 +473,12 @@ export class OutgoingPackets {
     }
 
     public flushQueue(): void {
-        if (!this.socket || this.socket.destroyed) {
+        if(!this.socket || this.socket.destroyed) {
             return;
         }
 
         const buffer = Buffer.concat([...this.packetQueue, ...this.updatingQueue]);
-        if (buffer.length !== 0) {
+        if(buffer.length !== 0) {
             this.socket.write(buffer);
         }
 
@@ -463,7 +487,7 @@ export class OutgoingPackets {
     }
 
     public queue(packet: Packet, updateTask: boolean = false): void {
-        if (!this.socket || this.socket.destroyed) {
+        if(!this.socket || this.socket.destroyed) {
             return;
         }
 

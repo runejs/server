@@ -29,7 +29,7 @@ export const action: objectAction = (details) => {
                         action({...details, option: `climb-${direction}`});
                         return;
                 }
-            }).catch(error => console.error(error));
+            });
         return;
     }
 

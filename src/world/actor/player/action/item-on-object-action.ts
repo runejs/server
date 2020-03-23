@@ -1,12 +1,11 @@
 import { Player } from '@server/world/actor/player/player';
-import { LandscapeObject, LandscapeObjectDefinition } from '@runejs/cache-parser';
+import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/logger/dist/logger';
-import { ActionPlugin } from '@server/plugins/plugin';
+import { ActionPlugin, questFilter } from '@server/plugins/plugin';
 import { Item } from '@server/world/items/item';
-import { soundIds } from '@server/world/config/sound-ids';
 
 /**
  * The definition for an item on object action function.
@@ -17,13 +16,21 @@ export type itemOnObjectAction = (details: ItemOnObjectActionDetails) => void;
  * Details about an object being interacted with. and the item being used.
  */
 export interface ItemOnObjectActionDetails {
+    // The player performing the action.
     player: Player;
-    object: LandscapeObject;
-    objectDefinition: LandscapeObjectDefinition;
+    // The object the action is being performed on.
+    object: LocationObject;
+    // Additional details about the object that the action is being performed on.
+    objectDefinition: LocationObjectDefinition;
+    // The position that the game object was at when the action was initiated.
     position: Position;
+    // The item being used.
     item: Item;
+    // The ID of the UI widget that the item being used is in.
     itemWidgetId: number;
+    // The ID of the UI container that the item being used is in.
     itemContainerId: number;
+    // Whether or not this game object is an original map object or if it has been added/replaced.
     cacheOriginal: boolean;
 }
 
@@ -33,9 +40,13 @@ export interface ItemOnObjectActionDetails {
  * and whether or not the player must first walk to the object.
  */
 export interface ItemOnObjectActionPlugin extends ActionPlugin {
+    // A single game object ID or a list of object IDs that this action applies to.
     objectIds: number | number[];
+    // A single game item ID or a list of item IDs that this action applies to.
     itemIds: number | number[];
+    // Whether or not the player needs to walk to this object before performing the action.
     walkTo: boolean;
+    // The action function to be performed.
     action: itemOnObjectAction;
 }
 
@@ -53,43 +64,48 @@ export const setItemOnObjectPlugins = (plugins: ActionPlugin[]): void => {
 };
 
 // @TODO priority and cancelling other (lower priority) actions
-export const itemOnObjectAction = (player: Player, landscapeObject: LandscapeObject, landscapeObjectDefinition: LandscapeObjectDefinition,
+export const itemOnObjectAction = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
                                    position: Position, item: Item, itemWidgetId: number, itemContainerId: number, cacheOriginal: boolean): void => {
     if(player.busy) {
         return;
     }
 
-    // Find all item on object action plugins that reference this landscape object
-    let interactionPlugins = itemOnObjectInteractions.filter(plugin => pluginFilter(plugin.objectIds, landscapeObject.objectId));
+    // Find all item on object action plugins that reference this location object
+    let interactionActions = itemOnObjectInteractions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, locationObject.objectId));
+    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
 
-    // Find all item on object action plugins that reference this item
-    if (interactionPlugins.length !== 0) {
-        interactionPlugins = interactionPlugins.filter(plugin => pluginFilter(plugin.itemIds, item.itemId));
+    if(questActions.length !== 0) {
+        interactionActions = questActions;
     }
 
-    if (interactionPlugins.length === 0) {
-        player.outgoingPackets.chatboxMessage(`Unhandled item on object interaction: ${item.itemId} on ${landscapeObjectDefinition.name} ` +
-            `(id-${landscapeObject.objectId}) @ ${position.x},${position.y},${position.level}`);
+    // Find all item on object action plugins that reference this item
+    if(interactionActions.length !== 0) {
+        interactionActions = interactionActions.filter(plugin => pluginFilter(plugin.itemIds, item.itemId));
+    }
+
+    if(interactionActions.length === 0) {
+        player.outgoingPackets.chatboxMessage(`Unhandled item on object interaction: ${ item.itemId } on ${ locationObjectDefinition.name } ` +
+            `(id-${ locationObject.objectId }) @ ${ position.x },${ position.y },${ position.level }`);
         return;
     }
 
     player.actionsCancelled.next();
 
     // Separate out walk-to actions from immediate actions
-    const walkToPlugins = interactionPlugins.filter(plugin => plugin.walkTo);
-    const immediatePlugins = interactionPlugins.filter(plugin => !plugin.walkTo);
+    const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);
+    const immediatePlugins = interactionActions.filter(plugin => !plugin.walkTo);
 
     // Make sure we walk to the object before running any of the walk-to plugins
-    if (walkToPlugins.length !== 0) {
-        walkToAction(player, position, {interactingObject: landscapeObject})
+    if(walkToPlugins.length !== 0) {
+        walkToAction(player, position, { interactingObject: locationObject })
             .then(() => {
                 player.face(position);
 
                 walkToPlugins.forEach(plugin =>
                     plugin.action({
                         player,
-                        object: landscapeObject,
-                        objectDefinition: landscapeObjectDefinition,
+                        object: locationObject,
+                        objectDefinition: locationObjectDefinition,
                         position,
                         item,
                         itemWidgetId,
@@ -101,12 +117,12 @@ export const itemOnObjectAction = (player: Player, landscapeObject: LandscapeObj
     }
 
     // Immediately run any non-walk-to plugins
-    if (immediatePlugins.length !== 0) {
+    if(immediatePlugins.length !== 0) {
         immediatePlugins.forEach(plugin =>
             plugin.action({
                 player,
-                object: landscapeObject,
-                objectDefinition: landscapeObjectDefinition,
+                object: locationObject,
+                objectDefinition: locationObjectDefinition,
                 position,
                 item,
                 itemWidgetId,

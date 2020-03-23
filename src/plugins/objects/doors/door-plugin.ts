@@ -4,6 +4,7 @@ import { Chunk } from '@server/world/map/chunk';
 import { objectAction } from '@server/world/actor/player/action/object-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { soundIds } from '@server/world/config/sound-ids';
+import { LocationObject } from '@runejs/cache-parser';
 
 // @TODO move to yaml config
 const doors = [
@@ -53,7 +54,7 @@ const rightHingeDir: { [key: string]: string } = {
 };
 
 export const action: objectAction = (details): void => {
-    let { player, object: door, position, cacheOriginal } = details;
+    const { player, object: door, position, cacheOriginal } = details;
     let opening = true;
     let doorConfig = doors.find(d => d.closed === door.objectId);
     let hingeConfig;
@@ -73,22 +74,22 @@ export const action: objectAction = (details): void => {
     }
 
     const startDoorChunk: Chunk = world.chunkManager.getChunkForWorldPosition(position);
-    const startDir = WNES[door.rotation];
+    const startDir = WNES[door.orientation];
     const endDir = hingeConfig[startDir];
-    const endPosition = position.step(opening ? 1 : -1, opening? startDir : endDir);
+    const endPosition = position.step(opening ? 1 : -1, opening ? startDir : endDir);
 
-    const replacementDoor = {
+    const replacementDoor: LocationObject = {
         objectId: replacementDoorId,
         x: endPosition.x,
         y: endPosition.y,
         level: position.level,
         type: door.type,
-        rotation: directionData[endDir].rotation
+        orientation: directionData[endDir].rotation
     };
 
     const replacementDoorChunk = world.chunkManager.getChunkForWorldPosition(endPosition);
 
-    world.toggleObjects(replacementDoor, door, endPosition, position, replacementDoorChunk, startDoorChunk, !cacheOriginal);
+    world.toggleLocationObjects(replacementDoor, door, endPosition, position, replacementDoorChunk, startDoorChunk, !cacheOriginal);
     // 70 = close gate, 71 = open gate, 62 = open door, 60 = close door
     player.playSound(opening ? soundIds.openDoor : soundIds.closeDoor, 7);
 };

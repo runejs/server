@@ -2,15 +2,14 @@ import { Player } from '@server/world/actor/player/player';
 import { Position } from '@server/world/position';
 import { Subject, timer } from 'rxjs';
 import { World } from '@server/world/world';
-import { LandscapeObject } from '@runejs/cache-parser';
-import { Actor } from '@server/world/actor/actor';
+import { LocationObject } from '@runejs/cache-parser';
 import { Npc } from '@server/world/actor/npc/npc';
 
 /**
  * A type of action where something is being interacted with.
  */
 export interface InteractingAction {
-    interactingObject?: LandscapeObject;
+    interactingObject?: LocationObject;
 }
 
 /**
@@ -70,7 +69,7 @@ export const loopingAction = (options: { ticks?: number, delayTicks?: number, np
  * @param interactingAction [optional] The information about the interaction that the player is making. Not required.
  * @TODO change to 600ms / 1 check per game cycle?
  */
-export const walkToAction = (player: Player, position: Position, interactingAction?: InteractingAction): Promise<void> => {
+export const walkToAction = async (player: Player, position: Position, interactingAction?: InteractingAction): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
         player.walkingTo = position;
 
@@ -90,8 +89,8 @@ export const walkToAction = (player: Player, position: Position, interactingActi
                     }
                 } else {
                     if(interactingAction.interactingObject) {
-                        const landscapeObject = interactingAction.interactingObject;
-                        if(player.position.withinInteractionDistance(landscapeObject)) {
+                        const locationObject = interactingAction.interactingObject;
+                        if(player.position.withinInteractionDistance(locationObject)) {
                             resolve();
                         } else {
                             reject();

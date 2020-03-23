@@ -25,7 +25,9 @@ Currently the server is set up for the 435 revision of the game, which was a gam
   - NPC spawn loading via YAML configuration.
 - Player & NPC pathing validation via collision and tile maps generated from the 377 game cache.
 - A basic REST service for polling logged in users.
+- Full functional update server.
 - A diverse TypeScript plugin system for easily writing new content based off of in-game actions.
+- Flexible quest and dialogue systems for easy content development.
 
 ## Usage
 
@@ -41,7 +43,7 @@ The game server will spin up and be accessible via port 43594. The REST service 
 
 ## Cache Parsing
 
-A separate package was created that RuneJS uses to parse the 377 and 435 game caches. This package parses item definitions, npc definitions, and landscape object definitions for both 377 and 435 caches. It also parses map region tiles and map region landscape objects for revision 377. 
+A separate package was created that RuneJS uses to parse the 435 game cache. This package decodes item definitions, npc definitions, location object definitions, widgets, sprites, and map data (tiles and location objects) for any implementing app to make use of.
 
 The RuneJS `cache-parser` package can be found here:
 
@@ -69,4 +71,4 @@ RuneJS supports the 435 RuneScape game client being renamed by [Promises](https:
 
 #### Update Server
 
-RuneJS does not provide a fully working update server for revision 435. While this is planned for a future release, the [refactored-client-435](https://github.com/Promises/refactored-client-435) currently has the update server disabled. Due to this, we can only recommend this client at this time.
+RuneJS provides a fully working update server for the 435 client to use. The update server runs alongside the regular game server using the same port, so no additional configuration is required. Simply start the server and then your game client.

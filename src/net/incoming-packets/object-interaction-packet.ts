@@ -1,10 +1,10 @@
 import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../world/actor/player/player';
-import { RsBuffer } from '@server/net/rs-buffer';
 import { Position } from '@server/world/position';
-import { gameCache, world } from '@server/game-server';
+import { cache, world } from '@server/game-server';
 import { objectAction } from '@server/world/actor/player/action/object-action';
 import { logger } from '@runejs/logger/dist/logger';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
 interface ObjectInteraction {
     objectId: number;
@@ -12,42 +12,44 @@ interface ObjectInteraction {
     y: number;
 }
 
-const option1 = (packet: RsBuffer): ObjectInteraction => {
-    const objectId = packet.readNegativeOffsetShortBE();
-    const y = packet.readNegativeOffsetShortBE();
-    const x = packet.readNegativeOffsetShortLE();
+const option1 = (packet: ByteBuffer): ObjectInteraction => {
+    const objectId = packet.get('SHORT', 'UNSIGNED');
+    const y = packet.get('SHORT', 'UNSIGNED');
+    const x = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
     return { objectId, x, y };
 };
 
-const option2 = (packet: RsBuffer): ObjectInteraction => {
-    const x = packet.readNegativeOffsetShortLE();
-    const y = packet.readNegativeOffsetShortLE();
-    const objectId = packet.readNegativeOffsetShortLE();
+const option2 = (packet: ByteBuffer): ObjectInteraction => {
+    const x = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const y = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const objectId = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
     return { objectId, x, y };
 };
 
-const option3 = (packet: RsBuffer): ObjectInteraction => {
-    const y = packet.readNegativeOffsetShortBE();
-    const objectId = packet.readUnsignedShortBE();
-    const x = packet.readNegativeOffsetShortBE();
+const option3 = (packet: ByteBuffer): ObjectInteraction => {
+    const y = packet.get('SHORT', 'UNSIGNED');
+    const objectId = packet.get('SHORT', 'UNSIGNED');
+    const x = packet.get('SHORT', 'UNSIGNED');
     return { objectId, x, y };
 };
 
-const option4 = (packet: RsBuffer): ObjectInteraction => {
-    const x = packet.readUnsignedShortBE();
-    const y = packet.readUnsignedShortLE();
-    const objectId = packet.readUnsignedShortBE();
+// @TODO
+const option4 = (packet: ByteBuffer): ObjectInteraction => {
+    const x = null;
+    const y = null;
+    const objectId = null;
     return { objectId, x, y };
 };
 
-const option5 = (packet: RsBuffer): ObjectInteraction => {
-    const objectId = packet.readUnsignedShortLE();
-    const y = packet.readUnsignedShortLE();
-    const x = packet.readUnsignedShortBE();
+// @TODO
+const option5 = (packet: ByteBuffer): ObjectInteraction => {
+    const objectId = null;
+    const y = null;
+    const x = null;
     return { objectId, x, y };
 };
 
-export const objectInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
+export const objectInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {
     const options = {
         30: { packetDef: option1, index: 0 },
         164: { packetDef: option2, index: 1 },
@@ -63,12 +65,12 @@ export const objectInteractionPacket: incomingPacket = (player: Player, packetId
     const objectChunk = world.chunkManager.getChunkForWorldPosition(objectPosition);
     let cacheOriginal: boolean = true;
 
-    let landscapeObject = objectChunk.getCacheObject(objectId, objectPosition);
-    if(!landscapeObject) {
-        landscapeObject = objectChunk.getAddedObject(objectId, objectPosition);
+    let locationObject = objectChunk.getCacheObject(objectId, objectPosition);
+    if(!locationObject) {
+        locationObject = objectChunk.getAddedObject(objectId, objectPosition);
         cacheOriginal = false;
 
-        if(!landscapeObject) {
+        if(!locationObject) {
             return;
         }
     }
@@ -77,23 +79,23 @@ export const objectInteractionPacket: incomingPacket = (player: Player, packetId
         return;
     }
 
-    const landscapeObjectDefinition = gameCache.landscapeObjectDefinitions.get(objectId);
+    const locationObjectDefinition = cache.locationObjectDefinitions.get(objectId);
 
     const actionIdx = options[packetId].index;
     let optionName = `action-${actionIdx + 1}`;
-    if(landscapeObjectDefinition.options && landscapeObjectDefinition.options.length >= actionIdx) {
-        if(!landscapeObjectDefinition.options[actionIdx] || landscapeObjectDefinition.options[actionIdx].toLowerCase() === 'hidden') {
+    if(locationObjectDefinition.options && locationObjectDefinition.options.length >= actionIdx) {
+        if(!locationObjectDefinition.options[actionIdx] || locationObjectDefinition.options[actionIdx].toLowerCase() === 'hidden') {
             // Invalid action
-            logger.error(`1: Invalid object ${objectId} option ${actionIdx + 1}, options: ${JSON.stringify(landscapeObjectDefinition.options)}`);
+            logger.error(`1: Invalid object ${objectId} option ${actionIdx + 1}, options: ${JSON.stringify(locationObjectDefinition.options)}`);
             return;
         }
 
-        optionName = landscapeObjectDefinition.options[actionIdx];
+        optionName = locationObjectDefinition.options[actionIdx];
     } else {
         // Invalid action
-        logger.error(`2: Invalid object ${objectId} option ${actionIdx + 1}, options: ${JSON.stringify(landscapeObjectDefinition.options)}`);
+        logger.error(`2: Invalid object ${objectId} option ${actionIdx + 1}, options: ${JSON.stringify(locationObjectDefinition.options)}`);
         return;
     }
 
-    objectAction(player, landscapeObject, landscapeObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
+    objectAction(player, locationObject, locationObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
 };

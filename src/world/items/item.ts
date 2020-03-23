@@ -1,4 +1,4 @@
-import { gameCache } from '@server/game-server';
+import { cache } from '@server/game-server';
 
 export interface Item {
     itemId: number;
@@ -6,7 +6,7 @@ export interface Item {
 }
 
 function itemInventoryOptions(itemId: number): string[] {
-    const itemDefinition = gameCache.itemDefinitions.get(itemId);
+    const itemDefinition = cache.itemDefinitions.get(itemId);
     if(!itemDefinition) {
         return [];
     }
@@ -15,7 +15,7 @@ function itemInventoryOptions(itemId: number): string[] {
 }
 
 export const getItemOptions = (itemId: number, widget: { widgetId: number, containerId: number }): string[] => {
-    const widgetDefinition = gameCache.widgetDefinitions.get(widget.widgetId);
+    const widgetDefinition = cache.widgets.get(widget.widgetId);
     if(!widgetDefinition || !widgetDefinition.children || widgetDefinition.children.length <= widget.containerId) {
         return itemInventoryOptions(itemId);
     }

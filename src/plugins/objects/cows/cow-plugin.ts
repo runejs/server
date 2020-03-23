@@ -1,5 +1,5 @@
 import { objectAction } from '@server/world/actor/player/action/object-action';
-import { gameCache } from '@server/game-server';
+import { cache } from '@server/game-server';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { dialogueAction, DialogueEmote } from '@server/world/actor/player/action/dialogue-action';
 import { npcIds } from '@server/world/config/npc-ids';
@@ -8,12 +8,12 @@ import { soundIds } from '@server/world/config/sound-ids';
 import { itemIds } from '@server/world/config/item-ids';
 import { objectIds } from '@server/world/config/object-ids';
 import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
-import { LandscapeObjectDefinition } from '@runejs/cache-parser';
+import { LocationObjectDefinition } from '@runejs/cache-parser';
 import { Player } from '@server/world/actor/player/player';
 
-function milkCow(details: {objectDefinition: LandscapeObjectDefinition, player: Player}): void {
+function milkCow(details: { objectDefinition: LocationObjectDefinition, player: Player }): void {
     const { player, objectDefinition } = details;
-    const emptyBucketItem = gameCache.itemDefinitions.get(itemIds.bucket);
+    const emptyBucketItem = cache.itemDefinitions.get(itemIds.bucket);
 
     if (player.hasItemInInventory(itemIds.bucket)) {
         player.playAnimation(animationIds.milkCow);
