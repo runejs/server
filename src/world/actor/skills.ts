@@ -2,6 +2,7 @@ import { Actor } from '@server/world/actor/actor';
 import { Player } from '@server/world/actor/player/player';
 import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
 import { startsWithVowel } from '@server/util/strings';
+import { serverConfig } from '@server/game-server';
 
 export enum Skill {
     ATTACK,
@@ -105,7 +106,7 @@ export class Skills {
     public addExp(skillId: number, exp: number): void {
         const currentExp = this._values[skillId].exp;
         const currentLevel = this.getLevelForExp(currentExp);
-        let finalExp = currentExp + exp;
+        let finalExp = currentExp + (exp * serverConfig.expRate);
         if(finalExp > 200000000) {
             finalExp = 200000000;
         }
@@ -120,7 +121,6 @@ export class Skills {
 
         if(currentLevel !== finalLevel) {
             this.setLevel(skillId, finalLevel);
-            // this.actor.playGraphics({ id: 199, delay: 0, height: 125 });
 
             if(this.actor instanceof Player) {
                 const achievementDetails = skillDetails[skillId];

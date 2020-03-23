@@ -8,6 +8,7 @@ export interface ServerConfig {
     host: string;
     port: number;
     showWelcome: boolean;
+    expRate: number;
 }
 
 export function parseServerConfig(useDefault?: boolean): ServerConfig {
