@@ -24,7 +24,7 @@ export class PlayerUpdateTask extends Task<void> {
     public async execute(): Promise<void> {
         return new Promise<void>(resolve => {
             const updateFlags: UpdateFlags = this.player.updateFlags;
-            let playerUpdatePacket: Packet = new Packet(92, PacketType.DYNAMIC_LARGE);
+            const playerUpdatePacket: Packet = new Packet(92, PacketType.DYNAMIC_LARGE);
             playerUpdatePacket.openBitBuffer();
 
             const updateMaskData = new ByteBuffer(5000);
