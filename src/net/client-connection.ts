@@ -1,13 +1,13 @@
 import { Socket } from 'net';
 import { Player } from '@server/world/actor/player/player';
 import { world } from '@server/game-server';
-import { RsBuffer } from './rs-buffer';
 import { LoginHandshakeParser } from './data-parser/login-handshake-parser';
 import { ClientLoginParser } from './data-parser/client-login-parser';
 import { ClientPacketDataParser } from './data-parser/client-packet-data-parser';
 import { DataParser } from './data-parser/data-parser';
 import { VersionHandshakeParser } from '@server/net/data-parser/version-handshake-parser';
 import { UpdateServerParser } from '@server/net/data-parser/update-server-parser';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
 enum ConnectionStage {
     VERSION_HANDSHAKE = 'VERSION_HANDSHAKE',
@@ -35,10 +35,10 @@ export class ClientConnection {
         this.dataParser = null;
     }
 
-    public parseIncomingData(buffer?: RsBuffer): void {
+    public parseIncomingData(buffer?: ByteBuffer): void {
         try {
             if(!this.connectionStage) {
-                const packetId = buffer.readUnsignedByte();
+                const packetId = buffer.get('BYTE', 'UNSIGNED');
 
                 if(packetId === 15) {
                     this.connectionStage = ConnectionStage.VERSION_HANDSHAKE;

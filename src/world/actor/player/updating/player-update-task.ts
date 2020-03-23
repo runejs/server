@@ -1,5 +1,4 @@
 import { Player } from '../player';
-import { RsBuffer, stringToLong } from '@server/net/rs-buffer';
 import { Task } from '@server/task/task';
 import { UpdateFlags } from '@server/world/actor/update-flags';
 import { Packet, PacketType } from '@server/net/packet';
@@ -7,6 +6,8 @@ import { world } from '@server/game-server';
 import { EquipmentSlot, HelmetType, ItemDetails, TorsoType } from '@server/world/config/item-data';
 import { ItemContainer } from '@server/world/items/item-container';
 import { appendMovement, updateTrackedActors, registerNewActors } from './actor-updating';
+import { ByteBuffer } from '@runejs/byte-buffer';
+import { stringToLong } from '@server/util/strings';
 
 /**
  * Handles the chonky player updating packet.
@@ -23,19 +24,19 @@ export class PlayerUpdateTask extends Task<void> {
     public async execute(): Promise<void> {
         return new Promise<void>(resolve => {
             const updateFlags: UpdateFlags = this.player.updateFlags;
-            const playerUpdatePacket: Packet = new Packet(92, PacketType.DYNAMIC_LARGE);
-            playerUpdatePacket.openBitChannel();
+            let playerUpdatePacket: Packet = new Packet(92, PacketType.DYNAMIC_LARGE);
+            playerUpdatePacket.openBitBuffer();
 
-            const updateMaskData = RsBuffer.create();
+            const updateMaskData = new ByteBuffer(5000);
 
             if(updateFlags.mapRegionUpdateRequired || this.player.metadata['teleporting']) {
-                playerUpdatePacket.writeBits(1, 1); // Update Required
-                playerUpdatePacket.writeBits(2, 3); // Map Region changed
-                playerUpdatePacket.writeBits(1, this.player.metadata['teleporting'] ? 1 : 0); // Whether or not the client should discard the current walking queue (1 if teleporting, 0 if not)
-                playerUpdatePacket.writeBits(2, this.player.position.level); // Player Height
-                playerUpdatePacket.writeBits(1, updateFlags.updateBlockRequired ? 1 : 0); // Whether or not an update flag block follows
-                playerUpdatePacket.writeBits(7, this.player.position.chunkLocalX); // Player Local Chunk X
-                playerUpdatePacket.writeBits(7, this.player.position.chunkLocalY); // Player Local Chunk Y
+                playerUpdatePacket.putBits(1, 1); // Update Required
+                playerUpdatePacket.putBits(2, 3); // Map Region changed
+                playerUpdatePacket.putBits(1, this.player.metadata['teleporting'] ? 1 : 0); // Whether or not the client should discard the current walking queue (1 if teleporting, 0 if not)
+                playerUpdatePacket.putBits(2, this.player.position.level); // Player Height
+                playerUpdatePacket.putBits(1, updateFlags.updateBlockRequired ? 1 : 0); // Whether or not an update flag block follows
+                playerUpdatePacket.putBits(7, this.player.position.chunkLocalX); // Player Local Chunk X
+                playerUpdatePacket.putBits(7, this.player.position.chunkLocalY); // Player Local Chunk Y
             } else {
                 appendMovement(this.player, playerUpdatePacket);
             }
@@ -70,25 +71,25 @@ export class PlayerUpdateTask extends Task<void> {
                 this.player.trackedPlayers.push(newPlayer);
 
                 // Notify the client of the new player and their worldIndex
-                playerUpdatePacket.writeBits(11, newPlayer.worldIndex + 1);
+                playerUpdatePacket.putBits(11, newPlayer.worldIndex + 1);
 
-                playerUpdatePacket.writeBits(5, positionOffsetX); // World Position X axis offset relative to the main player
-                playerUpdatePacket.writeBits(5, positionOffsetY); // World Position Y axis offset relative to the main player
-                playerUpdatePacket.writeBits(3, newPlayer.faceDirection);
-                playerUpdatePacket.writeBits(1, 1); // Update is required
-                playerUpdatePacket.writeBits(1, 1); // Discard client walking queues
+                playerUpdatePacket.putBits(5, positionOffsetX); // World Position X axis offset relative to the main player
+                playerUpdatePacket.putBits(5, positionOffsetY); // World Position Y axis offset relative to the main player
+                playerUpdatePacket.putBits(3, newPlayer.faceDirection);
+                playerUpdatePacket.putBits(1, 1); // Update is required
+                playerUpdatePacket.putBits(1, 1); // Discard client walking queues
 
                 this.appendUpdateMaskData(newPlayer, updateMaskData, true);
             });
 
-            if(updateMaskData.getWriterIndex() !== 0) {
-                playerUpdatePacket.writeBits(11, 2047);
-                playerUpdatePacket.closeBitChannel();
+            if(updateMaskData.writerIndex !== 0) {
+                playerUpdatePacket.putBits(11, 2047);
+                playerUpdatePacket.closeBitBuffer();
 
-                playerUpdatePacket.writeBytes(updateMaskData);
+                playerUpdatePacket.putBytes(updateMaskData.flipWriter());
             } else {
                 // No player updates were appended, so just end the packet here
-                playerUpdatePacket.closeBitChannel();
+                playerUpdatePacket.closeBitBuffer();
             }
 
             this.player.outgoingPackets.queue(playerUpdatePacket, true);
@@ -96,7 +97,7 @@ export class PlayerUpdateTask extends Task<void> {
         });
     }
 
-    private appendUpdateMaskData(player: Player, updateMaskData: RsBuffer, forceUpdate?: boolean): void {
+    private appendUpdateMaskData(player: Player, updateMaskData: ByteBuffer, forceUpdate?: boolean): void {
         const updateFlags = player.updateFlags;
 
         if(!updateFlags.updateBlockRequired && !forceUpdate) {
@@ -126,16 +127,16 @@ export class PlayerUpdateTask extends Task<void> {
 
         if(mask >= 0x100) {
             mask |= 0x2;
-            updateMaskData.writeByte(mask & 0xff);
-            updateMaskData.writeByte(mask >> 8);
+            updateMaskData.put(mask & 0xff);
+            updateMaskData.put(mask >> 8);
         } else {
-            updateMaskData.writeByte(mask);
+            updateMaskData.put(mask);
         }
 
         if(updateFlags.facePosition) {
             const position = updateFlags.facePosition;
-            updateMaskData.writeUnsignedShortBE(position.x * 2 + 1);
-            updateMaskData.writeUnsignedShortLE(position.y * 2 + 1);
+            updateMaskData.put(position.x * 2 + 1, 'SHORT');
+            updateMaskData.put(position.y * 2 + 1, 'SHORT', 'LITTLE_ENDIAN');
         }
 
         if(updateFlags.animation !== undefined) {
@@ -143,12 +144,12 @@ export class PlayerUpdateTask extends Task<void> {
 
             if(animation === null || animation.id === -1) {
                 // Reset animation
-                updateMaskData.writeShortLE(-1);
-                updateMaskData.writeUnsignedByteInverted(0);
+                updateMaskData.put(-1, 'SHORT', 'LITTLE_ENDIAN');
+                updateMaskData.put(0, 'BYTE');
             } else {
                 const delay = updateFlags.animation.delay || 0;
-                updateMaskData.writeUnsignedShortLE(updateFlags.animation.id);
-                updateMaskData.writeUnsignedByteInverted(delay);
+                updateMaskData.put(updateFlags.animation.id, 'SHORT', 'LITTLE_ENDIAN');
+                updateMaskData.put(delay, 'BYTE');
             }
         }
 
@@ -157,7 +158,7 @@ export class PlayerUpdateTask extends Task<void> {
 
             if(actor === null) {
                 // Reset faced actor
-                updateMaskData.writeOffsetShortBE(65535);
+                updateMaskData.put(65535, 'SHORT');
             } else {
                 let worldIndex = actor.worldIndex;
 
@@ -168,34 +169,34 @@ export class PlayerUpdateTask extends Task<void> {
                     worldIndex += 32768 + 1;
                 }
 
-                updateMaskData.writeOffsetShortBE(worldIndex);
+                updateMaskData.put(worldIndex, 'SHORT');
             }
         }
 
         if(updateFlags.chatMessages.length !== 0) {
             const message = updateFlags.chatMessages[0];
-            updateMaskData.writeUnsignedShortBE(((message.color & 0xFF) << 8) + (message.effects & 0xFF));
-            updateMaskData.writeUnsignedOffsetByte(player.rights.valueOf());
-            updateMaskData.writeByteInverted(message.data.length);
+            updateMaskData.put(((message.color & 0xFF) << 8) + (message.effects & 0xFF), 'SHORT');
+            updateMaskData.put(player.rights.valueOf(), 'BYTE');
+            updateMaskData.put(message.data.length, 'BYTE');
             for(let i = 0; i < message.data.length; i++) {
-                updateMaskData.writeUnsignedOffsetByte(message.data.readInt8(i));
+                updateMaskData.put(message.data.readInt8(i), 'BYTE');
             }
         }
 
         if(updateFlags.appearanceUpdateRequired || forceUpdate) {
             const equipment = player.equipment;
-            const appearanceData: RsBuffer = RsBuffer.create();
-            appearanceData.writeByte(player.appearance.gender); // Gender
-            appearanceData.writeByte(-1); // Skull Icon
-            appearanceData.writeByte(-1); // Prayer Icon
+            const appearanceData = new ByteBuffer(500);
+            appearanceData.put(player.appearance.gender); // Gender
+            appearanceData.put(-1); // Skull Icon
+            appearanceData.put(-1); // Prayer Icon
 
             for(let i = 0; i < 4; i++) {
                 const item = equipment.items[i];
 
                 if(item) {
-                    appearanceData.writeShortBE(0x200 + item.itemId);
+                    appearanceData.put(0x200 + item.itemId, 'SHORT');
                 } else {
-                    appearanceData.writeByte(0);
+                    appearanceData.put(0);
                 }
             }
 
@@ -203,22 +204,22 @@ export class PlayerUpdateTask extends Task<void> {
             let torsoItemData: ItemDetails = null;
             if(torsoItem) {
                 torsoItemData = world.itemData.get(torsoItem.itemId);
-                appearanceData.writeShortBE(0x200 + torsoItem.itemId);
+                appearanceData.put(0x200 + torsoItem.itemId, 'SHORT');
             } else {
-                appearanceData.writeShortBE(0x100 + player.appearance.torso);
+                appearanceData.put(0x100 + player.appearance.torso, 'SHORT');
             }
 
             const offHandItem = equipment.items[EquipmentSlot.OFF_HAND];
             if(offHandItem) {
-                appearanceData.writeShortBE(0x200 + offHandItem.itemId);
+                appearanceData.put(0x200 + offHandItem.itemId, 'SHORT');
             } else {
-                appearanceData.writeByte(0);
+                appearanceData.put(0);
             }
 
             if(torsoItemData && torsoItemData.equipment && torsoItemData.equipment.torsoType && torsoItemData.equipment.torsoType === TorsoType.FULL) {
-                appearanceData.writeByte(0);
+                appearanceData.put(0);
             } else {
-                appearanceData.writeShortBE(0x100 + player.appearance.arms);
+                appearanceData.put(0x100 + player.appearance.arms, 'SHORT');
             }
 
             this.appendBasicAppearanceItem(appearanceData, equipment, player.appearance.legs, EquipmentSlot.LEGS);
@@ -240,18 +241,18 @@ export class PlayerUpdateTask extends Task<void> {
             }
 
             if(!helmetType || helmetType === HelmetType.HAT) {
-                appearanceData.writeShortBE(0x100 + player.appearance.head);
+                appearanceData.put(0x100 + player.appearance.head, 'SHORT');
             } else {
-                appearanceData.writeByte(0);
+                appearanceData.put(0);
             }
 
             this.appendBasicAppearanceItem(appearanceData, equipment, player.appearance.hands, EquipmentSlot.GLOVES);
             this.appendBasicAppearanceItem(appearanceData, equipment, player.appearance.feet, EquipmentSlot.BOOTS);
 
             if(player.appearance.gender === 1 || fullHelmet) {
-                appearanceData.writeByte(0);
+                appearanceData.put(0);
             } else {
-                appearanceData.writeShortBE(0x100 + player.appearance.facialHair);
+                appearanceData.put(0x100 + player.appearance.facialHair, 'SHORT');
             }
 
             [
@@ -260,7 +261,7 @@ export class PlayerUpdateTask extends Task<void> {
                 player.appearance.legColor,
                 player.appearance.feetColor,
                 player.appearance.skinColor,
-            ].forEach(color => appearanceData.writeByte(color));
+            ].forEach(color => appearanceData.put(color));
 
             [
                 0x328, // stand
@@ -270,31 +271,31 @@ export class PlayerUpdateTask extends Task<void> {
                 0x335, // turn 90
                 0x336, // turn 90 reverse
                 0x338, // run
-            ].forEach(animationId => appearanceData.writeShortBE(animationId));
+            ].forEach(animationId => appearanceData.put(animationId, 'SHORT'));
 
-            appearanceData.writeLongBE(stringToLong(player.username)); // Username
-            appearanceData.writeByte(3); // Combat Level
-            appearanceData.writeShortBE(0); // Skill Level (Total Level)
+            appearanceData.put(stringToLong(player.username), 'LONG'); // Username
+            appearanceData.put(3); // Combat Level
+            appearanceData.put(0, 'SHORT'); // Skill Level (Total Level)
 
-            const appearanceDataSize = appearanceData.getWriterIndex();
+            const appearanceDataSize = appearanceData.writerIndex;
 
-            updateMaskData.writeByte(appearanceDataSize);
-            updateMaskData.writeBytes(appearanceData.getData());
+            updateMaskData.put(appearanceDataSize);
+            updateMaskData.putBytes(appearanceData.flipWriter());
         }
 
         if(updateFlags.graphics) {
             const delay = updateFlags.graphics.delay || 0;
-            updateMaskData.writeUnsignedShortLE(updateFlags.graphics.id);
-            updateMaskData.writeIntME2(updateFlags.graphics.height << 16 | delay & 0xffff);
+            updateMaskData.put(updateFlags.graphics.id, 'SHORT', 'LITTLE_ENDIAN');
+            updateMaskData.put(updateFlags.graphics.height << 16 | delay & 0xffff, 'INT');
         }
     }
 
-    private appendBasicAppearanceItem(buffer: RsBuffer, equipment: ItemContainer, appearanceInfo: number, equipmentSlot: EquipmentSlot): void {
+    private appendBasicAppearanceItem(buffer: ByteBuffer, equipment: ItemContainer, appearanceInfo: number, equipmentSlot: EquipmentSlot): void {
         const item = equipment.items[equipmentSlot];
         if(item) {
-            buffer.writeShortBE(0x200 + item.itemId);
+            buffer.put(0x200 + item.itemId, 'SHORT');
         } else {
-            buffer.writeShortBE(0x100 + appearanceInfo);
+            buffer.put(0x100 + appearanceInfo, 'SHORT');
         }
     }
 

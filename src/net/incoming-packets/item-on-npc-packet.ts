@@ -1,18 +1,18 @@
 import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../world/actor/player/player';
-import { RsBuffer } from '@server/net/rs-buffer';
 import { widgets } from '@server/world/config/widget';
 import { logger } from '@runejs/logger/dist/logger';
 import { world } from '@server/game-server';
 import { World } from '@server/world/world';
 import { itemOnNpcAction } from '@server/world/actor/player/action/item-on-npc-action';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
-export const itemOnNpcPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: RsBuffer): void => {
-    const npcIndex = packet.readNegativeOffsetShortBE();
-    const itemId = packet.readNegativeOffsetShortBE();
-    const itemSlot = packet.readNegativeOffsetShortLE();
-    const itemWidgetId = packet.readShortBE();
-    const itemContainerId = packet.readShortBE();
+export const itemOnNpcPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {
+    const npcIndex = packet.get('SHORT', 'UNSIGNED');
+    const itemId = packet.get('SHORT', 'UNSIGNED');
+    const itemSlot = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const itemWidgetId = packet.get('SHORT');
+    const itemContainerId = packet.get('SHORT');
 
     let usedItem;
     if(itemWidgetId === widgets.inventory.widgetId && itemContainerId === widgets.inventory.containerId) {

@@ -143,10 +143,6 @@ export class Chunk {
         const objectOrientation = locationObject.orientation;
         const objectDetails: LocationObjectDefinition = cache.locationObjectDefinitions.get(locationObject.objectId);
 
-        if(x === 3223 && y === 3217) {
-            console.log(`${x},${y} is type ${objectType} with orientation ${objectOrientation}`);
-        }
-
         if(objectDetails.solid) {
             if(objectType === 22) {
                 if(objectDetails.hasOptions) {

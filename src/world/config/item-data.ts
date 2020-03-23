@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from 'fs';
-import { ItemDefinition, NewFormatItemDefinition } from '@runejs/cache-parser';
+import { ItemDefinition } from '@runejs/cache-parser';
 import { logger } from '@runejs/logger/dist/logger';
 import { JSON_SCHEMA, safeLoad, safeDump } from 'js-yaml';
 
@@ -77,7 +77,7 @@ export interface ItemData {
     };
 }
 
-export interface ItemDetails extends NewFormatItemDefinition, ItemData {
+export interface ItemDetails extends ItemDefinition, ItemData {
 }
 
 function checkField(origin: ItemDetails, destination: ItemData, fieldName: string): void {
@@ -127,7 +127,7 @@ export function parseItemData(itemDefinitions: Map<number, ItemDefinition>): Map
         }
 
         const itemDetailsMap: Map<number, ItemDetails> = new Map<number, ItemDetails>();
-        itemDefinitions.forEach((itemDefinition: NewFormatItemDefinition) => {
+        itemDefinitions.forEach((itemDefinition: ItemDefinition) => {
             let itemData = itemDataList.find(i => i.id === itemDefinition.id);
 
             if(!itemData) {
