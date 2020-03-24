@@ -19,6 +19,10 @@ export class Position {
         this.move(x, y, level);
     }
 
+    public clone(): Position {
+        return new Position(this.x, this.y, this.level);
+    }
+
     public withinInteractionDistance(locationObject: LocationObject): boolean {
         const definition = cache.locationObjectDefinitions.get(locationObject.objectId);
         const occupantX = locationObject.x;
