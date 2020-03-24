@@ -8,6 +8,7 @@ import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
 import { DirectionData, directionFromIndex } from '@server/world/direction';
 import { CombatAction } from '@server/world/actor/player/action/combat-action';
+import { Pathfinding } from '@server/world/actor/pathfinding';
 
 /**
  * Handles an actor within the game world.
@@ -25,6 +26,7 @@ export abstract class Actor extends Entity {
     private _busy: boolean;
     public readonly metadata: { [key: string]: any } = {};
     private _combatActions: CombatAction[];
+    public readonly pathfinding: Pathfinding;
 
     protected constructor() {
         super();
@@ -37,6 +39,7 @@ export abstract class Actor extends Entity {
         this.skills = new Skills(this);
         this._busy = false;
         this._combatActions = [];
+        this.pathfinding = new Pathfinding(this);
     }
 
     public face(face: Position | Actor, clearWalkingQueue: boolean = true, autoClear: boolean = true): void {
