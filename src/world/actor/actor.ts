@@ -6,7 +6,8 @@ import { Entity } from '../entity';
 import { Skills } from '@server/world/actor/skills';
 import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
-import { DirectionData, directionData, directionFromIndex } from '@server/world/direction';
+import { DirectionData, directionFromIndex } from '@server/world/direction';
+import { CombatAction } from '@server/world/actor/player/action/combat-action';
 
 /**
  * Handles an actor within the game world.
@@ -23,6 +24,7 @@ export abstract class Actor extends Entity {
     public readonly skills: Skills;
     private _busy: boolean;
     public readonly metadata: { [key: string]: any } = {};
+    private _combatActions: CombatAction[];
 
     protected constructor() {
         super();
@@ -34,6 +36,7 @@ export abstract class Actor extends Entity {
         this._inventory = new ItemContainer(28);
         this.skills = new Skills(this);
         this._busy = false;
+        this._combatActions = [];
     }
 
     public face(face: Position | Actor, clearWalkingQueue: boolean = true, autoClear: boolean = true): void {
@@ -256,5 +259,9 @@ export abstract class Actor extends Entity {
 
     public set busy(value: boolean) {
         this._busy = value;
+    }
+
+    public get combatActions(): CombatAction[] {
+        return this._combatActions;
     }
 }
