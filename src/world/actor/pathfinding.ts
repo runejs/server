@@ -4,32 +4,135 @@ import { Position } from '../position';
 import { Chunk } from '@server/world/map/chunk';
 import { Tile } from '@runejs/cache-parser';
 
+class Point {
+
+    private _parent: Point = null;
+    private _cost: number;
+    private _heuristic: number;
+    private _depth: number;
+
+    public constructor(private readonly _x: number, private readonly _y: number) {
+    }
+
+    public compare(point: Point): number {
+        return this._cost - point._cost;
+    }
+
+    public equals(point: Point): boolean {
+        if(this._cost === point._cost && this._heuristic === point._heuristic && this._depth === point._depth) {
+            if(this._parent === null && point._parent !== null) {
+                return false;
+            } else if(this._parent !== null && !this._parent.equals(point._parent)) {
+                return false;
+            }
+
+            return this._x === point._x && this._y === point._y;
+        }
+
+        return false;
+    }
+
+    public get x(): number {
+        return this._x;
+    }
+
+    public get y(): number {
+        return this._y;
+    }
+
+    public get parent(): Point {
+        return this._parent;
+    }
+
+    public set parent(value: Point) {
+        this._parent = value;
+    }
+
+    public get cost(): number {
+        return this._cost;
+    }
+
+    public set cost(value: number) {
+        this._cost = value;
+    }
+
+    public get heuristic(): number {
+        return this._heuristic;
+    }
+
+    public set heuristic(value: number) {
+        this._heuristic = value;
+    }
+
+    public get depth(): number {
+        return this._depth;
+    }
+
+    public set depth(value: number) {
+        this._depth = value;
+    }
+
+}
+
 export class Pathfinding {
+
+    private currentPoint: Point;
+    private points: Point[][];
+    private closedPoints: Point[] = [];
+    private openPoints: Point[] = [];
 
     public constructor(private actor: Actor) {
     }
 
-    public pathTo(destinationX: number, destinationY: number): void {
-        const path: Position[][] = new Array(16).fill(new Array(16));
+    public pathTo(destinationX: number, destinationY: number, diameter: number = 32): void {
+        // @TODO check if destination is too far away
+
+        const currentPos = this.actor.position;
+        const radius = Math.floor(diameter / 2);
+        const startX = currentPos.x;
+        const startY = currentPos.y;
+        const pathingStartX = startX - radius;
+        const pathingStartY = startY - radius;
+
+        this.points = new Array(diameter).fill(new Array(diameter));
+
+        for(let x = 0; x < diameter; x++) {
+            for(let y = 0; y < diameter; y++) {
+                this.points[x][y] = new Point(x + startX, y + startY);
+            }
+        }
+
+        // Center point
+        this.openPoints.push(this.points[radius + 1][radius + 1]);
+
+        while(this.openPoints.length > 0) {
+            this.currentPoint = this.calculateBestPoint();
+
+            if(this.currentPoint === this.points[destinationX - pathingStartX][destinationY - pathingStartY]) {
+                break;
+            }
+
+            this.openPoints.splice(this.openPoints.indexOf(this.currentPoint), 1);
+            this.closedPoints.push(this.currentPoint);
+
+            let x = this.currentPoint.x;
+            let y = this.currentPoint.y;
+            let level = this.actor.position.level;
+            let currentPosition = new Position(x, y, level);
+
+            let testPosition = new Position(x - 1, y, level);
+            if(this.canMoveTo(currentPosition, testPosition)) {
+                const point = this.points[x - 1][y];
+            }
+        }
     }
 
     public canMoveTo(origin: Position, destination: Position): boolean {
-        let destinationChunk: Chunk = world.chunkManager.getChunkForWorldPosition(destination);
-        const positionAbove: Position = new Position(destination.x, destination.y, destination.level + 1);
-        const chunkAbove: Chunk = world.chunkManager.getChunkForWorldPosition(positionAbove);
-        let tile: Tile = chunkAbove.getTile(positionAbove);
+        const destinationChunk: Chunk = world.chunkManager.getChunkForWorldPosition(destination);
+        const tile: Tile = destinationChunk.getTile(destination);
 
-        if(!tile || !tile.bridge) {
-            tile = destinationChunk.getTile(destination);
-        } else {
-            // Destination is a bridge, so we need to check the chunk above to get the bridge tiles instead of the level we're currently on
-            destinationChunk = chunkAbove;
-        }
-
-        if(tile) {
-            if(tile.nonWalkable) {
-                return false;
-            }
+        if(tile && tile.nonWalkable) {
+            return false;
         }
 
         const initialX: number = origin.x;
@@ -37,10 +140,6 @@ export class Pathfinding {
         const destinationAdjacency: number[][] = destinationChunk.collisionMap.adjacency;
         const destinationLocalX: number = destination.x - destinationChunk.collisionMap.insetX;
         const destinationLocalY: number = destination.y - destinationChunk.collisionMap.insetY;
-
-        // @TODO check objects moving from bridge tile to non bridge tile
-        // ^ currently possible to clip through some bridge walls thanks to this issue
-        // not the most important thing since you still can't walk on water or anything
 
         // West
         if(destination.x < initialX && destination.y == initialY) {
@@ -131,6 +230,23 @@ export class Pathfinding {
         const localY: number = cornerY - cornerChunk.collisionMap.insetY;
 
         return { localX, localY, chunk: cornerChunk };
+    }
+
+    private calculateBestPoint(): Point {
+        let bestPoint: Point = null;
+
+        for(const point of this.openPoints) {
+            if(bestPoint === null) {
+                bestPoint = point;
+                continue;
+            }
+
+            if(point.cost < bestPoint.cost) {
+                bestPoint = point;
+            }
+        }
+
+        return bestPoint;
     }
 
 }
