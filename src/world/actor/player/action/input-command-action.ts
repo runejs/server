@@ -1,5 +1,6 @@
 import { Player } from '../player';
 import { ActionPlugin } from '@server/plugins/plugin';
+import { logger } from '@runejs/logger/dist/logger';
 
 /**
  * The definition for a command action function.
@@ -115,6 +116,7 @@ export const inputCommandAction = (player: Player, command: string, inputArgs: s
             }
         } catch(commandError) {
             player.outgoingPackets.chatboxMessage(`Command error: ${commandError}`);
+            logger.error(commandError);
         }
     });
 };
