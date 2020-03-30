@@ -42,12 +42,13 @@ export abstract class Actor extends Entity {
         this.pathfinding = new Pathfinding(this);
     }
 
-    public face(face: Position | Actor, clearWalkingQueue: boolean = true, autoClear: boolean = true): void {
+    public face(face: Position | Actor, clearWalkingQueue: boolean = true, autoClear: boolean = true, clearedByWalking: boolean = true): void {
         if(face instanceof Position) {
             this.updateFlags.facePosition = face;
         } else if(face instanceof Actor) {
             this.updateFlags.faceActor = face;
             this.metadata['faceActor'] = face;
+            this.metadata['faceActorClearedByWalking'] = clearedByWalking;
 
             if(autoClear) {
                 setTimeout(() => {

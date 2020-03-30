@@ -21,6 +21,7 @@ import { itemInteractionPacket } from '@server/net/incoming-packets/item-interac
 import { itemOnObjectPacket } from '@server/net/incoming-packets/item-on-object-packet';
 import { numberInputPacket } from '@server/net/incoming-packets/number-input-packet';
 import { itemOnNpcPacket } from '@server/net/incoming-packets/item-on-npc-packet';
+import { playerInteractionPacket } from '@server/net/incoming-packets/player-interaction-packet';
 
 const ignore = [ 234, 160, 216, 13, 58 /* camera move */ ];
 
@@ -58,6 +59,9 @@ const packets: { [key: number]: incomingPacket } = {
     30:  objectInteractionPacket,
     164: objectInteractionPacket,
     183: objectInteractionPacket,
+
+    68:  playerInteractionPacket,
+    211: playerInteractionPacket,
 };
 
 export function handlePacket(player: Player, packetId: number, packetSize: number, buffer: Buffer): void {

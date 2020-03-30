@@ -25,7 +25,11 @@ export interface InteractingAction {
  * `npc` the npc that the loop belongs to. This will Providing this field will cause the loop to cancel if
  *       this npc is flagged to no longer exist during the loop.
  */
-export const loopingAction = (options: { ticks?: number, delayTicks?: number, npc?: Npc, player?: Player }) => {
+export const loopingAction = (options?: { ticks?: number, delayTicks?: number, npc?: Npc, player?: Player }) => {
+    if(!options) {
+        options = {};
+    }
+
     const { ticks, delayTicks, npc, player } = options;
     const event: Subject<void> = new Subject<void>();
 

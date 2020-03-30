@@ -53,6 +53,11 @@ class Point {
     }
 }
 
+export interface PathingOptions {
+    pathingDiameter?: number;
+    ignoreDestination?: boolean;
+}
+
 export class Pathfinding {
 
     private currentPoint: Point;
@@ -63,8 +68,12 @@ export class Pathfinding {
     public constructor(private actor: Actor) {
     }
 
-    public walkTo(position: Position, pathingDiameter: number = 16): void {
-        const path = this.pathTo(position.x, position.y, pathingDiameter);
+    public async walkTo(position: Position, options: PathingOptions): Promise<void> {
+        if(!options.pathingDiameter) {
+            options.pathingDiameter = 16;
+        }
+
+        const path = await this.pathTo(position.x, position.y, options.pathingDiameter);
 
         if(!path) {
             throw new Error(`Unable to find path.`);
@@ -79,17 +88,23 @@ export class Pathfinding {
         walkingQueue.clear();
         walkingQueue.valid = true;
 
+        if(options.ignoreDestination) {
+            path.splice(path.length - 1, 1);
+        }
+
         for(const point of path) {
             walkingQueue.add(point.x, point.y);
         }
     }
 
-    public pathTo(destinationX: number, destinationY: number, diameter: number = 16): Point[] {
+    public async pathTo(destinationX: number, destinationY: number, diameter: number = 16): Promise<Point[]> {
         // @TODO check if destination is too far away
 
         const radius = Math.floor(diameter / 2);
         const pathingStartX = this.actor.position.x - radius;
         const pathingStartY = this.actor.position.y - radius;
+        const destinationIndexX = destinationX - pathingStartX;
+        const destinationIndexY = destinationY - pathingStartY;
 
         if(destinationX < pathingStartX || destinationY < pathingStartY) {
             throw new Error(`Pathing diameter too small!`);
@@ -112,7 +127,7 @@ export class Pathfinding {
         while(this.openPoints.length > 0) {
             this.currentPoint = this.calculateBestPoint();
 
-            if(this.currentPoint === this.points[destinationX - pathingStartX][destinationY - pathingStartY]) {
+            if(this.currentPoint === this.points[destinationIndexX][destinationIndexY]) {
                 break;
             }
 
@@ -121,25 +136,30 @@ export class Pathfinding {
 
             let level = this.actor.position.level;
             let { x, y, indexX, indexY } = this.currentPoint;
+            let canPath = false;
 
             // West
             if(indexX > 0 && this.canPathNSEW(new Position(x - 1, y, level), 0x1280108)) {
                 this.calculateCost(this.points[indexX - 1][indexY]);
+                canPath = true;
             }
 
             // East
             if(indexX < pointLen - 1 && this.canPathNSEW(new Position(x + 1, y, level), 0x1280180)) {
                 this.calculateCost(this.points[indexX + 1][indexY]);
+                canPath = true;
             }
 
             // South
             if(indexY > 0 && this.canPathNSEW(new Position(x, y - 1, level), 0x1280102)) {
                 this.calculateCost(this.points[indexX][indexY - 1]);
+                canPath = true;
             }
 
             // North
             if(indexY < pointLen - 1 && this.canPathNSEW(new Position(x, y + 1, level), 0x1280120)) {
                 this.calculateCost(this.points[indexX][indexY + 1]);
+                canPath = true;
             }
 
             // South-West
@@ -147,6 +167,7 @@ export class Pathfinding {
                 if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x - 1, y - 1, level), -1, -1,
                     0x128010e, 0x1280108, 0x1280102)) {
                     this.calculateCost(this.points[indexX - 1][indexY - 1]);
+                    canPath = true;
                 }
             }
 
@@ -155,6 +176,7 @@ export class Pathfinding {
                 if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x + 1, y - 1, level), 1, -1,
                     0x1280183, 0x1280180, 0x1280102)) {
                     this.calculateCost(this.points[indexX + 1][indexY - 1]);
+                    canPath = true;
                 }
             }
 
@@ -163,6 +185,7 @@ export class Pathfinding {
                 if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x - 1, y + 1, level), -1, 1,
                     0x1280138, 0x1280108, 0x1280120)) {
                     this.calculateCost(this.points[indexX - 1][indexY + 1]);
+                    canPath = true;
                 }
             }
 
@@ -171,11 +194,16 @@ export class Pathfinding {
                 if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x + 1, y + 1, level), 1, 1,
                     0x12801e0, 0x1280180, 0x1280120)) {
                     this.calculateCost(this.points[indexX + 1][indexY + 1]);
+                    canPath = true;
                 }
+            }
+
+            if(!canPath) {
+                break;
             }
         }
 
-        const destinationPoint = this.points[destinationX - pathingStartX][destinationY - pathingStartY];
+        const destinationPoint = this.points[destinationIndexX][destinationIndexY];
 
         if(destinationPoint === null || destinationPoint.parent === null) {
             return null;

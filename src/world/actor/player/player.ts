@@ -31,6 +31,19 @@ import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 import { quests } from '@server/world/config/quests';
 import { ItemDefinition } from '@runejs/cache-parser';
 
+export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
+    {
+        option: 'Yeet',
+        index: 1,
+        placement: 'TOP'
+    },
+    {
+        option: 'Follow',
+        index: 0,
+        placement: 'BOTTOM'
+    }
+];
+
 const DEFAULT_TAB_WIDGET_IDS = [
     92, widgets.skillsTab, 274, widgets.inventory.widgetId, widgets.equipment.widgetId, 271, 192, -1, 131, 148,
     widgets.logoutTab, widgets.settingsTab, widgets.emotesTab, 239
@@ -234,6 +247,9 @@ export class Player extends Actor {
             };
         }
 
+        for(const playerOption of playerOptions) {
+            this.outgoingPackets.updatePlayerOption(playerOption.option, playerOption.index, playerOption.placement);
+        }
         this.updateBonuses();
         this.updateCarryWeight(true);
         this.modifyWidget(widgets.musicPlayerTab, { childId: 82, textColor: colors.green }); // Set "Harmony" to green/unlocked on the music tab

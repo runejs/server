@@ -152,7 +152,9 @@ export class WalkingQueue {
             }
         }
 
-        this.actor.clearFaceActor();
+        if(this.actor.metadata['faceActorClearedByWalking'] === undefined || this.actor.metadata['faceActorClearedByWalking']) {
+            this.actor.clearFaceActor();
+        }
 
         const currentPosition = this.actor.position;
 
