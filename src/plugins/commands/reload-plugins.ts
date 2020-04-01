@@ -5,11 +5,12 @@ import { injectPlugins } from '@server/game-server';
 const action: commandAction = (details) => {
     const { player } = details;
 
-    player.sendMessage('Reloading plugins...');
+    player.sendLogMessage('Reloading plugins...', details.isConsole);
+
 
     injectPlugins()
-        .then(() => player.sendMessage('Plugins reloaded.'))
-        .catch(() => player.sendMessage('Error reloading plugins.'));
+        .then(() => player.sendLogMessage('Plugins reloaded.', details.isConsole))
+        .catch(() => player.sendLogMessage('Error reloading plugins.', details.isConsole));
 };
 
 export default new RunePlugin({ type: ActionType.COMMAND, commands: 'plugins', action });

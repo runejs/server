@@ -3,7 +3,7 @@ import { commandAction } from '@server/world/actor/player/action/input-command-a
 
 const action: commandAction = (details) => {
     const { player } = details;
-    player.sendMessage(`@[ ${player.position.x}, ${player.position.y}, ${player.position.level} ]`);
+    player.sendLogMessage(`@[ ${player.position.x}, ${player.position.y}, ${player.position.level} ]`, details.isConsole);
 };
 
 export default new RunePlugin({
