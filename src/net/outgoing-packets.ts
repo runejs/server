@@ -444,6 +444,13 @@ export class OutgoingPackets {
         this.queue(packet);
     }
 
+    public consoleMessage(message: string): void {
+        const packet = new Packet(83, PacketType.DYNAMIC_SMALL);
+        packet.putString(message);
+
+        this.queue(packet);
+    }
+
     public updateSkill(skillId: number, level: number, exp: number): void {
         const packet = new Packet(34);
         packet.put(level);

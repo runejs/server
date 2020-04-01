@@ -27,6 +27,7 @@ const ignore = [ 234, 160, 216, 13, 58 /* camera move */ ];
 const packets: { [key: number]: incomingPacket } = {
     75:  chatPacket,
     248: commandPacket,
+    246: commandPacket,
 
     73:  walkPacket,
     236: walkPacket,

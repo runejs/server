@@ -736,6 +736,14 @@ export class Player extends Actor {
         }
     }
 
+    public sendLogMessage(message: string, isConsole: boolean): void {
+        if(isConsole) {
+            this.outgoingPackets.consoleMessage(message);
+        } else {
+            this.outgoingPackets.chatboxMessage(message);
+        }
+    }
+
     /**
      * Closes the currently active widget or widget pair.
      * @param notifyClient [optional] Whether or not to notify the game client that widgets should be cleared. Defaults to true.

@@ -8,7 +8,7 @@ const action: commandAction = (details) => {
     const inventorySlot = player.inventory.getFirstOpenSlot();
 
     if(inventorySlot === -1) {
-        player.sendMessage(`You don't have enough free space to do that.`);
+        player.sendLogMessage(`You don't have enough free space to do that.`, details.isConsole);
         return;
     }
 
@@ -43,7 +43,8 @@ const action: commandAction = (details) => {
         }
     }
 
-    player.sendMessage(`Added ${actualAmount}x ${itemDefinition.name} to inventory.`);
+    player.sendLogMessage(`Added ${actualAmount}x ${itemDefinition.name} to inventory.`, details.isConsole);
+
 };
 
 export default new RunePlugin({
