@@ -332,9 +332,9 @@ export class OutgoingPackets {
     }
 
     private strip(packet: Packet): Buffer {
-        const size = packet.writerIndex - 1; //remove packet id
+        const size = packet.writerIndex;
         const buffer = new ByteBuffer(size);
-        packet.copy(buffer, 0, 1, size + 1);
+        packet.copy(buffer, 0, 0, size);
         return Buffer.from(buffer);
     }
 
