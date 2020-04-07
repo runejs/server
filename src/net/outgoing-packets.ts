@@ -339,7 +339,7 @@ export class OutgoingPackets {
     }
 
     private segment(container: ItemContainer, start: number): { bitset: number, buffer: Buffer } {
-        const bound = 1 + (7 * 8);
+        const bound = 7 * 8;
         const payload = new Packet(-1, PacketType.FIXED, bound);
 
         let bitset: number = 0;
