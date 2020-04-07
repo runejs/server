@@ -368,28 +368,7 @@ export class OutgoingPackets {
 
     public sendUpdateAllWidgetItems(widget: { widgetId: number, containerId: number }, container: ItemContainer): void {
         const packet = new Packet(12, PacketType.DYNAMIC_LARGE);
-        packet.put(widget.widgetId << 16 | widget.containerId, 'INT');
-        packet.put(container.size, 'SHORT');
-
-        const items = container.items;
-        items.forEach(item => {
-            if(!item) {
-                // Empty slot
-                packet.put(0);
-                packet.put(0, 'SHORT');
-            } else {
-                if(item.amount >= 255) {
-                    packet.put(255);
-                    packet.put(item.amount, 'INT');
-                } else {
-                    packet.put(item.amount);
-                }
-
-                packet.put(item.itemId + 1, 'SHORT'); // +1 because 0 means an empty slot
-            }
-        });
-
-        this.queue(packet);
+        this.update(packet, widget, container);
     }
 
     public sendUpdateAllWidgetItemsById(widget: { widgetId: number, containerId: number }, itemIds: number[]): void {
