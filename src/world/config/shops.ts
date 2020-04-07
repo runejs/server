@@ -1,6 +1,7 @@
 import { logger } from '@runejs/logger/dist/logger';
 import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 import { readFileSync } from 'fs';
+import { ItemContainer } from '@server/world/items/item-container';
 
 export interface Shop {
     identification: string;
@@ -16,6 +17,12 @@ interface ShopItems {
     price: number;
 }
 
+export function shopItemContainer(shop: Shop): ItemContainer {
+    const shopContainer = new ItemContainer(40);
+    shop.items.forEach((item, i) => shopContainer.set(i, !item ? null : { itemId: item.id, amount: item.amountInStock }, false));
+    return shopContainer;
+}
+
 export function parseShops(): Shop[] {
     try {
         logger.info('Parsing shops...');
@@ -23,7 +30,7 @@ export function parseShops(): Shop[] {
         const shops = safeLoad(readFileSync('data/config/shops.yaml', 'utf8'), { schema: JSON_SCHEMA }) as Shop[];
 
         if(!shops || shops.length === 0) {
-            throw 'Unable to read shops.';
+            throw new Error('Unable to read shops.');
         }
 
         logger.info(`${shops.length} shops found.`);

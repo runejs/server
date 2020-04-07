@@ -28,6 +28,41 @@ export class ItemContainer {
         return this.findIndex(item) !== -1;
     }
 
+    /**
+     * Finds all slots within the container that contain the specified items.
+     * @param search The item id or Item object to search for.
+     * @returns An array of slot numbers. 
+     */
+    public findAll(search: number | Item): number[] {
+        if(typeof search !== 'number') {
+            search = search.itemId;
+        }
+
+        const stackable = world.itemData.get(search).stackable;
+
+        if(stackable) {
+            const index = this.findIndex(search);
+
+            if(index === null || index === -1) {
+                return [];
+            } else {
+                return [ index ];
+            }
+        } else {
+            const slots = [];
+
+            for(let i = 0; i < this.size; i++) {
+                const item = this.items[i];
+
+                if(item && item.itemId === search) {
+                    slots.push(i);
+                }
+            }
+
+            return slots;
+        }
+    }
+
     public findIndex(item: number | Item): number {
         const itemId = (typeof item === 'number') ? item : item.itemId;
         return this._items.findIndex(i => i !== null && i.itemId === itemId);

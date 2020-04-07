@@ -1,8 +1,10 @@
 import { directionData, WNES } from '@server/world/direction';
 import { world } from '@server/game-server';
 import { Chunk } from '@server/world/map/chunk';
-import { objectAction } from '@server/world/mob/player/action/object-action';
+import { objectAction } from '@server/world/actor/player/action/object-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { soundIds } from '@server/world/config/sound-ids';
+import { LocationObject } from '@runejs/cache-parser';
 
 // @TODO move to yaml config
 const doors = [
@@ -30,6 +32,11 @@ const doors = [
         closed: 1536,
         open: 1537,
         hinge: 'LEFT'
+    },
+    {
+        closed: 11993,
+        open: 11994,
+        hinge: 'RIGHT'
     }
 ];
 
@@ -47,7 +54,7 @@ const rightHingeDir: { [key: string]: string } = {
 };
 
 export const action: objectAction = (details): void => {
-    let { player, object: door, position, cacheOriginal } = details;
+    const { player, object: door, position, cacheOriginal } = details;
     let opening = true;
     let doorConfig = doors.find(d => d.closed === door.objectId);
     let hingeConfig;
@@ -67,24 +74,25 @@ export const action: objectAction = (details): void => {
     }
 
     const startDoorChunk: Chunk = world.chunkManager.getChunkForWorldPosition(position);
-    const startDir = WNES[door.rotation];
+    const startDir = WNES[door.orientation];
     const endDir = hingeConfig[startDir];
-    const endPosition = position.step(opening ? 1 : -1, opening? startDir : endDir);
+    const endPosition = position.step(opening ? 1 : -1, opening ? startDir : endDir);
 
-    const replacementDoor = {
+    const replacementDoor: LocationObject = {
         objectId: replacementDoorId,
         x: endPosition.x,
         y: endPosition.y,
         level: position.level,
         type: door.type,
-        rotation: directionData[endDir].rotation
+        orientation: directionData[endDir].rotation
     };
 
     const replacementDoorChunk = world.chunkManager.getChunkForWorldPosition(endPosition);
 
-    world.chunkManager.toggleObjects(replacementDoor, door, endPosition, position, replacementDoorChunk, startDoorChunk, !cacheOriginal);
-    player.packetSender.playSound(opening ? 318 : 326, 7);
+    world.toggleLocationObjects(replacementDoor, door, endPosition, position, replacementDoorChunk, startDoorChunk, !cacheOriginal);
+    // 70 = close gate, 71 = open gate, 62 = open door, 60 = close door
+    player.playSound(opening ? soundIds.openDoor : soundIds.closeDoor, 7);
 };
 
 export default new RunePlugin({ type: ActionType.OBJECT_ACTION, objectIds: [1530, 4465, 4467, 3014, 3017, 3018,
-        3019, 1536, 1537, 1533, 1531, 1534, 12348], options: [ 'open', 'close' ], walkTo: true, action });
+        3019, 1536, 1537, 1533, 1531, 1534, 12348, 11993, 11994], options: [ 'open', 'close' ], walkTo: true, action });

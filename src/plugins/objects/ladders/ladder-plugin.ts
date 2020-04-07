@@ -1,5 +1,5 @@
-import { objectAction } from '@server/world/mob/player/action/object-action';
-import { dialogueAction } from '@server/world/mob/player/action/dialogue-action';
+import { objectAction } from '@server/world/actor/player/action/object-action';
+import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
 import { World } from '@server/world/world';
 import { Position } from '@server/world/position';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
@@ -29,7 +29,7 @@ export const action: objectAction = (details) => {
                         action({...details, option: `climb-${direction}`});
                         return;
                 }
-            }).catch(error => console.error(error));
+            });
         return;
     }
 
@@ -41,7 +41,7 @@ export const action: objectAction = (details) => {
     if (!details.objectDefinition.name.startsWith('Stair')) {
         player.playAnimation(up ? 828 : 827);
     }
-    player.packetSender.chatboxMessage(`You climb ${option.slice(6)} the ${details.objectDefinition.name.toLowerCase()}.`);
+    player.sendMessage(`You climb ${option.slice(6)} the ${details.objectDefinition.name.toLowerCase()}.`);
     setTimeout(() => {
         details.player.teleport(new Position(position.x, position.y, level));
     }, World.TICK_LENGTH);

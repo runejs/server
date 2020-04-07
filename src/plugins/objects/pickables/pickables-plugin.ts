@@ -1,45 +1,44 @@
-import { objectAction } from '@server/world/mob/player/action/object-action';
-import { gameCache, world } from '@server/game-server';
+import { objectAction } from '@server/world/actor/player/action/object-action';
+import { cache, world } from '@server/game-server';
 import { World } from '@server/world/world';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { itemIds } from '@server/world/config/item-ids';
 
 
 export const action: objectAction = (details) => {
-    if(details.player.metadata['busy']) {
-        return;
-    }
-    details.player.metadata['busy'] = true;
+    details.player.busy = true;
     details.player.playAnimation(827);
-    let itemId: number = 1965;
+    let itemId: number = itemIds.cabbage;
     let prefix = 'some';
     switch (details.objectDefinition.name) {
         case 'Wheat':
-            itemId = 1947;
+            itemId = itemIds.grain;
             break;
         case 'Onion':
-            itemId = 1957;
+            itemId = itemIds.onion;
             prefix = 'an';
             break;
         case 'Potato':
             prefix = 'a';
-            itemId = 1942;
+            itemId = itemIds.potato;
             break;
         case 'Flax':
-            itemId = 1779;
+            itemId = itemIds.flax;
             break;
         case 'Cabbage':
         default:
-            itemId = 1965;
+            itemId = itemIds.cabbage;
             break;
     }
-    const pickedItem = gameCache.itemDefinitions.get(itemId);
+    const pickedItem = cache.itemDefinitions.get(itemId);
     setTimeout(() => {
-        details.player.packetSender.chatboxMessage(`You ${details.option} the ${details.objectDefinition.name.toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`);
+        details.player.sendMessage(`You ${details.option} the ${details.objectDefinition.name.toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`);
+        details.player.playSound(2581, 7);
         if (details.objectDefinition.name !== 'Flax' || Math.floor(Math.random() * 10) === 1) {
-            world.chunkManager.removeLandscapeObjectTemporarily(details.object, details.position, 30);
+            world.removeLocationObjectTemporarily(details.object, details.position, 30);
         }
         details.player.giveItem(pickedItem.id);
-        details.player.metadata['busy'] = false;
+        details.player.busy = false;
     }, World.TICK_LENGTH);
 };
 

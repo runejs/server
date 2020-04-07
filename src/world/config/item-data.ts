@@ -123,11 +123,11 @@ export function parseItemData(itemDefinitions: Map<number, ItemDefinition>): Map
         const itemDataList = safeLoad(readFileSync('data/config/item-data.yaml', 'utf8'), { schema: JSON_SCHEMA }) as ItemData[];
 
         if(!itemDataList || itemDataList.length === 0) {
-            throw 'Unable to read item data.';
+            throw new Error('Unable to read item data.');
         }
 
         const itemDetailsMap: Map<number, ItemDetails> = new Map<number, ItemDetails>();
-        itemDefinitions.forEach(itemDefinition => {
+        itemDefinitions.forEach((itemDefinition: ItemDefinition) => {
             let itemData = itemDataList.find(i => i.id === itemDefinition.id);
 
             if(!itemData) {

@@ -1,6 +1,6 @@
 import express, { Request } from 'express';
-import { gameCache, world } from './game-server';
-import { Player } from './world/mob/player/player';
+import { cache, world } from './game-server';
+import { Player } from './world/actor/player/player';
 import { constants } from 'http2';
 import { logger } from '@runejs/logger';
 import { ItemData, ItemDetails, saveItemData } from './world/config/item-data';
@@ -153,7 +153,7 @@ export function runWebServer(): void {
             }
 
             const itemData = req.body as ItemData;
-            const itemDefinition = gameCache.itemDefinitions.get(itemId);
+            const itemDefinition = cache.itemDefinitions.get(itemId);
             const itemDetails = { ...itemDefinition, ...itemData } as ItemDetails;
             world.itemData.set(itemId, itemDetails);
             saveItemData(world.itemData);
@@ -188,9 +188,9 @@ export function runWebServer(): void {
                 const noted = req.query.noted.toLowerCase().trim();
 
                 if(noted === 'false') {
-                    worldItemList = worldItemList.filter(itemData => itemData.notedVersionOf === -1);
+                    worldItemList = worldItemList.filter(itemData => itemData.noteTemplateId === -1);
                 } else if(noted === 'true') {
-                    worldItemList = worldItemList.filter(itemData => itemData.notedVersionOf !== -1);
+                    worldItemList = worldItemList.filter(itemData => itemData.noteTemplateId !== -1);
                 }
             }
         }
