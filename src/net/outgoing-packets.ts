@@ -7,6 +7,7 @@ import { Position } from '@server/world/position';
 import { LocationObject } from '@runejs/cache-parser';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { WorldItem } from '@server/world/items/world-item';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -301,6 +302,68 @@ export class OutgoingPackets {
         }
 
         this.queue(packet);
+    }
+
+    public update(packet: Packet, widget: { widgetId: number, containerId: number }, container: ItemContainer): void {
+        const packed = widget.widgetId << 16 | widget.containerId;
+        packet.put(packed, 'INT');
+
+        const size = container.size;
+        packet.put(size, 'SHORT');
+
+        const bound = container.items.length * 7;
+        const payload = new Packet(-1, PacketType.FIXED, bound); //TODO: change default value of allocatedSize from 5000 to something reasonable (64 - 256 as most RS packets are quite small)
+
+        for (let index = 0; index < size; index += 8) {
+            const { bitset, buffer } = this.segment(container, index);
+
+            payload.put(bitset, 'BYTE');
+
+            if (bitset == 0) {
+                continue;
+            }
+
+            payload.putBytes(buffer);
+        }
+
+        packet.putBytes(this.strip(payload));
+
+        this.queue(packet);
+    }
+
+    private strip(packet: Packet): Buffer {
+        const size = packet.writerIndex - 1; //remove packet id
+        const buffer = new ByteBuffer(size);
+        packet.copy(buffer, 0, 1, size + 1);
+        return Buffer.from(buffer);
+    }
+
+    private segment(container: ItemContainer, start: number): { bitset: number, buffer: Buffer } {
+        const bound = 1 + (7 * 8);
+        const payload = new Packet(-1, PacketType.FIXED, bound);
+
+        let bitset: number = 0;
+
+        for (let offset = 0; offset < 8; offset++) {
+            const item = container.items[start + offset];
+
+            if (!item) {
+                continue;
+            }
+
+            bitset |= 1 << offset;
+
+            const large = item.amount >= 255;
+
+            if (large) {
+                payload.put(255, 'BYTE');
+            }
+
+            payload.put(item.amount, large ? 'INT' : 'BYTE');
+            payload.put(item.itemId + 1, 'SHORT');
+        }
+
+        return { bitset, buffer: this.strip(payload) };
     }
 
     public sendUpdateAllWidgetItems(widget: { widgetId: number, containerId: number }, container: ItemContainer): void {
