@@ -7,6 +7,7 @@ import { Position } from '@server/world/position';
 import { LocationObject } from '@runejs/cache-parser';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { WorldItem } from '@server/world/items/world-item';
+import { ByteBuffer } from '@runejs/byte-buffer';
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -303,49 +304,79 @@ export class OutgoingPackets {
         this.queue(packet);
     }
 
-    public sendUpdateAllWidgetItems(widget: { widgetId: number, containerId: number }, container: ItemContainer): void {
-        const packet = new Packet(12, PacketType.DYNAMIC_LARGE);
-        packet.put(widget.widgetId << 16 | widget.containerId, 'INT');
-        packet.put(container.size, 'SHORT');
+    public update(packet: Packet, widget: { widgetId: number, containerId: number }, container: ItemContainer): void {
+        const packed = widget.widgetId << 16 | widget.containerId;
+        packet.put(packed, 'INT');
 
-        const items = container.items;
-        items.forEach(item => {
-            if(!item) {
-                // Empty slot
-                packet.put(0);
-                packet.put(0, 'SHORT');
-            } else {
-                if(item.amount >= 255) {
-                    packet.put(255);
-                    packet.put(item.amount, 'INT');
-                } else {
-                    packet.put(item.amount);
-                }
+        const size = container.size;
+        packet.put(size, 'SHORT');
 
-                packet.put(item.itemId + 1, 'SHORT'); // +1 because 0 means an empty slot
+        const bound = container.items.length * 7;
+        const payload = new Packet(-1, PacketType.FIXED, bound); //TODO: change default value of allocatedSize from 5000 to something reasonable (64 - 256 as most RS packets are quite small)
+
+        for (let index = 0; index < size; index += 8) {
+            const { bitset, buffer } = this.segment(container, index);
+
+            payload.put(bitset, 'BYTE');
+
+            if (bitset == 0) {
+                continue;
             }
-        });
+
+            payload.putBytes(buffer);
+        }
+
+        packet.putBytes(this.strip(payload));
 
         this.queue(packet);
     }
 
-    public sendUpdateAllWidgetItemsById(widget: { widgetId: number, containerId: number }, itemIds: number[]): void {
-        const packet = new Packet(12, PacketType.DYNAMIC_LARGE);
-        packet.put(widget.widgetId << 16 | widget.containerId, 'INT');
-        packet.put(itemIds.length, 'SHORT');
+    private strip(packet: Packet): Buffer {
+        const size = packet.writerIndex;
+        const buffer = new ByteBuffer(size);
+        packet.copy(buffer, 0, 0, size);
+        return Buffer.from(buffer);
+    }
 
-        itemIds.forEach(itemId => {
-            if(!itemId) {
-                // Empty slot
-                packet.put(0);
-                packet.put(0, 'SHORT');
-            } else {
-                packet.put(1);
-                packet.put(itemId + 1, 'SHORT'); // +1 because 0 means an empty slot
+    private segment(container: ItemContainer, start: number): { bitset: number, buffer: Buffer } {
+        const bound = 7 * 8;
+        const payload = new Packet(-1, PacketType.FIXED, bound);
+
+        let bitset: number = 0;
+
+        for (let offset = 0; offset < 8; offset++) {
+            const item = container.items[start + offset];
+
+            if (!item) {
+                continue;
             }
-        });
 
-        this.queue(packet);
+            bitset |= 1 << offset;
+
+            const large = item.amount >= 255;
+
+            if (large) {
+                payload.put(255, 'BYTE');
+            }
+
+            payload.put(item.amount, large ? 'INT' : 'BYTE');
+            payload.put(item.itemId + 1, 'SHORT');
+        }
+
+        return { bitset, buffer: this.strip(payload) };
+    }
+
+    public sendUpdateAllWidgetItems(widget: { widgetId: number, containerId: number }, container: ItemContainer): void {
+        const packet = new Packet(12, PacketType.DYNAMIC_LARGE);
+        this.update(packet, widget, container);
+    }
+
+    public sendUpdateAllWidgetItemsById(widget: { widgetId: number, containerId: number }, itemIds: number[]): void {
+        const container = new ItemContainer(itemIds.length);
+        const items = itemIds.map(id => (!id ? null : {itemId: id, amount: 1}));
+        container.setAll(items, false);
+
+        this.sendUpdateAllWidgetItems(widget, container);
     }
 
     public setItemOnWidget(widgetId: number, childId: number, itemId: number, zoom: number): void {
@@ -439,6 +470,13 @@ export class OutgoingPackets {
 
     public chatboxMessage(message: string): void {
         const packet = new Packet(82, PacketType.DYNAMIC_SMALL);
+        packet.putString(message);
+
+        this.queue(packet);
+    }
+
+    public consoleMessage(message: string): void {
+        const packet = new Packet(83, PacketType.DYNAMIC_SMALL);
         packet.putString(message);
 
         this.queue(packet);

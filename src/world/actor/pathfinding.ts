@@ -97,37 +97,44 @@ export class Pathfinding {
         }
     }
 
-    public async pathTo(destinationX: number, destinationY: number, diameter: number = 16): Promise<Point[]> {
-        // @TODO check if destination is too far away
+    public async pathTo(destinationX: number, destinationY: number, diameter: number = 16, easyPath: boolean = false): Promise<Point[]> {
+        const lowestX = destinationX > this.actor.position.x ? this.actor.position.x : destinationX;
+        const lowestY = destinationY > this.actor.position.y ? this.actor.position.y : destinationY;
+        const highestX = destinationX > this.actor.position.x ? destinationX : this.actor.position.x;
+        const highestY = destinationY > this.actor.position.y ? destinationY : this.actor.position.y;
+        const lenX = (highestX - lowestX) + 1;
+        const lenY = (highestY - lowestY) + 1;
 
-        const radius = Math.floor(diameter / 2);
-        const pathingStartX = this.actor.position.x - radius;
-        const pathingStartY = this.actor.position.y - radius;
-        const destinationIndexX = destinationX - pathingStartX;
-        const destinationIndexY = destinationY - pathingStartY;
+        const destinationIndexX = destinationX - lowestX;
+        const destinationIndexY = destinationY - lowestY;
+        const startingIndexX = this.actor.position.x - lowestX;
+        const startingIndexY = this.actor.position.y - lowestY;
 
-        if(destinationX < pathingStartX || destinationY < pathingStartY) {
-            throw new Error(`Pathing diameter too small!`);
+        const pointLen = lenX * lenY;
+        console.log(`pointlen = ${pointLen}, startX = ${startingIndexX}, startY = ${startingIndexY}`);
+        console.log(`lenX = ${lenX}, lenY = ${lenY}`);
+
+        if(pointLen <= 0) {
+            return null;
         }
 
-        const pointLen = diameter + 1; // + 1 for the center row & column
         this.points = [];
 
         for(let x = 0; x < pointLen; x++) {
             this.points.push([]);
 
             for(let y = 0; y < pointLen; y++) {
-                this.points[x].push(new Point(pathingStartX + x, pathingStartY + y, x, y));
+                this.points[x].push(new Point(lowestX + x, lowestY + y, x, y));
             }
         }
 
-        // Center point
-        this.openPoints.push(this.points[radius][radius]);
+        // Starting point
+        this.openPoints.push(this.points[startingIndexX][startingIndexY]);
 
         while(this.openPoints.length > 0) {
             this.currentPoint = this.calculateBestPoint();
 
-            if(this.currentPoint === this.points[destinationIndexX][destinationIndexY]) {
+            if(!this.currentPoint || this.currentPoint === this.points[destinationIndexX][destinationIndexY]) {
                 break;
             }
 
@@ -212,10 +219,16 @@ export class Pathfinding {
         // build path
         const path: Point[] = [];
         let point = destinationPoint;
+        let iterations = 0;
 
-        while(!point.equals(this.points[radius][radius])) {
+        while(!point.equals(this.points[startingIndexX][startingIndexY])) {
             path.push(point);
             point = point.parent;
+            iterations++;
+
+            if(iterations > 10000) {
+                throw `AAAAHHHHHH!`;
+            }
 
             if(point === null) {
                 return null;

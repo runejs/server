@@ -100,6 +100,7 @@ export class Player extends Actor {
     public readonly dialogueInteractionEvent: Subject<number>;
     public readonly numericInputEvent: Subject<number>;
     private _walkingTo: Position;
+    public readonly movementEvent: Subject<Position>;
     private _nearbyChunks: Chunk[];
     public readonly actionsCancelled: Subject<boolean>;
     private quadtreeKey: QuadtreeKey = null;
@@ -127,6 +128,7 @@ export class Player extends Actor {
         this._equipment = new ItemContainer(14);
         this.dialogueInteractionEvent = new Subject<number>();
         this.numericInputEvent = new Subject<number>();
+        this.movementEvent = new Subject<Position>();
         this._nearbyChunks = [];
         this.actionsCancelled = new Subject<boolean>();
 
@@ -749,6 +751,14 @@ export class Player extends Actor {
             this.activeWidget = widget;
         } else {
             this.queuedWidgets.push(widget);
+        }
+    }
+
+    public sendLogMessage(message: string, isConsole: boolean): void {
+        if(isConsole) {
+            this.outgoingPackets.consoleMessage(message);
+        } else {
+            this.outgoingPackets.chatboxMessage(message);
         }
     }
 
