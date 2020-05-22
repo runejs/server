@@ -9,7 +9,7 @@ import { Cache } from '@runejs/cache-parser';
 import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
 import { ByteBuffer } from '@runejs/byte-buffer';
 
-import { loadPlugins } from '@server/plugins/plugin-loader';
+import { loadPlugins, loadScripts } from '@server/plugins/plugin-loader';
 import { ActionPlugin, ActionType, sort } from '@server/plugins/plugin';
 
 import { setNpcPlugins } from '@server/world/actor/player/action/npc-action';
@@ -34,7 +34,9 @@ export let crcTable: ByteBuffer;
 
 export async function injectPlugins(): Promise<void> {
     const actionTypes: { [key: string]: ActionPlugin[] } = {};
+    const actionTypes2: { [key: string]: ActionPlugin[] } = {};
     const plugins = await loadPlugins();
+    const scripts = await loadScripts();
 
     plugins.map(plugin => plugin.actions).reduce((a, b) => a.concat(b)).forEach(action => {
         if(!actionTypes.hasOwnProperty(action.type)) {
@@ -44,11 +46,19 @@ export async function injectPlugins(): Promise<void> {
         actionTypes[action.type].push(action);
     });
 
+    scripts.map(plugin => plugin.actions).reduce((a, b) => a.concat(b)).forEach(action => {
+        if(!actionTypes2.hasOwnProperty(action.type)) {
+            actionTypes2[action.type] = [];
+        }
+
+        actionTypes2[action.type].push(action);
+    });
+
     Object.keys(actionTypes).forEach(key => actionTypes[key] = sort(actionTypes[key]));
 
     setQuestPlugins(actionTypes[ActionType.QUEST]);
     setButtonPlugins(actionTypes[ActionType.BUTTON]);
-    setNpcPlugins(actionTypes[ActionType.NPC_ACTION]);
+    setNpcPlugins(actionTypes2[ActionType.NPC_ACTION]);
     setObjectPlugins(actionTypes[ActionType.OBJECT_ACTION]);
     setItemOnObjectPlugins(actionTypes[ActionType.ITEM_ON_OBJECT_ACTION]);
     setItemOnNpcPlugins(actionTypes[ActionType.ITEM_ON_NPC_ACTION]);

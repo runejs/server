@@ -1,18 +1,14 @@
-import { npcAction } from '@server/world/actor/player/action/npc-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { npcIds } from '@server/world/config/npc-ids';
-import { animationIds } from '@server/world/config/animation-ids';
-import { dialogue, Emote, execute, goto } from '@server/world/actor/dialogue';
+const { dialogue, Emote, execute, goto, ActionType, animationIds, npcIds } = require('../../rune.js');
 
-const action: npcAction = (details) => {
+const action = details => {
     const { player, npc } = details;
 
     let sadEnding = false;
 
-    dialogue([ player, { npc, key: 'hans' }], [
+    dialogue([ player, { npc, key: 'hans' } ], [
         hans => [ Emote.GENERIC, `Welcome to RuneScape!` ],
         (hans, tag_Hans_Question) => [ Emote.HAPPY, `How do you feel about Rune.JS so far?\n` +
-            `Please take a moment to let us know what you think!` ],
+        `Please take a moment to let us know what you think!` ],
         options => ([
             `Love it!`, [
                 player => [ Emote.HAPPY, `Loving it so far, thanks for asking!` ],
@@ -51,4 +47,4 @@ const action: npcAction = (details) => {
     ]);
 };
 
-export default new RunePlugin({ type: ActionType.NPC_ACTION, npcIds: npcIds.hans, options: 'talk-to', walkTo: true, action });
+module.exports = { type: ActionType.NPC_ACTION, npcIds: npcIds.hans, options: 'talk-to', walkTo: true, action };

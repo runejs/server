@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as util from 'util';
-import { RunePlugin } from '@server/plugins/plugin';
+import { RunePlugin, RunePluginAction } from '@server/plugins/plugin';
+
 
 export const basicStringFilter = (pluginValues: string | string[], searchValue: string): boolean => {
     if(Array.isArray(pluginValues)) {
@@ -56,6 +57,23 @@ const readdir = util.promisify(fs.readdir);
 const stat = util.promisify(fs.stat);
 const blacklist = ['plugin-loader.js', 'plugin.js'];
 
+async function* getScriptFiles(directory: string): AsyncGenerator<string> {
+    const files = await readdir(directory);
+
+    for(const file of files) {
+        const path = directory + '/' + file;
+        const statistics = await stat(path);
+
+        if(statistics.isDirectory()) {
+            for await (const child of getFiles(path)) {
+                yield child;
+            }
+        } else {
+            yield path;
+        }
+    }
+}
+
 async function* getFiles(directory: string): AsyncGenerator<string> {
     const files = await readdir(directory);
 
@@ -79,6 +97,20 @@ async function* getFiles(directory: string): AsyncGenerator<string> {
     }
 }
 
+export const BASE_SCRIPT_DIRECTORY = 'plugins';
+
+export async function loadScripts(): Promise<RunePlugin[]> {
+    const plugins: RunePlugin[] = [];
+
+    for await(const path of getFiles(BASE_SCRIPT_DIRECTORY)) {
+        const location = '../../' + path;
+        const actions: RunePluginAction | RunePluginAction[] = (require(location));
+        plugins.push(new RunePlugin(actions));
+    }
+
+    return plugins;
+}
+
 export const BASE_PLUGIN_DIRECTORY = './dist/plugins';
 
 export async function loadPlugins(): Promise<RunePlugin[]> {
@@ -86,7 +118,7 @@ export async function loadPlugins(): Promise<RunePlugin[]> {
 
     for await(const path of getFiles(BASE_PLUGIN_DIRECTORY)) {
         const location = '.' + path.substring(BASE_PLUGIN_DIRECTORY.length).replace('.js', '');
-        const plugin = await import(location);
+        const plugin = require(location);
         plugins.push(plugin.default as RunePlugin);
     }
 
