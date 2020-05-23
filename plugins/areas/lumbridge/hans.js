@@ -1,11 +1,11 @@
-const { dialogue, Emote, execute, goto, ActionType, animationIds, npcIds } = require('../../rune.js');
+const { dialogue, Emote, execute, goto, NPC_ACTION, animationIds, npcIds } = require('../../rune.js');
 
-const action = details => {
+const action = async details => {
     const { player, npc } = details;
 
     let sadEnding = false;
 
-    dialogue([ player, { npc, key: 'hans' } ], [
+    await dialogue([ player, { npc, key: 'hans' } ], [
         hans => [ Emote.GENERIC, `Welcome to RuneScape!` ],
         (hans, tag_Hans_Question) => [ Emote.HAPPY, `How do you feel about Rune.JS so far?\n` +
         `Please take a moment to let us know what you think!` ],
@@ -31,20 +31,25 @@ const action = details => {
                 player => [ Emote.DROWZY, `What?...` ],
                 goto('tag_Hans_Question')
             ]
-        ]),
-        execute(() => {
-            npc.clearFaceActor();
-            player.clearFaceActor();
-
-            if(sadEnding) {
-                npc.playAnimation(animationIds.cry);
-                npc.say(`Jerk!`);
-                player.sendMessage(`Hans wanders off rather dejectedly.`);
-            } else {
-                player.sendMessage(`Hans wanders off aimlessly through the courtyard.`);
-            }
-        })
+        ])
     ]);
+
+    npc.clearFaceActor();
+    player.clearFaceActor();
+
+    if(sadEnding) {
+        npc.playAnimation(animationIds.cry);
+        npc.say(`Jerk!`);
+        player.sendMessage(`Hans wanders off rather dejectedly.`);
+    } else {
+        player.sendMessage(`Hans wanders off aimlessly through the courtyard.`);
+    }
 };
 
-module.exports = { type: ActionType.NPC_ACTION, npcIds: npcIds.hans, options: 'talk-to', walkTo: true, action };
+module.exports = {
+    type: NPC_ACTION,
+    npcIds: npcIds.hans,
+    options: 'talk-to',
+    walkTo: true,
+    action
+};

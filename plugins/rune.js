@@ -11,8 +11,18 @@ const { ActionType, RunePlugin } = require('../dist/plugins/plugin');
 const { world } = require('../dist/game-server');
 
 module.exports = {
+
     dialogue, Emote, goto, execute,
+
     animationIds, gfxIds, itemIds, npcIds, objectIds, soundIds, songs, widgets, widgetScripts,
-    ActionType, RunePlugin,
+
+    NPC_ACTION: ActionType.NPC_ACTION, BUTTON_ACTION: ActionType.BUTTON, WIDGET_ACTION: ActionType.WIDGET_ACTION,
+    ITEM_ON_ITEM_ACTION: ActionType.ITEM_ON_ITEM_ACTION, ITEM_ACTION: ActionType.ITEM_ACTION,
+    WORLD_ITEM_ACTION: ActionType.WORLD_ITEM_ACTION, OBJECT_ACTION: ActionType.OBJECT_ACTION,
+    ITEM_ON_OBJECT_ACTION: ActionType.ITEM_ON_OBJECT_ACTION, ITEM_ON_NPC_ACTION: ActionType.ITEM_ON_NPC_ACTION,
+    COMMAND_ACTION: ActionType.COMMAND, PLAYER_INIT: ActionType.PLAYER_INIT, NPC_INIT: ActionType.NPC_INIT,
+    QUEST: ActionType.QUEST, RunePlugin,
+
     world
+
 };
