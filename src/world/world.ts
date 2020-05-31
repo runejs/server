@@ -2,6 +2,7 @@ import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { logger } from '@runejs/logger';
 import { ItemDetails, parseItemData } from './config/item-data';
+import { ExamineCache } from './config/examine-data';
 import { cache } from '@server/game-server';
 import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
@@ -36,6 +37,7 @@ export class World {
     public readonly npcList: Npc[] = new Array(World.MAX_NPCS).fill(null);
     public readonly chunkManager: ChunkManager = new ChunkManager();
     public readonly itemData: Map<number, ItemDetails>;
+    public readonly examine: ExamineCache;
     public readonly npcSpawns: NpcSpawn[];
     public readonly shops: Shop[];
     public readonly playerTree: Quadtree<any>;
@@ -45,6 +47,7 @@ export class World {
         this.itemData = parseItemData(cache.itemDefinitions);
         this.npcSpawns = parseNpcSpawns();
         this.shops = parseShops();
+        this.examine = new ExamineCache();
         this.playerTree = new Quadtree<any>({
             width: 10000,
             height: 10000
