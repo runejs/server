@@ -31,6 +31,24 @@ export const itemIds = {
     recruitmentDrive: {
         shears: 5603,
     },
-    kebab: 1971
-
+    kebab: 1971,
+    coal: 453,
+    tinOre: 438,
+    copperOre: 436,
+    bronzeBar: 2349,
+    bluriteBar: 9467,
+    bluriteOre: 668,
+    ironBar: 2351,
+    ironOre: 440,
+    silverBar: 2355,
+    silverOre: 442,
+    steelBar: 2353,
+    goldBar: 2357,
+    goldOre: 444,
+    mithrilBar: 2359,
+    mithrilOre: 447,
+    adamantiteBar: 2361,
+    adamantiteOre: 449,
+    runiteBar: 2363,
+    runiteOre: 451
 };
