@@ -77,7 +77,7 @@ const STEEL : Bar = {
     experience: 17.5,
     ingredients: [
         { itemId: itemIds.ironOre, amount: 1 },
-        { itemId: itemIds.coal, amount: 1 }
+        { itemId: itemIds.coal, amount: 2 }
     ]
 };
 
