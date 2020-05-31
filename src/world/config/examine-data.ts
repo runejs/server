@@ -1,15 +1,15 @@
 import { readFileSync } from 'fs';
 import { logger } from '@runejs/logger/dist/logger';
-import { JSON_SCHEMA, safeLoad, safeDump } from 'js-yaml';
+import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 
-export interface Examine {
+interface Examine {
     id: number;
     examine: string;
 }
 
 export class ExamineCache {
     private readonly items: Map<number, Examine>;
-    private readonly npcs: Map<number, Examine> ;
+    private readonly npcs: Map<number, Examine>;
     private readonly objects: Map<number, Examine>;
 
     public constructor() {
@@ -33,27 +33,23 @@ export class ExamineCache {
         const examine = this.objects.get(id);
         return examine ? examine.examine : null;
     }
-
 }
 
 function parseData(fileName: string): Map<number, Examine> {
+    const examineMap: Map<number, Examine> = new Map<number, Examine>();
     try {
-        logger.info('Parsing examine item data...');
-
         const examineItems = safeLoad(readFileSync(fileName, 'utf8'), { schema: JSON_SCHEMA }) as Examine[];
 
         if(!examineItems || examineItems.length === 0) {
             throw new Error('Unable to read examine data.');
         }
 
-        const examineMap: Map<number, Examine> = new Map<number, Examine>();
         for (const item of examineItems) {
             examineMap.set(item.id, item);
         }
-
-        return examineMap;
     } catch(error) {
         logger.error('Error parsing examine data: ' + error);
-        return null;
     }
+
+    return examineMap;
 }

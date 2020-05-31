@@ -37,7 +37,7 @@ export class World {
     public readonly npcList: Npc[] = new Array(World.MAX_NPCS).fill(null);
     public readonly chunkManager: ChunkManager = new ChunkManager();
     public readonly itemData: Map<number, ItemDetails>;
-    public readonly examine: ExamineCache;
+    public readonly examine: ExamineCache = new ExamineCache();
     public readonly npcSpawns: NpcSpawn[];
     public readonly shops: Shop[];
     public readonly playerTree: Quadtree<any>;
@@ -47,7 +47,6 @@ export class World {
         this.itemData = parseItemData(cache.itemDefinitions);
         this.npcSpawns = parseNpcSpawns();
         this.shops = parseShops();
-        this.examine = new ExamineCache();
         this.playerTree = new Quadtree<any>({
             width: 10000,
             height: 10000
@@ -439,13 +438,13 @@ export class World {
     public async worldTick(): Promise<void> {
         const hrStart = Date.now();
         const activePlayers: Player[] = this.playerList.filter(player => player !== null);
-        
+
         if(activePlayers.length === 0) {
             return Promise.resolve().then(() => {
                 setTimeout(() => this.worldTick(), World.TICK_LENGTH); //TODO: subtract processing time
             });
         }
-        
+
         const activeNpcs: Npc[] = this.npcList.filter(npc => npc !== null);
 
         await Promise.all([ ...activePlayers.map(player => player.tick()), ...activeNpcs.map(npc => npc.tick()) ]);
