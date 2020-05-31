@@ -18,4 +18,5 @@ export const soundIds = {
     sheepBaa: 2053,
     shearSheep: 761,
     spinWool: 2590,
+    smelting: 2725,
 };

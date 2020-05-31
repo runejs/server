@@ -36,6 +36,8 @@ export const itemIds = {
     tinOre: 438,
     copperOre: 436,
     bronzeBar: 2349,
+    bluriteBar: 9467,
+    bluriteOre: 668,
     ironBar: 2351,
     ironOre: 440,
     silverBar: 2355,
