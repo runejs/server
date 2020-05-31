@@ -28,6 +28,22 @@ export interface Animation {
     delay?: number;
 }
 
+export enum DamageType {
+    NO_DAMAGE = 0,
+    DAMAGE = 1,
+    POISON = 2
+}
+
+/**
+ * An instance of damage.
+ */
+export interface Damage {
+    damageDealt: number;
+    damageType: DamageType;
+    remainingHitpoints: number;
+    maxHitpoints: number;
+}
+
 /**
  * Various player updating flags.
  */
@@ -40,6 +56,7 @@ export class UpdateFlags {
     private _faceActor: Actor;
     private _graphics: Graphic;
     private _animation: Animation;
+    private _damage: Damage;
 
     public constructor() {
         this._chatMessages = [];
@@ -53,10 +70,19 @@ export class UpdateFlags {
         this._faceActor = undefined;
         this._graphics = null;
         this._animation = undefined;
+        this._damage = null;
 
         if(this._chatMessages.length !== 0) {
             this._chatMessages.shift();
         }
+    }
+
+    public addDamage(amount: number, type: DamageType, remainingHitpoints: number, maxHitpoints: number): void {
+        this.damage = {
+            damageDealt: amount,
+            damageType: type,
+            remainingHitpoints, maxHitpoints
+        };
     }
 
     public addChatMessage(chatMessage: ChatMessage): void {
@@ -126,5 +152,13 @@ export class UpdateFlags {
 
     public set animation(value: Animation) {
         this._animation = value;
+    }
+
+    public get damage(): Damage {
+        return this._damage;
+    }
+
+    public set damage(value: Damage) {
+        this._damage = value;
     }
 }

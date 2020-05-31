@@ -9,6 +9,11 @@ const { songs } = require('../dist/world/config/songs');
 const { widgets, widgetScripts } = require('../dist/world/config/widget');
 const { ActionType, RunePlugin } = require('../dist/plugins/plugin');
 const { world } = require('../dist/game-server');
+const { InteractingAction, loopingAction, walkToAction } = require('../dist/world/actor/player/action/action');
+const { DamageType, Damage, Animation, Graphic, ChatMessage } = require('../dist/world/actor/update-flags');
+const { Skill, Skills } = require('../dist/world/actor/skills');
+const { of } = require('rxjs');
+const { delay } = require('rxjs/operators');
 
 module.exports = {
 
@@ -23,6 +28,12 @@ module.exports = {
     COMMAND_ACTION: ActionType.COMMAND, PLAYER_INIT: ActionType.PLAYER_INIT, NPC_INIT: ActionType.NPC_INIT,
     QUEST: ActionType.QUEST, RunePlugin,
 
-    world
+    world, InteractingAction, loopingAction, walkToAction,
+
+    DamageType, Damage, Animation, Graphic, ChatMessage, Skill, Skills,
+
+    wait: async (waitLength) => {
+        await of(null).pipe(delay(waitLength)).toPromise();
+    }
 
 };
