@@ -12,23 +12,12 @@ import { cache } from '@server/game-server';
 import { loopingAction } from '@server/world/actor/player/action/action';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
+import { colors } from "@server/util/colors";
 
-export const openSmeltingInterface: objectAction = (details) => {
-    details.player.activeWidget = {
-        widgetId: widgets.furnace.widgetId,
-        type: 'CHAT',
-        closeOnWalk: true
-    };
-};
-
-interface Smeltable {
-    takesInput: boolean;
-    count: number;
-    bar: Bar;
-}
 
 export interface Bar {
     barId: number;
+    quest?: string;
     requiredLevel: number;
     ingredients: Item[];
     experience: number;
@@ -46,6 +35,7 @@ const BRONZE : Bar = {
 
 const BLURITE : Bar = {
     barId: itemIds.bluriteBar,
+    quest: 'theKnightsSword',
     requiredLevel: 8,
     experience: 8,
     ingredients: [
@@ -120,6 +110,64 @@ const RUNEITE : Bar = {
     ]
 };
 
+export const openSmeltingInterface: objectAction = (details) => {
+    details.player.activeWidget = {
+        widgetId: widgets.furnace.widgetId,
+        type: 'CHAT',
+        closeOnWalk: true
+    };
+    loadSmeltingInterface(details);
+};
+
+const widgetItemModels = [
+    { childId: widgets.furnace.slots.slot1.modelId, bar: BLURITE },
+    { childId: widgets.furnace.slots.slot2.modelId, bar: IRON },
+    { childId: widgets.furnace.slots.slot3.modelId, bar: SILVER },
+    { childId: widgets.furnace.slots.slot4.modelId, bar: STEEL },
+    { childId: widgets.furnace.slots.slot5.modelId, bar: GOLD },
+    { childId: widgets.furnace.slots.slot6.modelId, bar: MITHRIL },
+    { childId: widgets.furnace.slots.slot7.modelId, bar: ADAMANTITE },
+    { childId: widgets.furnace.slots.slot8.modelId, bar: RUNEITE }
+];
+
+const widgetItemTitles = [
+    { childId: widgets.furnace.slots.slot1.titleId, bar: BLURITE },
+    { childId: widgets.furnace.slots.slot2.titleId, bar: IRON },
+    { childId: widgets.furnace.slots.slot3.titleId, bar: SILVER },
+    { childId: widgets.furnace.slots.slot4.titleId, bar: STEEL },
+    { childId: widgets.furnace.slots.slot5.titleId, bar: GOLD },
+    { childId: widgets.furnace.slots.slot6.titleId, bar: MITHRIL },
+    { childId: widgets.furnace.slots.slot7.titleId, bar: ADAMANTITE },
+    { childId: widgets.furnace.slots.slot8.titleId, bar: RUNEITE },
+];
+
+// We need to tell the widget what the bars actually look like.
+const loadSmeltingInterface = (details: ObjectActionDetails) => {
+    const theKnightsSwordQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
+    // Send the items to the widget.
+    widgetItemModels.forEach((model) => {
+        details.player.outgoingPackets.setItemOnWidget(widgets.furnace.widgetId, model.childId, model.bar.barId, 125);
+    });
+    // Figure out how to color the titles.
+    widgetItemTitles.forEach((title) => {
+        if (!details.player.skills.hasSkillLevel(Skill.SMITHING, title.bar.requiredLevel)) {
+            details.player.modifyWidget(widgets.furnace.widgetId, { childId: title.childId, textColor: colors.red});
+        } else {
+            details.player.modifyWidget(widgets.furnace.widgetId, { childId: title.childId, textColor: colors.black});
+        }
+        // Check if the player has completed 'The Knight's Sword' quest, even if the level is okay.
+        if (title.bar.quest !== undefined && (theKnightsSwordQuest == undefined || theKnightsSwordQuest.stage !== 'COMPLETE')) {
+            details.player.modifyWidget(widgets.furnace.widgetId, { childId: title.childId, textColor: colors.red});
+        }
+    });
+};
+
+interface Smeltable {
+    takesInput: boolean;
+    count: number;
+    bar: Bar;
+}
+
 const widgetButtonIds : Map<number, Smeltable> = new Map<number, Smeltable>([
     [16, { takesInput: false, count: 1,  bar: BRONZE }],
     [15, { takesInput: false, count: 5,  bar: BRONZE }],
@@ -170,13 +218,21 @@ const hasIngredients = (details: ButtonActionDetails, ingredients: Item[], inven
     });
 };
 
-const canSmelt = (details: ButtonActionDetails, requiredLevel: number): boolean =>  {
-    return details.player.skills.hasSkillLevel(Skill.SMITHING, requiredLevel);
+const canSmelt = (details: ButtonActionDetails, bar: Bar): boolean =>  {
+    return details.player.skills.hasSkillLevel(Skill.SMITHING, bar.requiredLevel);
 };
 
 const smeltProduct = (details: ButtonActionDetails, bar: Bar, count: number) => {
+
+    const theKnightsSwordQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
+    console.log(theKnightsSwordQuest);
+    if (bar.quest !== undefined && (theKnightsSwordQuest == undefined || theKnightsSwordQuest.stage !== 'COMPLETE')) {
+        details.player.sendMessage(`You need to complete The Knight\´s Sword quest first.`, true);
+        return;
+    }
+
     // Check if the player has the required smithing level.
-    if (!canSmelt(details, bar.requiredLevel)) {
+    if (!canSmelt(details, bar)) {
         details.player.sendMessage(`You need a smithing level of ${bar.requiredLevel} to smelt ${cache.itemDefinitions.get(bar.barId).name.toLowerCase()}s.`, true);
         return;
     }
@@ -208,10 +264,7 @@ const smeltProduct = (details: ButtonActionDetails, bar: Bar, count: number) => 
             details.player.giveItem(bar.barId);
             details.player.skills.addExp(Skill.SMITHING, bar.experience);
             smelted++;
-        }
 
-        // Animation plays once every two items.
-        if (elapsedTicks % 6 === 0) {
             details.player.playAnimation(animationIds.smelting);
             details.player.outgoingPackets.playSound(soundIds.smelting, 5);
         }
