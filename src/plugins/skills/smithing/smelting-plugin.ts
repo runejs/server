@@ -14,7 +14,6 @@ import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { colors } from '@server/util/colors';
 
-
 export interface Bar {
     barId: number;
     quest?: string;
@@ -119,48 +118,16 @@ export const openSmeltingInterface: objectAction = (details) => {
     loadSmeltingInterface(details);
 };
 
-const widgetItemModels = [
-    { childId: widgets.furnace.slots.slot1.modelId, bar: BLURITE },
-    { childId: widgets.furnace.slots.slot2.modelId, bar: IRON },
-    { childId: widgets.furnace.slots.slot3.modelId, bar: SILVER },
-    { childId: widgets.furnace.slots.slot4.modelId, bar: STEEL },
-    { childId: widgets.furnace.slots.slot5.modelId, bar: GOLD },
-    { childId: widgets.furnace.slots.slot6.modelId, bar: MITHRIL },
-    { childId: widgets.furnace.slots.slot7.modelId, bar: ADAMANTITE },
-    { childId: widgets.furnace.slots.slot8.modelId, bar: RUNEITE }
+const widgetItems = [
+    { slot: widgets.furnace.slots.slot1, bar: BLURITE },
+    { slot: widgets.furnace.slots.slot2, bar: IRON },
+    { slot: widgets.furnace.slots.slot3, bar: SILVER },
+    { slot: widgets.furnace.slots.slot4, bar: STEEL },
+    { slot: widgets.furnace.slots.slot5, bar: GOLD },
+    { slot: widgets.furnace.slots.slot6, bar: MITHRIL },
+    { slot: widgets.furnace.slots.slot7, bar: ADAMANTITE },
+    { slot: widgets.furnace.slots.slot8, bar: RUNEITE }
 ];
-
-const widgetItemTitles = [
-    { childId: widgets.furnace.slots.slot1.titleId, bar: BLURITE },
-    { childId: widgets.furnace.slots.slot2.titleId, bar: IRON },
-    { childId: widgets.furnace.slots.slot3.titleId, bar: SILVER },
-    { childId: widgets.furnace.slots.slot4.titleId, bar: STEEL },
-    { childId: widgets.furnace.slots.slot5.titleId, bar: GOLD },
-    { childId: widgets.furnace.slots.slot6.titleId, bar: MITHRIL },
-    { childId: widgets.furnace.slots.slot7.titleId, bar: ADAMANTITE },
-    { childId: widgets.furnace.slots.slot8.titleId, bar: RUNEITE },
-];
-
-// We need to tell the widget what the bars actually look like.
-const loadSmeltingInterface = (details: ObjectActionDetails) => {
-    const theKnightsSwordQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
-    // Send the items to the widget.
-    widgetItemModels.forEach((model) => {
-        details.player.outgoingPackets.setItemOnWidget(widgets.furnace.widgetId, model.childId, model.bar.barId, 125);
-    });
-    // Figure out how to color the titles.
-    widgetItemTitles.forEach((title) => {
-        if (!details.player.skills.hasSkillLevel(Skill.SMITHING, title.bar.requiredLevel)) {
-            details.player.modifyWidget(widgets.furnace.widgetId, { childId: title.childId, textColor: colors.red});
-        } else {
-            details.player.modifyWidget(widgets.furnace.widgetId, { childId: title.childId, textColor: colors.black});
-        }
-        // Check if the player has completed 'The Knight's Sword' quest, even if the level is okay.
-        if (title.bar.quest !== undefined && (theKnightsSwordQuest == undefined || theKnightsSwordQuest.stage !== 'COMPLETE')) {
-            details.player.modifyWidget(widgets.furnace.widgetId, { childId: title.childId, textColor: colors.red});
-        }
-    });
-};
 
 interface Smeltable {
     takesInput: boolean;
@@ -207,6 +174,24 @@ const widgetButtonIds : Map<number, Smeltable> = new Map<number, Smeltable>([
     [45, { takesInput: true,  count: 0,  bar: RUNEITE }]
 ]);
 
+// We need to tell the widget what the bars actually look like.
+const loadSmeltingInterface = (details: ObjectActionDetails) => {
+    const theKnightsSwordQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
+    // Send the items to the widget.
+    widgetItems.forEach((item) => {
+        details.player.outgoingPackets.setItemOnWidget(widgets.furnace.widgetId, item.slot.modelId, item.bar.barId, 125);
+        if (!details.player.skills.hasSkillLevel(Skill.SMITHING, item.bar.requiredLevel)) {
+            details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.red});
+        } else {
+            details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.black});
+        }
+        // Check if the player has completed 'The Knight's Sword' quest, even if the level is okay.
+        if (item.bar.quest !== undefined && (theKnightsSwordQuest == undefined || theKnightsSwordQuest.stage !== 'COMPLETE')) {
+            details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.red});
+        }
+    });
+};
+
 const hasIngredients = (details: ButtonActionDetails, ingredients: Item[], inventory: ItemContainer, loop) => {
     ingredients.forEach((item: Item) => {
         const itemIndex = inventory.findIndex(item);
@@ -225,7 +210,6 @@ const canSmelt = (details: ButtonActionDetails, bar: Bar): boolean =>  {
 const smeltProduct = (details: ButtonActionDetails, bar: Bar, count: number) => {
 
     const theKnightsSwordQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
-    console.log(theKnightsSwordQuest);
     if (bar.quest !== undefined && (theKnightsSwordQuest == undefined || theKnightsSwordQuest.stage !== 'COMPLETE')) {
         details.player.sendMessage(`You need to complete The Knight\´s Sword quest first.`, true);
         return;
