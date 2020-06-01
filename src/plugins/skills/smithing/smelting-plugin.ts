@@ -12,7 +12,7 @@ import { cache } from '@server/game-server';
 import { loopingAction } from '@server/world/actor/player/action/action';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
-import { colors } from "@server/util/colors";
+import { colors } from '@server/util/colors';
 
 
 export interface Bar {
