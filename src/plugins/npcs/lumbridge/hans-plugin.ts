@@ -3,6 +3,7 @@ import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { npcIds } from '@server/world/config/npc-ids';
 import { animationIds } from '@server/world/config/animation-ids';
 import { dialogue, Emote, execute, goto } from '@server/world/actor/dialogue';
+import { Achievements, giveAchievement } from '@server/world/actor/player/achievements';
 
 const action: npcAction = (details) => {
     const { player, npc } = details;
@@ -47,6 +48,8 @@ const action: npcAction = (details) => {
             } else {
                 player.sendMessage(`Hans wanders off aimlessly through the courtyard.`);
             }
+
+            giveAchievement(Achievements.WELCOME, player);
         })
     ]);
 };
