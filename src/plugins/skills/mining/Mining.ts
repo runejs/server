@@ -43,7 +43,6 @@ const action: objectAction = (details) => {
         if (elapsedTicks % pickaxe.pulses === 0 && elapsedTicks != 0) {
             const successChance = randomBetween(0, 100)
             const percentNeeded = (ore.chance * details.player.skills.values[Skill.MINING].level + ore.chanceOffset) * 100;
-            logger.info(`${successChance} ${percentNeeded}`)
             if (successChance < percentNeeded) {
                 if (details.player.inventory.hasSpace()) {
                     details.player.playSound(soundIds.oreDepeleted)
