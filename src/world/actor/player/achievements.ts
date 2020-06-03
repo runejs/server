@@ -1,4 +1,6 @@
 import { Player } from '@server/world/actor/player/player';
+import { serverConfig } from '@server/game-server';
+import { gfxIds } from '@server/world/config/gfx-ids';
 
 export const achievementSeries = {
     lumbridge: {
@@ -33,11 +35,16 @@ export namespace Achievements {
 }
 
 export function giveAchievement(achievement: Achievement, player: Player): boolean {
+    if(!serverConfig.giveAchievements) {
+        return;
+    }
+
     if(hasAchievement(achievement, player)) {
         // return false;
     }
 
     player.achievements.push(achievement.id);
+    player.playGraphics({ id: gfxIds.levelUpFireworks, delay: 0, height: 125 });
     player.sendMessage(`<col=ffff00><shad>You've completed an Achievement in the ` +
         `${ achievementSeries[achievement.series].name } series!</shad></col>`);
     player.sendMessage(`<col=255>${ achievement.name }</col> - <i>${ achievement.description }</i>`);
