@@ -21,5 +21,6 @@ export const soundIds = {
     inventoryFull: 2277,
     oreDepeleted: 3600,
     pickaxeSwing: 3220,
-    oreEmpty: 2661
+    oreEmpty: 2661,
+    smelting: 2725,
 };

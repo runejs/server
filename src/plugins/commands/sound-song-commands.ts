@@ -28,7 +28,7 @@ export default new RunePlugin([{
     action: songAction
 }, {
     type: ActionType.COMMAND,
-    commands: 'sound',
+    commands: [ 'sound', 'so' ],
     args: [
         {
             name: 'soundId',

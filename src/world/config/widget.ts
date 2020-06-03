@@ -1,5 +1,19 @@
 export const widgets: any = {
     characterDesign: 269,
+    furnace: {
+        widgetId: 311,
+        slots: {
+            slot0: { modelId: 4, titleId: 16 },
+            slot1: { modelId: 5, titleId: 20 },
+            slot2: { modelId: 6, titleId: 24 },
+            slot3: { modelId: 7, titleId: 28 },
+            slot4: { modelId: 8, titleId: 32 },
+            slot5: { modelId: 9, titleId: 36 },
+            slot6: { modelId: 10, titleId: 40 },
+            slot7: { modelId: 11, titleId: 44 },
+            slot8: { modelId: 12, titleId: 48 },
+        }
+    },
     inventory: {
         widgetId: 149,
         containerId: 0
