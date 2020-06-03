@@ -9,7 +9,7 @@ import { Cache } from '@runejs/cache-parser';
 import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
 import { ByteBuffer } from '@runejs/byte-buffer';
 
-import { loadPlugins } from '@server/plugins/plugin-loader';
+import { loadTSPlugins, loadJSPlugins } from '@server/plugins/plugin-loader';
 import { ActionPlugin, ActionType, sort } from '@server/plugins/plugin';
 
 import { setNpcPlugins } from '@server/world/actor/player/action/npc-action';
@@ -33,32 +33,41 @@ export let world: World;
 export let crcTable: ByteBuffer;
 
 export async function injectPlugins(): Promise<void> {
-    const actionTypes: { [key: string]: ActionPlugin[] } = {};
-    const plugins = await loadPlugins();
+    const actionPluginMap: { [key: string]: ActionPlugin[] } = {};
+    const tsPlugins = await loadTSPlugins();
+    const jsPlugins = await loadJSPlugins();
 
-    plugins.map(plugin => plugin.actions).reduce((a, b) => a.concat(b)).forEach(action => {
-        if(!actionTypes.hasOwnProperty(action.type)) {
-            actionTypes[action.type] = [];
+    tsPlugins.map(plugin => plugin.actions).reduce((a, b) => a.concat(b)).forEach(action => {
+        if(!actionPluginMap.hasOwnProperty(action.type)) {
+            actionPluginMap[action.type] = [];
         }
 
-        actionTypes[action.type].push(action);
+        actionPluginMap[action.type].push(action);
     });
 
-    Object.keys(actionTypes).forEach(key => actionTypes[key] = sort(actionTypes[key]));
+    jsPlugins.map(plugin => plugin.actions).reduce((a, b) => a.concat(b)).forEach(action => {
+        if(!actionPluginMap.hasOwnProperty(action.type)) {
+            actionPluginMap[action.type] = [];
+        }
 
-    setQuestPlugins(actionTypes[ActionType.QUEST]);
-    setButtonPlugins(actionTypes[ActionType.BUTTON]);
-    setNpcPlugins(actionTypes[ActionType.NPC_ACTION]);
-    setObjectPlugins(actionTypes[ActionType.OBJECT_ACTION]);
-    setItemOnObjectPlugins(actionTypes[ActionType.ITEM_ON_OBJECT_ACTION]);
-    setItemOnNpcPlugins(actionTypes[ActionType.ITEM_ON_NPC_ACTION]);
-    setItemOnItemPlugins(actionTypes[ActionType.ITEM_ON_ITEM_ACTION]);
-    setItemPlugins(actionTypes[ActionType.ITEM_ACTION]);
-    setWorldItemPlugins(actionTypes[ActionType.WORLD_ITEM_ACTION]);
-    setCommandPlugins(actionTypes[ActionType.COMMAND]);
-    setWidgetPlugins(actionTypes[ActionType.WIDGET_ACTION]);
-    setPlayerInitPlugins(actionTypes[ActionType.PLAYER_INIT]);
-    setNpcInitPlugins(actionTypes[ActionType.NPC_INIT]);
+        actionPluginMap[action.type].push(action);
+    });
+
+    Object.keys(actionPluginMap).forEach(key => actionPluginMap[key] = sort(actionPluginMap[key]));
+
+    setQuestPlugins(actionPluginMap[ActionType.QUEST]);
+    setButtonPlugins(actionPluginMap[ActionType.BUTTON]);
+    setNpcPlugins(actionPluginMap[ActionType.NPC_ACTION]);
+    setObjectPlugins(actionPluginMap[ActionType.OBJECT_ACTION]);
+    setItemOnObjectPlugins(actionPluginMap[ActionType.ITEM_ON_OBJECT_ACTION]);
+    setItemOnNpcPlugins(actionPluginMap[ActionType.ITEM_ON_NPC_ACTION]);
+    setItemOnItemPlugins(actionPluginMap[ActionType.ITEM_ON_ITEM_ACTION]);
+    setItemPlugins(actionPluginMap[ActionType.ITEM_ACTION]);
+    setWorldItemPlugins(actionPluginMap[ActionType.WORLD_ITEM_ACTION]);
+    setCommandPlugins(actionPluginMap[ActionType.COMMAND]);
+    setWidgetPlugins(actionPluginMap[ActionType.WIDGET_ACTION]);
+    setPlayerInitPlugins(actionPluginMap[ActionType.PLAYER_INIT]);
+    setNpcInitPlugins(actionPluginMap[ActionType.NPC_INIT]);
 }
 
 function generateCrcTable(): void {

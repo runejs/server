@@ -1,7 +1,7 @@
 import { Item } from '@server/world/items/item';
 import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { Player } from './player';
 import { SkillValue } from '@server/world/actor/skills';
 

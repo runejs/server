@@ -56,6 +56,7 @@ const packets: { [key: number]: incomingPacket } = {
 
     63:  npcInteractionPacket,
     116: npcInteractionPacket,
+    57:  npcInteractionPacket,
 
     30:  objectInteractionPacket,
     164: objectInteractionPacket,

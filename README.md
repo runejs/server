@@ -31,7 +31,7 @@ Currently the server is set up for the 435 revision of the game, which was a gam
 
 ## Usage
 
-1. Download and install Node.JS **version 12 or higher**: https://nodejs.org/en/
+1. Download and install Node.JS **version 13 or higher**: https://nodejs.org/en/
 2. Clone the Github Repo: https://github.com/rune-js/server
 3. Install dependencies by navigating to the project in your Terminal or command prompt and running the command npm install
 4. Copy the `data/config/server-config-default.yaml` and paste it into the same folder using the name `server-config.yaml`. 

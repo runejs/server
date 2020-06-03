@@ -1,6 +1,5 @@
 import { Actor } from '@server/world/actor/actor';
 import { Player } from '@server/world/actor/player/player';
-import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
 import { startsWithVowel } from '@server/util/strings';
 import { serverConfig } from '@server/game-server';
 import { gfxIds } from '@server/world/config/gfx-ids';
