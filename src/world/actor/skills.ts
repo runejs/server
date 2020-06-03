@@ -3,6 +3,7 @@ import { Player } from '@server/world/actor/player/player';
 import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
 import { startsWithVowel } from '@server/util/strings';
 import { serverConfig } from '@server/game-server';
+import { gfxIds } from '@server/world/config/gfx-ids';
 
 export enum Skill {
     ATTACK,
@@ -169,7 +170,7 @@ export class Skills {
                     text: `Your ${skillName} level is now ${level}.` });
             },
             afterOpened: () => {
-                player.playGraphics({ id: 199, delay: 0, height: 125 });
+                player.playGraphics({ id: gfxIds.levelUpFireworks, delay: 0, height: 125 });
                 // @TODO sounds
             }
         });
