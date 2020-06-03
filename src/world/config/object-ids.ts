@@ -1,4 +1,5 @@
 export const objectIds = {
+    furnace: 2781,
     milkableCow: 8689,
     fire: 2732,
     spinningWheel: 2644,
