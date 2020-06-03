@@ -40,7 +40,7 @@ export function giveAchievement(achievement: Achievement, player: Player): boole
     player.achievements.push(achievement.id);
     player.sendMessage(`<col=ffff00><shad>You've completed an Achievement in the ` +
         `${ achievementSeries[achievement.series].name } series!</shad></col>`);
-    player.sendMessage(`<col=255>${ achievement.name }</col> - <col=1a1a1a>${ achievement.description }</col>`);
+    player.sendMessage(`<col=255>${ achievement.name }</col> - <i>${ achievement.description }</i>`);
     return true;
 }
 

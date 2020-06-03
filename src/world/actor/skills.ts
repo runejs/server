@@ -84,6 +84,15 @@ export class Skills {
         return values;
     }
 
+    /*
+     * @TODO make an additional field for boostedLevel that this reads from
+     *   Also add a new method to get the unboostedLevel incase it's ever needed
+     *   Then think about some way to reliably and easily fade those boosts out over time
+     */
+    public getSkillLevel(skillId: number, level: number): number {
+        return this.values[skillId].level;
+    }
+
     public hasSkillLevel(skillId: number, level: number): boolean {
         return this.values[skillId].level >= level;
     }
