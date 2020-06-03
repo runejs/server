@@ -31,6 +31,7 @@ import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 import { quests } from '@server/world/config/quests';
 import { ItemDefinition } from '@runejs/cache-parser';
 
+
 const DEFAULT_TAB_WIDGET_IDS = [
     92, widgets.skillsTab, 274, widgets.inventory.widgetId, widgets.equipment.widgetId, 271, 192, -1, 131, 148,
     widgets.logoutTab, widgets.settingsTab, widgets.emotesTab, 239
@@ -92,6 +93,7 @@ export class Player extends Actor {
     private quadtreeKey: QuadtreeKey = null;
     public savedMetadata: { [key: string]: any } = {};
     public quests: QuestProgress[] = [];
+    public achievements: string[] = [];
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -154,6 +156,9 @@ export class Player extends Actor {
 
             if(playerSave.quests) {
                 this.quests = playerSave.quests;
+            }
+            if(playerSave.achievements) {
+                this.achievements = playerSave.achievements;
             }
 
             this._lastAddress = playerSave.lastLogin?.address || (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
