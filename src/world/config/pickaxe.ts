@@ -1,6 +1,5 @@
 import {Player} from "@server/world/actor/player/player";
 import {Skill, Skills} from "@server/world/actor/skills";
-import {Ore} from "@server/world/config/Ore";
 
 interface IPickaxe {
     itemId: number;
@@ -29,7 +28,11 @@ const Pickaxes: IPickaxe[] = [
     {itemId: 1275, level: 41, animation: 624, pulses: 3}
 ]
 
-
+/**
+ * Checks the players inventory and equipment for pickaxe
+ * @param player
+ * @return the highest level pickage the player can use, or null if theres none found
+ */
 export function getBestPickaxe(player: Player): IPickaxe | null {
     for (let i = Pickaxes.length - 1; i >= 0; i--) {
         if (player.skills.hasSkillLevel(Skill.MINING, Pickaxes[i].level)) {

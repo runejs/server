@@ -1,10 +1,7 @@
 import {ActionType, RunePlugin} from "@server/plugins/plugin";
 import {objectAction} from "@server/world/actor/player/action/object-action";
-import {loopingAction} from "@server/world/actor/player/action/action";
-import {getAllOreIds, getOreFromRock} from "@server/world/config/Ore";
-import {itemIds} from "@server/world/config/item-ids";
+import {getAllOreIds, getOreFromRock} from "@server/world/config/ore";
 import {soundIds} from "@server/world/config/sound-ids";
-import {npcIds} from "@server/world/config/npc-ids";
 import {World} from "@server/world/world";
 import {cache} from "@server/game-server";
 
