@@ -13,7 +13,7 @@ const action: objectAction = (details) => {
     const ore = getOreFromRock(details.object.objectId);
     if (!ore) {
         details.player.sendMessage("There is current no ore available in this rock.")
-        details.player.playSound(2661, 7, 0);
+        details.player.playSound(soundIds.oreEmpty, 7, 0);
         return;
     }
     if (!details.player.skills.hasSkillLevel(Skill.MINING, ore.level)) {
@@ -46,7 +46,7 @@ const action: objectAction = (details) => {
             logger.info(`${successChance} ${percentNeeded}`)
             if (successChance < percentNeeded) {
                 if (details.player.inventory.hasSpace()) {
-                    details.player.playSound(3600)
+                    details.player.playSound(soundIds.oreDepeleted)
 
                     details.player.sendMessage(`You manage to mine some ${oreName}.`)
                     details.player.giveItem(ore.itemId);
@@ -66,7 +66,7 @@ const action: objectAction = (details) => {
             }
         } else {
             if (elapsedTicks % 1 == 0 && elapsedTicks != 0) {
-                details.player.playSound(3220, 7, 0)
+                details.player.playSound(soundIds.pickaxeSwing, 7, 0)
             }
         }
         elapsedTicks++;

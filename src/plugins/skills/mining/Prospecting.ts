@@ -12,7 +12,7 @@ const action: objectAction = (details) => {
     details.player.sendMessage("You examine the rock for ores.")
     details.player.face(details.position);
     const ore = getOreFromRock(details.object.objectId);
-    details.player.playSound(2661, 7, 0);
+    details.player.playSound(soundIds.oreEmpty, 7, 0);
 
     setTimeout(() => {
         if(!ore) {
