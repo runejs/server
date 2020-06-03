@@ -8,6 +8,7 @@ import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './actor/npc/npc';
 import { parseShops, Shop } from '@server/world/config/shops';
+import TravelLocations from '@server/world/config/travel-locations';
 import Quadtree from 'quadtree-lib';
 import { timer } from 'rxjs';
 import { Actor } from '@server/world/actor/actor';
@@ -40,6 +41,7 @@ export class World {
     public readonly examine: ExamineCache = new ExamineCache();
     public readonly npcSpawns: NpcSpawn[];
     public readonly shops: Shop[];
+    public readonly travelLocations: TravelLocations = new TravelLocations();
     public readonly playerTree: Quadtree<any>;
     public readonly npcTree: Quadtree<any>;
 
