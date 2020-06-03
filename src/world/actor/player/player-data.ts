@@ -5,6 +5,7 @@ import { logger } from '@runejs/logger';
 import { Player } from './player';
 import { SkillValue } from '@server/world/actor/skills';
 
+
 export interface QuestProgress {
     questId: string;
     stage: string;
@@ -61,6 +62,7 @@ export interface PlayerSave {
     settings: PlayerSettings;
     savedMetadata: { [key: string]: any };
     quests: QuestProgress[];
+    achievements: string[];
 }
 
 export const defaultAppearance = (): Appearance => {
@@ -123,6 +125,7 @@ export function savePlayerData(player: Player): boolean {
         settings: player.settings,
         savedMetadata: player.savedMetadata,
         quests: player.quests,
+        achievements: player.achievements
     };
 
     try {

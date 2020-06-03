@@ -9,6 +9,7 @@ export interface ServerConfig {
     port: number;
     showWelcome: boolean;
     expRate: number;
+    giveAchievements: boolean;
 }
 
 export function parseServerConfig(useDefault?: boolean): ServerConfig {

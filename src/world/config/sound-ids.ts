@@ -18,4 +18,9 @@ export const soundIds = {
     sheepBaa: 2053,
     shearSheep: 761,
     spinWool: 2590,
+    inventoryFull: 2277,
+    oreDepeleted: 3600,
+    pickaxeSwing: 3220,
+    oreEmpty: 2661,
+    smelting: 2725,
 };

@@ -1,0 +1,102 @@
+- name: Lumbridge
+  x: 3221
+  y: 3219
+- name: Al Kharid
+  x: 3293
+  y: 3184
+- name: Varrock
+  x: 3213
+  y: 3425
+- name: Barbarian Village
+  x: 3082
+  y: 3416
+- name: Edgeville
+  x: 3089
+  y: 3487
+- name: Draynor Village
+  x: 3083
+  y: 3249
+- name: Wizard's Tower
+  x: 3113
+  y: 3169
+- name: Port Sarim
+  x: 3019
+  y: 3244
+- name: Rimmington
+  x: 2956
+  y: 3209
+- name: Falador
+  x: 2965
+  y: 3383
+- name: Taverly
+  x: 2895
+  y: 3436
+- name: Burthorpe
+  x: 2898
+  y: 3544
+- name: Catherby
+  x: 2805
+  y: 3435
+- name: Seer's Village
+  x: 2730
+  y: 3485
+- name: Rellekka
+  x: 2659
+  y: 3657
+- name: Entrana
+  x: 2827
+  y: 3343
+- name: Karamja
+  x: 2917
+  y: 3175
+- name: Brimhaven
+  x: 2795
+  y: 3177
+- name: Shilo Village
+  x: 2849
+  y: 2961
+- name: Marim
+  x: 2758
+  y: 2781
+- name: Yanille
+  x: 2605
+  y: 3093
+- name: Port Khazard
+  x: 2655
+  y: 3157
+- name: Ardougne
+  x: 2663
+  y: 3305
+- name: West Ardougne
+  x: 2533
+  y: 3306
+- name: Tree Gnome Stronghold
+  x: 2450
+  y: 3422
+- name: Digsite
+  x: 3359
+  y: 3416
+- name: Canifis
+  x: 3494
+  y: 3483
+- name: Mort'ton
+  x: 3488
+  y: 3288
+- name: Port Phasmatys
+  x: 3666
+  y: 3486
+- name: Ruins of Uzer
+  x: 3482
+  y: 3090
+- name: Nardah
+  x: 3419
+  y: 2917
+- name: Sophanem
+  x: 3305
+  y: 2788
+- name: Pollnivneach
+  x: 3358
+  y: 2970
+- name: Bedabin Camp
+  x: 3169
+  y: 3034

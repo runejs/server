@@ -2,6 +2,7 @@ import { Actor } from '@server/world/actor/actor';
 import { Player } from '@server/world/actor/player/player';
 import { startsWithVowel } from '@server/util/strings';
 import { serverConfig } from '@server/game-server';
+import { gfxIds } from '@server/world/config/gfx-ids';
 
 export enum Skill {
     ATTACK,
@@ -83,6 +84,15 @@ export class Skills {
         return values;
     }
 
+    /*
+     * @TODO make an additional field for boostedLevel that this reads from
+     *   Also add a new method to get the unboostedLevel incase it's ever needed
+     *   Then think about some way to reliably and easily fade those boosts out over time
+     */
+    public getSkillLevel(skillId: number, level: number): number {
+        return this.values[skillId].level;
+    }
+
     public hasSkillLevel(skillId: number, level: number): boolean {
         return this.values[skillId].level >= level;
     }
@@ -159,7 +169,7 @@ export class Skills {
                     text: `Your ${skillName} level is now ${level}.` });
             },
             afterOpened: () => {
-                player.playGraphics({ id: 199, delay: 0, height: 125 });
+                player.playGraphics({ id: gfxIds.levelUpFireworks, delay: 0, height: 125 });
                 // @TODO sounds
             }
         });

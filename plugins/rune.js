@@ -12,6 +12,7 @@ const { world } = require('../dist/game-server');
 const { InteractingAction, loopingAction, walkToAction } = require('../dist/world/actor/player/action/action');
 const { DamageType, Damage, Animation, Graphic, ChatMessage } = require('../dist/world/actor/update-flags');
 const { Skill, Skills } = require('../dist/world/actor/skills');
+const { Achievements, giveAchievement } = require('../dist/world/actor/player/achievements');
 const { of } = require('rxjs');
 const { delay } = require('rxjs/operators');
 
@@ -30,7 +31,7 @@ module.exports = {
 
     world, InteractingAction, loopingAction, walkToAction,
 
-    DamageType, Damage, Animation, Graphic, ChatMessage, Skill, Skills,
+    DamageType, Damage, Animation, Graphic, ChatMessage, Skill, Skills, Achievements, giveAchievement,
 
     wait: async (waitLength) => {
         await of(null).pipe(delay(waitLength)).toPromise();

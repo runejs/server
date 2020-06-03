@@ -3,4 +3,5 @@ export const gfxIds = {
     homeTeleportPullOutBook: 802,
     homeTeleportCircleGlow: 803,
     homeTeleport: 804,
+    levelUpFireworks: 199
 };

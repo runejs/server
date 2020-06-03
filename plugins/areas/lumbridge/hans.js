@@ -1,4 +1,4 @@
-const { dialogue, Emote, execute, goto, NPC_ACTION, animationIds, npcIds } = require('../../rune.js');
+const { dialogue, Emote, execute, goto, NPC_ACTION, animationIds, npcIds, Achievements, giveAchievement } = require('../../rune.js');
 
 const action = async details => {
     const { player, npc } = details;
@@ -44,6 +44,8 @@ const action = async details => {
     } else {
         player.sendMessage(`Hans wanders off aimlessly through the courtyard.`);
     }
+
+    giveAchievement(Achievements.WELCOME, player);
 };
 
 module.exports = {
