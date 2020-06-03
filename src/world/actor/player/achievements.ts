@@ -31,7 +31,7 @@ export namespace Achievements {
         description: 'Talk to Hans.',
         longDescription: `Speak with Hans in the Lumbridge Castle's courtyard.`,
         series: AchievementSeries.LUMBRIDGE
-    }
+    };
 }
 
 export function giveAchievement(achievement: Achievement, player: Player): boolean {

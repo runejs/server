@@ -15,7 +15,7 @@ const CLAY_OBJECTS: Map<number, number> = new Map<number, number>([
     [2109, 451],
     [14904, 14896],
     [14905, 14897]
-])
+]);
 
 const COPPER_OBJECTS: Map<number, number> = new Map<number, number>([
     [11960, 11555],
@@ -31,7 +31,7 @@ const COPPER_OBJECTS: Map<number, number> = new Map<number, number>([
     [14856, 14832],
     [14857, 14833],
     [14858, 14834]
-])
+]);
 
 const TIN_OBJECTS: Map<number, number> = new Map<number, number>([
     [11597, 11555],
@@ -44,7 +44,7 @@ const TIN_OBJECTS: Map<number, number> = new Map<number, number>([
     [2095, 451],
     [14092, 14894],
     [14903, 14895]
-])
+]);
 
 const IRON_OBJECTS: Map<number, number> = new Map<number, number>([
     [11954, 11555],
@@ -56,7 +56,7 @@ const IRON_OBJECTS: Map<number, number> = new Map<number, number>([
     [14901, 14893],
     [14913, 14915],
     [14914, 14916]
-])
+]);
 
 const COAL_OBJECTS: Map<number, number> = new Map<number, number>([
     [11963, 11555],
@@ -70,7 +70,7 @@ const COAL_OBJECTS: Map<number, number> = new Map<number, number>([
     [14850, 14832],
     [14851, 14833],
     [14852, 14834]
-])
+]);
 
 const SILVER_OBJECTS: Map<number, number> = new Map<number, number>([
     [11948, 11555],
@@ -78,7 +78,7 @@ const SILVER_OBJECTS: Map<number, number> = new Map<number, number>([
     [11950, 11557],
     [2100, 450],
     [2101, 451]
-])
+]);
 
 const GOLD_OBJECTS: Map<number, number> = new Map<number, number>([
     [11951, 11555],
@@ -86,7 +86,7 @@ const GOLD_OBJECTS: Map<number, number> = new Map<number, number>([
     [11953, 11557],
     [2098, 450],
     [2099, 451]
-])
+]);
 
 const MITHRIL_OBJECTS: Map<number, number> = new Map<number, number>([
     [11945, 11555],
@@ -100,7 +100,8 @@ const MITHRIL_OBJECTS: Map<number, number> = new Map<number, number>([
     [14853, 14832],
     [14854, 14833],
     [14855, 14834]
-])
+]);
+
 const ADAMANT_OBJECTS: Map<number, number> = new Map<number, number>([
     [11939, 11552],
     [11940, 11553],
@@ -110,14 +111,15 @@ const ADAMANT_OBJECTS: Map<number, number> = new Map<number, number>([
     [14862, 14832],
     [14863, 14833],
     [14864, 14834]
-])
+]);
+
 const RUNITE_OBJECTS: Map<number, number> = new Map<number, number>([
     [2106, 450],
     [2107, 451],
     [14859, 14832],
     [14860, 14833],
     [14861, 14834]
-])
+]);
 
 
 export enum Ore {
@@ -145,7 +147,7 @@ const Ores: IOre[] = [
     {objects: MITHRIL_OBJECTS, itemId: 447, level: 55, experience: 80.0, respawn: 200, chance: 0.002, chanceOffset: 0},
     {objects: ADAMANT_OBJECTS, itemId: 449, level: 70, experience: 95.0, respawn: 800, chance: 0.001, chanceOffset: 0},
     {objects: RUNITE_OBJECTS, itemId: 451, level: 85, experience: 125.0, respawn: 1200, chance: 0.0008, chanceOffset: 0}
-]
+];
 
 export function getOre(ore: Ore): IOre {
     return Ores[ore];
@@ -155,21 +157,21 @@ export function getOreFromRock(id: number): IOre {
     return Ores.find(ore => ore.objects.has(id));
 }
 
-export function getOreFromDepletedRock(id: number) {
+export function getOreFromDepletedRock(id: number): IOre {
     return Ores.find(ore => {
-        for (let [rock, expired] of ore.objects) {
+        for (const [rock, expired] of ore.objects) {
             if (expired === id) {
                 return true;
             }
         }
         return false;
-    })
+    });
 }
 
 export function getAllOreIds(): number[] {
     const oreIds: number[] = [];
     for (const ore of Ores) {
-        for (let [rock, expired] of ore.objects) {
+        for (const [rock, expired] of ore.objects) {
             oreIds.push(rock);
             oreIds.push(expired);
         }

@@ -1,5 +1,5 @@
-import {Player} from "@server/world/actor/player/player";
-import {Skill, Skills} from "@server/world/actor/skills";
+import { Player } from '@server/world/actor/player/player';
+import { Skill, Skills } from '@server/world/actor/skills';
 
 interface IPickaxe {
     itemId: number;
@@ -26,7 +26,7 @@ const Pickaxes: IPickaxe[] = [
     {itemId: 1273, level: 21, animation: 629, pulses: 5},
     {itemId: 1271, level: 31, animation: 628, pulses: 4},
     {itemId: 1275, level: 41, animation: 624, pulses: 3}
-]
+];
 
 /**
  * Checks the players inventory and equipment for pickaxe
