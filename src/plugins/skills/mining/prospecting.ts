@@ -1,9 +1,9 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { objectAction } from '@server/world/actor/player/action/object-action';
-import { getAllOreIds, getOreFromRock } from '@server/world/config/ore';
 import { soundIds } from '@server/world/config/sound-ids';
 import { World } from '@server/world/world';
 import { cache } from '@server/game-server';
+import {getAllOreIds, getOreFromRock} from '@server/world/config/harvestable-object';
 
 const action: objectAction = (details) => {
     details.player.sendMessage('You examine the rock for ores.');
