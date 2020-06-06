@@ -598,3 +598,9 @@
   level: 0
   type: 10
   orientation: 0
+- objectId: 4306 # anvil in lumbridge
+  x: 3227
+  'y': 3252
+  level: 0
+  type: 10
+  orientation: 0

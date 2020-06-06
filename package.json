@@ -5,10 +5,10 @@
     "main": "src/game-server.ts",
     "scripts": {
         "server": "npm start",
-        "start": "rm -rf dist/ && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js\"",
+        "start": "rimraf ./dist && mkdirp ./dist && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js\"",
         "lint": "tslint --project tsconfig.json",
-        "fake-players": "rm -rf dist/ && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers\"",
-        "fake-players-tick": "rm -rf dist/ && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers -tickTime\"",
+        "fake-players": "rimraf ./dist && mkdirp ./dist && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers\"",
+        "fake-players-tick": "rimraf ./dist && mkdirp ./dist && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers -tickTime\"",
         "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
         "watch-plugins": "nodemon --watch src/plugins/ --exec \"npm run build\" -e ts"
     },
