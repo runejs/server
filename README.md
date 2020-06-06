@@ -13,38 +13,42 @@ The server runs on the 435 revision of the game, which was a game update made on
 
 ## Features
 
-- RSA and ISAAC ciphering support.
-- Login & input/output packet handling.
-- Player saving/loading via JSON files.
-- Player credential validation and password hashing.
-- Multiplayer support.
-- Map-chunk based positioning.
+- Asynchronous server infrastructure using Promises and RxJS Observables
+- RSA and ISAAC ciphering support
+- Login & input/output packet handling
+- Player saving/loading via JSON files
+- Player credential validation and password hashing
+- Multiplayer support:
+  - Multiplayer rendering
+  - Full chat support
+  - Quadtree collision detection for finding nearby players to synchronize
+- Map-chunk based positioning
 - Item support:
-  - Item definition parsing via the game cache.
-  - Additional item data loading via YAML configuration.
-  - Inventory items, equipment items, item swapping.
-  - Item dropping and picking up.
-  - Buying/selling via shops.
+  - Item definition parsing via the game cache
+  - Additional item data loading via YAML configuration
+  - Inventory items, equipment items, item swapping
+  - Item dropping and picking up
+  - Buying/selling via shops
 - Player equipment:
-  - Equipment bonuses and item weight tracking.
-  - Full equipment bonus widget support.
-- NPCs and NPC updating:
-  - NPC spawn loading via YAML configuration.
-- Player & NPC pathing validation via collision and tile maps generated from the game cache.
-- A basic REST service for polling logged in users and game items.
-- Fully functional game update server.
-- A diverse TypeScript plugin system for easily writing new content based off of in-game actions.
-- A simplified JavaScript plugin system for quickly and easily bootstrapping game content.
-- Flexible quest and dialogue systems for more advanced content development.
+  - Equipment bonuses and item weight tracking
+  - Full equipment bonus widget support
+- NPCs and NPC synchronization:
+  - NPC spawn loading via YAML configuration
+- Player & NPC pathing validation via collision and tile maps generated from the game cache
+- A basic REST service for polling logged in users and game items
+- Fully functional game update server
+- A diverse TypeScript plugin system for easily writing new content based off of in-game actions
+- A simplified JavaScript plugin system for quickly and easily bootstrapping game content
+- Flexible quest and dialogue systems for more advanced content development
 
 ## Usage
 
 1. Download and install NodeJS **version 13 or higher**: https://nodejs.org/en/
 2. Clone the Github Repo: https://github.com/rune-js/server
 3. Install dependencies by navigating to the project in your Terminal or command prompt and running the command npm install
-4. Copy the `data/config/server-config-default.yaml` and paste it into the same folder using the name `server-config.yaml`. 
-5. Go into your new `server-config.yaml` file and modify your RSA modulus and exponent with the ones matching your game client.
-  - You may also modify the server's port and host address from this configuration file.
+4. Copy the `data/config/server-config-default.yaml` and paste it into the same folder using the name `server-config.yaml`
+5. Go into your new `server-config.yaml` file and modify your RSA modulus and exponent with the ones matching your game client
+  - You may also modify the server's port and host address from this configuration file
 6. Run the game server and REST service by inputting the command npm run server
 
 The game server will spin up and be accessible via port 43594. The REST service can be accessed via port 8888.
@@ -64,10 +68,10 @@ Online players can be polled via the REST protocol for web applications.
 
 ##### API Endpoints:
 
-- `GET /players` : Returns a list of players currently logged into the game server.
-- `GET /items?page=x&limit=y` : Returns a list of item metadata loaded by the game server.
-- `GET /items/{itemId}` : Returns details about a specific item by id.
-- `PUT /items/{itemId}` : Updates an item's configurable server data.
+- `GET /players` : Returns a list of players currently logged into the game server
+- `GET /items?page=x&limit=y` : Returns a list of item metadata loaded by the game server
+- `GET /items/{itemId}` : Returns details about a specific item by id
+- `PUT /items/{itemId}` : Updates an item's configurable server data
 
 ## Aditional Information
 
