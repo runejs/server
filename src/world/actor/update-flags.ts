@@ -95,7 +95,7 @@ export class UpdateFlags {
 
     public get updateBlockRequired(): boolean {
         return this._appearanceUpdateRequired || this._chatMessages.length !== 0 || this._facePosition !== null ||
-            this._graphics !== null || this._animation !== undefined || this._faceActor !== undefined;
+            this._graphics !== null || this._animation !== undefined || this._faceActor !== undefined || this._damage !== null;
     }
 
     public get mapRegionUpdateRequired(): boolean {
