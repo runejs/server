@@ -66,7 +66,7 @@ export class Player extends Actor {
     private readonly _outCipher: Isaac;
     public readonly clientUuid: number;
     public readonly username: string;
-    private readonly password: string;
+    public readonly passwordHash: string;
     private _rights: Rights;
     private loggedIn: boolean;
     private _loginDate: Date;
@@ -102,7 +102,7 @@ export class Player extends Actor {
         this._outCipher = outCipher;
         this.clientUuid = clientUuid;
         this.username = username;
-        this.password = password;
+        this.passwordHash = password;
         this._rights = Rights.ADMIN;
         this.isLowDetail = isLowDetail;
         this._outgoingPackets = new OutgoingPackets(this);

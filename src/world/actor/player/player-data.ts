@@ -45,6 +45,7 @@ export class PlayerSettings {
 
 export interface PlayerSave {
     username: string;
+    passwordHash: string;
     rights: number;
     position: {
         x: number;
@@ -108,6 +109,7 @@ export function savePlayerData(player: Player): boolean {
 
     const playerSave: PlayerSave = {
         username: player.username,
+        passwordHash: player.passwordHash,
         position: {
             x: player.position.x,
             y: player.position.y,
