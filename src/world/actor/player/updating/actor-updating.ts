@@ -35,7 +35,7 @@ export function registerNewActors(packet: Packet, player: Player, trackedActors:
                 continue;
             }
 
-            if(!world.playerExists(nearbyActor)) {
+            if(!world.playerOnline(nearbyActor)) {
                 // Other player is no longer in the game world
                 continue;
             }
@@ -85,7 +85,7 @@ export function updateTrackedActors(packet: Packet, playerPosition: Position, ap
         let exists = true;
 
         if(trackedActor instanceof Player) {
-            if(!world.playerExists(trackedActor as Player)) {
+            if(!world.playerOnline(trackedActor as Player)) {
                 exists = false;
             }
         } else {
