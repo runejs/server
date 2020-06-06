@@ -5,3 +5,4 @@ port: 43594
 showWelcome: true
 expRate: 1
 giveAchievements: true
+checkCredentials: true

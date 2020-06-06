@@ -5,6 +5,8 @@ import { serverConfig, world } from '@server/game-server';
 import { DataParser } from './data-parser';
 import { logger } from '@runejs/logger/dist/logger';
 import { ByteBuffer } from '@runejs/byte-buffer';
+import * as bcrypt from 'bcrypt';
+import { loadPlayerSave } from '@server/world/actor/player/player-data';
 
 const VALID_CHARS = ['_', 'a', 'b', 'c', 'd',
     'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
@@ -136,8 +138,9 @@ export class ClientLoginParser extends DataParser {
         }
 
         const outCipher = new Isaac(sessionKey);
+        const passwordHash = bcrypt.hashSync(password, bcrypt.genSaltSync());
 
-        const player = new Player(this.clientConnection.socket, inCipher, outCipher, gameClientId, username, password, isLowDetail);
+        const player = new Player(this.clientConnection.socket, inCipher, outCipher, gameClientId, username, passwordHash, isLowDetail);
 
         world.registerPlayer(player);
 
@@ -163,6 +166,10 @@ export class ClientLoginParser extends DataParser {
      * @param password The incoming user's password input.
      */
     private checkCredentials(username: string, password: string): number {
+        if(!serverConfig.checkCredentials) {
+            return -1;
+        }
+
         if(!username || !password) {
             return LoginResponseCode.INVALID_CREDENTIALS;
         }
@@ -172,6 +179,19 @@ export class ClientLoginParser extends DataParser {
 
         if(username === '' || password === '') {
             return LoginResponseCode.INVALID_CREDENTIALS;
+        }
+
+        const playerSave = loadPlayerSave(username);
+        if(playerSave) {
+            const playerPasswordHash = playerSave.passwordHash;
+            if(playerPasswordHash) {
+                if(!bcrypt.compareSync(password, playerPasswordHash)) {
+                    return LoginResponseCode.INVALID_CREDENTIALS;
+                }
+            } else if(serverConfig.checkCredentials) {
+                logger.warn(`User ${ username } has no password hash saved - ` +
+                    `their password will now be saved.`);
+            }
         }
 
         if(world.playerOnline(username)) {
