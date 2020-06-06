@@ -17,6 +17,7 @@ import { Item } from '@server/world/items/item';
 import { Chunk } from '@server/world/map/chunk';
 import { LocationObject } from '@runejs/cache-parser';
 import { schedule } from '@server/task/task';
+import { parseScenerySpawns } from '@server/world/config/scenery-spawns';
 
 export interface QuadtreeKey {
     x: number;
@@ -40,6 +41,7 @@ export class World {
     public readonly itemData: Map<number, ItemDetails>;
     public readonly examine: ExamineCache = new ExamineCache();
     public readonly npcSpawns: NpcSpawn[];
+    public readonly scenerySpawns: LocationObject[];
     public readonly shops: Shop[];
     public readonly travelLocations: TravelLocations = new TravelLocations();
     public readonly playerTree: Quadtree<any>;
@@ -48,6 +50,7 @@ export class World {
     public constructor() {
         this.itemData = parseItemData(cache.itemDefinitions);
         this.npcSpawns = parseNpcSpawns();
+        this.scenerySpawns = parseScenerySpawns();
         this.shops = parseShops();
         this.playerTree = new Quadtree<any>({
             width: 10000,
@@ -67,6 +70,7 @@ export class World {
             resolve();
         }).then(() => {
             this.spawnNpcs();
+            this.spawnScenery();
         });
     }
 
@@ -398,6 +402,12 @@ export class World {
             const npcDefinition = cache.npcDefinitions.get(npcSpawn.npcId);
             const npc = new Npc(npcSpawn, npcDefinition);
             this.registerNpc(npc);
+        });
+    }
+
+    public spawnScenery(): void {
+        this.scenerySpawns.forEach(locationObject => {
+            this.addLocationObject(locationObject, new Position(locationObject.x, locationObject.y, locationObject.level));
         });
     }
 
