@@ -150,5 +150,5 @@ export function handleHarvesting(details: ObjectActionDetails, tool: HarvestTool
         }
 
         elapsedTicks++;
-    });
+    }, () => {}, () => details.player.playAnimation(null));
 }
