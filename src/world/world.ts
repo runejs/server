@@ -475,13 +475,18 @@ export class World {
         return Promise.resolve();
     }
 
-    public playerExists(player: Player): boolean {
-        const foundPlayer = this.playerList[player.worldIndex];
-        if(!foundPlayer) {
-            return false;
-        }
+    public playerOnline(player: Player | string): boolean {
+        if(typeof player === 'string') {
+            player = player.toLowerCase();
+            return this.playerList.findIndex(p => p !== null && p.username.toLowerCase() === player) !== -1;
+        } else {
+            const foundPlayer = this.playerList[player.worldIndex];
+            if(!foundPlayer) {
+                return false;
+            }
 
-        return foundPlayer.equals(player);
+            return foundPlayer.equals(player);
+        }
     }
 
     public registerPlayer(player: Player): boolean {
