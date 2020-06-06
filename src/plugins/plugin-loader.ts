@@ -57,7 +57,7 @@ export const pluginFilter = (pluginIds: number | number[], searchId: number, plu
 
 const readdir = util.promisify(fs.readdir);
 const stat = util.promisify(fs.stat);
-const blacklist = ['plugin-loader.js', 'plugin.js'];
+const blacklist = ['plugin-loader.js', 'plugin.js', 'rune.js'];
 
 async function* getFiles(directory: string): AsyncGenerator<string> {
     const files = await readdir(directory);
