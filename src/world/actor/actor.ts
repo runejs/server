@@ -2,7 +2,6 @@ import { WalkingQueue } from './walking-queue';
 import { ItemContainer } from '../items/item-container';
 import { Animation, Graphic, UpdateFlags } from './update-flags';
 import { Npc } from './npc/npc';
-import { Entity } from '../entity';
 import { Skills } from '@server/world/actor/skills';
 import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
@@ -12,8 +11,10 @@ import { CombatAction } from '@server/world/actor/player/action/combat-action';
 /**
  * Handles an actor within the game world.
  */
-export abstract class Actor extends Entity {
+export abstract class Actor {
 
+    private _position: Position;
+    private _lastMapRegionUpdatePosition: Position;
     private _worldIndex: number;
     public readonly updateFlags: UpdateFlags;
     private readonly _walkingQueue: WalkingQueue;
@@ -27,7 +28,6 @@ export abstract class Actor extends Entity {
     private _combatActions: CombatAction[];
 
     protected constructor() {
-        super();
         this.updateFlags = new UpdateFlags();
         this._walkingQueue = new WalkingQueue(this);
         this._walkDirection = -1;
@@ -212,6 +212,26 @@ export abstract class Actor extends Entity {
     }
 
     public abstract equals(actor: Actor): boolean;
+
+    public get position(): Position {
+        return this._position;
+    }
+
+    public set position(value: Position) {
+        if(!this._position) {
+            this._lastMapRegionUpdatePosition = value;
+        }
+
+        this._position = value;
+    }
+
+    public get lastMapRegionUpdatePosition(): Position {
+        return this._lastMapRegionUpdatePosition;
+    }
+
+    public set lastMapRegionUpdatePosition(value: Position) {
+        this._lastMapRegionUpdatePosition = value;
+    }
 
     public get worldIndex(): number {
         return this._worldIndex;
