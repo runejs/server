@@ -16,11 +16,12 @@ const spawnSceneryAction: commandAction = (details) => {
     if(locationObjectSearch.match(/^[0-9]+$/)) {
         locationObjectId = parseInt(locationObjectSearch, 10);
     } else {
+        // @TODO nested object ids
         locationObjectId = objectIds[locationObjectSearch];
     }
 
     if(isNaN(locationObjectId)) {
-        throw `Location object name not found.`;
+        throw new Error(`Location object name not found.`);
     }
 
     const objectType = args.objectType as number;
