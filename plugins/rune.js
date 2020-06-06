@@ -13,8 +13,7 @@ const { InteractingAction, loopingAction, walkToAction } = require('../dist/worl
 const { DamageType, Damage, Animation, Graphic, ChatMessage } = require('../dist/world/actor/update-flags');
 const { Skill, Skills } = require('../dist/world/actor/skills');
 const { Achievements, giveAchievement } = require('../dist/world/actor/player/achievements');
-const { of } = require('rxjs');
-const { delay } = require('rxjs/operators');
+const { wait, schedule } = require('../dist/task/task');
 
 module.exports = {
 
@@ -33,8 +32,6 @@ module.exports = {
 
     DamageType, Damage, Animation, Graphic, ChatMessage, Skill, Skills, Achievements, giveAchievement,
 
-    wait: async (waitLength) => {
-        await of(null).pipe(delay(waitLength)).toPromise();
-    }
+    wait, schedule
 
 };
