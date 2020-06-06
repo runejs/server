@@ -218,11 +218,16 @@ export class World {
         }
 
         const position = new Position(newObject.x, newObject.y, newObject.level);
+        const chunk = this.chunkManager.getChunkForWorldPosition(position);
 
+        this.deleteAddedLocationObjectMarker(oldObject, position, chunk);
         this.addLocationObject(newObject, position);
 
         if(respawnTicks !== -1) {
-            schedule(respawnTicks).then(() => this.addLocationObject(oldObject, position));
+            schedule(respawnTicks).then(() => {
+                this.deleteAddedLocationObjectMarker(newObject as LocationObject, position, chunk);
+                this.addLocationObject(oldObject, position);
+            });
         }
     }
 

@@ -1,6 +1,5 @@
 import { itemOnItemAction } from '@server/world/actor/player/action/item-on-item-action';
 import { world } from '@server/game-server';
-import { Skill } from '@server/world/actor/skills';
 import { loopingAction } from '@server/world/actor/player/action/action';
 import { LocationObject } from '@runejs/cache-parser';
 import { Player } from '@server/world/actor/player/player';
@@ -52,7 +51,7 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
 
     player.playAnimation(null);
     player.sendMessage(`The fire catches and the logs begin to burn.`);
-    player.skills.addExp(Skill.FIREMAKING, burnExp);
+    player.skills.addExp('firemaking', burnExp);
 
     if(!player.walkingQueue.moveIfAble(-1, 0)) {
         if(!player.walkingQueue.moveIfAble(1, 0)) {
@@ -93,7 +92,8 @@ const action: itemOnItemAction = (details) => {
     player.removeItem(removeFromSlot);
     const worldItemLog = world.spawnWorldItem(log, player.position, player, 300);
 
-    if(player.metadata['lastFire'] && Date.now() - player.metadata['lastFire'] < 1200 && canChain(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level)) {
+    if(player.metadata['lastFire'] && Date.now() - player.metadata['lastFire'] < 1200 &&
+        canChain(skillInfo.requiredLevel, player.skills.getSkillLevel('firemaking'))) {
         lightFire(player, position, worldItemLog, skillInfo.burnExp);
     } else {
         player.sendMessage(`You attempt to light the logs.`);
@@ -121,7 +121,7 @@ const action: itemOnItemAction = (details) => {
                 player.playAnimation(animationIds.lightingFire);
             }
 
-            canLightFire = elapsedTicks > 10 && canLight(skillInfo.requiredLevel, player.skills.values[Skill.WOODCUTTING].level);
+            canLightFire = elapsedTicks > 10 && canLight(skillInfo.requiredLevel, player.skills.getSkillLevel('firemaking'));
 
             if(!canLightFire && (elapsedTicks === 0 || elapsedTicks % 4 === 0)) {
                 player.playSound(soundIds.lightingFire, 10, 0);
@@ -134,4 +134,8 @@ const action: itemOnItemAction = (details) => {
     }
 };
 
-export default new RunePlugin({ type: ActionType.ITEM_ON_ITEM_ACTION, items: logs.map(log => ({item1: itemIds.tinderbox, item2: log.logId})), action });
+export default new RunePlugin({
+    type: ActionType.ITEM_ON_ITEM_ACTION,
+    items: logs.map(log => ({ item1: itemIds.tinderbox, item2: log.logId })),
+    action
+});
