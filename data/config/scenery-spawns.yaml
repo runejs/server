@@ -604,3 +604,65 @@
   level: 0
   type: 10
   orientation: 0
+- objectId: 2213 # lumby castle west bank booth
+  x: 3209
+  'y': 3221
+  level: 2
+  type: 10
+  orientation: 0
+- objectId: 2213 # lumby castle east bank booth
+  x: 3210
+  'y': 3221
+  level: 2
+  type: 10
+  orientation: 0
+# Start lumby castle roof bank construction objects
+- objectId: 10293
+  x: 3211
+  'y': 3220
+  level: 2
+  type: 10
+  orientation: 0
+- objectId: 357
+  x: 3208
+  'y': 3223
+  level: 2
+  type: 10
+  orientation: 0
+- objectId: 357
+  x: 3209
+  'y': 3224
+  level: 2
+  type: 10
+  orientation: 0
+- objectId: 357
+  x: 3211
+  'y': 3223
+  level: 2
+  type: 10
+  orientation: 0
+- objectId: 357
+  x: 3210
+  'y': 3218
+  level: 2
+  type: 10
+  orientation: 0
+- objectId: 10293
+  x: 3211
+  'y': 3217
+  level: 2
+  type: 10
+  orientation: 0
+- objectId: 357
+  x: 3211
+  'y': 3216
+  level: 2
+  type: 10
+  orientation: 1
+- objectId: 10293
+  x: 3208
+  'y': 3222
+  level: 2
+  type: 10
+  orientation: 1
+  # End lumby castle roof bank construction objects

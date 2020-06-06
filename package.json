@@ -41,7 +41,7 @@
         "tslib": "^1.10.0",
         "typescript": "^3.7.2",
         "uuid": "^3.3.3",
-        "yargs": "^15.0.2"
+        "yargs": "^15.3.1"
     },
     "devDependencies": {
         "@halkeye/tscpaths": "0.0.9",

@@ -44,6 +44,7 @@ export const action: worldItemAction = (details) => {
     inventory.add(item);
     player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, slot, item);
     player.playSound(soundIds.pickupItem, 3);
+    player.actionsCancelled.next();
 };
 
 export default new RunePlugin({
