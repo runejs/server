@@ -3,7 +3,7 @@ import { Player } from '../../world/actor/player/player';
 import { Position } from '@server/world/position';
 import { cache, world } from '@server/game-server';
 import { objectAction } from '@server/world/actor/player/action/object-action';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { ByteBuffer } from '@runejs/byte-buffer';
 
 interface ObjectInteraction {

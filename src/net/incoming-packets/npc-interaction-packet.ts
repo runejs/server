@@ -3,7 +3,7 @@ import { Player } from '../../world/actor/player/player';
 import { world } from '@server/game-server';
 import { World } from '@server/world/world';
 import { npcAction } from '@server/world/actor/player/action/npc-action';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { ByteBuffer } from '@runejs/byte-buffer';
 
 export const npcInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {

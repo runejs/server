@@ -1,4 +1,4 @@
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 
 /*
  * Error handling! Feel free to add other types of errors or warnings here. :)

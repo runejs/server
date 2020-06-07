@@ -4,7 +4,7 @@ import { world } from '@server/game-server';
 import { World } from '@server/world/world';
 import { ByteBuffer } from '@runejs/byte-buffer';
 import { playerAction } from '@server/world/actor/player/action/player-action';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 
 export const playerInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {
     const args = {

@@ -1,6 +1,6 @@
 import { Position } from '@server/world/position';
 import { WNES } from '@server/world/direction';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { world } from '@server/game-server';
 import { action as doorAction } from '@server/plugins/objects/doors/door-plugin';
 import { objectAction } from '@server/world/actor/player/action/object-action';

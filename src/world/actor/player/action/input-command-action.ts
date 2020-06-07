@@ -1,6 +1,6 @@
 import { Player } from '../player';
 import { ActionPlugin } from '@server/plugins/plugin';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 
 /**
  * The definition for a command action function.

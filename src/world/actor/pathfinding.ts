@@ -77,8 +77,7 @@ export class Pathfinding {
         const path = await this.pathTo(position.x, position.y, options.pathingDiameter);
 
         if(!path) {
-            logger.warn(`Unable to find path.`);
-            return;
+            throw new Error(`Unable to find path.`);
         }
 
         const walkingQueue = this.actor.walkingQueue;
@@ -94,6 +93,7 @@ export class Pathfinding {
             path.splice(path.length - 1, 1);
         }
 
+        path.shift();
         for(const point of path) {
             walkingQueue.add(point.x, point.y);
         }
@@ -145,64 +145,96 @@ export class Pathfinding {
             let { x, y, indexX, indexY } = this.currentPoint;
             let canPath = false;
 
-            // West
-            if(indexX > 0 && this.canPathNSEW(new Position(x - 1, y, level), 0x1280108)) {
-                this.calculateCost(this.points[indexX - 1][indexY]);
-                canPath = true;
-            }
-
-            // East
-            if(indexX < pointLen - 1 && this.canPathNSEW(new Position(x + 1, y, level), 0x1280180)) {
-                this.calculateCost(this.points[indexX + 1][indexY]);
-                canPath = true;
-            }
-
-            // South
-            if(indexY > 0 && this.canPathNSEW(new Position(x, y - 1, level), 0x1280102)) {
-                this.calculateCost(this.points[indexX][indexY - 1]);
-                canPath = true;
-            }
-
-            // North
-            if(indexY < pointLen - 1 && this.canPathNSEW(new Position(x, y + 1, level), 0x1280120)) {
-                this.calculateCost(this.points[indexX][indexY + 1]);
-                canPath = true;
-            }
-
-            // South-West
-            if(indexX > 0 && indexY > 0) {
-                if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x - 1, y - 1, level), -1, -1,
-                    0x128010e, 0x1280108, 0x1280102)) {
-                    this.calculateCost(this.points[indexX - 1][indexY - 1]);
+            try {
+                // West
+                if(indexX > 0 && this.canPathNSEW(new Position(x - 1, y, level), 0x1280108)) {
+                    this.calculateCost(this.points[indexX - 1][indexY]);
                     canPath = true;
                 }
+            } catch(e) {
+                logger.warn(`Error calculating path.`);
             }
 
-            // South-East
-            if(indexX < pointLen - 1 && indexY > 0) {
-                if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x + 1, y - 1, level), 1, -1,
-                    0x1280183, 0x1280180, 0x1280102)) {
-                    this.calculateCost(this.points[indexX + 1][indexY - 1]);
+            try {
+                // East
+                if(indexX < pointLen - 1 && this.canPathNSEW(new Position(x + 1, y, level), 0x1280180)) {
+                    this.calculateCost(this.points[indexX + 1][indexY]);
                     canPath = true;
                 }
+            } catch(e) {
+                logger.warn(`Error calculating path.`);
             }
 
-            // North-West
-            if(indexX > 0 && indexY < pointLen - 1) {
-                if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x - 1, y + 1, level), -1, 1,
-                    0x1280138, 0x1280108, 0x1280120)) {
-                    this.calculateCost(this.points[indexX - 1][indexY + 1]);
+            try {
+                // South
+                if(indexY > 0 && this.canPathNSEW(new Position(x, y - 1, level), 0x1280102)) {
+                    this.calculateCost(this.points[indexX][indexY - 1]);
                     canPath = true;
                 }
+            } catch(e) {
+                logger.warn(`Error calculating path.`);
             }
 
-            // North-East
-            if(indexX < pointLen - 1 && indexY < pointLen - 1) {
-                if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x + 1, y + 1, level), 1, 1,
-                    0x12801e0, 0x1280180, 0x1280120)) {
-                    this.calculateCost(this.points[indexX + 1][indexY + 1]);
+            try {
+                // North
+                if(indexY < pointLen - 1 && this.canPathNSEW(new Position(x, y + 1, level), 0x1280120)) {
+                    this.calculateCost(this.points[indexX][indexY + 1]);
                     canPath = true;
                 }
+            } catch(e) {
+                logger.warn(`Error calculating path.`);
+            }
+
+            try {
+                // South-West
+                if(indexX > 0 && indexY > 0) {
+                    if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x - 1, y - 1, level), -1, -1,
+                        0x128010e, 0x1280108, 0x1280102)) {
+                        this.calculateCost(this.points[indexX - 1][indexY - 1]);
+                        canPath = true;
+                    }
+                }
+            } catch(e) {
+                logger.warn(`Error calculating path.`);
+            }
+
+            try {
+                // South-East
+                if(indexX < pointLen - 1 && indexY > 0) {
+                    if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x + 1, y - 1, level), 1, -1,
+                        0x1280183, 0x1280180, 0x1280102)) {
+                        this.calculateCost(this.points[indexX + 1][indexY - 1]);
+                        canPath = true;
+                    }
+                }
+            } catch(e) {
+                logger.warn(`Error calculating path.`);
+            }
+
+            try {
+                // North-West
+                if(indexX > 0 && indexY < pointLen - 1) {
+                    if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x - 1, y + 1, level), -1, 1,
+                        0x1280138, 0x1280108, 0x1280120)) {
+                        this.calculateCost(this.points[indexX - 1][indexY + 1]);
+                        canPath = true;
+                    }
+                }
+            } catch(e) {
+                logger.warn(`Error calculating path.`);
+            }
+
+            try {
+                // North-East
+                if(indexX < pointLen - 1 && indexY < pointLen - 1) {
+                    if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x + 1, y + 1, level), 1, 1,
+                        0x12801e0, 0x1280180, 0x1280120)) {
+                        this.calculateCost(this.points[indexX + 1][indexY + 1]);
+                        canPath = true;
+                    }
+                }
+            } catch(e) {
+                logger.warn(`Error calculating path.`);
             }
 
             if(!canPath) {
@@ -227,7 +259,7 @@ export class Pathfinding {
             iterations++;
 
             if(iterations > 10000) {
-                throw `AAAAHHHHHH!`;
+                throw new Error(`Path iteration overflow, path will not be used.`);
             }
 
             if(point === null) {

@@ -3,7 +3,7 @@ import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { ActionPlugin, questFilter } from '@server/plugins/plugin';
 import { Item } from '@server/world/items/item';
 
