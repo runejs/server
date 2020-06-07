@@ -2,11 +2,13 @@ import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { logger } from '@runejs/logger';
 import { ItemDetails, parseItemData } from './config/item-data';
+import { ExamineCache } from './config/examine-data';
 import { cache } from '@server/game-server';
 import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './actor/npc/npc';
 import { parseShops, Shop } from '@server/world/config/shops';
+import TravelLocations from '@server/world/config/travel-locations';
 import Quadtree from 'quadtree-lib';
 import { timer } from 'rxjs';
 import { Actor } from '@server/world/actor/actor';
@@ -15,6 +17,7 @@ import { Item } from '@server/world/items/item';
 import { Chunk } from '@server/world/map/chunk';
 import { LocationObject } from '@runejs/cache-parser';
 import { schedule } from '@server/task/task';
+import { parseScenerySpawns } from '@server/world/config/scenery-spawns';
 
 export interface QuadtreeKey {
     x: number;
@@ -36,14 +39,18 @@ export class World {
     public readonly npcList: Npc[] = new Array(World.MAX_NPCS).fill(null);
     public readonly chunkManager: ChunkManager = new ChunkManager();
     public readonly itemData: Map<number, ItemDetails>;
+    public readonly examine: ExamineCache = new ExamineCache();
     public readonly npcSpawns: NpcSpawn[];
+    public readonly scenerySpawns: LocationObject[];
     public readonly shops: Shop[];
+    public readonly travelLocations: TravelLocations = new TravelLocations();
     public readonly playerTree: Quadtree<any>;
     public readonly npcTree: Quadtree<any>;
 
     public constructor() {
         this.itemData = parseItemData(cache.itemDefinitions);
         this.npcSpawns = parseNpcSpawns();
+        this.scenerySpawns = parseScenerySpawns();
         this.shops = parseShops();
         this.playerTree = new Quadtree<any>({
             width: 10000,
@@ -63,6 +70,7 @@ export class World {
             resolve();
         }).then(() => {
             this.spawnNpcs();
+            this.spawnScenery();
         });
     }
 
@@ -210,11 +218,16 @@ export class World {
         }
 
         const position = new Position(newObject.x, newObject.y, newObject.level);
+        const chunk = this.chunkManager.getChunkForWorldPosition(position);
 
+        this.deleteAddedLocationObjectMarker(oldObject, position, chunk);
         this.addLocationObject(newObject, position);
 
         if(respawnTicks !== -1) {
-            schedule(respawnTicks).then(() => this.addLocationObject(oldObject, position));
+            schedule(respawnTicks).then(() => {
+                this.deleteAddedLocationObjectMarker(newObject as LocationObject, position, chunk);
+                this.addLocationObject(oldObject, position);
+            });
         }
     }
 
@@ -397,6 +410,12 @@ export class World {
         });
     }
 
+    public spawnScenery(): void {
+        this.scenerySpawns.forEach(locationObject => {
+            this.addLocationObject(locationObject, new Position(locationObject.x, locationObject.y, locationObject.level));
+        });
+    }
+
     public setupWorldTick(): void {
         timer(World.TICK_LENGTH).toPromise().then(() => this.worldTick());
     }
@@ -436,13 +455,13 @@ export class World {
     public async worldTick(): Promise<void> {
         const hrStart = Date.now();
         const activePlayers: Player[] = this.playerList.filter(player => player !== null);
-        
+
         if(activePlayers.length === 0) {
             return Promise.resolve().then(() => {
                 setTimeout(() => this.worldTick(), World.TICK_LENGTH); //TODO: subtract processing time
             });
         }
-        
+
         const activeNpcs: Npc[] = this.npcList.filter(npc => npc !== null);
 
         await Promise.all([ ...activePlayers.map(player => player.tick()), ...activeNpcs.map(npc => npc.tick()) ]);
@@ -461,13 +480,18 @@ export class World {
         return Promise.resolve();
     }
 
-    public playerExists(player: Player): boolean {
-        const foundPlayer = this.playerList[player.worldIndex];
-        if(!foundPlayer) {
-            return false;
-        }
+    public playerOnline(player: Player | string): boolean {
+        if(typeof player === 'string') {
+            player = player.toLowerCase();
+            return this.playerList.findIndex(p => p !== null && p.username.toLowerCase() === player) !== -1;
+        } else {
+            const foundPlayer = this.playerList[player.worldIndex];
+            if(!foundPlayer) {
+                return false;
+            }
 
-        return foundPlayer.equals(player);
+            return foundPlayer.equals(player);
+        }
     }
 
     public registerPlayer(player: Player): boolean {

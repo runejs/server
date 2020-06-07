@@ -135,7 +135,7 @@ export class WalkingQueue {
         const walkPosition = this.queue.shift();
 
         if(this.actor instanceof Player) {
-            this.actor.actionsCancelled.next(true);
+            this.actor.actionsCancelled.next('pathing-movement');
 
             const activeWidget = this.actor.activeWidget;
             if(activeWidget && (!walkPosition.metadata || !walkPosition.metadata.ignoreWidgets)) {

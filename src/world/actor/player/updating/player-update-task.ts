@@ -106,6 +106,9 @@ export class PlayerUpdateTask extends Task<void> {
 
         let mask: number = 0;
 
+        if(updateFlags.damage !== null) {
+            mask |= 0x100;
+        }
         if(updateFlags.appearanceUpdateRequired || forceUpdate) {
             mask |= 0x20;
         }
@@ -131,6 +134,14 @@ export class PlayerUpdateTask extends Task<void> {
             updateMaskData.put(mask >> 8);
         } else {
             updateMaskData.put(mask);
+        }
+
+        if(updateFlags.damage !== null) {
+            const damage = updateFlags.damage;
+            updateMaskData.put(damage.damageType);
+            updateMaskData.put(damage.damageType.valueOf());
+            updateMaskData.put(damage.remainingHitpoints);
+            updateMaskData.put(damage.maxHitpoints);
         }
 
         if(updateFlags.facePosition) {

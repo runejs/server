@@ -19,6 +19,7 @@ export const action: itemAction = (details) => {
     player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, itemSlot, null);
     player.playSound(soundIds.dropItem, 5);
     world.spawnWorldItem(item, player.position, player, 300);
+    player.actionsCancelled.next();
 };
 
 export default new RunePlugin({

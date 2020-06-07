@@ -5,10 +5,10 @@
     "main": "src/game-server.ts",
     "scripts": {
         "server": "npm start",
-        "start": "rm -rf dist/ && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js\"",
+        "start": "rimraf ./dist && mkdirp ./dist && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js\"",
         "lint": "tslint --project tsconfig.json",
-        "fake-players": "rm -rf dist/ && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers\"",
-        "fake-players-tick": "rm -rf dist/ && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers -tickTime\"",
+        "fake-players": "rimraf ./dist && mkdirp ./dist && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers\"",
+        "fake-players-tick": "rimraf ./dist && mkdirp ./dist && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers -tickTime\"",
         "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
         "watch-plugins": "nodemon --watch src/plugins/ --exec \"npm run build\" -e ts"
     },
@@ -24,9 +24,10 @@
     "license": "GPL-3.0",
     "dependencies": {
         "@hapi/joi": "^16.1.8",
-        "@runejs/cache-parser": "0.6.3",
         "@runejs/byte-buffer": "1.0.8",
+        "@runejs/cache-parser": "0.6.3",
         "@runejs/logger": "^1.0.0",
+        "bcrypt": "^4.0.1",
         "bigi": "^1.4.2",
         "body-parser": "^1.19.0",
         "crc-32": "^1.2.0",
@@ -40,7 +41,7 @@
         "tslib": "^1.10.0",
         "typescript": "^3.7.2",
         "uuid": "^3.3.3",
-        "yargs": "^15.0.2"
+        "yargs": "^15.3.1"
     },
     "devDependencies": {
         "@halkeye/tscpaths": "0.0.9",
@@ -54,7 +55,9 @@
         "@types/yargs": "^13.0.4",
         "chokidar": "^3.3.1",
         "concurrently": "^5.1.0",
+        "mkdirp": "^1.0.4",
         "nodemon": "^2.0.2",
+        "rimraf": "^3.0.2",
         "tsconfig-paths": "^3.9.0",
         "tslint": "^6.1.0"
     }

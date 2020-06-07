@@ -1,6 +1,7 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { commandAction } from '@server/world/actor/player/action/input-command-action';
 import { cache } from '@server/game-server';
+import { itemIds } from '@server/world/config/item-ids';
 
 const action: commandAction = (details) => {
     const { player, args } = details;
@@ -12,7 +13,20 @@ const action: commandAction = (details) => {
         return;
     }
 
-    const itemId: number = args.itemId as number;
+    const itemSearch: string = args.itemSearch as string;
+    let itemId: number;
+
+    if(itemSearch.match(/^[0-9]+$/)) {
+        itemId = parseInt(itemSearch, 10);
+    } else {
+        // @TODO nested item ids
+        itemId = itemIds[itemSearch];
+    }
+
+    if(isNaN(itemId)) {
+        throw new Error(`Item name not found.`);
+    }
+
     let amount: number = args.amount as number;
 
     if(amount > 2000000000) {
@@ -52,8 +66,8 @@ export default new RunePlugin({
     commands: [ 'give', 'item', 'spawn' ],
     args: [
         {
-            name: 'itemId',
-            type: 'number'
+            name: 'itemSearch',
+            type: 'string'
         },
         {
             name: 'amount',

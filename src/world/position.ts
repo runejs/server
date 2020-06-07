@@ -104,6 +104,10 @@ export class Position {
         return new Position(this.x + (steps * directionData[direction].deltaX), this.y + (steps * directionData[direction].deltaY), this.level);
     }
 
+    public copy(): Position {
+        return new Position(this._x, this._y, this._level);
+    }
+
     public equals(position: Position | { x: number, y: number, level: number }): boolean {
         if(!(position instanceof Position)) {
             position = new Position(position.x, position.y, position.level);

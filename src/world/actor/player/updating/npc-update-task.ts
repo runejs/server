@@ -78,6 +78,9 @@ export class NpcUpdateTask extends Task<void> {
 
         let mask = 0;
 
+        if(updateFlags.damage !== null) {
+            mask |= 0x1;
+        }
         if(updateFlags.appearanceUpdateRequired) {
             mask |= 0x80;
         }
@@ -95,6 +98,14 @@ export class NpcUpdateTask extends Task<void> {
         }
 
         updateMaskData.put(mask, 'BYTE');
+
+        if(updateFlags.damage !== null) {
+            const damage = updateFlags.damage;
+            updateMaskData.put(damage.damageType);
+            updateMaskData.put(damage.damageType.valueOf());
+            updateMaskData.put(damage.remainingHitpoints);
+            updateMaskData.put(damage.maxHitpoints);
+        }
 
         if(updateFlags.faceActor !== undefined) {
             const actor = updateFlags.faceActor;

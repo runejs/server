@@ -2,7 +2,6 @@ import { WalkingQueue } from './walking-queue';
 import { ItemContainer } from '../items/item-container';
 import { Animation, Graphic, UpdateFlags } from './update-flags';
 import { Npc } from './npc/npc';
-import { Entity } from '../entity';
 import { Skills } from '@server/world/actor/skills';
 import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
@@ -13,8 +12,10 @@ import { Pathfinding } from '@server/world/actor/pathfinding';
 /**
  * Handles an actor within the game world.
  */
-export abstract class Actor extends Entity {
+export abstract class Actor {
 
+    private _position: Position;
+    private _lastMapRegionUpdatePosition: Position;
     private _worldIndex: number;
     public readonly updateFlags: UpdateFlags;
     private readonly _walkingQueue: WalkingQueue;
@@ -29,7 +30,6 @@ export abstract class Actor extends Entity {
     public readonly pathfinding: Pathfinding;
 
     protected constructor() {
-        super();
         this.updateFlags = new UpdateFlags();
         this._walkingQueue = new WalkingQueue(this);
         this._walkDirection = -1;
@@ -42,7 +42,13 @@ export abstract class Actor extends Entity {
         this.pathfinding = new Pathfinding(this);
     }
 
-    public face(face: Position | Actor, clearWalkingQueue: boolean = true, autoClear: boolean = true, clearedByWalking: boolean = true): void {
+    public face(face: Position | Actor | null, clearWalkingQueue: boolean = true, autoClear: boolean = true, clearedByWalking: boolean = true): void {
+        if(face === null) {
+            this.clearFaceActor();
+            this.updateFlags.facePosition = null;
+            return;
+        }
+
         if(face instanceof Position) {
             this.updateFlags.facePosition = face;
         } else if(face instanceof Actor) {
@@ -216,6 +222,26 @@ export abstract class Actor extends Entity {
     }
 
     public abstract equals(actor: Actor): boolean;
+
+    public get position(): Position {
+        return this._position;
+    }
+
+    public set position(value: Position) {
+        if(!this._position) {
+            this._lastMapRegionUpdatePosition = value;
+        }
+
+        this._position = value;
+    }
+
+    public get lastMapRegionUpdatePosition(): Position {
+        return this._lastMapRegionUpdatePosition;
+    }
+
+    public set lastMapRegionUpdatePosition(value: Position) {
+        this._lastMapRegionUpdatePosition = value;
+    }
 
     public get worldIndex(): number {
         return this._worldIndex;

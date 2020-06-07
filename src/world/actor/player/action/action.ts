@@ -5,6 +5,8 @@ import { World } from '@server/world/world';
 import { LocationObject } from '@runejs/cache-parser';
 import { Npc } from '@server/world/actor/npc/npc';
 
+export type ActionCancelType = 'manual-movement' | 'pathing-movement' | 'generic' | 'keep-widgets-open';
+
 /**
  * A type of action where something is being interacted with.
  */

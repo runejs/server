@@ -1,0 +1,29 @@
+name: Lint & Build Project
+
+on:
+    pull_request:
+        branches: [ master ]
+    push:
+        branches: [ master ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout Repository
+                uses: actions/checkout@v2
+
+            -   name: Setup Node
+                uses: actions/setup-node@v1
+                with:
+                    node-version: '13.x'
+
+            -   name: Install Node Modules
+                run: npm i
+
+            -   name: Run Linter
+                run: npm run lint
+
+            -   name: Build Project
+                run: npm run build

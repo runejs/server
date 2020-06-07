@@ -1,9 +1,10 @@
 import { Item } from '@server/world/items/item';
 import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { Player } from './player';
 import { SkillValue } from '@server/world/actor/skills';
+
 
 export interface QuestProgress {
     questId: string;
@@ -44,6 +45,7 @@ export class PlayerSettings {
 
 export interface PlayerSave {
     username: string;
+    passwordHash: string;
     rights: number;
     position: {
         x: number;
@@ -61,6 +63,7 @@ export interface PlayerSave {
     settings: PlayerSettings;
     savedMetadata: { [key: string]: any };
     quests: QuestProgress[];
+    achievements: string[];
 }
 
 export const defaultAppearance = (): Appearance => {
@@ -106,6 +109,7 @@ export function savePlayerData(player: Player): boolean {
 
     const playerSave: PlayerSave = {
         username: player.username,
+        passwordHash: player.passwordHash,
         position: {
             x: player.position.x,
             y: player.position.y,
@@ -123,6 +127,7 @@ export function savePlayerData(player: Player): boolean {
         settings: player.settings,
         savedMetadata: player.savedMetadata,
         quests: player.quests,
+        achievements: player.achievements
     };
 
     try {

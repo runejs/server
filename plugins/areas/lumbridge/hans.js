@@ -1,18 +1,14 @@
-import { npcAction } from '@server/world/actor/player/action/npc-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { npcIds } from '@server/world/config/npc-ids';
-import { animationIds } from '@server/world/config/animation-ids';
-import { dialogue, Emote, execute, goto } from '@server/world/actor/dialogue';
+const { dialogue, Emote, execute, goto, NPC_ACTION, animationIds, npcIds, Achievements, giveAchievement } = require('../../rune.js');
 
-const action: npcAction = (details) => {
+const action = async details => {
     const { player, npc } = details;
 
     let sadEnding = false;
 
-    dialogue([ player, { npc, key: 'hans' }], [
+    await dialogue([ player, { npc, key: 'hans' } ], [
         hans => [ Emote.GENERIC, `Welcome to RuneScape!` ],
         (hans, tag_Hans_Question) => [ Emote.HAPPY, `How do you feel about Rune.JS so far?\n` +
-            `Please take a moment to let us know what you think!` ],
+        `Please take a moment to let us know what you think!` ],
         options => ([
             `Love it!`, [
                 player => [ Emote.HAPPY, `Loving it so far, thanks for asking!` ],
@@ -35,20 +31,27 @@ const action: npcAction = (details) => {
                 player => [ Emote.DROWZY, `What?...` ],
                 goto('tag_Hans_Question')
             ]
-        ]),
-        execute(() => {
-            npc.clearFaceActor();
-            player.clearFaceActor();
-
-            if(sadEnding) {
-                npc.playAnimation(animationIds.cry);
-                npc.say(`Jerk!`);
-                player.sendMessage(`Hans wanders off rather dejectedly.`);
-            } else {
-                player.sendMessage(`Hans wanders off aimlessly through the courtyard.`);
-            }
-        })
+        ])
     ]);
+
+    npc.clearFaceActor();
+    player.clearFaceActor();
+
+    if(sadEnding) {
+        npc.playAnimation(animationIds.cry);
+        npc.say(`Jerk!`);
+        player.sendMessage(`Hans wanders off rather dejectedly.`);
+    } else {
+        player.sendMessage(`Hans wanders off aimlessly through the courtyard.`);
+    }
+
+    giveAchievement(Achievements.WELCOME, player);
 };
 
-export default new RunePlugin({ type: ActionType.NPC_ACTION, npcIds: npcIds.hans, options: 'talk-to', walkTo: true, action });
+module.exports = {
+    type: NPC_ACTION,
+    npcIds: npcIds.hans,
+    options: 'talk-to',
+    walkTo: true,
+    action
+};

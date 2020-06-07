@@ -30,6 +30,7 @@ import { songs } from '@server/world/config/songs';
 import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 import { quests } from '@server/world/config/quests';
 import { ItemDefinition } from '@runejs/cache-parser';
+import { ActionCancelType } from '@server/world/actor/player/action/action';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -78,7 +79,7 @@ export class Player extends Actor {
     private readonly _outCipher: Isaac;
     public readonly clientUuid: number;
     public readonly username: string;
-    private readonly password: string;
+    public readonly passwordHash: string;
     private _rights: Rights;
     private loggedIn: boolean;
     private _loginDate: Date;
@@ -102,10 +103,11 @@ export class Player extends Actor {
     private _walkingTo: Position;
     public readonly movementEvent: Subject<Position>;
     private _nearbyChunks: Chunk[];
-    public readonly actionsCancelled: Subject<boolean>;
+    public readonly actionsCancelled: Subject<ActionCancelType>;
     private quadtreeKey: QuadtreeKey = null;
     public savedMetadata: { [key: string]: any } = {};
     public quests: QuestProgress[] = [];
+    public achievements: string[] = [];
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -114,7 +116,7 @@ export class Player extends Actor {
         this._outCipher = outCipher;
         this.clientUuid = clientUuid;
         this.username = username;
-        this.password = password;
+        this.passwordHash = password;
         this._rights = Rights.ADMIN;
         this.isLowDetail = isLowDetail;
         this._outgoingPackets = new OutgoingPackets(this);
@@ -130,7 +132,7 @@ export class Player extends Actor {
         this.numericInputEvent = new Subject<number>();
         this.movementEvent = new Subject<Position>();
         this._nearbyChunks = [];
-        this.actionsCancelled = new Subject<boolean>();
+        this.actionsCancelled = new Subject<ActionCancelType>();
 
         this.loadSaveData();
     }
@@ -169,6 +171,9 @@ export class Player extends Actor {
 
             if(playerSave.quests) {
                 this.quests = playerSave.quests;
+            }
+            if(playerSave.achievements) {
+                this.achievements = playerSave.achievements;
             }
 
             this._lastAddress = playerSave.lastLogin?.address || (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
@@ -260,8 +265,12 @@ export class Player extends Actor {
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
 
-        this.actionsCancelled.subscribe(doNotCloseWidgets => {
-            if(!doNotCloseWidgets) {
+        this.actionsCancelled.subscribe(type => {
+            const keepWidgetsOpenFor = [
+                'keep-widgets-open', 'pathing-movement'
+            ];
+
+            if(keepWidgetsOpenFor.indexOf(type) === -1) {
                 this.outgoingPackets.closeActiveWidgets();
                 this._activeWidget = null;
             }
@@ -779,7 +788,7 @@ export class Player extends Actor {
             if(this.queuedWidgets.length !== 0) {
                 this.activeWidget = this.queuedWidgets.shift();
             } else {
-                this.actionsCancelled.next(true);
+                this.actionsCancelled.next('keep-widgets-open');
             }
         }
     }
@@ -874,7 +883,7 @@ export class Player extends Actor {
             this.outgoingPackets.closeActiveWidgets();
         }
 
-        this.actionsCancelled.next(true);
+        this.actionsCancelled.next('keep-widgets-open');
         this._activeWidget = value;
     }
 

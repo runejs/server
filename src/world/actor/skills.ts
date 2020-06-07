@@ -1,8 +1,8 @@
 import { Actor } from '@server/world/actor/actor';
 import { Player } from '@server/world/actor/player/player';
-import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
 import { startsWithVowel } from '@server/util/strings';
 import { serverConfig } from '@server/game-server';
+import { gfxIds } from '@server/world/config/gfx-ids';
 
 export enum Skill {
     ATTACK,
@@ -28,6 +28,10 @@ export enum Skill {
     RUNECRAFTING,
     CONSTRUCTION = 22
 }
+
+export type SkillName = 'attack' | 'defence' | 'strength' | 'hitpoints' | 'ranged' | 'prayer' | 'magic' | 'cooking' |
+    'woodcutting' | 'fletching' | 'fishing' | 'firemaking' | 'crafting' | 'smithing' | 'mining' | 'herblore' |
+    'agility' | 'thieving' | 'slayer' | 'farming' | 'runecrafting' | 'construction';
 
 export interface SkillDetail {
     readonly name: string;
@@ -84,8 +88,17 @@ export class Skills {
         return values;
     }
 
-    public hasSkillLevel(skillId: number, level: number): boolean {
-        return this.values[skillId].level >= level;
+    /*
+     * @TODO make an additional field for boostedLevel that this reads from
+     *   Also add a new method to get the unboostedLevel incase it's ever needed
+     *   Then think about some way to reliably and easily fade those boosts out over time
+     */
+    public getSkillLevel(skill: number | SkillName): number {
+        return this.get(skill).level;
+    }
+
+    public hasSkillLevel(skill: number | SkillName, level: number): boolean {
+        return this.get(skill).level >= level;
     }
 
     public getLevelForExp(exp: number): number {
@@ -103,8 +116,8 @@ export class Skills {
         return 99;
     }
 
-    public addExp(skillId: number, exp: number): void {
-        const currentExp = this._values[skillId].exp;
+    public addExp(skill: number | SkillName, exp: number): void {
+        const currentExp = this.get(skill).exp;
         const currentLevel = this.getLevelForExp(currentExp);
         let finalExp = currentExp + (exp * serverConfig.expRate);
         if(finalExp > 200000000) {
@@ -113,34 +126,35 @@ export class Skills {
 
         const finalLevel = this.getLevelForExp(finalExp);
 
-        this.setExp(skillId, finalExp);
+        this.setExp(skill, finalExp);
 
         if(this.actor instanceof Player) {
-            this.actor.outgoingPackets.updateSkill(skillId, finalLevel, finalExp);
+            this.actor.outgoingPackets.updateSkill(this.getSkillId(skill), finalLevel, finalExp);
         }
 
         if(currentLevel !== finalLevel) {
-            this.setLevel(skillId, finalLevel);
+            this.setLevel(skill, finalLevel);
 
             if(this.actor instanceof Player) {
-                const achievementDetails = skillDetails[skillId];
+                const achievementDetails = skillDetails[this.getSkillId(skill)];
                 if(!achievementDetails) {
                     return;
                 }
 
-                this.actor.sendMessage(`Congratulations, you just advanced a ${achievementDetails.name.toLowerCase()} level.`);
-                this.showLevelUpDialogue(skillId, finalLevel);
+                this.actor.sendMessage(`Congratulations, you just advanced a ` +
+                    `${ achievementDetails.name.toLowerCase() } level.`);
+                this.showLevelUpDialogue(skill, finalLevel);
             }
         }
     }
 
-    public showLevelUpDialogue(skillId: number, level: number): void {
+    public showLevelUpDialogue(skill: number | SkillName, level: number): void {
         if(!(this.actor instanceof Player)) {
             return;
         }
 
         const player = this.actor as Player;
-        const achievementDetails = skillDetails[skillId];
+        const achievementDetails = skillDetails[this.getSkillId(skill)];
         const widgetId = achievementDetails.advancementWidgetId;
 
         if(!widgetId) {
@@ -155,23 +169,44 @@ export class Skills {
             closeOnWalk: true,
             beforeOpened: () => {
                 player.modifyWidget(widgetId, { childId: 0,
-                    text: `<col=000080>Congratulations, you just advanced ${startsWithVowel(skillName) ? 'an' : 'a'} ${skillName} level.</col>` });
+                    text: `<col=000080>Congratulations, you just advanced ${ startsWithVowel(skillName) ? 'an' : 'a' } ` +
+                        `${ skillName } level.</col>` });
                 player.modifyWidget(widgetId, { childId: 1,
-                    text: `Your ${skillName} level is now ${level}.` });
+                    text: `Your ${skillName} level is now ${ level }.` });
             },
             afterOpened: () => {
-                player.playGraphics({ id: 199, delay: 0, height: 125 });
+                player.playGraphics({ id: gfxIds.levelUpFireworks, delay: 0, height: 125 });
                 // @TODO sounds
             }
         });
     }
 
-    public setExp(skillId: number, exp: number): void {
+    public setExp(skill: number | SkillName, exp: number): void {
+        const skillId = this.getSkillId(skill);
         this._values[skillId].exp = exp;
     }
 
-    public setLevel(skillId: number, level: number): void {
+    public setLevel(skill: number | SkillName, level: number): void {
+        const skillId = this.getSkillId(skill);
         this._values[skillId].level = level;
+    }
+
+    public getSkillId(skill: number | SkillName) : number {
+        if(typeof skill === 'number') {
+            return skill;
+        } else {
+            const skillName = skill.toString().toUpperCase();
+            return Skill[skillName].valueOf();
+        }
+    }
+
+    public get(skill: number | SkillName): SkillValue {
+        if(typeof skill === 'number') {
+            return this._values[skill];
+        } else {
+            const skillName = skill.toString().toUpperCase();
+            return this._values[Skill[skillName].valueOf()];
+        }
     }
 
     public get values(): SkillValue[] {

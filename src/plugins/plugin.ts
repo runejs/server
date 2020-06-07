@@ -61,20 +61,14 @@ export function questFilter(player: Player, plugin: ActionPlugin): boolean {
     return playerQuest.stage === plugin.questAction.stage;
 }
 
+export type RunePluginAction = NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | ItemOnObjectActionPlugin | ItemOnNpcActionPlugin |
+    CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | PlayerInitPlugin | NpcInitPlugin | QuestPlugin | PlayerActionPlugin;
+
 export class RunePlugin {
 
-    public actions: (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin |
-        ItemOnObjectActionPlugin | CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin |
-        PlayerInitPlugin | NpcInitPlugin | QuestPlugin | PlayerActionPlugin | ItemOnNpcActionPlugin)[];
+    public actions: RunePluginAction[];
 
-    public constructor(actions: NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin |
-        ItemOnObjectActionPlugin | CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin |
-        PlayerInitPlugin | NpcInitPlugin | QuestPlugin | PlayerActionPlugin | ItemOnNpcActionPlugin |
-
-        (NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | ItemOnObjectActionPlugin |
-            CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | PlayerInitPlugin |
-            NpcInitPlugin | QuestPlugin | PlayerActionPlugin | ItemOnNpcActionPlugin)[], quest?: QuestAction) {
-
+    public constructor(actions: RunePluginAction | RunePluginAction[], quest?: QuestAction) {
         if(!Array.isArray(actions)) {
             if(quest !== undefined && !actions.questAction) {
                 actions.questAction = quest;

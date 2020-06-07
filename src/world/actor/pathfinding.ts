@@ -4,6 +4,7 @@ import { Position } from '../position';
 import { Chunk } from '@server/world/map/chunk';
 import { Tile } from '@runejs/cache-parser';
 import { Player } from '@server/world/actor/player/player';
+import { logger } from '@runejs/logger';
 
 class Point {
 
@@ -76,7 +77,8 @@ export class Pathfinding {
         const path = await this.pathTo(position.x, position.y, options.pathingDiameter);
 
         if(!path) {
-            throw new Error(`Unable to find path.`);
+            logger.warn(`Unable to find path.`);
+            return;
         }
 
         const walkingQueue = this.actor.walkingQueue;
@@ -111,8 +113,6 @@ export class Pathfinding {
         const startingIndexY = this.actor.position.y - lowestY;
 
         const pointLen = lenX * lenY;
-        console.log(`pointlen = ${pointLen}, startX = ${startingIndexX}, startY = ${startingIndexY}`);
-        console.log(`lenX = ${lenX}, lenY = ${lenY}`);
 
         if(pointLen <= 0) {
             return null;
@@ -239,6 +239,10 @@ export class Pathfinding {
     }
 
     private calculateCost(point: Point): void {
+        if(!this.currentPoint || !point) {
+            return;
+        }
+
         const differenceX = this.currentPoint.x - point.x;
         const differenceY = this.currentPoint.y - point.y;
         const nextStepCost = this.currentPoint.cost + ((Math.abs(differenceX) + Math.abs(differenceY)) * 10);

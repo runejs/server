@@ -30,7 +30,7 @@ export interface NpcActionDetails {
  */
 export interface NpcActionPlugin extends ActionPlugin {
     // A single NPC ID or a list of NPC IDs that this action applies to.
-    npcIds: number | number[];
+    npcIds?: number | number[];
     // A single option name or a list of option names that this action applies to.
     options: string | string[];
     // Whether or not the player needs to walk to this NPC before performing the action.

@@ -10,8 +10,8 @@ export const npcInteractionPacket: incomingPacket = (player: Player, packetId: n
     const args = {
         63: [ 'SHORT', 'UNSIGNED', 'LITTLE_ENDIAN' ],
         116: [ 'SHORT', 'UNSIGNED', 'LITTLE_ENDIAN' ],
-        /*13: 'readNegativeOffsetShortLE',
-        42: 'readUnsignedShortLE',
+        57: [ 'SHORT', 'UNSIGNED' ],
+        /*42: 'readUnsignedShortLE',
         8: 'readUnsignedShortLE'*/
     };
     const npcIndex = packet.get(...args[packetId]);
@@ -35,7 +35,7 @@ export const npcInteractionPacket: incomingPacket = (player: Player, packetId: n
 
     const actions = {
         63: 0, // Usually the Talk-to option
-        //67: 1, // Usually the Attack option
+        57: 1, // Usually the Attack option
         116: 2, // Usually the Pickpocket option
         /*42: 3,
         8: 4*/

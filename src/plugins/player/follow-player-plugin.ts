@@ -1,7 +1,5 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { playerAction } from '@server/world/actor/player/action/player-action';
-import { loopingAction } from '@server/world/actor/player/action/action';
-import { Position } from '@server/world/position';
 import { Player } from '@server/world/actor/player/player';
 
 async function pathTo(player: Player, otherPlayer: Player): Promise<boolean> {
@@ -31,10 +29,13 @@ export const action: playerAction = (details) => {
     const subscription = otherPlayer.movementEvent.subscribe(() => {
         pathTo(player, otherPlayer);
     });
-    /*const actionCancelled = player.actionsCancelled.subscribe(() => {
-        subscription.unsubscribe();
-        actionCancelled.unsubscribe();
-    });*/
+    const actionCancelled = player.actionsCancelled.subscribe(type => {
+        if(type !== 'pathing-movement') {
+            subscription.unsubscribe();
+            actionCancelled.unsubscribe();
+            player.face(null);
+        }
+    });
 
     /*const loop = loopingAction({ ticks: 2 });
 
