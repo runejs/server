@@ -69,6 +69,38 @@ export class Pathfinding {
     public constructor(private actor: Actor) {
     }
 
+    public static canMoveNSEW(destinationAdjacency: number[][], destinationLocalX: number, destinationLocalY: number, i: number): boolean {
+        return (destinationAdjacency[destinationLocalX][destinationLocalY] & i) === 0;
+    }
+
+    public static canMoveDiagonally(origin: Position, destinationAdjacency: number[][], destinationLocalX: number, destinationLocalY: number,
+                                    initialX: number, initialY: number, offsetX: number, offsetY: number, destMask: number, cornerMask1: number, cornerMask2: number): boolean {
+        const cornerX1: number = initialX + offsetX;
+        const cornerY1: number = initialY;
+        const cornerX2: number = initialX;
+        const cornerY2: number = initialY + offsetY;
+        const corner1 = Pathfinding.calculateLocalCornerPosition(cornerX1, cornerY1, origin);
+        const corner2 = Pathfinding.calculateLocalCornerPosition(cornerX2, cornerY2, origin);
+
+        return ((destinationAdjacency[destinationLocalX][destinationLocalY] & destMask) == 0 &&
+            (corner1.chunk.collisionMap.adjacency[corner1.localX][corner1.localY] & cornerMask1) == 0 &&
+            (corner2.chunk.collisionMap.adjacency[corner2.localX][corner2.localY] & cornerMask2) == 0);
+    }
+
+    private static calculateLocalCornerPosition(cornerX: number, cornerY: number, origin: Position): { localX: number, localY: number, chunk: Chunk } {
+        const cornerPosition: Position = new Position(cornerX, cornerY, origin.level + 1);
+        let cornerChunk: Chunk = world.chunkManager.getChunkForWorldPosition(cornerPosition);
+        const tileAbove: Tile = cornerChunk.getTile(cornerPosition);
+        if(!tileAbove || !tileAbove.bridge) {
+            cornerPosition.level = cornerPosition.level - 1;
+            cornerChunk = world.chunkManager.getChunkForWorldPosition(cornerPosition);
+        }
+        const localX: number = cornerX - cornerChunk.collisionMap.insetX;
+        const localY: number = cornerY - cornerChunk.collisionMap.insetY;
+
+        return { localX, localY, chunk: cornerChunk };
+    }
+
     public async walkTo(position: Position, options: PathingOptions): Promise<void> {
         if(!options.pathingDiameter) {
             options.pathingDiameter = 16;
@@ -141,8 +173,8 @@ export class Pathfinding {
             this.openPoints.splice(this.openPoints.indexOf(this.currentPoint), 1);
             this.closedPoints.push(this.currentPoint);
 
-            let level = this.actor.position.level;
-            let { x, y, indexX, indexY } = this.currentPoint;
+            const level = this.actor.position.level;
+            const { x, y, indexX, indexY } = this.currentPoint;
             let canPath = false;
 
             try {
@@ -402,38 +434,6 @@ export class Pathfinding {
         }
 
         return true;
-    }
-
-    public static canMoveNSEW(destinationAdjacency: number[][], destinationLocalX: number, destinationLocalY: number, i: number): boolean {
-        return (destinationAdjacency[destinationLocalX][destinationLocalY] & i) === 0;
-    }
-
-    public static canMoveDiagonally(origin: Position, destinationAdjacency: number[][], destinationLocalX: number, destinationLocalY: number,
-                                      initialX: number, initialY: number, offsetX: number, offsetY: number, destMask: number, cornerMask1: number, cornerMask2: number): boolean {
-        const cornerX1: number = initialX + offsetX;
-        const cornerY1: number = initialY;
-        const cornerX2: number = initialX;
-        const cornerY2: number = initialY + offsetY;
-        const corner1 = Pathfinding.calculateLocalCornerPosition(cornerX1, cornerY1, origin);
-        const corner2 = Pathfinding.calculateLocalCornerPosition(cornerX2, cornerY2, origin);
-
-        return ((destinationAdjacency[destinationLocalX][destinationLocalY] & destMask) == 0 &&
-            (corner1.chunk.collisionMap.adjacency[corner1.localX][corner1.localY] & cornerMask1) == 0 &&
-            (corner2.chunk.collisionMap.adjacency[corner2.localX][corner2.localY] & cornerMask2) == 0);
-    }
-
-    private static calculateLocalCornerPosition(cornerX: number, cornerY: number, origin: Position): { localX: number, localY: number, chunk: Chunk } {
-        const cornerPosition: Position = new Position(cornerX, cornerY, origin.level + 1);
-        let cornerChunk: Chunk = world.chunkManager.getChunkForWorldPosition(cornerPosition);
-        const tileAbove: Tile = cornerChunk.getTile(cornerPosition);
-        if(!tileAbove || !tileAbove.bridge) {
-            cornerPosition.level = cornerPosition.level - 1;
-            cornerChunk = world.chunkManager.getChunkForWorldPosition(cornerPosition);
-        }
-        const localX: number = cornerX - cornerChunk.collisionMap.insetX;
-        const localY: number = cornerY - cornerChunk.collisionMap.insetY;
-
-        return { localX, localY, chunk: cornerChunk };
     }
 
 }
