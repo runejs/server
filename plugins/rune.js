@@ -26,6 +26,7 @@ module.exports = {
     WORLD_ITEM_ACTION: ActionType.WORLD_ITEM_ACTION, OBJECT_ACTION: ActionType.OBJECT_ACTION,
     ITEM_ON_OBJECT_ACTION: ActionType.ITEM_ON_OBJECT_ACTION, ITEM_ON_NPC_ACTION: ActionType.ITEM_ON_NPC_ACTION,
     COMMAND_ACTION: ActionType.COMMAND, PLAYER_INIT: ActionType.PLAYER_INIT, NPC_INIT: ActionType.NPC_INIT,
+    PLAYER_ACTION: ActionType.PLAYER_ACTION,
     QUEST: ActionType.QUEST, RunePlugin,
 
     world, InteractingAction, loopingAction, walkToAction,
