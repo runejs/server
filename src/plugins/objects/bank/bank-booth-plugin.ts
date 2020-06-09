@@ -67,7 +67,7 @@ export const depositItem: itemAction = (details) => {
         } else {
             itemToAdd.amount += countToRemove;
             invItem.amount -= countToRemove;
-            countToRemove = 0
+            countToRemove = 0;
         }
     }
     playerBank.addStacking(itemToAdd);
