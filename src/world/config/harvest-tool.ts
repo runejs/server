@@ -57,7 +57,7 @@ const Axes: HarvestTool[] = [
  */
 export function getBestPickaxe(player: Player): HarvestTool | null {
     for (let i = Pickaxes.length - 1; i >= 0; i--) {
-        if (player.skills.hasSkillLevel(Skill.MINING, Pickaxes[i].level)) {
+        if (player.skills.hasLevel(Skill.MINING, Pickaxes[i].level)) {
             if (player.hasItemOnPerson(Pickaxes[i].itemId)) {
                 return Pickaxes[i];
             }
@@ -72,7 +72,7 @@ export function getBestPickaxe(player: Player): HarvestTool | null {
  */
 export function getBestAxe(player: Player): HarvestTool | null {
     for (let i = Axes.length - 1; i >= 0; i--) {
-        if (player.skills.hasSkillLevel(Skill.WOODCUTTING, Axes[i].level)) {
+        if (player.skills.hasLevel(Skill.WOODCUTTING, Axes[i].level)) {
             if (player.hasItemOnPerson(Axes[i].itemId)) {
                 return Axes[i];
             }

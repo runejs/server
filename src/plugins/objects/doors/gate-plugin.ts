@@ -1,6 +1,6 @@
 import { Position } from '@server/world/position';
 import { directionData, WNES } from '@server/world/direction';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { world } from '@server/game-server';
 import { ModifiedLocationObject } from '@server/world/map/location-object';
 import { objectAction } from '@server/world/actor/player/action/object-action';

@@ -34,7 +34,7 @@ export function canInitiateHarvest(player: Player, target: IHarvestable, skill: 
 
 
     // Check player level against the required level
-    if (!player.skills.hasSkillLevel(skill, target.level)) {
+    if (!player.skills.hasLevel(skill, target.level)) {
         switch (skill) {
             case Skill.MINING:
                 player.sendMessage(`You need a Mining level of ${target.level} to mine this rock.`, true);

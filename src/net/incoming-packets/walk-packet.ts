@@ -16,6 +16,7 @@ export const walkPacket: incomingPacket = (player: Player, packetId: number, pac
 
     const walkingQueue = player.walkingQueue;
 
+    player.actionsCancelled.next('manual-movement');
     player.walkingTo = null;
     walkingQueue.clear();
     walkingQueue.valid = true;
