@@ -17,7 +17,8 @@ export const openBankInterface: objectAction = (details) => {
 
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, details.player.inventory);
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, details.player.bank);
-
+    details.player.outgoingPackets.updateClientConfig(304, details.player.sessionMetadata['bankRearrangeMode'] === 'insert' ? 1 : 0);
+    details.player.outgoingPackets.updateClientConfig(115, details.player.sessionMetadata['bankWithdrawAs'] === 'note' ? 1 : 0);
 
 };
 

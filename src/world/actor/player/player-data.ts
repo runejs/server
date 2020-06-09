@@ -4,6 +4,7 @@ import { join } from 'path';
 import { logger } from '@runejs/logger';
 import { Player } from './player';
 import { SkillValue } from '@server/world/actor/skills';
+import { hasValueNotNull } from '@server/util/data';
 
 
 export interface QuestProgress {
@@ -124,7 +125,7 @@ export function savePlayerData(player: Player): boolean {
         appearance: player.appearance,
         inventory: player.inventory.items,
         bank: player.bank.items.filter((item) => {
-            return !!item;
+            return hasValueNotNull(item);
         }),
         equipment: player.equipment.items,
         skills: player.skills.values,

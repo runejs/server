@@ -1,6 +1,7 @@
 import { Item } from './item';
 import { Subject } from 'rxjs';
 import { cache, world } from '@server/game-server';
+import { hasValueNotNull } from '@server/util/data';
 
 export interface ContainerUpdateEvent {
     slot?: number;
@@ -43,7 +44,7 @@ export class ItemContainer {
         if (stackable) {
             const index = this.findIndex(search);
 
-            if (!index || index === -1) {
+            if (!hasValueNotNull(index) || index === -1) {
                 return [];
             } else {
                 return [index];
@@ -204,7 +205,7 @@ export class ItemContainer {
     }
 
     public getFirstOpenSlot(): number {
-        return this._items.findIndex(item => !item);
+        return this._items.findIndex(item => !hasValueNotNull(item));
     }
 
     public hasSpace(): boolean {
@@ -214,7 +215,7 @@ export class ItemContainer {
     public getOpenSlotCount(): number {
         let count = 0;
         for (let i = 0; i < this._size; i++) {
-            if (!this._items[i]) {
+            if (!hasValueNotNull(this._items[i])) {
                 count++;
             }
         }
@@ -226,7 +227,7 @@ export class ItemContainer {
         const slots: number[] = [];
 
         for (let i = 0; i < this._size; i++) {
-            if (!this._items[i]) {
+            if (!hasValueNotNull(this._items[i])) {
                 slots.push(i);
             }
         }
@@ -246,12 +247,12 @@ export class ItemContainer {
         let weight = 0;
 
         for (const item of this._items) {
-            if (!item) {
+            if (!hasValueNotNull(item)) {
                 continue;
             }
 
             const itemData = world.itemData.get(item.itemId);
-            if (!itemData || itemData.weight === undefined) {
+            if (!!hasValueNotNull(itemData) || itemData.weight === undefined) {
                 continue;
             }
 

@@ -92,6 +92,7 @@ export class Player extends Actor {
     public readonly actionsCancelled: Subject<boolean>;
     private quadtreeKey: QuadtreeKey = null;
     public savedMetadata: { [key: string]: any } = {};
+    public sessionMetadata: { [key: string]: any } = {};
     public quests: QuestProgress[] = [];
     public achievements: string[] = [];
 
