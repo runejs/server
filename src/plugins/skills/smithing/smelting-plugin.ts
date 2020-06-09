@@ -180,7 +180,7 @@ const loadSmeltingInterface = (details: ObjectActionDetails) => {
     // Send the items to the widget.
     widgetItems.forEach((item) => {
         details.player.outgoingPackets.setItemOnWidget(widgets.furnace.widgetId, item.slot.modelId, item.bar.barId, 125);
-        if (!details.player.skills.hasSkillLevel(Skill.SMITHING, item.bar.requiredLevel)) {
+        if (!details.player.skills.hasLevel(Skill.SMITHING, item.bar.requiredLevel)) {
             details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.red});
         } else {
             details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.black});
@@ -204,7 +204,7 @@ const hasIngredients = (details: ButtonActionDetails, ingredients: Item[], inven
 };
 
 const canSmelt = (details: ButtonActionDetails, bar: Bar): boolean =>  {
-    return details.player.skills.hasSkillLevel(Skill.SMITHING, bar.requiredLevel);
+    return details.player.skills.hasLevel(Skill.SMITHING, bar.requiredLevel);
 };
 
 const smeltProduct = (details: ButtonActionDetails, bar: Bar, count: number) => {

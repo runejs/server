@@ -1,6 +1,6 @@
 import { WalkingQueue } from './walking-queue';
 import { ItemContainer } from '../items/item-container';
-import { Animation, Graphic, UpdateFlags } from './update-flags';
+import { Animation, DamageType, Graphic, UpdateFlags } from './update-flags';
 import { Npc } from './npc/npc';
 import { Skills } from '@server/world/actor/skills';
 import { Item } from '@server/world/items/item';
@@ -40,6 +40,10 @@ export abstract class Actor {
         this._busy = false;
         this._combatActions = [];
         this.pathfinding = new Pathfinding(this);
+    }
+
+    public damage(amount: number, damageType: DamageType = DamageType.DAMAGE): void {
+
     }
 
     public face(face: Position | Actor | null, clearWalkingQueue: boolean = true, autoClear: boolean = true, clearedByWalking: boolean = true): void {
