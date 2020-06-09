@@ -55,7 +55,7 @@ export class ItemContainer {
             for (let i = 0; i < this.size; i++) {
                 const item = this.items[i];
 
-                if (item && item.itemId === search) {
+                if (hasValueNotNull(item) && item.itemId === search) {
                     slots.push(i);
                 }
             }
@@ -66,7 +66,7 @@ export class ItemContainer {
 
     public findIndex(item: number | Item): number {
         const itemId = (typeof item === 'number') ? item : item.itemId;
-        return this._items.findIndex(i => i && i.itemId === itemId);
+        return this._items.findIndex(i => hasValueNotNull(i) && i.itemId === itemId);
     }
 
     public setAll(items: Item[], fireEvent: boolean = true): void {
@@ -88,7 +88,7 @@ export class ItemContainer {
 
     public findItemIndex(item: Item): number {
         for (let i = 0; i < this._size; i++) {
-            if (this._items[i] &&
+            if (hasValueNotNull(this._items[i]) &&
                 this._items[i].itemId === item.itemId &&
                 this._items[i].amount >= item.amount) {
                 return i;
