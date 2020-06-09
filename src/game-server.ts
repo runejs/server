@@ -25,6 +25,7 @@ import { setItemOnNpcPlugins } from '@server/world/actor/player/action/item-on-n
 import { setPlayerInitPlugins } from '@server/world/actor/player/player';
 import { setNpcInitPlugins } from '@server/world/actor/npc/npc';
 import { setQuestPlugins } from '@server/world/config/quests';
+import { setPlayerPlugins } from '@server/world/actor/player/action/player-action';
 
 
 export let serverConfig: ServerConfig;
@@ -68,6 +69,7 @@ export async function injectPlugins(): Promise<void> {
     setWidgetPlugins(actionPluginMap[ActionType.WIDGET_ACTION]);
     setPlayerInitPlugins(actionPluginMap[ActionType.PLAYER_INIT]);
     setNpcInitPlugins(actionPluginMap[ActionType.NPC_INIT]);
+    setPlayerPlugins(actionPluginMap[ActionType.PLAYER_ACTION]);
 }
 
 function generateCrcTable(): void {

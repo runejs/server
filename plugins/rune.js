@@ -13,8 +13,7 @@ const { InteractingAction, loopingAction, walkToAction } = require('../dist/worl
 const { DamageType, Damage, Animation, Graphic, ChatMessage } = require('../dist/world/actor/update-flags');
 const { Skill, Skills } = require('../dist/world/actor/skills');
 const { Achievements, giveAchievement } = require('../dist/world/actor/player/achievements');
-const { of } = require('rxjs');
-const { delay } = require('rxjs/operators');
+const { wait, schedule } = require('../dist/task/task');
 
 module.exports = {
 
@@ -27,14 +26,13 @@ module.exports = {
     WORLD_ITEM_ACTION: ActionType.WORLD_ITEM_ACTION, OBJECT_ACTION: ActionType.OBJECT_ACTION,
     ITEM_ON_OBJECT_ACTION: ActionType.ITEM_ON_OBJECT_ACTION, ITEM_ON_NPC_ACTION: ActionType.ITEM_ON_NPC_ACTION,
     COMMAND_ACTION: ActionType.COMMAND, PLAYER_INIT: ActionType.PLAYER_INIT, NPC_INIT: ActionType.NPC_INIT,
+    PLAYER_ACTION: ActionType.PLAYER_ACTION,
     QUEST: ActionType.QUEST, RunePlugin,
 
     world, InteractingAction, loopingAction, walkToAction,
 
     DamageType, Damage, Animation, Graphic, ChatMessage, Skill, Skills, Achievements, giveAchievement,
 
-    wait: async (waitLength) => {
-        await of(null).pipe(delay(waitLength)).toPromise();
-    }
+    wait, schedule
 
 };

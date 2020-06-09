@@ -2,7 +2,7 @@ import { Npc } from '@server/world/actor/npc/npc';
 import { Player } from '@server/world/actor/player/player';
 import { Subscription } from 'rxjs';
 import { cache } from '@server/game-server';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import _ from 'lodash';
 import { wrapText } from '@server/util/strings';
 import { ActionsCancelledWarning, WidgetsClosedWarning } from '@server/error-handling';

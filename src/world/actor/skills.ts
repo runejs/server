@@ -67,13 +67,74 @@ export const skillDetails: SkillDetail[] = [
 export interface SkillValue {
     exp: number;
     level: number;
+    modifiedLevel?: number;
 }
 
-export class Skills {
+export class SkillShortcut {
+
+    public constructor(private skills: Skills, private skillName: SkillName) {
+    }
+
+    public addExp(exp: number): void {
+        this.skills.addExp(this.skillName, exp);
+    }
+
+    public get level(): number {
+        return this.skills.getLevel(this.skillName);
+    }
+
+    public get exp(): number {
+        return this.skills.get(this.skillName).exp;
+    }
+
+    public get levelForExp(): number {
+        return this.skills.getLevelForExp(this.exp);
+    }
+
+}
+
+type SkillShortcutMap = {
+    [skillName in SkillName]: SkillShortcut;
+};
+
+class SkillShortcuts implements SkillShortcutMap {
+    agility: SkillShortcut;
+    attack: SkillShortcut;
+    construction: SkillShortcut;
+    cooking: SkillShortcut;
+    crafting: SkillShortcut;
+    defence: SkillShortcut;
+    farming: SkillShortcut;
+    firemaking: SkillShortcut;
+    fishing: SkillShortcut;
+    fletching: SkillShortcut;
+    herblore: SkillShortcut;
+    hitpoints: SkillShortcut;
+    magic: SkillShortcut;
+    mining: SkillShortcut;
+    prayer: SkillShortcut;
+    ranged: SkillShortcut;
+    runecrafting: SkillShortcut;
+    slayer: SkillShortcut;
+    smithing: SkillShortcut;
+    strength: SkillShortcut;
+    thieving: SkillShortcut;
+    woodcutting: SkillShortcut;
+}
+
+export class Skills extends SkillShortcuts {
 
     private _values: SkillValue[];
 
     public constructor(private actor: Actor, values?: SkillValue[]) {
+        super();
+
+        Object.keys(Skill)
+            .map(skillName => skillName.toLowerCase())
+            .forEach(skillName =>
+                this[skillName] = new SkillShortcut(this, skillName as SkillName)
+            );
+
         if(values) {
             this._values = values;
         } else {
@@ -81,24 +142,14 @@ export class Skills {
         }
     }
 
-    private defaultValues(): SkillValue[] {
-        const values: SkillValue[] = [];
-        skillDetails.forEach(s => values.push({ exp: 0, level: 1 }));
-        values[Skill.HITPOINTS] = { exp: 1154, level: 10 };
-        return values;
+    public getLevel(skill: number | SkillName, ignoreLevelModifications: boolean = false): number {
+        const s = this.get(skill);
+        return (s.modifiedLevel !== undefined && !ignoreLevelModifications ? s.modifiedLevel : s.level);
     }
 
-    /*
-     * @TODO make an additional field for boostedLevel that this reads from
-     *   Also add a new method to get the unboostedLevel incase it's ever needed
-     *   Then think about some way to reliably and easily fade those boosts out over time
-     */
-    public getSkillLevel(skill: number | SkillName): number {
-        return this.get(skill).level;
-    }
-
-    public hasSkillLevel(skill: number | SkillName, level: number): boolean {
-        return this.get(skill).level >= level;
+    public hasLevel(skill: number | SkillName, level: number, ignoreLevelModifications: boolean = false): boolean {
+        const s = this.get(skill);
+        return (ignoreLevelModifications ? s.level : s.modifiedLevel) >= level;
     }
 
     public getLevelForExp(exp: number): number {
@@ -181,16 +232,6 @@ export class Skills {
         });
     }
 
-    public setExp(skill: number | SkillName, exp: number): void {
-        const skillId = this.getSkillId(skill);
-        this._values[skillId].exp = exp;
-    }
-
-    public setLevel(skill: number | SkillName, level: number): void {
-        const skillId = this.getSkillId(skill);
-        this._values[skillId].level = level;
-    }
-
     public getSkillId(skill: number | SkillName) : number {
         if(typeof skill === 'number') {
             return skill;
@@ -207,6 +248,23 @@ export class Skills {
             const skillName = skill.toString().toUpperCase();
             return this._values[Skill[skillName].valueOf()];
         }
+    }
+
+    private defaultValues(): SkillValue[] {
+        const values: SkillValue[] = [];
+        skillDetails.forEach(s => values.push({ exp: 0, level: 1 }));
+        values[Skill.HITPOINTS] = { exp: 1154, level: 10 };
+        return values;
+    }
+
+    private setExp(skill: number | SkillName, exp: number): void {
+        const skillId = this.getSkillId(skill);
+        this._values[skillId].exp = exp;
+    }
+
+    private setLevel(skill: number | SkillName, level: number): void {
+        const skillId = this.getSkillId(skill);
+        this._values[skillId].level = level;
     }
 
     public get values(): SkillValue[] {

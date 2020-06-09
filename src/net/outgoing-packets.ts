@@ -510,6 +510,15 @@ export class OutgoingPackets {
         this.queue(packet);
     }
 
+    public updatePlayerOption(option: string, index: number = 0, placement: 'TOP' | 'BOTTOM' = 'BOTTOM'): void {
+        const packet = new Packet(223, PacketType.DYNAMIC_SMALL);
+        packet.putString(!option ? 'hidden' : option);
+        packet.put(placement === 'TOP' ? 1 : 0);
+        packet.put(index + 1);
+
+        this.queue(packet);
+    }
+
     public flushQueue(): void {
         if(!this.socket || this.socket.destroyed) {
             return;

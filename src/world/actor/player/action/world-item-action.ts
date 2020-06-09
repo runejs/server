@@ -1,7 +1,7 @@
 import { Player } from '@server/world/actor/player/player';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { ActionPlugin, questFilter } from '@server/plugins/plugin';
 import { WorldItem } from '@server/world/items/world-item';
 

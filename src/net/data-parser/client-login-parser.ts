@@ -3,7 +3,7 @@ import { Player } from '@server/world/actor/player/player';
 import { Isaac } from '@server/net/isaac';
 import { serverConfig, world } from '@server/game-server';
 import { DataParser } from './data-parser';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { ByteBuffer } from '@runejs/byte-buffer';
 import * as bcrypt from 'bcrypt';
 import { loadPlayerSave } from '@server/world/actor/player/player-data';
