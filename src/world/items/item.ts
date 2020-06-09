@@ -1,4 +1,4 @@
-import { cache } from '@server/game-server';
+import { cache, world } from '@server/game-server';
 
 export interface Item {
     itemId: number;
@@ -52,3 +52,19 @@ export const getItemOption = (itemId: number, optionNumber: number, widget: { wi
 
     return option.replace(/ /g, '-');
 };
+
+export function parseItemId(item: number | Item): number {
+    return (typeof item !== 'number' ? item.itemId : item);
+}
+
+export function toNote(item: number | Item): number {
+    item = parseItemId(item);
+    const notedItem = Array.from(world.itemData.values()).find(i => i.notedId === item);
+    return !notedItem ? -1 : notedItem.id;
+}
+
+export function fromNote(item: number | Item): number {
+    item = parseItemId(item);
+    const notedItem = world.itemData.get(item);
+    return !notedItem ? -1 : notedItem.notedId;
+}
