@@ -31,7 +31,10 @@ export const widgets: any = {
         containerId: 0
     },
     bank: {
-        screenWidget: 12,
+        screenWidget: {
+            widgetId: 12,
+            containerId: 89,
+        },
         tabWidget: {
             widgetId: 266,
             containerId: 0

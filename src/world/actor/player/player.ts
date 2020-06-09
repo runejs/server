@@ -106,6 +106,7 @@ export class Player extends Actor {
     public readonly actionsCancelled: Subject<ActionCancelType>;
     private quadtreeKey: QuadtreeKey = null;
     public savedMetadata: { [key: string]: any } = {};
+    public sessionMetadata: { [key: string]: any } = {};
     public quests: QuestProgress[] = [];
     public achievements: string[] = [];
 
@@ -151,6 +152,9 @@ export class Player extends Actor {
             this.position = new Position(playerSave.position.x, playerSave.position.y, playerSave.position.level);
             if(playerSave.inventory && playerSave.inventory.length !== 0) {
                 this.inventory.setAll(playerSave.inventory);
+            }
+            if(playerSave.bank && playerSave.bank.length !== 0) {
+                this.bank.setAll(playerSave.bank);
             }
             if(playerSave.equipment && playerSave.equipment.length !== 0) {
                 this.equipment.setAll(playerSave.equipment);

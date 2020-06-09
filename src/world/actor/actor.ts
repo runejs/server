@@ -23,6 +23,7 @@ export abstract class Actor {
     private _runDirection: number;
     private _faceDirection: number;
     private readonly _inventory: ItemContainer;
+    private readonly _bank: ItemContainer;
     public readonly skills: Skills;
     private _busy: boolean;
     public readonly metadata: { [key: string]: any } = {};
@@ -36,6 +37,7 @@ export abstract class Actor {
         this._runDirection = -1;
         this._faceDirection = 6;
         this._inventory = new ItemContainer(28);
+        this._bank = new ItemContainer(376);
         this.skills = new Skills(this);
         this._busy = false;
         this._combatActions = [];
@@ -100,12 +102,22 @@ export abstract class Actor {
         this._inventory.remove(slot);
     }
 
+    public removeBankItem(slot: number): void {
+        this._bank.remove(slot);
+    }
+
     public giveItem(item: number | Item): boolean {
         return this._inventory.add(item) !== null;
+    }
+    public giveBankItem(item: number | Item): boolean {
+        return this._bank.add(item) !== null;
     }
 
     public hasItemInInventory(item: number | Item): boolean {
         return this._inventory.has(item);
+    }
+    public hasItemInBank(item: number | Item): boolean {
+        return this._bank.has(item);
     }
 
     public hasItemOnPerson(item: number | Item): boolean {
@@ -285,6 +297,9 @@ export abstract class Actor {
 
     public get inventory(): ItemContainer {
         return this._inventory;
+    }
+    public get bank(): ItemContainer {
+        return this._bank;
     }
 
     public get busy(): boolean {

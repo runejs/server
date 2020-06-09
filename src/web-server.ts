@@ -82,6 +82,7 @@ export function runWebServer(): void {
                     level: p.position.level
                 },
                 inventory: p.inventory.items,
+                bank: p.bank.items,
                 equipment: p.equipment.items
             };
         }));

@@ -18,7 +18,7 @@ const action: objectAction = (details) => {
 
 export default new RunePlugin({
     type: ActionType.OBJECT_ACTION,
-    options: ['chop down'],
+    options: ['chop down', 'chop'],
     objectIds: getTreeIds(),
     walkTo: true,
     action
