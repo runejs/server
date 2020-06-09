@@ -124,7 +124,7 @@ export function savePlayerData(player: Player): boolean {
         appearance: player.appearance,
         inventory: player.inventory.items,
         bank: player.bank.items.filter((item) => {
-            return item !== null
+            return !!item;
         }),
         equipment: player.equipment.items,
         skills: player.skills.values,

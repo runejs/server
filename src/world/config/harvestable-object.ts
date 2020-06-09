@@ -1,4 +1,4 @@
-import { objectIds } from "@server/world/config/object-ids";
+import { objectIds } from '@server/world/config/object-ids';
 
 export interface IHarvestable {
     objects: Map<number, number>;

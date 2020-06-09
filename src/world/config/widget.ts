@@ -33,7 +33,7 @@ export const widgets: any = {
     bank: {
         screenWidget: {
             widgetId: 12,
-            containerId:89,
+            containerId: 89,
         },
         tabWidget: {
             widgetId: 266,

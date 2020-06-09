@@ -2,9 +2,9 @@ import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { objectIds } from '@server/world/config/object-ids';
 import { widgets } from '@server/world/config/widget';
 import { objectAction } from '@server/world/actor/player/action/object-action';
-import { ItemContainer } from "@server/world/items/item-container";
-import { itemAction } from "@server/world/actor/player/action/item-action";
-import { Item } from "@server/world/items/item";
+import { ItemContainer } from '@server/world/items/item-container';
+import { itemAction } from '@server/world/actor/player/action/item-action';
+import { Item } from '@server/world/items/item';
 
 
 export const openBankInterface: objectAction = (details) => {
@@ -35,10 +35,10 @@ export const depositItem: itemAction = (details) => {
     }
 
     let countToRemove: number;
-    if (details.option.endsWith("all")) {
+    if (details.option.endsWith('all')) {
         countToRemove = -1;
     } else {
-        countToRemove = +details.option.replace("deposit-", "");
+        countToRemove = +details.option.replace('deposit-', '');
     }
 
     const playerInventory: ItemContainer = details.player.inventory;
@@ -47,16 +47,16 @@ export const depositItem: itemAction = (details) => {
     let itemAmount: number = 0;
     slotsWithItem.forEach((slot) => itemAmount += playerInventory.items[slot].amount);
     if (countToRemove == -1 || countToRemove > itemAmount) {
-        countToRemove = itemAmount
+        countToRemove = itemAmount;
     }
 
     if (!playerBank.canFit({itemId: details.itemId, amount: countToRemove}, true)) {
-        details.player.sendMessage("Your bank is full.");
+        details.player.sendMessage('Your bank is full.');
         return;
     }
 
 
-    const itemToAdd: Item = {itemId: details.itemId, amount: 0}
+    const itemToAdd: Item = {itemId: details.itemId, amount: 0};
     while (countToRemove > 0 && playerInventory.has(details.itemId)) {
         const invIndex = playerInventory.findIndex(details.itemId);
         const invItem = playerInventory.items[invIndex];
@@ -91,18 +91,18 @@ export const withdrawItem: itemAction = (details) => {
         return;
     }
     let countToRemove: number;
-    if (details.option.endsWith("all")) {
+    if (details.option.endsWith('all')) {
         countToRemove = -1;
     } else {
-        countToRemove = +details.option.replace("withdraw-", "");
+        countToRemove = +details.option.replace('withdraw-', '');
     }
 
     const playerBank: ItemContainer = details.player.bank;
     const playerInventory: ItemContainer = details.player.inventory;
     const slotWithItem: number = playerBank.findIndex(details.itemId);
-    let itemAmount: number = playerBank.items[slotWithItem].amount;
+    const itemAmount: number = playerBank.items[slotWithItem].amount;
     if (countToRemove == -1 || countToRemove > itemAmount) {
-        countToRemove = itemAmount
+        countToRemove = itemAmount;
     }
 
     if (!details.itemDetails.stackable) {
@@ -113,12 +113,12 @@ export const withdrawItem: itemAction = (details) => {
     }
 
     if (!playerInventory.canFit({itemId: details.itemId, amount: countToRemove})) {
-        details.player.sendMessage("Your inventory is full.");
+        details.player.sendMessage('Your inventory is full.');
         return;
     }
 
 
-    const itemToAdd: Item = {itemId: details.itemId, amount: 0}
+    const itemToAdd: Item = {itemId: details.itemId, amount: 0};
     while (countToRemove > 0 && playerBank.has(details.itemId)) {
         const invIndex = playerBank.findIndex(details.itemId);
         const invItem = playerBank.items[invIndex];
@@ -129,7 +129,7 @@ export const withdrawItem: itemAction = (details) => {
         } else {
             itemToAdd.amount += countToRemove;
             invItem.amount -= countToRemove;
-            countToRemove = 0
+            countToRemove = 0;
         }
     }
     playerInventory.addStacking(itemToAdd);
