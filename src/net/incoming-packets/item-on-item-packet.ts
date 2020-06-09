@@ -1,7 +1,7 @@
 import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../world/actor/player/player';
 import { widgets } from '@server/world/config/widget';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { itemOnItemAction } from '@server/world/actor/player/action/item-on-item-action';
 import { ByteBuffer } from '@runejs/byte-buffer';
 

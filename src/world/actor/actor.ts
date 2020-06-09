@@ -1,12 +1,13 @@
 import { WalkingQueue } from './walking-queue';
 import { ItemContainer } from '../items/item-container';
-import { Animation, Graphic, UpdateFlags } from './update-flags';
+import { Animation, DamageType, Graphic, UpdateFlags } from './update-flags';
 import { Npc } from './npc/npc';
 import { Skills } from '@server/world/actor/skills';
 import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
 import { DirectionData, directionFromIndex } from '@server/world/direction';
 import { CombatAction } from '@server/world/actor/player/action/combat-action';
+import { Pathfinding } from '@server/world/actor/pathfinding';
 
 /**
  * Handles an actor within the game world.
@@ -26,6 +27,7 @@ export abstract class Actor {
     private _busy: boolean;
     public readonly metadata: { [key: string]: any } = {};
     private _combatActions: CombatAction[];
+    public readonly pathfinding: Pathfinding;
 
     protected constructor() {
         this.updateFlags = new UpdateFlags();
@@ -37,14 +39,26 @@ export abstract class Actor {
         this.skills = new Skills(this);
         this._busy = false;
         this._combatActions = [];
+        this.pathfinding = new Pathfinding(this);
     }
 
-    public face(face: Position | Actor, clearWalkingQueue: boolean = true, autoClear: boolean = true): void {
+    public damage(amount: number, damageType: DamageType = DamageType.DAMAGE): void {
+
+    }
+
+    public face(face: Position | Actor | null, clearWalkingQueue: boolean = true, autoClear: boolean = true, clearedByWalking: boolean = true): void {
+        if(face === null) {
+            this.clearFaceActor();
+            this.updateFlags.facePosition = null;
+            return;
+        }
+
         if(face instanceof Position) {
             this.updateFlags.facePosition = face;
         } else if(face instanceof Actor) {
             this.updateFlags.faceActor = face;
             this.metadata['faceActor'] = face;
+            this.metadata['faceActorClearedByWalking'] = clearedByWalking;
 
             if(autoClear) {
                 setTimeout(() => {

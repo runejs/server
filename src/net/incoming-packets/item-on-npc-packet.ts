@@ -1,7 +1,7 @@
 import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../world/actor/player/player';
 import { widgets } from '@server/world/config/widget';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { world } from '@server/game-server';
 import { World } from '@server/world/world';
 import { itemOnNpcAction } from '@server/world/actor/player/action/item-on-npc-action';

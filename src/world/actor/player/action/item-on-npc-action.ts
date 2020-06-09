@@ -2,7 +2,7 @@ import { Player } from '@server/world/actor/player/player';
 import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { ActionPlugin, questFilter } from '@server/plugins/plugin';
 import { Item } from '@server/world/items/item';
 import { Npc } from '@server/world/actor/npc/npc';

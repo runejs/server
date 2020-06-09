@@ -11,6 +11,7 @@ import { ButtonActionPlugin } from '@server/world/actor/player/action/button-act
 import { WorldItemActionPlugin } from '@server/world/actor/player/action/world-item-action';
 import { ItemActionPlugin } from '@server/world/actor/player/action/item-action';
 import { QuestPlugin } from '@server/world/config/quests';
+import { PlayerActionPlugin } from '@server/world/actor/player/action/player-action';
 
 export enum ActionType {
     BUTTON = 'button',
@@ -25,7 +26,8 @@ export enum ActionType {
     COMMAND = 'command',
     PLAYER_INIT = 'player_init',
     NPC_INIT = 'npc_init',
-    QUEST = 'quest'
+    QUEST = 'quest',
+    PLAYER_ACTION = 'player_action',
 }
 
 export interface QuestAction {
@@ -60,7 +62,7 @@ export function questFilter(player: Player, plugin: ActionPlugin): boolean {
 }
 
 export type RunePluginAction = NpcActionPlugin | ObjectActionPlugin | ButtonActionPlugin | ItemOnItemActionPlugin | ItemOnObjectActionPlugin | ItemOnNpcActionPlugin |
-    CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | PlayerInitPlugin | NpcInitPlugin | QuestPlugin;
+    CommandActionPlugin | WidgetActionPlugin | ItemActionPlugin | WorldItemActionPlugin | PlayerInitPlugin | NpcInitPlugin | QuestPlugin | PlayerActionPlugin;
 
 export class RunePlugin {
 

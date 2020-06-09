@@ -1,4 +1,4 @@
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 import { readFileSync } from 'fs';
 import { ItemContainer } from '@server/world/items/item-container';

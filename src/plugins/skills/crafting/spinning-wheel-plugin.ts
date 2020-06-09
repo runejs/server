@@ -148,7 +148,7 @@ export const buttonClicked: buttonAction = (details) => {
     // Close the widget as it is no longer needed
     details.player.closeActiveWidgets();
 
-    if (!details.player.skills.hasSkillLevel(Skill.CRAFTING, product.spinnable.requiredLevel)) {
+    if (!details.player.skills.hasLevel(Skill.CRAFTING, product.spinnable.requiredLevel)) {
         details.player.sendMessage(`You need a crafting level of ${product.spinnable.requiredLevel} to craft ${cache.itemDefinitions.get(product.spinnable.output).name.toLowerCase()}.`, true);
         return;
     }

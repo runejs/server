@@ -51,7 +51,7 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
 
     player.playAnimation(null);
     player.sendMessage(`The fire catches and the logs begin to burn.`);
-    player.skills.addExp('firemaking', burnExp);
+    player.skills.firemaking.addExp(burnExp);
 
     if(!player.walkingQueue.moveIfAble(-1, 0)) {
         if(!player.walkingQueue.moveIfAble(1, 0)) {
@@ -93,7 +93,7 @@ const action: itemOnItemAction = (details) => {
     const worldItemLog = world.spawnWorldItem(log, player.position, player, 300);
 
     if(player.metadata['lastFire'] && Date.now() - player.metadata['lastFire'] < 1200 &&
-        canChain(skillInfo.requiredLevel, player.skills.getSkillLevel('firemaking'))) {
+        canChain(skillInfo.requiredLevel, player.skills.firemaking.level)) {
         lightFire(player, position, worldItemLog, skillInfo.burnExp);
     } else {
         player.sendMessage(`You attempt to light the logs.`);
@@ -121,7 +121,7 @@ const action: itemOnItemAction = (details) => {
                 player.playAnimation(animationIds.lightingFire);
             }
 
-            canLightFire = elapsedTicks > 10 && canLight(skillInfo.requiredLevel, player.skills.getSkillLevel('firemaking'));
+            canLightFire = elapsedTicks > 10 && canLight(skillInfo.requiredLevel, player.skills.firemaking.level);
 
             if(!canLightFire && (elapsedTicks === 0 || elapsedTicks % 4 === 0)) {
                 player.playSound(soundIds.lightingFire, 10, 0);

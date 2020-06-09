@@ -1,6 +1,6 @@
 import { world } from '@server/game-server';
 import { Player } from '@server/world/actor/player/player';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { Shop, shopItemContainer } from '@server/world/config/shops';
 import { widgets } from '@server/world/config/widget';
 

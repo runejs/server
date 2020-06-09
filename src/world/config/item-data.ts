@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { ItemDefinition } from '@runejs/cache-parser';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { JSON_SCHEMA, safeLoad, safeDump } from 'js-yaml';
 
 export enum EquipmentSlot {

@@ -30,7 +30,20 @@ import { songs } from '@server/world/config/songs';
 import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 import { quests } from '@server/world/config/quests';
 import { ItemDefinition } from '@runejs/cache-parser';
+import { ActionCancelType } from '@server/world/actor/player/action/action';
 
+export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
+    {
+        option: 'Yeet',
+        index: 1,
+        placement: 'TOP'
+    },
+    {
+        option: 'Follow',
+        index: 0,
+        placement: 'BOTTOM'
+    }
+];
 
 const DEFAULT_TAB_WIDGET_IDS = [
     92, widgets.skillsTab, 274, widgets.inventory.widgetId, widgets.equipment.widgetId, 271, 192, -1, 131, 148,
@@ -88,8 +101,9 @@ export class Player extends Actor {
     public readonly dialogueInteractionEvent: Subject<number>;
     public readonly numericInputEvent: Subject<number>;
     private _walkingTo: Position;
+    public readonly movementEvent: Subject<Position>;
     private _nearbyChunks: Chunk[];
-    public readonly actionsCancelled: Subject<boolean>;
+    public readonly actionsCancelled: Subject<ActionCancelType>;
     private quadtreeKey: QuadtreeKey = null;
     public savedMetadata: { [key: string]: any } = {};
     public quests: QuestProgress[] = [];
@@ -116,8 +130,9 @@ export class Player extends Actor {
         this._equipment = new ItemContainer(14);
         this.dialogueInteractionEvent = new Subject<number>();
         this.numericInputEvent = new Subject<number>();
+        this.movementEvent = new Subject<Position>();
         this._nearbyChunks = [];
-        this.actionsCancelled = new Subject<boolean>();
+        this.actionsCancelled = new Subject<ActionCancelType>();
 
         this.loadSaveData();
     }
@@ -239,6 +254,9 @@ export class Player extends Actor {
             };
         }
 
+        for(const playerOption of playerOptions) {
+            this.outgoingPackets.updatePlayerOption(playerOption.option, playerOption.index, playerOption.placement);
+        }
         this.updateBonuses();
         this.updateCarryWeight(true);
         this.modifyWidget(widgets.musicPlayerTab, { childId: 82, textColor: colors.green }); // Set "Harmony" to green/unlocked on the music tab
@@ -247,8 +265,12 @@ export class Player extends Actor {
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
 
-        this.actionsCancelled.subscribe(doNotCloseWidgets => {
-            if(!doNotCloseWidgets) {
+        this.actionsCancelled.subscribe(type => {
+            const keepWidgetsOpenFor = [
+                'keep-widgets-open', 'pathing-movement'
+            ];
+
+            if(keepWidgetsOpenFor.indexOf(type) === -1) {
                 this.outgoingPackets.closeActiveWidgets();
                 this._activeWidget = null;
             }
@@ -766,7 +788,7 @@ export class Player extends Actor {
             if(this.queuedWidgets.length !== 0) {
                 this.activeWidget = this.queuedWidgets.shift();
             } else {
-                this.actionsCancelled.next(true);
+                this.actionsCancelled.next('keep-widgets-open');
             }
         }
     }
@@ -861,7 +883,7 @@ export class Player extends Actor {
             this.outgoingPackets.closeActiveWidgets();
         }
 
-        this.actionsCancelled.next(true);
+        this.actionsCancelled.next('keep-widgets-open');
         this._activeWidget = value;
     }
 

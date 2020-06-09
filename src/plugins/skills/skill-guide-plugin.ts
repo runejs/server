@@ -1,5 +1,5 @@
 import { buttonAction } from '@server/world/actor/player/action/button-action';
-import { logger } from '@runejs/logger/dist/logger';
+import { logger } from '@runejs/logger';
 import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 import { readFileSync } from 'fs';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
