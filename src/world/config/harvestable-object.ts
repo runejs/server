@@ -1,3 +1,5 @@
+import { objectIds } from "@server/world/config/object-ids";
+
 export interface IHarvestable {
     objects: Map<number, number>;
     itemId: number;
@@ -123,52 +125,17 @@ const RUNITE_OBJECTS: Map<number, number> = new Map<number, number>([
 ]);
 
 const NORMAL_OBJECTS: Map<number, number> = new Map<number, number>([
-    [1276, 1342],
-    [1277, 1342],
-    [1278, 1342],
-    [1279, 1342],
-    [1280, 1342],
-    [1282, 1341],
-    [1283, 1341],
-    [1284, 1341],
-    [1285, 1341],
-    [1285, 1341],
-    [1286, 1341],
-    [1289, 1341],
-    [1290, 1341],
-    [1291, 1341],
-    [1315, 1342],
-    [1316, 1342],
-    [1318, 1342],
-    [1330, 1342],
-    [1331, 1342],
-    [1332, 1342],
-    [1365, 1342],
-    [1383, 1342],
-    [1384, 1342],
-    [2409, 1342],
-    [3033, 1342],
-    [3034, 1342],
-    [3035, 1342],
-    [3036, 1342],
-    [3881, 1342],
-    [3882, 1342],
-    [3883, 1342],
-    [5902, 1342],
-    [5903, 1342],
-    [5904, 1342],
-    [10041, 1342]
-]);
+    ...objectIds.tree.normal.map((tree) => [tree.default, tree.stump]),
+    ...objectIds.tree.dead.map((tree) => [tree.default, tree.stump]),
+] as [number, number][]);
 
 const ACHEY_OBJECTS: Map<number, number> = new Map<number, number>([
-    [2023, 3371],
-]);
-
+    ...objectIds.tree.archey.map((tree) => [tree.default, tree.stump]),
+] as [number, number][]);
 
 const OAK_OBJECTS: Map<number, number> = new Map<number, number>([
-    [1281, 1342],
-    [3037, 1342],
-]);
+    ...objectIds.tree.oak.map((tree) => [tree.default, tree.stump]),
+] as [number, number][]);
 
 
 const WILLOW_OBJECTS: Map<number, number> = new Map<number, number>([

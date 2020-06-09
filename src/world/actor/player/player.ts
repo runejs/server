@@ -137,6 +137,9 @@ export class Player extends Actor {
             if(playerSave.inventory && playerSave.inventory.length !== 0) {
                 this.inventory.setAll(playerSave.inventory);
             }
+            if(playerSave.bank && playerSave.bank.length !== 0) {
+                this.bank.setAll(playerSave.bank);
+            }
             if(playerSave.equipment && playerSave.equipment.length !== 0) {
                 this.equipment.setAll(playerSave.equipment);
             }

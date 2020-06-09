@@ -58,6 +58,7 @@ export interface PlayerSave {
     };
     appearance: Appearance;
     inventory: Item[];
+    bank: Item[];
     equipment: Item[];
     skills: SkillValue[];
     settings: PlayerSettings;
@@ -122,6 +123,9 @@ export function savePlayerData(player: Player): boolean {
         rights: player.rights.valueOf(),
         appearance: player.appearance,
         inventory: player.inventory.items,
+        bank: player.bank.items.filter((item) => {
+            return item !== null
+        }),
         equipment: player.equipment.items,
         skills: player.skills.values,
         settings: player.settings,
