@@ -49,7 +49,7 @@ The server runs on the 435 revision of the game, which was a game update made on
 4. Copy the `data/config/server-config-default.yaml` and paste it into the same folder using the name `server-config.yaml`
 5. Go into your new `server-config.yaml` file and modify your RSA modulus and exponent with the ones matching your game client
   - You may also modify the server's port and host address from this configuration file
-6. Run the game server and REST service by inputting the command npm run server
+6. Run the game server and REST service by inputting the command `npm start`
 
 The game server will spin up and be accessible via port 43594. The REST service can be accessed via port 8888.
 
