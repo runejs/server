@@ -1,0 +1,21 @@
+{
+    "sourceMaps": true,
+    "presets": [
+        "@babel/preset-typescript",
+        [ "@babel/preset-env", {
+            "targets": {
+                "node": "13"
+            },
+            "modules": "commonjs"
+        } ]
+    ],
+    "plugins": [
+        "@babel/plugin-proposal-class-properties",
+        [ "babel-plugin-module-resolver", {
+            "root": [ "./src" ],
+            "alias": {
+                "@server": "./dist"
+            }
+        } ]
+    ]
+}

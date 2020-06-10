@@ -1,4 +1,4 @@
-const { NPC_ACTION, DamageType, schedule } = require('../rune.js');
+import { ActionType, DamageType, schedule } from '../rune.js';
 
 const action = async details => {
     const { player, npc } = details;
@@ -12,7 +12,7 @@ const action = async details => {
 };
 
 module.exports = {
-    type: NPC_ACTION,
+    type: ActionType.NPC_ACTION,
     options: 'attack',
     walkTo: true,
     action

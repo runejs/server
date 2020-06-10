@@ -24,15 +24,15 @@ export interface Achievement {
     series: AchievementSeries;
 }
 
-export namespace Achievements {
-    export const WELCOME: Achievement = {
+export const Achievements: { [key: string]: Achievement } = {
+    WELCOME: {
         id: 'lumbridge-hans-welcome',
         name: 'Welcome!',
         description: 'Talk to Hans.',
         longDescription: `Speak with Hans in the Lumbridge Castle's courtyard.`,
         series: AchievementSeries.LUMBRIDGE
-    };
-}
+    }
+};
 
 export function giveAchievement(achievement: Achievement, player: Player): boolean {
     if(!serverConfig.giveAchievements) {

@@ -9,7 +9,7 @@ import { Cache } from '@runejs/cache-parser';
 import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
 import { ByteBuffer } from '@runejs/byte-buffer';
 
-import { loadTSPlugins, loadJSPlugins } from '@server/plugins/plugin-loader';
+import { loadPlugins } from '@server/plugins/plugin-loader';
 import { ActionPlugin, ActionType, sort } from '@server/plugins/plugin';
 
 import { setNpcPlugins } from '@server/world/actor/player/action/npc-action';
@@ -35,18 +35,9 @@ export let crcTable: ByteBuffer;
 
 export async function injectPlugins(): Promise<void> {
     const actionPluginMap: { [key: string]: ActionPlugin[] } = {};
-    const tsPlugins = await loadTSPlugins();
-    const jsPlugins = await loadJSPlugins();
+    const plugins = await loadPlugins();
 
-    tsPlugins.map(plugin => plugin.actions).reduce((a, b) => a.concat(b)).forEach(action => {
-        if(!actionPluginMap.hasOwnProperty(action.type)) {
-            actionPluginMap[action.type] = [];
-        }
-
-        actionPluginMap[action.type].push(action);
-    });
-
-    jsPlugins.map(plugin => plugin.actions).reduce((a, b) => a.concat(b)).forEach(action => {
+    plugins.map(plugin => plugin.actions).reduce((a, b) => a.concat(b)).forEach(action => {
         if(!actionPluginMap.hasOwnProperty(action.type)) {
             actionPluginMap[action.type] = [];
         }
