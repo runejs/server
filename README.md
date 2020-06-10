@@ -12,34 +12,64 @@ The server runs on the 435 revision of the game, which was a game update made on
 **RuneJS is completely open-source and open to all pull requests and/or issues. Many plugins have been added by contributor pull requests and we're always happy to have more!**
 
 ## Features
+    
+### Game Server
 
-- Asynchronous server infrastructure using Promises and RxJS Observables
-- RSA and ISAAC ciphering support
-- Login & input/output packet handling
-- Player saving/loading via JSON files
-- Player credential validation and password hashing
-- Multiplayer support:
-  - Multiplayer rendering
-  - Full chat support
-  - Quadtree collision detection for finding nearby players to synchronize
-- Map-chunk based positioning
-- Item support:
-  - Item definition parsing via the game cache
-  - Additional item data loading via YAML configuration
-  - Inventory items, equipment items, item swapping
-  - Item dropping and picking up
-  - Buying/selling via shops
-- Player equipment:
-  - Equipment bonuses and item weight tracking
-  - Full equipment bonus widget support
-- NPCs and NPC synchronization:
-  - NPC spawn loading via YAML configuration
-- Player & NPC pathing validation via collision and tile maps generated from the game cache
-- A basic REST service for polling logged in users and game items
-- Fully functional game update server
-- A diverse TypeScript plugin system for easily writing new content based off of in-game actions
-- A simplified JavaScript plugin system for quickly and easily bootstrapping game content
-- Flexible quest and dialogue systems for more advanced content development
+* RSA + ISAAC ciphering :heavy_check_mark:
+* Game Update Server :heavy_check_mark:
+* Authentication  :heavy_check_mark:
+* Server side cache loading :heavy_check_mark:
+    * Client pathing validation via cache mapdata :heavy_check_mark:
+    * Item/object/npc definitions :heavy_check_mark:
+* Packet queueing  :heavy_check_mark:
+
+### Game World
+
+* Bank :white_check_mark: 
+    * Withdraw/Deposit 1,5,10,All :heavy_check_mark:
+    * As note  :x: 
+    * Swap slot :heavy_check_mark:
+    * Insert mode: :x:
+* Audio :white_check_mark:
+    * Music :white_check_mark:
+        * Playing music :heavy_check_mark:
+        * Music Regions :x:
+        * Music Player tab :x:
+    * Sounds :white_check_mark:
+        * Playing sounds :heavy_check_mark:
+        * Sound effects for actions :white_check_mark:
+* Climbing ladders :white_check_mark:
+* Climbing stairs :white_check_mark:
+* Lumbridge mill :white_check_mark:
+    * Replacing objects for local player only :x:
+
+### Skills
+
+* Woodcutting :white_check_mark: 
+    * Formula for success :white_check_mark:
+    * Chopping Trees :white_check_mark: 
+    * Axes :heavy_check_mark:
+    * Birds nests  :x: 
+    * Stump ids :white_check_mark: 
+* Mining 
+    * Formula for success :white_check_mark:
+    * Mining ores :white_check_mark: 
+    * Pickaxes :heavy_check_mark:
+    * Random gems  :x: 
+    * Gem ores :x:
+    * Essence mining :x:
+    * Empty Rock ids :white_check_mark: 
+* Crafting
+    * Spinning wheel :heavy_check_mark:
+
+### Technical Features
+
+* Asynchronous server infrastructure w/ Promises & RxJS
+* A diverse TypeScript plugin system for easily writing new content based off of in-game actions
+* A simplified JavaScript plugin system for quickly and easily bootstrapping game content
+* Flexible quest and dialogue systems for more advanced content development
+* A basic REST service for polling logged in users and game items
+* Code compilation via Babel, offering more seamless compilation and redeployment of plugins
 
 ## Setup
 
