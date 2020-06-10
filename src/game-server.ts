@@ -90,9 +90,16 @@ export function runGameServer(): void {
     });
     generateCrcTable();
 
+    delete cache.dataChannel;
+    delete cache.metaChannel;
+    delete cache.indexChannels;
+    delete cache.indices;
+
     world = new World();
     injectPlugins().then(() => {
         world.init();
+
+        delete cache.mapData;
 
         if(process.argv.indexOf('-fakePlayers') !== -1) {
             world.generateFakePlayers();

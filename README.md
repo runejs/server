@@ -41,7 +41,7 @@ The server runs on the 435 revision of the game, which was a game update made on
 - A simplified JavaScript plugin system for quickly and easily bootstrapping game content
 - Flexible quest and dialogue systems for more advanced content development
 
-## Usage
+## Setup
 
 1. Download and install NodeJS **version 13 or higher**: https://nodejs.org/en/
 2. Clone the Github Repo: https://github.com/rune-js/server

@@ -5,6 +5,7 @@
     "main": "src/game-server.ts",
     "scripts": {
         "start": "concurrently \"npm run build:watch\" \"node --max-old-space-size=4096 dist/main.js\"",
+        "start:server": "concurrently \"npm run build\" \"node --max-old-space-size=4096 dist/main.js\"",
         "lint": "tslint --project tsconfig.json",
         "fake-players": "concurrently \"npm run build:watch\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers\"",
         "fake-players-tick": "concurrently \"npm run build:watch\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers -tickTime\"",
