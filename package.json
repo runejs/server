@@ -4,11 +4,12 @@
     "description": "",
     "main": "src/game-server.ts",
     "scripts": {
-        "start": "concurrently \"npm run build\" \"node --max-old-space-size=4096 dist/main.js\"",
+        "start": "concurrently \"npm run build:watch\" \"node --max-old-space-size=4096 dist/main.js\"",
         "lint": "tslint --project tsconfig.json",
-        "fake-players": "npm run cleanup && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers\"",
-        "fake-players-tick": "npm run cleanup && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers -tickTime\"",
-        "build": "tsc --project tsconfig.json && babel ./src --out-dir dist --extensions \".ts,.tsx,.js\" --source-maps --watch"
+        "fake-players": "concurrently \"npm run build:watch\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers\"",
+        "fake-players-tick": "concurrently \"npm run build:watch\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers -tickTime\"",
+        "build:watch": "tsc --project tsconfig.json && babel ./src --out-dir dist --extensions \".ts,.tsx,.js\" --source-maps --watch",
+        "build": "tsc --project tsconfig.json && babel ./src --out-dir dist --extensions \".ts,.tsx,.js\" --source-maps"
     },
     "repository": {
         "type": "git",
