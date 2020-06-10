@@ -82,29 +82,21 @@ async function* getFiles(directory: string): AsyncGenerator<string> {
     }
 }
 
-export const JS_PLUGIN_DIRECTORY = 'plugins';
+export const PLUGIN_DIRECTORY = './dist/plugins';
 
-export async function loadJSPlugins(): Promise<RunePlugin[]> {
+export async function loadPlugins(): Promise<RunePlugin[]> {
     const plugins: RunePlugin[] = [];
 
-    for await(const path of getFiles(JS_PLUGIN_DIRECTORY)) {
-        const location = '../../' + path;
-        const actions: RunePluginAction | RunePluginAction[] = (require(location));
-        plugins.push(new RunePlugin(actions));
-    }
-
-    return plugins;
-}
-
-export const TS_PLUGIN_DIRECTORY = './dist/plugins';
-
-export async function loadTSPlugins(): Promise<RunePlugin[]> {
-    const plugins: RunePlugin[] = [];
-
-    for await(const path of getFiles(TS_PLUGIN_DIRECTORY)) {
-        const location = '.' + path.substring(TS_PLUGIN_DIRECTORY.length).replace('.js', '');
+    for await(const path of getFiles(PLUGIN_DIRECTORY)) {
+        const location = '.' + path.substring(PLUGIN_DIRECTORY.length).replace('.js', '');
         const plugin = require(location);
-        plugins.push(plugin.default as RunePlugin);
+        if(plugin.default) {
+            // TS plugin
+            plugins.push(plugin.default as RunePlugin);
+        } else {
+            // JS plugin
+            plugins.push(new RunePlugin(plugin));
+        }
     }
 
     return plugins;

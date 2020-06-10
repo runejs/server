@@ -1,4 +1,4 @@
-const { dialogue, Emote, execute, goto, NPC_ACTION, animationIds, npcIds, Achievements, giveAchievement } = require('../../rune.js');
+import { dialogue, Emote, execute, goto, ActionType, animationIds, npcIds, Achievements, giveAchievement } from '../../rune.js';
 
 const action = async details => {
     const { player, npc } = details;
@@ -49,7 +49,7 @@ const action = async details => {
 };
 
 module.exports = {
-    type: NPC_ACTION,
+    type: ActionType.NPC_ACTION,
     npcIds: npcIds.hans,
     options: 'talk-to',
     walkTo: true,

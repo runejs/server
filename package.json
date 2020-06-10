@@ -4,13 +4,13 @@
     "description": "",
     "main": "src/game-server.ts",
     "scripts": {
-        "server": "npm start",
-        "start": "rimraf ./dist && mkdirp ./dist && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js\"",
+        "start": "concurrently \"npm run build:watch\" \"node --max-old-space-size=4096 dist/main.js\"",
+        "start:server": "concurrently \"npm run build\" \"node --max-old-space-size=4096 dist/main.js\"",
         "lint": "tslint --project tsconfig.json",
-        "fake-players": "rimraf ./dist && mkdirp ./dist && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers\"",
-        "fake-players-tick": "rimraf ./dist && mkdirp ./dist && npm run build && concurrently \"npm run watch-plugins\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers -tickTime\"",
-        "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
-        "watch-plugins": "nodemon --watch src/plugins/ --exec \"npm run build\" -e ts"
+        "fake-players": "concurrently \"npm run build:watch\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers\"",
+        "fake-players-tick": "concurrently \"npm run build:watch\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers -tickTime\"",
+        "build:watch": "tsc --project tsconfig.json && babel ./src --out-dir dist --extensions \".ts,.tsx,.js\" --source-maps --watch",
+        "build": "tsc --project tsconfig.json && babel ./src --out-dir dist --extensions \".ts,.tsx,.js\" --source-maps"
     },
     "repository": {
         "type": "git",
@@ -44,6 +44,11 @@
         "yargs": "^15.3.1"
     },
     "devDependencies": {
+        "@babel/cli": "^7.10.1",
+        "@babel/core": "^7.10.2",
+        "@babel/plugin-proposal-class-properties": "^7.10.1",
+        "@babel/preset-env": "^7.10.2",
+        "@babel/preset-typescript": "^7.10.1",
         "@halkeye/tscpaths": "0.0.9",
         "@types/body-parser": "^1.17.1",
         "@types/express": "^4.17.2",
@@ -53,6 +58,7 @@
         "@types/node": "^12.12.6",
         "@types/uuid": "^3.4.6",
         "@types/yargs": "^13.0.4",
+        "babel-plugin-module-resolver": "^4.0.0",
         "chokidar": "^3.3.1",
         "concurrently": "^5.1.0",
         "mkdirp": "^1.0.4",

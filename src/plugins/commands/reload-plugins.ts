@@ -12,10 +12,14 @@ const action: commandAction = (details) => {
         if(!path.endsWith('.js')) {
             continue;
         }
-        if(path.indexOf('node_modules') !== -1 || path.indexOf('dist') !== -1) {
+        if(path.indexOf('node_modules') !== -1 || path.indexOf('/plugins/') === -1) {
             continue;
         }
-        if(path.indexOf('rune.js') !== -1 || path.indexOf('plugins') === -1) {
+
+        const blacklist = ['plugin-loader.js', 'plugin.js', 'rune.js'];
+        const invalid = blacklist.some(component => path.endsWith(component) || path.endsWith('.map'));
+
+        if(invalid) {
             continue;
         }
 
@@ -27,4 +31,4 @@ const action: commandAction = (details) => {
         .catch(() => player.sendLogMessage('Error reloading plugins.', details.isConsole));
 };
 
-export default new RunePlugin({ type: ActionType.COMMAND, commands: 'plugins', action });
+export default new RunePlugin({ type: ActionType.COMMAND, commands: [ 'plugins', 'reload' ], action });
