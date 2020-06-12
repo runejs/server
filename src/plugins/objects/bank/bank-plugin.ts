@@ -1,11 +1,13 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { objectIds } from '@server/world/config/object-ids';
-import { widgets } from '@server/world/config/widget';
+import { widgets, widgetScripts } from '@server/world/config/widget';
 import { objectAction } from '@server/world/actor/player/action/object-action';
 import { ItemContainer } from '@server/world/items/item-container';
 import { itemAction } from '@server/world/actor/player/action/item-action';
-import { Item } from '@server/world/items/item';
+import { fromNote, Item } from '@server/world/items/item';
 import { buttonAction } from '@server/world/actor/player/action/button-action';
+import { logger } from '@runejs/logger/dist/logger';
+import { hasValueNotNull } from '@server/util/data';
 
 const buttonIds: number[] = [
     92, // as note
@@ -24,6 +26,8 @@ export const openBankInterface: objectAction = (details) => {
 
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, details.player.inventory);
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, details.player.bank);
+    details.player.outgoingPackets.updateClientConfig(widgetScripts.bankInsertMode, details.player.settings.bankInsertMode);
+    details.player.outgoingPackets.updateClientConfig(widgetScripts.bankWithdrawNoteMode, details.player.settings.bankWithdrawNoteMode);
 };
 
 export const depositItem: itemAction = (details) => {
@@ -35,8 +39,16 @@ export const depositItem: itemAction = (details) => {
     }
 
     // Check if the player has the item
+
     if (!details.player.hasItemInInventory(details.itemId)) {
         return;
+    }
+
+
+    let itemIdToAdd: number = details.itemId;
+    let fromNoteId: number = fromNote(details.itemId);
+    if (fromNoteId > -1) {
+        itemIdToAdd = fromNoteId;
     }
 
     let countToRemove: number;
@@ -45,6 +57,7 @@ export const depositItem: itemAction = (details) => {
     } else {
         countToRemove = +details.option.replace('deposit-', '');
     }
+
 
     const playerInventory: ItemContainer = details.player.inventory;
     const playerBank: ItemContainer = details.player.bank;
@@ -55,13 +68,13 @@ export const depositItem: itemAction = (details) => {
         countToRemove = itemAmount;
     }
 
-    if (!playerBank.canFit({itemId: details.itemId, amount: countToRemove}, true)) {
+    if (!playerBank.canFit({itemId: itemIdToAdd, amount: countToRemove}, true)) {
         details.player.sendMessage('Your bank is full.');
         return;
     }
 
 
-    const itemToAdd: Item = {itemId: details.itemId, amount: 0};
+    const itemToAdd: Item = {itemId: itemIdToAdd, amount: 0};
     while (countToRemove > 0 && playerInventory.has(details.itemId)) {
         const invIndex = playerInventory.findIndex(details.itemId);
         const invItem = playerInventory.items[invIndex];
@@ -75,6 +88,7 @@ export const depositItem: itemAction = (details) => {
             countToRemove = 0;
         }
     }
+
     playerBank.addStacking(itemToAdd);
 
 
