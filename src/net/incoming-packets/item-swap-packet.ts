@@ -1,6 +1,6 @@
 import { incomingPacket } from '../incoming-packet';
 import { Player } from '../../world/actor/player/player';
-import { swapItemAction } from '../../world/actor/player/action/swap-item-action';
+import { insertItemAction, swapItemAction } from '../../world/actor/player/action/swap-item-action';
 import { ByteBuffer } from '@runejs/byte-buffer';
 
 export const itemSwapPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {
@@ -18,6 +18,6 @@ export const itemSwapPacket: incomingPacket = (player: Player, packetId: number,
         // Swap
         swapItemAction(player, fromSlot, toSlot, { widgetId, containerId });
     } else if(swapType === 1) {
-        // @TODO insert
+        insertItemAction(player, fromSlot, toSlot, { widgetId, containerId });
     }
 };

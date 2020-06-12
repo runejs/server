@@ -4,7 +4,7 @@ import { widgets, widgetScripts } from '@server/world/config/widget';
 import { objectAction } from '@server/world/actor/player/action/object-action';
 import { ItemContainer } from '@server/world/items/item-container';
 import { itemAction } from '@server/world/actor/player/action/item-action';
-import { fromNote, Item } from '@server/world/items/item';
+import { fromNote, Item, toNote } from '@server/world/items/item';
 import { buttonAction } from '@server/world/actor/player/action/button-action';
 import { logger } from '@runejs/logger/dist/logger';
 import { hasValueNotNull } from '@server/util/data';
@@ -109,6 +109,18 @@ export const withdrawItem: itemAction = (details) => {
     if (!details.player.hasItemInBank(details.itemId)) {
         return;
     }
+
+    let itemIdToAdd: number = details.itemId;
+    if (details.player.settings.bankWithdrawNoteMode) {
+        let toNoteId: number = toNote(details.itemId);
+        if (toNoteId > -1) {
+            itemIdToAdd = toNoteId;
+        } else {
+            details.player.sendMessage('This item can not be withdrawn as a note.');
+        }
+    }
+
+
     let countToRemove: number;
     if (details.option.endsWith('all')) {
         countToRemove = -1;
@@ -130,14 +142,13 @@ export const withdrawItem: itemAction = (details) => {
             countToRemove = slots;
         }
     }
-
-    if (!playerInventory.canFit({itemId: details.itemId, amount: countToRemove})) {
+    if (!playerInventory.canFit({itemId: itemIdToAdd, amount: countToRemove}) || countToRemove === 0) {
         details.player.sendMessage('Your inventory is full.');
         return;
     }
 
 
-    const itemToAdd: Item = {itemId: details.itemId, amount: 0};
+    const itemToAdd: Item = {itemId: itemIdToAdd, amount: 0};
     while (countToRemove > 0 && playerBank.has(details.itemId)) {
         const invIndex = playerBank.findIndex(details.itemId);
         const invItem = playerBank.items[invIndex];
@@ -151,7 +162,9 @@ export const withdrawItem: itemAction = (details) => {
             countToRemove = 0;
         }
     }
-    playerInventory.addStacking(itemToAdd);
+    for (let i = 0; i < itemToAdd.amount; i++) {
+        playerInventory.add({itemId: itemIdToAdd, amount: 1});
+    }
 
 
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, details.player.inventory);
