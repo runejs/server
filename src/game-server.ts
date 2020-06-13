@@ -121,15 +121,16 @@ export async function runGameServer(): Promise<void> {
     });
     generateCrcTable();
 
-    delete cache.dataChannel;
-    delete cache.metaChannel;
-    delete cache.indexChannels;
-    delete cache.indices;
+    // @TODO keep these in the login server so they don't eat game server memory :)
+    // delete cache.dataChannel;
+    // delete cache.metaChannel;
+    // delete cache.indexChannels;
+    // delete cache.indices;
 
     world = new World();
     await injectPlugins();
 
-    world.init().then(() => delete cache.mapData);
+    world.init();//.then(() => delete cache.mapData);
 
     if(process.argv.indexOf('-fakePlayers') !== -1) {
         world.generateFakePlayers();

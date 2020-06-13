@@ -101,11 +101,17 @@ export function handleHarvesting(details: ObjectActionDetails, tool: HarvestTool
     let elapsedTicks = 0;
 
     loop.event.subscribe(() => {
+
         // Check if the amount of ticks passed equal the tools pulses
-        if (elapsedTicks % tool.pulses === 0 && elapsedTicks != 0) {
-            const successChance = randomBetween(0, 100);
-            const percentNeeded = (target.chance * details.player.skills.values[skill].level + target.chanceOffset) * 100;
-            if (successChance < percentNeeded) {
+        if (elapsedTicks % 3 === 0 && elapsedTicks != 0) {
+            const successChance = randomBetween(0, 255);
+            let toolLevel = tool.level - 1;
+            if (tool.itemId === 1349 || tool.itemId === 1267) {
+                toolLevel = 2;
+            }
+            const percentNeeded = target.baseChance + toolLevel + details.player.skills.values[skill].level;
+            details.player.sendMessage(`roll: ${successChance}, needed: ${percentNeeded}`);
+            if (successChance <= percentNeeded) {
                 if (details.player.inventory.hasSpace()) {
 
                     switch (skill) {
@@ -120,7 +126,7 @@ export function handleHarvesting(details: ObjectActionDetails, tool: HarvestTool
                     details.player.skills.addExp(skill, target.experience);
                     if (randomBetween(0, 100) <= target.break) {
                         details.player.playSound(soundIds.oreDepeleted);
-                        world.replaceLocationObject(target.objects.get(details.object.objectId), details.object, target.respawn);
+                        world.replaceLocationObject(target.objects.get(details.object.objectId), details.object, randomBetween(target.respawnLow, target.respawnHigh));
                         loop.cancel();
                         details.player.playAnimation(null);
                         return;
@@ -144,11 +150,11 @@ export function handleHarvesting(details: ObjectActionDetails, tool: HarvestTool
                         break;
                 }
             }
-            if (elapsedTicks % 3 == 0 && elapsedTicks != 0) {
-                details.player.playAnimation(tool.animation);
-            }
         }
-
+        if (elapsedTicks % 3 == 0 && elapsedTicks != 0) {
+            details.player.playAnimation(tool.animation);
+        }
         elapsedTicks++;
-    }, () => {}, () => details.player.playAnimation(null));
+    }, () => {
+    }, () => details.player.playAnimation(null));
 }
