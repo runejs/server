@@ -170,10 +170,10 @@ export class Pathfinding {
             throw new Error(`Out of range.`);
         }
 
-        let destinationIndexX = destinationX - position.x + searchRadius;
-        let destinationIndexY = destinationY - position.y + searchRadius;
-        let startingIndexX = searchRadius;
-        let startingIndexY = searchRadius;
+        const destinationIndexX = destinationX - position.x + searchRadius;
+        const destinationIndexY = destinationY - position.y + searchRadius;
+        const startingIndexX = searchRadius;
+        const startingIndexY = searchRadius;
 
         const pointLen = searchRadius * 2;
 

@@ -15,7 +15,7 @@ export class ChunkManager {
         this.chunkMap = new Map<string, Chunk>();
     }
 
-    public async generateCollisionMaps(): Promise<void> {
+    public generateCollisionMaps(): void {
         logger.info('Generating game world collision maps...');
 
         const tileList = cache.mapData.tiles;
