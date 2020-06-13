@@ -14,115 +14,45 @@ export interface IHarvestable {
 
 // Object maps work with key is mineable object, value is empty ore
 const CLAY_OBJECTS: Map<number, number> = new Map<number, number>([
-    [2108, 450],
-    [2109, 451],
-    [14904, 14896],
-    [14905, 14897]
-]);
+    ...objectIds.default.clay.map((tree) => [tree.default, tree.empty]),
+] as [number, number][]);
 
 const COPPER_OBJECTS: Map<number, number> = new Map<number, number>([
-    [11960, 11555],
-    [11961, 11556],
-    [11962, 11557],
-    [11936, 11552],
-    [11937, 11553],
-    [11938, 11554],
-    [2090, 450],
-    [2091, 451],
-    [14906, 14898],
-    [14907, 14899],
-    [14856, 14832],
-    [14857, 14833],
-    [14858, 14834]
-]);
+    ...objectIds.default.copper.map((tree) => [tree.default, tree.empty]),
+] as [number, number][]);
 
 const TIN_OBJECTS: Map<number, number> = new Map<number, number>([
-    [11597, 11555],
-    [11958, 11556],
-    [11959, 11557],
-    [11933, 11552],
-    [11934, 11553],
-    [11935, 11554],
-    [2094, 450],
-    [2095, 451],
-    [14092, 14894],
-    [14903, 14895]
-]);
+    ...objectIds.default.tin.map((tree) => [tree.default, tree.empty]),
+] as [number, number][]);
 
 const IRON_OBJECTS: Map<number, number> = new Map<number, number>([
-    [11954, 11555],
-    [11955, 11556],
-    [11956, 11557],
-    [2092, 450],
-    [2093, 451],
-    [14900, 14892],
-    [14901, 14893],
-    [14913, 14915],
-    [14914, 14916]
-]);
+    ...objectIds.default.iron.map((tree) => [tree.default, tree.empty]),
+] as [number, number][]);
 
 const COAL_OBJECTS: Map<number, number> = new Map<number, number>([
-    [11963, 11555],
-    [11964, 11556],
-    [11965, 11557],
-    [11930, 11552],
-    [11931, 11553],
-    [11932, 11554],
-    [2096, 450],
-    [2097, 451],
-    [14850, 14832],
-    [14851, 14833],
-    [14852, 14834]
-]);
+    ...objectIds.default.coal.map((tree) => [tree.default, tree.empty]),
+] as [number, number][]);
 
 const SILVER_OBJECTS: Map<number, number> = new Map<number, number>([
-    [11948, 11555],
-    [11949, 11556],
-    [11950, 11557],
-    [2100, 450],
-    [2101, 451]
-]);
+    ...objectIds.default.silver.map((tree) => [tree.default, tree.empty]),
+] as [number, number][]);
 
 const GOLD_OBJECTS: Map<number, number> = new Map<number, number>([
-    [11951, 11555],
-    [11952, 11556],
-    [11953, 11557],
-    [2098, 450],
-    [2099, 451]
-]);
+    ...objectIds.default.gold.map((tree) => [tree.default, tree.empty]),
+] as [number, number][]);
 
 const MITHRIL_OBJECTS: Map<number, number> = new Map<number, number>([
-    [11945, 11555],
-    [11946, 11556],
-    [11947, 11557],
-    [11942, 11552],
-    [11943, 11553],
-    [11944, 11554],
-    [2102, 450],
-    [2103, 451],
-    [14853, 14832],
-    [14854, 14833],
-    [14855, 14834]
-]);
+    ...objectIds.default.mithril.map((tree) => [tree.default, tree.empty]),
+] as [number, number][]);
+
 
 const ADAMANT_OBJECTS: Map<number, number> = new Map<number, number>([
-    [11939, 11552],
-    [11940, 11553],
-    [11941, 11554],
-    [2104, 450],
-    [2105, 451],
-    [14862, 14832],
-    [14863, 14833],
-    [14864, 14834]
-]);
+    ...objectIds.default.adamant.map((tree) => [tree.default, tree.empty]),
+] as [number, number][]);
 
 const RUNITE_OBJECTS: Map<number, number> = new Map<number, number>([
-    [2106, 450],
-    [2107, 451],
-    [14859, 14832],
-    [14860, 14833],
-    [14861, 14834]
-]);
+    ...objectIds.default.runite.map((tree) => [tree.default, tree.empty]),
+] as [number, number][]);
 
 const NORMAL_OBJECTS: Map<number, number> = new Map<number, number>([
     ...objectIds.tree.normal.map((tree) => [tree.default, tree.stump]),
@@ -199,9 +129,9 @@ const Ores: IHarvestable[] = [
         itemId: 434,
         level: 1,
         experience: 5.0,
-        respawnLow: 1,
-        respawnHigh: 1,
-        baseChance: 0.0085,
+        respawnLow: 5,
+        respawnHigh: 10,
+        baseChance: 70,
         break: 100
     },
     {
@@ -209,9 +139,9 @@ const Ores: IHarvestable[] = [
         itemId: 436,
         level: 1,
         experience: 17.5,
-        respawnLow: 4,
-        respawnHigh: 4,
-        baseChance: 0.0085,
+        respawnLow: 10,
+        respawnHigh: 20,
+        baseChance: 70,
         break: 100
     },
     {
@@ -219,9 +149,9 @@ const Ores: IHarvestable[] = [
         itemId: 438,
         level: 1,
         experience: 17.5,
-        respawnLow: 4,
-        respawnHigh: 4,
-        baseChance: 0.0085,
+        respawnLow: 10,
+        respawnHigh: 20,
+        baseChance: 70,
         break: 100
     },
     {
@@ -239,9 +169,9 @@ const Ores: IHarvestable[] = [
         itemId: 453,
         level: 30,
         experience: 50.0,
-        respawnLow: 50,
-        respawnHigh: 50,
-        baseChance: 0.004,
+        respawnLow: 20,
+        respawnHigh: 30,
+        baseChance: 50,
         break: 100
     },
     {
@@ -249,9 +179,9 @@ const Ores: IHarvestable[] = [
         itemId: 442,
         level: 20,
         experience: 40.0,
-        respawnLow: 100,
-        respawnHigh: 100,
-        baseChance: 0.0085,
+        respawnLow: 30,
+        respawnHigh: 40,
+        baseChance: 40,
         break: 100
     },
     {
@@ -259,19 +189,19 @@ const Ores: IHarvestable[] = [
         itemId: 444,
         level: 40,
         experience: 65.0,
-        respawnLow: 100,
-        respawnHigh: 100,
-        baseChance: 0.003,
+        respawnLow: 50,
+        respawnHigh: 70,
+        baseChance: 30,
         break: 100
     },
     {
         objects: MITHRIL_OBJECTS,
         itemId: 447,
         level: 55,
-        experience: 80.0,
-        respawnLow: 200,
-        respawnHigh: 200,
-        baseChance: 0.002,
+        experience: 65.0,
+        respawnLow: 90,
+        respawnHigh: 120,
+        baseChance: 20,
         break: 100
     },
     {
@@ -279,9 +209,9 @@ const Ores: IHarvestable[] = [
         itemId: 449,
         level: 70,
         experience: 95.0,
-        respawnLow: 800,
-        respawnHigh: 800,
-        baseChance: 0.001,
+        respawnLow: 200,
+        respawnHigh: 400,
+        baseChance: 0,
         break: 100
     },
     {
@@ -291,7 +221,7 @@ const Ores: IHarvestable[] = [
         experience: 125.0,
         respawnLow: 1200,
         respawnHigh: 1200,
-        baseChance: 0.0008,
+        baseChance: -10,
         break: 100
     }
 ];
