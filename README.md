@@ -109,15 +109,16 @@ The server runs on the 435 revision of the game, which was a game update made on
     * Formula for success :heavy_check_mark:
     * Chopping Trees :heavy_check_mark: 
     * Axes :heavy_check_mark:
-    * Birds nests  :x: 
+    * Birds nests  :heavy_check_mark: 
     * Stump ids :yellow_square: 
+    * Canoes :x:
 * Mining 
     * Formula for success :heavy_check_mark:
     * Mining ores :heavy_check_mark: 
     * Pickaxes :heavy_check_mark:
-    * Random gems  :x: 
-    * Gem ores :x:
-    * Essence mining :x:
+    * Random gems  :heavy_check_mark: 
+    * Gem ores :heavy_check_mark:
+    * Essence mining :heavy_check_mark:
     * Empty Rock ids :yellow_square: 
 * Crafting
     * Spinning wheel :heavy_check_mark:

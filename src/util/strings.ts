@@ -1,3 +1,5 @@
+import { hexToHexString } from '@server/util/colors';
+
 export const startsWithVowel = (str: string): boolean => {
     str = str.trim().toLowerCase();
 
@@ -7,7 +9,7 @@ export const startsWithVowel = (str: string): boolean => {
 };
 
 // Thank you to the Apollo team for these values. :)
-const charWidths = [ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+const charWidths = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
     3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 7, 14, 9, 12, 12, 4, 5,
     5, 10, 8, 4, 8, 4, 7, 9, 7, 9, 8, 8, 8, 9, 7, 9, 9, 4, 5, 7,
     9, 7, 9, 14, 9, 8, 8, 8, 7, 7, 9, 8, 6, 8, 8, 7, 10, 9, 9, 8,
@@ -19,7 +21,7 @@ const charWidths = [ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
     8, 8, 4, 5, 5, 6, 7, 11, 11, 11, 9, 9, 9, 9, 9, 9, 9, 13, 8, 8,
     8, 8, 8, 4, 4, 5, 4, 8, 9, 9, 9, 9, 9, 9, 8, 10, 9, 9, 9, 9,
     8, 8, 8, 8, 8, 8, 8, 8, 8, 13, 6, 8, 8, 8, 8, 4, 4, 5, 4, 8,
-    8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 ];
+    8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8];
 
 export function wrapText(text: string, maxWidth: number): string[] {
     const lines = [];
@@ -30,11 +32,11 @@ export function wrapText(text: string, maxWidth: number): string[] {
     let widthAfterSpace = 0;
     let lastSpaceChar = '';
 
-    for(let i = 0; i < text.length; i++) {
+    for (let i = 0; i < text.length; i++) {
         const char = text.charAt(i);
 
         // Ignore <col=> and </col> strings...
-        if(char === '<' && (text.charAt(i + 1) === '/' || text.charAt(i + 1) === 'c' && text.charAt(i + 2) === 'o' && text.charAt(i + 3) === 'l')) {
+        if (char === '<' && (text.charAt(i + 1) === '/' || text.charAt(i + 1) === 'c' && text.charAt(i + 2) === 'o' && text.charAt(i + 3) === 'l')) {
             const tagCloseIndex = text.indexOf('>', i);
             i = tagCloseIndex;
             continue;
@@ -44,20 +46,20 @@ export function wrapText(text: string, maxWidth: number): string[] {
         width += charWidth;
         widthAfterSpace += charWidth;
 
-        if(char === ' ' || char === '\n' || char === '-') {
+        if (char === ' ' || char === '\n' || char === '-') {
             lastSpaceChar = char;
             lastSpace = i;
             widthAfterSpace = 0;
         }
 
-        if(width >= maxWidth || char === '\n') {
+        if (width >= maxWidth || char === '\n') {
             lines.push(text.substring(lineStartIdx, lastSpaceChar === '-' ? lastSpace + 1 : lastSpace));
             lineStartIdx = lastSpace + 1;
             width = widthAfterSpace;
         }
     }
 
-    if(lineStartIdx !== text.length - 1) {
+    if (lineStartIdx !== text.length - 1) {
         lines.push(text.substring(lineStartIdx, text.length));
     }
 
@@ -67,14 +69,19 @@ export function wrapText(text: string, maxWidth: number): string[] {
 export function stringToLong(s: string): bigint {
     let l: bigint = BigInt(0);
 
-    for(let i = 0; i < s.length && i < 12; i++) {
+    for (let i = 0; i < s.length && i < 12; i++) {
         const c = s.charAt(i);
         const cc = s.charCodeAt(i);
         l *= BigInt(37);
-        if(c >= 'A' && c <= 'Z') l += BigInt((1 + cc) - 65);
-        else if(c >= 'a' && c <= 'z') l += BigInt((1 + cc) - 97);
-        else if(c >= '0' && c <= '9') l += BigInt((27 + cc) - 48);
+        if (c >= 'A' && c <= 'Z') l += BigInt((1 + cc) - 65);
+        else if (c >= 'a' && c <= 'z') l += BigInt((1 + cc) - 97);
+        else if (c >= '0' && c <= '9') l += BigInt((27 + cc) - 48);
     }
-    while(l % BigInt(37) == BigInt(0) && l != BigInt(0)) l /= BigInt(37);
+    while (l % BigInt(37) == BigInt(0) && l != BigInt(0)) l /= BigInt(37);
     return l;
+}
+
+export function colorText(s: string, hexColor: number): string {
+    console.log(hexToHexString(hexColor));
+    return `<col=${hexToHexString(hexColor)}>${s}</col>`;
 }
