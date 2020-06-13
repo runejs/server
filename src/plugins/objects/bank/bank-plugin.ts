@@ -1,11 +1,20 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { objectIds } from '@server/world/config/object-ids';
-import { widgets } from '@server/world/config/widget';
+import { widgets, widgetScripts } from '@server/world/config/widget';
 import { objectAction } from '@server/world/actor/player/action/object-action';
 import { ItemContainer } from '@server/world/items/item-container';
 import { itemAction } from '@server/world/actor/player/action/item-action';
-import { Item } from '@server/world/items/item';
+import { fromNote, Item, toNote } from '@server/world/items/item';
+import { buttonAction } from '@server/world/actor/player/action/button-action';
+import { logger } from '@runejs/logger/dist/logger';
+import { hasValueNotNull } from '@server/util/data';
 
+const buttonIds: number[] = [
+    92, // as note
+    93, // as item
+    98, // swap
+    99, // insert
+];
 
 export const openBankInterface: objectAction = (details) => {
     details.player.activeWidget = {
@@ -17,9 +26,8 @@ export const openBankInterface: objectAction = (details) => {
 
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, details.player.inventory);
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, details.player.bank);
-    details.player.outgoingPackets.updateClientConfig(304, details.player.sessionMetadata['bankRearrangeMode'] === 'insert' ? 1 : 0);
-    details.player.outgoingPackets.updateClientConfig(115, details.player.sessionMetadata['bankWithdrawAs'] === 'note' ? 1 : 0);
-
+    details.player.outgoingPackets.updateClientConfig(widgetScripts.bankInsertMode, details.player.settings.bankInsertMode);
+    details.player.outgoingPackets.updateClientConfig(widgetScripts.bankWithdrawNoteMode, details.player.settings.bankWithdrawNoteMode);
 };
 
 export const depositItem: itemAction = (details) => {
@@ -31,8 +39,16 @@ export const depositItem: itemAction = (details) => {
     }
 
     // Check if the player has the item
+
     if (!details.player.hasItemInInventory(details.itemId)) {
         return;
+    }
+
+
+    let itemIdToAdd: number = details.itemId;
+    const fromNoteId: number = fromNote(details.itemId);
+    if (fromNoteId > -1) {
+        itemIdToAdd = fromNoteId;
     }
 
     let countToRemove: number;
@@ -41,6 +57,7 @@ export const depositItem: itemAction = (details) => {
     } else {
         countToRemove = +details.option.replace('deposit-', '');
     }
+
 
     const playerInventory: ItemContainer = details.player.inventory;
     const playerBank: ItemContainer = details.player.bank;
@@ -51,13 +68,13 @@ export const depositItem: itemAction = (details) => {
         countToRemove = itemAmount;
     }
 
-    if (!playerBank.canFit({itemId: details.itemId, amount: countToRemove}, true)) {
+    if (!playerBank.canFit({itemId: itemIdToAdd, amount: countToRemove}, true)) {
         details.player.sendMessage('Your bank is full.');
         return;
     }
 
 
-    const itemToAdd: Item = {itemId: details.itemId, amount: 0};
+    const itemToAdd: Item = {itemId: itemIdToAdd, amount: 0};
     while (countToRemove > 0 && playerInventory.has(details.itemId)) {
         const invIndex = playerInventory.findIndex(details.itemId);
         const invItem = playerInventory.items[invIndex];
@@ -71,6 +88,7 @@ export const depositItem: itemAction = (details) => {
             countToRemove = 0;
         }
     }
+
     playerBank.addStacking(itemToAdd);
 
 
@@ -91,6 +109,18 @@ export const withdrawItem: itemAction = (details) => {
     if (!details.player.hasItemInBank(details.itemId)) {
         return;
     }
+
+    let itemIdToAdd: number = details.itemId;
+    if (details.player.settings.bankWithdrawNoteMode) {
+        const toNoteId: number = toNote(details.itemId);
+        if (toNoteId > -1) {
+            itemIdToAdd = toNoteId;
+        } else {
+            details.player.sendMessage('This item can not be withdrawn as a note.');
+        }
+    }
+
+
     let countToRemove: number;
     if (details.option.endsWith('all')) {
         countToRemove = -1;
@@ -112,14 +142,13 @@ export const withdrawItem: itemAction = (details) => {
             countToRemove = slots;
         }
     }
-
-    if (!playerInventory.canFit({itemId: details.itemId, amount: countToRemove})) {
+    if (!playerInventory.canFit({itemId: itemIdToAdd, amount: countToRemove}) || countToRemove === 0) {
         details.player.sendMessage('Your inventory is full.');
         return;
     }
 
 
-    const itemToAdd: Item = {itemId: details.itemId, amount: 0};
+    const itemToAdd: Item = {itemId: itemIdToAdd, amount: 0};
     while (countToRemove > 0 && playerBank.has(details.itemId)) {
         const invIndex = playerBank.findIndex(details.itemId);
         const invItem = playerBank.items[invIndex];
@@ -133,12 +162,32 @@ export const withdrawItem: itemAction = (details) => {
             countToRemove = 0;
         }
     }
-    playerInventory.addStacking(itemToAdd);
+    for (let i = 0; i < itemToAdd.amount; i++) {
+        playerInventory.add({itemId: itemIdToAdd, amount: 1});
+    }
 
 
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, details.player.inventory);
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, details.player.inventory);
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, details.player.bank);
+};
+
+export const btnAction: buttonAction = (details) => {
+    const {player, buttonId} = details;
+    player.settingChanged(buttonId);
+
+    const settingsMappings = {
+        92: {setting: 'bankWithdrawNoteMode', value: 1},
+        93: {setting: 'bankWithdrawNoteMode', value: 0},
+        98: {setting: 'bankInsertMode', value: 0},
+        99: {setting: 'bankInsertMode', value: 1},
+    };
+    if (!settingsMappings.hasOwnProperty(buttonId)) {
+        return;
+    }
+
+    const config = settingsMappings[buttonId];
+    player.settings[config.setting] = config.value;
 };
 
 
@@ -158,4 +207,4 @@ export default new RunePlugin([{
     widgets: widgets.bank.screenWidget,
     options: ['withdraw-1', 'withdraw-5', 'withdraw-10', 'withdraw-all'],
     action: withdrawItem,
-}]);
+}, {type: ActionType.BUTTON, widgetId: widgets.bank.screenWidget.widgetId, buttonIds: buttonIds, action: btnAction}]);

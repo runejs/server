@@ -42,6 +42,7 @@ export class PlayerSettings {
     autoRetaliateEnabled: boolean = true;
     attackStyle: number = 0;
     bankInsertMode: number = 0;
+    bankWithdrawNoteMode: number = 0;
 }
 
 export interface PlayerSave {
