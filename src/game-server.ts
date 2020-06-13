@@ -90,16 +90,17 @@ export function runGameServer(): void {
     });
     generateCrcTable();
 
-    delete cache.dataChannel;
-    delete cache.metaChannel;
-    delete cache.indexChannels;
-    delete cache.indices;
+    // @TODO keep these in the login server so they don't eat game server memory :)
+    // delete cache.dataChannel;
+    // delete cache.metaChannel;
+    // delete cache.indexChannels;
+    // delete cache.indices;
 
     world = new World();
     injectPlugins().then(() => {
         world.init();
 
-        delete cache.mapData;
+        // delete cache.mapData;
 
         if(process.argv.indexOf('-fakePlayers') !== -1) {
             world.generateFakePlayers();
