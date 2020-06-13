@@ -196,12 +196,15 @@ export class ItemContainer {
         return slot;
     }
 
-    public remove(slot: number, fireEvent: boolean = true): void {
+    public remove(slot: number, fireEvent: boolean = true): Item {
+        const item = this._items[slot];
         this._items[slot] = null;
 
         if (fireEvent) {
             this._containerUpdated.next({type: 'REMOVE', slot});
         }
+        return item;
+
     }
 
     public getFirstOpenSlot(): number {

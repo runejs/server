@@ -86,6 +86,7 @@ export const widgetScripts = {
     runMode: 173,
     splitPrivateChat: 287,
     bankInsertMode: 304,
+    bankWithdrawNoteMode: 115,
     acceptAid: 427,
     areaEffectVolume: 872,
     questPoints: 101

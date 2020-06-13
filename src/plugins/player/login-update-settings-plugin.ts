@@ -21,6 +21,7 @@ export const action: playerInitAction = (details) => {
     player.outgoingPackets.updateClientConfig(widgetScripts.autoRetaliate, settings.autoRetaliateEnabled ? 0 : 1);
     player.outgoingPackets.updateClientConfig(widgetScripts.attackStyle, settings.attackStyle);
     player.outgoingPackets.updateClientConfig(widgetScripts.bankInsertMode, settings.bankInsertMode);
+    player.outgoingPackets.updateClientConfig(widgetScripts.bankWithdrawNoteMode, settings.bankWithdrawNoteMode);
 };
 
 export default new RunePlugin({ type: ActionType.PLAYER_INIT, action });
