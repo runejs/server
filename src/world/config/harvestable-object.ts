@@ -106,7 +106,9 @@ export enum Ore {
     GOLD,
     MITHIL,
     ADAMANT,
-    RUNITE
+    RUNITE,
+    RUNE_ESS,
+    GEM
 }
 
 
@@ -222,6 +224,16 @@ const Ores: IHarvestable[] = [
         respawnLow: 1200,
         respawnHigh: 1200,
         baseChance: -10,
+        break: 100
+    },
+    {
+        objects: new Map<number, number>([[2111, 450]]), // Gem rocks
+        itemId: 1625,
+        level: 40,
+        experience: 65.0,
+        respawnLow: 200,
+        respawnHigh: 400,
+        baseChance: 30,
         break: 100
     }
 ];

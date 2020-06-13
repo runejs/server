@@ -10,7 +10,7 @@ import { ObjectActionDetails } from '@server/world/actor/player/action/object-ac
 import { colors } from '@server/util/colors';
 import { checkForGemBoost } from '@server/world/skill-util/glory-boost';
 import { colorText } from '@server/util/strings';
-import { rollBirdsNestType, rollGemType } from '@server/world/skill-util/harvest-roll';
+import { rollBirdsNestType, rollGemRockResult, rollGemType } from '@server/world/skill-util/harvest-roll';
 
 export function canInitiateHarvest(player: Player, target: IHarvestable, skill: Skill): undefined | HarvestTool {
     if (!target) {
@@ -19,7 +19,7 @@ export function canInitiateHarvest(player: Player, target: IHarvestable, skill: 
                 player.sendMessage('There is current no ore available in this rock.');
                 break;
             default:
-                player.sendMessage(colorText("HARVEST SKILL ERROR, PLEASE CONTACT DEVELOPERS", colors.red));
+                player.sendMessage(colorText('HARVEST SKILL ERROR, PLEASE CONTACT DEVELOPERS', colors.red));
                 break;
 
 
@@ -81,7 +81,15 @@ export function canInitiateHarvest(player: Player, target: IHarvestable, skill: 
 }
 
 export function handleHarvesting(details: ObjectActionDetails, tool: HarvestTool, target: IHarvestable, skill: Skill): void {
-    let targetName: string = cache.itemDefinitions.get(target.itemId).name.toLowerCase();
+    let itemToAdd = target.itemId;
+    if (itemToAdd === 1436 && details.player.skills.hasLevel(Skill.MINING, 30)) {
+        itemToAdd = 7936;
+    }
+    if (details.object.objectId === 2111 && details.player.skills.hasLevel(Skill.MINING, 30)) {
+        itemToAdd = rollGemRockResult().itemId;
+    }
+    let targetName: string = cache.itemDefinitions.get(itemToAdd).name.toLowerCase();
+
     switch (skill) {
         case Skill.MINING:
             targetName = targetName.replace(' ore', '');
@@ -113,7 +121,6 @@ export function handleHarvesting(details: ObjectActionDetails, tool: HarvestTool
                 toolLevel = 2;
             }
             const percentNeeded = target.baseChance + toolLevel + details.player.skills.values[skill].level;
-            details.player.sendMessage(`roll: ${successChance}, needed: ${percentNeeded}`);
             if (successChance <= percentNeeded) {
                 if (details.player.inventory.hasSpace()) {
                     let randomLoot = false;
@@ -123,7 +130,7 @@ export function handleHarvesting(details: ObjectActionDetails, tool: HarvestTool
                             roll = randomBetween(1, checkForGemBoost(details.player));
                             if (roll === 1) {
                                 randomLoot = true;
-                                details.player.sendMessage(colorText("You found a rare gem.", colors.red));
+                                details.player.sendMessage(colorText('You found a rare gem.', colors.red));
                                 details.player.giveItem(rollGemType());
                             }
                             break;
@@ -131,7 +138,7 @@ export function handleHarvesting(details: ObjectActionDetails, tool: HarvestTool
                             roll = randomBetween(1, 256);
                             if (roll === 1) {
                                 randomLoot = true;
-                                details.player.sendMessage(colorText("A bird's nest falls out of the tree.", colors.red));
+                                details.player.sendMessage(colorText('A bird\'s nest falls out of the tree.', colors.red));
                                 world.spawnWorldItem(rollBirdsNestType(), details.player.position, details.player, 300);
                             }
                             break;
@@ -145,7 +152,9 @@ export function handleHarvesting(details: ObjectActionDetails, tool: HarvestTool
                                 details.player.sendMessage(`You manage to chop some ${targetName}.`);
                                 break;
                         }
-                        details.player.giveItem(target.itemId);
+
+                        details.player.giveItem(itemToAdd);
+
                     }
                     details.player.skills.addExp(skill, target.experience);
                     if (randomBetween(0, 100) <= target.break) {

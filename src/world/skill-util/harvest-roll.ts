@@ -36,3 +36,24 @@ export function rollGemType(): Item {
     }
     return {itemId: itemId, amount: 1};
 }
+
+export function rollGemRockResult(): Item  {
+    const roll = randomBetween(0, 127);
+    let itemId;
+    if (roll < 60) {
+        itemId = 1625; // Uncut Opal
+    } else if (roll < 90) {
+        itemId = 1627; // Uncut Jade
+    } else if (roll < 105) {
+        itemId = 1629; // uncut topaz
+    } else if (roll < 114) {
+        itemId = 1623; // uncut sapphire
+    } else if (roll < 119) {
+        itemId = 1621; // uncut emerald
+    } else if (roll < 124) {
+        itemId = 1619; // uncut ruby
+    } else {
+        itemId = 1617; // uncut diamond
+    }
+    return {itemId: itemId, amount: 1};
+}
