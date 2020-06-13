@@ -1,7 +1,7 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { playerAction } from '@server/world/actor/player/action/player-action';
 import { Player } from '@server/world/actor/player/player';
-import { Pathfinding } from '@server/world/actor/pathfinding';
+
 
 async function pathTo(player: Player, otherPlayer: Player): Promise<boolean> {
     const distance = Math.floor(otherPlayer.position.distanceBetween(player.position));
@@ -11,32 +11,19 @@ async function pathTo(player: Player, otherPlayer: Player): Promise<boolean> {
         throw new Error(`Distance too great!`);
     }
 
-    if(distance <= 1) {
-        return Promise.resolve(false);
+    let ignoreDestination = true;
+    let desiredPosition = otherPlayer.position;
+    if(otherPlayer.lastMovementPosition/* && otherPlayer.lastMovementPosition.distanceBetween(otherPlayer.position) < 1*/) {
+        desiredPosition = otherPlayer.lastMovementPosition;
+        ignoreDestination = false;
     }
 
-    //try {
-        let ignoreDestination = true;
-        let desiredPosition = otherPlayer.position;
-        /*if(otherPlayer.lastMovementPosition && otherPlayer.lastMovementPosition.distanceBetween(otherPlayer.position) < 1) {
-            desiredPosition = otherPlayer.lastMovementPosition;
-            ignoreDestination = false;
-        }*/
+    await player.pathfinding.walkTo(desiredPosition, {
+        pathingSearchRadius: distance + 2,
+        ignoreDestination
+    });
 
-        player.pathfinding.stopped = true;
-        player.pathfinding = new Pathfinding(player);
-        await player.pathfinding.walkTo(desiredPosition, {
-            pathingSearchRadius: distance + 2,
-            ignoreDestination
-        });
-
-        return Promise.resolve(true);
-    /*} catch(e) {
-        player.clearFaceActor();
-        player.actionsCancelled.next();
-        logger.error('Pathing error:');
-        logger.error(e && e.message ? e.message : 'Error while finding path.');
-    }*/
+    return Promise.resolve(true);
 }
 
 export const action: playerAction = (details) => {

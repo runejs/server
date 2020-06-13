@@ -5,15 +5,13 @@ import { Chunk } from '@server/world/map/chunk';
 import { Tile } from '@runejs/cache-parser';
 import { Player } from '@server/world/actor/player/player';
 import { logger } from '@runejs/logger';
-import { itemIds } from '@server/world/config/item-ids';
 
 class Point {
 
     private _parent: Point = null;
     private _cost: number = 0;
 
-    public constructor(private readonly _x: number, private readonly _y: number,
-                       public readonly indexX: number, public readonly indexY: number) {
+    public constructor(private readonly _x: number, private readonly _y: number) {
     }
 
     public equals(point: Point): boolean {
@@ -64,8 +62,8 @@ export class Pathfinding {
 
     private currentPoint: Point;
     private points: Point[][];
-    private closedPoints: Point[] = [];
-    private openPoints: Point[] = [];
+    private closedPoints = new Set<Point>();
+    private openPoints = new Set<Point>();
     public stopped = false;
 
     public constructor(private actor: Actor) {
@@ -110,6 +108,11 @@ export class Pathfinding {
 
         try {
             const path = this.pathTo(position.x, position.y, options.pathingSearchRadius);
+
+            if(!path) {
+                return;
+            }
+
             const walkingQueue = this.actor.walkingQueue;
 
             if(this.actor instanceof Player) {
@@ -120,7 +123,7 @@ export class Pathfinding {
             walkingQueue.valid = true;
 
             if(options.ignoreDestination) {
-                // path.splice(path.length - 1, 1);
+                path.splice(path.length - 1, 1);
             }
 
             for(const point of path) {
@@ -162,16 +165,15 @@ export class Pathfinding {
         const lowestY = position.y - searchRadius;
         const highestX = position.x + searchRadius;
         const highestY = position.y + searchRadius;
-        console.log(highestX - lowestX, searchRadius * 2);
 
         if(destinationX < lowestX || destinationX > highestX || destinationY < lowestY || destinationY > highestY) {
             throw new Error(`Out of range.`);
         }
 
-        let destinationIndexX;
-        let destinationIndexY;
-        let startingIndexX;
-        let startingIndexY;
+        let destinationIndexX = destinationX - position.x + searchRadius;
+        let destinationIndexY = destinationY - position.y + searchRadius;
+        let startingIndexX = searchRadius;
+        let startingIndexY = searchRadius;
 
         const pointLen = searchRadius * 2;
 
@@ -179,33 +181,20 @@ export class Pathfinding {
             throw new Error(`Why is your search radius zero?`);
         }
 
-        this.points = new Array(pointLen).fill(new Array(pointLen));
+        this.points = [...Array(pointLen)].map(e => Array(pointLen));
 
         for(let x = 0; x < pointLen; x++) {
             for(let y = 0; y < pointLen; y++) {
-                const worldX = lowestX + x;
-                const worldY = lowestY + y;
-                world.spawnWorldItem({ itemId: itemIds.ashes, amount: 1 },
-                    new Position(worldX, worldY, this.actor.position.level), this.actor as Player, 50);
-
-                if(worldX === position.x && worldY === position.y) {
-                    startingIndexX = x;
-                    startingIndexY = y;
-                }
-
-                if(worldX === destinationX && worldY === destinationY) {
-                    destinationIndexX = x;
-                    destinationIndexY = y;
-                }
-
-                this.points[x][y] = new Point(worldX, worldY, x, y);
+                this.points[x][y] = new Point(lowestX + x, lowestY + y);
             }
         }
 
         // Starting point
-        this.openPoints.push(this.points[startingIndexX][startingIndexY]);
+        this.openPoints = new Set<Point>();
+        this.closedPoints = new Set<Point>();
+        this.openPoints.add(this.points[startingIndexX][startingIndexY]);
 
-        while(this.openPoints.length > 0) {
+        while(this.openPoints.size > 0) {
             if(this.stopped) {
                 return null;
             }
@@ -216,11 +205,13 @@ export class Pathfinding {
                 break;
             }
 
-            this.openPoints.splice(this.openPoints.findIndex(p => p.equals(this.currentPoint)), 1);
-            this.closedPoints.push(this.currentPoint);
+            this.openPoints.delete(this.currentPoint);
+            this.closedPoints.add(this.currentPoint);
 
             const level = this.actor.position.level;
-            const { x, y, indexX, indexY } = this.currentPoint;
+            const { x, y } = this.currentPoint;
+            const indexX = x - lowestX;
+            const indexY = y - lowestY;
 
             // North-West
             if(indexX > 0 && this.points[indexX - 1] && indexY < this.points[indexX - 1].length - 1) {
@@ -277,20 +268,11 @@ export class Pathfinding {
             }
         }
 
-        for(let x = 0; x < pointLen; x++) {
-            for(let y = 0; y < pointLen; y++) {
-                const point = this.points[x][y];
-                if(point.parent) {
-                    world.spawnWorldItem({ itemId: itemIds.cabbage, amount: 1 },
-                        new Position(point.x, point.y, this.actor.position.level), this.actor as Player, 50);
-                }
-            }
-        }
-
         const destinationPoint = this.points[destinationIndexX][destinationIndexY];
 
         if(!destinationPoint || !destinationPoint.parent) {
-            throw new Error(`Unable to find destination point.`);
+            // throw new Error(`Unable to find destination point.`);
+            return null;
         }
 
         // build path
@@ -298,12 +280,12 @@ export class Pathfinding {
         let point = destinationPoint;
         let iterations = 0;
 
-        while(!point.equals(this.points[startingIndexX][startingIndexY])) {
+        do {
             if(this.stopped) {
                 return null;
             }
 
-            path.push(new Point(point.x, point.y, point.indexX, point.indexY));
+            path.push(new Point(point.x, point.y));
             point = point.parent;
             iterations++;
 
@@ -314,10 +296,7 @@ export class Pathfinding {
             if(point === null) {
                 break;
             }
-        }
-
-        const start = this.points[startingIndexX][startingIndexY];
-        path.push(new Point(start.x, start.y, start.indexX, start.indexY));
+        } while(!point.equals(this.points[startingIndexX][startingIndexY]));
 
         return path.reverse();
     }
@@ -327,35 +306,36 @@ export class Pathfinding {
             return;
         }
 
-        const differenceX = this.currentPoint.x - point.x;
-        const differenceY = this.currentPoint.y - point.y;
-        const nextStepCost = this.currentPoint.cost + ((Math.abs(differenceX) + Math.abs(differenceY)) * 10);
+        const nextStepCost = this.currentPoint.cost + this.calculateCostBetween(this.currentPoint, point);
 
         if(nextStepCost < point.cost) {
-            this.openPoints.splice(this.openPoints.findIndex(p => p.equals(point)));
-            this.closedPoints.splice(this.closedPoints.findIndex(p => p.equals(point)));
+            this.openPoints.delete(point);
+            this.closedPoints.delete(point);
         }
 
-        if(this.openPoints.findIndex(p => p.equals(point)) === -1 && this.closedPoints.findIndex(p => p.equals(point)) === -1) {
+        if(!this.openPoints.has(point) && !this.closedPoints.has(point)) {
             point.parent = this.currentPoint;
             point.cost = nextStepCost;
-            this.openPoints.push(point);
+            this.openPoints.add(point);
         }
+    }
+
+    private calculateCostBetween(current: Point, destination: Point): number {
+        const deltaX = current.x - destination.x;
+        const deltaY = current.y - destination.y;
+        return (Math.abs(deltaX) + Math.abs(deltaY)) * 10;
     }
 
     private calculateBestPoint(): Point {
         let bestPoint: Point = null;
 
-        for(const point of this.openPoints) {
-            if(bestPoint === null) {
+        this.openPoints.forEach(point => {
+            if(!bestPoint) {
                 bestPoint = point;
-                continue;
-            }
-
-            if(point.cost < bestPoint.cost) {
+            } else if(point.cost < bestPoint.cost) {
                 bestPoint = point;
             }
-        }
+        });
 
         return bestPoint;
     }

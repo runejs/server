@@ -171,6 +171,7 @@ export class WalkingQueue {
                 return;
             }
 
+            this.actor.lastMovementPosition = this.actor.position;
             this.actor.position = walkPosition;
 
             let runDir = -1;
@@ -186,6 +187,7 @@ export class WalkingQueue {
                         runDir = this.calculateDirection(runDiffX, runDiffY);
 
                         if(runDir != -1) {
+                            this.actor.lastMovementPosition = this.actor.position;
                             this.actor.position = runPosition;
                         }
                     } else {
@@ -202,10 +204,6 @@ export class WalkingQueue {
                 this.actor.faceDirection = runDir;
             } else {
                 this.actor.faceDirection = walkDir;
-            }
-
-            if(this.queue.length !== 0) {
-                this.actor.lastMovementPosition = this.actor.position;
             }
 
             const newChunk = world.chunkManager.getChunkForWorldPosition(this.actor.position);
