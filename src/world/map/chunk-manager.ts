@@ -9,6 +9,7 @@ import { cache } from '@server/game-server';
 export class ChunkManager {
 
     private readonly chunkMap: Map<string, Chunk>;
+    private _complete: boolean = false;
 
     public constructor() {
         this.chunkMap = new Map<string, Chunk>();
@@ -34,6 +35,7 @@ export class ChunkManager {
         }
 
         logger.info('Game world collision maps generated.', true);
+        this._complete = true;
     }
 
     public getSurroundingChunks(chunk: Chunk): Chunk[] {
@@ -70,6 +72,10 @@ export class ChunkManager {
             this.chunkMap.set(pos.key, chunk);
             return chunk;
         }
+    }
+
+    public get complete(): boolean {
+        return this._complete;
     }
 
 }

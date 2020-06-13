@@ -77,7 +77,38 @@ function generateCrcTable(): void {
     crcTable = buffer;
 }
 
-export function runGameServer(): void {
+function openServer(): void {
+    net.createServer(socket => {
+        socket.setNoDelay(true);
+        socket.setKeepAlive(true);
+        socket.setTimeout(30000);
+
+        let clientConnection = new ClientConnection(socket);
+
+        socket.on('data', data => {
+            if(clientConnection) {
+                clientConnection.parseIncomingData(new ByteBuffer(data));
+            }
+        });
+
+        socket.on('close', () => {
+            if(clientConnection) {
+                clientConnection.connectionDestroyed();
+                clientConnection = null;
+            }
+        });
+
+        socket.on('error', error => {
+            logger.error('Socket destroyed due to connection error.');
+            logger.error(error.message);
+            socket.destroy();
+        });
+    }).listen(serverConfig.port, serverConfig.host);
+
+    logger.info(`Game server listening on port ${ serverConfig.port }.`);
+}
+
+export async function runGameServer(): Promise<void> {
     serverConfig = parseServerConfig();
 
     if(!serverConfig) {
@@ -97,46 +128,15 @@ export function runGameServer(): void {
     // delete cache.indices;
 
     world = new World();
-    injectPlugins().then(() => {
-        world.init();
+    await injectPlugins();
 
-        // delete cache.mapData;
+    world.init(); // .then(() => delete cache.mapData);
 
-        if(process.argv.indexOf('-fakePlayers') !== -1) {
-            world.generateFakePlayers();
-        }
+    if(process.argv.indexOf('-fakePlayers') !== -1) {
+        world.generateFakePlayers();
+    }
 
-        net.createServer(socket => {
-            logger.info('Socket opened');
-
-            socket.setNoDelay(true);
-            socket.setKeepAlive(true);
-            socket.setTimeout(30000);
-
-            let clientConnection = new ClientConnection(socket);
-
-            socket.on('data', data => {
-                if(clientConnection) {
-                    clientConnection.parseIncomingData(new ByteBuffer(data));
-                }
-            });
-
-            socket.on('close', () => {
-                if(clientConnection) {
-                    clientConnection.connectionDestroyed();
-                    clientConnection = null;
-                }
-            });
-
-            socket.on('error', error => {
-                logger.error(error.message);
-                socket.destroy();
-                logger.error('Socket destroyed due to connection error.');
-            });
-        }).listen(serverConfig.port, serverConfig.host);
-
-        logger.info(`Game server listening on port ${serverConfig.port}.`);
-    });
+    openServer();
 
     const watcher = watch('dist/plugins/');
     watcher.on('ready', () => {

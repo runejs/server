@@ -64,11 +64,9 @@ export class World {
         this.setupWorldTick();
     }
 
-    public init(): void {
-        new Promise(resolve => {
+    public async init(): Promise<void> {
+        await new Promise(() => {
             this.chunkManager.generateCollisionMaps();
-            resolve();
-        }).then(() => {
             this.spawnNpcs();
             this.spawnScenery();
         });
@@ -453,6 +451,10 @@ export class World {
     }
 
     public async worldTick(): Promise<void> {
+        if(!this.ready) {
+            return;
+        }
+
         const hrStart = Date.now();
         const activePlayers: Player[] = this.playerList.filter(player => player !== null);
 
@@ -537,6 +539,10 @@ export class World {
     public deregisterNpc(npc: Npc): void {
         npc.exists = false;
         this.npcList[npc.worldIndex] = null;
+    }
+
+    public get ready(): boolean {
+        return this.chunkManager && this.chunkManager.complete;
     }
 
 }
