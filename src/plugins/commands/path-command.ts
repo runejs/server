@@ -9,7 +9,7 @@ const action: commandAction = (details) => {
     const y: number = args.y as number;
     const pathingDiameter: number = args.diameter as number;
 
-    player.pathfinding.walkTo(new Position(x, y, player.position.level), { pathingDiameter });
+    player.pathfinding.walkTo(new Position(x, y, player.position.level), { pathingSearchRadius: pathingDiameter });
 };
 
 export default new RunePlugin({

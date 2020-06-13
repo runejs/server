@@ -28,7 +28,8 @@ export abstract class Actor {
     private _busy: boolean;
     public readonly metadata: { [key: string]: any } = {};
     private _combatActions: CombatAction[];
-    public readonly pathfinding: Pathfinding;
+    public pathfinding: Pathfinding;
+    public lastMovementPosition: Position;
 
     protected constructor() {
         this.updateFlags = new UpdateFlags();

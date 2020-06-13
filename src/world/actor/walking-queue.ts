@@ -127,7 +127,7 @@ export class WalkingQueue {
     }
 
     public process(): void {
-        if(this.actor.busy || this.queue.length === 0 || !this.valid) {
+        if(!world.ready || this.actor.busy || this.queue.length === 0 || !this.valid) {
             this.resetDirections();
             return;
         }
@@ -171,6 +171,7 @@ export class WalkingQueue {
                 return;
             }
 
+            this.actor.lastMovementPosition = this.actor.position;
             this.actor.position = walkPosition;
 
             let runDir = -1;
@@ -186,6 +187,7 @@ export class WalkingQueue {
                         runDir = this.calculateDirection(runDiffX, runDiffY);
 
                         if(runDir != -1) {
+                            this.actor.lastMovementPosition = this.actor.position;
                             this.actor.position = runPosition;
                         }
                     } else {

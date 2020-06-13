@@ -11,8 +11,7 @@ class Point {
     private _parent: Point = null;
     private _cost: number = 0;
 
-    public constructor(private readonly _x: number, private readonly _y: number,
-                       public readonly indexX: number, public readonly indexY: number) {
+    public constructor(private readonly _x: number, private readonly _y: number) {
     }
 
     public equals(point: Point): boolean {
@@ -55,7 +54,7 @@ class Point {
 }
 
 export interface PathingOptions {
-    pathingDiameter?: number;
+    pathingSearchRadius?: number;
     ignoreDestination?: boolean;
 }
 
@@ -63,8 +62,9 @@ export class Pathfinding {
 
     private currentPoint: Point;
     private points: Point[][];
-    private closedPoints: Point[] = [];
-    private openPoints: Point[] = [];
+    private closedPoints = new Set<Point>();
+    private openPoints = new Set<Point>();
+    public stopped = false;
 
     public constructor(private actor: Actor) {
     }
@@ -102,181 +102,176 @@ export class Pathfinding {
     }
 
     public async walkTo(position: Position, options: PathingOptions): Promise<void> {
-        if(!options.pathingDiameter) {
-            options.pathingDiameter = 16;
+        if(!options.pathingSearchRadius) {
+            options.pathingSearchRadius = 16;
         }
 
-        const path = await this.pathTo(position.x, position.y, options.pathingDiameter);
+        try {
+            const path = this.pathTo(position.x, position.y, options.pathingSearchRadius);
 
-        if(!path) {
-            throw new Error(`Unable to find path.`);
-        }
+            if(!path) {
+                return;
+            }
 
-        const walkingQueue = this.actor.walkingQueue;
+            const walkingQueue = this.actor.walkingQueue;
 
-        if(this.actor instanceof Player) {
-            this.actor.walkingTo = null;
-        }
+            if(this.actor instanceof Player) {
+                this.actor.walkingTo = null;
+            }
 
-        walkingQueue.clear();
-        walkingQueue.valid = true;
+            walkingQueue.clear();
+            walkingQueue.valid = true;
 
-        if(options.ignoreDestination) {
-            path.splice(path.length - 1, 1);
-        }
+            if(options.ignoreDestination) {
+                path.splice(path.length - 1, 1);
+            }
 
-        path.shift();
-        for(const point of path) {
-            walkingQueue.add(point.x, point.y);
+            for(const point of path) {
+                walkingQueue.add(point.x, point.y);
+            }
+        } catch(error) {
+            logger.error(error);
         }
     }
 
-    public async pathTo(destinationX: number, destinationY: number, diameter: number = 16, easyPath: boolean = false): Promise<Point[]> {
-        const lowestX = destinationX > this.actor.position.x ? this.actor.position.x : destinationX;
-        const lowestY = destinationY > this.actor.position.y ? this.actor.position.y : destinationY;
-        const highestX = destinationX > this.actor.position.x ? destinationX : this.actor.position.x;
-        const highestY = destinationY > this.actor.position.y ? destinationY : this.actor.position.y;
-        const lenX = (highestX - lowestX) + 1;
-        const lenY = (highestY - lowestY) + 1;
+    public async path(destination: Position, searchRadius: number = 8): Promise<Point[]> {
+        const tileMap = await this.createTileMap(searchRadius);
 
-        const destinationIndexX = destinationX - lowestX;
-        const destinationIndexY = destinationY - lowestY;
-        const startingIndexX = this.actor.position.x - lowestX;
-        const startingIndexY = this.actor.position.y - lowestY;
+        return null;
+    }
 
-        const pointLen = lenX * lenY;
+    public async createTileMap(searchRadius: number = 8): Promise<{ [key: string]: Tile }> {
+        const position = this.actor.position;
+        const lowestX = position.x - searchRadius;
+        const lowestY = position.y - searchRadius;
+        const highestX = position.x + searchRadius;
+        const highestY = position.y + searchRadius;
 
-        if(pointLen <= 0) {
-            return null;
+        const chunks: Chunk[] = world.chunkManager.getSurroundingChunks(
+            world.chunkManager.getChunkForWorldPosition(position));
+
+        let tiles = [];
+        chunks.forEach(chunk => tiles = tiles.concat(...chunk.tileList
+            .filter(tile => tile.x >= lowestX && tile.x <= highestX && tile.y >= lowestY && tile.y <= highestY)));
+
+        return Object.fromEntries(
+            tiles.map(tile => [ `${tile.x},${tile.y}`, tile ])
+        );
+    }
+
+    public pathTo(destinationX: number, destinationY: number, searchRadius: number = 16): Point[] {
+        const position = this.actor.position;
+        const lowestX = position.x - searchRadius;
+        const lowestY = position.y - searchRadius;
+        const highestX = position.x + searchRadius;
+        const highestY = position.y + searchRadius;
+
+        if(destinationX < lowestX || destinationX > highestX || destinationY < lowestY || destinationY > highestY) {
+            throw new Error(`Out of range.`);
         }
 
-        this.points = [];
+        const destinationIndexX = destinationX - position.x + searchRadius;
+        const destinationIndexY = destinationY - position.y + searchRadius;
+        const startingIndexX = searchRadius;
+        const startingIndexY = searchRadius;
+
+        const pointLen = searchRadius * 2;
+
+        if(pointLen <= 0) {
+            throw new Error(`Why is your search radius zero?`);
+        }
+
+        this.points = [...Array(pointLen)].map(e => Array(pointLen));
 
         for(let x = 0; x < pointLen; x++) {
-            this.points.push([]);
-
             for(let y = 0; y < pointLen; y++) {
-                this.points[x].push(new Point(lowestX + x, lowestY + y, x, y));
+                this.points[x][y] = new Point(lowestX + x, lowestY + y);
             }
         }
 
         // Starting point
-        this.openPoints.push(this.points[startingIndexX][startingIndexY]);
+        this.openPoints = new Set<Point>();
+        this.closedPoints = new Set<Point>();
+        this.openPoints.add(this.points[startingIndexX][startingIndexY]);
 
-        while(this.openPoints.length > 0) {
+        while(this.openPoints.size > 0) {
+            if(this.stopped) {
+                return null;
+            }
+
             this.currentPoint = this.calculateBestPoint();
 
-            if(!this.currentPoint || this.currentPoint === this.points[destinationIndexX][destinationIndexY]) {
+            if(!this.currentPoint || this.currentPoint.equals(this.points[destinationIndexX][destinationIndexY])) {
                 break;
             }
 
-            this.openPoints.splice(this.openPoints.indexOf(this.currentPoint), 1);
-            this.closedPoints.push(this.currentPoint);
+            this.openPoints.delete(this.currentPoint);
+            this.closedPoints.add(this.currentPoint);
 
             const level = this.actor.position.level;
-            const { x, y, indexX, indexY } = this.currentPoint;
-            let canPath = false;
+            const { x, y } = this.currentPoint;
+            const indexX = x - lowestX;
+            const indexY = y - lowestY;
 
-            try {
-                // West
-                if(indexX > 0 && this.canPathNSEW(new Position(x - 1, y, level), 0x1280108)) {
-                    this.calculateCost(this.points[indexX - 1][indexY]);
-                    canPath = true;
+            // North-West
+            if(indexX > 0 && this.points[indexX - 1] && indexY < this.points[indexX - 1].length - 1) {
+                if(this.canPathDiagonally(x, y, new Position(x - 1, y + 1, level), -1, 1,
+                    0x1280138, 0x1280108, 0x1280120)) {
+                    this.calculateCost(this.points[indexX - 1][indexY + 1]);
                 }
-            } catch(e) {
-                logger.warn(`Error calculating path.`);
             }
 
-            try {
-                // East
-                if(indexX < pointLen - 1 && this.canPathNSEW(new Position(x + 1, y, level), 0x1280180)) {
-                    this.calculateCost(this.points[indexX + 1][indexY]);
-                    canPath = true;
+            // North-East
+            if(indexX < this.points.length - 1 && this.points[indexX + 1] && indexY < this.points[indexX + 1].length - 1) {
+                if(this.canPathDiagonally(x, y, new Position(x + 1, y + 1, level), 1, 1,
+                    0x12801e0, 0x1280180, 0x1280120)) {
+                    this.calculateCost(this.points[indexX + 1][indexY + 1]);
                 }
-            } catch(e) {
-                logger.warn(`Error calculating path.`);
             }
 
-            try {
-                // South
-                if(indexY > 0 && this.canPathNSEW(new Position(x, y - 1, level), 0x1280102)) {
-                    this.calculateCost(this.points[indexX][indexY - 1]);
-                    canPath = true;
+            // South-West
+            if(indexX > 0 && indexY > 0 && this.points[indexX - 1]) {
+                if(this.canPathDiagonally(x, y,
+                    new Position(x - 1, y - 1, level), -1, -1,
+                    0x128010e, 0x1280108, 0x1280102)) {
+                    this.calculateCost(this.points[indexX - 1][indexY - 1]);
                 }
-            } catch(e) {
-                logger.warn(`Error calculating path.`);
             }
 
-            try {
-                // North
-                if(indexY < pointLen - 1 && this.canPathNSEW(new Position(x, y + 1, level), 0x1280120)) {
-                    this.calculateCost(this.points[indexX][indexY + 1]);
-                    canPath = true;
+            // South-East
+            if(indexX < this.points.length - 1 && indexY > 0 && this.points[indexX + 1]) {
+                if(this.canPathDiagonally(x, y, new Position(x + 1, y - 1, level), 1, -1,
+                    0x1280183, 0x1280180, 0x1280102)) {
+                    this.calculateCost(this.points[indexX + 1][indexY - 1]);
                 }
-            } catch(e) {
-                logger.warn(`Error calculating path.`);
             }
 
-            try {
-                // South-West
-                if(indexX > 0 && indexY > 0) {
-                    if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x - 1, y - 1, level), -1, -1,
-                        0x128010e, 0x1280108, 0x1280102)) {
-                        this.calculateCost(this.points[indexX - 1][indexY - 1]);
-                        canPath = true;
-                    }
-                }
-            } catch(e) {
-                logger.warn(`Error calculating path.`);
+            // West
+            if(indexX > 0 && this.canPathNSEW(new Position(x - 1, y, level), 0x1280108)) {
+                this.calculateCost(this.points[indexX - 1][indexY]);
             }
 
-            try {
-                // South-East
-                if(indexX < pointLen - 1 && indexY > 0) {
-                    if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x + 1, y - 1, level), 1, -1,
-                        0x1280183, 0x1280180, 0x1280102)) {
-                        this.calculateCost(this.points[indexX + 1][indexY - 1]);
-                        canPath = true;
-                    }
-                }
-            } catch(e) {
-                logger.warn(`Error calculating path.`);
+            // East
+            if(indexX < this.points.length - 1 && this.canPathNSEW(new Position(x + 1, y, level), 0x1280180)) {
+                this.calculateCost(this.points[indexX + 1][indexY]);
             }
 
-            try {
-                // North-West
-                if(indexX > 0 && indexY < pointLen - 1) {
-                    if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x - 1, y + 1, level), -1, 1,
-                        0x1280138, 0x1280108, 0x1280120)) {
-                        this.calculateCost(this.points[indexX - 1][indexY + 1]);
-                        canPath = true;
-                    }
-                }
-            } catch(e) {
-                logger.warn(`Error calculating path.`);
+            // South
+            if(indexY > 0 && this.canPathNSEW(new Position(x, y - 1, level), 0x1280102)) {
+                this.calculateCost(this.points[indexX][indexY - 1]);
             }
 
-            try {
-                // North-East
-                if(indexX < pointLen - 1 && indexY < pointLen - 1) {
-                    if(this.canPathDiagonally(this.currentPoint.x, this.currentPoint.y, new Position(x + 1, y + 1, level), 1, 1,
-                        0x12801e0, 0x1280180, 0x1280120)) {
-                        this.calculateCost(this.points[indexX + 1][indexY + 1]);
-                        canPath = true;
-                    }
-                }
-            } catch(e) {
-                logger.warn(`Error calculating path.`);
-            }
-
-            if(!canPath) {
-                break;
+            // North
+            if(this.points[indexX] && indexY < this.points[indexX].length - 1 &&
+                    this.canPathNSEW(new Position(x, y + 1, level), 0x1280120)) {
+                this.calculateCost(this.points[indexX][indexY + 1]);
             }
         }
 
         const destinationPoint = this.points[destinationIndexX][destinationIndexY];
 
-        if(destinationPoint === null || destinationPoint.parent === null) {
+        if(!destinationPoint || !destinationPoint.parent) {
+            // throw new Error(`Unable to find destination point.`);
             return null;
         }
 
@@ -285,19 +280,23 @@ export class Pathfinding {
         let point = destinationPoint;
         let iterations = 0;
 
-        while(!point.equals(this.points[startingIndexX][startingIndexY])) {
-            path.push(point);
+        do {
+            if(this.stopped) {
+                return null;
+            }
+
+            path.push(new Point(point.x, point.y));
             point = point.parent;
             iterations++;
 
-            if(iterations > 10000) {
-                throw new Error(`Path iteration overflow, path will not be used.`);
+            if(iterations > 1000) {
+                throw new Error(`Path iteration overflow, path can not be found.`);
             }
 
             if(point === null) {
-                return null;
+                break;
             }
-        }
+        } while(!point.equals(this.points[startingIndexX][startingIndexY]));
 
         return path.reverse();
     }
@@ -307,35 +306,36 @@ export class Pathfinding {
             return;
         }
 
-        const differenceX = this.currentPoint.x - point.x;
-        const differenceY = this.currentPoint.y - point.y;
-        const nextStepCost = this.currentPoint.cost + ((Math.abs(differenceX) + Math.abs(differenceY)) * 10);
+        const nextStepCost = this.currentPoint.cost + this.calculateCostBetween(this.currentPoint, point);
 
         if(nextStepCost < point.cost) {
-            this.openPoints.splice(this.openPoints.indexOf(point));
-            this.closedPoints.splice(this.closedPoints.indexOf(point));
+            this.openPoints.delete(point);
+            this.closedPoints.delete(point);
         }
 
-        if(this.openPoints.indexOf(point) === -1 && this.closedPoints.indexOf(point) === -1) {
+        if(!this.openPoints.has(point) && !this.closedPoints.has(point)) {
             point.parent = this.currentPoint;
             point.cost = nextStepCost;
-            this.openPoints.push(point);
+            this.openPoints.add(point);
         }
+    }
+
+    private calculateCostBetween(current: Point, destination: Point): number {
+        const deltaX = current.x - destination.x;
+        const deltaY = current.y - destination.y;
+        return (Math.abs(deltaX) + Math.abs(deltaY)) * 10;
     }
 
     private calculateBestPoint(): Point {
         let bestPoint: Point = null;
 
-        for(const point of this.openPoints) {
-            if(bestPoint === null) {
+        this.openPoints.forEach(point => {
+            if(!bestPoint) {
                 bestPoint = point;
-                continue;
-            }
-
-            if(point.cost < bestPoint.cost) {
+            } else if(point.cost < bestPoint.cost) {
                 bestPoint = point;
             }
-        }
+        });
 
         return bestPoint;
     }
