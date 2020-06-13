@@ -25,42 +25,109 @@ The server runs on the 435 revision of the game, which was a game update made on
 
 ### Game World
 
-* Bank :white_check_mark: 
+* Bank :yellow_square: 
     * Withdraw/Deposit 1,5,10,All :heavy_check_mark:
     * As note  :x: 
     * Swap slot :heavy_check_mark:
     * Insert mode: :x:
-* Audio :white_check_mark:
-    * Music :white_check_mark:
+* Audio :yellow_square:
+    * Music :yellow_square:
         * Playing music :heavy_check_mark:
         * Music Regions :x:
         * Music Player tab :x:
-    * Sounds :white_check_mark:
+    * Sounds :yellow_square:
         * Playing sounds :heavy_check_mark:
-        * Sound effects for actions :white_check_mark:
-* Climbing ladders :white_check_mark:
-* Climbing stairs :white_check_mark:
-* Lumbridge mill :white_check_mark:
+        * Sound effects for actions :yellow_square:
+* Climbing ladders :yellow_square:
+* Climbing stairs :yellow_square:
+* Lumbridge mill :yellow_square:
     * Replacing objects for local player only :x:
+    * Grain in hopper :heavy_check_mark:
+    * Operating levers :heavy_check_mark:
+    * Removing flour if and only if grain has been processed :heavy_check_mark:
+* Cow milking :heavy_check_mark:
+* Container filling
+    * Buckets :heavy_check_mark:
+    * Jugs :heavy_check_mark:
+    * Wells :heavy_check_mark:
+    * Sinks :heavy_check_mark:
+    * Fountains :heavy_check_mark:
+    * Emptying Containers :heavy_check_mark:
+* Home Teleport :yellow_square:
+    * Animation :yellow_square:
+* Emotes :yellow_square:
+    * Skillcape :yellow_square:
+    * Normal emotes :heavy_check_mark:
+* Shops :yellow_square: 
+    * Shop logic :heavy_check_mark:
+    * World Shops :yellow_square:
+        * Al Kahrid gem trader :heavy_check_mark:
+        * Louie Armoured legs :heavy_check_mark:
+        * Dommik craftin shop :heavy_check_mark:
+        * Raneal Super skirt :heavy_check_mark:
+        * Bob's axes :heavy_check_mark:
+* Intentory :yellow_square: 
+    * Swap Items :heavy_check_mark:
+    * Drop Item :heavy_check_mark:
+    * Pickup item :heavy_check_mark:
+    * Equip item :yellow_square: 
+        * Complete equiment stats and slot info :yellow_square: 
+        * Wielding logic (Weight, Stats, Equipping) :heavy_check_mark:
+* Pickables :heavy_check_mark:
+    * Wheat :heavy_check_mark:
+    * Flax :heavy_check_mark:
+    * Potato :heavy_check_mark:
+    * Onion :heavy_check_mark:
+    * Cabbage :heavy_check_mark:
+* Doors :yellow_square: 
+    * Door logic :heavy_check_mark:
+    * Door ids :yellow_square: 
+* Clue Scrolls :x:
 
 ### Skills
 
-* Woodcutting :white_check_mark: 
-    * Formula for success :white_check_mark:
-    * Chopping Trees :white_check_mark: 
+* Combat :yellow_square:
+    * Melee :x:
+    * Ranged :x:
+    * Magic :x:
+* Prayer :x:
+* Cooking :x:
+* Fletching :x:
+* Fishing :x:
+* Firemaking :yellow_square:
+* Herblore :x:
+* Agility :x:
+* Thieving :x:
+* Slayer :x:
+* Farming :x:
+* Runecraft :x:
+* Construction :x:
+
+
+* Woodcutting :yellow_square: 
+    * Formula for success :yellow_square:
+    * Chopping Trees :yellow_square: 
     * Axes :heavy_check_mark:
     * Birds nests  :x: 
-    * Stump ids :white_check_mark: 
+    * Stump ids :yellow_square: 
 * Mining 
-    * Formula for success :white_check_mark:
-    * Mining ores :white_check_mark: 
+    * Formula for success :yellow_square:
+    * Mining ores :yellow_square: 
     * Pickaxes :heavy_check_mark:
     * Random gems  :x: 
     * Gem ores :x:
     * Essence mining :x:
-    * Empty Rock ids :white_check_mark: 
+    * Empty Rock ids :yellow_square: 
 * Crafting
     * Spinning wheel :heavy_check_mark:
+* Smithing
+    * Smelting ore to bars :heavy_check_mark:
+    * Forging :yellow_square:
+        * Correct items :heavy_check_mark:
+        * Hiding non applicable items :yellow_square: 
+    
+### Quests
+* Cook's Assistant :heavy_check_mark:
 
 ### Technical Features
 
