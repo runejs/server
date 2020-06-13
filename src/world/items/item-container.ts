@@ -197,7 +197,7 @@ export class ItemContainer {
     }
 
     public remove(slot: number, fireEvent: boolean = true): Item {
-        let item = this._items[slot];
+        const item = this._items[slot];
         this._items[slot] = null;
 
         if (fireEvent) {

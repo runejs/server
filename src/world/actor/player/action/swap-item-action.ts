@@ -35,7 +35,7 @@ export const insertItemAction = (player: Player, fromSlot: number, toSlot: numbe
             let slot = toSlot;
             let current = bank.remove(fromSlot);
             while (slot >= fromSlot) {
-                let temp = bank.remove(slot);
+                const temp = bank.remove(slot);
                 bank.set(slot, current);
                 current = temp;
                 slot--;
@@ -44,7 +44,7 @@ export const insertItemAction = (player: Player, fromSlot: number, toSlot: numbe
             let slot = toSlot;
             let current = bank.remove(fromSlot);
             while (slot <= fromSlot) {
-                let temp = bank.remove(slot);
+                const temp = bank.remove(slot);
                 bank.set(slot, current);
                 current = temp;
                 slot++;

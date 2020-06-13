@@ -46,7 +46,7 @@ export const depositItem: itemAction = (details) => {
 
 
     let itemIdToAdd: number = details.itemId;
-    let fromNoteId: number = fromNote(details.itemId);
+    const fromNoteId: number = fromNote(details.itemId);
     if (fromNoteId > -1) {
         itemIdToAdd = fromNoteId;
     }
@@ -112,7 +112,7 @@ export const withdrawItem: itemAction = (details) => {
 
     let itemIdToAdd: number = details.itemId;
     if (details.player.settings.bankWithdrawNoteMode) {
-        let toNoteId: number = toNote(details.itemId);
+        const toNoteId: number = toNote(details.itemId);
         if (toNoteId > -1) {
             itemIdToAdd = toNoteId;
         } else {
