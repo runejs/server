@@ -27,9 +27,10 @@ The server runs on the 435 revision of the game, which was a game update made on
 
 * Bank :yellow_square: 
     * Withdraw/Deposit 1,5,10,All :heavy_check_mark:
-    * As note  :x: 
+    * As note  :heavy_check_mark: 
     * Swap slot :heavy_check_mark:
-    * Insert mode: :x:
+    * Insert mode: :heavy_check_mark:
+    * Deposit box :yellow_square: 
 * Audio :yellow_square:
     * Music :yellow_square:
         * Playing music :heavy_check_mark:
@@ -105,14 +106,14 @@ The server runs on the 435 revision of the game, which was a game update made on
 
 
 * Woodcutting :yellow_square: 
-    * Formula for success :yellow_square:
-    * Chopping Trees :yellow_square: 
+    * Formula for success :heavy_check_mark:
+    * Chopping Trees :heavy_check_mark: 
     * Axes :heavy_check_mark:
     * Birds nests  :x: 
     * Stump ids :yellow_square: 
 * Mining 
-    * Formula for success :yellow_square:
-    * Mining ores :yellow_square: 
+    * Formula for success :heavy_check_mark:
+    * Mining ores :heavy_check_mark: 
     * Pickaxes :heavy_check_mark:
     * Random gems  :x: 
     * Gem ores :x:
