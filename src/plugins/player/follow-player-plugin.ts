@@ -1,7 +1,7 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { playerAction } from '@server/world/actor/player/action/player-action';
 import { Player } from '@server/world/actor/player/player';
-import { logger } from '@runejs/logger';
+import { Pathfinding } from '@server/world/actor/pathfinding';
 
 async function pathTo(player: Player, otherPlayer: Player): Promise<boolean> {
     const distance = Math.floor(otherPlayer.position.distanceBetween(player.position));
@@ -15,23 +15,35 @@ async function pathTo(player: Player, otherPlayer: Player): Promise<boolean> {
         return Promise.resolve(false);
     }
 
-    try {
-        await player.pathfinding.walkTo(otherPlayer.position, {
-            pathingDiameter: distance + 6,
-            ignoreDestination: true
+    //try {
+        let ignoreDestination = true;
+        let desiredPosition = otherPlayer.position;
+        /*if(otherPlayer.lastMovementPosition && otherPlayer.lastMovementPosition.distanceBetween(otherPlayer.position) < 1) {
+            desiredPosition = otherPlayer.lastMovementPosition;
+            ignoreDestination = false;
+        }*/
+
+        player.pathfinding.stopped = true;
+        player.pathfinding = new Pathfinding(player);
+        await player.pathfinding.walkTo(desiredPosition, {
+            pathingSearchRadius: distance + 2,
+            ignoreDestination
         });
 
         return Promise.resolve(true);
-    } catch(error) {
+    /*} catch(e) {
         player.clearFaceActor();
-        logger.warn(error.message);
-    }
+        player.actionsCancelled.next();
+        logger.error('Pathing error:');
+        logger.error(e && e.message ? e.message : 'Error while finding path.');
+    }*/
 }
 
 export const action: playerAction = (details) => {
     const { player, otherPlayer } = details;
 
     player.face(otherPlayer, false, false, false);
+
     pathTo(player, otherPlayer);
 
     const subscription = otherPlayer.movementEvent.subscribe(() => {

@@ -127,7 +127,7 @@ export class WalkingQueue {
     }
 
     public process(): void {
-        if(this.actor.busy || this.queue.length === 0 || !this.valid) {
+        if(!world.ready || this.actor.busy || this.queue.length === 0 || !this.valid) {
             this.resetDirections();
             return;
         }
@@ -202,6 +202,10 @@ export class WalkingQueue {
                 this.actor.faceDirection = runDir;
             } else {
                 this.actor.faceDirection = walkDir;
+            }
+
+            if(this.queue.length !== 0) {
+                this.actor.lastMovementPosition = this.actor.position;
             }
 
             const newChunk = world.chunkManager.getChunkForWorldPosition(this.actor.position);

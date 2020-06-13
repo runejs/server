@@ -35,7 +35,7 @@ export function initErrorHandling(): void {
         }
 
         logger.error(`Unhandled promise rejection from ${promise}, reason: ${error}`);
-        if(error.hasOwnProperty('stack')) {
+        if(error && error.hasOwnProperty('stack')) {
             logger.error((error as any).stack);
         }
     });
