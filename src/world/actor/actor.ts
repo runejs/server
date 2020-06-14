@@ -8,6 +8,8 @@ import { Position } from '@server/world/position';
 import { DirectionData, directionFromIndex } from '@server/world/direction';
 import { CombatAction } from '@server/world/actor/player/action/combat-action';
 import { Pathfinding } from '@server/world/actor/pathfinding';
+import { Subject } from 'rxjs';
+import { ActionCancelType } from '@server/world/actor/player/action/action';
 
 /**
  * Handles an actor within the game world.
@@ -30,6 +32,8 @@ export abstract class Actor {
     private _combatActions: CombatAction[];
     public pathfinding: Pathfinding;
     public lastMovementPosition: Position;
+    public readonly actionsCancelled: Subject<ActionCancelType>;
+    public readonly movementEvent: Subject<Position>;
 
     protected constructor() {
         this.updateFlags = new UpdateFlags();
@@ -43,6 +47,8 @@ export abstract class Actor {
         this._busy = false;
         this._combatActions = [];
         this.pathfinding = new Pathfinding(this);
+        this.actionsCancelled = new Subject<ActionCancelType>();
+        this.movementEvent = new Subject<Position>();
     }
 
     public damage(amount: number, damageType: DamageType = DamageType.DAMAGE): void {

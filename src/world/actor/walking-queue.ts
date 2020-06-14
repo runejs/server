@@ -208,8 +208,9 @@ export class WalkingQueue {
 
             const newChunk = world.chunkManager.getChunkForWorldPosition(this.actor.position);
 
+            this.actor.movementEvent.next(this.actor.position);
+
             if(this.actor instanceof Player) {
-                this.actor.movementEvent.next(this.actor.position);
                 const mapDiffX = this.actor.position.x - (lastMapRegionUpdatePosition.chunkX * 8);
                 const mapDiffY = this.actor.position.y - (lastMapRegionUpdatePosition.chunkY * 8);
                 if(mapDiffX < 16 || mapDiffX > 87 || mapDiffY < 16 || mapDiffY > 87) {
