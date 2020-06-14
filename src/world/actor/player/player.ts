@@ -101,9 +101,7 @@ export class Player extends Actor {
     public readonly dialogueInteractionEvent: Subject<number>;
     public readonly numericInputEvent: Subject<number>;
     private _walkingTo: Position;
-    public readonly movementEvent: Subject<Position>;
     private _nearbyChunks: Chunk[];
-    public readonly actionsCancelled: Subject<ActionCancelType>;
     private quadtreeKey: QuadtreeKey = null;
     public savedMetadata: { [key: string]: any } = {};
     public sessionMetadata: { [key: string]: any } = {};
@@ -131,9 +129,7 @@ export class Player extends Actor {
         this._equipment = new ItemContainer(14);
         this.dialogueInteractionEvent = new Subject<number>();
         this.numericInputEvent = new Subject<number>();
-        this.movementEvent = new Subject<Position>();
         this._nearbyChunks = [];
-        this.actionsCancelled = new Subject<ActionCancelType>();
 
         this.loadSaveData();
     }
