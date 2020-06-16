@@ -47,48 +47,42 @@ The server runs on the 435 revision of the game, which was a game update made on
     * Operating levers :heavy_check_mark:
     * Removing flour if and only if grain has been processed :heavy_check_mark:
 * Cow milking :heavy_check_mark:
-* Container filling
-    * Buckets :heavy_check_mark:
-    * Jugs :heavy_check_mark:
-    * Wells :heavy_check_mark:
-    * Sinks :heavy_check_mark:
-    * Fountains :heavy_check_mark:
+* Container filling :heavy_check_mark:
+    * Buckets, Jugs, Wells, Sinks, Fountains :heavy_check_mark:
     * Emptying Containers :heavy_check_mark:
 * Home Teleport :yellow_square:
     * Animation :yellow_square:
 * Emotes :yellow_square:
-    * Skillcape :yellow_square:
-    * Normal emotes :heavy_check_mark:
+    * Skillcape emotes :yellow_square:
+    * Unlockable emotes w/ requirements :heavy_check_mark:
 * Shops :yellow_square: 
     * Shop logic :heavy_check_mark:
     * World Shops :yellow_square:
         * Al Kahrid gem trader :heavy_check_mark:
         * Louie Armoured legs :heavy_check_mark:
-        * Dommik craftin shop :heavy_check_mark:
+        * Dommik crafting shop :heavy_check_mark:
         * Raneal Super skirt :heavy_check_mark:
         * Bob's axes :heavy_check_mark:
-* Intentory :yellow_square: 
-    * Swap Items :heavy_check_mark:
-    * Drop Item :heavy_check_mark:
-    * Pickup item :heavy_check_mark:
-    * Equip item :yellow_square: 
+* Inventory :yellow_square: 
+    * Swapping items :heavy_check_mark:
+    * Dropping items :heavy_check_mark:
+    * Picking up ground items :heavy_check_mark:
+    * Equipping items :yellow_square: 
         * Complete equiment stats and slot info :yellow_square: 
         * Wielding logic (Weight, Stats, Equipping) :heavy_check_mark:
 * Pickables :heavy_check_mark:
-    * Wheat :heavy_check_mark:
-    * Flax :heavy_check_mark:
-    * Potato :heavy_check_mark:
-    * Onion :heavy_check_mark:
-    * Cabbage :heavy_check_mark:
-* Doors :yellow_square: 
-    * Door logic :heavy_check_mark:
-    * Door ids :yellow_square: 
+    * Wheat, Flax, Potato, Onion, Cabbage :heavy_check_mark:
+* Doors/gates :yellow_square: 
+    * NSEW doors :heavy_check_mark:
+    * Diagonal doors :yellow_square:
+    * Double doors :heavy_check_mark: 
+    * Wooden gates :heavy_check_mark: 
 * Clue Scrolls :x:
 
 ### Skills
 
 * Combat :yellow_square:
-    * Melee :x:
+    * Melee :yellow_square:
     * Ranged :x:
     * Magic :x:
 * Prayer :x:
@@ -96,15 +90,15 @@ The server runs on the 435 revision of the game, which was a game update made on
 * Fletching :x:
 * Fishing :x:
 * Firemaking :yellow_square:
+    * Fire lighting :yellow_square:
+    * Chain fires w/ movement :yellow_square:
 * Herblore :x:
 * Agility :x:
 * Thieving :x:
 * Slayer :x:
 * Farming :x:
-* Runecraft :x:
+* Runecrafting :x:
 * Construction :x:
-
-
 * Woodcutting :yellow_square: 
     * Formula for success :heavy_check_mark:
     * Chopping Trees :heavy_check_mark: 
@@ -112,7 +106,7 @@ The server runs on the 435 revision of the game, which was a game update made on
     * Birds nests  :heavy_check_mark: 
     * Stump ids :yellow_square: 
     * Canoes :x:
-* Mining 
+* Mining :yellow_square: 
     * Formula for success :heavy_check_mark:
     * Mining ores :heavy_check_mark: 
     * Pickaxes :heavy_check_mark:
@@ -120,9 +114,9 @@ The server runs on the 435 revision of the game, which was a game update made on
     * Gem ores :heavy_check_mark:
     * Essence mining :heavy_check_mark:
     * Empty Rock ids :yellow_square: 
-* Crafting
+* Crafting :yellow_square: 
     * Spinning wheel :heavy_check_mark:
-* Smithing
+* Smithing :yellow_square: 
     * Smelting ore to bars :heavy_check_mark:
     * Forging :yellow_square:
         * Correct items :heavy_check_mark:
