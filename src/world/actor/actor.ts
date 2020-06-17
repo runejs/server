@@ -10,30 +10,31 @@ import { CombatAction } from '@server/world/actor/player/action/combat-action';
 import { Pathfinding } from '@server/world/actor/pathfinding';
 import { Subject } from 'rxjs';
 import { ActionCancelType } from '@server/world/actor/player/action/action';
+import { filter, take } from 'rxjs/operators';
 
 /**
  * Handles an actor within the game world.
  */
 export abstract class Actor {
 
+    public readonly updateFlags: UpdateFlags;
+    public readonly skills: Skills;
+    public readonly metadata: { [key: string]: any } = {};
+    public readonly actionsCancelled: Subject<ActionCancelType>;
+    public readonly movementEvent: Subject<Position>;
+    public pathfinding: Pathfinding;
+    public lastMovementPosition: Position;
+    private readonly _walkingQueue: WalkingQueue;
+    private readonly _inventory: ItemContainer;
+    private readonly _bank: ItemContainer;
     private _position: Position;
     private _lastMapRegionUpdatePosition: Position;
     private _worldIndex: number;
-    public readonly updateFlags: UpdateFlags;
-    private readonly _walkingQueue: WalkingQueue;
     private _walkDirection: number;
     private _runDirection: number;
     private _faceDirection: number;
-    private readonly _inventory: ItemContainer;
-    private readonly _bank: ItemContainer;
-    public readonly skills: Skills;
     private _busy: boolean;
-    public readonly metadata: { [key: string]: any } = {};
     private _combatActions: CombatAction[];
-    public pathfinding: Pathfinding;
-    public lastMovementPosition: Position;
-    public readonly actionsCancelled: Subject<ActionCancelType>;
-    public readonly movementEvent: Subject<Position>;
 
     protected constructor() {
         this.updateFlags = new UpdateFlags();
@@ -52,7 +53,80 @@ export abstract class Actor {
     }
 
     public damage(amount: number, damageType: DamageType = DamageType.DAMAGE): void {
+    }
 
+    public async moveBehind(target: Actor): Promise<boolean> {
+        const distance = Math.floor(this.position.distanceBetween(target.position));
+        if(distance > 16) {
+            this.clearFaceActor();
+            return false;
+        }
+
+        let ignoreDestination = true;
+        let desiredPosition = target.position;
+        if(target.lastMovementPosition) {
+            desiredPosition = target.lastMovementPosition;
+            ignoreDestination = false;
+        }
+
+        await this.pathfinding.walkTo(desiredPosition, {
+            pathingSearchRadius: distance + 2,
+            ignoreDestination
+        });
+
+        return true;
+    }
+
+    public follow(target: Actor): void {
+        this.face(target, false, false, false);
+
+        this.moveBehind(target);
+        const subscription = target.movementEvent.subscribe(() => this.moveBehind(target));
+
+        this.actionsCancelled.pipe(
+            filter(type => type !== 'pathing-movement'),
+            take(1)
+        ).subscribe(() => {
+            subscription.unsubscribe();
+            this.face(null);
+        });
+    }
+
+    public async walkTo(target: Actor): Promise<boolean> {
+        const distance = Math.floor(this.position.distanceBetween(target.position));
+        if(distance > 16) {
+            this.clearFaceActor();
+            this.metadata.faceActorClearedByWalking = true;
+            return false;
+        }
+
+        if(distance <= 1) {
+            return false;
+        }
+
+        const desiredPosition = target.position;
+
+        await this.pathfinding.walkTo(desiredPosition, {
+            pathingSearchRadius: distance + 2,
+            ignoreDestination: true
+        });
+
+        return true;
+    }
+
+    public tail(target: Actor): void {
+        this.face(target, false, false, false);
+
+        this.walkTo(target);
+        const subscription = target.movementEvent.subscribe(() => this.walkTo(target));
+
+        this.actionsCancelled.pipe(
+            filter(type => type !== 'pathing-movement'),
+            take(1)
+        ).subscribe(() => {
+            subscription.unsubscribe();
+            this.face(null);
+        });
     }
 
     public face(face: Position | Actor | null, clearWalkingQueue: boolean = true, autoClear: boolean = true, clearedByWalking: boolean = true): void {
