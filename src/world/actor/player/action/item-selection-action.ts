@@ -1,7 +1,7 @@
 import { Player } from '@server/world/actor/player/player';
 
 const amounts = [
-    1, 5, 10, 0
+    1, 5, 'X', 'All'
 ];
 
 const widgets = {
@@ -123,9 +123,9 @@ export async function itemSelectionAction(player: Player, type: 'COOKING' | 'MAK
             }
 
             const itemId = items[choiceIndex].itemId;
-            const amount = amounts[optionIndex];
+            let amount = amounts[optionIndex];
 
-            if(amount === 0) {
+            if(amount === 'X') {
                 actionsSub.unsubscribe();
 
                 player.outgoingPackets.showNumberInputDialogue();
@@ -149,6 +149,10 @@ export async function itemSelectionAction(player: Player, type: 'COOKING' | 'MAK
                     }
                 });
             } else {
+                if (amount === 'All') {
+                    amount = player.inventory.findAll(itemId).length;
+                }
+
                 actionsSub.unsubscribe();
                 interactionSub.unsubscribe();
                 player.closeActiveWidgets();
