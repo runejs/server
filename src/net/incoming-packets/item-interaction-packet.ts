@@ -43,6 +43,14 @@ const option4 = (packet: ByteBuffer): ItemInteraction => {
     return { widgetId, containerId, itemId, slot };
 };
 
+const inventoryOption1 = (packet: ByteBuffer): ItemInteraction => {
+    const slot = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const itemId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const containerId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const widgetId = packet.get('SHORT', 'UNSIGNED');
+    return { widgetId, containerId, itemId, slot };
+};
+
 const inventoryOption4 = (packet: ByteBuffer): ItemInteraction => {
     const slot = packet.get('SHORT', 'UNSIGNED');
     const widgetId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
@@ -58,6 +66,7 @@ export const itemInteractionPacket: incomingPacket = (player: Player, packetId: 
         26: { packetDef: option3, optionNumber: 3 },
         147: { packetDef: option4, optionNumber: 4 },
         98: { packetDef: inventoryOption4, optionNumber: 4 },
+        240: { packetDef: inventoryOption1, optionNumber: 1 },
     };
 
     const packetDetails = packets[packetId];

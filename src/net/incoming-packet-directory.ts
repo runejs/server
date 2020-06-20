@@ -52,6 +52,7 @@ const packets: { [key: number]: incomingPacket } = {
     228: itemInteractionPacket,
     26:  itemInteractionPacket,
     147: itemInteractionPacket,
+    240: itemInteractionPacket,
     29:  dropItemPacket,
     85:  pickupItemPacket,
 
