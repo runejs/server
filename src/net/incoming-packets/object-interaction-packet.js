@@ -6,50 +6,33 @@ import { objectAction } from '@server/world/actor/player/action/object-action';
 import { logger } from '@runejs/logger';
 import { ByteBuffer } from '@runejs/byte-buffer';
 
-interface ObjectInteraction {
-    objectId: number;
-    x: number;
-    y: number;
-}
-
-const option1 = (packet: ByteBuffer): ObjectInteraction => {
-    const objectId = packet.get('SHORT', 'UNSIGNED');
-    const y = packet.get('SHORT', 'UNSIGNED');
-    const x = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+const option1 = packet => {
+    const { buffer } = packet;
+    const objectId = buffer.get('SHORT', 'UNSIGNED');
+    const y = buffer.get('SHORT', 'UNSIGNED');
+    const x = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
     return { objectId, x, y };
 };
 
-const option2 = (packet: ByteBuffer): ObjectInteraction => {
-    const x = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const y = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const objectId = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+const option2 = packet => {
+    const { buffer } = packet;
+    const x = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const y = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const objectId = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
     return { objectId, x, y };
 };
 
-const option3 = (packet: ByteBuffer): ObjectInteraction => {
-    const y = packet.get('SHORT', 'UNSIGNED');
-    const objectId = packet.get('SHORT', 'UNSIGNED');
-    const x = packet.get('SHORT', 'UNSIGNED');
+const option3 = packet => {
+    const { buffer } = packet;
+    const y = buffer.get('SHORT', 'UNSIGNED');
+    const objectId = buffer.get('SHORT', 'UNSIGNED');
+    const x = buffer.get('SHORT', 'UNSIGNED');
     return { objectId, x, y };
 };
 
-// @TODO
-const option4 = (packet: ByteBuffer): ObjectInteraction => {
-    const x = null;
-    const y = null;
-    const objectId = null;
-    return { objectId, x, y };
-};
+const objectInteractionPacket = (player, packet) => {
+    const { packetId } = packet;
 
-// @TODO
-const option5 = (packet: ByteBuffer): ObjectInteraction => {
-    const objectId = null;
-    const y = null;
-    const x = null;
-    return { objectId, x, y };
-};
-
-export const objectInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {
     const options = {
         30: { packetDef: option1, index: 0 },
         164: { packetDef: option2, index: 1 },
@@ -63,7 +46,7 @@ export const objectInteractionPacket: incomingPacket = (player: Player, packetId
 
     const objectPosition = new Position(x, y, level);
     const objectChunk = world.chunkManager.getChunkForWorldPosition(objectPosition);
-    let cacheOriginal: boolean = true;
+    let cacheOriginal = true;
 
     let locationObject = objectChunk.getCacheObject(objectId, objectPosition);
     if(!locationObject) {
@@ -99,3 +82,17 @@ export const objectInteractionPacket: incomingPacket = (player: Player, packetId
 
     objectAction(player, locationObject, locationObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
 };
+
+export default [{
+    opcode: 30,
+    size: 6,
+    handler: objectInteractionPacket
+}, {
+    opcode: 164,
+    size: 6,
+    handler: objectInteractionPacket
+}, {
+    opcode: 183,
+    size: 6,
+    handler: objectInteractionPacket
+}];

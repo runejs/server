@@ -1,14 +1,12 @@
-import { incomingPacket } from '../incoming-packet';
-import { Player } from '../../world/actor/player/player';
 import { world } from '@server/game-server';
 import { Position } from '@server/world/position';
 import { worldItemAction } from '@server/world/actor/player/action/world-item-action';
-import { ByteBuffer } from '@runejs/byte-buffer';
 
-export const pickupItemPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {
-    const y = packet.get('SHORT', 'UNSIGNED');
-    const itemId = packet.get('SHORT', 'UNSIGNED');
-    const x = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+const pickupItemPacket = (player, packet) => {
+    const { buffer } = packet;
+    const y = buffer.get('SHORT', 'UNSIGNED');
+    const itemId = buffer.get('SHORT', 'UNSIGNED');
+    const x = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
 
     const level = player.position.level;
     const worldItemPosition = new Position(x, y, level);
@@ -24,4 +22,10 @@ export const pickupItemPacket: incomingPacket = (player: Player, packetId: numbe
     }
 
     worldItemAction(player, worldItem, 'pick-up');
+};
+
+export default {
+    opcode: 85,
+    size: 6,
+    handler: pickupItemPacket
 };

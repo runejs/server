@@ -1,18 +1,16 @@
-import { incomingPacket } from '../incoming-packet';
-import { Player } from '../../world/actor/player/player';
-import { widgets } from '@server/world/config/widget';
+import { widgets } from '../../world/config/widget';
 import { logger } from '@runejs/logger';
-import { world } from '@server/game-server';
-import { World } from '@server/world/world';
-import { itemOnNpcAction } from '@server/world/actor/player/action/item-on-npc-action';
-import { ByteBuffer } from '@runejs/byte-buffer';
+import { world } from '../../game-server';
+import { World } from '../../world/world';
+import { itemOnNpcAction } from '../../world/actor/player/action/item-on-npc-action';
 
-export const itemOnNpcPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {
-    const npcIndex = packet.get('SHORT', 'UNSIGNED');
-    const itemId = packet.get('SHORT', 'UNSIGNED');
-    const itemSlot = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const itemWidgetId = packet.get('SHORT');
-    const itemContainerId = packet.get('SHORT');
+const itemOnNpcPacket = (player, packet) => {
+    const { buffer } = packet;
+    const npcIndex = buffer.get('SHORT', 'UNSIGNED');
+    const itemId = buffer.get('SHORT', 'UNSIGNED');
+    const itemSlot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const itemWidgetId = buffer.get('SHORT');
+    const itemContainerId = buffer.get('SHORT');
 
     let usedItem;
     if(itemWidgetId === widgets.inventory.widgetId && itemContainerId === widgets.inventory.containerId) {
@@ -51,5 +49,10 @@ export const itemOnNpcPacket: incomingPacket = (player: Player, packetId: number
     }
 
     itemOnNpcAction(player, npc, position, usedItem, itemWidgetId, itemContainerId);
+};
 
+export default {
+    opcode: 208,
+    size: 10,
+    handler: itemOnNpcPacket
 };
