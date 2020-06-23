@@ -1,5 +1,5 @@
 import { AddressInfo, Socket } from 'net';
-import { OutgoingPackets } from '../../../net/outgoing-packets';
+import { OutboundPackets } from '../../../net/outbound-packets';
 import { Isaac } from '@server/net/isaac';
 import { PlayerUpdateTask } from './updating/player-update-task';
 import { Actor } from '../actor';
@@ -86,7 +86,7 @@ export class Player extends Actor {
     private _lastAddress: string;
     public isLowDetail: boolean;
     private firstTimePlayer: boolean;
-    private readonly _outgoingPackets: OutgoingPackets;
+    private readonly _outgoingPackets: OutboundPackets;
     public readonly playerUpdateTask: PlayerUpdateTask;
     public readonly npcUpdateTask: NpcUpdateTask;
     public trackedPlayers: Player[];
@@ -118,7 +118,7 @@ export class Player extends Actor {
         this.passwordHash = password;
         this._rights = Rights.ADMIN;
         this.isLowDetail = isLowDetail;
-        this._outgoingPackets = new OutgoingPackets(this);
+        this._outgoingPackets = new OutboundPackets(this);
         this.playerUpdateTask = new PlayerUpdateTask(this);
         this.npcUpdateTask = new NpcUpdateTask(this);
         this.trackedPlayers = [];
@@ -832,7 +832,7 @@ export class Player extends Actor {
         return this._outCipher;
     }
 
-    public get outgoingPackets(): OutgoingPackets {
+    public get outgoingPackets(): OutboundPackets {
         return this._outgoingPackets;
     }
 

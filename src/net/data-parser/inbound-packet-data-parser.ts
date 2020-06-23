@@ -1,12 +1,12 @@
-import { incomingPacketSizes } from '@server/net/incoming-packet-sizes';
-import { handlePacket } from '@server/net/incoming-packet-directory';
+import { handlePacket, incomingPackets } from '../inbound-packets';
 import { DataParser } from './data-parser';
 import { ByteBuffer } from '@runejs/byte-buffer';
+import { logger } from '@runejs/logger';
 
 /**
- * Parses incoming packet data from the game client once the user is fully authenticated.
+ * Parses inbound packet data from the game client once the user is fully authenticated.
  */
-export class ClientPacketDataParser extends DataParser {
+export class InboundPacketDataParser extends DataParser {
 
     private activePacketId: number = null;
     private activePacketSize: number = null;
@@ -40,7 +40,14 @@ export class ClientPacketDataParser extends DataParser {
 
             this.activePacketId = this.activeBuffer.get('BYTE', 'UNSIGNED');
             this.activePacketId = (this.activePacketId - inCipher.rand()) & 0xff;
-            this.activePacketSize = incomingPacketSizes[this.activePacketId];
+            const incomingPacket = incomingPackets.get(this.activePacketId);
+            if(!incomingPacket) {
+                // throw new Error(`Unknown packet ${this.activePacketId} received - aborting session.`);
+                logger.warn(`Unknown packet ${this.activePacketId} received.`);
+                this.activePacketSize = 0;
+            } else {
+                this.activePacketSize = incomingPacket.size;
+            }
         }
 
         // Packet will provide the size

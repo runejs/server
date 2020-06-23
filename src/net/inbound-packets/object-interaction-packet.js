@@ -1,10 +1,7 @@
-import { incomingPacket } from '../incoming-packet';
-import { Player } from '../../world/actor/player/player';
-import { Position } from '@server/world/position';
-import { cache, world } from '@server/game-server';
-import { objectAction } from '@server/world/actor/player/action/object-action';
+import { Position } from '../../world/position';
+import { cache, world } from '../../game-server';
+import { objectAction } from '../../world/actor/player/action/object-action';
 import { logger } from '@runejs/logger';
-import { ByteBuffer } from '@runejs/byte-buffer';
 
 const option1 = packet => {
     const { buffer } = packet;

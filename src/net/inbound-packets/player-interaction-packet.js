@@ -1,17 +1,16 @@
-import { incomingPacket } from '../incoming-packet';
-import { Player, playerOptions } from '../../world/actor/player/player';
-import { world } from '@server/game-server';
-import { World } from '@server/world/world';
-import { ByteBuffer } from '@runejs/byte-buffer';
-import { playerAction } from '@server/world/actor/player/action/player-action';
+import { playerOptions } from '../../world/actor/player/player';
+import { world } from '../../game-server';
+import { World } from '../../world/world';
+import { playerAction } from '../../world/actor/player/action/player-action';
 import { logger } from '@runejs/logger';
 
-export const playerInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {
+const playerInteractionPacket = (player, packet) => {
+    const { buffer, packetId } = packet;
     const args = {
         68: [ 'SHORT', 'UNSIGNED', 'LITTLE_ENDIAN' ],
         211: [ 'SHORT', 'UNSIGNED', 'LITTLE_ENDIAN' ]
     };
-    const playerIndex = packet.get(...args[packetId]) - 1;
+    const playerIndex = buffer.get(...args[packetId]) - 1;
 
     if(playerIndex < 0 || playerIndex > World.MAX_PLAYERS - 1) {
         return;
@@ -44,3 +43,13 @@ export const playerInteractionPacket: incomingPacket = (player: Player, packetId
 
     playerAction(player, otherPlayer, position, playerOption.option.toLowerCase());
 };
+
+export default [{
+    opcode: 68,
+    size: 2,
+    handler: playerInteractionPacket
+}, {
+    opcode: 211,
+    size: 2,
+    handler: playerInteractionPacket
+}];

@@ -26,6 +26,7 @@ import { setPlayerInitPlugins } from '@server/world/actor/player/player';
 import { setNpcInitPlugins } from '@server/world/actor/npc/npc';
 import { setQuestPlugins } from '@server/world/config/quests';
 import { setPlayerPlugins } from '@server/world/actor/player/action/player-action';
+import { loadPackets } from '@server/net/inbound-packets';
 
 
 export let serverConfig: ServerConfig;
@@ -126,6 +127,8 @@ export async function runGameServer(): Promise<void> {
     // delete cache.metaChannel;
     // delete cache.indexChannels;
     // delete cache.indices;
+
+    await loadPackets();
 
     world = new World();
     await injectPlugins();
