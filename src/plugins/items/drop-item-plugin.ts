@@ -15,6 +15,11 @@ export const action: itemAction = (details) => {
         return;
     }
 
+    if(player.rights == 2) {
+        player.sendMessage('Administrators are not allowed to drop items.', true);
+        return;
+    }
+
     inventory.remove(itemSlot);
     player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, itemSlot, null);
     player.playSound(soundIds.dropItem, 5);
