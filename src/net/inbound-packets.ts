@@ -3,8 +3,6 @@ import { logger } from '@runejs/logger';
 import { getFiles } from '../util/files';
 import { ByteBuffer } from '@runejs/byte-buffer';
 
-const ignore = [ 234, 160, 216, 13, 58 /* camera move */ ];
-
 interface InboundPacket {
     opcode: number;
     size: number;
@@ -32,11 +30,6 @@ export async function loadPackets(): Promise<Map<number, InboundPacket>> {
 }
 
 export function handlePacket(player: Player, packetId: number, packetSize: number, buffer: ByteBuffer): void {
-    if(ignore.indexOf(packetId) !== -1) {
-        return;
-    }
-
-    // const packetFunction = packets[packetId];
     const incomingPacket = incomingPackets.get(packetId);
 
     if(!incomingPacket) {

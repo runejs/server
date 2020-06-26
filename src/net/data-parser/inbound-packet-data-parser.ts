@@ -41,12 +41,10 @@ export class InboundPacketDataParser extends DataParser {
             this.activePacketId = this.activeBuffer.get('BYTE', 'UNSIGNED');
             this.activePacketId = (this.activePacketId - inCipher.rand()) & 0xff;
             const incomingPacket = incomingPackets.get(this.activePacketId);
-            if(!incomingPacket) {
-                // throw new Error(`Unknown packet ${this.activePacketId} received - aborting session.`);
-                logger.warn(`Unknown packet ${this.activePacketId} received.`);
-                this.activePacketSize = 0;
-            } else {
+            if(incomingPacket) {
                 this.activePacketSize = incomingPacket.size;
+            } else {
+                this.activePacketSize = -3;
             }
         }
 
