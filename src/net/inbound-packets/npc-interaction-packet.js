@@ -1,12 +1,11 @@
-import { incomingPacket } from '../incoming-packet';
-import { Player } from '../../world/actor/player/player';
-import { world } from '@server/game-server';
-import { World } from '@server/world/world';
-import { npcAction } from '@server/world/actor/player/action/npc-action';
+import { world } from '../../game-server';
+import { World } from '../../world/world';
+import { npcAction } from '../../world/actor/player/action/npc-action';
 import { logger } from '@runejs/logger';
-import { ByteBuffer } from '@runejs/byte-buffer';
 
-export const npcInteractionPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {
+const npcInteractionPacket = (player, packet) => {
+    const { buffer, packetId } = packet;
+
     const args = {
         63: [ 'SHORT', 'UNSIGNED', 'LITTLE_ENDIAN' ],
         116: [ 'SHORT', 'UNSIGNED', 'LITTLE_ENDIAN' ],
@@ -14,7 +13,7 @@ export const npcInteractionPacket: incomingPacket = (player: Player, packetId: n
         /*42: 'readUnsignedShortLE',
         8: 'readUnsignedShortLE'*/
     };
-    const npcIndex = packet.get(...args[packetId]);
+    const npcIndex = buffer.get(...args[packetId]);
 
     if(npcIndex < 0 || npcIndex > World.MAX_NPCS - 1) {
         return;
@@ -59,3 +58,17 @@ export const npcInteractionPacket: incomingPacket = (player: Player, packetId: n
 
     npcAction(player, npc, position, optionName.toLowerCase());
 };
+
+export default [{
+    opcode: 63,
+    size: 2,
+    handler: npcInteractionPacket
+}, {
+    opcode: 116,
+    size: 2,
+    handler: npcInteractionPacket
+}, {
+    opcode: 57,
+    size: 2,
+    handler: npcInteractionPacket
+}];

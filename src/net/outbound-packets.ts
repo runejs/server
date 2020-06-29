@@ -12,7 +12,7 @@ import { ByteBuffer } from '@runejs/byte-buffer';
 /**
  * A helper class for sending various network packets back to the game client.
  */
-export class OutgoingPackets {
+export class OutboundPackets {
 
     private updatingQueue: Buffer[];
     private packetQueue: Buffer[];

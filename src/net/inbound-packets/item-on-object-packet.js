@@ -1,20 +1,18 @@
-import { incomingPacket } from '../incoming-packet';
-import { Player } from '../../world/actor/player/player';
-import { widgets } from '@server/world/config/widget';
+import { widgets } from '../../world/config/widget';
 import { logger } from '@runejs/logger';
-import { Position } from '@server/world/position';
-import { cache, world } from '@server/game-server';
-import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
-import { ByteBuffer } from '@runejs/byte-buffer';
+import { Position } from '../../world/position';
+import { cache, world } from '../../game-server';
+import { itemOnObjectAction } from '../../world/actor/player/action/item-on-object-action';
 
-export const itemOnObjectPacket: incomingPacket = (player: Player, packetId: number, packetSize: number, packet: ByteBuffer): void => {
-    const objectY = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const itemId = packet.get('SHORT', 'UNSIGNED');
-    const objectId = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const itemSlot = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const itemWidgetId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const itemContainerId = packet.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const objectX = packet.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+const itemOnObjectPacket = (player, packet) => {
+    const { buffer } = packet;
+    const objectY = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const itemId = buffer.get('SHORT', 'UNSIGNED');
+    const objectId = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const itemSlot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const itemWidgetId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const itemContainerId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const objectX = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
 
     let usedItem;
     if (itemWidgetId === widgets.inventory.widgetId && itemContainerId === widgets.inventory.containerId) {
@@ -37,7 +35,7 @@ export const itemOnObjectPacket: incomingPacket = (player: Player, packetId: num
 
     const objectPosition = new Position(objectX, objectY, level);
     const objectChunk = world.chunkManager.getChunkForWorldPosition(objectPosition);
-    let cacheOriginal: boolean = true;
+    let cacheOriginal = true;
 
     let locationObject = objectChunk.getCacheObject(objectId, objectPosition);
     if (!locationObject) {
@@ -57,5 +55,10 @@ export const itemOnObjectPacket: incomingPacket = (player: Player, packetId: num
 
 
     itemOnObjectAction(player, locationObject, locationObjectDefinition, objectPosition, usedItem, itemWidgetId, itemContainerId, cacheOriginal);
+};
 
+export default {
+    opcode: 24,
+    size: 14,
+    handler: itemOnObjectPacket
 };

@@ -3,7 +3,7 @@ import { Player } from '@server/world/actor/player/player';
 import { world } from '@server/game-server';
 import { LoginHandshakeParser } from './data-parser/login-handshake-parser';
 import { ClientLoginParser } from './data-parser/client-login-parser';
-import { ClientPacketDataParser } from './data-parser/client-packet-data-parser';
+import { InboundPacketDataParser } from './data-parser/inbound-packet-data-parser';
 import { DataParser } from './data-parser/data-parser';
 import { VersionHandshakeParser } from '@server/net/data-parser/version-handshake-parser';
 import { UpdateServerParser } from '@server/net/data-parser/update-server-parser';
@@ -61,7 +61,7 @@ export class ClientConnection {
                 this.dataParser = new ClientLoginParser(this);
             } else if(this.connectionStage === ConnectionStage.LOGIN) {
                 this.connectionStage = ConnectionStage.LOGGED_IN;
-                this.dataParser = new ClientPacketDataParser(this);
+                this.dataParser = new InboundPacketDataParser(this);
             }
         } catch(err) {
             console.error('Error decoding client data');
