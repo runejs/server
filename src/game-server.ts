@@ -27,6 +27,7 @@ import { setNpcInitPlugins } from '@server/world/actor/npc/npc';
 import { setQuestPlugins } from '@server/world/config/quests';
 import { setPlayerPlugins } from '@server/world/actor/player/action/player-action';
 import { loadPackets } from '@server/net/inbound-packets';
+import { watchForChanges } from '@server/util/files';
 
 
 export let serverConfig: ServerConfig;
@@ -141,14 +142,6 @@ export async function runGameServer(): Promise<void> {
 
     openServer();
 
-    const watcher = watch('dist/plugins/');
-    watcher.on('ready', () => {
-        watcher.on('all', () => {
-            Object.keys(require.cache).forEach((id) => {
-                if(/[\/\\]plugins[\/\\]/.test(id)) {
-                    delete require.cache[id];
-                }
-            });
-        });
-    });
+    watchForChanges('dist/plugins/', /[\/\\]plugins[\/\\]/);
+    watchForChanges('dist/net/inbound-packets/', /[\/\\]inbound-packets[\/\\]/);
 }
