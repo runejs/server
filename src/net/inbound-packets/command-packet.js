@@ -19,7 +19,7 @@ const commandPacket = (player, packet) => {
 
 export default [{
     opcode: 246,
-    size: -1,
+    size: -3,
     handler: commandPacket
 },{
     opcode: 248,
