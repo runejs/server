@@ -40,7 +40,7 @@ export interface CommandActionPlugin extends ActionPlugin {
 /**
  * A directory of all command interaction plugins.
  */
-let commandInteractions: CommandActionPlugin[] = [];
+export let commandInteractions: CommandActionPlugin[] = [];
 
 /**
  * Sets the list of command interaction plugins.
