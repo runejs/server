@@ -31,6 +31,7 @@ import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 import { quests } from '@server/world/config/quests';
 import { ItemDefinition } from '@runejs/cache-parser';
 import { ActionCancelType } from '@server/world/actor/player/action/action';
+import { CommandActionPlugin, commandInteractions } from '@server/world/actor/player/action/input-command-action';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -139,23 +140,23 @@ export class Player extends Actor {
         const firstTimePlayer: boolean = playerSave === null;
         this.firstTimePlayer = firstTimePlayer;
 
-        if(!firstTimePlayer) {
-            if(playerSave.savedMetadata) {
+        if (!firstTimePlayer) {
+            if (playerSave.savedMetadata) {
                 this.savedMetadata = playerSave.savedMetadata;
             }
 
             // Existing player logging in
             this.position = new Position(playerSave.position.x, playerSave.position.y, playerSave.position.level);
-            if(playerSave.inventory && playerSave.inventory.length !== 0) {
+            if (playerSave.inventory && playerSave.inventory.length !== 0) {
                 this.inventory.setAll(playerSave.inventory);
             }
-            if(playerSave.bank && playerSave.bank.length !== 0) {
+            if (playerSave.bank && playerSave.bank.length !== 0) {
                 this.bank.setAll(playerSave.bank);
             }
-            if(playerSave.equipment && playerSave.equipment.length !== 0) {
+            if (playerSave.equipment && playerSave.equipment.length !== 0) {
                 this.equipment.setAll(playerSave.equipment);
             }
-            if(playerSave.skills && playerSave.skills.length !== 0) {
+            if (playerSave.skills && playerSave.skills.length !== 0) {
                 this.skills.values = playerSave.skills;
             }
             this._appearance = playerSave.appearance;
@@ -163,16 +164,16 @@ export class Player extends Actor {
             this._rights = playerSave.rights || Rights.USER;
 
             const lastLogin = playerSave.lastLogin?.date;
-            if(!lastLogin) {
+            if (!lastLogin) {
                 this._loginDate = new Date();
             } else {
                 this._loginDate = new Date(lastLogin);
             }
 
-            if(playerSave.quests) {
+            if (playerSave.quests) {
                 this.quests = playerSave.quests;
             }
-            if(playerSave.achievements) {
+            if (playerSave.achievements) {
                 this.achievements = playerSave.achievements;
             }
 
@@ -193,7 +194,7 @@ export class Player extends Actor {
             this.savedMetadata = {};
         }
 
-        if(!this._settings) {
+        if (!this._settings) {
             this._settings = defaultSettings();
         }
     }
@@ -211,7 +212,7 @@ export class Player extends Actor {
         this.outgoingPackets.chatboxMessage('Welcome to RuneJS #435.');
 
         DEFAULT_TAB_WIDGET_IDS.forEach((widgetId: number, tabIndex: number) => {
-            if(widgetId !== -1) {
+            if (widgetId !== -1) {
                 this.outgoingPackets.sendTabWidget(tabIndex, widgetId);
             }
         });
@@ -221,19 +222,19 @@ export class Player extends Actor {
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
 
-        if(this.firstTimePlayer) {
+        if (this.firstTimePlayer) {
             this.activeWidget = {
                 widgetId: widgets.characterDesign,
                 type: 'SCREEN',
                 disablePlayerMovement: true
             };
-        } else if(serverConfig.showWelcome) {
+        } else if (serverConfig.showWelcome) {
             const daysSinceLogin = daysSinceLastLogin(this.loginDate);
             let loginDaysStr = '';
 
-            if(daysSinceLogin <= 0) {
+            if (daysSinceLogin <= 0) {
                 loginDaysStr = 'earlier today';
-            } else if(daysSinceLogin === 1) {
+            } else if (daysSinceLogin === 1) {
                 loginDaysStr = 'yesterday';
             } else {
                 loginDaysStr = daysSinceLogin + ' days ago';
@@ -254,12 +255,12 @@ export class Player extends Actor {
             };
         }
 
-        for(const playerOption of playerOptions) {
+        for (const playerOption of playerOptions) {
             this.outgoingPackets.updatePlayerOption(playerOption.option, playerOption.index, playerOption.placement);
         }
         this.updateBonuses();
         this.updateCarryWeight(true);
-        this.modifyWidget(widgets.musicPlayerTab, { childId: 82, textColor: colors.green }); // Set "Harmony" to green/unlocked on the music tab
+        this.modifyWidget(widgets.musicPlayerTab, {childId: 82, textColor: colors.green}); // Set "Harmony" to green/unlocked on the music tab
         this.playSong(songs.harmony);
         this.updateQuestTab();
 
@@ -270,7 +271,7 @@ export class Player extends Actor {
                 'keep-widgets-open', 'pathing-movement'
             ];
 
-            if(keepWidgetsOpenFor.indexOf(type) === -1) {
+            if (keepWidgetsOpenFor.indexOf(type) === -1) {
                 this.outgoingPackets.closeActiveWidgets();
                 this._activeWidget = null;
             }
@@ -278,9 +279,11 @@ export class Player extends Actor {
 
         this._loginDate = new Date();
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
-
+        if(this.rights === Rights.ADMIN) {
+            this.sendCommandList(commandInteractions);
+        }
         new Promise(resolve => {
-            playerInitPlugins.forEach(plugin => plugin.action({ player: this }));
+            playerInitPlugins.forEach(plugin => plugin.action({player: this}));
             resolve();
         }).then(() => {
             this.outgoingPackets.flushQueue();
@@ -289,7 +292,7 @@ export class Player extends Actor {
     }
 
     public logout(): void {
-        if(!this.loggedIn) {
+        if (!this.loggedIn) {
             return;
         }
 
@@ -311,7 +314,7 @@ export class Player extends Actor {
      */
     public chunkChanged(chunk: Chunk): void {
         const nearbyChunks = world.chunkManager.getSurroundingChunks(chunk);
-        if(this._nearbyChunks.length === 0) {
+        if (this._nearbyChunks.length === 0) {
             this.sendChunkUpdates(nearbyChunks);
         } else {
             const newChunks = nearbyChunks.filter(c1 => this._nearbyChunks.findIndex(c2 => c1.equals(c2)) === -1);
@@ -331,19 +334,19 @@ export class Player extends Actor {
 
             const chunkUpdateItems: ChunkUpdateItem[] = [];
 
-            if(chunk.removedLocationObjects.size !== 0) {
-                chunk.removedLocationObjects.forEach(object => chunkUpdateItems.push({ object, type: 'REMOVE' }));
+            if (chunk.removedLocationObjects.size !== 0) {
+                chunk.removedLocationObjects.forEach(object => chunkUpdateItems.push({object, type: 'REMOVE'}));
             }
 
-            if(chunk.addedLocationObjects.size !== 0) {
-                chunk.addedLocationObjects.forEach(object => chunkUpdateItems.push({ object, type: 'ADD' }));
+            if (chunk.addedLocationObjects.size !== 0) {
+                chunk.addedLocationObjects.forEach(object => chunkUpdateItems.push({object, type: 'ADD'}));
             }
 
-            if(chunk.worldItems.size !== 0) {
+            if (chunk.worldItems.size !== 0) {
                 chunk.worldItems.forEach(worldItemList => {
-                    if(worldItemList && worldItemList.length !== 0) {
+                    if (worldItemList && worldItemList.length !== 0) {
                         worldItemList.forEach(worldItem => {
-                            if(!worldItem.initiallyVisibleTo || worldItem.initiallyVisibleTo.equals(this)) {
+                            if (!worldItem.initiallyVisibleTo || worldItem.initiallyVisibleTo.equals(this)) {
                                 chunkUpdateItems.push({worldItem, type: 'ADD'});
                             }
                         });
@@ -351,7 +354,7 @@ export class Player extends Actor {
                 });
             }
 
-            if(chunkUpdateItems.length !== 0) {
+            if (chunkUpdateItems.length !== 0) {
                 this.outgoingPackets.updateChunk(chunk, chunkUpdateItems);
             }
         });
@@ -361,7 +364,7 @@ export class Player extends Actor {
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
 
-            if(this.updateFlags.mapRegionUpdateRequired) {
+            if (this.updateFlags.mapRegionUpdateRequired) {
                 this.outgoingPackets.updateCurrentMapChunk();
             }
 
@@ -370,7 +373,7 @@ export class Player extends Actor {
     }
 
     public async update(): Promise<void> {
-        await Promise.all([ this.playerUpdateTask.execute(), this.npcUpdateTask.execute() ]);
+        await Promise.all([this.playerUpdateTask.execute(), this.npcUpdateTask.execute()]);
     }
 
     public async reset(): Promise<void> {
@@ -379,15 +382,15 @@ export class Player extends Actor {
 
             this.outgoingPackets.flushQueue();
 
-            if(this.metadata['updateChunk']) {
-                const { newChunk, oldChunk } = this.metadata['updateChunk'];
+            if (this.metadata['updateChunk']) {
+                const {newChunk, oldChunk} = this.metadata['updateChunk'];
                 oldChunk.removePlayer(this);
                 newChunk.addPlayer(this);
                 this.chunkChanged(newChunk);
                 this.metadata['updateChunk'] = null;
             }
 
-            if(this.metadata['teleporting']) {
+            if (this.metadata['teleporting']) {
                 this.metadata['teleporting'] = null;
             }
 
@@ -406,12 +409,12 @@ export class Player extends Actor {
             const playerQuest = this.quests.find(quest => quest.questId === questData.id);
             let stage = 'NOT_STARTED';
             let color = colors.red;
-            if(playerQuest && playerQuest.stage) {
+            if (playerQuest && playerQuest.stage) {
                 stage = playerQuest.stage;
                 color = stage === 'COMPLETE' ? colors.green : colors.yellow;
             }
 
-            this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: color });
+            this.modifyWidget(widgets.questTab, {childId: questData.questTabId, textColor: color});
         });
     }
 
@@ -421,20 +424,21 @@ export class Player extends Actor {
     public getQuestPoints(): number {
         let questPoints = 0;
 
-        if(this.quests && this.quests.length !== 0) {
+        if (this.quests && this.quests.length !== 0) {
             this.quests.filter(quest => quest.stage === 'COMPLETE')
                 .forEach(quest => questPoints += quests[quest.questId].points);
         }
 
         return questPoints;
     }
+
     /**
      * Fetches a player's quest progression details.
      * @param questId The ID of the quest to find the player's status on.
      */
     public getQuest(questId: string): QuestProgress {
         let playerQuest = this.quests.find(quest => quest.questId === questId);
-        if(!playerQuest) {
+        if (!playerQuest) {
             playerQuest = {
                 questId,
                 stage: 'NOT_STARTED',
@@ -456,7 +460,7 @@ export class Player extends Actor {
         const questData = quests[questId];
 
         let playerQuest = this.quests.find(quest => quest.questId === questId);
-        if(!playerQuest) {
+        if (!playerQuest) {
             playerQuest = {
                 questId,
                 stage: 'NOT_STARTED',
@@ -466,25 +470,28 @@ export class Player extends Actor {
             this.quests.push(playerQuest);
         }
 
-        if(playerQuest.stage === 'NOT_STARTED' && stage !== 'COMPLETE') {
-            this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
-        } else if(playerQuest.stage !== 'COMPLETE' && stage === 'COMPLETE') {
+        if (playerQuest.stage === 'NOT_STARTED' && stage !== 'COMPLETE') {
+            this.modifyWidget(widgets.questTab, {childId: questData.questTabId, textColor: colors.yellow});
+        } else if (playerQuest.stage !== 'COMPLETE' && stage === 'COMPLETE') {
             this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, questData.points + this.getQuestPoints());
-            this.modifyWidget(widgets.questReward, { childId: 2, text: `You have completed ${questData.name}!` });
-            this.modifyWidget(widgets.questReward, { childId: 8, text: `${questData.points} Quest Point${questData.points > 1 ? 's' : ''}` });
+            this.modifyWidget(widgets.questReward, {childId: 2, text: `You have completed ${questData.name}!`});
+            this.modifyWidget(widgets.questReward, {
+                childId: 8,
+                text: `${questData.points} Quest Point${questData.points > 1 ? 's' : ''}`
+            });
 
-            for(let i = 0; i < 5; i++) {
-                if(i >= questData.completion.rewards.length) {
-                    this.modifyWidget(widgets.questReward, { childId: 9 + i, text: '' });
+            for (let i = 0; i < 5; i++) {
+                if (i >= questData.completion.rewards.length) {
+                    this.modifyWidget(widgets.questReward, {childId: 9 + i, text: ''});
                 } else {
-                    this.modifyWidget(widgets.questReward, { childId: 9 + i, text: questData.completion.rewards[i] });
+                    this.modifyWidget(widgets.questReward, {childId: 9 + i, text: questData.completion.rewards[i]});
                 }
             }
 
-            if(questData.completion.itemId) {
+            if (questData.completion.itemId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3,
                     (cache.itemDefinitions.get(questData.completion.itemId) as ItemDefinition).inventoryModelId);
-            } else if(questData.completion.modelId) {
+            } else if (questData.completion.modelId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.completion.modelId);
             }
 
@@ -498,7 +505,7 @@ export class Player extends Actor {
                 closeOnWalk: true
             };
 
-            this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.green });
+            this.modifyWidget(widgets.questTab, {childId: questData.questTabId, textColor: colors.green});
 
             questData.completion.onComplete(this);
         }
@@ -512,17 +519,17 @@ export class Player extends Actor {
      * @param options The options with which to modify the widget.
      */
     public modifyWidget(widgetId: number, options: { childId?: number, text?: string, hidden?: boolean, textColor?: number }): void {
-        const { childId, text, hidden, textColor } = options;
+        const {childId, text, hidden, textColor} = options;
 
-        if(childId !== undefined) {
-            if(text !== undefined) {
+        if (childId !== undefined) {
+            if (text !== undefined) {
                 this.outgoingPackets.updateWidgetString(widgetId, childId, text);
             }
-            if(hidden !== undefined) {
+            if (hidden !== undefined) {
                 this.outgoingPackets.toggleWidgetVisibility(widgets.skillGuide, childId, hidden);
             }
-            if(textColor !== undefined) {
-                const { r, g, b } = hexToRgb(textColor);
+            if (textColor !== undefined) {
+                const {r, g, b} = hexToRgb(textColor);
                 this.outgoingPackets.updateWidgetColor(widgetId, childId, rgbTo16Bit(r, g, b));
             }
         }
@@ -554,19 +561,19 @@ export class Player extends Actor {
      * after their chat messages have been sent.
      */
     public async sendMessage(messages: string | string[], showDialogue: boolean = false): Promise<void> {
-        if(!Array.isArray(messages)) {
-            messages = [ messages ];
+        if (!Array.isArray(messages)) {
+            messages = [messages];
         }
 
-        if(!showDialogue) {
+        if (!showDialogue) {
             messages.forEach(message => this.outgoingPackets.chatboxMessage(message));
             return Promise.resolve();
         } else {
-            if(messages.length > 5) {
+            if (messages.length > 5) {
                 throw new Error(`Dialogues have a maximum of 5 lines!`);
             }
 
-            return dialogueAction(this, { type: 'TEXT', lines: messages }).then(async d => {
+            return dialogueAction(this, {type: 'TEXT', lines: messages}).then(async d => {
                 d.close();
                 return Promise.resolve();
             });
@@ -588,8 +595,8 @@ export class Player extends Actor {
         this.lastMapRegionUpdatePosition = newPosition;
         this.metadata['teleporting'] = true;
 
-        if(!oldChunk.equals(newChunk)) {
-            this.metadata['updateChunk'] = { newChunk, oldChunk };
+        if (!oldChunk.equals(newChunk)) {
+            this.metadata['updateChunk'] = {newChunk, oldChunk};
         }
     }
 
@@ -600,7 +607,7 @@ export class Player extends Actor {
     public removeFirstItem(item: number | Item): number {
         const slot = this.inventory.removeFirst(item);
 
-        if(slot === -1) {
+        if (slot === -1) {
             return -1;
         }
 
@@ -621,7 +628,7 @@ export class Player extends Actor {
 
     public giveItem(item: number | Item): boolean {
         const addedItem = this.inventory.add(item);
-        if(addedItem === null) {
+        if (addedItem === null) {
             return false;
         }
 
@@ -649,7 +656,7 @@ export class Player extends Actor {
         const oldWeight = this._carryWeight;
         this._carryWeight = Math.round(this.inventory.weight() + this.equipment.weight());
 
-        if(oldWeight !== this._carryWeight || force) {
+        if (oldWeight !== this._carryWeight || force) {
             this.outgoingPackets.updateCarryWeight(this._carryWeight);
         }
     }
@@ -691,7 +698,7 @@ export class Player extends Actor {
             // 151: {setting: 'autoRetaliateEnabled', value: false}
         };
 
-        if(!settingsMappings.hasOwnProperty(buttonId)) {
+        if (!settingsMappings.hasOwnProperty(buttonId)) {
             return;
         }
 
@@ -705,8 +712,8 @@ export class Player extends Actor {
     public updateBonuses(): void {
         this.clearBonuses();
 
-        for(const item of this._equipment.items) {
-            if(item === null) {
+        for (const item of this._equipment.items) {
+            if (item === null) {
                 continue;
             }
 
@@ -717,22 +724,22 @@ export class Player extends Actor {
     private addBonuses(item: Item): void {
         const itemData: ItemDetails = world.itemData.get(item.itemId);
 
-        if(!itemData || !itemData.equipment || !itemData.equipment.bonuses) {
+        if (!itemData || !itemData.equipment || !itemData.equipment.bonuses) {
             return;
         }
 
         const bonuses = itemData.equipment.bonuses;
 
-        if(bonuses.offencive) {
-            [ 'speed', 'stab', 'slash', 'crush', 'magic', 'ranged' ].forEach(bonus => this._bonuses.offencive[bonus] += (!bonuses.offencive.hasOwnProperty(bonus) ? 0 : bonuses.offencive[bonus]));
+        if (bonuses.offencive) {
+            ['speed', 'stab', 'slash', 'crush', 'magic', 'ranged'].forEach(bonus => this._bonuses.offencive[bonus] += (!bonuses.offencive.hasOwnProperty(bonus) ? 0 : bonuses.offencive[bonus]));
         }
 
-        if(bonuses.defencive) {
-            [ 'stab', 'slash', 'crush', 'magic', 'ranged' ].forEach(bonus => this._bonuses.defencive[bonus] += (!bonuses.defencive.hasOwnProperty(bonus) ? 0 : bonuses.defencive[bonus]));
+        if (bonuses.defencive) {
+            ['stab', 'slash', 'crush', 'magic', 'ranged'].forEach(bonus => this._bonuses.defencive[bonus] += (!bonuses.defencive.hasOwnProperty(bonus) ? 0 : bonuses.defencive[bonus]));
         }
 
-        if(bonuses.skill) {
-            [ 'strength', 'prayer' ].forEach(bonus => this._bonuses.skill[bonus] += (!bonuses.skill.hasOwnProperty(bonus) ? 0 : bonuses.skill[bonus]));
+        if (bonuses.skill) {
+            ['strength', 'prayer'].forEach(bonus => this._bonuses.skill[bonus] += (!bonuses.skill.hasOwnProperty(bonus) ? 0 : bonuses.skill[bonus]));
         }
     }
 
@@ -756,7 +763,7 @@ export class Player extends Actor {
      * @param widget The widget to queue.
      */
     public queueWidget(widget: PlayerWidget): void {
-        if(this.activeWidget === null) {
+        if (this.activeWidget === null) {
             this.activeWidget = widget;
         } else {
             this.queuedWidgets.push(widget);
@@ -764,10 +771,32 @@ export class Player extends Actor {
     }
 
     public sendLogMessage(message: string, isConsole: boolean): void {
-        if(isConsole) {
+        if (isConsole) {
             this.outgoingPackets.consoleMessage(message);
         } else {
             this.outgoingPackets.chatboxMessage(message);
+        }
+    }
+
+    public sendCommandList(commands: CommandActionPlugin[]): void {
+        for (const command of commands) {
+            let strCmd: string;
+            if (Array.isArray(command.commands)) {
+                strCmd = command.commands.join('|');
+            } else {
+                strCmd = command.commands;
+            }
+            let strHelp: string = '';
+            if (command.args) {
+                for (const arg of command.args) {
+                    if (arg.defaultValue) {
+                        strHelp = `${strHelp} \\<${arg.name} = ${arg.defaultValue}>`;
+                    } else {
+                        strHelp = `${strHelp} \\<${arg.name}>`;
+                    }
+                }
+            }
+            this.outgoingPackets.sendConsoleCommand(strCmd, strHelp);
         }
     }
 
@@ -776,8 +805,8 @@ export class Player extends Actor {
      * @param notifyClient [optional] Whether or not to notify the game client that widgets should be cleared. Defaults to true.
      */
     public closeActiveWidgets(notifyClient: boolean = true): void {
-        if(notifyClient) {
-            if(this.queuedWidgets.length !== 0) {
+        if (notifyClient) {
+            if (this.queuedWidgets.length !== 0) {
                 this.activeWidget = this.queuedWidgets.shift();
             } else {
                 this.activeWidget = null;
@@ -785,7 +814,7 @@ export class Player extends Actor {
         } else {
             this._activeWidget = null;
 
-            if(this.queuedWidgets.length !== 0) {
+            if (this.queuedWidgets.length !== 0) {
                 this.activeWidget = this.queuedWidgets.shift();
             } else {
                 this.actionsCancelled.next('keep-widgets-open');
@@ -804,11 +833,11 @@ export class Player extends Actor {
     public set position(position: Position) {
         super.position = position;
 
-        if(this.quadtreeKey !== null) {
+        if (this.quadtreeKey !== null) {
             world.playerTree.remove(this.quadtreeKey);
         }
 
-        this.quadtreeKey = { x: position.x, y: position.y, actor: this };
+        this.quadtreeKey = {x: position.x, y: position.y, actor: this};
         world.playerTree.push(this.quadtreeKey);
     }
 
@@ -861,22 +890,22 @@ export class Player extends Actor {
     }
 
     public set activeWidget(value: PlayerWidget) {
-        if(value !== null) {
-            if(value.beforeOpened !== undefined) {
+        if (value !== null) {
+            if (value.beforeOpened !== undefined) {
                 value.beforeOpened();
             }
 
-            if(value.type === 'SCREEN') {
+            if (value.type === 'SCREEN') {
                 this.outgoingPackets.showScreenWidget(value.widgetId);
-            } else if(value.type === 'CHAT') {
+            } else if (value.type === 'CHAT') {
                 this.outgoingPackets.showChatboxWidget(value.widgetId);
-            } else if(value.type === 'FULLSCREEN') {
+            } else if (value.type === 'FULLSCREEN') {
                 this.outgoingPackets.showFullscreenWidget(value.widgetId, value.secondaryWidgetId);
-            } else if(value.type === 'SCREEN_AND_TAB') {
+            } else if (value.type === 'SCREEN_AND_TAB') {
                 this.outgoingPackets.showScreenAndTabWidgets(value.widgetId, value.secondaryWidgetId);
             }
 
-            if(value.afterOpened !== undefined) {
+            if (value.afterOpened !== undefined) {
                 value.afterOpened();
             }
         } else {

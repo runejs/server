@@ -482,6 +482,13 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
+    public sendConsoleCommand(command: string, help: string): void {
+        const packet = new Packet(85, PacketType.DYNAMIC_SMALL);
+        packet.putString(command);
+        packet.putString(help);
+        this.queue(packet);
+    }
+
     public updateSkill(skillId: number, level: number, exp: number): void {
         const packet = new Packet(34);
         packet.put(level);
