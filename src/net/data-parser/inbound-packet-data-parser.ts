@@ -79,7 +79,16 @@ export class InboundPacketDataParser extends DataParser {
             this.activeBuffer.copy(packetData, 0, this.activeBuffer.readerIndex, this.activeBuffer.readerIndex + this.activePacketSize);
             this.activeBuffer.readerIndex += this.activePacketSize;
         }
-        handlePacket(this.clientConnection.player, this.activePacketId, this.activePacketSize, packetData);
+
+        try {
+            handlePacket(this.clientConnection.player, this.activePacketId, this.activePacketSize, packetData);
+        } catch(e) {
+            logger.warn(`${ this.clientConnection.player.username } was kicked for sending invalid packet ` +
+                `${ this.activePacketId }.`);
+            clearBuffer = true;
+            this.activeBuffer = null;
+            this.clientConnection.socket.destroy();
+        }
 
         if(clearBuffer) {
             this.activeBuffer = null;

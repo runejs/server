@@ -33,8 +33,7 @@ export function handlePacket(player: Player, packetId: number, packetSize: numbe
     const incomingPacket = incomingPackets.get(packetId);
 
     if(!incomingPacket) {
-        logger.info(`Unknown packet ${packetId} with size ${packetSize} received.`);
-        return;
+        throw new Error(`Unknown packet ${packetId} with size ${packetSize} received.`);
     }
 
     new Promise(resolve => {
