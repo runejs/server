@@ -50,7 +50,7 @@ const inventoryOption4 = buffer => {
 };
 
 const itemInteractionPacket = (player, packet) => {
-    const { packetId } = packet;
+    const { packetId, buffer } = packet;
     const packets = {
         38: { packetDef: option1, optionNumber: 1 },
         228: { packetDef: option2, optionNumber: 2 },
@@ -61,7 +61,7 @@ const itemInteractionPacket = (player, packet) => {
     };
 
     const packetDetails = packets[packetId];
-    const { widgetId, containerId, itemId, slot } = packetDetails.packetDef(packet);
+    const { widgetId, containerId, itemId, slot } = packetDetails.packetDef(buffer);
 
     const option = getItemOption(itemId, packetDetails.optionNumber, { widgetId, containerId });
 
