@@ -14,5 +14,6 @@ export const npcIds = {
     karim: 543,
     gillieGroats: 3807,
     ranael: 544,
-    millieMiller: 3806
+    millieMiller: 3806,
+    zaff: 546
 };
