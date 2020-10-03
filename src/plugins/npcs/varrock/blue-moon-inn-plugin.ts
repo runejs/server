@@ -43,7 +43,7 @@ const talkToBartender : npcAction = (details) => {
                             });
                         }
 
-                        // Give the cabbage.
+                        // Give the beer.
                         player.inventory.add(itemIds.beer);
                         player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
                     }
