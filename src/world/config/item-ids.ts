@@ -50,5 +50,6 @@ export const itemIds = {
     adamantiteBar: 2361,
     adamantiteOre: 449,
     runiteBar: 2363,
-    runiteOre: 451
+    runiteOre: 451,
+    beer: 1917,
 };
