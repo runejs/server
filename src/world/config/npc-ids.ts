@@ -15,5 +15,7 @@ export const npcIds = {
     gillieGroats: 3807,
     ranael: 544,
     millieMiller: 3806,
-    zaff: 546
+    zaff: 546,
+    varrockBartender: 734,
+    varrockCharlieTheCook: 794,
 };
