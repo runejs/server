@@ -194,7 +194,7 @@ export const btnAction: buttonAction = (details) => {
 export default new RunePlugin([{
     type: ActionType.OBJECT_ACTION,
     objectIds: objectIds.bankBooth,
-    options: ['use-quickly'],
+    options: ['use-quickly', 'use'],
     walkTo: true,
     action: openBankInterface
 }, {
