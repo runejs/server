@@ -1,7 +1,7 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { commandAction } from '@server/world/actor/player/action/input-command-action';
-import { cache, world } from "@server/game-server";
-import { Npc } from "@server/world/actor/npc/npc";
+import { cache, world } from '@server/game-server';
+import { Npc } from '@server/world/actor/npc/npc';
 
 const action: commandAction = (details) => {
     const {player, args} = details;
