@@ -916,15 +916,15 @@
           level: 99
     - name: Pouches
       lines:
-        - itemId: 1205
+        - itemId: 5512
           text: "Small pouch: Holds 3 extra essence"
           level: 1
-        - itemId: 1205
+        - itemId: 5510
           text: "Medium pouch: Holds 6 extra essence"
           level: 25
-        - itemId: 1205
+        - itemId: 5512
           text: "Large pouch: Holds 9 extra essence"
           level: 50
-        - itemId: 1205
+        - itemId: 5514
           text: "Giant pouch: Holds 12 extra essence"
           level: 75
