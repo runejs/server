@@ -1,15 +1,13 @@
-import {ActionType, RunePlugin} from '@server/plugins/plugin';
-import {objectIds} from '@server/world/config/object-ids';
-import {widgets, widgetScripts} from '@server/world/config/widget';
-import {objectAction} from '@server/world/actor/player/action/object-action';
-import {ItemContainer} from '@server/world/items/item-container';
-import {itemAction} from '@server/world/actor/player/action/item-action';
-import {fromNote, Item, toNote} from '@server/world/items/item';
-import {buttonAction} from '@server/world/actor/player/action/button-action';
-import {npcAction} from "@server/world/actor/player/action/npc-action";
-import {dialogue, Emote, execute} from "@server/world/actor/dialogue";
-import {Npc} from "@server/world/actor/npc/npc";
-import {cache} from "@server/game-server";
+import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { objectIds } from '@server/world/config/object-ids';
+import { widgets, widgetScripts } from '@server/world/config/widget';
+import { objectAction } from '@server/world/actor/player/action/object-action';
+import { ItemContainer } from '@server/world/items/item-container';
+import { itemAction } from '@server/world/actor/player/action/item-action';
+import { fromNote, Item, toNote } from '@server/world/items/item';
+import { buttonAction } from '@server/world/actor/player/action/button-action';
+import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
+import { npcIds } from '@server/world/config/npc-ids';
 
 const buttonIds: number[] = [
     92, // as note
@@ -203,7 +201,7 @@ export const btnAction: buttonAction = (details) => {
 const useBankBoothAction : objectAction = (details) => {
     const { player } = details;
 
-    dialogue([player, {npc: 494, key: 'banker'}], [
+    dialogue([player, {npc: npcIds.banker1, key: 'banker'}], [
         banker => [Emote.HAPPY, `Good day, how can I help you?`],
         options => [
             `I'd Like to access my bank account, please.`, [

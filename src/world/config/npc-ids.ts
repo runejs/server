@@ -18,4 +18,5 @@ export const npcIds = {
     zaff: 546,
     varrockBartender: 734,
     varrockCharlieTheCook: 794,
+    banker1: 494,
 };
