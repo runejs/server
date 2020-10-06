@@ -61,7 +61,7 @@ const itemInteractionPacket = (player, packet) => {
     };
 
     const packetDetails = packets[packetId];
-    const { widgetId, containerId, itemId, slot } = packetDetails.packetDef(packet);
+    const { widgetId, containerId, itemId, slot } = packetDetails.packetDef(packet.buffer);
 
     const option = getItemOption(itemId, packetDetails.optionNumber, { widgetId, containerId });
 
