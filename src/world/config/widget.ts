@@ -31,6 +31,12 @@ export const widgets: any = {
         containerId: 0
     },
     bank: {
+        depositBoxWidget: {
+            widgetId: 11
+        },
+        pinSettingsWidget: {
+            widgetId: 14
+        },
         screenWidget: {
             widgetId: 12,
             containerId: 89,

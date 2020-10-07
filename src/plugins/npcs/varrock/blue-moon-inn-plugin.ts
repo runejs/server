@@ -1,9 +1,9 @@
-import { ActionType, RunePlugin } from "@server/plugins/plugin";
-import { npcIds } from "@server/world/config/npc-ids";
-import { npcAction } from "@server/world/actor/player/action/npc-action";
-import { dialogue, Emote, execute } from "@server/world/actor/dialogue";
-import { itemIds } from "@server/world/config/item-ids";
-import { widgets } from "@server/world/config/widget";
+import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { npcIds } from '@server/world/config/npc-ids';
+import { npcAction } from '@server/world/actor/player/action/npc-action';
+import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
+import { itemIds } from '@server/world/config/item-ids';
+import { widgets } from '@server/world/config/widget';
 
 
 const talkToBartender : npcAction = (details) => {
@@ -165,4 +165,4 @@ export default new RunePlugin([{
     type: ActionType.NPC_ACTION,
     npcIds: npcIds.varrockCharlieTheCook,
     action: talkToCook
-}])
+}]);

@@ -36,7 +36,7 @@ const talkToAction : npcAction = (details) => {
 
         ]
     ]);
-}
+};
 
 export default new RunePlugin([{
     type: ActionType.NPC_ACTION,
