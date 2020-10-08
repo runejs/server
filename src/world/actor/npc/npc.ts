@@ -4,10 +4,11 @@ import { NpcDefinition } from '@runejs/cache-parser';
 import uuidv4 from 'uuid/v4';
 import { Position } from '@server/world/position';
 import { world } from '@server/game-server';
-import { Direction, directionData } from '@server/world/direction';
+import { directionData } from '@server/world/direction';
 import { QuadtreeKey } from '@server/world/world';
 import { ActionPlugin } from '@server/plugins/plugin';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
+import { schedule } from '@server/task/task';
 
 interface NpcAnimations {
     walk: number;
@@ -47,6 +48,8 @@ export class Npc extends Actor {
     public readonly initialPosition: Position;
     private quadtreeKey: QuadtreeKey = null;
     private _exists: boolean = true;
+    private npcSpawn: NpcSpawn;
+    private cacheData: NpcDefinition;
 
     public constructor(npcSpawn: NpcSpawn, cacheData: NpcDefinition) {
         super();
@@ -58,6 +61,8 @@ export class Npc extends Actor {
         this.options = cacheData.options;
         this.position = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
         this.initialPosition = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
+        this.npcSpawn = npcSpawn;
+        this.cacheData = cacheData;
 
         if(npcSpawn.radius) {
             this._movementRadius = npcSpawn.radius;
@@ -78,6 +83,16 @@ export class Npc extends Actor {
                 .forEach(plugin => plugin.action({npc: this}));
             resolve();
         });
+    }
+
+    public kill(respawn: boolean = true): void {
+        world.chunkManager.getChunkForWorldPosition(this.position).removeNpc(this);
+        clearInterval(this.randomMovementInterval);
+        world.deregisterNpc(this);
+
+        if(respawn) {
+            world.scheduleNpcRespawn(new Npc(this.npcSpawn, this.cacheData));
+        }
     }
 
     public async tick(): Promise<void> {
@@ -106,7 +121,7 @@ export class Npc extends Actor {
      * Whether or not the Npc can currently move.
      */
     public canMove(): boolean {
-        if(this.metadata['following']) {
+        if(this.metadata.following || this.metadata.tailing) {
             return false;
         }
         return this.updateFlags.faceActor === undefined && this.updateFlags.animation === undefined;

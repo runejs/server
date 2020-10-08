@@ -4,6 +4,7 @@ export const itemIds = {
     bucketOfMilk: 1927,
     bucketOfWater: 1929,
     ashes: 592,
+    bones: 526,
     tinderbox: 590,
     logs: 1511,
     jug: 1935,

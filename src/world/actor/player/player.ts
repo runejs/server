@@ -255,7 +255,7 @@ export class Player extends Actor {
             };
         }
 
-        for (const playerOption of playerOptions) {
+        for(const playerOption of playerOptions) {
             this.outgoingPackets.updatePlayerOption(playerOption.option, playerOption.index, playerOption.placement);
         }
         this.updateBonuses();
@@ -622,7 +622,6 @@ export class Player extends Actor {
 
     public removeItem(slot: number): void {
         this.inventory.remove(slot);
-
         this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, slot, null);
     }
 

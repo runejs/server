@@ -24,6 +24,7 @@ export abstract class Actor {
     public readonly movementEvent: Subject<Position>;
     public pathfinding: Pathfinding;
     public lastMovementPosition: Position;
+    protected randomMovementInterval;
     private readonly _walkingQueue: WalkingQueue;
     private readonly _inventory: ItemContainer;
     private readonly _bank: ItemContainer;
@@ -77,6 +78,21 @@ export abstract class Actor {
         return true;
     }
 
+    public async moveTo(target: Actor): Promise<boolean> {
+        const distance = Math.floor(this.position.distanceBetween(target.position));
+        if(distance > 16) {
+            this.clearFaceActor();
+            return false;
+        }
+
+        await this.pathfinding.walkTo(target.position, {
+            pathingSearchRadius: distance + 2,
+            ignoreDestination: true
+        });
+
+        return true;
+    }
+
     public follow(target: Actor): void {
         this.face(target, false, false, false);
         this.metadata['following'] = target;
@@ -120,8 +136,14 @@ export abstract class Actor {
     public tail(target: Actor): void {
         this.face(target, false, false, false);
 
-        this.walkTo(target);
-        const subscription = target.movementEvent.subscribe(() => this.walkTo(target));
+        if(this.metadata.tailing && this.metadata.tailing.equals(target)) {
+            return;
+        }
+
+        this.metadata['tailing'] = target;
+
+        this.moveTo(target);
+        const subscription = target.movementEvent.subscribe(() => this.moveTo(target));
 
         this.actionsCancelled.pipe(
             filter(type => type !== 'pathing-movement'),
@@ -129,6 +151,7 @@ export abstract class Actor {
         ).subscribe(() => {
             subscription.unsubscribe();
             this.face(null);
+            delete this.metadata['tailing'];
         });
     }
 
@@ -213,7 +236,7 @@ export abstract class Actor {
     }
 
     public initiateRandomMovement(): void {
-        setInterval(() => {
+        this.randomMovementInterval = setInterval(() => {
             if(!this.canMove()) {
                 return;
             }

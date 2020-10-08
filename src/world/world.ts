@@ -111,7 +111,10 @@ export class World {
      * @param expires [optional] The amount of game ticks/cycles before the world item will be automatically deleted
      * from the world. If not provided, it will remain within the game world forever.
      */
-    public spawnWorldItem(item: Item, position: Position, initiallyVisibleTo?: Player, expires?: number): WorldItem {
+    public spawnWorldItem(item: Item | number, position: Position, initiallyVisibleTo?: Player, expires?: number): WorldItem {
+        if(typeof item === 'number') {
+            item = { itemId: item, amount: 1 };
+        }
         const chunk = this.chunkManager.getChunkForWorldPosition(position);
         const worldItem: WorldItem = {
             itemId: item.itemId,
@@ -480,6 +483,11 @@ export class World {
 
         setTimeout(() => this.worldTick(), delay);
         return Promise.resolve();
+    }
+
+    public async scheduleNpcRespawn(npc: Npc): Promise<void> {
+        await schedule(10);
+        this.registerNpc(npc);
     }
 
     public playerOnline(player: Player | string): boolean {

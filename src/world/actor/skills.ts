@@ -142,6 +142,10 @@ export class Skills extends SkillShortcuts {
         }
     }
 
+    public setHitpoints(hitpoints: number): void {
+        this.setLevel(Skill.HITPOINTS, hitpoints);
+    }
+
     public getLevel(skill: number | SkillName, ignoreLevelModifications: boolean = false): number {
         const s = this.get(skill);
         return (s.modifiedLevel !== undefined && !ignoreLevelModifications ? s.modifiedLevel : s.level);
