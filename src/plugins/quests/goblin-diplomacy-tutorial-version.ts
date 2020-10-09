@@ -69,6 +69,8 @@ const stageHandler: { [key: number]: (player: Player) => void } = {
     15: player => {
         npcHint(player, npcIds.questGuide);
 
+        player.outgoingPackets.sendTabWidget(Tabs.settings, widgets.settingsTab);
+
         if(!player.activeWidget) {
             dialogue([ player ], [
                 titled => [ `Getting Started`, `\nSpeak with the Guide to continue.` ]
@@ -161,6 +163,48 @@ const stageHandler: { [key: number]: (player: Player) => void } = {
                 permanent: true
             });
         }
+    },
+    40: player => {
+        player.metadata.tabClickEvent = {
+            tabIndex: Tabs.music,
+            event: new Subject<boolean>()
+        };
+        dialogue([ player ], [
+            titled => [ `Music`, `Check out the music tab to view and play all of your favorite old-school RuneScape tracks!\nOnce you've unlocked them, of course.` ]
+        ], {
+            permanent: true
+        });
+
+        player.outgoingPackets.sendTabWidget(Tabs.settings, widgets.settingsTab);
+        player.outgoingPackets.sendTabWidget(Tabs.friends, widgets.friendsList);
+        player.outgoingPackets.sendTabWidget(Tabs.ignoreList, widgets.ignoreList);
+        player.outgoingPackets.sendTabWidget(Tabs.emotes, widgets.emotesTab);
+        player.outgoingPackets.sendTabWidget(Tabs.music, widgets.musicPlayerTab);
+        player.outgoingPackets.blinkTabIcon(Tabs.music);
+
+        player.metadata.tabClickEvent.event.pipe(take(1)).subscribe(() => {
+            player.savedMetadata.tutorialProgress = 45;
+            player.metadata.tabClickEvent.event.complete();
+            delete player.metadata.tabClickEvent;
+            handleTutorial(player);
+        });
+    },
+    45: player => {
+        npcHint(player, npcIds.questGuide);
+
+        player.outgoingPackets.sendTabWidget(Tabs.settings, widgets.settingsTab);
+        player.outgoingPackets.sendTabWidget(Tabs.friends, widgets.friendsList);
+        player.outgoingPackets.sendTabWidget(Tabs.ignoreList, widgets.ignoreList);
+        player.outgoingPackets.sendTabWidget(Tabs.emotes, widgets.emotesTab);
+        player.outgoingPackets.sendTabWidget(Tabs.music, widgets.musicPlayerTab);
+
+        if(!player.activeWidget) {
+            dialogue([ player ], [
+                titled => [ `Continue`, `\nSpeak with the Guide to continue.` ]
+            ], {
+                permanent: true
+            });
+        }
     }
 };
 
@@ -221,7 +265,14 @@ const guideDialogueHandler: { [key: number]: (player: Player, npc: Npc) => void 
     35: async (player, npc) => {
         await dialogue([ player, { npc, key: 'guide' } ], [
             player => [ Emote.HAPPY, `I've gone through the Friends List and everything. When do I get to kill things?` ],
-            guide => [ Emote.LAUGH, `All in good time, ${player.username}. We've a little more to discuss yet.` ]
+            guide => [ Emote.LAUGH, `All in good time, ${player.username}. We've a little more to discuss yet - like music!` ],
+            player => [ Emote.SKEPTICAL, `Music? Doesn't everyone turn that off?` ],
+            guide => [ Emote.SAD, `Some people find it nostalgic.` ],
+            player => [ Emote.SAD, `Sorry, go on...` ],
+            guide => [ Emote.GENERIC, `Yes... As I was saying... Music can be accessed from the music tab.`],
+            execute(() => {
+                player.savedMetadata.tutorialProgress = 40;
+            })
         ]);
     }
 };
