@@ -116,15 +116,21 @@ class Combat {
             defenderRemainingHealth = 0;
         }
 
+        // Animate attacking the opponent and play the sound of them defending
         attacker.playAnimation(animationIds.combat.punch);
         world.playLocationSound(defender.position, defender instanceof Player ? soundIds.npc.human.playerDefence :
             soundIds.npc.human.maleDefence, 5);
+
+        // Set the opponent's new remaining hitpoints and their damage flag
         defender.skills.setHitpoints(defenderRemainingHealth);
         defender.updateFlags.addDamage(actualHit, actualHit === 0 ? DamageType.NO_DAMAGE : DamageType.DAMAGE,
             defenderRemainingHealth, defenderMaxHealth);
+
+        // Play the sound of the defender being hit or blocking
         world.playLocationSound(defender.position, defender instanceof Player ? soundIds.npc.human.noArmorHitPlayer :
             soundIds.npc.human.noArmorHit, 5);
 
+        // Kill the defender if their hitpoints are zero, otherwise play an animation of them blocking the hit
         if(defenderRemainingHealth === 0) {
             this.processDeath(defender);
         } else {

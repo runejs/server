@@ -19,7 +19,7 @@ import { EquipmentBonuses, ItemDetails } from '../../config/item-data';
 import { Item } from '../../items/item';
 import { Npc } from '../npc/npc';
 import { NpcUpdateTask } from './updating/npc-update-task';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { QuadtreeKey } from '@server/world/world';
 import { daysSinceLastLogin } from '@server/util/time';
@@ -30,8 +30,8 @@ import { songs } from '@server/world/config/songs';
 import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 import { quests } from '@server/world/config/quests';
 import { ItemDefinition } from '@runejs/cache-parser';
-import { ActionCancelType } from '@server/world/actor/player/action/action';
 import { CommandActionPlugin, commandInteractions } from '@server/world/actor/player/action/input-command-action';
+import { take } from 'rxjs/operators';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -46,10 +46,28 @@ export const playerOptions: { option: string, index: number, placement: 'TOP' | 
     }
 ];
 
-const DEFAULT_TAB_WIDGET_IDS = [
-    92, widgets.skillsTab, 274, widgets.inventory.widgetId, widgets.equipment.widgetId, 271, 192, -1, 131, 148,
-    widgets.logoutTab, widgets.settingsTab, widgets.emotesTab, 239
+export const DEFAULT_TAB_WIDGET_IDS = [
+    widgets.defaultCombatStyle, widgets.skillsTab, widgets.questTab, widgets.inventory.widgetId,
+    widgets.equipment.widgetId, widgets.prayerTab, widgets.standardSpellbookTab, -1,
+    widgets.friendsList, widgets.ignoreList, widgets.logoutTab, widgets.settingsTab, widgets.emotesTab,
+    widgets.musicPlayerTab
 ];
+
+export enum Tabs {
+    combatStyle = 0,
+    skills = 1,
+    quests = 2,
+    inventory = 3,
+    equipment = 4,
+    prayers = 5,
+    magic = 6,
+    friends = 8,
+    ignoreList = 9,
+    logout = 10,
+    settings = 11,
+    emotes = 12,
+    music = 13
+}
 
 export enum Rights {
     ADMIN = 2,
@@ -180,18 +198,21 @@ export class Player extends Actor {
             this._lastAddress = playerSave.lastLogin?.address || (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
         } else {
             // Brand new player logging in
-            this.position = new Position(3222, 3222);
-            this.inventory.add({itemId: 1351, amount: 1});
+            this.position = new Position(3231, 3239);
+            /*this.inventory.add({itemId: 1351, amount: 1});
             this.inventory.add({itemId: 1048, amount: 1});
             this.inventory.add({itemId: 6623, amount: 1});
             this.inventory.add({itemId: 1079, amount: 1});
             this.inventory.add({itemId: 1127, amount: 1});
             this.inventory.add({itemId: 1303, amount: 1});
             this.inventory.add({itemId: 1319, amount: 1});
-            this.inventory.add({itemId: 1201, amount: 1});
+            this.inventory.add({itemId: 1201, amount: 1});*/
             this._appearance = defaultAppearance();
             this._rights = Rights.USER;
-            this.savedMetadata = {};
+            this.savedMetadata = {
+                tutorialProgress: 0,
+                tutorialComplete: false
+            };
         }
 
         if (!this._settings) {
@@ -211,24 +232,26 @@ export class Player extends Actor {
         this.chunkChanged(playerChunk);
         this.outgoingPackets.chatboxMessage('Welcome to RuneJS #435.');
 
-        DEFAULT_TAB_WIDGET_IDS.forEach((widgetId: number, tabIndex: number) => {
-            if (widgetId !== -1) {
-                this.outgoingPackets.sendTabWidget(tabIndex, widgetId);
-            }
-        });
+        if(this.savedMetadata.tutorialComplete) {
+            DEFAULT_TAB_WIDGET_IDS.forEach((widgetId: number, tabIndex: number) => {
+                if(widgetId !== -1) {
+                    this.outgoingPackets.sendTabWidget(tabIndex, widgetId);
+                }
+            });
+        }
 
         this.skills.values.forEach((skill, index) => this.outgoingPackets.updateSkill(index, skill.level, skill.exp));
 
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
 
-        if (this.firstTimePlayer) {
-            this.activeWidget = {
+        if(this.firstTimePlayer) {
+            /*this.activeWidget = {
                 widgetId: widgets.characterDesign,
                 type: 'SCREEN',
                 disablePlayerMovement: true
-            };
-        } else if (serverConfig.showWelcome) {
+            };*/
+        } else if(serverConfig.showWelcome && this.savedMetadata.tutorialComplete) {
             const daysSinceLogin = daysSinceLastLogin(this.loginDate);
             let loginDaysStr = '';
 
@@ -258,6 +281,7 @@ export class Player extends Actor {
         for(const playerOption of playerOptions) {
             this.outgoingPackets.updatePlayerOption(playerOption.option, playerOption.index, playerOption.placement);
         }
+
         this.updateBonuses();
         this.updateCarryWeight(true);
         this.modifyWidget(widgets.musicPlayerTab, {childId: 82, textColor: colors.green}); // Set "Harmony" to green/unlocked on the music tab
@@ -267,11 +291,30 @@ export class Player extends Actor {
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
 
         this.actionsCancelled.subscribe(type => {
-            const keepWidgetsOpenFor = [
-                'keep-widgets-open', 'pathing-movement'
-            ];
+            let closeWidget = false;
 
-            if (keepWidgetsOpenFor.indexOf(type) === -1) {
+            const widget = this.activeWidget;
+
+            if(widget && !widget.permanent) {
+                if(type === 'manual-movement' || type === 'pathing-movement') {
+                    if(widget.closeOnWalk) {
+                        closeWidget = true;
+                    }
+                } else if(type === 'keep-widgets-open' || type === 'button' || type === 'widget') {
+                    closeWidget = false;
+                } else {
+                    closeWidget = true;
+                }
+            }
+
+            if(closeWidget) {
+                widget.closed.next();
+                widget.closed.complete();
+
+                if(widget.forceClosed !== undefined) {
+                    widget.forceClosed();
+                }
+
                 this.outgoingPackets.closeActiveWidgets();
                 this._activeWidget = null;
             }
@@ -279,9 +322,11 @@ export class Player extends Actor {
 
         this._loginDate = new Date();
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
+
         if(this.rights === Rights.ADMIN) {
             this.sendCommandList(commandInteractions);
         }
+
         new Promise(resolve => {
             playerInitPlugins.forEach(plugin => plugin.action({player: this}));
             resolve();
@@ -299,12 +344,37 @@ export class Player extends Actor {
         world.playerTree.remove(this.quadtreeKey);
         savePlayerData(this);
 
+        this.actionsCancelled.complete();
+        this.movementEvent.complete();
         this.outgoingPackets.logout();
         world.chunkManager.getChunkForWorldPosition(this.position).removePlayer(this);
         world.deregisterPlayer(this);
         this.loggedIn = false;
 
         logger.info(`${this.username} has logged out.`);
+    }
+
+    public openInteractiveWidget(widget: PlayerWidget): Observable<number> {
+        const subject = new Subject<number>();
+        this.activeWidget = widget;
+
+        this.actionsCancelled.pipe(take(1)).subscribe(() => {
+            subject.next(-1);
+            subject.complete();
+        });
+
+        this.metadata.buttonListener = {
+            widgetId: widget.widgetId,
+            event: new Subject<number>()
+        };
+
+        this.metadata.buttonListener.event.pipe(take(1)).subscribe(buttonId => {
+            delete this.metadata.buttonListener;
+            subject.next(buttonId);
+            subject.complete();
+        });
+
+        return subject.asObservable();
     }
 
     /**
@@ -561,19 +631,19 @@ export class Player extends Actor {
      * after their chat messages have been sent.
      */
     public async sendMessage(messages: string | string[], showDialogue: boolean = false): Promise<void> {
-        if (!Array.isArray(messages)) {
+        if(!Array.isArray(messages)) {
             messages = [messages];
         }
 
-        if (!showDialogue) {
+        if(!showDialogue) {
             messages.forEach(message => this.outgoingPackets.chatboxMessage(message));
             return Promise.resolve();
         } else {
-            if (messages.length > 5) {
+            if(messages.length > 5) {
                 throw new Error(`Dialogues have a maximum of 5 lines!`);
             }
 
-            return dialogueAction(this, {type: 'TEXT', lines: messages}).then(async d => {
+            return dialogueAction(this, { type: 'TEXT', lines: messages }).then(async d => {
                 d.close();
                 return Promise.resolve();
             });
@@ -889,7 +959,9 @@ export class Player extends Actor {
     }
 
     public set activeWidget(value: PlayerWidget) {
-        if (value !== null) {
+        if(value !== null) {
+            value.closed = new Subject<void>();
+
             if (value.beforeOpened !== undefined) {
                 value.beforeOpened();
             }

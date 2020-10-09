@@ -86,7 +86,7 @@ export const widgetAction = (player: Player, widgetId: number, childId: number, 
     // Immediately run the plugins
     interactionActions.forEach(plugin => {
         if(plugin.cancelActions) {
-            player.actionsCancelled.next();
+            player.actionsCancelled.next('widget');
         }
 
         plugin.action({ player, widgetId, childId, optionId });

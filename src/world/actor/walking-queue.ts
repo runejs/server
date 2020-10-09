@@ -142,12 +142,6 @@ export class WalkingQueue {
                 if(activeWidget.disablePlayerMovement) {
                     this.resetDirections();
                     return;
-                } else if(activeWidget.closeOnWalk) {
-                    if(activeWidget.forceClosed !== undefined) {
-                        activeWidget.forceClosed();
-                    }
-
-                    this.actor.activeWidget = null;
                 }
             }
         }

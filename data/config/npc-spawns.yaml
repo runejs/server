@@ -83,6 +83,12 @@
   y: 3432
   radius: 2
 
+# Lumbridge
+- npcId: 945 # RuneScape Guide
+  x: 3230
+  y: 3238
+  radius: 1
+
 # Varrock - The Blue Moon Inn
 - npcId: 17 # Barbarian woman (level: 8)
   x: 3224

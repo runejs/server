@@ -8,6 +8,7 @@ import { LocationObject } from '@runejs/cache-parser';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { WorldItem } from '@server/world/items/world-item';
 import { ByteBuffer } from '@runejs/byte-buffer';
+import { Npc } from '@server/world/actor/npc/npc';
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -413,6 +414,12 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
+    public blinkTabIcon(tabIndex: number): void {
+        const packet = new Packet(88);
+        packet.put(tabIndex);
+        this.queue(packet);
+    }
+
     public showFullscreenWidget(widgetId: number, secondaryWidgetId: number): void {
         const packet = new Packet(195);
         packet.put(secondaryWidgetId, 'SHORT');
@@ -439,7 +446,7 @@ export class OutboundPackets {
     }
 
     public showHintIcon(iconType: 2 | 3 | 4 | 5 | 6, position: Position, offset: number = 0): void {
-        const packet = new Packet(199);
+        const packet = new Packet(186);
         packet.put(iconType, 'BYTE');
         packet.put(position.x, 'SHORT');
         packet.put(position.y, 'SHORT');
@@ -449,9 +456,35 @@ export class OutboundPackets {
     }
 
     public showPlayerHintIcon(player: Player): void {
-        const packet = new Packet(199);
+        const packet = new Packet(186);
         packet.put(10, 'BYTE');
         packet.put(player.worldIndex, 'SHORT');
+
+        // Packet requires a length of 6, so send some extra junk
+        packet.put(0);
+        packet.put(0);
+        packet.put(0);
+
+        this.queue(packet);
+    }
+
+    public showNpcHintIcon(npc: Npc): void {
+        const packet = new Packet(186);
+        packet.put(1, 'BYTE');
+        packet.put(npc.worldIndex, 'SHORT');
+
+        // Packet requires a length of 6, so send some extra junk
+        packet.put(0);
+        packet.put(0);
+        packet.put(0);
+
+        this.queue(packet);
+    }
+
+    public resetNpcHintIcon(): void {
+        const packet = new Packet(186);
+        packet.put(1, 'BYTE');
+        packet.put(-1, 'SHORT');
 
         // Packet requires a length of 6, so send some extra junk
         packet.put(0);
