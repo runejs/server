@@ -15,7 +15,7 @@ import {
 } from './player-data';
 import { PlayerWidget, widgets, widgetScripts } from '../../config/widget';
 import { ContainerUpdateEvent, ItemContainer } from '../../items/item-container';
-import { EquipmentBonuses, ItemDetails } from '../../config/item-data';
+import { EquipmentBonuses, EquipmentSlot,ItemDetails } from '@server/world/config/item-data';
 import { Item } from '../../items/item';
 import { Npc } from '../npc/npc';
 import { NpcUpdateTask } from './updating/npc-update-task';
@@ -638,6 +638,10 @@ export class Player extends Actor {
 
     public hasItemInEquipment(item: number | Item): boolean {
         return this._equipment.has(item);
+    }
+
+    public getItemInEquipmentSlot(slot: string) {
+        return this._equipment.items[EquipmentSlot[slot]];
     }
 
     public hasItemOnPerson(item: number | Item): boolean {
