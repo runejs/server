@@ -290,7 +290,6 @@ export class Player extends Actor {
         this.modifyWidget(widgets.musicPlayerTab, { childId: 82, textColor: colors.green }); // Set "Harmony" to green/unlocked on the music tab
         this.playSong(songs.harmony);
         this.updateQuestTab();
-        this.updateFriendList();
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
 
@@ -358,20 +357,8 @@ export class Player extends Actor {
         logger.info(`${this.username} has logged out.`);
     }
 
-    public privateMessageReceived(fromPlayer: string, messageBytes: number[]): void {
+    public privateMessageReceived(fromPlayer: Player, messageBytes: number[]): void {
         this.outgoingPackets.sendPrivateMessage(this.privateMessageIndex++, fromPlayer, messageBytes);
-    }
-
-    public updateFriendList(): void {
-        for(const friend of this.friendsList) {
-            if(world.playerOnline(friend)) {
-                this.outgoingPackets.updateFriendStatus(friend, 1); // @TODO proper world id
-            } else {
-                this.outgoingPackets.updateFriendStatus(friend, 0);
-            }
-        }
-
-        this.outgoingPackets.sendFriendServerStatus(2);
     }
 
     public addFriend(friendName: string): boolean {
@@ -380,8 +367,8 @@ export class Player extends Actor {
         }
 
         friendName = friendName.toLowerCase();
-        // @TODO emit event to friend service watcher
-        return this.friendsList.findIndex(friend => friend === friendName) === -1;
+        this.friendsList.push(friendName);
+        return true;
     }
 
     public removeFriend(friendName: string): boolean {
@@ -391,7 +378,6 @@ export class Player extends Actor {
             return false;
         }
 
-        // @TODO emit event to friend service watcher
         this.friendsList.splice(index, 1);
         return true;
     }

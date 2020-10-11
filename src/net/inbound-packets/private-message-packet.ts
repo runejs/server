@@ -18,7 +18,7 @@ export default {
 
         const otherPlayer = world.findActivePlayerByUsername(username);
         if(otherPlayer) {
-            otherPlayer.privateMessageReceived(player.username, messageBytes);
+            otherPlayer.privateMessageReceived(player, messageBytes);
         }
     }
 };

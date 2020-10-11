@@ -28,12 +28,12 @@ export class OutboundPackets {
         this.socket = player.socket;
     }
 
-    public sendPrivateMessage(chatId: number, sender: string, message: number[]): void {
+    public sendPrivateMessage(chatId: number, sender: Player, message: number[]): void {
         const packet = new Packet(51, PacketType.DYNAMIC_SMALL);
-        packet.put(stringToLong(sender.toLowerCase()), 'LONG');
-        packet.put(chatId, 'INT');
-        packet.put(0); // @TODO other player's rights/role
-        packet.put(0); // @TODO other player's rights/role
+        packet.put(stringToLong(sender.username.toLowerCase()), 'LONG');
+        packet.put(32767, 'SHORT');
+        packet.put(chatId, 'INT24');
+        packet.put(sender.rights);
         packet.putBytes(Buffer.from(message));
         this.queue(packet);
     }
