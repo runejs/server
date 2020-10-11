@@ -403,6 +403,15 @@ export class World {
         }).map(quadree => quadree.actor as Player);
     }
 
+    /**
+     * Finds a logged in player via their username.
+     * @param username The player's username.
+     */
+    public findActivePlayerByUsername(username: string): Player {
+        username = username.toLowerCase();
+        return this.playerList.find(p => p && p.username.toLowerCase() === username);
+    }
+
     public spawnNpcs(): void {
         this.npcSpawns.forEach(npcSpawn => {
             const npcDefinition = cache.npcDefinitions.get(npcSpawn.npcId);

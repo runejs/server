@@ -33,8 +33,8 @@ export class OutboundPackets {
         packet.put(stringToLong(sender.toLowerCase()), 'LONG');
         packet.put(chatId, 'INT');
         packet.put(0); // @TODO other player's rights/role
-        packet.put(message.length, 'SMART');
-        message.forEach(char => packet.put(char));
+        packet.put(0); // @TODO other player's rights/role
+        packet.putBytes(Buffer.from(message));
         this.queue(packet);
     }
 

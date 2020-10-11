@@ -5,26 +5,20 @@ export default {
     opcode: 207,
     size: -3,
     handler: (player, packet) => {
-        const { buffer, packetSize } = packet;
+        const { buffer } = packet;
 
-        /*
-        final long usernameLong = packet.readLong();
-        final String username = StringUtil.longToUsername(usernameLong);
-        final int messageLength = packet.getLength() - 8;
-        final byte[] messageBytes = new byte[messageLength];
-        packet.getPayload().readBytes(messageBytes, 0, messageLength);
-         */
-
-        buffer.get('BYTE');
+        buffer.get('BYTE'); // junk
         const nameLong = buffer.get('LONG');
         const username = longToString(nameLong).toLowerCase();
-        const messageLength = packetSize - 8;
+        const messageLength = buffer.length - 9;
         const messageBytes = new Array(messageLength);
-        messageBytes.forEach((item, index) => messageBytes[index] = buffer.get('BYTE'));
+        for(let i = 0; i < messageLength; i++) {
+            messageBytes[i] = buffer[buffer.readerIndex + i];
+        }
 
-        const otherPlayer = world.playerList.find(p => p && p.username.toLowerCase() === username);
+        const otherPlayer = world.findActivePlayerByUsername(username);
         if(otherPlayer) {
-            otherPlayer.outgoingPackets.sendPrivateMessage(1, player.username, messageBytes);
+            otherPlayer.privateMessageReceived(player.username, messageBytes);
         }
     }
 };

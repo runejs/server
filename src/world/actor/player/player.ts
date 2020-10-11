@@ -128,6 +128,7 @@ export class Player extends Actor {
     public achievements: string[] = [];
     public friendsList: string[] = [];
     public ignoreList: string[] = [];
+    private privateMessageIndex: number = 1;
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -355,6 +356,10 @@ export class Player extends Actor {
         this.loggedIn = false;
 
         logger.info(`${this.username} has logged out.`);
+    }
+
+    public privateMessageReceived(fromPlayer: string, messageBytes: number[]): void {
+        this.outgoingPackets.sendPrivateMessage(this.privateMessageIndex++, fromPlayer, messageBytes);
     }
 
     public updateFriendList(): void {
