@@ -2,7 +2,7 @@ import { DEFAULT_TAB_WIDGET_IDS, Player, playerInitAction, Tabs } from '@server/
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { widgets } from '@server/world/config/widget';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
-import { world } from '@server/game-server';
+import { serverConfig, world } from '@server/game-server';
 import { npcIds } from '@server/world/config/npc-ids';
 import { npcAction } from '@server/world/actor/player/action/npc-action';
 import { Subject } from 'rxjs';
@@ -274,6 +274,9 @@ const guideDialogueHandler: { [key: number]: (player: Player, npc: Npc) => void 
                 player.savedMetadata.tutorialProgress = 40;
             })
         ]);
+    },
+    45: async (player, npc) => {
+
     }
 };
 
@@ -294,6 +297,10 @@ async function handleTutorial(player: Player): Promise<void> {
 }
 
 export const guideAction: npcAction = async (details) => {
+    if(!serverConfig.tutorialEnabled) {
+        return;
+    }
+
     const { player, npc } = details;
 
     const progress = player.savedMetadata.tutorialProgress;
@@ -307,6 +314,10 @@ export const guideAction: npcAction = async (details) => {
 };
 
 export const action: playerInitAction = async (details) => {
+    if(!serverConfig.tutorialEnabled) {
+        return;
+    }
+
     const { player } = details;
 
     const progress = player.savedMetadata?.tutorialProgress || 0;

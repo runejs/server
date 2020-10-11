@@ -81,6 +81,24 @@ export function stringToLong(s: string): bigint {
     return l;
 }
 
+const VALID_CHARS = ['_', 'a', 'b', 'c', 'd',
+    'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
+    'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3',
+    '4', '5', '6', '7', '8', '9', '!', '@', '#', '$', '%', '^', '&',
+    '*', '(', ')', '-', '+', '=', ':', ';', '.', '>', '<', ',', '"',
+    '[', ']', '|', '?', '/', '`'];
+
+export function longToString(l: BigInt): string {
+    let ac: string = '';
+    while(l !== BigInt(0)) {
+        const l1 = l;
+        l = BigInt(l) / BigInt(37);
+        ac += VALID_CHARS[parseInt(l1.toString()) - parseInt(l.toString()) * 37];
+    }
+
+    return ac.split('').reverse().join('');
+};
+
 export function colorText(s: string, hexColor: number): string {
     console.log(hexToHexString(hexColor));
     return `<col=${hexToHexString(hexColor)}>${s}</col>`;

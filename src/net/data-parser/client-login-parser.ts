@@ -7,24 +7,7 @@ import { logger } from '@runejs/logger';
 import { ByteBuffer } from '@runejs/byte-buffer';
 import * as bcrypt from 'bcrypt';
 import { loadPlayerSave } from '@server/world/actor/player/player-data';
-
-const VALID_CHARS = ['_', 'a', 'b', 'c', 'd',
-    'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
-    'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3',
-    '4', '5', '6', '7', '8', '9', '!', '@', '#', '$', '%', '^', '&',
-    '*', '(', ')', '-', '+', '=', ':', ';', '.', '>', '<', ',', '"',
-    '[', ']', '|', '?', '/', '`'];
-
-function longToName(nameLong: BigInt): string {
-    let ac: string = '';
-    while(nameLong !== BigInt(0)) {
-        const l1 = nameLong;
-        nameLong = BigInt(nameLong) / BigInt(37);
-        ac += VALID_CHARS[parseInt(l1.toString()) - parseInt(nameLong.toString()) * 37];
-    }
-
-    return ac.split('').reverse().join('');
-}
+import { longToString } from '@server/util/strings';
 
 /**
  * Codes for user login attempts that are sent back to the game client
@@ -104,7 +87,7 @@ export class ClientLoginParser extends DataParser {
 
         const gameClientId = decrypted.get('INT');
         const usernameLong = BigInt(decrypted.get('LONG'));
-        const username = longToName(usernameLong);
+        const username = longToString(usernameLong);
         const password = decrypted.getString();
 
         logger.info(`Login request: ${username}/${password}`);

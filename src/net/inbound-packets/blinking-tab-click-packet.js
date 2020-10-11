@@ -1,4 +1,3 @@
-
 const blinkingTabClickPacket = (player, packet) => {
     const { buffer } = packet;
     const tabIndex = buffer.get();

@@ -6,3 +6,4 @@ showWelcome: true
 expRate: 1
 giveAchievements: true
 checkCredentials: true
+tutorialEnabled: false

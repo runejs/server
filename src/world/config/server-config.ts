@@ -11,6 +11,7 @@ export interface ServerConfig {
     expRate: number;
     giveAchievements: boolean;
     checkCredentials: boolean;
+    tutorialEnabled: boolean;
 }
 
 export function parseServerConfig(useDefault?: boolean): ServerConfig {

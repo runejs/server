@@ -9,6 +9,7 @@ import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { WorldItem } from '@server/world/items/world-item';
 import { ByteBuffer } from '@runejs/byte-buffer';
 import { Npc } from '@server/world/actor/npc/npc';
+import { stringToLong } from '@server/util/strings';
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -25,6 +26,30 @@ export class OutboundPackets {
         this.packetQueue = [];
         this.player = player;
         this.socket = player.socket;
+    }
+
+    public sendPrivateMessage(chatId: number, sender: string, message: number[]): void {
+        const packet = new Packet(51, PacketType.DYNAMIC_SMALL);
+        packet.put(stringToLong(sender.toLowerCase()), 'LONG');
+        packet.put(chatId, 'INT');
+        packet.put(0); // @TODO other player's rights/role
+        packet.put(message.length, 'SMART');
+        message.forEach(char => packet.put(char));
+        this.queue(packet);
+    }
+
+    public updateFriendStatus(friendName: string, worldId: number): void {
+        const packet = new Packet(156);
+        packet.put(stringToLong(friendName.toLowerCase()), 'LONG');
+        packet.put(worldId, 'SHORT');
+        this.queue(packet);
+    }
+
+    public sendFriendServerStatus(status: 0 | 1 | 2): void {
+        // 0 = loading, 1 = connecting to friend server, 2 = friend list
+        const packet = new Packet(70);
+        packet.put(status);
+        this.queue(packet);
     }
 
     public playSong(songId: number): void {
@@ -407,6 +432,10 @@ export class OutboundPackets {
     }
 
     public sendTabWidget(tabIndex: number, widgetId: number): void {
+        if(widgetId < 0) {
+            return;
+        }
+
         const packet = new Packet(140);
         packet.put(widgetId, 'SHORT');
         packet.put(tabIndex);
