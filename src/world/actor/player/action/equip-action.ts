@@ -17,11 +17,11 @@ export type EquipType = 'EQUIP' | 'UNEQUIP';
 export interface EquipDetails {
     // The player performing the action.
     player: Player;
-    // The ID of the item being interacted with.
+    // The ID of the item being equipped/unequipped.
     itemId: number;
     // Additional details about the item.
     itemDetails: ItemDetails;
-    // The option that the player used (ie "equip"  or "drop").
+    // If the item was equipped or unequiped.
     equipType: EquipType;
 }
 
@@ -38,12 +38,12 @@ export interface EquipActionPlugin extends ActionPlugin {
 }
 
 /**
- * A directory of all object interaction plugins.
+ * A directory of all equipment plugins.
  */
 let equipInteractions: EquipActionPlugin[] = [];
 
 /**
- * Sets the list of object interaction plugins.
+ * Sets the list of equipment plugins.
  * @param plugins The plugin list.
  */
 export const setEquipPlugins = (plugins: ActionPlugin[]): void => {
@@ -52,7 +52,6 @@ export const setEquipPlugins = (plugins: ActionPlugin[]): void => {
 
 export const equipAction = (player: Player, itemId: number, equipType: EquipType): void => {
 
-    // Find all object action plugins that reference this location object
     let equipActions = equipInteractions.filter(plugin => {
         if(!questFilter(player, plugin)) {
             return false;
