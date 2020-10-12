@@ -34,11 +34,12 @@ function HomeTeleport(player: Player): void {
             player.outgoingPackets.playSound(soundIds.homeTeleportDraw, 10);
         }
         if (elapsedTicks === 7) {
-            player.playAnimation(animationIds.homeTeleportPullOutAndReadBook);
+            player.playAnimation(animationIds.homeTeleportSit);
+            player.playGraphics({id: gfxIds.homeTeleportFullDrawnCircle, delay: 0, height: 0});
             player.outgoingPackets.playSound(soundIds.homeTeleportSit, 10);
         }
         if (elapsedTicks === 12) {
-            player.playAnimation(animationIds.homeTeleportSit);
+            player.playAnimation(animationIds.homeTeleportPullOutAndReadBook);
             player.playGraphics({id: gfxIds.homeTeleportPullOutBook, delay: 0, height: 0});
             player.outgoingPackets.playSound(soundIds.homeTeleportPullOutBook, 10);
         }
@@ -46,7 +47,6 @@ function HomeTeleport(player: Player): void {
             player.playAnimation(animationIds.homeTeleportReadBookAndGlowCircle);
             player.playGraphics({id: gfxIds.homeTeleportCircleGlow, delay: 0, height: 0});
             player.outgoingPackets.playSound(soundIds.homeTeleportCircleGlowAndTeleport, 10);
-
         }
         if (elapsedTicks === 20) {
             player.playAnimation(animationIds.homeTeleport);

@@ -78,3 +78,30 @@
   x: 3272
   y: 3182
   radius: 2
+- npcId: 546
+  x: 3203
+  y: 3432
+  radius: 2
+
+# Varrock - The Blue Moon Inn
+- npcId: 17 # Barbarian woman (level: 8)
+  x: 3224
+  y: 3402
+  radius: 1
+- npcId: 734 # Bartender
+  x: 3226
+  y: 3399
+  radius: 2
+- npcId: 794 # Charlie the cook
+  x: 3230
+  y: 3402
+  radius: 1
+- npcId: 645 # Jonny the beard
+  x: 3225
+  y: 3395
+  radius: 5
+- npcId: 756 # Dr Harlow
+  x: 3222
+  y: 3397
+  radius: 3
+

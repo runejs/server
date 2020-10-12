@@ -196,3 +196,35 @@
       text: Adamant plateskirt
       price: 6400
       amountInStock: 1
+
+- identification: VARROCK_ZAFFS_SUPERIOR_STAFFS
+  name: Zaff's Superior Staffs
+  items:
+    - id: 1391
+      text: Battlestaff
+      price: 7000
+      amountInStock: 5
+    - id: 1379
+      text: Staff
+      price: 15
+      amountInStock: 5
+    - id: 1389
+      text: Magic staff
+      price: 200
+      amountInStock: 5
+    - id: 1381
+      text: Staff of air
+      price: 1500
+      amountInStock: 2
+    - id: 1383
+      text: Staff of water
+      price: 1500
+      amountInStock: 2
+    - id: 1385
+      text: Staff of earth
+      price: 1500
+      amountInStock: 5
+    - id: 1387
+      text: Staff of fire
+      price: 1500
+      amountInStock: 5

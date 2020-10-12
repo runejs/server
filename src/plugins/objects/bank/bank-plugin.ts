@@ -6,8 +6,8 @@ import { ItemContainer } from '@server/world/items/item-container';
 import { itemAction } from '@server/world/actor/player/action/item-action';
 import { fromNote, Item, toNote } from '@server/world/items/item';
 import { buttonAction } from '@server/world/actor/player/action/button-action';
-import { logger } from '@runejs/logger/dist/logger';
-import { hasValueNotNull } from '@server/util/data';
+import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
+import { npcIds } from '@server/world/config/npc-ids';
 
 const buttonIds: number[] = [
     92, // as note
@@ -28,6 +28,14 @@ export const openBankInterface: objectAction = (details) => {
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, details.player.bank);
     details.player.outgoingPackets.updateClientConfig(widgetScripts.bankInsertMode, details.player.settings.bankInsertMode);
     details.player.outgoingPackets.updateClientConfig(widgetScripts.bankWithdrawNoteMode, details.player.settings.bankWithdrawNoteMode);
+};
+
+export const openPinSettings: objectAction = (details) => {
+    details.player.activeWidget = {
+        widgetId: widgets.bank.pinSettingsWidget.widgetId,
+        type: 'SCREEN',
+        closeOnWalk: true
+    };
 };
 
 export const depositItem: itemAction = (details) => {
@@ -190,8 +198,40 @@ export const btnAction: buttonAction = (details) => {
     player.settings[config.setting] = config.value;
 };
 
+const useBankBoothAction : objectAction = (details) => {
+    const { player } = details;
+
+    dialogue([player, {npc: npcIds.banker1, key: 'banker'}], [
+        banker => [Emote.HAPPY, `Good day, how can I help you?`],
+        options => [
+            `I'd Like to access my bank account, please.`, [
+                execute(() => {
+                    openBankInterface(details as any);
+                })
+            ],
+            `I'd like to check my PIN settings.`, [
+                execute(() => {
+                    openPinSettings(details);
+                })
+            ],
+            `What is this place?`, [
+                player => [Emote.WONDERING, `What is this place?`],
+                banker => [Emote.HAPPY, `This is a branch of the Bank of Gielinor. We have branches in many towns.`],
+                player => [Emote.WONDERING, `And what do you do?`],
+                banker => [Emote.GENERIC, `We will look after your items and money for you.`],
+                banker => [Emote.GENERIC, `Leave your valuables with us if you want to keep them safe.`]
+            ]
+        ]
+    ]);
+};
 
 export default new RunePlugin([{
+    type: ActionType.OBJECT_ACTION,
+    objectIds: objectIds.bankBooth,
+    options: ['use'],
+    walkTo: true,
+    action: useBankBoothAction
+}, {
     type: ActionType.OBJECT_ACTION,
     objectIds: objectIds.bankBooth,
     options: ['use-quickly'],

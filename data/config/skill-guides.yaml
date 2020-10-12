@@ -744,3 +744,187 @@
         - itemId: 447
           text: Mining guild
           level: 60
+- id: 140
+  name: Runecrafting
+  members: false
+  subGuides:
+    - name: Runes
+      lines:
+        - itemId: 556
+          text: "Air runes"
+          level: 1
+        - itemId: 558
+          text: "Mind runes"
+          level: 2
+        - itemId: 555
+          text: "Water runes"
+          level: 5
+        - itemId: 4695
+          text: "Members: Mist runes"
+          level: 6
+        - itemId: 557
+          text: "Earth runes"
+          level: 9
+        - itemId: 4696
+          text: "Members: Dust runes"
+          level: 10
+        - itemId: 4698
+          text: "Members: Mud runes"
+          level: 13
+        - itemId: 554
+          text: "Fire runes"
+          level: 14
+        - itemId: 4697
+          text: "Members: Smoke runes"
+          level: 15
+        - itemId: 4694
+          text: "Members: Steam runes"
+          level: 19
+        - itemId: 559
+          text: "Body runes"
+          level: 20
+        - itemId: 4699
+          text: "Members: Lava runes"
+          level: 23
+        - itemId: 564
+          text: "Members: Cosmic runes"
+          level: 27
+        - itemId: 562
+          text: "Members: Chaos runes"
+          level: 35
+        - itemId: 9075
+          text: "Members: Astral runes"
+          level: 40
+        - itemId: 561
+          text: "Members: Nature runes"
+          level: 44
+        - itemId: 563
+          text: "Members: Law runes"
+          level: 54
+        - itemId: 560
+          text: "Members: Death runes"
+          level: 65
+        - itemId: 565
+          text: "Members: Blood runes"
+          level: 77
+        - itemId: 566
+          text: "Members: Soul runes"
+          level: 90
+    - name: Multiple
+      lines:
+        - itemId: 556
+          text: "2 Air runes per essence"
+          level: 11
+        - itemId: 558
+          text: "2 Mind runes per essence"
+          level: 14
+        - itemId: 555
+          text: "2 Water runes per essence"
+          level: 19
+        - itemId: 556
+          text: "3 Air runes per essence"
+          level: 22
+        - itemId: 557
+          text: "2 Earth runes per essence"
+          level: 26
+        - itemId: 558
+          text: "3 Mind runes per essence"
+          level: 28
+        - itemId: 556
+          text: "4 Air runes per essence"
+          level: 33
+        - itemId: 554
+          text: "2 Fire runes per essence"
+          level: 35
+        - itemId: 555
+          text: "3 Water runes per essence"
+          level: 38
+        - itemId: 558
+          text: "4 Mind runes per essence"
+          level: 42
+        - itemId: 556
+          text: "5 Air runes per essence"
+          level: 44
+        - itemId: 559
+          text: "2 Body runes per essence"
+          level: 46
+        - itemId: 557
+          text: "3 Earth runes per essence"
+          level: 52
+        - itemId: 556
+          text: "6 Air runes per essence"
+          level: 55
+        - itemId: 558
+          text: "5 Mind runes per essence"
+          level: 56
+        - itemId: 555
+          text: "4 Water runes per essence"
+          level: 57
+        - itemId: 564
+          text: "Members: 2 Cosmic runes per essence"
+          level: 59
+        - itemId: 556
+          text: "7 Air runes per essence"
+          level: 66
+        - itemId: 558
+          text: "6 Mind runes per essence"
+          level: 70
+        - itemId: 554
+          text: "3 Fire runes per essence"
+          level: 70
+        - itemId: 562
+          text: "Members: 2 Chaos runes per essence"
+          level: 74
+        - itemId: 555
+          text: "5 Water runes per essence"
+          level: 76
+        - itemId: 556
+          text: "8 Air runes per essence"
+          level: 77
+        - itemId: 557
+          text: "4 Earth runes per essence"
+          level: 78
+        - itemId: 9075
+          text: "Members: 2 Astral runes per essence"
+          level: 82
+        - itemId: 558
+          text: "7 Mind runes per essence"
+          level: 84
+        - itemId: 556
+          text: "9 Air runes per essence"
+          level: 88
+        - itemId: 561
+          text: "Members: 2 Nature runes per essence"
+          level: 91
+        - itemId: 554
+          text: "3 Body runes per essence"
+          level: 92
+        - itemId: 555
+          text: "6 Water runes per essence"
+          level: 95
+        - itemId: 563
+          text: "Members: 2 Law runes per essence"
+          level: 95
+        - itemId: 558
+          text: "8 Mind runes per essence"
+          level: 98
+        - itemId: 556
+          text: "10 Air runes per essence"
+          level: 99
+        - itemId: 560
+          text: "Members: 2 Death runes per essence"
+          level: 99
+    - name: Pouches
+      lines:
+        - itemId: 5512
+          text: "Small pouch: Holds 3 extra essence"
+          level: 1
+        - itemId: 5510
+          text: "Medium pouch: Holds 6 extra essence"
+          level: 25
+        - itemId: 5512
+          text: "Large pouch: Holds 9 extra essence"
+          level: 50
+        - itemId: 5514
+          text: "Giant pouch: Holds 12 extra essence"
+          level: 75

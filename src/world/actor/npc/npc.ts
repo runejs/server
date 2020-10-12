@@ -106,6 +106,9 @@ export class Npc extends Actor {
      * Whether or not the Npc can currently move.
      */
     public canMove(): boolean {
+        if(this.metadata['following']) {
+            return false;
+        }
         return this.updateFlags.faceActor === undefined && this.updateFlags.animation === undefined;
     }
 
