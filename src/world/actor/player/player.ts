@@ -224,6 +224,11 @@ export class Player extends Actor {
 
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
+        for (const item of this.equipment.items) {
+            if(item) {
+                equipAction(this, item.itemId, 'EQUIP');
+            }
+        }
 
         if (this.firstTimePlayer) {
             this.activeWidget = {
