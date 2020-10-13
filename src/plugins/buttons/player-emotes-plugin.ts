@@ -154,7 +154,7 @@ export const action: buttonAction = (details) => {
             player.playAnimation(skillcapeEmote[0].animationId);
             player.playGraphics({id: skillcapeEmote[0].graphicId, delay: 0, height: 0});
         } else {
-            player.sendMessage(`You need to be wearing a skillcape in order to perform that emote.`);
+            player.sendMessage(`You need to be wearing a skillcape in order to perform that emote.`, true);
         }
     } else {
         if(emote.unlockable) {
