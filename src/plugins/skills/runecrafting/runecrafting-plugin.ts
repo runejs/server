@@ -1,13 +1,13 @@
-import {ActionType, RunePlugin} from "@server/plugins/plugin";
-import {objectAction} from "@server/world/actor/player/action/object-action";
-import {itemIds} from "@server/world/config/item-ids";
-import {Item} from "@server/world/items/item";
-import {Position} from "@server/world/position";
-import {cache} from "@server/game-server";
-import {itemOnObjectAction} from "@server/world/actor/player/action/item-on-object-action";
-import {Skill} from "@server/world/actor/skills";
-import {widgets} from "@server/world/config/widget";
-import {equipAction} from "@server/world/actor/player/action/equip-action";
+import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { objectAction } from '@server/world/actor/player/action/object-action';
+import { itemIds } from '@server/world/config/item-ids';
+import { Item } from '@server/world/items/item';
+import { Position } from '@server/world/position';
+import { cache } from '@server/game-server';
+import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
+import { Skill } from '@server/world/actor/skills';
+import { widgets } from '@server/world/config/widget';
+import { equipAction } from '@server/world/actor/player/action/equip-action';
 
 interface Recipe {
     ingredients: Item[] | number[];
@@ -190,23 +190,23 @@ const craftRune : objectAction = (details) => {
 
 const runeMultiplier = (runeId: number, level: number) => {
     switch (runeId) {
-        case 556: return (Math.floor((level / 11.0)) + 1)
-        case 558: return (Math.floor((level / 14.0)) + 1)
-        case 555: return (Math.floor((level / 19.0)) + 1)
-        case 557: return (Math.floor((level / 26.0)) + 1)
-        case 554: return (Math.floor((level / 35.0)) + 1)
-        case 559: return (Math.floor((level / 46.0)) + 1)
-        case 564: return (Math.floor((level / 59.0)) + 1)
-        case 562: return (Math.floor((level / 74.0)) + 1)
-        case 561: return (Math.floor((level / 91.0)) + 1)
-        case 563: return 1.0
-        case 560: return 1.0
+        case 556: return (Math.floor((level / 11.0)) + 1);
+        case 558: return (Math.floor((level / 14.0)) + 1);
+        case 555: return (Math.floor((level / 19.0)) + 1);
+        case 557: return (Math.floor((level / 26.0)) + 1);
+        case 554: return (Math.floor((level / 35.0)) + 1);
+        case 559: return (Math.floor((level / 46.0)) + 1);
+        case 564: return (Math.floor((level / 59.0)) + 1);
+        case 562: return (Math.floor((level / 74.0)) + 1);
+        case 561: return (Math.floor((level / 91.0)) + 1);
+        case 563: return 1.0;
+        case 560: return 1.0;
     }
 };
 
 const getEntityByAttr = (entities, attr, value) => {
     let entity = undefined;
-    let splits = attr.split('.');
+    const splits = attr.split('.');
 
     // Handles dot seperated attribute names.
     if (splits.length === 2) {
@@ -240,7 +240,7 @@ export default new RunePlugin([
         walkTo: true,
         action: enterAltar
     }, {
-        type:ActionType.OBJECT_ACTION,
+        type: ActionType.OBJECT_ACTION,
         objectIds: getEntityIds(altars, 'portalId'),
         walkTo: true,
         action: exitAltar
