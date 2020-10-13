@@ -28,6 +28,7 @@ import { setQuestPlugins } from '@server/world/config/quests';
 import { setPlayerPlugins } from '@server/world/actor/player/action/player-action';
 import { loadPackets } from '@server/net/inbound-packets';
 import { watchForChanges } from '@server/util/files';
+import { setEquipPlugins } from '@server/world/actor/player/action/equip-action';
 
 
 export let serverConfig: ServerConfig;
@@ -57,6 +58,7 @@ export async function injectPlugins(): Promise<void> {
     setItemOnNpcPlugins(actionPluginMap[ActionType.ITEM_ON_NPC_ACTION]);
     setItemOnItemPlugins(actionPluginMap[ActionType.ITEM_ON_ITEM_ACTION]);
     setItemPlugins(actionPluginMap[ActionType.ITEM_ACTION]);
+    setEquipPlugins(actionPluginMap[ActionType.EQUIP_ACTION]);
     setWorldItemPlugins(actionPluginMap[ActionType.WORLD_ITEM_ACTION]);
     setCommandPlugins(actionPluginMap[ActionType.COMMAND]);
     setWidgetPlugins(actionPluginMap[ActionType.WIDGET_ACTION]);
