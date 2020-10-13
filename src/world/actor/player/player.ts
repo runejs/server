@@ -15,7 +15,7 @@ import {
 } from './player-data';
 import { PlayerWidget, widgets, widgetScripts } from '../../config/widget';
 import { ContainerUpdateEvent, ItemContainer } from '../../items/item-container';
-import { EquipmentBonuses, EquipmentSlot, ItemDetails } from '@server/world/config/item-data';
+import { EquipmentBonuses, EquipmentSlot, ItemDetails, WeaponType } from '../../config/item-data';
 import { Item } from '../../items/item';
 import { Npc } from '../npc/npc';
 import { NpcUpdateTask } from './updating/npc-update-task';
@@ -32,6 +32,9 @@ import { quests } from '@server/world/config/quests';
 import { ItemDefinition } from '@runejs/cache-parser';
 import { ActionCancelType } from '@server/world/actor/player/action/action';
 import { CommandActionPlugin, commandInteractions } from '@server/world/actor/player/action/input-command-action';
+import { getItemFromContainer } from '@server/world/actor/player/action/item-action';
+import { updateBonusStrings } from '@server/plugins/equipment/equipment-stats-plugin';
+import { equipAction } from '@server/world/actor/player/action/equip-action';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -221,6 +224,11 @@ export class Player extends Actor {
 
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
+        for (const item of this.equipment.items) {
+            if(item) {
+                equipAction(this, item.itemId, 'EQUIP');
+            }
+        }
 
         if (this.firstTimePlayer) {
             this.activeWidget = {
@@ -279,7 +287,7 @@ export class Player extends Actor {
 
         this._loginDate = new Date();
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
-        if(this.rights === Rights.ADMIN) {
+        if (this.rights === Rights.ADMIN) {
             this.sendCommandList(commandInteractions);
         }
         new Promise(resolve => {
@@ -834,6 +842,108 @@ export class Player extends Actor {
         return this.activeWidget && this.activeWidget.widgetId === widgetId;
     }
 
+
+    public equipItem(itemId: number, itemSlot: number, slot: EquipmentSlot): boolean {
+        const itemToEquip = getItemFromContainer(itemId, itemSlot, this.inventory);
+
+        if (!itemToEquip) {
+            // The specified item was not found in the specified slot.
+            return false;
+        }
+        const itemToUnequip: Item = this.equipment.items[slot];
+        let shouldUnequipOffHand: boolean = false;
+        let shouldUnequipMainHand: boolean = false;
+        const itemDetails: ItemDetails = world.itemData.get(itemId);
+
+        if (!itemDetails || !itemDetails.equipment || !itemDetails.equipment.slot) {
+            this.sendMessage(`Unable to equip item ${itemId}/${itemDetails.name}: Missing equipment data.`);
+            return;
+        }
+
+        if (itemDetails && itemDetails.equipment) {
+            if (itemDetails.equipment.weaponType === WeaponType.TWO_HANDED) {
+                shouldUnequipOffHand = true;
+            }
+
+            if (slot === EquipmentSlot.OFF_HAND && this.equipment.items[EquipmentSlot.MAIN_HAND]) {
+                const mainHandItemData: ItemDetails = world.itemData.get(this.equipment.items[EquipmentSlot.MAIN_HAND].itemId);
+
+                if (mainHandItemData && mainHandItemData.equipment && mainHandItemData.equipment.weaponType === WeaponType.TWO_HANDED) {
+                    shouldUnequipMainHand = true;
+                }
+            }
+        }
+
+        if (itemToUnequip) {
+            if (shouldUnequipOffHand && !this.unequipItem(EquipmentSlot.OFF_HAND, false)) {
+                return false;
+            }
+
+            if (shouldUnequipMainHand && !this.unequipItem(EquipmentSlot.MAIN_HAND, false)) {
+                return false;
+            }
+            equipAction(this, itemToUnequip.itemId, 'UNEQUIP');
+
+            this.equipment.remove(slot, false);
+            this.inventory.remove(itemSlot, false);
+
+            this.equipment.set(slot, itemToEquip);
+            this.inventory.set(itemSlot, itemToUnequip);
+
+        } else {
+            this.equipment.set(slot, itemToEquip);
+            this.inventory.remove(itemSlot);
+
+            if (shouldUnequipOffHand) {
+                this.unequipItem(EquipmentSlot.OFF_HAND);
+            }
+
+            if (shouldUnequipMainHand) {
+                this.unequipItem(EquipmentSlot.MAIN_HAND);
+            }
+        }
+        equipAction(this, itemId, 'EQUIP');
+        this.equipmentChanged();
+        return true;
+    }
+
+    public equipmentChanged(): void {
+        this.updateBonuses();
+
+        // @TODO change packets to only update modified container slots
+        this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
+        this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
+
+        if (this.hasWidgetOpen(widgets.equipmentStats.widgetId)) {
+            this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipmentStats, this.equipment);
+            updateBonusStrings(this);
+        }
+
+        this.updateFlags.appearanceUpdateRequired = true;
+    }
+
+    public unequipItem(slot: EquipmentSlot, updateRequired: boolean = true): boolean {
+        const inventorySlot = this.inventory.getFirstOpenSlot();
+        if (inventorySlot === -1) {
+            this.sendMessage(`You don't have enough free space to do that.`);
+            return false;
+        }
+
+        const itemInSlot = this.equipment.items[slot];
+
+        if (!itemInSlot) {
+            return true;
+        }
+        equipAction(this, itemInSlot.itemId, 'UNEQUIP');
+
+        this.equipment.remove(slot);
+        this.inventory.set(inventorySlot, itemInSlot);
+        if (updateRequired) {
+            this.equipmentChanged();
+        }
+        return true;
+    }
+
     public set position(position: Position) {
         super.position = position;
 
@@ -923,6 +1033,7 @@ export class Player extends Actor {
     public get equipment(): ItemContainer {
         return this._equipment;
     }
+
 
     public get carryWeight(): number {
         return this._carryWeight;

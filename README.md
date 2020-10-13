@@ -50,8 +50,8 @@ The server runs on the 435 revision of the game, which was a game update made on
 * Container filling :heavy_check_mark:
     * Buckets, Jugs, Wells, Sinks, Fountains :heavy_check_mark:
     * Emptying Containers :heavy_check_mark:
-* Home Teleport :yellow_square:
-    * Animation :yellow_square:
+* Home Teleport :heavy_check_mark:
+    * Animation :heavy_check_mark:
 * Emotes :yellow_square:
     * Skillcape emotes :yellow_square:
     * Unlockable emotes w/ requirements :heavy_check_mark:
