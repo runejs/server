@@ -79,6 +79,7 @@ export abstract class Actor {
 
     public follow(target: Actor): void {
         this.face(target, false, false, false);
+        this.metadata['following'] = target;
 
         this.moveBehind(target);
         const subscription = target.movementEvent.subscribe(() => this.moveBehind(target));
@@ -89,18 +90,20 @@ export abstract class Actor {
         ).subscribe(() => {
             subscription.unsubscribe();
             this.face(null);
+            delete this.metadata['following'];
         });
     }
 
     public async walkTo(target: Actor): Promise<boolean> {
         const distance = Math.floor(this.position.distanceBetween(target.position));
+
+        if(distance <= 1) {
+            return false;
+        }
+        
         if(distance > 16) {
             this.clearFaceActor();
             this.metadata.faceActorClearedByWalking = true;
-            return false;
-        }
-
-        if(distance <= 1) {
             return false;
         }
 
