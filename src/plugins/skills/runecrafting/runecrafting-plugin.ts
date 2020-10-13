@@ -6,8 +6,8 @@ import {Position} from "@server/world/position";
 import {cache} from "@server/game-server";
 import {itemOnObjectAction} from "@server/world/actor/player/action/item-on-object-action";
 import {Skill} from "@server/world/actor/skills";
-import {count} from "rxjs/operators";
 import {widgets} from "@server/world/config/widget";
+import {equipAction} from "@server/world/actor/player/action/equip-action";
 
 interface Recipe {
     ingredients: Item[] | number[];
@@ -22,6 +22,7 @@ interface Pos {
 
 interface Tiara {
     id: number;
+    config: number;
     recipe: Recipe;
     level: number;
     xp: number;
@@ -49,18 +50,34 @@ interface Rune {
     talisman: Talisman;
 }
 
+
+// RUNECRAFTING Tiara Configs
+/*
+    Air - config 491 1
+    Mind - config 491 2
+    Water - config 491 4
+    Earth - config 491 8
+    Fire - config 491 16
+    Body - config 491 32
+    Cosmic - config 491 64
+    Chaos - config 491 128
+    Nature - config 491 256
+    Law - config 491 512
+    Death - config 491 1024
+ */
+
 export const tiaras : Map<string, Tiara> = new Map<string, Tiara>([
-    ['air', {id: 5527, level: 1, xp: 25.0, recipe: { ingredients: [itemIds.airTalisman, itemIds.tiara], result: itemIds.airTiara}}],
-    ['mind', {id: 5529, level: 1, xp: 27.5, recipe: { ingredients: [itemIds.mindTalisman, itemIds.tiara], result: itemIds.mindTiara}}],
-    ['water', {id: 5531, level: 1, xp: 30, recipe: { ingredients: [itemIds.waterTalisman, itemIds.tiara], result: itemIds.waterTiara}}],
-    ['body', {id: 5533, level: 1, xp: 37.5, recipe: { ingredients: [itemIds.bodyTalisman, itemIds.tiara], result: itemIds.bodyTiara}}],
-    ['earth', {id: 5535, level: 1, xp: 32.5, recipe: { ingredients: [itemIds.earthTalisman, itemIds.tiara], result: itemIds.earthTiara}}],
-    ['fire', {id: 5537, level: 1, xp: 35, recipe: { ingredients: [itemIds.fireTalisman, itemIds.tiara], result: itemIds.fireTiara}}],
-    ['cosmic', {id: 5539, level: 1, xp: 40, recipe: { ingredients: [itemIds.cosmicTalisman, itemIds.tiara], result: itemIds.cosmicTiara}}],
-    ['nature', {id: 5541, level: 1, xp: 45, recipe: { ingredients: [itemIds.natureTalisman, itemIds.tiara], result: itemIds.natureTiara}}],
-    ['chaos', {id: 5543, level: 1, xp: 42.5, recipe: { ingredients: [itemIds.chaosTalisman, itemIds.tiara], result: itemIds.chaosTiara}}],
-    ['law', {id: 5545, level: 1, xp: 47.5, recipe: { ingredients: [itemIds.lawTalisman, itemIds.tiara], result: itemIds.lawTiara}}],
-    ['death', {id: 5548, level: 1, xp: 50, recipe: { ingredients: [itemIds.deathTalisman, itemIds.tiara], result: itemIds.deathTiara}}],
+    ['air', {id: 5527, config: 1, level: 1, xp: 25.0, recipe: { ingredients: [itemIds.airTalisman, itemIds.tiara], result: itemIds.airTiara}}],
+    ['mind', {id: 5529, config: 2, level: 1, xp: 27.5, recipe: { ingredients: [itemIds.mindTalisman, itemIds.tiara], result: itemIds.mindTiara}}],
+    ['water', {id: 5531, config: 4, level: 1, xp: 30, recipe: { ingredients: [itemIds.waterTalisman, itemIds.tiara], result: itemIds.waterTiara}}],
+    ['body', {id: 5533, config: 32, level: 1, xp: 37.5, recipe: { ingredients: [itemIds.bodyTalisman, itemIds.tiara], result: itemIds.bodyTiara}}],
+    ['earth', {id: 5535, config: 8, level: 1, xp: 32.5, recipe: { ingredients: [itemIds.earthTalisman, itemIds.tiara], result: itemIds.earthTiara}}],
+    ['fire', {id: 5537, config: 16, level: 1, xp: 35, recipe: { ingredients: [itemIds.fireTalisman, itemIds.tiara], result: itemIds.fireTiara}}],
+    ['cosmic', {id: 5539, config: 64, level: 1, xp: 40, recipe: { ingredients: [itemIds.cosmicTalisman, itemIds.tiara], result: itemIds.cosmicTiara}}],
+    ['nature', {id: 5541, config: 256, level: 1, xp: 45, recipe: { ingredients: [itemIds.natureTalisman, itemIds.tiara], result: itemIds.natureTiara}}],
+    ['chaos', {id: 5543, config: 128, level: 1, xp: 42.5, recipe: { ingredients: [itemIds.chaosTalisman, itemIds.tiara], result: itemIds.chaosTiara}}],
+    ['law', {id: 5545, config: 512, level: 1, xp: 47.5, recipe: { ingredients: [itemIds.lawTalisman, itemIds.tiara], result: itemIds.lawTiara}}],
+    ['death', {id: 5548, config: 1024, level: 1, xp: 50, recipe: { ingredients: [itemIds.deathTalisman, itemIds.tiara], result: itemIds.deathTiara}}],
 ]);
 
 export const talismans : Map<string, Talisman> = new Map<string, Talisman>([
@@ -123,6 +140,17 @@ const enterAltar : itemOnObjectAction = (details) => {
         player.sendMessage(`You feel a powerful force take hold of you..`);
         player.teleport(new Position(altar.entrance.x, altar.entrance.y, altar.entrance.level));
     }
+};
+
+const unequipTiara : equipAction = (details) => {
+    const { player } = details;
+    player.outgoingPackets.updateClientConfig(491, 0);
+};
+
+const equipTiara : equipAction = (details) => {
+    const { player, itemId } = details;
+    const tiara = getEntityByAttr(tiaras, 'id', itemId);
+    player.outgoingPackets.updateClientConfig(491, tiara.config);
 };
 
 const exitAltar : objectAction = (details) => {
@@ -221,21 +249,15 @@ export default new RunePlugin([
         objectIds: getEntityIds(altars, 'craftingId'),
         walkTo: true,
         action: craftRune
+    }, {
+        type: ActionType.EQUIP_ACTION,
+        equipType: 'EQUIP',
+        itemIds: getEntityIds(tiaras, 'id'),
+        action: equipTiara
+    }, {
+        type: ActionType.EQUIP_ACTION,
+        equipType: 'UNEQUIP',
+        itemIds: getEntityIds(tiaras, 'id'),
+        action: unequipTiara
     }
 ]);
-
-
-// RUNECRAFTING Tiara Configs
-/*
-    Air - config 491 1
-    Mind - config 491 2
-    Water - config 491 4
-    Earth - config 491 8
-    Fire - config 491 16
-    Body - config 491 32
-    Cosmic - config 491 64
-    Chaos - config 491 128
-    Nature - config 491 256
-    Law - config 491 512
-    Death - config 491 1024
- */
