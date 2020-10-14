@@ -87,7 +87,7 @@ function openServer(): void {
         socket.setKeepAlive(true);
         socket.setTimeout(30000);
 
-        let clientConnection = new ClientConnection(socket);
+        let clientConnection = new ClientConnection(socket, 'game');
 
         socket.on('data', data => {
             if(clientConnection) {
@@ -109,7 +109,7 @@ function openServer(): void {
         });
     }).listen(serverConfig.port, serverConfig.host);
 
-    logger.info(`Game server listening on port ${ serverConfig.port }.`);
+    logger.info(`Gameserver listening @ ${ serverConfig.host }:${ serverConfig.port }.`);
 }
 
 export async function runGameServer(): Promise<void> {
