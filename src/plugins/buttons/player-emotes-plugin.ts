@@ -12,7 +12,7 @@ interface Emote {
 
 interface SkillcapeEmote extends Emote {
     itemIds: Array<number>;
-};
+}
 
 export const skillcapeEmotes: SkillcapeEmote[]  = [
     { animationId: 4959, name: 'Attack', itemIds: [9747, 9748], graphicId: 823 },

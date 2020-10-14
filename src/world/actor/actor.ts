@@ -175,7 +175,7 @@ export abstract class Actor {
     }
 
     public stopAnimation(): void {
-        let animation = {id: -1, delay: 0};
+        const animation = {id: -1, delay: 0};
         this.updateFlags.animation = animation;
     }
 
@@ -188,7 +188,7 @@ export abstract class Actor {
     }
 
     public stopGraphics(): void {
-        let graphics = {id: -1, delay: 0, height: 120};
+        const graphics = {id: -1, delay: 0, height: 120};
         this.updateFlags.graphics = graphics;
     }
 
