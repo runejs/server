@@ -1,5 +1,5 @@
 import { Socket } from 'net';
-import { openServer, SocketConnectionHandler } from '@server/net/server-handler';
+import { openServer, SocketConnectionHandler } from '@server/net/server/server-gateway';
 import { ByteBuffer } from '@runejs/byte-buffer';
 import { parseServerConfig } from '@server/world/config/server-config';
 import { logger } from '@runejs/logger/dist/logger';
@@ -21,7 +21,7 @@ class UpdateServerConnection extends SocketConnectionHandler {
 
     public async dataReceived(buffer: ByteBuffer): Promise<void> {
         if(!buffer) {
-            logger.info('No data supplied in message to updateserver.');
+            logger.info('No data supplied in message to update server.');
             return;
         }
 
@@ -119,7 +119,7 @@ export const launchUpdateServer = (): void => {
     const serverConfig = parseServerConfig();
 
     if(!serverConfig) {
-        logger.error('Unable to start updateserver due to missing or invalid server configuration.');
+        logger.error('Unable to start update server due to missing or invalid server configuration.');
         return;
     }
 

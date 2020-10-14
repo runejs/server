@@ -1,8 +1,8 @@
 import { Socket, createServer } from 'net';
 import { logger } from '@runejs/logger/dist/logger';
 import { ByteBuffer } from '@runejs/byte-buffer';
-import { createLoginServerConnection } from '@server/net/server/loginserver';
-import { createGameServerConnection, GameServerConnection } from '@server/net/server/gameserver';
+import { createLoginServerConnection } from '@server/net/server/login-server';
+import { createGameServerConnection, GameServerConnection } from '@server/net/server/game-server';
 import { parseServerConfig } from '@server/world/config/server-config';
 
 const serverConfig = parseServerConfig();
@@ -78,9 +78,9 @@ class ServerGateway {
 
 }
 
-const socketError = (socket: Socket): void => {
+const socketError = (socket: Socket, error): void => {
     logger.error('Socket destroyed due to connection error.');
-    logger.error(error.message);
+    logger.error(error?.message || '[no message]');
     socket.destroy();
 };
 
@@ -99,7 +99,7 @@ export const registerSocket = (socket: Socket, type: ServerType): void => {
         // @TODO socket close event
     });
 
-    socket.on('error', socketError);
+    socket.on('error', error => socketError(socket, error));
 };
 
 export const openServer = (host: string, port: number, type: ServerType): void => {
