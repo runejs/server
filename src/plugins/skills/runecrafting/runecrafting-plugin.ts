@@ -50,9 +50,8 @@ interface Rune {
     talisman: Talisman;
 }
 
-
-// RUNECRAFTING Tiara Configs
 /*
+    RUNECRAFTING Tiara Configs
     Air - config 491 1
     Mind - config 491 2
     Water - config 491 4
@@ -67,31 +66,31 @@ interface Rune {
  */
 
 export const tiaras : Map<string, Tiara> = new Map<string, Tiara>([
-    ['air', {id: 5527, config: 1, level: 1, xp: 25.0, recipe: { ingredients: [itemIds.airTalisman, itemIds.tiara], result: itemIds.airTiara}}],
-    ['mind', {id: 5529, config: 2, level: 1, xp: 27.5, recipe: { ingredients: [itemIds.mindTalisman, itemIds.tiara], result: itemIds.mindTiara}}],
-    ['water', {id: 5531, config: 4, level: 1, xp: 30, recipe: { ingredients: [itemIds.waterTalisman, itemIds.tiara], result: itemIds.waterTiara}}],
-    ['body', {id: 5533, config: 32, level: 1, xp: 37.5, recipe: { ingredients: [itemIds.bodyTalisman, itemIds.tiara], result: itemIds.bodyTiara}}],
-    ['earth', {id: 5535, config: 8, level: 1, xp: 32.5, recipe: { ingredients: [itemIds.earthTalisman, itemIds.tiara], result: itemIds.earthTiara}}],
-    ['fire', {id: 5537, config: 16, level: 1, xp: 35, recipe: { ingredients: [itemIds.fireTalisman, itemIds.tiara], result: itemIds.fireTiara}}],
-    ['cosmic', {id: 5539, config: 64, level: 1, xp: 40, recipe: { ingredients: [itemIds.cosmicTalisman, itemIds.tiara], result: itemIds.cosmicTiara}}],
-    ['nature', {id: 5541, config: 256, level: 1, xp: 45, recipe: { ingredients: [itemIds.natureTalisman, itemIds.tiara], result: itemIds.natureTiara}}],
-    ['chaos', {id: 5543, config: 128, level: 1, xp: 42.5, recipe: { ingredients: [itemIds.chaosTalisman, itemIds.tiara], result: itemIds.chaosTiara}}],
-    ['law', {id: 5545, config: 512, level: 1, xp: 47.5, recipe: { ingredients: [itemIds.lawTalisman, itemIds.tiara], result: itemIds.lawTiara}}],
-    ['death', {id: 5548, config: 1024, level: 1, xp: 50, recipe: { ingredients: [itemIds.deathTalisman, itemIds.tiara], result: itemIds.deathTiara}}],
+    ['air', {id: 5527, config: 1, level: 1, xp: 25.0, recipe: { ingredients: [itemIds.talismans.air, itemIds.tiaras.blank], result: itemIds.tiaras.air}}],
+    ['mind', {id: 5529, config: 2, level: 1, xp: 27.5, recipe: { ingredients: [itemIds.talismans.mind, itemIds.tiaras.blank], result: itemIds.tiaras.mind}}],
+    ['water', {id: 5531, config: 4, level: 1, xp: 30, recipe: { ingredients: [itemIds.talismans.water, itemIds.tiaras.blank], result: itemIds.tiaras.water}}],
+    ['body', {id: 5533, config: 32, level: 1, xp: 37.5, recipe: { ingredients: [itemIds.talismans.body, itemIds.tiaras.blank], result: itemIds.tiaras.body}}],
+    ['earth', {id: 5535, config: 8, level: 1, xp: 32.5, recipe: { ingredients: [itemIds.talismans.earth, itemIds.tiaras.blank], result: itemIds.tiaras.earth}}],
+    ['fire', {id: 5537, config: 16, level: 1, xp: 35, recipe: { ingredients: [itemIds.talismans.fire, itemIds.tiaras.blank], result: itemIds.tiaras.fire}}],
+    ['cosmic', {id: 5539, config: 64, level: 1, xp: 40, recipe: { ingredients: [itemIds.talismans.cosmic, itemIds.tiaras.blank], result: itemIds.talismans.cosmic}}],
+    ['nature', {id: 5541, config: 256, level: 1, xp: 45, recipe: { ingredients: [itemIds.talismans.nature, itemIds.tiaras.blank], result: itemIds.talismans.nature}}],
+    ['chaos', {id: 5543, config: 128, level: 1, xp: 42.5, recipe: { ingredients: [itemIds.talismans.chaos, itemIds.tiaras.blank], result: itemIds.talismans.chaos}}],
+    ['law', {id: 5545, config: 512, level: 1, xp: 47.5, recipe: { ingredients: [itemIds.talismans.law, itemIds.tiaras.blank], result: itemIds.talismans.law}}],
+    ['death', {id: 5548, config: 1024, level: 1, xp: 50, recipe: { ingredients: [itemIds.talismans.death, itemIds.tiaras.blank], result: itemIds.talismans.death}}],
 ]);
 
 export const talismans : Map<string, Talisman> = new Map<string, Talisman>([
-    ['air', {id: 1438}],
-    ['mind', {id: 1440}],
-    ['water', {id: 1442}],
-    ['body', {id: 1444}],
-    ['earth', {id: 1446}],
-    ['fire', {id: 1448}],
-    ['cosmic', {id: 1452}],
-    ['nature', {id: 1454}],
-    ['chaos', {id: 1456}],
-    ['law', {id: 1458}],
-    ['death', {id: 1462}],
+    ['air', {id: itemIds.talismans.air}],
+    ['mind', {id: itemIds.talismans.mind}],
+    ['water', {id: itemIds.talismans.water}],
+    ['body', {id: itemIds.talismans.body}],
+    ['earth', {id: itemIds.talismans.earth}],
+    ['fire', {id: itemIds.talismans.fire}],
+    ['cosmic', {id: itemIds.talismans.cosmic}],
+    ['nature', {id: itemIds.talismans.nature}],
+    ['chaos', {id: itemIds.talismans.chaos}],
+    ['law', {id: itemIds.talismans.law}],
+    ['death', {id: itemIds.talismans.death}],
 ]);
 
 export const altars : Map<string, Altar> = new Map<string, Altar>([
@@ -109,17 +108,17 @@ export const altars : Map<string, Altar> = new Map<string, Altar>([
 ]);
 
 export const runes : Map<string, Rune> = new Map<string, Rune>([
-    ['air', {id: 556, xp: 5.0, level: 1, essence: [itemIds.pureEssence, itemIds.runeEssence], altar: altars.get('air'), talisman: talismans.get('air'), tiara: tiaras.get('air')}],
-    ['mind', {id: 558, xp: 5.5, level: 1, essence: [itemIds.pureEssence, itemIds.runeEssence], altar: altars.get('mind'), talisman: talismans.get('mind'), tiara: tiaras.get('mind')}],
-    ['water', {id: 555, xp: 6, level: 5, essence: [itemIds.pureEssence, itemIds.runeEssence], altar: altars.get('water'), talisman: talismans.get('water'), tiara: tiaras.get('water')}],
-    ['earth', {id: 557, xp: 6.5, level: 9, essence: [itemIds.pureEssence, itemIds.runeEssence], altar: altars.get('earth'), talisman: talismans.get('earth'), tiara: tiaras.get('earth')}],
-    ['fire', {id: 554, xp: 7.0, level: 14, essence: [itemIds.pureEssence, itemIds.runeEssence], altar: altars.get('fire'), talisman: talismans.get('fire'), tiara: tiaras.get('fire')}],
-    ['body', {id: 559, xp: 7.5, level: 20, essence: [itemIds.pureEssence, itemIds.runeEssence], altar: altars.get('body'), talisman: talismans.get('body'), tiara: tiaras.get('body')}],
-    ['cosmic', {id: 564, xp: 8.0, level: 27, essence: [itemIds.pureEssence], altar: altars.get('cosmic'), talisman: talismans.get('cosmic'), tiara: tiaras.get('cosmic')}],
-    ['chaos', {id: 562, xp: 8.5, level: 35, essence: [itemIds.pureEssence], altar: altars.get('chaos'), talisman: talismans.get('chaos'), tiara: tiaras.get('chaos')}],
-    ['nature', {id: 561, xp: 9.0, level: 44, essence: [itemIds.pureEssence], altar: altars.get('nature'), talisman: talismans.get('nature'), tiara: tiaras.get('nature')}],
-    ['law', {id: 563, xp: 9.5, level: 54, essence: [itemIds.pureEssence], altar: altars.get('law'), talisman: talismans.get('law'), tiara: tiaras.get('law')}],
-    ['death', {id: 560, xp: 10.0, level: 65, essence: [itemIds.pureEssence], altar: altars.get('death'), talisman: talismans.get('death'), tiara: tiaras.get('death')}],
+    ['air', {id: 556, xp: 5.0, level: 1, essence: [itemIds.essence.pure, itemIds.essence.rune], altar: altars.get('air'), talisman: talismans.get('air'), tiara: tiaras.get('air')}],
+    ['mind', {id: 558, xp: 5.5, level: 1, essence: [itemIds.essence.pure, itemIds.essence.rune], altar: altars.get('mind'), talisman: talismans.get('mind'), tiara: tiaras.get('mind')}],
+    ['water', {id: 555, xp: 6, level: 5, essence: [itemIds.essence.pure, itemIds.essence.rune], altar: altars.get('water'), talisman: talismans.get('water'), tiara: tiaras.get('water')}],
+    ['earth', {id: 557, xp: 6.5, level: 9, essence: [itemIds.essence.pure, itemIds.essence.rune], altar: altars.get('earth'), talisman: talismans.get('earth'), tiara: tiaras.get('earth')}],
+    ['fire', {id: 554, xp: 7.0, level: 14, essence: [itemIds.essence.pure, itemIds.essence.rune], altar: altars.get('fire'), talisman: talismans.get('fire'), tiara: tiaras.get('fire')}],
+    ['body', {id: 559, xp: 7.5, level: 20, essence: [itemIds.essence.pure, itemIds.essence.rune], altar: altars.get('body'), talisman: talismans.get('body'), tiara: tiaras.get('body')}],
+    ['cosmic', {id: 564, xp: 8.0, level: 27, essence: [itemIds.essence.pure], altar: altars.get('cosmic'), talisman: talismans.get('cosmic'), tiara: tiaras.get('cosmic')}],
+    ['chaos', {id: 562, xp: 8.5, level: 35, essence: [itemIds.essence.pure], altar: altars.get('chaos'), talisman: talismans.get('chaos'), tiara: tiaras.get('chaos')}],
+    ['nature', {id: 561, xp: 9.0, level: 44, essence: [itemIds.essence.pure], altar: altars.get('nature'), talisman: talismans.get('nature'), tiara: tiaras.get('nature')}],
+    ['law', {id: 563, xp: 9.5, level: 54, essence: [itemIds.essence.pure], altar: altars.get('law'), talisman: talismans.get('law'), tiara: tiaras.get('law')}],
+    ['death', {id: 560, xp: 10.0, level: 65, essence: [itemIds.essence.pure], altar: altars.get('death'), talisman: talismans.get('death'), tiara: tiaras.get('death')}],
 ]);
 
 
