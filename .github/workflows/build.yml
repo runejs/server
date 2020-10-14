@@ -2,9 +2,9 @@ name: Lint & Build Project
 
 on:
     pull_request:
-        branches: [ master ]
+        branches: [ master, develop ]
     push:
-        branches: [ master ]
+        branches: [ master, develop ]
 
 jobs:
     build:

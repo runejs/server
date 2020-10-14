@@ -6,6 +6,7 @@ import { npcAction } from '@server/world/actor/player/action/npc-action';
 import { Actor } from '@server/world/actor/actor';
 import { Player } from '@server/world/actor/player/player';
 import { timer } from 'rxjs';
+import { Skills } from '@server/world/actor/skills';
 
 class Combat {
 
@@ -48,6 +49,25 @@ class Combat {
         await timer(1200).toPromise();
 
         this.combatRoll();
+    }
+
+    public calculateCombatLevel(attack: number, strength: number, defence: number, hitpoints: number,
+                         prayer: number, ranged: number, magic: number, skills: Skills): number {
+        const combatLevel = (skills.defence.level + skills.hitpoints.level + Math.floor(skills.prayer.level / 2)) * 0.25;
+        const melee = (skills.attack.level + skills.strength.level) * 0.325;
+        const ranger = skills.ranged.level * 0.4875;
+        const mage = skills.magic.level * 0.4875;
+        return combatLevel + Math.max(melee, Math.max(ranger, mage));
+    }
+
+    public meleeMaxHit(strengthBase: number, strengthCurrent: number, strengthBonus: number, prayer: any, fightStyle: any,
+                       special: any, effect: any, itemSet: any, hpBase?: number, hpCurrent?: number): number {
+        const finalStrength = strengthCurrent + fightStyle.getStrengthBoost() +
+            (strengthBase * prayer.getBoost()) + (strengthBase * effect.getBoost())/* +
+            (itemSet == ItemSets.Dharok ? (hpBase - hpCurrent) : 0)*/;
+        const strengthMultiplier = (strengthBonus * 0.00175) + 0.1;
+        const maxHit = Math.floor((finalStrength * strengthMultiplier) + 1.05);
+        return Math.floor(Math.floor(Math.floor(maxHit) * itemSet.getMultiplier()) * special.getMultiplier());
     }
 
     private async getWithinDistance(): Promise<void> {
