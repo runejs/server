@@ -174,11 +174,21 @@ export abstract class Actor {
         this.updateFlags.animation = animation;
     }
 
+    public stopAnimation(): void {
+        let animation = {id: -1, delay: 0};
+        this.updateFlags.animation = animation;
+    }
+
     public playGraphics(graphics: number | Graphic): void {
         if(typeof graphics === 'number') {
             graphics = {id: graphics, delay: 0, height: 120};
         }
 
+        this.updateFlags.graphics = graphics;
+    }
+
+    public stopGraphics(): void {
+        let graphics = {id: -1, delay: 0, height: 120};
         this.updateFlags.graphics = graphics;
     }
 
