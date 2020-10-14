@@ -87,7 +87,7 @@ function openServer(): void {
         socket.setKeepAlive(true);
         socket.setTimeout(30000);
 
-        let clientConnection = new ClientConnection(socket, 'game');
+        let clientConnection = new ClientConnection(socket);
 
         socket.on('data', data => {
             if(clientConnection) {

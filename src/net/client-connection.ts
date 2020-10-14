@@ -1,6 +1,6 @@
 import { Socket } from 'net';
 import { Player } from '@server/world/actor/player/player';
-import { serverConfig, world } from '@server/game-server';
+import { world } from '@server/game-server';
 import { LoginHandshakeParser } from './data-parser/login-handshake-parser';
 import { ClientLoginParser } from './data-parser/client-login-parser';
 import { InboundPacketDataParser } from './data-parser/inbound-packet-data-parser';
@@ -28,56 +28,14 @@ export class ClientConnection {
     private _clientKey1: bigint;
     private _clientKey2: bigint;
     private _player: Player;
-    private loginServerSocket: Socket;
 
-    public constructor(public readonly socket: Socket,
-                       private readonly type: 'game' | 'login') {
+    public constructor(public readonly socket: Socket) {
         this.socket = socket;
         this.dataParser = null;
         socket.emit('name', {});
     }
 
     public parseIncomingData(buffer?: ByteBuffer): void {
-        if(this.type === 'game') {
-            if(!this._connectionStage) {
-                const packetId = buffer.get('BYTE', 'UNSIGNED');
-
-                if(packetId === 15) {
-                    // Update server
-                } else if(packetId === 14) {
-                    // Login server
-                } else {
-                    throw new Error(`Invalid handshake packet id for connection.`);
-                }
-            }
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         try {
             if(!this.connectionStage) {
                 const packetId = buffer.get('BYTE', 'UNSIGNED');
@@ -116,20 +74,6 @@ export class ClientConnection {
         if(this.player) {
             this.player.logout();
             world.deregisterPlayer(this.player);
-        }
-    }
-
-    private async callLoginServer(buffer: ByteBuffer): Promise<void> {
-        if(!this.loginServerSocket) {
-            await new Promise(resolve => {
-                this.loginServerSocket = new Socket();
-
-                this.loginServerSocket.on('data', data => {});
-
-                this.loginServerSocket.connect(serverConfig.loginServerPort, serverConfig.loginServerHost, () => {
-
-                });
-            });
         }
     }
 

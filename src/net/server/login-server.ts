@@ -137,9 +137,8 @@ class LoginServerConnection extends SocketConnectionHandler {
         const credentialsResponseCode = this.checkCredentials(username, password);
         if(credentialsResponseCode === -1) {
             this.sendLoginResponse(LoginResponseCode.SUCCESS);
-            this.sendLogin([ clientKey1, clientKey2 ], gameClientId, username, password, isLowDetail);
         } else {
-            logger.warn(`${username} attempted to login but received error code ${ credentialsResponseCode }.`);
+            logger.info(`${username} attempted to login but received error code ${ credentialsResponseCode }.`);
             this.sendLoginResponse(credentialsResponseCode);
         }
     }
