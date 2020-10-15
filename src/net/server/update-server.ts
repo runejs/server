@@ -1,22 +1,38 @@
-import { Socket } from 'net';
-import { openServer, SocketConnectionHandler } from '@server/net/server/server-gateway';
+import { createServer, Socket } from 'net';
+import { SocketConnectionHandler } from '@server/net/server/server-gateway';
 import { ByteBuffer } from '@runejs/byte-buffer';
-import { parseServerConfig } from '@server/world/config/server-config';
 import { logger } from '@runejs/logger/dist/logger';
-import { cache, crcTable } from '@server/game-server';
+import * as CRC32 from 'crc-32';
+import { Cache } from '@runejs/cache-parser';
+
+const cache: Cache = new Cache('cache', false);
+let crcTable: ByteBuffer;
+
+function generateCrcTable(): void {
+    const index = cache.metaChannel;
+    const indexLength = index.length;
+    const buffer = new ByteBuffer(4048);
+    buffer.put(0, 'BYTE');
+    buffer.put(indexLength, 'INT');
+    for(let file = 0; file < (indexLength / 6); file++) {
+        const crcValue = CRC32.buf(cache.getRawFile(255, file));
+        buffer.put(crcValue, 'INT');
+    }
+
+    crcTable = buffer;
+}
 
 enum ConnectionStage {
     HANDSHAKE = 'handshake',
     ACTIVE = 'active'
 }
 
-class UpdateServerConnection extends SocketConnectionHandler {
+class UpdateServerConnection implements SocketConnectionHandler {
 
     private connectionStage: ConnectionStage = ConnectionStage.HANDSHAKE;
     private files: { file: number, index: number }[] = [];
 
     public constructor(private readonly gameServerSocket: Socket) {
-        super();
     }
 
     public async dataReceived(buffer: ByteBuffer): Promise<void> {
@@ -29,6 +45,8 @@ class UpdateServerConnection extends SocketConnectionHandler {
             case ConnectionStage.HANDSHAKE:
                 const gameVersion = buffer.get('INT');
                 const outputBuffer = new ByteBuffer(1);
+
+                console.log(gameVersion);
 
                 if(gameVersion === 435) {
                     outputBuffer.put(6);
@@ -112,16 +130,33 @@ class UpdateServerConnection extends SocketConnectionHandler {
 
 }
 
-export const createUpdateServerConnection =
-    (socket: Socket): UpdateServerConnection => new UpdateServerConnection(socket);
-
-export const launchUpdateServer = (): void => {
-    const serverConfig = parseServerConfig();
-
-    if(!serverConfig) {
-        logger.error('Unable to start update server due to missing or invalid server configuration.');
-        return;
-    }
-
-    openServer(serverConfig.updateServerHost, serverConfig.updateServerPort, 'update_server');
+const socketError = (socket: Socket, error): void => {
+    logger.error('Socket destroyed due to connection error.');
+    logger.error(error?.message || '[no message]');
+    socket.destroy();
 };
+
+const registerSocket = (socket: Socket): void => {
+    socket.setNoDelay(true);
+    socket.setKeepAlive(true);
+    socket.setTimeout(30000);
+
+    const connection: UpdateServerConnection = new UpdateServerConnection(socket);
+
+    logger.info(`Updateserver connection established.`);
+
+    socket.on('data', data => connection.dataReceived(new ByteBuffer(data)));
+
+    socket.on('close', () => {
+        // @TODO socket close event
+    });
+
+    socket.on('error', error => socketError(socket, error));
+};
+
+export const openUpdateServer = (host: string, port: number): void => {
+    generateCrcTable();
+    createServer(socket => registerSocket(socket)).listen(port, host);
+    logger.info(`Updateserver listening @ ${ host }:${ port }.`);
+};
+

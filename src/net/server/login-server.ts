@@ -1,12 +1,12 @@
-import { Socket } from 'net';
-import { openServer, SocketConnectionHandler } from '@server/net/server/server-gateway';
+import { createServer, Socket } from 'net';
+import { SocketConnectionHandler } from '@server/net/server/server-gateway';
 import { ByteBuffer } from '@runejs/byte-buffer';
 import { parseServerConfig } from '@server/world/config/server-config';
-import { logger } from '@runejs/logger/dist/logger';
-import { world } from '@server/game-server';
+import { logger } from '@runejs/logger';
 import { loadPlayerSave } from '@server/world/actor/player/player-data';
 import BigInteger from 'bigi';
 import * as bcrypt from 'bcrypt';
+import { longToString } from '@server/util/strings';
 
 const serverConfig = parseServerConfig();
 
@@ -17,17 +17,6 @@ const VALID_CHARS = ['_', 'a', 'b', 'c', 'd',
     '*', '(', ')', '-', '+', '=', ':', ';', '.', '>', '<', ',', '"',
     '[', ']', '|', '?', '/', '`'];
 
-function longToName(nameLong: BigInt): string {
-    let ac: string = '';
-    while(nameLong !== BigInt(0)) {
-        const l1 = nameLong;
-        nameLong = BigInt(nameLong) / BigInt(37);
-        ac += VALID_CHARS[parseInt(l1.toString()) - parseInt(nameLong.toString()) * 37];
-    }
-
-    return ac.split('').reverse().join('');
-}
-
 enum ConnectionStage {
     HANDSHAKE = 'handshake',
     ACTIVE = 'active'
@@ -37,7 +26,7 @@ enum ConnectionStage {
  * Codes for user login attempts that are sent back to the game client
  * to inform the user of the status of their login attempt.
  */
-enum LoginResponseCode {
+export enum LoginResponseCode {
     SUCCESS = 2,
     INVALID_CREDENTIALS = 3,
     ACCOUNT_DISABLED = 4,
@@ -50,7 +39,7 @@ enum LoginResponseCode {
     // @TODO the rest
 }
 
-class LoginServerConnection extends SocketConnectionHandler {
+class LoginServerConnection implements SocketConnectionHandler {
 
     private readonly rsaModulus = BigInteger(serverConfig.rsaMod);
     private readonly rsaExponent = BigInteger(serverConfig.rsaExp);
@@ -58,7 +47,6 @@ class LoginServerConnection extends SocketConnectionHandler {
     private serverKey: bigint;
 
     public constructor(private readonly gameServerSocket: Socket) {
-        super();
     }
 
     public async dataReceived(buffer: ByteBuffer): Promise<void> {
@@ -129,7 +117,7 @@ class LoginServerConnection extends SocketConnectionHandler {
 
         const gameClientId = decrypted.get('INT');
         const usernameLong = BigInt(decrypted.get('LONG'));
-        const username = longToName(usernameLong);
+        const username = longToString(usernameLong);
         const password = decrypted.getString();
 
         logger.info(`Login request: ${username}/${password}`);
@@ -137,12 +125,37 @@ class LoginServerConnection extends SocketConnectionHandler {
         const credentialsResponseCode = this.checkCredentials(username, password);
         if(credentialsResponseCode === -1) {
             this.sendLoginResponse(LoginResponseCode.SUCCESS);
+            this.sendLogin([ clientKey1, clientKey2 ], gameClientId, username, password, isLowDetail);
         } else {
             logger.info(`${username} attempted to login but received error code ${ credentialsResponseCode }.`);
             this.sendLoginResponse(credentialsResponseCode);
         }
     }
 
+    /**
+     * Logs a user in and notifies their game server of a successful login.
+     * @param clientKeys The user's client keys (sent by the client).
+     * @param gameClientId The user's game client ID (sent by the client).
+     * @param username The user's username.
+     * @param password The user's password.
+     * @param isLowDetail Whether or not the user selected the "Low Detail" option.
+     */
+    private sendLogin(clientKeys: [ number, number ], gameClientId: number, username: string, password: string, isLowDetail: boolean): void {
+        const outputBuffer = new ByteBuffer(400);
+        outputBuffer.put(LoginResponseCode.SUCCESS);
+        outputBuffer.put(clientKeys[0], 'INT');
+        outputBuffer.put(clientKeys[1], 'INT');
+        outputBuffer.put(gameClientId, 'INT');
+        outputBuffer.putString(username);
+        outputBuffer.putString(bcrypt.hashSync(password, bcrypt.genSaltSync()));
+        outputBuffer.put(isLowDetail ? 1 : 0);
+        this.gameServerSocket.write(outputBuffer.getSlice(0, outputBuffer.writerIndex));
+    }
+
+    /**
+     * Sends a simple login response code to the game server.
+     * @param responseCode The specific response code to send.
+     */
     private sendLoginResponse(responseCode: number): void {
         const outputBuffer = new ByteBuffer(1);
         outputBuffer.put(responseCode, 'BYTE');
@@ -184,10 +197,6 @@ class LoginServerConnection extends SocketConnectionHandler {
             }
         }
 
-        if(world.playerOnline(username)) {
-            return LoginResponseCode.ALREADY_LOGGED_IN;
-        }
-
         return -1;
     }
 
@@ -206,16 +215,29 @@ class LoginServerConnection extends SocketConnectionHandler {
 
 }
 
-export const createLoginServerConnection =
-    (socket: Socket): LoginServerConnection => new LoginServerConnection(socket);
+const socketError = (socket: Socket, error): void => {
+    logger.error('Socket destroyed due to connection error.');
+    logger.error(error?.message || '[no message]');
+    socket.destroy();
+};
 
-export const launchLoginServer = (): void => {
-    const serverConfig = parseServerConfig();
+export const registerSocket = (socket: Socket): void => {
+    socket.setNoDelay(true);
+    socket.setKeepAlive(true);
+    socket.setTimeout(30000);
 
-    if(!serverConfig) {
-        logger.error('Unable to start login server due to missing or invalid server configuration.');
-        return;
-    }
+    const connection: LoginServerConnection = new LoginServerConnection(socket);
 
-    openServer(serverConfig.host, serverConfig.port, 'game_server');
+    socket.on('data', data => connection.dataReceived(new ByteBuffer(data)));
+
+    socket.on('close', () => {
+        // @TODO socket close event
+    });
+
+    socket.on('error', error => socketError(socket, error));
+};
+
+export const openLoginServer = (host: string, port: number): void => {
+    createServer(socket => registerSocket(socket)).listen(port, host);
+    logger.info(`Loginserver listening @ ${ host }:${ port }.`);
 };

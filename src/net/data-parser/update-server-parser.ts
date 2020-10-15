@@ -1,6 +1,7 @@
 import { ByteBuffer } from '@runejs/byte-buffer';
 import { DataParser } from './data-parser';
-import { crcTable, cache } from '@server/game-server';
+
+const crcTable = null;
 
 /**
  * Handles the cache update server.
@@ -10,7 +11,7 @@ export class UpdateServerParser extends DataParser {
     private files: { file: number, index: number }[] = [];
 
     public parse(buffer?: ByteBuffer): void {
-        if(!buffer) {
+        /*if(!buffer) {
             return;
         }
 
@@ -38,11 +39,11 @@ export class UpdateServerParser extends DataParser {
                 const info = this.files.shift();
                 this.clientConnection.socket.write(this.generateFile(info.index, info.file));
             }
-        }
+        }*/
     }
 
-    private generateFile(index: number, file: number): Buffer {
-        let cacheFile: ByteBuffer;
+    private generateFile(index: number, file: number): void {
+        /*let cacheFile: ByteBuffer;
 
         if(index === 255 && file === 255) {
             cacheFile = new ByteBuffer(crcTable.length);
@@ -76,6 +77,6 @@ export class UpdateServerParser extends DataParser {
             c++;
         }
 
-        return Buffer.from(buffer.flipWriter());
+        return Buffer.from(buffer.flipWriter());*/
     }
 }
