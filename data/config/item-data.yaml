@@ -591,29 +591,6 @@
   alchemy:
     high: 12
     low: 8
-- id: 5527
-  desc: air tiara
-  canTrade: true
-  weight: 1
-  alchemy:
-    high: 60
-    low: 30
-  equipment:
-    slot: HEAD
-    helmetType: HAT
-    bonuses:
-      offencive:
-        stab: 0
-        slash: 0
-        crush: 0
-        magic: 0
-        ranged: 0
-      defencive:
-        stab: 0
-        slash: 0
-        crush: 0
-        magic: 0
-        ranged: 0
 - id: 6623
   desc: white full helm
   canTrade: true
@@ -640,3 +617,302 @@
       skill:
         strength: 0
         prayer: 1
+- id: 5527
+  desc: air tiara
+  canTrade: true
+  weight: 1
+  alchemy:
+    high: 60
+    low: 30
+  equipment:
+    slot: HEAD
+    helmetType: HAT
+    bonuses:
+      offencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+- id: 5529
+  desc: Mind tiara
+  canTrade: true
+  weight: 1
+  alchemy:
+    high: 60
+    low: 30
+  equipment:
+    slot: HEAD
+    helmetType: HAT
+    bonuses:
+      offencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+- id: 5531
+  desc: Water tiara
+  canTrade: true
+  weight: 1
+  alchemy:
+    high: 60
+    low: 30
+  equipment:
+    slot: HEAD
+    helmetType: HAT
+    bonuses:
+      offencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+- id: 5533
+  desc: Body tiara
+  canTrade: true
+  weight: 1
+  alchemy:
+    high: 60
+    low: 30
+  equipment:
+    slot: HEAD
+    helmetType: HAT
+    bonuses:
+      offencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+- id: 5535
+  desc: Earth tiara
+  canTrade: true
+  weight: 1
+  alchemy:
+    high: 60
+    low: 30
+  equipment:
+    slot: HEAD
+    helmetType: HAT
+    bonuses:
+      offencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+- id: 5537
+  desc: Fire tiara
+  canTrade: true
+  weight: 1
+  alchemy:
+    high: 60
+    low: 30
+  equipment:
+    slot: HEAD
+    helmetType: HAT
+    bonuses:
+      offencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+- id: 5539
+  desc: Cosmic tiara
+  canTrade: true
+  weight: 1
+  alchemy:
+    high: 60
+    low: 30
+  equipment:
+    slot: HEAD
+    helmetType: HAT
+    bonuses:
+      offencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+- id: 5541
+  desc: Nature tiara
+  canTrade: true
+  weight: 1
+  alchemy:
+    high: 60
+    low: 30
+  equipment:
+    slot: HEAD
+    helmetType: HAT
+    bonuses:
+      offencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+- id: 5543
+  desc: Chaos tiara
+  canTrade: true
+  weight: 1
+  alchemy:
+    high: 60
+    low: 30
+  equipment:
+    slot: HEAD
+    helmetType: HAT
+    bonuses:
+      offencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+- id: 5545
+  desc: Law tiara
+  canTrade: true
+  weight: 1
+  alchemy:
+    high: 60
+    low: 30
+  equipment:
+    slot: HEAD
+    helmetType: HAT
+    bonuses:
+      offencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+- id: 5547
+  desc: Death tiara
+  canTrade: true
+  weight: 1
+  alchemy:
+    high: 60
+    low: 30
+  equipment:
+    slot: HEAD
+    helmetType: HAT
+    bonuses:
+      offencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+- id: 5549
+  desc: Blood tiara
+  canTrade: true
+  weight: 1
+  alchemy:
+    high: 60
+    low: 30
+  equipment:
+    slot: HEAD
+    helmetType: HAT
+    bonuses:
+      offencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+- id: 5551
+  desc: Soul tiara
+  canTrade: true
+  weight: 1
+  alchemy:
+    high: 60
+    low: 30
+  equipment:
+    slot: HEAD
+    helmetType: HAT
+    bonuses:
+      offencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
