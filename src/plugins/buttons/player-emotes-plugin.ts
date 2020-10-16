@@ -152,11 +152,13 @@ export const action: buttonAction = (details) => {
     const emote = emotes[buttonId];
     
     if(emote.name === 'SKILLCAPE') {
-        if (skillCapeEmotes.some(item => item.itemIds.includes(player.getItemInEquipmentSlot('BACK')?.itemId))) {
-            const skillcapeEmote = skillCapeEmotes.filter(item => item.itemIds.includes(player.getItemInEquipmentSlot('BACK')?.itemId));
-            player.playAnimation(skillcapeEmote[0].animationId);
-            player.playGraphics({id: skillcapeEmote[0].graphicId, delay: 0, height: 0});
-        } else {
+        if (player.getItemInEquipmentSlot('BACK')) {            
+            if (skillCapeEmotes.some(item => item.itemIds.includes(player.getItemInEquipmentSlot('BACK')?.itemId))) {
+                const skillcapeEmote = skillCapeEmotes.filter(item => item.itemIds.includes(player.getItemInEquipmentSlot('BACK')?.itemId));
+                player.playAnimation(skillcapeEmote[0].animationId);
+                player.playGraphics({id: skillcapeEmote[0].graphicId, delay: 0, height: 0});
+            }
+        }  else {
             player.sendMessage(`You need to be wearing a skillcape in order to perform that emote.`, true);
         }
     } else {
