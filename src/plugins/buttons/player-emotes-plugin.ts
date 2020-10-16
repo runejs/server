@@ -2,6 +2,7 @@ import { buttonAction } from '@server/world/actor/player/action/button-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { widgets } from '@server/world/config/widget';
 import { Player } from '@server/world/actor/player/player';
+import { itemIds } from '@server/world/config/item-ids';
 
 interface Emote {
     animationId: number;
@@ -9,6 +10,38 @@ interface Emote {
     unlockable?: boolean;
     graphicId?: number;
 }
+
+interface SkillcapeEmote extends Emote {
+    itemIds: Array<number>;
+}
+
+const { skillCapes } = itemIds;
+
+export const skillCapeEmotes: SkillcapeEmote[]  = [
+    { animationId: 4959, name: 'Attack', itemIds: [skillCapes.attack.untrimmed, skillCapes.attack.trimmed], graphicId: 823 },
+    { animationId: 4981, name: 'Strength', itemIds: [skillCapes.strength.untrimmed, skillCapes.strength.trimmed], graphicId: 828 },
+    { animationId: 4961, name: 'Defence', itemIds: [skillCapes.defence.untrimmed, skillCapes.defence.trimmed], graphicId: 824 },
+    { animationId: 4973, name: 'Ranged', itemIds: [skillCapes.ranged.untrimmed, skillCapes.ranged.trimmed], graphicId: 832 },
+    { animationId: 4979, name: 'Prayer', itemIds: [skillCapes.prayer.untrimmed, skillCapes.prayer.trimmed], graphicId: 829 },
+    { animationId: 4939, name: 'Magic', itemIds: [skillCapes.magic.untrimmed, skillCapes.magic.trimmed], graphicId: 813 },
+    { animationId: 4947, name: 'Runecrafting', itemIds: [skillCapes.runecrafting.untrimmed, skillCapes.runecrafting.trimmed], graphicId: 817 },
+    { animationId: 4971, name: 'Constitution', itemIds: [skillCapes.constitution.untrimmed, skillCapes.constitution.trimmed], graphicId: 833 },
+    { animationId: 4977, name: 'Agility', itemIds: [skillCapes.agility.untrimmed, skillCapes.agility.trimmed], graphicId: 830 },
+    { animationId: 4969, name: 'Herblore', itemIds: [skillCapes.herblore.untrimmed, skillCapes.herblore.trimmed], graphicId: 835 },
+    { animationId: 4965, name: 'Thieving', itemIds: [skillCapes.thieving.untrimmed, skillCapes.thieving.trimmed], graphicId: 826 },
+    { animationId: 4949, name: 'Crafting', itemIds: [skillCapes.crafting.untrimmed, skillCapes.crafting.trimmed], graphicId: 818 },
+    { animationId: 4937, name: 'Fletching', itemIds: [skillCapes.fletching.untrimmed, skillCapes.fletching.trimmed], graphicId: 812 },
+    { animationId: 4967, name: 'Slayer', itemIds: [skillCapes.slayer.untrimmed, skillCapes.slayer.trimmed], graphicId: 827 },
+    { animationId: 4953, name: 'Construction', itemIds: [skillCapes.construction.untrimmed, skillCapes.construction.trimmed], graphicId: 820 },
+    { animationId: 4941, name: 'Mining', itemIds: [skillCapes.mining.untrimmed, skillCapes.mining.trimmed], graphicId: 814 },
+    { animationId: 4943, name: 'Smithing', itemIds: [skillCapes.smithing.untrimmed, skillCapes.smithing.trimmed], graphicId: 815 },
+    { animationId: 4951, name: 'Fishing', itemIds: [skillCapes.fishing.untrimmed, skillCapes.fishing.trimmed], graphicId: 819 },
+    { animationId: 4955, name: 'Cooking', itemIds: [skillCapes.cooking.untrimmed, skillCapes.cooking.trimmed], graphicId: 821 },
+    { animationId: 4975, name: 'Firemaking', itemIds: [skillCapes.firemaking.untrimmed, skillCapes.firemaking.trimmed], graphicId: 831 },
+    { animationId: 4957, name: 'Woodcutting', itemIds: [skillCapes.woodcutting.untrimmed, skillCapes.woodcutting.trimmed], graphicId: 822 },
+    { animationId: 4963, name: 'Farming', itemIds: [skillCapes.farming.untrimmed, skillCapes.farming.trimmed], graphicId: 825 },
+    { animationId: 4945, name: 'Quest point', itemIds: [skillCapes.questpoint.untrimmed], graphicId: 816 },
+];
 
 export const emotes: { [key: number]: Emote } = {
     1:  { animationId: 855,  name: 'YES' },
@@ -117,9 +150,17 @@ export const action: buttonAction = (details) => {
     const { player, buttonId } = details;
 
     const emote = emotes[buttonId];
-
+    
     if(emote.name === 'SKILLCAPE') {
-        player.sendMessage(`You need to be wearing a skillcape in order to perform that emote.`);
+        if (player.getItemInEquipmentSlot('BACK')) {            
+            if (skillCapeEmotes.some(item => item.itemIds.includes(player.getItemInEquipmentSlot('BACK')?.itemId))) {
+                const skillcapeEmote = skillCapeEmotes.filter(item => item.itemIds.includes(player.getItemInEquipmentSlot('BACK')?.itemId));
+                player.playAnimation(skillcapeEmote[0].animationId);
+                player.playGraphics({id: skillcapeEmote[0].graphicId, delay: 0, height: 0});
+            }
+        }  else {
+            player.sendMessage(`You need to be wearing a skillcape in order to perform that emote.`, true);
+        }
     } else {
         if(emote.unlockable) {
             const unlockedEmotes: string[] = player.savedMetadata.unlockedEmotes || [];
