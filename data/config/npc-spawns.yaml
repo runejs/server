@@ -105,3 +105,35 @@
   y: 3397
   radius: 3
 
+- npcId: 549 # Horvik
+  x: 3229
+  y: 3437
+  radius: 2
+- npcId: 783 # Wilough
+  x: 3221
+  y: 3437
+  radius: 2
+- npcId: 781 # Shilop
+  x: 3220
+  y: 3432
+  radius: 2
+- npcId: 547 # Baraek
+  x: 3220
+  y: 3433
+  radius: 1
+- npcId: 639 # Romeo
+  x: 3211
+  y: 3424
+  radius: 4
+- npcId: 520 # Shop Keeper
+  x: 3214
+  y: 3417
+  radius: 1
+- npcId: 521 # Shop Assistant
+  x: 3214
+  y: 3417
+  radius: 1
+- npcId: 4905 # Master Smithing Tutor
+  x: 3187
+  y: 3423
+  radius: 2
