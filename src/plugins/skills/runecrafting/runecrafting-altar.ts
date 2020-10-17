@@ -1,3 +1,6 @@
+/**
+ * @Author NickNick
+ */
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import {
     altars,

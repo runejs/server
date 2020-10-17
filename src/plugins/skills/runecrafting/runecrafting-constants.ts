@@ -1,3 +1,6 @@
+/**
+ * @Author NickNick
+ */
 /*
     RUNECRAFTING Tiara Configs
     Air - config 491 1

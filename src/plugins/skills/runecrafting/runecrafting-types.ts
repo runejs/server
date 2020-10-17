@@ -1,6 +1,9 @@
+/**
+ * @Author NickNick
+ */
+
 import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
-import { altars, talismans, tiaras } from '@server/plugins/skills/runecrafting/runecrafting-constants';
 
 export interface RunecraftingRecipe {
     ingredients: Item[] | number[];

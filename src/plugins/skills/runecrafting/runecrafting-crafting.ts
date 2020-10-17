@@ -1,3 +1,7 @@
+/**
+ * @Author NickNick
+ */
+
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { objectAction, ObjectActionDetails } from '@server/world/actor/player/action/object-action';
 import { Skill } from '@server/world/actor/skills';
