@@ -14,10 +14,10 @@
  */
 
 import { itemIds } from '@server/world/config/item-ids';
-import { Altar, CombinationRune, Rune, Talisman, Tiara } from '@server/plugins/skills/runecrafting/types';
+import { RunecraftingAltar, RunecraftingCombinationRune, RunecraftingRune, RunecraftingTalisman, RunecraftingTiara } from '@server/plugins/skills/runecrafting/runecrafting-types';
 import { Position } from '@server/world/position';
 
-export const tiaras: Map<string, Tiara> = new Map<string, Tiara>([
+export const tiaras: Map<string, RunecraftingTiara> = new Map<string, RunecraftingTiara>([
     ['air', {
         id: itemIds.tiaras.air,
         config: 1,
@@ -97,7 +97,7 @@ export const tiaras: Map<string, Tiara> = new Map<string, Tiara>([
     }],
 ]);
 
-export const talismans: Map<string, Talisman> = new Map<string, Talisman>([
+export const talismans: Map<string, RunecraftingTalisman> = new Map<string, RunecraftingTalisman>([
     ['air', {id: itemIds.talismans.air}],
     ['mind', {id: itemIds.talismans.mind}],
     ['water', {id: itemIds.talismans.water}],
@@ -112,7 +112,7 @@ export const talismans: Map<string, Talisman> = new Map<string, Talisman>([
     ['elemental', {id: itemIds.talismans.elemental}],
 ]);
 
-export const altars: Map<string, Altar> = new Map<string, Altar>([
+export const altars: Map<string, RunecraftingAltar> = new Map<string, RunecraftingAltar>([
     ['air', {
         entranceId: 2452,
         craftingId: 2478,
@@ -192,7 +192,7 @@ export const altars: Map<string, Altar> = new Map<string, Altar>([
     }],
 ]);
 
-export const runes: Map<string, Rune> = new Map<string, Rune>([
+export const runes: Map<string, RunecraftingRune> = new Map<string, RunecraftingRune>([
     ['air', {
         id: 556,
         xp: 5.0,
@@ -297,7 +297,7 @@ export const runes: Map<string, Rune> = new Map<string, Rune>([
 
 
 
-export const combinationRunes: Map<string, CombinationRune> = new Map<string, CombinationRune>([
+export const combinationRunes: Map<string, RunecraftingCombinationRune> = new Map<string, RunecraftingCombinationRune>([
     ['mist', {
         altar: [altars.get('air'), altars.get('water')],
         id: 4695,

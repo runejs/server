@@ -1,5 +1,5 @@
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { getEntityByAttr, getEntityIds, tiaras } from '@server/plugins/skills/runecrafting/constants';
+import { getEntityByAttr, getEntityIds, tiaras } from '@server/plugins/skills/runecrafting/runecrafting-constants';
 import { equipAction } from '@server/world/actor/player/action/equip-action';
 
 

@@ -7,9 +7,9 @@ import {
     getEntityByAttr,
     getEntityIds, runeMultiplier,
     runes,
-} from '@server/plugins/skills/runecrafting/constants';
+} from '@server/plugins/skills/runecrafting/runecrafting-constants';
 import { itemOnObjectAction, ItemOnObjectActionDetails } from '@server/world/actor/player/action/item-on-object-action';
-import { CombinationRune } from '@server/plugins/skills/runecrafting/types';
+import { RunecraftingCombinationRune } from '@server/plugins/skills/runecrafting/runecrafting-types';
 import { randomBetween } from '@server/util/num';
 import { itemIds } from '@server/world/config/item-ids';
 import { cache } from '@server/game-server';
@@ -44,7 +44,7 @@ const craftRune: objectAction = (details: ObjectActionDetails) => {
     player.sendMessage(`You do not have any rune essence to bind.`);
 };
 
-function getCombinationRuneByAltar(itemId: number, objectId: number): CombinationRune | undefined {
+function getCombinationRuneByAltar(itemId: number, objectId: number): RunecraftingCombinationRune | undefined {
     let rune = undefined;
     for (const combinationRune of combinationRunes.values()) {
         const altarIndex = combinationRune.altar.findIndex((altar) => altar.craftingId === objectId);

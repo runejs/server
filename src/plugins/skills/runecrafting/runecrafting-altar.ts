@@ -5,11 +5,11 @@ import {
     getEntityIds,
     runes,
     talismans,
-} from '@server/plugins/skills/runecrafting/constants';
+} from '@server/plugins/skills/runecrafting/runecrafting-constants';
 import { itemOnObjectAction, ItemOnObjectActionDetails } from '@server/world/actor/player/action/item-on-object-action';
 import { cache } from '@server/game-server';
 import { objectAction, ObjectActionDetails } from '@server/world/actor/player/action/object-action';
-import { Altar, Rune } from '@server/plugins/skills/runecrafting/types';
+import { RunecraftingAltar, RunecraftingRune } from '@server/plugins/skills/runecrafting/runecrafting-types';
 import { itemIds } from '@server/world/config/item-ids';
 import { Player } from '@server/world/actor/player/player';
 import { Item } from '@server/world/items/item';
@@ -17,8 +17,8 @@ import { Item } from '@server/world/items/item';
 
 const enterAltar: itemOnObjectAction = (details: ItemOnObjectActionDetails) => {
     const {player, object, item} = details;
-    const altar: Altar = getEntityByAttr(altars, 'entranceId', object.objectId);
-    const rune: Rune = getEntityByAttr(runes, 'altar.entranceId', object.objectId);
+    const altar: RunecraftingAltar = getEntityByAttr(altars, 'entranceId', object.objectId);
+    const rune: RunecraftingRune = getEntityByAttr(runes, 'altar.entranceId', object.objectId);
 
     if (item.itemId === itemIds.talismans.elemental) {
         if (rune.talisman.id === itemIds.talismans.air
@@ -43,7 +43,7 @@ const enterAltar: itemOnObjectAction = (details: ItemOnObjectActionDetails) => {
     }
 };
 
-function finishEnterAltar(player: Player, item: Item, altar: Altar): void {
+function finishEnterAltar(player: Player, item: Item, altar: RunecraftingAltar): void {
     const talisman = cache.itemDefinitions.get(item.itemId);
     player.sendMessage(`You hold the ${talisman.name} towards the mysterious ruins.`);
     player.sendMessage(`You feel a powerful force take hold of you..`);
