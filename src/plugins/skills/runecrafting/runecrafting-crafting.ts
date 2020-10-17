@@ -22,8 +22,13 @@ import { cache } from '@server/game-server';
 const craftRune: objectAction = (details: ObjectActionDetails) => {
     const {player, object} = details;
     const rune = getEntityByAttr(runes, 'altar.craftingId', object.objectId);
-    const level = player.skills.get(Skill.RUNECRAFTING).level;
+    const runeDetails = cache.itemDefinitions.get(rune.id);
 
+    const level = player.skills.get(Skill.RUNECRAFTING).level;
+    if (level < rune.level) {
+        player.sendMessage(`You need a runecrafting level of ${rune.level} to craft ${runeDetails.name}.`);
+        return;
+    }
     let essenceAvailable = 0;
     rune.essence.forEach((essenceId) => {
         essenceAvailable += player.inventory.findAll(essenceId).length;
