@@ -14,7 +14,7 @@
  */
 
 import { itemIds } from '@server/world/config/item-ids';
-import { Altar, Rune, Talisman, Tiara } from '@server/plugins/skills/runecrafting/types';
+import { Altar, CombinationRune, Rune, Talisman, Tiara } from '@server/plugins/skills/runecrafting/types';
 import { Position } from '@server/world/position';
 
 export const tiaras: Map<string, Tiara> = new Map<string, Tiara>([
@@ -296,6 +296,64 @@ export const runes: Map<string, Rune> = new Map<string, Rune>([
 
 
 
+
+export const combinationRunes: Map<string, CombinationRune> = new Map<string, CombinationRune>([
+    ['mist', {
+        altar: [altars.get('air'), altars.get('water')],
+        id: 4695,
+        level: 7,
+        talisman: [talismans.get('air'), talismans.get('water')],
+        tiara: [tiaras.get('air'), tiaras.get('water')],
+        runes: [runes.get('air'), runes.get('water')],
+        xp: [8.0, 8.5]
+    }],
+    ['dust', {
+        id: 4696,
+        level: 10,
+        xp: [8.3, 9.0],
+        altar: [altars.get('air'), altars.get('earth')],
+        talisman: [talismans.get('air'), talismans.get('earth')],
+        runes: [runes.get('air'), runes.get('earth')],
+        tiara: [tiaras.get('air'), tiaras.get('earth')],
+    }],
+    ['mud', {
+        id: 4698,
+        level: 13,
+        xp: [9.3, 9.5],
+        altar: [altars.get('water'), altars.get('earth')],
+        talisman: [talismans.get('water'), talismans.get('earth')],
+        runes: [runes.get('water'), runes.get('earth')],
+        tiara: [tiaras.get('water'), tiaras.get('earth')],
+    }],
+    ['smoke', {
+        id: 4697,
+        level: 15,
+        xp: [8.5, 9.5],
+        altar: [altars.get('air'), altars.get('fire')],
+        talisman: [talismans.get('air'), talismans.get('fire')],
+        runes: [runes.get('air'), runes.get('fire')],
+        tiara: [tiaras.get('air'), tiaras.get('fire')],
+    }],
+    ['steam', {
+        id: 4694,
+        level: 19,
+        xp: [9.5, 10.0],
+        altar: [altars.get('water'), altars.get('fire')],
+        talisman: [talismans.get('water'), talismans.get('fire')],
+        runes: [runes.get('water'), runes.get('fire')],
+        tiara: [tiaras.get('water'), tiaras.get('fire')],
+    }],
+    ['lava', {
+        id: 4699,
+        level: 23,
+        xp: [10.0, 10.5],
+        altar: [altars.get('earth'), altars.get('fire')],
+        talisman: [talismans.get('earth'), talismans.get('fire')],
+        runes: [runes.get('earth'), runes.get('fire')],
+        tiara: [tiaras.get('earth'), tiaras.get('fire')],
+    }]
+]);
+
 export function getEntityByAttr<T>(entities: Map<any, T>, attr: string, value: any): T {
     let entity = undefined;
     const splits = attr.split('.');
@@ -342,4 +400,3 @@ export function runeMultiplier(runeId: number, level: number): number {
         case 560: return 1.0;
     }
 }
-

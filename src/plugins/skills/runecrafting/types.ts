@@ -1,5 +1,6 @@
 import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
+import { altars, talismans, tiaras } from '@server/plugins/skills/runecrafting/constants';
 
 export interface Recipe {
     ingredients: Item[] | number[];
@@ -33,4 +34,13 @@ export interface Rune {
     altar: Altar;
     tiara: Tiara;
     talisman: Talisman;
+}
+export interface CombinationRune {
+    id: number;
+    xp: [number, number];
+    level: number;
+    altar: [Altar, Altar];
+    tiara: [Tiara, Tiara];
+    talisman: [Talisman, Talisman];
+    runes: [Rune, Rune];
 }
