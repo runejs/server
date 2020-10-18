@@ -648,6 +648,10 @@ export class Player extends Actor {
         return this._equipment.has(item);
     }
 
+    public getItemInEquipmentSlot(slot: string): Item {
+        return this._equipment.items[EquipmentSlot[slot]];
+    }
+
     public hasItemOnPerson(item: number | Item): boolean {
         return this.hasItemInInventory(item) || this.hasItemInEquipment(item);
     }
