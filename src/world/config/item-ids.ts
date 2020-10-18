@@ -52,6 +52,7 @@ export const itemIds = {
     runiteBar: 2363,
     runiteOre: 451,
     beer: 1917,
+    hammer: 2347,
     skillCapes: {
         attack: {
             untrimmed: 9747,
