@@ -19,4 +19,6 @@ export const npcIds = {
     varrockBartender: 734,
     varrockCharlieTheCook: 794,
     banker1: 494,
+    shilop: 781,
+    wilough: 783,
 };
