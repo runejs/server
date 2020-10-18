@@ -46,19 +46,16 @@ class UpdateServerConnection implements SocketConnectionHandler {
                 const gameVersion = buffer.get('INT');
                 const outputBuffer = new ByteBuffer(1);
 
-                console.log(gameVersion);
-
                 if(gameVersion === 435) {
-                    outputBuffer.put(6);
+                    outputBuffer.put(0); // good to go!
                     this.connectionStage = ConnectionStage.ACTIVE;
                     this.gameServerSocket.write(outputBuffer);
                 } else {
-                    outputBuffer.put(0);
+                    outputBuffer.put(6); // out of date
                     this.gameServerSocket.write(outputBuffer);
-                    this.gameServerSocket.destroy();
                 }
                 break;
-            default:
+            case ConnectionStage.ACTIVE:
                 while(buffer.readable >= 4) {
                     const type = buffer.get('BYTE', 'UNSIGNED');
                     const index = buffer.get('BYTE', 'UNSIGNED');
@@ -84,6 +81,8 @@ class UpdateServerConnection implements SocketConnectionHandler {
                         this.gameServerSocket.write(this.generateFile(info.index, info.file));
                     }
                 }
+                break;
+            default:
                 break;
         }
 
@@ -145,7 +144,14 @@ const registerSocket = (socket: Socket): void => {
 
     logger.info(`Updateserver connection established.`);
 
-    socket.on('data', data => connection.dataReceived(new ByteBuffer(data)));
+    socket.on('data', async data => {
+        try {
+            await connection.dataReceived(new ByteBuffer(data));
+        } catch(e) {
+            logger.error(e);
+            socket.destroy();
+        }
+    });
 
     socket.on('close', () => {
         // @TODO socket close event

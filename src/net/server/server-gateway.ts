@@ -80,11 +80,14 @@ export class ServerGateway {
                         buffer.put(LoginResponseCode.ALREADY_LOGGED_IN);
                     } else {
                         this.createPlayer([ clientKey1, clientKey2 ], gameClientId, username, passwordHash, lowDetail ? 'low' : 'high');
+                        this.serverType = 'game_server';
                         return;
                     }
                 } catch(e) {
                     logger.error(e);
-                    this.gameServerConnection.closeSocket();
+                    if(this.gameServerConnection) {
+                        this.gameServerConnection.closeSocket();
+                    }
                 }
             }
         }

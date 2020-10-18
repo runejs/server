@@ -124,7 +124,6 @@ class LoginServerConnection implements SocketConnectionHandler {
 
         const credentialsResponseCode = this.checkCredentials(username, password);
         if(credentialsResponseCode === -1) {
-            this.sendLoginResponse(LoginResponseCode.SUCCESS);
             this.sendLogin([ clientKey1, clientKey2 ], gameClientId, username, password, isLowDetail);
         } else {
             logger.info(`${username} attempted to login but received error code ${ credentialsResponseCode }.`);
@@ -203,11 +202,11 @@ class LoginServerConnection implements SocketConnectionHandler {
     private handleLoginHandshake(buffer: ByteBuffer): void {
         buffer.get('BYTE', 'UNSIGNED'); // Name hash
 
-        const serverKey = BigInt(Math.floor(Math.random() * 999999));
+        this.serverKey = BigInt(Math.floor(Math.random() * 999999));
 
         const outputBuffer = new ByteBuffer(9);
         outputBuffer.put(0, 'BYTE'); // Initial server login response -> 0 for OK
-        outputBuffer.put(serverKey, 'LONG');
+        outputBuffer.put(this.serverKey, 'LONG');
         this.gameServerSocket.write(outputBuffer);
 
         this.connectionStage = ConnectionStage.ACTIVE;
@@ -228,7 +227,14 @@ export const registerSocket = (socket: Socket): void => {
 
     const connection: LoginServerConnection = new LoginServerConnection(socket);
 
-    socket.on('data', data => connection.dataReceived(new ByteBuffer(data)));
+    socket.on('data', async data => {
+        try {
+            await connection.dataReceived(new ByteBuffer(data));
+        } catch(e) {
+            logger.error(e);
+            socket.destroy();
+        }
+    });
 
     socket.on('close', () => {
         // @TODO socket close event
