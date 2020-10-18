@@ -164,6 +164,7 @@ export const itemIds = {
         law: 1458,
         soul: 1460,
         nature: 1462,
+        elemental: 5516
     },
     tiaras: {
         blank: 5525,

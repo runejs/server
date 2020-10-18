@@ -5,7 +5,7 @@ import { Skill } from '@server/world/actor/skills';
 const action: commandAction = (details) => {
     const { player } = details;
 
-    player.skills.addExp(Skill.AGILITY, 1000);
+    player.skills.addExp(Skill.RUNECRAFTING, 1000);
 };
 
 export default new RunePlugin({

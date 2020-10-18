@@ -640,6 +640,28 @@
         crush: 0
         magic: 0
         ranged: 0
+- id: 5521
+  desc: Binding necklace
+  canTrade: true
+  weight: 0.010
+  alchemy:
+    high: 855
+    low: 570
+  equipment:
+    slot: NECK
+    bonuses:
+      offencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
+      defencive:
+        stab: 0
+        slash: 0
+        crush: 0
+        magic: 0
+        ranged: 0
 - id: 5529
   desc: Mind tiara
   canTrade: true
