@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  nodejs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nodejs
+    container_name: runejs
+    restart: unless-stopped
+    ports:
+      - "43594:43594"
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
