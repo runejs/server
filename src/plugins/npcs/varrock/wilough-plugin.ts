@@ -16,6 +16,7 @@ const talkTo : npcAction = (details) => {
 };
 
 export default new RunePlugin({
+    npcIds: [npcIds.wilough],
     type: ActionType.NPC_ACTION,
     options: ['talk-to'],
     walkTo: true,
