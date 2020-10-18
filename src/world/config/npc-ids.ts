@@ -21,4 +21,5 @@ export const npcIds = {
     banker1: 494,
     shilop: 781,
     wilough: 783,
+    masterSmithingTutor: 4905,
 };

@@ -3,6 +3,7 @@ import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { dialogue, Emote, execute, goto } from '@server/world/actor/dialogue';
 import { itemIds } from '@server/world/config/item-ids';
 import { widgets } from '@server/world/config/widget';
+import { npcIds } from '@server/world/config/npc-ids';
 
 const talkTo : npcAction = (details) => {
     const { player, npc } = details;
@@ -69,6 +70,7 @@ const talkTo : npcAction = (details) => {
 
 export default new RunePlugin({
     type: ActionType.NPC_ACTION,
+    npcIds: [npcIds.masterSmithingTutor],
     options: ['talk-to'],
     walkTo: true,
     action: talkTo
