@@ -1,5 +1,4 @@
-import { createServer, Socket } from 'net';
-import { SocketConnectionHandler } from '@server/net/server/server-gateway';
+import { Socket } from 'net';
 import { ByteBuffer } from '@runejs/byte-buffer';
 import { parseServerConfig } from '@server/world/config/server-config';
 import { logger } from '@runejs/logger';
@@ -7,6 +6,7 @@ import { loadPlayerSave } from '@server/world/actor/player/player-data';
 import BigInteger from 'bigi';
 import * as bcrypt from 'bcrypt';
 import { longToString } from '@server/util/strings';
+import { openServer, SocketConnectionHandler } from '@server/net/socket-server';
 
 const serverConfig = parseServerConfig();
 
@@ -39,7 +39,7 @@ export enum LoginResponseCode {
     // @TODO the rest
 }
 
-class LoginServerConnection implements SocketConnectionHandler {
+class LoginServerConnection extends SocketConnectionHandler {
 
     private readonly rsaModulus = BigInteger(serverConfig.rsaMod);
     private readonly rsaExponent = BigInteger(serverConfig.rsaExp);
@@ -47,6 +47,7 @@ class LoginServerConnection implements SocketConnectionHandler {
     private serverKey: bigint;
 
     public constructor(private readonly gameServerSocket: Socket) {
+        super();
     }
 
     public async dataReceived(buffer: ByteBuffer): Promise<void> {
@@ -65,6 +66,9 @@ class LoginServerConnection implements SocketConnectionHandler {
         }
 
         return Promise.resolve();
+    }
+
+    public connectionDestroyed(): void {
     }
 
     private authenticate(buffer: ByteBuffer): void {
@@ -214,36 +218,5 @@ class LoginServerConnection implements SocketConnectionHandler {
 
 }
 
-const socketError = (socket: Socket, error): void => {
-    logger.error('Socket destroyed due to connection error.');
-    logger.error(error?.message || '[no message]');
-    socket.destroy();
-};
-
-export const registerSocket = (socket: Socket): void => {
-    socket.setNoDelay(true);
-    socket.setKeepAlive(true);
-    socket.setTimeout(30000);
-
-    const connection: LoginServerConnection = new LoginServerConnection(socket);
-
-    socket.on('data', async data => {
-        try {
-            await connection.dataReceived(new ByteBuffer(data));
-        } catch(e) {
-            logger.error(e);
-            socket.destroy();
-        }
-    });
-
-    socket.on('close', () => {
-        // @TODO socket close event
-    });
-
-    socket.on('error', error => socketError(socket, error));
-};
-
-export const openLoginServer = (host: string, port: number): void => {
-    createServer(socket => registerSocket(socket)).listen(port, host);
-    logger.info(`Loginserver listening @ ${ host }:${ port }.`);
-};
+export const openLoginServer = (host: string, port: number): void =>
+    openServer<LoginServerConnection>('Loginserver', host, port, socket => new LoginServerConnection(socket));

@@ -1,10 +1,9 @@
 FROM node:14
-WORKDIR /usr/src/app
-COPY . .
-RUN npm install
-RUN npm run build
-RUN npm install -g concurrently
+WORKDIR /app
+COPY [ "package.json", "package-lock.json*", "./" ]
+RUN npm install --production --silent && mv node_modules ../
 COPY . .
 
 EXPOSE 43594
-CMD [ "concurrently", "npm run start:game-server", "npm run start:login-server", "npm run start:update-server" ]
+RUN npm install -g concurrently
+RUN npm start

@@ -212,7 +212,7 @@ export class Player extends Actor {
 
         this.outgoingPackets.updateCurrentMapChunk();
         this.chunkChanged(playerChunk);
-        this.outgoingPackets.chatboxMessage('Welcome to RuneJS #435.');
+        this.outgoingPackets.chatboxMessage('Welcome to RuneJS');
 
         DEFAULT_TAB_WIDGET_IDS.forEach((widgetId: number, tabIndex: number) => {
             if (widgetId !== -1) {
@@ -300,7 +300,7 @@ export class Player extends Actor {
     }
 
     public logout(): void {
-        if (!this.loggedIn) {
+        if(!this.loggedIn) {
             return;
         }
 
@@ -310,8 +310,8 @@ export class Player extends Actor {
         this.outgoingPackets.logout();
         world.chunkManager.getChunkForWorldPosition(this.position).removePlayer(this);
         world.deregisterPlayer(this);
-        this.loggedIn = false;
 
+        this.loggedIn = false;
         logger.info(`${this.username} has logged out.`);
     }
 

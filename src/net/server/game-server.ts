@@ -1,8 +1,9 @@
-import { createServer, Socket } from 'net';
-import { ServerGateway, SocketConnectionHandler } from '@server/net/server/server-gateway';
+import { Socket } from 'net';
+import { ServerGateway } from '@server/net/server/server-gateway';
 import { ByteBuffer } from '@runejs/byte-buffer';
 import { handlePacket, incomingPackets } from '@server/net/inbound-packets';
 import { Player } from '@server/world/actor/player/player';
+import { openServer, SocketConnectionHandler } from '@server/net/socket-server';
 import { logger } from '@runejs/logger';
 
 export class GameServerConnection implements SocketConnectionHandler {
@@ -97,42 +98,16 @@ export class GameServerConnection implements SocketConnectionHandler {
         return Promise.resolve();
     }
 
+    public connectionDestroyed(): void {
+        logger.info(`Connection destroyed.`);
+        this.player?.logout();
+    }
+
     public closeSocket(): void {
         this.clientSocket.destroy();
     }
 
 }
 
-const socketError = (socket: Socket, error): void => {
-    logger.error('Socket destroyed due to connection error.');
-    logger.error(error?.message || '[no message]');
-    socket.destroy();
-};
-
-const registerSocket = (socket: Socket): void => {
-    socket.setNoDelay(true);
-    socket.setKeepAlive(true);
-    socket.setTimeout(30000);
-
-    const gateway: ServerGateway = new ServerGateway(socket);
-
-    socket.on('data', async data => {
-        try {
-            await gateway.dataReceived(new ByteBuffer(data));
-        } catch(e) {
-            logger.error(e);
-            socket.destroy();
-        }
-    });
-
-    socket.on('close', () => {
-        // @TODO socket close event
-    });
-
-    socket.on('error', error => socketError(socket, error));
-};
-
-export const openGameServer = (host: string, port: number): void => {
-    createServer(socket => registerSocket(socket)).listen(port, host);
-    logger.info(`Gameserver listening @ ${ host }:${ port }.`);
-};
+export const openGameServer = (host: string, port: number): void =>
+    openServer<ServerGateway>('Gameserver', host, port, socket => new ServerGateway(socket));

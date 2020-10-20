@@ -1,9 +1,9 @@
-import { createServer, Socket } from 'net';
-import { SocketConnectionHandler } from '@server/net/server/server-gateway';
+import { Socket } from 'net';
 import { ByteBuffer } from '@runejs/byte-buffer';
 import { logger } from '@runejs/logger/dist/logger';
 import * as CRC32 from 'crc-32';
 import { Cache } from '@runejs/cache-parser';
+import { openServer, SocketConnectionHandler } from '@server/net/socket-server';
 
 const cache: Cache = new Cache('cache', false);
 let crcTable: ByteBuffer;
@@ -27,12 +27,13 @@ enum ConnectionStage {
     ACTIVE = 'active'
 }
 
-class UpdateServerConnection implements SocketConnectionHandler {
+class UpdateServerConnection extends SocketConnectionHandler {
 
     private connectionStage: ConnectionStage = ConnectionStage.HANDSHAKE;
     private files: { file: number, index: number }[] = [];
 
     public constructor(private readonly gameServerSocket: Socket) {
+        super();
     }
 
     public async dataReceived(buffer: ByteBuffer): Promise<void> {
@@ -89,6 +90,9 @@ class UpdateServerConnection implements SocketConnectionHandler {
         return Promise.resolve(undefined);
     }
 
+    public connectionDestroyed(): void {
+    }
+
     private generateFile(index: number, file: number): Buffer {
         let cacheFile: ByteBuffer;
 
@@ -129,40 +133,9 @@ class UpdateServerConnection implements SocketConnectionHandler {
 
 }
 
-const socketError = (socket: Socket, error): void => {
-    logger.error('Socket destroyed due to connection error.');
-    logger.error(error?.message || '[no message]');
-    socket.destroy();
-};
-
-const registerSocket = (socket: Socket): void => {
-    socket.setNoDelay(true);
-    socket.setKeepAlive(true);
-    socket.setTimeout(30000);
-
-    const connection: UpdateServerConnection = new UpdateServerConnection(socket);
-
-    logger.info(`Updateserver connection established.`);
-
-    socket.on('data', async data => {
-        try {
-            await connection.dataReceived(new ByteBuffer(data));
-        } catch(e) {
-            logger.error(e);
-            socket.destroy();
-        }
-    });
-
-    socket.on('close', () => {
-        // @TODO socket close event
-    });
-
-    socket.on('error', error => socketError(socket, error));
-};
-
 export const openUpdateServer = (host: string, port: number): void => {
     generateCrcTable();
-    createServer(socket => registerSocket(socket)).listen(port, host);
-    logger.info(`Updateserver listening @ ${ host }:${ port }.`);
+    openServer<UpdateServerConnection>('Updateserver', host, port,
+            socket => new UpdateServerConnection(socket));
 };
 

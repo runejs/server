@@ -1,4 +1,4 @@
-import { Socket, createServer, createConnection } from 'net';
+import { Socket, createConnection } from 'net';
 import { logger } from '@runejs/logger/dist/logger';
 import { ByteBuffer } from '@runejs/byte-buffer';
 import { GameServerConnection } from '@server/net/server/game-server';
@@ -7,16 +7,13 @@ import { LoginResponseCode } from '@server/net/server/login-server';
 import { Isaac } from '@server/net/isaac';
 import { Player } from '@server/world/actor/player/player';
 import { world } from '@server/game-server';
+import { SocketConnectionHandler } from '@server/net/socket-server';
 
 const serverConfig = parseServerConfig();
 
 export type ServerType = 'game_server' | 'login_server' | 'update_server';
 
-export interface SocketConnectionHandler {
-    dataReceived(buffer: ByteBuffer): Promise<void>;
-}
-
-export class ServerGateway {
+export class ServerGateway extends SocketConnectionHandler {
 
     private serverType: ServerType;
     private gameServerConnection: GameServerConnection;
@@ -25,6 +22,7 @@ export class ServerGateway {
     private serverKey: bigint;
 
     public constructor(private readonly clientSocket: Socket) {
+        super();
     }
 
     public async dataReceived(buffer: ByteBuffer): Promise<void> {
@@ -50,6 +48,10 @@ export class ServerGateway {
         }
 
         return Promise.resolve();
+    }
+
+    public connectionDestroyed(): void {
+        this.gameServerConnection?.connectionDestroyed();
     }
 
     private parseLoginServerResponse(buffer: ByteBuffer): void {
