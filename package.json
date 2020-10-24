@@ -4,7 +4,7 @@
     "description": "",
     "main": "src/game-server.ts",
     "scripts": {
-        "start": "concurrently \"npm run build:watch\" \"npm run start:game-server\"",
+        "start": "npm run build && concurrently \"npm run build:watch\" \"npm run start:all\"",
         "start:game-server": "nodemon --delay 5000ms --max-old-space-size=2048 dist/main.js",
         "start:login-server": "node --max-old-space-size=1024 dist/login-server.js",
         "start:update-server": "node --max-old-space-size=1024 dist/update-server.js",
@@ -66,7 +66,7 @@
         "@types/uuid": "^3.4.6",
         "@types/yargs": "^13.0.4",
         "babel-plugin-module-resolver": "^4.0.0",
-        "chokidar": "^3.3.1",
+        "chokidar": "^3.4.3",
         "concurrently": "^5.1.0",
         "mkdirp": "^1.0.4",
         "nodemon": "^2.0.6",

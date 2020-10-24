@@ -1,21 +1,21 @@
+import { logger } from '@runejs/core';
+import { LocationObject } from '@runejs/cache-parser';
+import Quadtree from 'quadtree-lib';
+import { timer } from 'rxjs';
 import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
-import { logger } from '@runejs/logger';
 import { ItemDetails, parseItemData } from './config/item-data';
 import { ExamineCache } from './config/examine-data';
-import { cache, world } from '@server/game-server';
+import { cache } from '@server/game-server';
 import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './actor/npc/npc';
 import { parseShops, Shop } from '@server/world/config/shops';
 import TravelLocations from '@server/world/config/travel-locations';
-import Quadtree from 'quadtree-lib';
-import { timer } from 'rxjs';
 import { Actor } from '@server/world/actor/actor';
 import { WorldItem } from '@server/world/items/world-item';
 import { Item } from '@server/world/items/item';
 import { Chunk } from '@server/world/map/chunk';
-import { LocationObject } from '@runejs/cache-parser';
 import { schedule } from '@server/task/task';
 import { parseScenerySpawns } from '@server/world/config/scenery-spawns';
 
@@ -80,9 +80,13 @@ export class World {
             return;
         }
 
+        logger.info(`Saving player data...`);
+
         this.playerList
             .filter(player => player !== null)
             .forEach(player => player.save());
+
+        logger.info(`Player data saved.`);
     }
 
     /**
