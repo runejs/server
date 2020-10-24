@@ -6,15 +6,7 @@ import { logger } from '@runejs/logger';
 const shutdown = (signal, cb) => {
     logger.info(`[${signal}] Shutting down...`);
 
-    if(world && world.playerList) {
-        world.playerList.filter(player => player !== null).forEach(player => {
-            player.logout();
-            if(player.socket) {
-                player.socket.destroy();
-            }
-        });
-        logger.info(`Online players saved.`);
-    }
+    world?.saveOnlinePlayers();
 
     cb();
 };

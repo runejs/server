@@ -3,7 +3,7 @@ import { ChunkManager } from './map/chunk-manager';
 import { logger } from '@runejs/logger';
 import { ItemDetails, parseItemData } from './config/item-data';
 import { ExamineCache } from './config/examine-data';
-import { cache } from '@server/game-server';
+import { cache, world } from '@server/game-server';
 import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './actor/npc/npc';
@@ -70,6 +70,19 @@ export class World {
             this.spawnNpcs();
             this.spawnScenery();
         });
+    }
+
+    /**
+     * Saves player data for every active player within the game world.
+     */
+    public saveOnlinePlayers(): void {
+        if(!this.playerList) {
+            return;
+        }
+
+        this.playerList
+            .filter(player => player !== null)
+            .forEach(player => player.save());
     }
 
     /**

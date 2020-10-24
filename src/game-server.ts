@@ -1,7 +1,7 @@
 import { World } from './world/world';
-import { logger } from '@runejs/logger';
+import { logger, parseServerConfig } from '@runejs/core';
 import { Cache } from '@runejs/cache-parser';
-import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
+import { ServerConfig } from '@server/net/server/server-config';
 
 import { loadPlugins } from '@server/plugins/plugin-loader';
 import { ActionPlugin, ActionType, sort } from '@server/plugins/plugin';
@@ -21,7 +21,7 @@ import { setNpcInitPlugins } from '@server/world/actor/npc/npc';
 import { setQuestPlugins } from '@server/world/config/quests';
 import { setPlayerPlugins } from '@server/world/actor/player/action/player-action';
 import { loadPackets } from '@server/net/inbound-packets';
-import { watchForChanges } from '@server/util/files';
+import { watchForChanges, watchSource } from '@server/util/files';
 import { setEquipPlugins } from '@server/world/actor/player/action/equip-action';
 import { openGameServer } from '@server/net/server/game-server';
 
@@ -62,7 +62,7 @@ export async function injectPlugins(): Promise<void> {
 }
 
 export async function runGameServer(): Promise<void> {
-    serverConfig = parseServerConfig();
+    serverConfig = parseServerConfig<ServerConfig>();
 
     if(!serverConfig) {
         logger.error('Unable to start server due to missing or invalid server configuration.');
@@ -73,7 +73,7 @@ export async function runGameServer(): Promise<void> {
         items: true,
         npcs: true,
         locationObjects: true,
-        mapData: true,
+        mapData: !serverConfig.clippingDisabled,
         widgets: true
     });
 
@@ -95,6 +95,7 @@ export async function runGameServer(): Promise<void> {
 
     openGameServer(serverConfig.host, serverConfig.port);
 
+    watchSource('src/').subscribe(() => world.saveOnlinePlayers());
     watchForChanges('dist/plugins/', /[\/\\]plugins[\/\\]/);
     watchForChanges('dist/net/inbound-packets/', /[\/\\]inbound-packets[\/\\]/);
 }

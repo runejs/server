@@ -305,7 +305,7 @@ export class Player extends Actor {
         }
 
         world.playerTree.remove(this.quadtreeKey);
-        savePlayerData(this);
+        this.save();
 
         this.outgoingPackets.logout();
         world.chunkManager.getChunkForWorldPosition(this.position).removePlayer(this);
@@ -313,6 +313,10 @@ export class Player extends Actor {
 
         this.loggedIn = false;
         logger.info(`${this.username} has logged out.`);
+    }
+
+    public save(): void {
+        savePlayerData(this);
     }
 
     /**

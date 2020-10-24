@@ -5,7 +5,7 @@
     "main": "src/game-server.ts",
     "scripts": {
         "start": "concurrently \"npm run build:watch\" \"npm run start:game-server\"",
-        "start:game-server": "nodemon --max-old-space-size=2048 dist/main.js",
+        "start:game-server": "nodemon --delay 5000ms --max-old-space-size=2048 dist/main.js",
         "start:login-server": "node --max-old-space-size=1024 dist/login-server.js",
         "start:update-server": "node --max-old-space-size=1024 dist/update-server.js",
         "start:all": "concurrently \"npm run start:update-server\" \"npm run start:login-server\" \"npm run start:game-server\"",

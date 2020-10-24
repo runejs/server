@@ -2,7 +2,7 @@ import { parseServerConfig, logger, ByteBuffer, SocketConnectionHandler } from '
 import { LoginResponseCode } from '@runejs/login-server';
 import { Socket, createConnection } from 'net';
 import { GameServerConnection } from '@server/net/server/game-server';
-import { ServerConfig } from '@server/world/config/server-config';
+import { ServerConfig } from '@server/net/server/server-config';
 import { Isaac } from '@server/net/isaac';
 import { Player } from '@server/world/actor/player/player';
 import { world } from '@server/game-server';

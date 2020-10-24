@@ -1,4 +1,4 @@
-import { ServerConfig } from '@server/world/config/server-config';
+import { ServerConfig } from '@server/net/server/server-config';
 import { logger, parseServerConfig } from '@runejs/core';
 import { launchUpdateServer } from '@runejs/update-server';
 
