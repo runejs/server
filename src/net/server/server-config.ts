@@ -12,4 +12,5 @@ export interface ServerConfig {
     giveAchievements: boolean;
     checkCredentials: boolean;
     clippingDisabled: boolean;
+    tutorialEnabled: boolean;
 }

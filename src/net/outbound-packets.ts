@@ -8,6 +8,8 @@ import { LocationObject } from '@runejs/cache-parser';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { WorldItem } from '@server/world/items/world-item';
 import { ByteBuffer } from '@runejs/byte-buffer';
+import { Npc } from '@server/world/actor/npc/npc';
+import { stringToLong } from '@server/util/strings';
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -24,6 +26,30 @@ export class OutboundPackets {
         this.packetQueue = [];
         this.player = player;
         this.socket = player.socket;
+    }
+
+    public sendPrivateMessage(chatId: number, sender: Player, message: number[]): void {
+        const packet = new Packet(51, PacketType.DYNAMIC_SMALL);
+        packet.put(stringToLong(sender.username.toLowerCase()), 'LONG');
+        packet.put(32767, 'SHORT');
+        packet.put(chatId, 'INT24');
+        packet.put(sender.rights);
+        packet.putBytes(Buffer.from(message));
+        this.queue(packet);
+    }
+
+    public updateFriendStatus(friendName: string, worldId: number): void {
+        const packet = new Packet(156);
+        packet.put(stringToLong(friendName.toLowerCase()), 'LONG');
+        packet.put(worldId, 'SHORT');
+        this.queue(packet);
+    }
+
+    public sendFriendServerStatus(status: 0 | 1 | 2): void {
+        // 0 = loading, 1 = connecting to friend server, 2 = friend list
+        const packet = new Packet(70);
+        packet.put(status);
+        this.queue(packet);
     }
 
     public playSong(songId: number): void {
@@ -406,10 +432,20 @@ export class OutboundPackets {
     }
 
     public sendTabWidget(tabIndex: number, widgetId: number): void {
+        if(widgetId < 0) {
+            return;
+        }
+
         const packet = new Packet(140);
         packet.put(widgetId, 'SHORT');
         packet.put(tabIndex);
 
+        this.queue(packet);
+    }
+
+    public blinkTabIcon(tabIndex: number): void {
+        const packet = new Packet(88);
+        packet.put(tabIndex);
         this.queue(packet);
     }
 
@@ -439,7 +475,7 @@ export class OutboundPackets {
     }
 
     public showHintIcon(iconType: 2 | 3 | 4 | 5 | 6, position: Position, offset: number = 0): void {
-        const packet = new Packet(199);
+        const packet = new Packet(186);
         packet.put(iconType, 'BYTE');
         packet.put(position.x, 'SHORT');
         packet.put(position.y, 'SHORT');
@@ -449,9 +485,35 @@ export class OutboundPackets {
     }
 
     public showPlayerHintIcon(player: Player): void {
-        const packet = new Packet(199);
+        const packet = new Packet(186);
         packet.put(10, 'BYTE');
         packet.put(player.worldIndex, 'SHORT');
+
+        // Packet requires a length of 6, so send some extra junk
+        packet.put(0);
+        packet.put(0);
+        packet.put(0);
+
+        this.queue(packet);
+    }
+
+    public showNpcHintIcon(npc: Npc): void {
+        const packet = new Packet(186);
+        packet.put(1, 'BYTE');
+        packet.put(npc.worldIndex, 'SHORT');
+
+        // Packet requires a length of 6, so send some extra junk
+        packet.put(0);
+        packet.put(0);
+        packet.put(0);
+
+        this.queue(packet);
+    }
+
+    public resetNpcHintIcon(): void {
+        const packet = new Packet(186);
+        packet.put(1, 'BYTE');
+        packet.put(-1, 'SHORT');
 
         // Packet requires a length of 6, so send some extra junk
         packet.put(0);

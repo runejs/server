@@ -1,3 +1,5 @@
+import { Observable, Subject } from 'rxjs';
+
 export const widgets: any = {
     characterDesign: 269,
     furnace: {
@@ -46,12 +48,17 @@ export const widgets: any = {
             containerId: 0
         }
     },
+    defaultCombatStyle: 92,
     skillGuide: 308,
     skillsTab: 320,
+    friendsList: 131,
+    ignoreList: 148,
     logoutTab: 182,
     settingsTab: 261,
     emotesTab: 464,
     musicPlayerTab: 239,
+    prayerTab: 271,
+    standardSpellbookTab: 192,
     questTab: 274,
     shop: {
         widgetId: 300,
@@ -104,7 +111,9 @@ export interface PlayerWidget {
     type: 'SCREEN' | 'CHAT' | 'FULLSCREEN' | 'SCREEN_AND_TAB';
     disablePlayerMovement?: boolean;
     closeOnWalk?: boolean;
+    permanent?: boolean;
     forceClosed?: Function;
     beforeOpened?: Function;
     afterOpened?: Function;
+    closed?: Subject<void>;
 }

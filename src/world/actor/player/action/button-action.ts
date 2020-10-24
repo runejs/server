@@ -57,6 +57,12 @@ export const buttonAction = (player: Player, widgetId: number, buttonId: number)
         interactionActions = questActions;
     }
 
+    if(player.metadata.buttonListener) {
+        if(widgetId === player.metadata.buttonListener.widgetId) {
+            player.metadata.buttonListener.event.next(buttonId);
+        }
+    }
+
     if(interactionActions.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled button interaction: ${widgetId}:${buttonId}`);
         return;
@@ -65,7 +71,7 @@ export const buttonAction = (player: Player, widgetId: number, buttonId: number)
     // Immediately run the plugins
     for(const plugin of interactionActions) {
         if(plugin.cancelActions) {
-            player.actionsCancelled.next();
+            player.actionsCancelled.next('button');
         }
 
         plugin.action({ player, widgetId, buttonId });
