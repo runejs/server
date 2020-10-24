@@ -212,7 +212,7 @@ export class Player extends Actor {
 
         this.outgoingPackets.updateCurrentMapChunk();
         this.chunkChanged(playerChunk);
-        this.outgoingPackets.chatboxMessage('Welcome to RuneJS');
+        this.outgoingPackets.chatboxMessage('Welcome to RuneJS.');
 
         DEFAULT_TAB_WIDGET_IDS.forEach((widgetId: number, tabIndex: number) => {
             if (widgetId !== -1) {

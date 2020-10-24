@@ -8,11 +8,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: '4'
           memory: 4096m
         reservations:
-          cpus: '1'
-          memory: 512m
+          cpus: '4'
+          memory: 4096m
     restart: always
     ports:
       - "43594:43594"
