@@ -52,6 +52,7 @@ export const itemIds = {
     runiteBar: 2363,
     runiteOre: 451,
     beer: 1917,
+    hammer: 2347,
     skillCapes: {
         attack: {
             untrimmed: 9747,
@@ -163,6 +164,7 @@ export const itemIds = {
         law: 1458,
         soul: 1460,
         nature: 1462,
+        elemental: 5516
     },
     tiaras: {
         blank: 5525,
