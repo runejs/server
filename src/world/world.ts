@@ -30,7 +30,7 @@ export interface QuadtreeKey {
  */
 export class World {
 
-    public static readonly MAX_PLAYERS = 1000;
+    public static readonly MAX_PLAYERS = 1600;
     public static readonly MAX_NPCS = 30000;
     public static readonly TICK_LENGTH = 600;
     private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
@@ -426,7 +426,7 @@ export class World {
 
         const spawnChunk = this.chunkManager.getChunkForWorldPosition(new Position(x, y, 0));
 
-        for(let i = 0; i < 1500; i++) {
+        for(let i = 0; i < 1000; i++) {
             const player = new Player(null, null, null, i, `test${i}`, 'abs', true);
             this.registerPlayer(player);
             player.activeWidget = null;

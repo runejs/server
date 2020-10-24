@@ -1,16 +1,16 @@
-import { parseServerConfig } from '@server/world/config/server-config';
-import { logger } from '@runejs/logger';
-import { openUpdateServer } from '@server/net/server/update-server';
+import { ServerConfig } from '@server/world/config/server-config';
+import { logger, parseServerConfig } from '@runejs/core';
+import { launchUpdateServer } from '@runejs/update-server';
 
 const startUpdateServer = (): void => {
-    const serverConfig = parseServerConfig();
+    const serverConfig = parseServerConfig<ServerConfig>();
 
     if(!serverConfig) {
-        logger.error('Unable to start update server due to missing or invalid server configuration.');
+        logger.error('Unable to start Update Server due to missing or invalid server configuration.');
         return;
     }
 
-    openUpdateServer(serverConfig.updateServerHost, serverConfig.updateServerPort);
+    launchUpdateServer(serverConfig.updateServerHost, serverConfig.updateServerPort, 'cache');
 };
 
 startUpdateServer();

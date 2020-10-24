@@ -1,16 +1,17 @@
-import { parseServerConfig } from '@server/world/config/server-config';
-import { logger } from '@runejs/logger';
-import { openLoginServer } from '@server/net/server/login-server';
+import { launchLoginServer } from '@runejs/login-server';
+import { logger, parseServerConfig } from '@runejs/core';
+import { ServerConfig } from '@server/world/config/server-config';
 
 const startLoginServer = (): void => {
-    const serverConfig = parseServerConfig();
+    const serverConfig = parseServerConfig<ServerConfig>();
 
     if(!serverConfig) {
-        logger.error('Unable to start login server due to missing or invalid server configuration.');
+        logger.error('Unable to start Login Server due to missing or invalid server configuration.');
         return;
     }
 
-    openLoginServer(serverConfig.loginServerHost, serverConfig.loginServerPort);
+    launchLoginServer(serverConfig.loginServerHost, serverConfig.loginServerPort,
+        serverConfig.rsaMod, serverConfig.rsaExp, serverConfig.checkCredentials, 'data/saves');
 };
 
 startLoginServer();

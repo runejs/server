@@ -1,15 +1,13 @@
+import { parseServerConfig, logger, ByteBuffer, SocketConnectionHandler } from '@runejs/core';
+import { LoginResponseCode } from '@runejs/login-server';
 import { Socket, createConnection } from 'net';
-import { logger } from '@runejs/logger/dist/logger';
-import { ByteBuffer } from '@runejs/byte-buffer';
 import { GameServerConnection } from '@server/net/server/game-server';
-import { parseServerConfig } from '@server/world/config/server-config';
-import { LoginResponseCode } from '@server/net/server/login-server';
+import { ServerConfig } from '@server/world/config/server-config';
 import { Isaac } from '@server/net/isaac';
 import { Player } from '@server/world/actor/player/player';
 import { world } from '@server/game-server';
-import { SocketConnectionHandler } from '@server/net/socket-server';
 
-const serverConfig = parseServerConfig();
+const serverConfig = parseServerConfig<ServerConfig>();
 
 export type ServerType = 'game_server' | 'login_server' | 'update_server';
 

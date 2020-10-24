@@ -1,10 +1,8 @@
 import { Socket } from 'net';
 import { ServerGateway } from '@server/net/server/server-gateway';
-import { ByteBuffer } from '@runejs/byte-buffer';
+import { ByteBuffer, logger, openServer, SocketConnectionHandler } from '@runejs/core';
 import { handlePacket, incomingPackets } from '@server/net/inbound-packets';
 import { Player } from '@server/world/actor/player/player';
-import { openServer, SocketConnectionHandler } from '@server/net/socket-server';
-import { logger } from '@runejs/logger';
 
 export class GameServerConnection implements SocketConnectionHandler {
 
@@ -110,4 +108,5 @@ export class GameServerConnection implements SocketConnectionHandler {
 }
 
 export const openGameServer = (host: string, port: number): void =>
-    openServer<ServerGateway>('Gameserver', host, port, socket => new ServerGateway(socket));
+    openServer<ServerGateway>('Game Server', host, port,
+        socket => new ServerGateway(socket));
