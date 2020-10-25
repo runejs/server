@@ -43,6 +43,9 @@ export class PlayerSettings {
     attackStyle: number = 0;
     bankInsertMode: number = 0;
     bankWithdrawNoteMode: number = 0;
+    publicChatMode: number = 0;
+    privateChatMode: number = 0;
+    tradeMode: number = 0;
 }
 
 export interface PlayerSave {

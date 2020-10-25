@@ -16,6 +16,8 @@ import { stringToLong } from '@server/util/strings';
  */
 export class OutboundPackets {
 
+    private static privateMessageCounter: number = Math.floor(Math.random() * 100000000);
+
     private updatingQueue: Buffer[];
     private packetQueue: Buffer[];
     private readonly player: Player;
@@ -28,11 +30,19 @@ export class OutboundPackets {
         this.socket = player.socket;
     }
 
+    public updateSocialSettings(): void {
+        const packet = new Packet(196);
+        packet.put(this.player.settings.publicChatMode || 0);
+        packet.put(this.player.settings.privateChatMode || 0);
+        packet.put(this.player.settings.tradeMode || 0);
+        this.queue(packet);
+    }
+
     public sendPrivateMessage(chatId: number, sender: Player, message: number[]): void {
         const packet = new Packet(51, PacketType.DYNAMIC_SMALL);
         packet.put(stringToLong(sender.username.toLowerCase()), 'LONG');
         packet.put(32767, 'SHORT');
-        packet.put(chatId, 'INT24');
+        packet.put(OutboundPackets.privateMessageCounter++, 'INT24');
         packet.put(sender.rights);
         packet.putBytes(Buffer.from(message));
         this.queue(packet);
