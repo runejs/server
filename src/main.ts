@@ -3,10 +3,17 @@ import 'source-map-support/register';
 import { initErrorHandling } from '@server/error-handling';
 import { logger } from '@runejs/logger';
 
+let killed: boolean = false;
+
 const shutdown = (signal, cb) => {
+    if(killed) {
+        return;
+    }
+
     logger.info(`[${signal}] Shutting down...`);
 
     world?.saveOnlinePlayers();
+    killed = true;
 
     cb();
 };
