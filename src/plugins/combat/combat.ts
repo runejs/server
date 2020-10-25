@@ -1,58 +1,163 @@
 import { DamageType } from '../../world/actor/update-flags';
 import { ActionType, RunePlugin } from '../plugin';
-import { loopingAction, walkToAction } from '../../world/actor/player/action/action';
-import { schedule } from '../../task/task';
+import { walkToAction } from '../../world/actor/player/action/action';
 import { npcAction } from '@server/world/actor/player/action/npc-action';
 import { Actor } from '@server/world/actor/actor';
 import { Player } from '@server/world/actor/player/player';
 import { timer } from 'rxjs';
 import { Skills } from '@server/world/actor/skills';
+import { World } from '@server/world/world';
+import { filter, take } from 'rxjs/operators';
+import { animationIds } from '@server/world/config/animation-ids';
+import { Npc } from '@server/world/actor/npc/npc';
+import { world } from '@server/game-server';
+import { itemIds } from '@server/world/config/item-ids';
+import { soundIds } from '@server/world/config/sound-ids';
 
 class Combat {
 
-    public readonly actor: Actor;
+    public readonly assailant: Actor;
     public readonly victim: Actor;
-    public inCombat: boolean = false;
+    public combatActive: boolean = false;
+    public contactInitiated: boolean = false;
 
     public constructor(actor: Actor, victim: Actor) {
-        this.actor = actor;
+        this.assailant = actor;
         this.victim = victim;
     }
 
-    public async initiateCombat(): Promise<void> {
-        await this.getWithinDistance();
-        this.inCombat = true;
-        await this.combatRoll();
+    /*
+     * This is all a major work in progress
+     * Scrap code, psuedo code, junk code, we have it all
+     * Half of this is junk :D
+     */
+
+    public cancelCombat(): void {
+        this.contactInitiated = false;
+        this.combatActive = false;
+        this.assailant.actionsCancelled.next();
+        this.victim.actionsCancelled.next();
     }
 
-    public async combatRoll(): Promise<void> {
-        if(!this.inCombat) {
+    public async initiateCombat(): Promise<void> {
+        this.combatActive = true;
+        await this.processAttacker(true);
+
+        this.assailant.actionsCancelled.pipe(
+            filter(type => type !== 'pathing-movement'),
+            take(1)
+        ).toPromise().then(() => {
+            this.cancelCombat();
+        });
+
+        this.victim.actionsCancelled.pipe(
+            filter(type => type !== 'pathing-movement'),
+            take(1)
+        ).toPromise().then(() => {
+            this.cancelCombat();
+        });
+    }
+
+    public async processAttacker(firstAttack: boolean = false): Promise<void> {
+        if(!this.combatActive) {
             return;
         }
 
-        // @TODO actor vs victim speed checks
+        await this.assailant.tail(this.victim);
 
-        await this.actor.tail(this.victim);
-        this.actor.face(this.victim);
+        if(!firstAttack) {
+            await timer(4 * World.TICK_LENGTH).toPromise();
+        }
 
-        this.victim.updateFlags.addDamage(1, DamageType.DAMAGE, 4, 5);
-        this.victim.face(this.actor, true);
-        
-        await timer(1200).toPromise();
+        if(!this.combatActive) {
+            return;
+        }
 
-        await this.victim.tail(this.actor);
-        this.victim.face(this.actor);
+        this.damage(this.assailant, this.victim);
 
-        this.actor.updateFlags.addDamage(1, DamageType.DAMAGE, 4, 5);
-        this.actor.face(this.victim);
+        if(!this.contactInitiated) {
+            this.contactInitiated = true;
+            this.processVictim(true);
+        }
 
-        await timer(1200).toPromise();
-
-        this.combatRoll();
+        this.processAttacker();
     }
 
-    public calculateCombatLevel(attack: number, strength: number, defence: number, hitpoints: number,
-                         prayer: number, ranged: number, magic: number, skills: Skills): number {
+    public async processVictim(firstAttack: boolean = false): Promise<void> {
+        if(!this.combatActive) {
+            return;
+        }
+
+        await this.victim.tail(this.assailant);
+
+        if(!firstAttack) {
+            await timer(6 * World.TICK_LENGTH).toPromise();
+        } else {
+            await timer(World.TICK_LENGTH).toPromise();
+        }
+
+        if(!this.combatActive) {
+            return;
+        }
+
+        this.damage(this.victim, this.assailant);
+        this.processVictim();
+    }
+
+    public damage(attacker: Actor, defender: Actor): void {
+        const skills = attacker.skills;
+        const strengthBonus = (attacker instanceof Player) ? attacker.bonuses?.skill?.strength || 0 : 0;
+        const maxHit = this.meleeMaxHit(skills.strength.levelForExp, skills.strength.level, strengthBonus, 1);
+        const actualHit = Math.floor(Math.random() * (maxHit + 1));
+
+        let defenderRemainingHealth: number = defender.skills.hitpoints.level - actualHit;
+        const defenderMaxHealth: number = defender.skills.hitpoints.levelForExp;
+        if(defenderRemainingHealth < 0) {
+            defenderRemainingHealth = 0;
+        }
+
+        // Animate attacking the opponent and play the sound of them defending
+        attacker.playAnimation(animationIds.combat.punch);
+        world.playLocationSound(defender.position, defender instanceof Player ? soundIds.npc.human.playerDefence :
+            soundIds.npc.human.maleDefence, 5);
+
+        // Set the opponent's new remaining hitpoints and their damage flag
+        defender.skills.setHitpoints(defenderRemainingHealth);
+        defender.updateFlags.addDamage(actualHit, actualHit === 0 ? DamageType.NO_DAMAGE : DamageType.DAMAGE,
+            defenderRemainingHealth, defenderMaxHealth);
+
+        // Play the sound of the defender being hit or blocking
+        world.playLocationSound(defender.position, defender instanceof Player ? soundIds.npc.human.noArmorHitPlayer :
+            soundIds.npc.human.noArmorHit, 5);
+
+        // Kill the defender if their hitpoints are zero, otherwise play an animation of them blocking the hit
+        if(defenderRemainingHealth === 0) {
+            this.processDeath(defender);
+        } else {
+            defender.playAnimation(animationIds.combat.armBlock);
+        }
+    }
+
+    public async processDeath(victim: Actor): Promise<void> {
+        const deathPosition = victim.position;
+
+        this.cancelCombat();
+        victim.playAnimation(animationIds.death);
+        world.playLocationSound(deathPosition, soundIds.npc.human.maleDeath, 5);
+
+        await timer(2 * World.TICK_LENGTH).toPromise();
+
+        if(victim instanceof Npc) {
+            victim.kill(true);
+        } else if(victim instanceof Player) {
+
+        }
+
+        world.spawnWorldItem(itemIds.bones, deathPosition, this.assailant instanceof Player ? this.assailant : undefined, 300);
+    }
+
+    // https://forum.tip.it/topic/199687-runescape-formulas-revealed
+    public calculateCombatLevel(skills: Skills): number {
         const combatLevel = (skills.defence.level + skills.hitpoints.level + Math.floor(skills.prayer.level / 2)) * 0.25;
         const melee = (skills.attack.level + skills.strength.level) * 0.325;
         const ranger = skills.ranged.level * 0.4875;
@@ -60,22 +165,22 @@ class Combat {
         return combatLevel + Math.max(melee, Math.max(ranger, mage));
     }
 
-    public meleeMaxHit(strengthBase: number, strengthCurrent: number, strengthBonus: number, prayer: any, fightStyle: any,
-                       special: any, effect: any, itemSet: any, hpBase?: number, hpCurrent?: number): number {
-        const finalStrength = strengthCurrent + fightStyle.getStrengthBoost() +
-            (strengthBase * prayer.getBoost()) + (strengthBase * effect.getBoost())/* +
-            (itemSet == ItemSets.Dharok ? (hpBase - hpCurrent) : 0)*/;
+    // https://forum.tip.it/topic/199687-runescape-formulas-revealed
+    public meleeMaxHit(strengthBase: number, strengthCurrent: number, strengthBonus: number, specialMultiplier: number): number {
+        const finalStrength = strengthCurrent/* + fightStyleStrengthBoost +
+            (strengthBase * prayerBoost) + (strengthBase * effectBoost) +
+            (itemSet == Dharok ? (hpBase - hpCurrent) : 0)*/;
         const strengthMultiplier = (strengthBonus * 0.00175) + 0.1;
         const maxHit = Math.floor((finalStrength * strengthMultiplier) + 1.05);
-        return Math.floor(Math.floor(Math.floor(maxHit) * itemSet.getMultiplier()) * special.getMultiplier());
+        return Math.floor(Math.floor(Math.floor(maxHit)/* * itemSet.getMultiplier()*/) * specialMultiplier);
     }
 
     private async getWithinDistance(): Promise<void> {
-        if(this.actor instanceof Player && this.actor.position.distanceBetween(this.victim.position) > 1) {
-            await walkToAction(this.actor, this.victim.position);
+        if(this.assailant instanceof Player && this.assailant.position.distanceBetween(this.victim.position) > 1) {
+            await walkToAction(this.assailant, this.victim.position);
         }
     
-        this.actor.follow(this.victim);
+        this.assailant.follow(this.victim);
     }
 
 }
@@ -85,20 +190,6 @@ const attackNpcAction: npcAction = async details => {
 
     const combatInstance = new Combat(player, npc);
     await combatInstance.initiateCombat();
-
-    /*const loop = loopingAction({ ticks: 5, player, npc });
-    const loopSub = loop.event.subscribe(async () => {
-        if(player.position.distanceBetween(npc.position) > 1) {
-            walkToAction(player, npc.position);
-            return;
-        }
-
-        npc.updateFlags.addDamage(1, DamageType.DAMAGE, 4, 5);
-
-        await schedule(3);
-
-        player.updateFlags.addDamage(1, DamageType.DAMAGE, 4, 5);
-    });*/
 };
 
 export default new RunePlugin({

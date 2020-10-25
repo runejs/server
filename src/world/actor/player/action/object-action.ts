@@ -61,7 +61,7 @@ export const setObjectPlugins = (plugins: ActionPlugin[]): void => {
 // @TODO priority and cancelling other (lower priority) actions
 export const objectAction = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
                              position: Position, option: string, cacheOriginal: boolean): void => {
-    if(player.busy) {
+    if(player.busy || player.metadata.blockObjectInteractions) {
         return;
     }
 

@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  nodejs:
+    build: ./
+    image: runejs
+    container_name: runejs
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4096m
+        reservations:
+          cpus: '4'
+          memory: 4096m
+    restart: always
+    ports:
+      - "43594:43594"
+    volumes:
+      - .:/app
+      - /app/node_modules/bcrypt/

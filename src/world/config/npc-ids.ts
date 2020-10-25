@@ -22,4 +22,6 @@ export const npcIds = {
     shilop: 781,
     wilough: 783,
     masterSmithingTutor: 4905,
+    runescapeGuide: 945,
+    questGuide: 945,
 };

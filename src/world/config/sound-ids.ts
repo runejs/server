@@ -19,9 +19,21 @@ export const soundIds = {
     shearSheep: 761,
     spinWool: 2590,
     inventoryFull: 2277,
+    buryBones: 2738,
     oreDepeleted: 3600,
     pickaxeSwing: 3220,
     axeSwing: [88, 89, 90],
     oreEmpty: 2661,
     smelting: 2725,
+    npc: {
+        human: {
+            maleDeath: 512,
+            maleDefence: 513,
+            femaleDeath: 505,
+            femaleDefence: 506,
+            playerDefence: 516,
+            noArmorHitPlayer: 519,
+            noArmorHit: 511
+        }
+    }
 };

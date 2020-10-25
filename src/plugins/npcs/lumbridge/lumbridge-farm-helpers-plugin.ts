@@ -3,10 +3,8 @@ import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { npcIds } from '@server/world/config/npc-ids';
 import { dialogue, Emote, goto } from '@server/world/actor/dialogue';
 
-const millieDialogue: npcAction = (details) => {
-    const { player, npc } = details;
-
-    dialogue([ player, { npc, key: 'millie' }], [
+const millieDialogue: npcAction = (details) =>
+    dialogue([ details.player, { npc: details.npc, key: 'millie' }], [
         millie => [ Emote.GENERIC, `Hello Adventurer. Welcome to Mill Lane Mill. Can I help you?` ],
         options => [
             `Who are you?`, [
@@ -51,12 +49,9 @@ const millieDialogue: npcAction = (details) => {
             ]
         ]
     ]);
-};
 
-const gillieDialogue: npcAction = (details) => {
-    const { player, npc } = details;
-
-    dialogue([ player, { npc, key: 'gillie' }], [
+const gillieDialogue: npcAction = (details) =>
+    dialogue([ details.player, { npc: details.npc, key: 'gillie' }], [
         gillie => [ Emote.HAPPY, `Hello, I'm Gillie the Milkmaid. What can I do for you?` ],
         options => [
             `Who are you?`, [
@@ -83,7 +78,6 @@ const gillieDialogue: npcAction = (details) => {
             ]
         ]
     ]);
-};
 
 export default new RunePlugin([{
     type: ActionType.NPC_ACTION,

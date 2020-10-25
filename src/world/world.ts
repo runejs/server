@@ -1,6 +1,9 @@
+import { logger } from '@runejs/core';
+import { LocationObject } from '@runejs/cache-parser';
+import Quadtree from 'quadtree-lib';
+import { timer } from 'rxjs';
 import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
-import { logger } from '@runejs/logger';
 import { ItemDetails, parseItemData } from './config/item-data';
 import { ExamineCache } from './config/examine-data';
 import { cache } from '@server/game-server';
@@ -9,13 +12,10 @@ import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './actor/npc/npc';
 import { parseShops, Shop } from '@server/world/config/shops';
 import TravelLocations from '@server/world/config/travel-locations';
-import Quadtree from 'quadtree-lib';
-import { timer } from 'rxjs';
 import { Actor } from '@server/world/actor/actor';
 import { WorldItem } from '@server/world/items/world-item';
 import { Item } from '@server/world/items/item';
 import { Chunk } from '@server/world/map/chunk';
-import { LocationObject } from '@runejs/cache-parser';
 import { schedule } from '@server/task/task';
 import { parseScenerySpawns } from '@server/world/config/scenery-spawns';
 
@@ -30,7 +30,7 @@ export interface QuadtreeKey {
  */
 export class World {
 
-    public static readonly MAX_PLAYERS = 1000;
+    public static readonly MAX_PLAYERS = 1600;
     public static readonly MAX_NPCS = 30000;
     public static readonly TICK_LENGTH = 600;
     private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
@@ -73,6 +73,23 @@ export class World {
     }
 
     /**
+     * Saves player data for every active player within the game world.
+     */
+    public saveOnlinePlayers(): void {
+        if(!this.playerList) {
+            return;
+        }
+
+        logger.info(`Saving player data...`);
+
+        this.playerList
+            .filter(player => player !== null)
+            .forEach(player => player.save());
+
+        logger.info(`Player data saved.`);
+    }
+
+    /**
      * Players a sound at a specific position for all players within range of that position.
      * @param position The position to play the sound at.
      * @param soundId The ID of the sound effect.
@@ -111,7 +128,10 @@ export class World {
      * @param expires [optional] The amount of game ticks/cycles before the world item will be automatically deleted
      * from the world. If not provided, it will remain within the game world forever.
      */
-    public spawnWorldItem(item: Item, position: Position, initiallyVisibleTo?: Player, expires?: number): WorldItem {
+    public spawnWorldItem(item: Item | number, position: Position, initiallyVisibleTo?: Player, expires?: number): WorldItem {
+        if(typeof item === 'number') {
+            item = { itemId: item, amount: 1 };
+        }
         const chunk = this.chunkManager.getChunkForWorldPosition(position);
         const worldItem: WorldItem = {
             itemId: item.itemId,
@@ -400,6 +420,15 @@ export class World {
         }).map(quadree => quadree.actor as Player);
     }
 
+    /**
+     * Finds a logged in player via their username.
+     * @param username The player's username.
+     */
+    public findActivePlayerByUsername(username: string): Player {
+        username = username.toLowerCase();
+        return this.playerList.find(p => p && p.username.toLowerCase() === username);
+    }
+
     public spawnNpcs(): void {
         this.npcSpawns.forEach(npcSpawn => {
             const npcDefinition = cache.npcDefinitions.get(npcSpawn.npcId);
@@ -426,7 +455,7 @@ export class World {
 
         const spawnChunk = this.chunkManager.getChunkForWorldPosition(new Position(x, y, 0));
 
-        for(let i = 0; i < 1500; i++) {
+        for(let i = 0; i < 1000; i++) {
             const player = new Player(null, null, null, i, `test${i}`, 'abs', true);
             this.registerPlayer(player);
             player.activeWidget = null;
@@ -480,6 +509,11 @@ export class World {
 
         setTimeout(() => this.worldTick(), delay);
         return Promise.resolve();
+    }
+
+    public async scheduleNpcRespawn(npc: Npc): Promise<void> {
+        await schedule(10);
+        this.registerNpc(npc);
     }
 
     public playerOnline(player: Player | string): boolean {

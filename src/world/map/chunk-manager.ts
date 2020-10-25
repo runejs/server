@@ -1,7 +1,7 @@
 import { Chunk } from './chunk';
 import { Position } from '../position';
 import { logger } from '@runejs/logger';
-import { cache } from '@server/game-server';
+import { cache, serverConfig } from '@server/game-server';
 
 /**
  * Controls all of the game world's map chunks.
@@ -16,25 +16,28 @@ export class ChunkManager {
     }
 
     public generateCollisionMaps(): void {
-        logger.info('Generating game world collision maps...');
+        if(!serverConfig.clippingDisabled) {
+            logger.info('Generating game world collision maps...');
 
-        const tileList = cache.mapData.tiles;
+            const tileList = cache.mapData.tiles;
 
-        for(const tile of tileList) {
-            const position = new Position(tile.x, tile.y, tile.level);
-            const chunk = this.getChunkForWorldPosition(position);
-            chunk.addTile(tile, position);
+            for(const tile of tileList) {
+                const position = new Position(tile.x, tile.y, tile.level);
+                const chunk = this.getChunkForWorldPosition(position);
+                chunk.addTile(tile, position);
+            }
+
+            const objectList = cache.mapData.locationObjects;
+
+            for(const locationObject of objectList) {
+                const position = new Position(locationObject.x, locationObject.y, locationObject.level);
+                const chunk = this.getChunkForWorldPosition(position);
+                chunk.setCacheLocationObject(locationObject, position);
+            }
+
+            logger.info('Game world collision maps generated.', true);
         }
 
-        const objectList = cache.mapData.locationObjects;
-
-        for(const locationObject of objectList) {
-            const position = new Position(locationObject.x, locationObject.y, locationObject.level);
-            const chunk = this.getChunkForWorldPosition(position);
-            chunk.setCacheLocationObject(locationObject, position);
-        }
-
-        logger.info('Game world collision maps generated.', true);
         this._complete = true;
     }
 

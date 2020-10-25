@@ -1,13 +1,7 @@
-import * as net from 'net';
-import { watch } from 'chokidar';
-import * as CRC32 from 'crc-32';
-
 import { World } from './world/world';
-import { ClientConnection } from './net/client-connection';
-import { logger } from '@runejs/logger';
+import { logger, parseServerConfig } from '@runejs/core';
 import { Cache } from '@runejs/cache-parser';
-import { parseServerConfig, ServerConfig } from '@server/world/config/server-config';
-import { ByteBuffer } from '@runejs/byte-buffer';
+import { ServerConfig } from '@server/net/server/server-config';
 
 import { loadPlugins } from '@server/plugins/plugin-loader';
 import { ActionPlugin, ActionType, sort } from '@server/plugins/plugin';
@@ -27,14 +21,14 @@ import { setNpcInitPlugins } from '@server/world/actor/npc/npc';
 import { setQuestPlugins } from '@server/world/config/quests';
 import { setPlayerPlugins } from '@server/world/actor/player/action/player-action';
 import { loadPackets } from '@server/net/inbound-packets';
-import { watchForChanges } from '@server/util/files';
+import { watchForChanges, watchSource } from '@server/util/files';
 import { setEquipPlugins } from '@server/world/actor/player/action/equip-action';
+import { openGameServer } from '@server/net/server/game-server';
 
 
 export let serverConfig: ServerConfig;
 export let cache: Cache;
 export let world: World;
-export let crcTable: ByteBuffer;
 
 export async function injectPlugins(): Promise<void> {
     const actionPluginMap: { [key: string]: ActionPlugin[] } = {};
@@ -67,53 +61,8 @@ export async function injectPlugins(): Promise<void> {
     setPlayerPlugins(actionPluginMap[ActionType.PLAYER_ACTION]);
 }
 
-function generateCrcTable(): void {
-    const index = cache.metaChannel;
-    const indexLength = index.length;
-    const buffer = new ByteBuffer(4048);
-    buffer.put(0, 'BYTE');
-    buffer.put(indexLength, 'INT');
-    for(let file = 0; file < (indexLength / 6); file++) {
-        const crcValue = CRC32.buf(cache.getRawFile(255, file));
-        buffer.put(crcValue, 'INT');
-    }
-
-    crcTable = buffer;
-}
-
-function openServer(): void {
-    net.createServer(socket => {
-        socket.setNoDelay(true);
-        socket.setKeepAlive(true);
-        socket.setTimeout(30000);
-
-        let clientConnection = new ClientConnection(socket);
-
-        socket.on('data', data => {
-            if(clientConnection) {
-                clientConnection.parseIncomingData(new ByteBuffer(data));
-            }
-        });
-
-        socket.on('close', () => {
-            if(clientConnection) {
-                clientConnection.connectionDestroyed();
-                clientConnection = null;
-            }
-        });
-
-        socket.on('error', error => {
-            logger.error('Socket destroyed due to connection error.');
-            logger.error(error.message);
-            socket.destroy();
-        });
-    }).listen(serverConfig.port, serverConfig.host);
-
-    logger.info(`Game server listening on port ${ serverConfig.port }.`);
-}
-
 export async function runGameServer(): Promise<void> {
-    serverConfig = parseServerConfig();
+    serverConfig = parseServerConfig<ServerConfig>();
 
     if(!serverConfig) {
         logger.error('Unable to start server due to missing or invalid server configuration.');
@@ -121,29 +70,32 @@ export async function runGameServer(): Promise<void> {
     }
 
     cache = new Cache('cache', {
-        items: true, npcs: true, locationObjects: true, mapData: true, widgets: true
+        items: true,
+        npcs: true,
+        locationObjects: true,
+        mapData: !serverConfig.clippingDisabled,
+        widgets: true
     });
-    generateCrcTable();
 
-    // @TODO keep these in the login server so they don't eat game server memory :)
-    // delete cache.dataChannel;
-    // delete cache.metaChannel;
-    // delete cache.indexChannels;
-    // delete cache.indices;
+    delete cache.dataChannel;
+    delete cache.metaChannel;
+    delete cache.indexChannels;
+    delete cache.indices;
 
     await loadPackets();
 
     world = new World();
     await injectPlugins();
 
-    world.init(); // .then(() => delete cache.mapData);
+    world.init().then(() => delete cache.mapData);
 
     if(process.argv.indexOf('-fakePlayers') !== -1) {
         world.generateFakePlayers();
     }
 
-    openServer();
+    openGameServer(serverConfig.host, serverConfig.port);
 
+    watchSource('src/').subscribe(() => world.saveOnlinePlayers());
     watchForChanges('dist/plugins/', /[\/\\]plugins[\/\\]/);
     watchForChanges('dist/net/inbound-packets/', /[\/\\]inbound-packets[\/\\]/);
 }

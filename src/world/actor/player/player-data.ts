@@ -1,5 +1,5 @@
 import { Item } from '@server/world/items/item';
-import { writeFileSync, readFileSync, existsSync } from 'fs';
+import { writeFileSync, readFileSync, existsSync, exists } from 'fs';
 import { join } from 'path';
 import { logger } from '@runejs/logger';
 import { Player } from './player';
@@ -43,6 +43,9 @@ export class PlayerSettings {
     attackStyle: number = 0;
     bankInsertMode: number = 0;
     bankWithdrawNoteMode: number = 0;
+    publicChatMode: number = 0;
+    privateChatMode: number = 0;
+    tradeMode: number = 0;
 }
 
 export interface PlayerSave {
@@ -67,6 +70,8 @@ export interface PlayerSave {
     savedMetadata: { [key: string]: any };
     quests: QuestProgress[];
     achievements: string[];
+    friendsList: string[];
+    ignoreList: string[];
 }
 
 export const defaultAppearance = (): Appearance => {
@@ -133,7 +138,9 @@ export function savePlayerData(player: Player): boolean {
         settings: player.settings,
         savedMetadata: player.savedMetadata,
         quests: player.quests,
-        achievements: player.achievements
+        achievements: player.achievements,
+        friendsList: player.friendsList,
+        ignoreList: player.ignoreList
     };
 
     try {
@@ -143,6 +150,12 @@ export function savePlayerData(player: Player): boolean {
         logger.error(`Error saving player data for ${player.username}.`);
         return false;
     }
+}
+
+export function playerExists(username: string): boolean {
+    const fileName = username.toLowerCase() + '.json';
+    const filePath = join('data/saves', fileName);
+    return existsSync(filePath);
 }
 
 export function loadPlayerSave(username: string): PlayerSave {

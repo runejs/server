@@ -1,18 +1,19 @@
-import { handlePacket, incomingPackets } from '../inbound-packets';
-import { DataParser } from './data-parser';
-import { ByteBuffer } from '@runejs/byte-buffer';
-import { logger } from '@runejs/logger';
+import { Socket } from 'net';
+import { ServerGateway } from '@server/net/server/server-gateway';
+import { ByteBuffer, logger, openServer, SocketConnectionHandler } from '@runejs/core';
+import { handlePacket, incomingPackets } from '@server/net/inbound-packets';
+import { Player } from '@server/world/actor/player/player';
 
-/**
- * Parses inbound packet data from the game client once the user is fully authenticated.
- */
-export class InboundPacketDataParser extends DataParser {
+export class GameServerConnection implements SocketConnectionHandler {
 
     private activePacketId: number = null;
     private activePacketSize: number = null;
     private activeBuffer: ByteBuffer;
 
-    public parse(buffer?: ByteBuffer): void {
+    public constructor(private readonly clientSocket: Socket, private readonly player: Player) {
+    }
+
+    public async dataReceived(buffer?: ByteBuffer): Promise<void> {
         if(!this.activeBuffer) {
             this.activeBuffer = buffer;
         } else if(buffer) {
@@ -31,7 +32,7 @@ export class InboundPacketDataParser extends DataParser {
             this.activePacketSize = -1;
         }
 
-        const inCipher = this.clientConnection.player.inCipher;
+        const inCipher = this.player.inCipher;
 
         if(this.activePacketId === -1) {
             if(this.activeBuffer.readable < 1) {
@@ -79,7 +80,7 @@ export class InboundPacketDataParser extends DataParser {
             this.activeBuffer.copy(packetData, 0, this.activeBuffer.readerIndex, this.activeBuffer.readerIndex + this.activePacketSize);
             this.activeBuffer.readerIndex += this.activePacketSize;
         }
-        handlePacket(this.clientConnection.player, this.activePacketId, this.activePacketSize, packetData);
+        handlePacket(this.player, this.activePacketId, this.activePacketSize, packetData);
 
         if(clearBuffer) {
             this.activeBuffer = null;
@@ -89,7 +90,23 @@ export class InboundPacketDataParser extends DataParser {
         this.activePacketSize = null;
 
         if(this.activeBuffer !== null && this.activeBuffer.readable > 0) {
-            this.parse();
+            await this.dataReceived();
         }
+
+        return Promise.resolve();
     }
+
+    public connectionDestroyed(): void {
+        logger.info(`Connection destroyed.`);
+        this.player?.logout();
+    }
+
+    public closeSocket(): void {
+        this.clientSocket.destroy();
+    }
+
 }
+
+export const openGameServer = (host: string, port: number): void =>
+    openServer<ServerGateway>('Game Server', host, port,
+        socket => new ServerGateway(socket));
