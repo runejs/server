@@ -17,7 +17,6 @@ import { itemIds } from '@server/world/config/item-ids';
 import { Player } from '@server/world/actor/player/player';
 import { Item } from '@server/world/items/item';
 
-
 const enterAltar: itemOnObjectAction = (details: ItemOnObjectActionDetails) => {
     const {player, object, item} = details;
     const altar: RunecraftingAltar = getEntityByAttr(altars, 'entranceId', object.objectId);
@@ -42,7 +41,6 @@ const enterAltar: itemOnObjectAction = (details: ItemOnObjectActionDetails) => {
     // Correct talisman.
     if (item.itemId === rune.talisman.id) {
         finishEnterAltar(player, item, altar);
-
     }
 };
 
@@ -59,7 +57,6 @@ const exitAltar: objectAction = (details: ObjectActionDetails) => {
     const altar = getEntityByAttr(altars, 'portalId', object.objectId);
     player.teleport(altar.exit);
 };
-
 
 export default new RunePlugin([
     {

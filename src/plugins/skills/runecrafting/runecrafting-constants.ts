@@ -297,9 +297,6 @@ export const runes: Map<string, RunecraftingRune> = new Map<string, Runecrafting
     }],
 ]);
 
-
-
-
 export const combinationRunes: Map<string, RunecraftingCombinationRune> = new Map<string, RunecraftingCombinationRune>([
     ['mist', {
         altar: [altars.get('air'), altars.get('water')],

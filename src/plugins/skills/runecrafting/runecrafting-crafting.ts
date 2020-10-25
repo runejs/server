@@ -7,10 +7,12 @@ import { objectAction, ObjectActionDetails } from '@server/world/actor/player/ac
 import { Skill } from '@server/world/actor/skills';
 import { widgets } from '@server/world/config/widget';
 import {
-    altars, combinationRunes,
+    altars,
+    combinationRunes,
     getEntityByAttr,
-    getEntityIds, runeMultiplier,
-    runes,
+    getEntityIds,
+    runeMultiplier,
+    runes, talismans,
 } from '@server/plugins/skills/runecrafting/runecrafting-constants';
 import { itemOnObjectAction, ItemOnObjectActionDetails } from '@server/world/actor/player/action/item-on-object-action';
 import { RunecraftingCombinationRune } from '@server/plugins/skills/runecrafting/runecrafting-types';
@@ -122,8 +124,31 @@ const craftCombinationRune: itemOnObjectAction = (details: ItemOnObjectActionDet
     player.sendMessage(`You do not have any pure essence to bind.`);
 };
 
+const craftTiara: itemOnObjectAction = (details: ItemOnObjectActionDetails) => {
+    const { player, object, item } = details;
+
+    // Handle tiara on altar.
+    if (item.itemId === itemIds.tiaras.blank) {
+        player.sendMessage(`Tiara on Altar detected!`, true);
+    }
+
+    // Handle talisman on altar.
+    if (item.itemId !== itemIds.tiaras.blank) {
+        player.sendMessage(`Talisman on Altar detected!`, true);
+    }
+
+    console.log('OBJECT: ', object);
+    console.log('ITEM: ', item);
+};
 
 export default new RunePlugin([
+    {
+        type: ActionType.ITEM_ON_OBJECT_ACTION,
+        itemIds: [itemIds.tiaras.blank, ...getEntityIds(talismans, 'id')],
+        objectIds: getEntityIds(altars, 'craftingId'),
+        walkTo: true,
+        action: craftTiara
+    },
     {
         type: ActionType.OBJECT_ACTION,
         objectIds: getEntityIds(altars, 'craftingId'),
@@ -132,6 +157,7 @@ export default new RunePlugin([
     },
     {
         type: ActionType.ITEM_ON_OBJECT_ACTION,
+        itemIds: [...getEntityIds(runes, 'id'), ...getEntityIds(combinationRunes, 'id')],
         objectIds: getEntityIds(altars, 'craftingId'),
         walkTo: true,
         action: craftCombinationRune
