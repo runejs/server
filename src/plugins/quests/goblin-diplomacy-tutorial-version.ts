@@ -276,7 +276,7 @@ const guideDialogueHandler: { [key: number]: (player: Player, npc: Npc) => void 
         ]);
     },
     45: async (player, npc) => {
-
+        return Promise.resolve();
     }
 };
 

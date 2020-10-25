@@ -68,4 +68,4 @@ export class PrivateMessaging {
         PrivateMessaging.updateFriendsList(player);
     }
 
-};
+}
