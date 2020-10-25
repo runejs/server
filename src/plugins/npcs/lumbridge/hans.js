@@ -5,7 +5,7 @@ const action = async details => {
 
     let sadEnding = false;
 
-    await dialogue([ player, { npc, key: 'hans' } ], [
+    const dialogueSuccessful = await dialogue([ player, { npc, key: 'hans' } ], [
         hans => [ Emote.GENERIC, `Welcome to RuneScape!` ],
         (hans, tag_Hans_Question) => [ Emote.HAPPY, `How do you feel about Rune.JS so far?\n` +
         `Please take a moment to let us know what you think!` ],
@@ -37,15 +37,17 @@ const action = async details => {
     npc.clearFaceActor();
     player.clearFaceActor();
 
-    if(sadEnding) {
-        npc.playAnimation(animationIds.cry);
-        npc.say(`Jerk!`);
-        player.sendMessage(`Hans wanders off rather dejectedly.`);
-    } else {
-        player.sendMessage(`Hans wanders off aimlessly through the courtyard.`);
-    }
+    if(dialogueSuccessful) {
+        if(sadEnding) {
+            npc.playAnimation(animationIds.cry);
+            npc.say(`Jerk!`);
+            player.sendMessage(`Hans wanders off rather dejectedly.`);
+        } else {
+            player.sendMessage(`Hans wanders off aimlessly through the courtyard.`);
+        }
 
-    giveAchievement(Achievements.WELCOME, player);
+        giveAchievement(Achievements.WELCOME, player);
+    }
 };
 
 module.exports = {

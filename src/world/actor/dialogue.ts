@@ -1,7 +1,7 @@
 import { Npc } from '@server/world/actor/npc/npc';
 import { Player } from '@server/world/actor/player/player';
 import { cache } from '@server/game-server';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 import _ from 'lodash';
 import { wrapText } from '@server/util/strings';
 import { take } from 'rxjs/operators';
@@ -354,7 +354,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
 }
 
 async function runDialogueAction(player: Player, dialogueAction: string | DialogueFunction | DialogueAction,
-                                 tag?: string, additionalOptions?: AdditionalOptions): Promise<void> {
+                                 tag?: string, additionalOptions?: AdditionalOptions): Promise<string | undefined> {
     if(dialogueAction instanceof DialogueFunction && !tag) {
         // Code execution dialogue.
         dialogueAction.execute();
@@ -544,15 +544,16 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
             }
         }
     }
+
+    return tag;
 }
 
 async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTree, tag?: string, additionalOptions?: AdditionalOptions): Promise<boolean> {
     for(let i = 0; i < dialogueTree.length; i++) {
         try {
-            await runDialogueAction(player, dialogueTree[i], tag, additionalOptions);
+            tag = await runDialogueAction(player, dialogueTree[i], tag, additionalOptions);
             player.activeWidget = null;
         } catch(error) {
-            console.log(error.message || 'Error: No Message');
             throw error;
         }
     }
@@ -561,7 +562,7 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
 }
 
 export async function dialogue(participants: (Player | NpcParticipant)[], dialogueTree: DialogueTree,
-                               additionalOptions?: AdditionalOptions): Promise<void> {
+                               additionalOptions?: AdditionalOptions): Promise<boolean> {
     const player = participants.find(p => p instanceof Player) as Player;
 
     if(!player) {
@@ -588,5 +589,11 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
         });
     }
 
-    await run();
+    try {
+        await run();
+        return true;
+    } catch(error) {
+        logger.warn(`Dialogue cancelled.`);
+        return false;
+    }
 }
