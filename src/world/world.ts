@@ -516,6 +516,11 @@ export class World {
         this.registerNpc(npc);
     }
 
+    public findPlayer(playerUsername: string): Player {
+        playerUsername = playerUsername.toLowerCase();
+        return this.playerList?.find(p => p !== null && p.username.toLowerCase() === playerUsername) || null;
+    }
+
     public playerOnline(player: Player | string): boolean {
         if(typeof player === 'string') {
             player = player.toLowerCase();

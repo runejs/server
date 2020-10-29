@@ -9,6 +9,24 @@ export enum PrivateChatMode {
 
 export class PrivateMessaging {
 
+    public static friendAdded(player: Player, friendName: string): void {
+        friendName = friendName.toLowerCase();
+        const friend = world?.findPlayer(friendName);
+    }
+
+    public static friendRemoved(player: Player, friendName: string): void {
+        friendName = friendName.toLowerCase();
+        const playerPrivateChatMode = player.settings.privateChatMode;
+        const playerUsername = player.username.toLowerCase();
+        if(playerPrivateChatMode !== PrivateChatMode.PUBLIC) {
+            const friend = world?.findPlayer(friendName);
+            if(friend && friend.friendsList.indexOf(playerUsername) !== -1) {
+                // Friend being removed is currently online - update their friends list if they have this player added
+                friend.outgoingPackets.updateFriendStatus(player.username, 0);
+            }
+        }
+    }
+
     /**
      * Updates a specific player's entire friends list.
      * @param player The player to update.
