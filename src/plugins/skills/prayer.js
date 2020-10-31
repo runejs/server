@@ -4,7 +4,6 @@ import { animationIds } from '../../world/config/animation-ids';
 import { Achievements, giveAchievement } from '../../world/actor/player/achievements';
 import { Skill } from '../../world/actor/skills';
 import { widgets } from '../../world/config/widget';
-import { ActionType } from '../plugin';
 
 const action = async details => {
     const { player, itemSlot } = details;
@@ -18,7 +17,7 @@ const action = async details => {
 };
 
 module.exports = {
-    type: ActionType.ITEM_ACTION,
+    type: 'item_action',
     widgets: widgets.inventory,
     options: 'bury',
     itemIds: itemIds.bones,

@@ -1,16 +1,17 @@
 import { Player } from '@server/world/actor/player/player';
 import { pluginFilter } from '@server/plugins/plugin-loader';
-import { ActionPlugin, questFilter } from '@server/plugins/plugin';
+import { Action, questFilter } from '@server/plugins/plugin';
+import { World } from '@server/game-server';
 
 /**
  * The definition for a button action function.
  */
-export type buttonAction = (details: ButtonActionDetails) => void;
+export type buttonAction = (buttonActionData: ButtonActionData) => void;
 
 /**
  * Details about a button action.
  */
-export interface ButtonActionDetails {
+export interface ButtonActionData {
     // The player performing the action.
     player: Player;
     // The ID of the UI widget that the button is on.
@@ -22,7 +23,7 @@ export interface ButtonActionDetails {
 /**
  * Defines a button interaction plugin.
  */
-export interface ButtonActionPlugin extends ActionPlugin {
+export interface ButtonAction extends Action {
     // The ID of the UI widget that the button is on.
     widgetId: number;
     // The child ID or list of child IDs of the button(s) within the UI widget.
@@ -36,22 +37,22 @@ export interface ButtonActionPlugin extends ActionPlugin {
 /**
  * A directory of all button interaction plugins.
  */
-let buttonInteractions: ButtonActionPlugin[] = [
+let buttonActions: ButtonAction[] = [
 ];
 
 /**
  * Sets the list of button interaction plugins.
- * @param plugins The plugin list.
+ * @param actions The plugin list.
  */
-export const setButtonPlugins = (plugins: ActionPlugin[]): void => {
-    buttonInteractions = plugins as ButtonActionPlugin[];
+export const setButtonActions = (actions: Action[]): void => {
+    buttonActions = actions as ButtonAction[];
 };
 
-export const buttonAction = (player: Player, widgetId: number, buttonId: number): void => {
+const actionHandler = (player: Player, widgetId: number, buttonId: number): void => {
     // Find all item on item action plugins that match this action
-    let interactionActions = buttonInteractions.filter(plugin => questFilter(player, plugin) &&
+    let interactionActions = buttonActions.filter(plugin => questFilter(player, plugin) &&
         plugin.widgetId === widgetId && (plugin.buttonIds === undefined || pluginFilter(plugin.buttonIds, buttonId)));
-    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
+    const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
         interactionActions = questActions;
@@ -77,3 +78,5 @@ export const buttonAction = (player: Player, widgetId: number, buttonId: number)
         plugin.action({ player, widgetId, buttonId });
     }
 };
+
+World.registerActionEventListener('button', actionHandler);

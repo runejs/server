@@ -1,20 +1,20 @@
 import { Player } from '@server/world/actor/player/player';
-import { ActionPlugin, questFilter } from '@server/plugins/plugin';
+import { Action, questFilter } from '@server/plugins/plugin';
 import { ItemContainer } from '@server/world/items/item-container';
 import { Item } from '@server/world/items/item';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
-import { world } from '@server/game-server';
+import { World, world } from '@server/game-server';
 import { ItemDetails } from '@server/world/config/item-data';
 
 /**
  * The definition for an item action function.
  */
-export type itemAction = (details: ItemActionDetails) => void;
+export type itemAction = (itemActionData: ItemActionData) => void;
 
 /**
  * Details about an item being interacted with.
  */
-export interface ItemActionDetails {
+export interface ItemActionData {
     // The player performing the action.
     player: Player;
     // The ID of the item being interacted with.
@@ -34,7 +34,7 @@ export interface ItemActionDetails {
 /**
  * Defines an item interaction plugin.
  */
-export interface ItemActionPlugin extends ActionPlugin {
+export interface ItemAction extends Action {
     // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
     // A single UI widget ID or a list of widget IDs that this action applies to.
@@ -50,14 +50,14 @@ export interface ItemActionPlugin extends ActionPlugin {
 /**
  * A directory of all object interaction plugins.
  */
-let itemInteractions: ItemActionPlugin[] = [];
+let itemActions: ItemAction[] = [];
 
 /**
  * Sets the list of object interaction plugins.
- * @param plugins The plugin list.
+ * @param actions The plugin list.
  */
-export const setItemPlugins = (plugins: ActionPlugin[]): void => {
-    itemInteractions = plugins as ItemActionPlugin[];
+export const setItemActions = (actions: Action[]): void => {
+    itemActions = actions as ItemAction[];
 };
 
 export const getItemFromContainer = (itemId: number, slot: number, container: ItemContainer): Item => {
@@ -74,7 +74,7 @@ export const getItemFromContainer = (itemId: number, slot: number, container: It
 };
 
 // @TODO priority and cancelling other (lower priority) actions
-export const itemAction = (player: Player, itemId: number, slot: number, widgetId: number, containerId: number, option: string): void => {
+const actionHandler = (player: Player, itemId: number, slot: number, widgetId: number, containerId: number, option: string): void => {
     if(player.busy) {
         return;
     }
@@ -82,7 +82,7 @@ export const itemAction = (player: Player, itemId: number, slot: number, widgetI
     let cancelActions = false;
 
     // Find all object action plugins that reference this location object
-    let interactionActions = itemInteractions.filter(plugin => {
+    let interactionActions = itemActions.filter(plugin => {
         if(!questFilter(player, plugin)) {
             return false;
         }
@@ -125,7 +125,7 @@ export const itemAction = (player: Player, itemId: number, slot: number, widgetI
         return true;
     });
 
-    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
+    const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
         interactionActions = questActions;
@@ -153,3 +153,5 @@ export const itemAction = (player: Player, itemId: number, slot: number, widgetI
     }
 
 };
+
+World.registerActionEventListener('item_action', actionHandler);

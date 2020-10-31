@@ -1,8 +1,7 @@
 import { playerOptions } from '../../world/actor/player/player';
 import { world } from '../../game-server';
 import { World } from '../../world/world';
-import { playerAction } from '../../world/actor/player/action/player-action';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 
 const playerInteractionPacket = (player, packet) => {
     const { buffer, packetId } = packet;
@@ -41,7 +40,7 @@ const playerInteractionPacket = (player, packet) => {
         return;
     }
 
-    playerAction(player, otherPlayer, position, playerOption.option.toLowerCase());
+    World.callActionEventListener('player_action', otherPlayer, position, playerOption.option.toLowerCase());
 };
 
 export default [{

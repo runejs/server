@@ -1,16 +1,17 @@
 import { Player } from '../player';
-import { ActionPlugin } from '@server/plugins/plugin';
-import { logger } from '@runejs/logger';
+import { Action } from '@server/plugins/plugin';
+import { logger } from '@runejs/core';
+import { World } from '@server/game-server';
 
 /**
  * The definition for a command action function.
  */
-export type commandAction = (details: CommandActionDetails) => void;
+export type commandAction = (playerCommandActionData: PlayerCommandActionData) => void;
 
 /**
  * Details about a command action.
  */
-export interface CommandActionDetails {
+export interface PlayerCommandActionData {
     // The player performing the action.
     player: Player;
     // The command that the player entered.
@@ -24,7 +25,7 @@ export interface CommandActionDetails {
 /**
  * Defines a command interaction plugin.
  */
-export interface CommandActionPlugin extends ActionPlugin {
+export interface PlayerCommandAction extends Action {
     // The single command or list of commands that this action applies to.
     commands: string | string[];
     // The potential arguments for this command action.
@@ -40,18 +41,18 @@ export interface CommandActionPlugin extends ActionPlugin {
 /**
  * A directory of all command interaction plugins.
  */
-export let commandInteractions: CommandActionPlugin[] = [];
+export let commandActions: PlayerCommandAction[] = [];
 
 /**
  * Sets the list of command interaction plugins.
- * @param plugins The plugin list.
+ * @param actions The plugin list.
  */
-export const setCommandPlugins = (plugins: ActionPlugin[]): void => {
-    commandInteractions = plugins as CommandActionPlugin[];
+export const setCommandActions = (actions: Action[]): void => {
+    commandActions = actions as PlayerCommandAction[];
 };
 
-export const inputCommandAction = (player: Player, command: string, isConsole: boolean, inputArgs: string[]): void => {
-    const plugins = commandInteractions.filter(plugin => {
+const actionHandler = (player: Player, command: string, isConsole: boolean, inputArgs: string[]): void => {
+    const plugins = commandActions.filter(plugin => {
         if (Array.isArray(plugin.commands)) {
             return plugin.commands.indexOf(command) !== -1;
         } else {
@@ -121,3 +122,5 @@ export const inputCommandAction = (player: Player, command: string, isConsole: b
         }
     });
 };
+
+World.registerActionEventListener('player_command', actionHandler);

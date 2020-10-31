@@ -1,4 +1,3 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { npcIds } from '@server/world/config/npc-ids';
 import { npcInitAction } from '@server/world/actor/npc/npc';
 import { World } from '@server/world/world';
@@ -41,17 +40,17 @@ export const shearAction: itemOnNpcAction = (details) => {
     }, World.TICK_LENGTH);
 
 };
-export default new RunePlugin([
+export default [
     {
-        type: ActionType.NPC_INIT,
+        type: 'npc_init',
         npcIds: npcIds.sheep,
         action: initAction
     },
     {
-        type: ActionType.ITEM_ON_NPC_ACTION,
+        type: 'item_on_npc',
         npcsIds: [npcIds.sheep],
         itemIds: [itemIds.shears, itemIds.recruitmentDrive.shears],
         walkTo: true,
         action: shearAction
     }
-]);
+];

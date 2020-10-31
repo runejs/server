@@ -1,4 +1,3 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { npcIds } from '@server/world/config/npc-ids';
 import { npcAction } from '@server/world/actor/player/action/npc-action';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
@@ -157,12 +156,12 @@ const talkToCook : npcAction = (details) => {
     ]);
 };
 
-export default new RunePlugin([{
-    type: ActionType.NPC_ACTION,
+export default [{
+    type: 'npc_action',
     npcIds: npcIds.varrockBartender,
     action: talkToBartender,
 }, {
-    type: ActionType.NPC_ACTION,
+    type: 'npc_action',
     npcIds: npcIds.varrockCharlieTheCook,
     action: talkToCook
-}]);
+}];

@@ -1,5 +1,4 @@
 import { npcAction } from '@server/world/actor/player/action/npc-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { npcIds } from '@server/world/config/npc-ids';
 import { Quest } from '@server/world/config/quests';
 import { dialogue, DialogueTree, Emote, execute, goto } from '@server/world/actor/dialogue';
@@ -255,21 +254,21 @@ const handInIngredientsAction: npcAction = (details) => {
     dialogue([ player, { npc, key: 'cook' }], dialogueTree);
 };
 
-export default new RunePlugin([{
-    type: ActionType.QUEST,
+export default [{
+    type: 'question',
     quest
 }, {
-    type: ActionType.NPC_ACTION,
-    questAction: { questId: 'cooksAssistant', stage: 'NOT_STARTED' },
+    type: 'npc_action',
+    questRequirement: { questId: 'cooksAssistant', stage: 'NOT_STARTED' },
     npcIds: npcIds.lumbridgeCook,
     options: 'talk-to',
     walkTo: true,
     action: startQuestAction
 }, {
-    type: ActionType.NPC_ACTION,
-    questAction: { questId: 'cooksAssistant', stage: 'COLLECTING' },
+    type: 'npc_action',
+    questRequirement: { questId: 'cooksAssistant', stage: 'COLLECTING' },
     npcIds: npcIds.lumbridgeCook,
     options: 'talk-to',
     walkTo: true,
     action: handInIngredientsAction
-}]);
+}];

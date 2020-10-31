@@ -1,6 +1,5 @@
 import { npcAction } from '@server/world/actor/player/action/npc-action';
 import { dialogue, Emote } from '@server/world/actor/dialogue';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { npcIds } from '@server/world/config/npc-ids';
 
 const talkTo : npcAction = (details) => {
@@ -15,10 +14,10 @@ const talkTo : npcAction = (details) => {
     ]);
 };
 
-export default new RunePlugin({
+export default {
     npcIds: [npcIds.wilough],
-    type: ActionType.NPC_ACTION,
+    type: 'npc_action',
     options: ['talk-to'],
     walkTo: true,
     action: talkTo
-});
+};

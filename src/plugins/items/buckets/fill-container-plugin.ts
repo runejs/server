@@ -34,10 +34,10 @@ export const action: itemOnObjectAction = (details) => {
 
 };
 
-export default new RunePlugin({
-    type: ActionType.ITEM_ON_OBJECT_ACTION,
+export default {
+    type: 'item_on_object',
     objectIds: [...FountainIds, ...WellIds, ...SinkIds],
     itemIds: [itemIds.bucket, itemIds.jug],
     walkTo: true,
     action
-});
+};

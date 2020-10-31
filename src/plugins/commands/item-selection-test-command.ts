@@ -1,4 +1,3 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { commandAction } from '@server/world/actor/player/action/input-command-action';
 import { itemSelectionAction } from '@server/world/actor/player/action/item-selection-action';
 
@@ -21,9 +20,9 @@ const action: commandAction = (details) => {
     // The console.log is not required, it's only here for testing purposes.
 };
 
-export default new RunePlugin({
-    type: ActionType.COMMAND,
+export default {
+    type: 'player_command',
     commands: 'itemselection',
     action,
     cancelOtherActions: false
-});
+};

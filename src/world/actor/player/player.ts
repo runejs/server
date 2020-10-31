@@ -4,8 +4,8 @@ import { Isaac } from '@server/net/isaac';
 import { PlayerUpdateTask } from './updating/player-update-task';
 import { Actor } from '../actor';
 import { Position } from '@server/world/position';
-import { cache, serverConfig, world } from '@server/game-server';
-import { logger } from '@runejs/logger';
+import { cache, serverConfig, World, world } from '@server/game-server';
+import { logger } from '@runejs/core';
 import {
     Appearance,
     defaultAppearance, defaultSettings,
@@ -25,12 +25,12 @@ import { QuadtreeKey } from '@server/world/world';
 import { daysSinceLastLogin } from '@server/util/time';
 import { itemIds } from '@server/world/config/item-ids';
 import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
-import { ActionPlugin } from '@server/plugins/plugin';
+import { Action } from '@server/plugins/plugin';
 import { songs } from '@server/world/config/songs';
 import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 import { quests } from '@server/world/config/quests';
 import { ItemDefinition } from '@runejs/cache-parser';
-import { CommandActionPlugin, commandInteractions } from '@server/world/actor/player/action/input-command-action';
+import { PlayerCommandAction, commandActions } from '@server/world/actor/player/action/input-command-action';
 import { take } from 'rxjs/operators';
 import { getItemFromContainer } from '@server/world/actor/player/action/item-action';
 import { updateBonusStrings } from '@server/plugins/equipment/equipment-stats-plugin';
@@ -78,15 +78,15 @@ export enum Rights {
     USER = 0
 }
 
-let playerInitPlugins: PlayerInitPlugin[];
+let playerInitPlugins: PlayerInitAction[];
 
 export type playerInitAction = (details: { player: Player }) => void;
 
-export const setPlayerInitPlugins = (plugins: ActionPlugin[]): void => {
-    playerInitPlugins = plugins as PlayerInitPlugin[];
+export const setPlayerInitPlugins = (plugins: Action[]): void => {
+    playerInitPlugins = plugins as PlayerInitAction[];
 };
 
-export interface PlayerInitPlugin extends ActionPlugin {
+export interface PlayerInitAction extends Action {
     // The action function to be performed.
     action: playerInitAction;
 }
@@ -250,7 +250,7 @@ export class Player extends Actor {
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
         for (const item of this.equipment.items) {
             if(item) {
-                equipAction(this, item.itemId, 'EQUIP');
+                World.callActionEventListener('equip_action', this, item.itemId, 'EQUIP');
             }
         }
 
@@ -335,7 +335,7 @@ export class Player extends Actor {
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
 
         if(this.rights === Rights.ADMIN) {
-            this.sendCommandList(commandInteractions);
+            this.sendCommandList(commandActions);
         }
 
         new Promise(resolve => {
@@ -913,7 +913,7 @@ export class Player extends Actor {
         }
     }
 
-    public sendCommandList(commands: CommandActionPlugin[]): void {
+    public sendCommandList(commands: PlayerCommandAction[]): void {
         for(const command of commands) {
             let strCmd: string;
             if(Array.isArray(command.commands)) {
@@ -1005,7 +1005,8 @@ export class Player extends Actor {
             if (shouldUnequipMainHand && !this.unequipItem(EquipmentSlot.MAIN_HAND, false)) {
                 return false;
             }
-            equipAction(this, itemToUnequip.itemId, 'UNEQUIP');
+
+            World.callActionEventListener('equip_action', this, itemToUnequip.itemId, 'UNEQUIP');
 
             this.equipment.remove(slot, false);
             this.inventory.remove(itemSlot, false);
@@ -1025,7 +1026,8 @@ export class Player extends Actor {
                 this.unequipItem(EquipmentSlot.MAIN_HAND);
             }
         }
-        equipAction(this, itemId, 'EQUIP');
+
+        World.callActionEventListener('equip_action', this, itemId, 'EQUIP');
         this.equipmentChanged();
         return true;
     }
@@ -1057,7 +1059,8 @@ export class Player extends Actor {
         if (!itemInSlot) {
             return true;
         }
-        equipAction(this, itemInSlot.itemId, 'UNEQUIP');
+
+        World.callActionEventListener('equip_action', this, itemInSlot.itemId, 'UNEQUIP');
 
         this.equipment.remove(slot);
         this.inventory.set(inventorySlot, itemInSlot);

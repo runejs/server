@@ -6,7 +6,7 @@ import { Position } from '@server/world/position';
 import { world } from '@server/game-server';
 import { directionData } from '@server/world/direction';
 import { QuadtreeKey } from '@server/world/world';
-import { ActionPlugin } from '@server/plugins/plugin';
+import { Action } from '@server/plugins/plugin';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
 import { schedule } from '@server/task/task';
 
@@ -18,15 +18,15 @@ interface NpcAnimations {
     turnLeft: number;
 }
 
-let npcInitPlugins: NpcInitPlugin[];
+let npcInitPlugins: NpcInitAction[];
 
 export type npcInitAction = (details: { npc: Npc }) => void;
 
-export const setNpcInitPlugins = (plugins: ActionPlugin[]): void => {
-    npcInitPlugins = plugins as NpcInitPlugin[];
+export const setNpcInitPlugins = (plugins: Action[]): void => {
+    npcInitPlugins = plugins as NpcInitAction[];
 };
 
-export interface NpcInitPlugin extends ActionPlugin {
+export interface NpcInitAction extends Action {
     // The action function to be performed.
     action: npcInitAction;
     // A single NPC ID or a list of NPC IDs that this action applies to.

@@ -1,4 +1,3 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { commandAction } from '@server/world/actor/player/action/input-command-action';
 import { world } from '@server/game-server';
 
@@ -27,16 +26,16 @@ const trackedNpcsAction: commandAction = (details) => {
 
 };
 
-export default new RunePlugin([{
-    type: ActionType.COMMAND,
+export default [{
+    type: 'player_command',
     commands: 'quadtree',
     action: quadtreeAction
 }, {
-    type: ActionType.COMMAND,
+    type: 'player_command',
     commands: 'trackedplayers',
     action: trackedPlayersAction
 }, {
-    type: ActionType.COMMAND,
+    type: 'player_command',
     commands: 'trackednpcs',
     action: trackedNpcsAction
-}]);
+}];

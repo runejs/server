@@ -1,5 +1,4 @@
 import { DamageType } from '../../world/actor/update-flags';
-import { ActionType, RunePlugin } from '../plugin';
 import { walkToAction } from '../../world/actor/player/action/action';
 import { npcAction } from '@server/world/actor/player/action/npc-action';
 import { Actor } from '@server/world/actor/actor';
@@ -192,9 +191,9 @@ const attackNpcAction: npcAction = async details => {
     await combatInstance.initiateCombat();
 };
 
-export default new RunePlugin({
-    type: ActionType.NPC_ACTION,
+export default {
+    type: 'npc_action',
     options: 'attack',
     walkTo: true,
     action: attackNpcAction
-});
+};

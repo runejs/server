@@ -1,4 +1,3 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { equipAction } from '@server/world/actor/player/action/equip-action';
 
 export const equip: equipAction = (details) => {
@@ -10,14 +9,14 @@ export const unequip: equipAction = (details) => {
     player.outgoingPackets.updateClientConfig(491, 0);
 };
 
-export default new RunePlugin([{
-    type: ActionType.EQUIP_ACTION,
+export default [{
+    type: 'equip_action',
     equipType: 'EQUIP',
     action: equip,
     itemIds: 5527
 }, {
-    type: ActionType.EQUIP_ACTION,
+    type: 'equip_action',
     equipType: 'UNEQUIP',
     action: unequip,
     itemIds: 5527
-}]);
+}];

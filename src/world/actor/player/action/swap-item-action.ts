@@ -1,6 +1,6 @@
 import { Player } from '../player';
 import { widgets } from '../../../config/widget';
-import { logger } from '@runejs/logger/dist/logger';
+
 
 export const swapItemAction = (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }) => {
     if (widget.widgetId === widgets.inventory.widgetId && widget.containerId === widgets.inventory.containerId) {

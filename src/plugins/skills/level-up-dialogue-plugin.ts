@@ -19,4 +19,4 @@ export const action: widgetAction = (details) => {
     player.closeActiveWidgets();
 };
 
-export default new RunePlugin({ type: ActionType.WIDGET_ACTION, widgetIds, action, cancelActions: false });
+export default { type: 'widget_action', widgetIds, action, cancelActions: false };

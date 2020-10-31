@@ -1,6 +1,5 @@
 import { objectAction } from '@server/world/actor/player/action/object-action';
 import { cache } from '@server/game-server';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { dialogueAction, DialogueEmote } from '@server/world/actor/player/action/dialogue-action';
 import { npcIds } from '@server/world/config/npc-ids';
 import { animationIds } from '@server/world/config/animation-ids';
@@ -39,20 +38,20 @@ export const actionItem: itemOnObjectAction = (details) => milkCow(details);
 
 export const actionInteract: objectAction = (details) => milkCow(details);
 
-export default new RunePlugin(
+export default
     [
         {
-            type: ActionType.OBJECT_ACTION,
+            type: 'object_action',
             objectIds: objectIds.milkableCow,
             options: 'milk',
             walkTo: true,
             action: actionInteract
         },
         {
-            type: ActionType.ITEM_ON_OBJECT_ACTION,
+            type: 'item_on_object',
             objectIds: objectIds.milkableCow,
             itemIds: itemIds.bucket,
             walkTo: true,
             action: actionItem
         }
-    ]);
+    ];

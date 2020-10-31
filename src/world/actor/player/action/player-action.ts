@@ -2,18 +2,19 @@ import { Player } from '@server/world/actor/player/player';
 import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { basicStringFilter } from '@server/plugins/plugin-loader';
-import { logger } from '@runejs/logger';
-import { ActionPlugin, questFilter } from '@server/plugins/plugin';
+import { logger } from '@runejs/core';
+import { Action, questFilter } from '@server/plugins/plugin';
+import { World } from '@server/game-server';
 
 /**
  * The definition for a player action function.
  */
-export type playerAction = (details: PlayerActionDetails) => void;
+export type playerAction = (playerActionData: PlayerActionData) => void;
 
 /**
  * Details about a player being interacted with.
  */
-export interface PlayerActionDetails {
+export interface PlayerActionData {
     // The player performing the action.
     player: Player;
     // The player that the action is being performed on.
@@ -26,7 +27,7 @@ export interface PlayerActionDetails {
  * Defines a player interaction plugin.
  * The option selected, the action to be performed, and whether or not the player must first walk to the other player.
  */
-export interface PlayerActionPlugin extends ActionPlugin {
+export interface PlayerAction extends Action {
     // A single option name or a list of option names that this action applies to.
     options: string | string[];
     // Whether or not the player needs to walk to the other player before performing the action.
@@ -38,26 +39,26 @@ export interface PlayerActionPlugin extends ActionPlugin {
 /**
  * A directory of all player interaction plugins.
  */
-let playerInteractions: PlayerActionPlugin[] = [
+let playerActions: PlayerAction[] = [
 ];
 
 /**
  * Sets the list of player interaction plugins.
- * @param plugins The plugin list.
+ * @param actions The plugin list.
  */
-export const setPlayerPlugins = (plugins: ActionPlugin[]): void => {
-    playerInteractions = plugins as PlayerActionPlugin[];
+export const setPlayerActions = (actions: Action[]): void => {
+    playerActions = actions as PlayerAction[];
 };
 
 // @TODO priority and cancelling other (lower priority) actions
-export const playerAction = (player: Player, otherPlayer: Player, position: Position, option: string): void => {
+const actionHandler = (player: Player, otherPlayer: Player, position: Position, option: string): void => {
     if(player.busy) {
         return;
     }
 
     // Find all player action plugins that reference this option
-    let interactionActions = playerInteractions.filter(plugin => questFilter(player, plugin) && basicStringFilter(plugin.options, option));
-    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
+    let interactionActions = playerActions.filter(plugin => questFilter(player, plugin) && basicStringFilter(plugin.options, option));
+    const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
         interactionActions = questActions;
@@ -89,3 +90,5 @@ export const playerAction = (player: Player, otherPlayer: Player, position: Posi
         immediatePlugins.forEach(plugin => plugin.action({ player, otherPlayer, position }));
     }
 };
+
+World.registerActionEventListener('player_action', actionHandler);

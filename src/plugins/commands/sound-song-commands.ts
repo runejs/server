@@ -16,8 +16,8 @@ const quickSongAction: commandAction = (details) => {
     player.outgoingPackets.playQuickSong(args.songId as number, args.prevSongId as number);
 };
 
-export default new RunePlugin([{
-    type: ActionType.COMMAND,
+export default [{
+    type: 'player_command',
     commands: 'song',
     args: [
         {
@@ -27,7 +27,7 @@ export default new RunePlugin([{
     ],
     action: songAction
 }, {
-    type: ActionType.COMMAND,
+    type: 'player_command',
     commands: [ 'sound', 'so' ],
     args: [
         {
@@ -42,7 +42,7 @@ export default new RunePlugin([{
     ],
     action: soundAction
 }, {
-    type: ActionType.COMMAND,
+    type: 'player_command',
     commands: 'quicksong',
     args: [
         {
@@ -55,4 +55,4 @@ export default new RunePlugin([{
         }
     ],
     action: quickSongAction
-}]);
+}];

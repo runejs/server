@@ -1,6 +1,5 @@
 import { objectAction } from '@server/world/actor/player/action/object-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { buttonAction, ButtonActionDetails } from '@server/world/actor/player/action/button-action';
+import { buttonAction, ButtonActionData } from '@server/world/actor/player/action/button-action';
 import { soundIds } from '@server/world/config/sound-ids';
 import { Subscription } from 'rxjs';
 import { itemIds } from '@server/world/config/item-ids';
@@ -80,7 +79,7 @@ export const openSpinningInterface: objectAction = (details) => {
     };
 };
 
-const spinProduct: any = (details: ButtonActionDetails, spinnable: Spinnable, count: number) => {
+const spinProduct: any = (details: ButtonActionData, spinnable: Spinnable, count: number) => {
     let elapsedTicks = 0;
 
     let created = 0;
@@ -179,19 +178,18 @@ export const buttonClicked: buttonAction = (details) => {
 
 };
 
-export default new RunePlugin([
-        {
-            type: ActionType.OBJECT_ACTION,
-            objectIds: objectIds.spinningWheel,
-            options: ['spin'],
-            walkTo: true,
-            action: openSpinningInterface
-        },
-        {
-            type: ActionType.BUTTON,
-            widgetId: widgets.whatWouldYouLikeToSpin,
-            buttonIds: Array.from(widgetButtonIds.keys()),
-            action: buttonClicked
-        }
-    ]
-);
+export default [
+    {
+        type: 'object_action',
+        objectIds: objectIds.spinningWheel,
+        options: ['spin'],
+        walkTo: true,
+        action: openSpinningInterface
+    },
+    {
+        type: 'button',
+        widgetId: widgets.whatWouldYouLikeToSpin,
+        buttonIds: Array.from(widgetButtonIds.keys()),
+        action: buttonClicked
+    }
+];

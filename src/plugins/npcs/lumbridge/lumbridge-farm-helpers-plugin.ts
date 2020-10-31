@@ -1,5 +1,4 @@
 import { npcAction } from '@server/world/actor/player/action/npc-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { npcIds } from '@server/world/config/npc-ids';
 import { dialogue, Emote, goto } from '@server/world/actor/dialogue';
 
@@ -79,16 +78,16 @@ const gillieDialogue: npcAction = (details) =>
         ]
     ]);
 
-export default new RunePlugin([{
-    type: ActionType.NPC_ACTION,
+export default [{
+    type: 'npc_action',
     npcIds: npcIds.gillieGroats,
     options: 'talk-to',
     walkTo: true,
     action: gillieDialogue
 }, {
-    type: ActionType.NPC_ACTION,
+    type: 'npc_action',
     npcIds: npcIds.millieMiller,
     options: 'talk-to',
     walkTo: true,
     action: millieDialogue
-}]);
+}];

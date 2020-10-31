@@ -75,8 +75,8 @@ const dumpSceneryAction: commandAction = (details) => {
     player.metadata.spawnedScenery = [];
 };
 
-export default new RunePlugin([{
-    type: ActionType.COMMAND,
+export default [{
+    type: 'player_command',
     commands: [ 'scene', 'sc' ],
     args: [
         {
@@ -96,11 +96,11 @@ export default new RunePlugin([{
     ],
     action: spawnSceneryAction
 }, {
-    type: ActionType.COMMAND,
+    type: 'player_command',
     commands: [ 'undoscene', 'undosc' ],
     action: undoSceneryAction
 }, {
-    type: ActionType.COMMAND,
+    type: 'player_command',
     commands: [ 'dumpscene', 'dumpsc' ],
     action: dumpSceneryAction
-}]);
+}];

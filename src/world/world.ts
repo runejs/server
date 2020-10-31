@@ -18,6 +18,7 @@ import { Item } from '@server/world/items/item';
 import { Chunk } from '@server/world/map/chunk';
 import { schedule } from '@server/task/task';
 import { parseScenerySpawns } from '@server/world/config/scenery-spawns';
+import { ActionType } from '@server/plugins/plugin';
 
 export interface QuadtreeKey {
     x: number;
@@ -46,6 +47,7 @@ export class World {
     public readonly travelLocations: TravelLocations = new TravelLocations();
     public readonly playerTree: Quadtree<any>;
     public readonly npcTree: Quadtree<any>;
+    public static readonly eventListeners: Map<string, any> = new Map<string, any>();
 
     public constructor() {
         this.itemData = parseItemData(cache.itemDefinitions);
@@ -62,6 +64,17 @@ export class World {
         });
 
         this.setupWorldTick();
+    }
+
+    public static callActionEventListener(action: ActionType, ...args: any[]): void {
+        const listener = World.eventListeners.get(action.toString());
+        if(listener) {
+            listener(args);
+        }
+    }
+
+    public static registerActionEventListener(action: ActionType, actionHandler: (...args: any[]) => void): void {
+        World.eventListeners.set(action.toString(), actionHandler);
     }
 
     public async init(): Promise<void> {

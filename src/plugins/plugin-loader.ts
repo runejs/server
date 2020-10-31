@@ -1,5 +1,6 @@
 import { RunePlugin } from '@server/plugins/plugin';
 import { getFiles } from '@server/util/files';
+import { logger } from '@runejs/core';
 
 
 export const basicStringFilter = (pluginValues: string | string[], searchValue: string): boolean => {
@@ -63,13 +64,19 @@ export async function loadPlugins(): Promise<RunePlugin[]> {
 
     for await(const path of getFiles(PLUGIN_DIRECTORY, blacklist)) {
         const location = '.' + path.substring(PLUGIN_DIRECTORY.length).replace('.js', '');
-        const plugin = require(location);
-        if(plugin.default) {
-            // TS plugin
-            plugins.push(plugin.default as RunePlugin);
-        } else {
-            // JS plugin
-            plugins.push(new RunePlugin(plugin));
+
+        try {
+            const plugin = require(location);
+            if(plugin.default) {
+                // TS plugin
+                plugins.push(new RunePlugin(plugin.default));
+            } else {
+                // JS plugin
+                plugins.push(new RunePlugin(plugin));
+            }
+        } catch(error) {
+            logger.error(`Error loading plugin file at ${location}:`);
+            logger.error(error);
         }
     }
 

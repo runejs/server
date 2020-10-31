@@ -1,10 +1,9 @@
 import { Position } from '@server/world/position';
 import { directionData, WNES } from '@server/world/direction';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 import { world } from '@server/game-server';
 import { ModifiedLocationObject } from '@server/world/map/location-object';
 import { objectAction } from '@server/world/actor/player/action/object-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { soundIds } from '@server/world/config/sound-ids';
 
 const gates = [
@@ -216,7 +215,7 @@ const action: objectAction = (details) => {
     }
 };
 
-export default new RunePlugin({
-    type: ActionType.OBJECT_ACTION, objectIds: [1551, 1552, 1553, 1556, 12986, 12987, 12988, 12989],
+export default {
+    type: 'object_action', objectIds: [1551, 1552, 1553, 1556, 12986, 12987, 12988, 12989],
     options: ['open', 'close'], walkTo: true, action
-});
+};

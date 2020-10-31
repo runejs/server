@@ -20,11 +20,11 @@ export const action: itemAction = (details) => {
     player.giveItem(itemIds.pot);
 };
 
-export default new RunePlugin({
-    type: ActionType.ITEM_ACTION,
+export default {
+    type: 'item_action',
     widgets: widgets.inventory,
     options: 'empty',
     itemIds: [itemIds.potOfFlour],
     action,
     cancelOtherActions: false
-});
+};

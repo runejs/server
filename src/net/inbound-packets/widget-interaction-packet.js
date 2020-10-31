@@ -1,4 +1,4 @@
-import { widgetAction } from '../../world/actor/player/action/widget-action';
+import { World } from '../../game-server';
 
 const widgetInteractionPacket = (player, packet) => {
     const { buffer } = packet;
@@ -6,7 +6,7 @@ const widgetInteractionPacket = (player, packet) => {
     const widgetId = buffer.get('SHORT');
     const optionId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
 
-    widgetAction(player, widgetId, childId, optionId);
+    World.callActionEventListener('widget_action', widgetId, childId, optionId);
 };
 
 export default {

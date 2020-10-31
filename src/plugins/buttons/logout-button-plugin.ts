@@ -1,5 +1,4 @@
 import { buttonAction } from '@server/world/actor/player/action/button-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { widgets } from '@server/world/config/widget';
 import { world } from '@server/game-server';
 
@@ -15,4 +14,4 @@ export const action: buttonAction = (details) => {
     }
 };
 
-export default new RunePlugin({ type: ActionType.BUTTON, widgetId: widgets.logoutTab, buttonIds: 6, action });
+export default { type: 'button', widgetId: widgets.logoutTab, buttonIds: 6, action };

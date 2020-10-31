@@ -1,5 +1,4 @@
 import { buttonAction } from '@server/world/actor/player/action/button-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { widgets } from '@server/world/config/widget';
 import { Player } from '@server/world/actor/player/player';
 import { itemIds } from '@server/world/config/item-ids';
@@ -179,4 +178,4 @@ export const action: buttonAction = (details) => {
     }
 };
 
-export default new RunePlugin({ type: ActionType.BUTTON, widgetId: widgets.emotesTab, buttonIds, action });
+export default { type: 'button', widgetId: widgets.emotesTab, buttonIds, action };

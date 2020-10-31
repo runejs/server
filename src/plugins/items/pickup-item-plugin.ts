@@ -1,4 +1,3 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { worldItemAction } from '@server/world/actor/player/action/world-item-action';
 import { world } from '../../game-server';
 import { Item } from '../../world/items/item';
@@ -47,9 +46,9 @@ export const action: worldItemAction = (details) => {
     player.actionsCancelled.next();
 };
 
-export default new RunePlugin({
-    type: ActionType.WORLD_ITEM_ACTION,
+export default {
+    type: 'world_item_action',
     options: 'pick-up',
     action,
     walkTo: true
-});
+};

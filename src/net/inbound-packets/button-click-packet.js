@@ -1,4 +1,4 @@
-import { buttonAction } from '../../world/actor/player/action/button-action';
+import { World } from '../../game-server';
 
 const ignoreButtons = [
     '269:99' // character design accept button
@@ -10,7 +10,7 @@ const buttonClickPacket = (player, packet) => {
     const buttonId = buffer.get('SHORT');
 
     if(ignoreButtons.indexOf(`${widgetId}:${buttonId}`) === -1) {
-        buttonAction(player, widgetId, buttonId);
+        World.callActionEventListener('button', player, widgetId, buttonId);
     }
 };
 

@@ -1,4 +1,3 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { itemIds } from '@server/world/config/item-ids';
 import { objectAction } from '@server/world/actor/player/action/object-action';
 import { soundIds } from '@server/world/config/sound-ids';
@@ -33,19 +32,19 @@ const actionItem: itemOnObjectAction = (details) => {
     flourBin(details);
 };
 
-export default new RunePlugin([
+export default [
     {
-        type: ActionType.ITEM_ON_OBJECT_ACTION,
+        type: 'item_on_object',
         objectIds: [1782],
         itemIds: [itemIds.pot],
         walkTo: true,
         action: actionItem
     },
     {
-        type: ActionType.OBJECT_ACTION,
+        type: 'object_action',
         objectIds: [1782],
         options: ['empty'],
         walkTo: true,
         action: actionInteract
     }
-]);
+];

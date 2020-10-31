@@ -3,18 +3,19 @@ import { Npc } from '@server/world/actor/npc/npc';
 import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
-import { logger } from '@runejs/logger';
-import { ActionPlugin, questFilter } from '@server/plugins/plugin';
+import { logger } from '@runejs/core';
+import { Action, questFilter } from '@server/plugins/plugin';
+import { World } from '@server/game-server';
 
 /**
  * The definition for an NPC action function.
  */
-export type npcAction = (details: NpcActionDetails) => void;
+export type npcAction = (npcActionData: NpcActionData) => void;
 
 /**
  * Details about an NPC being interacted with.
  */
-export interface NpcActionDetails {
+export interface NpcActionData {
     // The player performing the action.
     player: Player;
     // The NPC the action is being performed on.
@@ -28,7 +29,7 @@ export interface NpcActionDetails {
  * A list of NPC ids that apply to the plugin, the option selected, the action to be performed,
  * and whether or not the player must first walk to the NPC.
  */
-export interface NpcActionPlugin extends ActionPlugin {
+export interface NpcAction extends Action {
     // A single NPC ID or a list of NPC IDs that this action applies to.
     npcIds?: number | number[];
     // A single option name or a list of option names that this action applies to.
@@ -42,26 +43,26 @@ export interface NpcActionPlugin extends ActionPlugin {
 /**
  * A directory of all NPC interaction plugins.
  */
-let npcInteractions: NpcActionPlugin[] = [
+let npcActions: NpcAction[] = [
 ];
 
 /**
  * Sets the list of NPC interaction plugins.
- * @param plugins The plugin list.
+ * @param actions The plugin list.
  */
-export const setNpcPlugins = (plugins: ActionPlugin[]): void => {
-    npcInteractions = plugins as NpcActionPlugin[];
+export const setNpcPlugins = (actions: Action[]): void => {
+    npcActions = actions as NpcAction[];
 };
 
 // @TODO priority and cancelling other (lower priority) actions
-export const npcAction = (player: Player, npc: Npc, position: Position, option: string): void => {
+const actionHandler = (player: Player, npc: Npc, position: Position, option: string): void => {
     if(player.busy) {
         return;
     }
 
     // Find all NPC action plugins that reference this NPC
-    let interactionActions = npcInteractions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.npcIds, npc.id, plugin.options, option));
-    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
+    let interactionActions = npcActions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.npcIds, npc.id, plugin.options, option));
+    const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
         interactionActions = questActions;
@@ -94,3 +95,5 @@ export const npcAction = (player: Player, npc: Npc, position: Position, option: 
         immediatePlugins.forEach(plugin => plugin.action({ player, npc, position }));
     }
 };
+
+World.registerActionEventListener('npc_action', actionHandler);

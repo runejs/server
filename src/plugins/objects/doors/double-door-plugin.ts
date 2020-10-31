@@ -1,6 +1,6 @@
 import { Position } from '@server/world/position';
 import { WNES } from '@server/world/direction';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 import { world } from '@server/game-server';
 import { action as doorAction } from '@server/plugins/objects/doors/door-plugin';
 import { objectAction } from '@server/world/actor/player/action/object-action';
@@ -107,5 +107,5 @@ const action: objectAction = (details) => {
     });
 };
 
-export default new RunePlugin({ type: ActionType.OBJECT_ACTION, objectIds: [1519, 1516, 1517, 1520],
-    options: [ 'open', 'close' ], walkTo: true, action });
+export default { type: 'object_action', objectIds: [1519, 1516, 1517, 1520],
+    options: [ 'open', 'close' ], walkTo: true, action };

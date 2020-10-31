@@ -1,6 +1,5 @@
 import { getItemFromContainer, itemAction } from '@server/world/actor/player/action/item-action';
 import { widgets } from '@server/world/config/widget';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { Shop, shopItemContainer } from '@server/world/config/shops';
 import { world } from '@server/game-server';
 import { itemIds } from '@server/world/config/item-ids';
@@ -88,10 +87,10 @@ export const action: itemAction = (details) => {
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, inventory);
 };
 
-export default new RunePlugin({
-    type: ActionType.ITEM_ACTION,
+export default {
+    type: 'item_action',
     widgets: widgets.shopPlayerInventory,
     options: [ 'sell-1', 'sell-5', 'sell-10' ],
     action,
     cancelOtherActions: false
-});
+};

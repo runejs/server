@@ -1,4 +1,3 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { objectIds } from '@server/world/config/object-ids';
 import { widgets, widgetScripts } from '@server/world/config/widget';
 import { objectAction } from '@server/world/actor/player/action/object-action';
@@ -225,26 +224,31 @@ const useBankBoothAction : objectAction = (details) => {
     ]);
 };
 
-export default new RunePlugin([{
-    type: ActionType.OBJECT_ACTION,
+export default [{
+    type: 'object_action',
     objectIds: objectIds.bankBooth,
     options: ['use'],
     walkTo: true,
     action: useBankBoothAction
 }, {
-    type: ActionType.OBJECT_ACTION,
+    type: 'object_action',
     objectIds: objectIds.bankBooth,
     options: ['use-quickly'],
     walkTo: true,
     action: openBankInterface
 }, {
-    type: ActionType.ITEM_ACTION,
+    type: 'item_action',
     widgets: widgets.bank.tabWidget,
     options: ['deposit-1', 'deposit-5', 'deposit-10', 'deposit-all'],
     action: depositItem,
 }, {
-    type: ActionType.ITEM_ACTION,
+    type: 'item_action',
     widgets: widgets.bank.screenWidget,
     options: ['withdraw-1', 'withdraw-5', 'withdraw-10', 'withdraw-all'],
     action: withdrawItem,
-}, {type: ActionType.BUTTON, widgetId: widgets.bank.screenWidget.widgetId, buttonIds: buttonIds, action: btnAction}]);
+}, {
+    type: 'button',
+    widgetId: widgets.bank.screenWidget.widgetId,
+    buttonIds: buttonIds,
+    action: btnAction
+}];

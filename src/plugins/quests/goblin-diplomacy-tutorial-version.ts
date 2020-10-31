@@ -1,5 +1,4 @@
 import { DEFAULT_TAB_WIDGET_IDS, Player, playerInitAction, Tabs } from '@server/world/actor/player/player';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { widgets } from '@server/world/config/widget';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 import { serverConfig, world } from '@server/game-server';
@@ -328,12 +327,12 @@ export const action: playerInitAction = async (details) => {
     }
 };
 
-export default new RunePlugin([ {
-    type: ActionType.PLAYER_INIT,
+export default [{
+    type: 'player_init',
     action
 }, {
-    type: ActionType.NPC_ACTION,
+    type: 'npc_action',
     action: guideAction,
     npcIds: npcIds.runescapeGuide,
     walkTo: true
-}]);
+}];

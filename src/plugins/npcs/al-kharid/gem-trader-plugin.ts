@@ -33,7 +33,7 @@ const talkToAction : npcAction = (details) => {
         });
 };
 
-export default new RunePlugin([
-    {type: ActionType.NPC_ACTION, npcIds: npcIds.gemTrader, options: 'trade', walkTo: true, action: tradeAction},
-    {type: ActionType.NPC_ACTION, npcIds: npcIds.gemTrader, options: 'talk-to', walkTo: true, action: talkToAction}
-]);
+export default [
+    {type: 'np_action', npcIds: npcIds.gemTrader, options: 'trade', walkTo: true, action: tradeAction},
+    {type: 'npc_action', npcIds: npcIds.gemTrader, options: 'talk-to', walkTo: true, action: talkToAction}
+];

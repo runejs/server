@@ -1,4 +1,3 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { commandAction } from '@server/world/actor/player/action/input-command-action';
 import { Position } from '@server/world/position';
 
@@ -12,8 +11,8 @@ const action: commandAction = (details) => {
     player.pathfinding.walkTo(new Position(x, y, player.position.level), { pathingSearchRadius: pathingDiameter });
 };
 
-export default new RunePlugin({
-    type: ActionType.COMMAND,
+export default {
+    type: 'player_command',
     commands: [ 'path' ],
     args: [
         {
@@ -31,4 +30,4 @@ export default new RunePlugin({
         }
     ],
     action
-});
+};

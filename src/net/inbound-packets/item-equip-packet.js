@@ -1,4 +1,4 @@
-import { itemAction } from '../../world/actor/player/action/item-action';
+import { World } from '../../game-server';
 
 const itemEquipPacket = (player, packet) => {
     const { buffer } = packet;
@@ -7,7 +7,7 @@ const itemEquipPacket = (player, packet) => {
     const slot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
     const itemId = buffer.get('SHORT', 'UNSIGNED');
 
-    itemAction(player, itemId, slot, widgetId, containerId, 'equip');
+    World.callActionEventListener('item_action', player, itemId, slot, widgetId, containerId, 'equip');
 };
 
 export default {

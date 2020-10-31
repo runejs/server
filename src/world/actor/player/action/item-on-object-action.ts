@@ -3,19 +3,20 @@ import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
-import { logger } from '@runejs/logger';
-import { ActionPlugin, questFilter } from '@server/plugins/plugin';
+import { logger } from '@runejs/core';
+import { Action, questFilter } from '@server/plugins/plugin';
 import { Item } from '@server/world/items/item';
+import { World } from '@server/game-server';
 
 /**
  * The definition for an item on object action function.
  */
-export type itemOnObjectAction = (details: ItemOnObjectActionDetails) => void;
+export type itemOnObjectAction = (itemOnObjectActionData: ItemOnObjectActionData) => void;
 
 /**
  * Details about an object being interacted with. and the item being used.
  */
-export interface ItemOnObjectActionDetails {
+export interface ItemOnObjectActionData {
     // The player performing the action.
     player: Player;
     // The object the action is being performed on.
@@ -39,7 +40,7 @@ export interface ItemOnObjectActionDetails {
  * A list of object ids that apply to the plugin, the options for the object, the items that can be performed on,
  * and whether or not the player must first walk to the object.
  */
-export interface ItemOnObjectActionPlugin extends ActionPlugin {
+export interface ItemOnObjectAction extends Action {
     // A single game object ID or a list of object IDs that this action applies to.
     objectIds: number | number[];
     // A single game item ID or a list of item IDs that this action applies to.
@@ -53,26 +54,26 @@ export interface ItemOnObjectActionPlugin extends ActionPlugin {
 /**
  * A directory of all item on object interaction plugins.
  */
-let itemOnObjectInteractions: ItemOnObjectActionPlugin[] = [];
+let itemOnObjectActions: ItemOnObjectAction[] = [];
 
 /**
  * Sets the list of item on object interaction plugins.
- * @param plugins The plugin list.
+ * @param actions The plugin list.
  */
-export const setItemOnObjectPlugins = (plugins: ActionPlugin[]): void => {
-    itemOnObjectInteractions = plugins as ItemOnObjectActionPlugin[];
+export const setItemOnObjectActions = (actions: Action[]): void => {
+    itemOnObjectActions = actions as ItemOnObjectAction[];
 };
 
 // @TODO priority and cancelling other (lower priority) actions
-export const itemOnObjectAction = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
+const actionHandler = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
                                    position: Position, item: Item, itemWidgetId: number, itemContainerId: number, cacheOriginal: boolean): void => {
     if(player.busy) {
         return;
     }
 
     // Find all item on object action plugins that reference this location object
-    let interactionActions = itemOnObjectInteractions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, locationObject.objectId));
-    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
+    let interactionActions = itemOnObjectActions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, locationObject.objectId));
+    const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
         interactionActions = questActions;
@@ -131,3 +132,5 @@ export const itemOnObjectAction = (player: Player, locationObject: LocationObjec
             }));
     }
 };
+
+World.registerActionEventListener('item_on_object', actionHandler);

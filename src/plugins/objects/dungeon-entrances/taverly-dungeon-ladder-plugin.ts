@@ -1,5 +1,4 @@
 import { objectAction } from '@server/world/actor/player/action/object-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { objectIds } from '@server/world/config/object-ids';
 import { World } from '@server/world/world';
 import { animationIds } from '@server/world/config/animation-ids';
@@ -24,19 +23,19 @@ export const exitDungeon: objectAction = (details) => {
 };
 
 
-export default new RunePlugin([
+export default [
     {
-        type: ActionType.OBJECT_ACTION,
+        type: 'object_action',
         objectIds: objectIds.ladders.taverlyDungeonOverworld,
         options: ['climb-down'],
         walkTo: true,
         action: enterDungeon
     },
     {
-        type: ActionType.OBJECT_ACTION,
+        type: 'object_action',
         objectIds: objectIds.ladders.taverlyDungeonUnderground,
         options: ['climb-up'],
         walkTo: true,
         action: exitDungeon
     }
-]);
+];

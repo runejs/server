@@ -1,4 +1,3 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { widgets } from '@server/world/config/widget';
 import { getItemFromContainer, itemAction } from '@server/world/actor/player/action/item-action';
 import { world } from '@server/game-server';
@@ -27,10 +26,10 @@ export const action: itemAction = (details) => {
     player.actionsCancelled.next();
 };
 
-export default new RunePlugin({
-    type: ActionType.ITEM_ACTION,
+export default {
+    type: 'item_action',
     widgets: widgets.inventory,
     options: 'drop',
     action,
     cancelOtherActions: false
-});
+};

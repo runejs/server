@@ -1,4 +1,3 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { commandAction } from '@server/world/actor/player/action/input-command-action';
 
 const action: commandAction = (details) => {
@@ -10,8 +9,8 @@ const action: commandAction = (details) => {
     player.playGraphics({id: graphicsId, delay: 0, height: height});
 };
 
-export default new RunePlugin({
-    type: ActionType.COMMAND,
+export default {
+    type: 'player_command',
     commands: [ 'gfx', 'graphics'],
     args: [
         {
@@ -25,4 +24,4 @@ export default new RunePlugin({
         }
     ],
     action
-});
+};

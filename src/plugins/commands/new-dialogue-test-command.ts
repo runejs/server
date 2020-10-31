@@ -1,4 +1,3 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { commandAction } from '@server/world/actor/player/action/input-command-action';
 import { world } from '@server/game-server';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
@@ -35,4 +34,6 @@ const action: commandAction = (details) => {
     });
 };
 
-export default new RunePlugin({ type: ActionType.COMMAND, commands: 'd', action });
+export default {
+    type: 'player_command', commands: 'd', action
+};

@@ -3,18 +3,19 @@ import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
-import { logger } from '@runejs/logger';
-import { ActionPlugin, questFilter } from '@server/plugins/plugin';
+import { logger } from '@runejs/core';
+import { Action, questFilter } from '@server/plugins/plugin';
+import { World } from '@server/game-server';
 
 /**
  * The definition for an object action function.
  */
-export type objectAction = (details: ObjectActionDetails) => void;
+export type objectAction = (objectActionData: ObjectActionData) => void;
 
 /**
  * Details about an object being interacted with.
  */
-export interface ObjectActionDetails {
+export interface ObjectActionData {
     // The player performing the action.
     player: Player;
     // The object the action is being performed on.
@@ -34,7 +35,7 @@ export interface ObjectActionDetails {
  * A list of object ids that apply to the plugin, the options for the object, the action to be performed,
  * and whether or not the player must first walk to the object.
  */
-export interface ObjectActionPlugin extends ActionPlugin {
+export interface ObjectAction extends Action {
     // A single game object ID or a list of object IDs that this action applies to.
     objectIds: number | number[];
     // A single option name or a list of option names that this action applies to.
@@ -48,18 +49,18 @@ export interface ObjectActionPlugin extends ActionPlugin {
 /**
  * A directory of all object interaction plugins.
  */
-let objectInteractions: ObjectActionPlugin[] = [];
+let objectInteractions: ObjectAction[] = [];
 
 /**
  * Sets the list of object interaction plugins.
  * @param plugins The plugin list.
  */
-export const setObjectPlugins = (plugins: ActionPlugin[]): void => {
-    objectInteractions = plugins as ObjectActionPlugin[];
+export const setObjectPlugins = (plugins: Action[]): void => {
+    objectInteractions = plugins as ObjectAction[];
 };
 
 // @TODO priority and cancelling other (lower priority) actions
-export const objectAction = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
+const actionHandler = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
                              position: Position, option: string, cacheOriginal: boolean): void => {
     if(player.busy || player.metadata.blockObjectInteractions) {
         return;
@@ -67,7 +68,7 @@ export const objectAction = (player: Player, locationObject: LocationObject, loc
 
     // Find all object action plugins that reference this location object
     let interactionActions = objectInteractions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, locationObject.objectId, plugin.options, option));
-    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
+    const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
         interactionActions = questActions;
@@ -117,3 +118,5 @@ export const objectAction = (player: Player, locationObject: LocationObject, loc
             }));
     }
 };
+
+World.registerActionEventListener('object_action', actionHandler);

@@ -1,4 +1,4 @@
-import { ActionPlugin } from '@server/plugins/plugin';
+import { Action } from '@server/plugins/plugin';
 
 export interface Quest {
     // The unique ID string for the quest.
@@ -24,7 +24,7 @@ export interface Quest {
     };
 }
 
-export interface QuestPlugin extends ActionPlugin {
+export interface QuestAction extends Action {
     // The quest being registered.
     quest: Quest;
 }
@@ -32,10 +32,10 @@ export interface QuestPlugin extends ActionPlugin {
 // @TODO quest requirements
 export let quests: { [key: string]: Quest };
 
-export function setQuestPlugins(questPlugins: ActionPlugin[]): void {
+export function setQuestPlugins(questPlugins: Action[]): void {
     quests = {};
 
-    for(const plugin of questPlugins as QuestPlugin[]) {
+    for(const plugin of questPlugins as QuestAction[]) {
         quests[plugin.quest.id] = plugin.quest;
     }
 }

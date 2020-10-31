@@ -1,7 +1,6 @@
 /**
  * @Author NickNick
  */
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import {
     altars,
     getEntityByAttr,
@@ -9,16 +8,16 @@ import {
     runes,
     talismans,
 } from '@server/plugins/skills/runecrafting/runecrafting-constants';
-import { itemOnObjectAction, ItemOnObjectActionDetails } from '@server/world/actor/player/action/item-on-object-action';
+import { itemOnObjectAction, ItemOnObjectActionData } from '@server/world/actor/player/action/item-on-object-action';
 import { cache } from '@server/game-server';
-import { objectAction, ObjectActionDetails } from '@server/world/actor/player/action/object-action';
+import { objectAction, ObjectActionData } from '@server/world/actor/player/action/object-action';
 import { RunecraftingAltar, RunecraftingRune } from '@server/plugins/skills/runecrafting/runecrafting-types';
 import { itemIds } from '@server/world/config/item-ids';
 import { Player } from '@server/world/actor/player/player';
 import { Item } from '@server/world/items/item';
 
 
-const enterAltar: itemOnObjectAction = (details: ItemOnObjectActionDetails) => {
+const enterAltar: itemOnObjectAction = (details: ItemOnObjectActionData) => {
     const {player, object, item} = details;
     const altar: RunecraftingAltar = getEntityByAttr(altars, 'entranceId', object.objectId);
     const rune: RunecraftingRune = getEntityByAttr(runes, 'altar.entranceId', object.objectId);
@@ -54,25 +53,24 @@ function finishEnterAltar(player: Player, item: Item, altar: RunecraftingAltar):
 }
 
 
-const exitAltar: objectAction = (details: ObjectActionDetails) => {
+const exitAltar: objectAction = (details: ObjectActionData) => {
     const {player, object} = details;
     const altar = getEntityByAttr(altars, 'portalId', object.objectId);
     player.teleport(altar.exit);
 };
 
 
-export default new RunePlugin([
+export default [
     {
-        type: ActionType.ITEM_ON_OBJECT_ACTION,
+        type: 'item_on_object',
         itemIds: getEntityIds(talismans, 'id'),
         objectIds: getEntityIds(altars, 'entranceId'),
         walkTo: true,
         action: enterAltar
     }, {
-        type: ActionType.OBJECT_ACTION,
+        type: 'object_action',
         objectIds: getEntityIds(altars, 'portalId'),
         walkTo: true,
         action: exitAltar
     }
-]);
-
+];

@@ -1,4 +1,3 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { commandAction } from '@server/world/actor/player/action/input-command-action';
 import { cache, world } from '@server/game-server';
 import { Npc } from '@server/world/actor/npc/npc';
@@ -17,8 +16,8 @@ const action: commandAction = (details) => {
     world.registerNpc(npc);
 };
 
-export default new RunePlugin({
-    type: ActionType.COMMAND,
+export default {
+    type: 'player_command',
     commands: [ 'npc' ],
     args: [
         {
@@ -27,4 +26,4 @@ export default new RunePlugin({
         }
     ],
     action
-});
+};

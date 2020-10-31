@@ -1,7 +1,6 @@
 import { getItemFromContainer, itemAction } from '@server/world/actor/player/action/item-action';
 import { widgets } from '@server/world/config/widget';
 import { soundIds } from '@server/world/config/sound-ids';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { itemIds } from '@server/world/config/item-ids';
 
 export const action: itemAction = (details) => {
@@ -30,11 +29,11 @@ export const action: itemAction = (details) => {
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, inventory);
 };
 
-export default new RunePlugin({
-    type: ActionType.ITEM_ACTION,
+export default {
+    type: 'item_action',
     widgets: widgets.inventory,
     options: 'empty',
     itemIds: [itemIds.bucketOfMilk, itemIds.bucketOfWater, itemIds.jugOfWater],
     action,
     cancelOtherActions: false
-});
+};

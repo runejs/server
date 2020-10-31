@@ -1,4 +1,3 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { objectAction } from '@server/world/actor/player/action/object-action';
 import { Skill } from '@server/world/actor/skills';
 import { canInitiateHarvest, handleHarvesting } from '@server/world/skill-util/harvest-skill';
@@ -17,10 +16,10 @@ const action: objectAction = (details) => {
 };
 
 
-export default new RunePlugin({
-    type: ActionType.OBJECT_ACTION,
+export default {
+    type: 'object_action',
     options: ['mine'],
     objectIds: getAllOreIds(),
     walkTo: true,
     action
-});
+};
