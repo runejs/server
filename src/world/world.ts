@@ -34,6 +34,7 @@ export class World {
     public static readonly MAX_PLAYERS = 1600;
     public static readonly MAX_NPCS = 30000;
     public static readonly TICK_LENGTH = 600;
+
     private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
 
     public readonly playerList: Player[] = new Array(World.MAX_PLAYERS).fill(null);
@@ -47,7 +48,6 @@ export class World {
     public readonly travelLocations: TravelLocations = new TravelLocations();
     public readonly playerTree: Quadtree<any>;
     public readonly npcTree: Quadtree<any>;
-    public static readonly eventListeners: Map<string, any> = new Map<string, any>();
 
     public constructor() {
         this.itemData = parseItemData(cache.itemDefinitions);
@@ -64,17 +64,6 @@ export class World {
         });
 
         this.setupWorldTick();
-    }
-
-    public static callActionEventListener(action: ActionType, ...args: any[]): void {
-        const listener = World.eventListeners.get(action.toString());
-        if(listener) {
-            listener(args);
-        }
-    }
-
-    public static registerActionEventListener(action: ActionType, actionHandler: (...args: any[]) => void): void {
-        World.eventListeners.set(action.toString(), actionHandler);
     }
 
     public async init(): Promise<void> {

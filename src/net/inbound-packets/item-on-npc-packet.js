@@ -2,6 +2,7 @@ import { widgets } from '../../world/config/widget';
 import { logger } from '@runejs/core';
 import { world } from '../../game-server';
 import { World } from '../../world/world';
+import { RunePlugin } from '../../plugins/plugin';
 
 
 const itemOnNpcPacket = (player, packet) => {
@@ -48,7 +49,7 @@ const itemOnNpcPacket = (player, packet) => {
         return;
     }
 
-    World.callActionEventListener('item_on_npc', player, npc, position, usedItem, itemWidgetId, itemContainerId)
+    RunePlugin.callActionEventListener('item_on_npc', player, npc, position, usedItem, itemWidgetId, itemContainerId)
 };
 
 export default {

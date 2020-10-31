@@ -1,6 +1,6 @@
 import { world } from '../../game-server';
 import { Position } from '../../world/position';
-import { worldItemAction } from '../../world/actor/player/action/world-item-action';
+import { RunePlugin } from '../../plugins/plugin';
 
 const pickupItemPacket = (player, packet) => {
     const { buffer } = packet;
@@ -21,7 +21,7 @@ const pickupItemPacket = (player, packet) => {
         return;
     }
 
-    worldItemAction(player, worldItem, 'pick-up');
+    RunePlugin.callActionEventListener('item_action', player, worldItem, 'pick-up');
 };
 
 export default {

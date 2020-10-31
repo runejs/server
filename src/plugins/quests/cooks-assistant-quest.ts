@@ -255,7 +255,7 @@ const handInIngredientsAction: npcAction = (details) => {
 };
 
 export default [{
-    type: 'question',
+    type: 'quest',
     quest
 }, {
     type: 'npc_action',

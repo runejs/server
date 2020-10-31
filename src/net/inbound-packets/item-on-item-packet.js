@@ -1,6 +1,6 @@
 import { widgets } from '../../world/config/widget';
 import { logger } from '@runejs/core';
-import { World } from '../../game-server';
+import { RunePlugin } from '../../plugins/plugin';
 
 const itemOnItemPacket = (player, packet) => {
     const { buffer } = packet;
@@ -29,7 +29,7 @@ const itemOnItemPacket = (player, packet) => {
             return;
         }
 
-        World.callActionEventListener('item_on_item', player, usedItem, usedSlot, usedWidgetId, usedWithItem, usedWithSlot, usedWithWidgetId);
+        RunePlugin.callActionEventListener('item_on_item', player, usedItem, usedSlot, usedWidgetId, usedWithItem, usedWithSlot, usedWithWidgetId);
     } else {
         logger.warn(`Unhandled item on item case using widgets ${usedWidgetId}:${usedContainerId} => ${usedWithWidgetId}:${usedWithContainerId}`);
     }

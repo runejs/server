@@ -1,4 +1,4 @@
-import { World } from '../../game-server';
+import { RunePlugin } from '../../plugins/plugin';
 
 const widgetInteractionPacket = (player, packet) => {
     const { buffer } = packet;
@@ -6,7 +6,7 @@ const widgetInteractionPacket = (player, packet) => {
     const widgetId = buffer.get('SHORT');
     const optionId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
 
-    World.callActionEventListener('widget_action', widgetId, childId, optionId);
+    RunePlugin.callActionEventListener('widget_action', widgetId, childId, optionId);
 };
 
 export default {

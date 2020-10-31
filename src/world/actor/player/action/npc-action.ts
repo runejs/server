@@ -4,8 +4,7 @@ import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { Action, questFilter } from '@server/plugins/plugin';
-import { World } from '@server/game-server';
+import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
 
 /**
  * The definition for an NPC action function.
@@ -96,4 +95,4 @@ const actionHandler = (player: Player, npc: Npc, position: Position, option: str
     }
 };
 
-World.registerActionEventListener('npc_action', actionHandler);
+RunePlugin.registerActionEventListener('npc_action', actionHandler);

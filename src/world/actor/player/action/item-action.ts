@@ -1,9 +1,9 @@
 import { Player } from '@server/world/actor/player/player';
-import { Action, questFilter } from '@server/plugins/plugin';
+import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
 import { ItemContainer } from '@server/world/items/item-container';
 import { Item } from '@server/world/items/item';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
-import { World, world } from '@server/game-server';
+import { world } from '@server/game-server';
 import { ItemDetails } from '@server/world/config/item-data';
 
 /**
@@ -154,4 +154,4 @@ const actionHandler = (player: Player, itemId: number, slot: number, widgetId: n
 
 };
 
-World.registerActionEventListener('item_action', actionHandler);
+RunePlugin.registerActionEventListener('item_action', actionHandler);

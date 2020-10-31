@@ -3,8 +3,7 @@ import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { basicStringFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { Action, questFilter } from '@server/plugins/plugin';
-import { World } from '@server/game-server';
+import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
 
 /**
  * The definition for a player action function.
@@ -91,4 +90,4 @@ const actionHandler = (player: Player, otherPlayer: Player, position: Position, 
     }
 };
 
-World.registerActionEventListener('player_action', actionHandler);
+RunePlugin.registerActionEventListener('player_action', actionHandler);

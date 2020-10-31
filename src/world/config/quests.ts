@@ -32,10 +32,14 @@ export interface QuestAction extends Action {
 // @TODO quest requirements
 export let quests: { [key: string]: Quest };
 
-export function setQuestPlugins(questPlugins: Action[]): void {
+export function setQuestActions(actions: Action[]): void {
+    if(!actions) {
+        return;
+    }
+
     quests = {};
 
-    for(const plugin of questPlugins as QuestAction[]) {
+    for(const plugin of actions as QuestAction[]) {
         quests[plugin.quest.id] = plugin.quest;
     }
 }

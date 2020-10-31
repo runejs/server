@@ -1,8 +1,8 @@
 import { widgets } from '../../world/config/widget';
 import { logger } from '@runejs/core';
 import { Position } from '../../world/position';
-import { cache, World, world } from '../../game-server';
-import { itemOnObjectAction } from '../../world/actor/player/action/item-on-object-action';
+import { cache, world } from '../../game-server';
+import { RunePlugin } from '../../plugins/plugin';
 
 const itemOnObjectPacket = (player, packet) => {
     const { buffer } = packet;
@@ -53,7 +53,7 @@ const itemOnObjectPacket = (player, packet) => {
 
     const locationObjectDefinition = cache.locationObjectDefinitions.get(objectId);
 
-    World.callActionEventListener('item_on_object', player, locationObject, locationObjectDefinition, objectPosition, usedItem, itemWidgetId, itemContainerId, cacheOriginal);
+    RunePlugin.callActionEventListener('item_on_object', player, locationObject, locationObjectDefinition, objectPosition, usedItem, itemWidgetId, itemContainerId, cacheOriginal);
 };
 
 export default {

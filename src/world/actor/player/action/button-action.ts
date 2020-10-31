@@ -1,7 +1,6 @@
 import { Player } from '@server/world/actor/player/player';
 import { pluginFilter } from '@server/plugins/plugin-loader';
-import { Action, questFilter } from '@server/plugins/plugin';
-import { World } from '@server/game-server';
+import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
 
 /**
  * The definition for a button action function.
@@ -79,4 +78,4 @@ const actionHandler = (player: Player, widgetId: number, buttonId: number): void
     }
 };
 
-World.registerActionEventListener('button', actionHandler);
+RunePlugin.registerActionEventListener('button', actionHandler);

@@ -4,8 +4,7 @@ import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { Action, questFilter } from '@server/plugins/plugin';
-import { World } from '@server/game-server';
+import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
 
 /**
  * The definition for an object action function.
@@ -62,7 +61,7 @@ export const setObjectPlugins = (plugins: Action[]): void => {
 // @TODO priority and cancelling other (lower priority) actions
 const actionHandler = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
                              position: Position, option: string, cacheOriginal: boolean): void => {
-    if(player.busy || player.metadata.blockObjectInteractions) {
+    if(player.busy || player.metadata?.blockObjectInteractions) {
         return;
     }
 
@@ -119,4 +118,4 @@ const actionHandler = (player: Player, locationObject: LocationObject, locationO
     }
 };
 
-World.registerActionEventListener('object_action', actionHandler);
+RunePlugin.registerActionEventListener('object_action', actionHandler);

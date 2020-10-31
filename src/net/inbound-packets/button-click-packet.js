@@ -1,4 +1,4 @@
-import { World } from '../../game-server';
+import { RunePlugin } from '../../plugins/plugin';
 
 const ignoreButtons = [
     '269:99' // character design accept button
@@ -10,7 +10,7 @@ const buttonClickPacket = (player, packet) => {
     const buttonId = buffer.get('SHORT');
 
     if(ignoreButtons.indexOf(`${widgetId}:${buttonId}`) === -1) {
-        World.callActionEventListener('button', player, widgetId, buttonId);
+        RunePlugin.callActionEventListener('button', player, widgetId, buttonId);
     }
 };
 

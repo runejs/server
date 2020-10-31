@@ -1,7 +1,6 @@
 import { Player } from '@server/world/actor/player/player';
 import { pluginFilter } from '@server/plugins/plugin-loader';
-import { Action, questFilter } from '@server/plugins/plugin';
-import { World } from '@server/game-server';
+import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
 
 /**
  * The definition for a widget action function.
@@ -94,4 +93,4 @@ const actionHandler = (player: Player, widgetId: number, childId: number, option
     });
 };
 
-World.registerActionEventListener('widget_action', actionHandler);
+RunePlugin.registerActionEventListener('widget_action', actionHandler);

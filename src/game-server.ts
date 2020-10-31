@@ -4,7 +4,7 @@ import { Cache } from '@runejs/cache-parser';
 import { ServerConfig } from '@server/net/server/server-config';
 
 import { loadPlugins } from '@server/plugins/plugin-loader';
-import { Action, ActionType, sort } from '@server/plugins/plugin';
+import { Action, sort } from '@server/plugins/plugin';
 
 import { setNpcPlugins } from '@server/world/actor/player/action/npc-action';
 import { setObjectPlugins } from '@server/world/actor/player/action/object-action';
@@ -18,7 +18,7 @@ import { setItemOnObjectActions } from '@server/world/actor/player/action/item-o
 import { setItemOnNpcActions } from '@server/world/actor/player/action/item-on-npc-action';
 import { setPlayerInitPlugins } from '@server/world/actor/player/player';
 import { setNpcInitPlugins } from '@server/world/actor/npc/npc';
-import { setQuestPlugins } from '@server/world/config/quests';
+import { setQuestActions } from '@server/world/config/quests';
 import { setPlayerActions } from '@server/world/actor/player/action/player-action';
 import { loadPackets } from '@server/net/inbound-packets';
 import { watchForChanges, watchSource } from '@server/util/files';
@@ -29,7 +29,6 @@ import { openGameServer } from '@server/net/server/game-server';
 export let serverConfig: ServerConfig;
 export let cache: Cache;
 export let world: World;
-export { World } from './world/world';
 
 export async function injectPlugins(): Promise<void> {
     const actionPluginMap: { [key: string]: Action[] } = {};
@@ -45,21 +44,21 @@ export async function injectPlugins(): Promise<void> {
 
     Object.keys(actionPluginMap).forEach(key => actionPluginMap[key] = sort(actionPluginMap[key]));
 
-    setQuestPlugins(actionPluginMap[ActionType.QUEST]);
-    setButtonActions(actionPluginMap[ActionType.BUTTON]);
-    setNpcPlugins(actionPluginMap[ActionType.NPC_ACTION]);
-    setObjectPlugins(actionPluginMap[ActionType.OBJECT_ACTION]);
-    setItemOnObjectActions(actionPluginMap[ActionType.ITEM_ON_OBJECT_ACTION]);
-    setItemOnNpcActions(actionPluginMap[ActionType.ITEM_ON_NPC_ACTION]);
-    setItemOnItemPlugins(actionPluginMap[ActionType.ITEM_ON_ITEM_ACTION]);
-    setItemActions(actionPluginMap[ActionType.ITEM_ACTION]);
-    setEquipActions(actionPluginMap[ActionType.EQUIP_ACTION]);
-    setWorldItemActions(actionPluginMap[ActionType.WORLD_ITEM_ACTION]);
-    setCommandActions(actionPluginMap[ActionType.COMMAND]);
-    setWidgetActions(actionPluginMap[ActionType.WIDGET_ACTION]);
-    setPlayerInitPlugins(actionPluginMap[ActionType.PLAYER_INIT]);
-    setNpcInitPlugins(actionPluginMap[ActionType.NPC_INIT]);
-    setPlayerActions(actionPluginMap[ActionType.PLAYER_ACTION]);
+    setQuestActions(actionPluginMap.quest);
+    setButtonActions(actionPluginMap.button);
+    setNpcPlugins(actionPluginMap.npc_action);
+    setObjectPlugins(actionPluginMap.object_action);
+    setItemOnObjectActions(actionPluginMap.item_on_object);
+    setItemOnNpcActions(actionPluginMap.item_on_npc);
+    setItemOnItemPlugins(actionPluginMap.item_on_item);
+    setItemActions(actionPluginMap.item_action);
+    setEquipActions(actionPluginMap.equip_action);
+    setWorldItemActions(actionPluginMap.world_item_action);
+    setCommandActions(actionPluginMap.player_command);
+    setWidgetActions(actionPluginMap.widget_action);
+    setPlayerInitPlugins(actionPluginMap.player_init);
+    setNpcInitPlugins(actionPluginMap.npc_init);
+    setPlayerActions(actionPluginMap.player_action);
 }
 
 export async function runGameServer(): Promise<void> {

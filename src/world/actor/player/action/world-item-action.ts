@@ -2,9 +2,8 @@ import { Player } from '@server/world/actor/player/player';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { Action, questFilter } from '@server/plugins/plugin';
+import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
 import { WorldItem } from '@server/world/items/world-item';
-import { World } from '@server/game-server';
 
 /**
  * The definition for a world item action function.
@@ -103,4 +102,4 @@ const actionHandler = (player: Player, worldItem: WorldItem, option: string): vo
     }
 };
 
-World.registerActionEventListener('world_item_action', actionHandler);
+RunePlugin.registerActionEventListener('world_item_action', actionHandler);

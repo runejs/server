@@ -10,10 +10,11 @@ const shutdown = (signal, cb) => {
         return;
     }
 
+    killed = true;
+
     logger.info(`[${signal}] Shutting down...`);
 
     world?.saveOnlinePlayers();
-    killed = true;
 
     cb();
 };

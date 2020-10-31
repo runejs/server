@@ -83,6 +83,8 @@ export type RuneActionDirectory =
 
 export class RunePlugin {
 
+    public static readonly eventListeners: Map<string, any> = new Map<string, any>();
+
     public actions: RuneActionDirectory[];
 
     public constructor(actions: RuneActionDirectory | RuneActionDirectory[], questRequirement?: QuestRequirement) {
@@ -101,6 +103,17 @@ export class RunePlugin {
             }
             this.actions = actions;
         }
+    }
+
+    public static callActionEventListener(action: ActionType, ...args: any[]): void {
+        const listener = RunePlugin.eventListeners.get(action.toString());
+        if(listener) {
+            listener(...args);
+        }
+    }
+
+    public static registerActionEventListener(action: ActionType, actionHandler: (...args: any[]) => void): void {
+        RunePlugin.eventListeners.set(action.toString(), actionHandler);
     }
 
 }

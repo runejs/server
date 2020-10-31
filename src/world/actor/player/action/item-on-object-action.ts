@@ -4,9 +4,8 @@ import { Position } from '@server/world/position';
 import { walkToAction } from '@server/world/actor/player/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { Action, questFilter } from '@server/plugins/plugin';
+import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
 import { Item } from '@server/world/items/item';
-import { World } from '@server/game-server';
 
 /**
  * The definition for an item on object action function.
@@ -133,4 +132,4 @@ const actionHandler = (player: Player, locationObject: LocationObject, locationO
     }
 };
 
-World.registerActionEventListener('item_on_object', actionHandler);
+RunePlugin.registerActionEventListener('item_on_object', actionHandler);

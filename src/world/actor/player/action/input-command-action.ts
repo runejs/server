@@ -1,7 +1,6 @@
 import { Player } from '../player';
-import { Action } from '@server/plugins/plugin';
+import { Action, RunePlugin } from '@server/plugins/plugin';
 import { logger } from '@runejs/core';
-import { World } from '@server/game-server';
 
 /**
  * The definition for a command action function.
@@ -123,4 +122,4 @@ const actionHandler = (player: Player, command: string, isConsole: boolean, inpu
     });
 };
 
-World.registerActionEventListener('player_command', actionHandler);
+RunePlugin.registerActionEventListener('player_command', actionHandler);

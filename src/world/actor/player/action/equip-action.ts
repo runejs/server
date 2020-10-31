@@ -1,7 +1,7 @@
 import { Player } from '@server/world/actor/player/player';
-import { Action, questFilter } from '@server/plugins/plugin';
+import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
-import { World, world } from '@server/game-server';
+import { world } from '@server/game-server';
 import { ItemDetails } from '@server/world/config/item-data';
 
 /**
@@ -88,4 +88,4 @@ const actionHandler = (player: Player, itemId: number, equipType: EquipType): vo
     }
 };
 
-World.registerActionEventListener('equip_action', actionHandler);
+RunePlugin.registerActionEventListener('equip_action', actionHandler);

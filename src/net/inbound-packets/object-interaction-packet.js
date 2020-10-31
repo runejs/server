@@ -1,6 +1,7 @@
 import { Position } from '../../world/position';
-import { cache, World, world } from '../../game-server';
+import { cache, world } from '../../game-server';
 import { logger } from '@runejs/core';
+import { RunePlugin } from '../../plugins/plugin';
 
 const option1 = packet => {
     const { buffer } = packet;
@@ -76,7 +77,7 @@ const objectInteractionPacket = (player, packet) => {
         return;
     }
 
-    World.callActionEventListener('object_action', locationObject, locationObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
+    RunePlugin.callActionEventListener('object_action', locationObject, locationObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
 };
 
 export default [{

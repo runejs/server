@@ -4,7 +4,7 @@ import { Isaac } from '@server/net/isaac';
 import { PlayerUpdateTask } from './updating/player-update-task';
 import { Actor } from '../actor';
 import { Position } from '@server/world/position';
-import { cache, serverConfig, World, world } from '@server/game-server';
+import { cache, serverConfig, world } from '@server/game-server';
 import { logger } from '@runejs/core';
 import {
     Appearance,
@@ -25,7 +25,7 @@ import { QuadtreeKey } from '@server/world/world';
 import { daysSinceLastLogin } from '@server/util/time';
 import { itemIds } from '@server/world/config/item-ids';
 import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
-import { Action } from '@server/plugins/plugin';
+import { Action, RunePlugin } from '@server/plugins/plugin';
 import { songs } from '@server/world/config/songs';
 import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 import { quests } from '@server/world/config/quests';
@@ -250,7 +250,7 @@ export class Player extends Actor {
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
         for (const item of this.equipment.items) {
             if(item) {
-                World.callActionEventListener('equip_action', this, item.itemId, 'EQUIP');
+                RunePlugin.callActionEventListener('equip_action', this, item.itemId, 'EQUIP');
             }
         }
 
@@ -1006,7 +1006,7 @@ export class Player extends Actor {
                 return false;
             }
 
-            World.callActionEventListener('equip_action', this, itemToUnequip.itemId, 'UNEQUIP');
+            RunePlugin.callActionEventListener('equip_action', this, itemToUnequip.itemId, 'UNEQUIP');
 
             this.equipment.remove(slot, false);
             this.inventory.remove(itemSlot, false);
@@ -1027,7 +1027,7 @@ export class Player extends Actor {
             }
         }
 
-        World.callActionEventListener('equip_action', this, itemId, 'EQUIP');
+        RunePlugin.callActionEventListener('equip_action', this, itemId, 'EQUIP');
         this.equipmentChanged();
         return true;
     }
@@ -1060,7 +1060,7 @@ export class Player extends Actor {
             return true;
         }
 
-        World.callActionEventListener('equip_action', this, itemInSlot.itemId, 'UNEQUIP');
+        RunePlugin.callActionEventListener('equip_action', this, itemInSlot.itemId, 'UNEQUIP');
 
         this.equipment.remove(slot);
         this.inventory.set(inventorySlot, itemInSlot);
