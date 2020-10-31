@@ -3,7 +3,7 @@
  */
 
 import { getEntityByAttr, getEntityIds, tiaras } from '@server/plugins/skills/runecrafting/runecrafting-constants';
-import { equipAction } from '@server/world/actor/player/action/equip-action';
+import { equipAction } from '@server/world/action/equip-action';
 
 
 const unequipTiara : equipAction = (details) => {

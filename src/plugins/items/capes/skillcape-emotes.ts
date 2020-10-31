@@ -1,5 +1,5 @@
 import { lockEmote, unlockEmote } from '@server/plugins/buttons/player-emotes-plugin';
-import { equipAction } from '@server/world/actor/player/action/equip-action';
+import { equipAction } from '@server/world/action/equip-action';
 import { itemIds } from '@server/world/config/item-ids';
 
 export const skillcapeIds: Array<number> = Object.keys(

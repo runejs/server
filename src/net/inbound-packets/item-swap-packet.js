@@ -1,4 +1,4 @@
-import { insertItemAction, swapItemAction } from '../../world/actor/player/action/swap-item-action';
+import { insertItemAction, swapItemAction } from '../../world/action/swap-item-action';
 
 const itemSwapPacket = (player, packet) => {
     const { buffer } = packet;

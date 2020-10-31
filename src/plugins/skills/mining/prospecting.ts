@@ -1,4 +1,4 @@
-import { objectAction } from '@server/world/actor/player/action/object-action';
+import { objectAction } from '@server/world/action/object-action';
 import { soundIds } from '@server/world/config/sound-ids';
 import { World } from '@server/world/world';
 import { cache } from '@server/game-server';

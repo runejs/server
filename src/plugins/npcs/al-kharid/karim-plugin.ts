@@ -1,4 +1,4 @@
-import { npcAction } from '@server/world/actor/player/action/npc-action';
+import { npcAction } from '@server/world/action/npc-action';
 import { npcIds } from '@server/world/config/npc-ids';
 import { itemIds } from '@server/world/config/item-ids';
 import { widgets } from '@server/world/config/widget';

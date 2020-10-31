@@ -1,4 +1,4 @@
-import { getItemFromContainer, itemAction } from '@server/world/actor/player/action/item-action';
+import { getItemFromContainer, itemAction } from '@server/world/action/item-action';
 import { widgets } from '@server/world/config/widget';
 import { Shop, shopItemContainer } from '@server/world/config/shops';
 import { world } from '@server/game-server';

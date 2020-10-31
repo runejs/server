@@ -24,17 +24,17 @@ import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { QuadtreeKey } from '@server/world/world';
 import { daysSinceLastLogin } from '@server/util/time';
 import { itemIds } from '@server/world/config/item-ids';
-import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
+import { dialogueAction } from '@server/world/action/dialogue-action';
 import { Action, RunePlugin } from '@server/plugins/plugin';
 import { songs } from '@server/world/config/songs';
 import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 import { quests } from '@server/world/config/quests';
 import { ItemDefinition } from '@runejs/cache-parser';
-import { PlayerCommandAction, commandActions } from '@server/world/actor/player/action/input-command-action';
+import { PlayerCommandAction, commandActions } from '@server/world/action/input-command-action';
 import { take } from 'rxjs/operators';
-import { getItemFromContainer } from '@server/world/actor/player/action/item-action';
+import { getItemFromContainer } from '@server/world/action/item-action';
 import { updateBonusStrings } from '@server/plugins/equipment/equipment-stats-plugin';
-import { equipAction } from '@server/world/actor/player/action/equip-action';
+import { equipAction } from '@server/world/action/equip-action';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {

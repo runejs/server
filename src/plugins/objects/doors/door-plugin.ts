@@ -1,7 +1,7 @@
 import { directionData, WNES } from '@server/world/direction';
 import { world } from '@server/game-server';
 import { Chunk } from '@server/world/map/chunk';
-import { objectAction } from '@server/world/actor/player/action/object-action';
+import { objectAction } from '@server/world/action/object-action';
 import { soundIds } from '@server/world/config/sound-ids';
 import { LocationObject } from '@runejs/cache-parser';
 

@@ -1,4 +1,4 @@
-import { equipAction } from '@server/world/actor/player/action/equip-action';
+import { equipAction } from '@server/world/action/equip-action';
 
 export const equip: equipAction = (details) => {
     const {player} = details;

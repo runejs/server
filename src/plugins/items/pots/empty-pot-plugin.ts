@@ -1,4 +1,4 @@
-import { getItemFromContainer, itemAction } from '@server/world/actor/player/action/item-action';
+import { getItemFromContainer, itemAction } from '@server/world/action/item-action';
 import { widgets } from '@server/world/config/widget';
 import { soundIds } from '@server/world/config/sound-ids';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';

@@ -1,6 +1,6 @@
 import { Player } from '@server/world/actor/player/player';
 import { pluginFilter } from '@server/plugins/plugin-loader';
-import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
+import { Action, questFilter } from '@server/plugins/plugin';
 
 /**
  * The definition for a widget action function.
@@ -51,7 +51,14 @@ export const setWidgetActions = (actions: Action[]): void => {
     widgetActions = actions as WidgetAction[];
 };
 
-const actionHandler = (player: Player, widgetId: number, childId: number, optionId: number): void => {
+/**
+ * The actual widget action handler function.
+ * @param player The player performing the action.
+ * @param widgetId The ID of the widget.
+ * @param childId The ID of the widget child being interacted with.
+ * @param optionId The widget context option chosen by the player.
+ */
+export const widgetActionHandler = (player: Player, widgetId: number, childId: number, optionId: number): void => {
     // Find all item on item action plugins that match this action
     let interactionActions = widgetActions.filter(plugin => {
         if(!questFilter(player, plugin)) {
@@ -92,5 +99,3 @@ const actionHandler = (player: Player, widgetId: number, childId: number, option
         plugin.action({ player, widgetId, childId, optionId });
     });
 };
-
-RunePlugin.registerActionEventListener('widget_action', actionHandler);

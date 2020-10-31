@@ -1,4 +1,4 @@
-import { buttonAction } from '@server/world/actor/player/action/button-action';
+import { buttonAction } from '@server/world/action/button-action';
 import { widgets } from '@server/world/config/widget';
 
 const buttonIds: number[] = [

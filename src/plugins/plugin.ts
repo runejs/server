@@ -1,18 +1,18 @@
-import { ItemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
-import { ItemOnNpcAction } from '@server/world/actor/player/action/item-on-npc-action';
-import { NpcAction } from '@server/world/actor/player/action/npc-action';
-import { PlayerCommandAction } from '@server/world/actor/player/action/input-command-action';
-import { WidgetAction } from '@server/world/actor/player/action/widget-action';
-import { ObjectAction } from '@server/world/actor/player/action/object-action';
+import { ItemOnObjectAction } from '@server/world/action/item-on-object-action';
+import { ItemOnNpcAction } from '@server/world/action/item-on-npc-action';
+import { NpcAction } from '@server/world/action/npc-action';
+import { PlayerCommandAction } from '@server/world/action/input-command-action';
+import { WidgetAction } from '@server/world/action/widget-action';
+import { ObjectAction } from '@server/world/action/object-action';
 import { NpcInitAction } from '@server/world/actor/npc/npc';
 import { Player, PlayerInitAction } from '@server/world/actor/player/player';
-import { ItemOnItemAction } from '@server/world/actor/player/action/item-on-item-action';
-import { ButtonAction } from '@server/world/actor/player/action/button-action';
-import { WorldItemAction } from '@server/world/actor/player/action/world-item-action';
-import { ItemAction } from '@server/world/actor/player/action/item-action';
+import { ItemOnItemAction } from '@server/world/action/item-on-item-action';
+import { ButtonAction } from '@server/world/action/button-action';
+import { WorldItemAction } from '@server/world/action/world-item-action';
+import { ItemAction } from '@server/world/action/item-action';
 import { QuestAction } from '@server/world/config/quests';
-import { PlayerAction } from '@server/world/actor/player/action/player-action';
-import { EquipAction } from '@server/world/actor/player/action/equip-action';
+import { PlayerAction } from '@server/world/action/player-action';
+import { EquipAction } from '@server/world/action/equip-action';
 
 export type ActionType =
     'button'
@@ -83,8 +83,6 @@ export type RuneActionDirectory =
 
 export class RunePlugin {
 
-    public static readonly eventListeners: Map<string, any> = new Map<string, any>();
-
     public actions: RuneActionDirectory[];
 
     public constructor(actions: RuneActionDirectory | RuneActionDirectory[], questRequirement?: QuestRequirement) {
@@ -103,17 +101,6 @@ export class RunePlugin {
             }
             this.actions = actions;
         }
-    }
-
-    public static callActionEventListener(action: ActionType, ...args: any[]): void {
-        const listener = RunePlugin.eventListeners.get(action.toString());
-        if(listener) {
-            listener(...args);
-        }
-    }
-
-    public static registerActionEventListener(action: ActionType, actionHandler: (...args: any[]) => void): void {
-        RunePlugin.eventListeners.set(action.toString(), actionHandler);
     }
 
 }

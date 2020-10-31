@@ -6,10 +6,10 @@ import { Skills } from '@server/world/actor/skills';
 import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
 import { DirectionData, directionFromIndex } from '@server/world/direction';
-import { CombatAction } from '@server/world/actor/player/action/combat-action';
+import { CombatAction } from '@server/world/action/combat-action';
 import { Pathfinding } from '@server/world/actor/pathfinding';
 import { Subject } from 'rxjs';
-import { ActionCancelType } from '@server/world/actor/player/action/action';
+import { ActionCancelType } from '@server/world/action/action';
 import { filter, take } from 'rxjs/operators';
 
 /**

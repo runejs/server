@@ -1,4 +1,4 @@
-import { objectAction } from '@server/world/actor/player/action/object-action';
+import { objectAction } from '@server/world/action/object-action';
 import { Skill } from '@server/world/actor/skills';
 import { canInitiateHarvest, handleHarvesting } from '@server/world/skill-util/harvest-skill';
 import { getAllOreIds, getOreFromRock } from '@server/world/config/harvestable-object';

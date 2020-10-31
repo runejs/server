@@ -1,8 +1,8 @@
 import { Player } from '@server/world/actor/player/player';
-import { walkToAction } from '@server/world/actor/player/action/action';
+import { walkToAction } from '@server/world/action/action';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
+import { Action, questFilter } from '@server/plugins/plugin';
 import { WorldItem } from '@server/world/items/world-item';
 
 /**
@@ -49,7 +49,7 @@ export const setWorldItemActions = (actions: Action[]): void => {
 };
 
 // @TODO priority and cancelling other (lower priority) actions
-const actionHandler = (player: Player, worldItem: WorldItem, option: string): void => {
+export const worldItemActionHandler = (player: Player, worldItem: WorldItem, option: string): void => {
     if(player.busy) {
         return;
     }
@@ -101,5 +101,3 @@ const actionHandler = (player: Player, worldItem: WorldItem, option: string): vo
         immediatePlugins.forEach(plugin => plugin.action({ player, worldItem }));
     }
 };
-
-RunePlugin.registerActionEventListener('world_item_action', actionHandler);

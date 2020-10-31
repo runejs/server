@@ -1,14 +1,14 @@
 import { Item } from '@server/world/items/item';
 import { ItemContainer } from '@server/world/items/item-container';
 import { objectIds } from '@server/world/config/object-ids';
-import { objectAction, ObjectActionData } from '@server/world/actor/player/action/object-action';
+import { objectAction, ObjectActionData } from '@server/world/action/object-action';
 import { widgets } from '@server/world/config/widget';
-import { buttonAction, ButtonActionData } from '@server/world/actor/player/action/button-action';
+import { buttonAction, ButtonActionData } from '@server/world/action/button-action';
 import { itemIds } from '@server/world/config/item-ids';
 import { Subscription } from 'rxjs';
 import { Skill } from '@server/world/actor/skills';
 import { cache } from '@server/game-server';
-import { loopingAction } from '@server/world/actor/player/action/action';
+import { loopingAction } from '@server/world/action/action';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { colors } from '@server/util/colors';

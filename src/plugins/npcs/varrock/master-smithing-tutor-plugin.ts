@@ -1,4 +1,4 @@
-import { npcAction } from '@server/world/actor/player/action/npc-action';
+import { npcAction } from '@server/world/action/npc-action';
 import { dialogue, Emote, execute, goto } from '@server/world/actor/dialogue';
 import { itemIds } from '@server/world/config/item-ids';
 import { widgets } from '@server/world/config/widget';

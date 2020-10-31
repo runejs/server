@@ -1,5 +1,5 @@
-import { Player } from '../player';
-import { widgets } from '../../../config/widget';
+import { Player } from '../actor/player/player';
+import { widgets } from '../config/widget';
 
 
 export const swapItemAction = (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }) => {

@@ -1,4 +1,4 @@
-import { commandAction } from '@server/world/actor/player/action/input-command-action';
+import { commandAction } from '@server/world/action/input-command-action';
 
 const action: commandAction = (details) => {
     const { player } = details;

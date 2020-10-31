@@ -1,9 +1,9 @@
 import { Player } from '@server/world/actor/player/player';
 import { Position } from '@server/world/position';
-import { walkToAction } from '@server/world/actor/player/action/action';
+import { walkToAction } from '@server/world/action/action';
 import { basicStringFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
+import { Action, questFilter } from '@server/plugins/plugin';
 
 /**
  * The definition for a player action function.
@@ -50,7 +50,7 @@ export const setPlayerActions = (actions: Action[]): void => {
 };
 
 // @TODO priority and cancelling other (lower priority) actions
-const actionHandler = (player: Player, otherPlayer: Player, position: Position, option: string): void => {
+export const playerActionHandler = (player: Player, otherPlayer: Player, position: Position, option: string): void => {
     if(player.busy) {
         return;
     }
@@ -89,5 +89,3 @@ const actionHandler = (player: Player, otherPlayer: Player, position: Position, 
         immediatePlugins.forEach(plugin => plugin.action({ player, otherPlayer, position }));
     }
 };
-
-RunePlugin.registerActionEventListener('player_action', actionHandler);

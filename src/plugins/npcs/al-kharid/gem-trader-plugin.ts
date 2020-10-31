@@ -1,7 +1,7 @@
-import { npcAction } from '@server/world/actor/player/action/npc-action';
+import { npcAction } from '@server/world/action/npc-action';
 import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { openShop } from '@server/world/actor/player/action/shop-action';
-import { dialogueAction, DialogueEmote } from '@server/world/actor/player/action/dialogue-action';
+import { openShop } from '@server/world/shops/shops';
+import { dialogueAction, DialogueEmote } from '@server/world/action/dialogue-action';
 import { npcIds } from '@server/world/config/npc-ids';
 
 const tradeAction : npcAction = (details)  => {

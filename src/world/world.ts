@@ -20,6 +20,7 @@ import { schedule } from '@server/task/task';
 import { parseScenerySpawns } from '@server/world/config/scenery-spawns';
 import { ActionType } from '@server/plugins/plugin';
 
+
 export interface QuadtreeKey {
     x: number;
     y: number;
@@ -48,6 +49,7 @@ export class World {
     public readonly travelLocations: TravelLocations = new TravelLocations();
     public readonly playerTree: Quadtree<any>;
     public readonly npcTree: Quadtree<any>;
+    public readonly actionHandlers: Map<string, any> = new Map<string, any>();
 
     public constructor() {
         this.itemData = parseItemData(cache.itemDefinitions);
@@ -72,6 +74,17 @@ export class World {
             this.spawnNpcs();
             this.spawnScenery();
         });
+    }
+
+    public callActionHandler(action: ActionType, ...args: any[]): void {
+        const actionHandler = this.actionHandlers.get(action.toString());
+        if(actionHandler) {
+            actionHandler(...args);
+        }
+    }
+
+    public registerActionHandler(action: ActionType, actionHandler: (...args: any[]) => void): void {
+        this.actionHandlers.set(action.toString(), actionHandler);
     }
 
     /**

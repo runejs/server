@@ -1,4 +1,4 @@
-import { worldItemAction } from '@server/world/actor/player/action/world-item-action';
+import { worldItemAction } from '@server/world/action/world-item-action';
 import { world } from '../../game-server';
 import { Item } from '../../world/items/item';
 import { widgets } from '../../world/config/widget';

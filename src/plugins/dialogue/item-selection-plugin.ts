@@ -1,4 +1,4 @@
-import { widgetAction } from '@server/world/actor/player/action/widget-action';
+import { widgetAction } from '@server/world/action/widget-action';
 
 /**
  * Handles an item selection dialogue choice.

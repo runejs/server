@@ -1,4 +1,4 @@
-import { commandAction } from '@server/world/actor/player/action/input-command-action';
+import { commandAction } from '@server/world/action/input-command-action';
 import { world } from '@server/game-server';
 
 const quadtreeAction: commandAction = (details) => {

@@ -2,7 +2,7 @@
  * @Author NickNick
  */
 
-import { objectAction, ObjectActionData } from '@server/world/actor/player/action/object-action';
+import { objectAction, ObjectActionData } from '@server/world/action/object-action';
 import { Skill } from '@server/world/actor/skills';
 import { widgets } from '@server/world/config/widget';
 import {
@@ -11,7 +11,7 @@ import {
     getEntityIds, runeMultiplier,
     runes,
 } from '@server/plugins/skills/runecrafting/runecrafting-constants';
-import { itemOnObjectAction, ItemOnObjectActionData } from '@server/world/actor/player/action/item-on-object-action';
+import { itemOnObjectAction, ItemOnObjectActionData } from '@server/world/action/item-on-object-action';
 import { RunecraftingCombinationRune } from '@server/plugins/skills/runecrafting/runecrafting-types';
 import { randomBetween } from '@server/util/num';
 import { itemIds } from '@server/world/config/item-ids';

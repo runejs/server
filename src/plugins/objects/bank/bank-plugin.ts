@@ -1,10 +1,10 @@
 import { objectIds } from '@server/world/config/object-ids';
 import { widgets, widgetScripts } from '@server/world/config/widget';
-import { objectAction } from '@server/world/actor/player/action/object-action';
+import { objectAction } from '@server/world/action/object-action';
 import { ItemContainer } from '@server/world/items/item-container';
-import { itemAction } from '@server/world/actor/player/action/item-action';
+import { itemAction } from '@server/world/action/item-action';
 import { fromNote, Item, toNote } from '@server/world/items/item';
-import { buttonAction } from '@server/world/actor/player/action/button-action';
+import { buttonAction } from '@server/world/action/button-action';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 import { npcIds } from '@server/world/config/npc-ids';
 

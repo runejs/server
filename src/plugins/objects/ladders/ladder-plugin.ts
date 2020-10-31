@@ -1,5 +1,5 @@
-import { objectAction } from '@server/world/actor/player/action/object-action';
-import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
+import { objectAction } from '@server/world/action/object-action';
+import { dialogueAction } from '@server/world/action/dialogue-action';
 import { World } from '@server/world/world';
 import { Position } from '@server/world/position';
 

@@ -3,7 +3,7 @@ import { widgets } from '@server/world/config/widget';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 import { serverConfig, world } from '@server/game-server';
 import { npcIds } from '@server/world/config/npc-ids';
-import { npcAction } from '@server/world/actor/player/action/npc-action';
+import { npcAction } from '@server/world/action/npc-action';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Npc } from '@server/world/actor/npc/npc';

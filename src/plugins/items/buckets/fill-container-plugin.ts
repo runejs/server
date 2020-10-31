@@ -1,4 +1,4 @@
-import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
+import { itemOnObjectAction } from '@server/world/action/item-on-object-action';
 import { cache } from '@server/game-server';
 import { itemIds } from '@server/world/config/item-ids';
 import { animationIds } from '@server/world/config/animation-ids';

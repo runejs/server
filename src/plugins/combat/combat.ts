@@ -1,6 +1,6 @@
 import { DamageType } from '../../world/actor/update-flags';
-import { walkToAction } from '../../world/actor/player/action/action';
-import { npcAction } from '@server/world/actor/player/action/npc-action';
+import { walkToAction } from '../../world/action/action';
+import { npcAction } from '@server/world/action/npc-action';
 import { Actor } from '@server/world/actor/actor';
 import { Player } from '@server/world/actor/player/player';
 import { timer } from 'rxjs';

@@ -9,7 +9,7 @@ export * from '../world/config/songs';
 export * from '../world/config/widget';
 export * from '../plugins/plugin';
 export * from '../game-server';
-export * from '../world/actor/player/action/action';
+export * from '../world/action/action';
 export * from '../world/actor/update-flags';
 export * from '../world/actor/skills';
 export * from '../world/actor/player/achievements';

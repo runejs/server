@@ -1,4 +1,4 @@
-import { Player } from '../player';
+import { Player } from '../actor/player/player';
 import { Action, RunePlugin } from '@server/plugins/plugin';
 import { logger } from '@runejs/core';
 

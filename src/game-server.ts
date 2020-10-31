@@ -6,23 +6,23 @@ import { ServerConfig } from '@server/net/server/server-config';
 import { loadPlugins } from '@server/plugins/plugin-loader';
 import { Action, sort } from '@server/plugins/plugin';
 
-import { setNpcPlugins } from '@server/world/actor/player/action/npc-action';
-import { setObjectPlugins } from '@server/world/actor/player/action/object-action';
-import { setItemOnItemPlugins } from '@server/world/actor/player/action/item-on-item-action';
-import { setButtonActions } from '@server/world/actor/player/action/button-action';
-import { setCommandActions } from '@server/world/actor/player/action/input-command-action';
-import { setWidgetActions } from '@server/world/actor/player/action/widget-action';
-import { setItemActions } from '@server/world/actor/player/action/item-action';
-import { setWorldItemActions } from '@server/world/actor/player/action/world-item-action';
-import { setItemOnObjectActions } from '@server/world/actor/player/action/item-on-object-action';
-import { setItemOnNpcActions } from '@server/world/actor/player/action/item-on-npc-action';
+import { setNpcPlugins } from '@server/world/action/npc-action';
+import { setObjectPlugins } from '@server/world/action/object-action';
+import { setItemOnItemActions } from '@server/world/action/item-on-item-action';
+import { setButtonActions } from '@server/world/action/button-action';
+import { setCommandActions } from '@server/world/action/input-command-action';
+import { setWidgetActions } from '@server/world/action/widget-action';
+import { setItemActions } from '@server/world/action/item-action';
+import { setWorldItemActions } from '@server/world/action/world-item-action';
+import { setItemOnObjectActions } from '@server/world/action/item-on-object-action';
+import { setItemOnNpcActions } from '@server/world/action/item-on-npc-action';
 import { setPlayerInitPlugins } from '@server/world/actor/player/player';
 import { setNpcInitPlugins } from '@server/world/actor/npc/npc';
 import { setQuestActions } from '@server/world/config/quests';
-import { setPlayerActions } from '@server/world/actor/player/action/player-action';
+import { setPlayerActions } from '@server/world/action/player-action';
 import { loadPackets } from '@server/net/inbound-packets';
 import { watchForChanges, watchSource } from '@server/util/files';
-import { setEquipActions } from '@server/world/actor/player/action/equip-action';
+import { setEquipActions } from '@server/world/action/equip-action';
 import { openGameServer } from '@server/net/server/game-server';
 
 
@@ -50,7 +50,7 @@ export async function injectPlugins(): Promise<void> {
     setObjectPlugins(actionPluginMap.object_action);
     setItemOnObjectActions(actionPluginMap.item_on_object);
     setItemOnNpcActions(actionPluginMap.item_on_npc);
-    setItemOnItemPlugins(actionPluginMap.item_on_item);
+    setItemOnItemActions(actionPluginMap.item_on_item);
     setItemActions(actionPluginMap.item_action);
     setEquipActions(actionPluginMap.equip_action);
     setWorldItemActions(actionPluginMap.world_item_action);

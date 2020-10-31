@@ -40,26 +40,25 @@ export interface ItemOnItemAction extends Action {
 /**
  * A directory of all item on item interaction plugins.
  */
-let itemOnItemInteractions: ItemOnItemAction[] = [
+let itemOnItemActions: ItemOnItemAction[] = [
 ];
 
 /**
  * Sets the list of item on item interaction plugins.
- * @param plugins The plugin list.
+ * @param actions The plugin list.
  */
-export const setItemOnItemPlugins = (plugins: Action[]): void => {
-    itemOnItemInteractions = plugins as ItemOnItemAction[];
+export const setItemOnItemActions = (actions: Action[]): void => {
+    itemOnItemActions = actions as ItemOnItemAction[];
 };
 
-export const itemOnItemAction = (player: Player,
-                                 usedItem: Item, usedSlot: number, usedWidgetId: number,
-                                 usedWithItem: Item, usedWithSlot: number, usedWithWidgetId: number): void => {
+export const itemOnItemActionHandler = (player: Player, usedItem: Item, usedSlot: number, usedWidgetId: number,
+                                        usedWithItem: Item, usedWithSlot: number, usedWithWidgetId: number): void => {
     if(player.busy) {
         return;
     }
 
     // Find all item on item action plugins that match this action
-    let interactionActions = itemOnItemInteractions.filter(plugin =>
+    let interactionActions = itemOnItemActions.filter(plugin =>
         questFilter(player, plugin) &&
         (plugin.items.findIndex(i => i.item1 === usedItem.itemId && i.item2 === usedWithItem.itemId) !== -1 ||
         plugin.items.findIndex(i => i.item2 === usedItem.itemId && i.item1 === usedWithItem.itemId) !== -1));

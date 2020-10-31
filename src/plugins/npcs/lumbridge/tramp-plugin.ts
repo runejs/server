@@ -1,6 +1,6 @@
 import { npcIds } from '@server/world/config/npc-ids';
 import { npcInitAction } from '@server/world/actor/npc/npc';
-import { loopingAction } from '@server/world/actor/player/action/action';
+import { loopingAction } from '@server/world/action/action';
 
 const action: npcInitAction = (details) => {
     const { npc } = details;

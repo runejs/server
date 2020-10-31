@@ -1,7 +1,7 @@
 import { npcIds } from '@server/world/config/npc-ids';
 import { npcInitAction } from '@server/world/actor/npc/npc';
 import { World } from '@server/world/world';
-import { itemOnNpcAction } from '@server/world/actor/player/action/item-on-npc-action';
+import { itemOnNpcAction } from '@server/world/action/item-on-npc-action';
 import { itemIds } from '@server/world/config/item-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { animationIds } from '@server/world/config/animation-ids';

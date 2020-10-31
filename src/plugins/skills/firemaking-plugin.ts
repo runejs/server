@@ -1,6 +1,6 @@
-import { itemOnItemAction } from '@server/world/actor/player/action/item-on-item-action';
+import { itemOnItemActionHandler } from '@server/world/action/item-on-item-action';
 import { world } from '@server/game-server';
-import { loopingAction } from '@server/world/actor/player/action/action';
+import { loopingAction } from '@server/world/action/action';
 import { LocationObject } from '@runejs/cache-parser';
 import { Player } from '@server/world/actor/player/player';
 import { WorldItem } from '@server/world/items/world-item';
@@ -68,7 +68,7 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
     player.metadata.busy = false;
 };
 
-const action: itemOnItemAction = (details) => {
+const action: itemOnItemActionHandler = (details) => {
     const { player, usedItem, usedWithItem, usedSlot, usedWithSlot } = details;
 
     if(player.metadata['lastFire'] && Date.now() - player.metadata['lastFire'] < 600) {

@@ -1,9 +1,9 @@
 import { Player } from '@server/world/actor/player/player';
 import { Position } from '@server/world/position';
-import { walkToAction } from '@server/world/actor/player/action/action';
+import { walkToAction } from '@server/world/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
+import { Action, questFilter } from '@server/plugins/plugin';
 import { Item } from '@server/world/items/item';
 import { Npc } from '@server/world/actor/npc/npc';
 
@@ -60,8 +60,8 @@ export const setItemOnNpcActions = (actions: Action[]): void => {
 };
 
 // @TODO priority and cancelling other (lower priority) actions
-const actionHandler = (player: Player, npc: Npc,
-                                position: Position, item: Item, itemWidgetId: number, itemContainerId: number): void => {
+export const itemOnNpcActionHandler = (player: Player, npc: Npc, position: Position, item: Item,
+                                       itemWidgetId: number, itemContainerId: number): void => {
     if(player.busy) {
         return;
     }
@@ -119,5 +119,3 @@ const actionHandler = (player: Player, npc: Npc,
         });
     }
 };
-
-RunePlugin.registerActionEventListener('item_on_npc', actionHandler);

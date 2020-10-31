@@ -1,12 +1,12 @@
-import { objectAction } from '@server/world/actor/player/action/object-action';
+import { objectAction } from '@server/world/action/object-action';
 import { cache } from '@server/game-server';
-import { dialogueAction, DialogueEmote } from '@server/world/actor/player/action/dialogue-action';
+import { dialogueAction, DialogueEmote } from '@server/world/action/dialogue-action';
 import { npcIds } from '@server/world/config/npc-ids';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { itemIds } from '@server/world/config/item-ids';
 import { objectIds } from '@server/world/config/object-ids';
-import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
+import { itemOnObjectAction } from '@server/world/action/item-on-object-action';
 import { LocationObjectDefinition } from '@runejs/cache-parser';
 import { Player } from '@server/world/actor/player/player';
 

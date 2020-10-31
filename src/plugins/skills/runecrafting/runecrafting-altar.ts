@@ -8,9 +8,9 @@ import {
     runes,
     talismans,
 } from '@server/plugins/skills/runecrafting/runecrafting-constants';
-import { itemOnObjectAction, ItemOnObjectActionData } from '@server/world/actor/player/action/item-on-object-action';
+import { itemOnObjectAction, ItemOnObjectActionData } from '@server/world/action/item-on-object-action';
 import { cache } from '@server/game-server';
-import { objectAction, ObjectActionData } from '@server/world/actor/player/action/object-action';
+import { objectAction, ObjectActionData } from '@server/world/action/object-action';
 import { RunecraftingAltar, RunecraftingRune } from '@server/plugins/skills/runecrafting/runecrafting-types';
 import { itemIds } from '@server/world/config/item-ids';
 import { Player } from '@server/world/actor/player/player';

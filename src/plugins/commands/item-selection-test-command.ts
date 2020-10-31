@@ -1,10 +1,10 @@
-import { commandAction } from '@server/world/actor/player/action/input-command-action';
-import { itemSelectionAction } from '@server/world/actor/player/action/item-selection-action';
+import { commandAction } from '@server/world/action/input-command-action';
+import { itemSelectionDialogue } from '@server/world/actor/dialogue';
 
 const action: commandAction = (details) => {
     const { player } = details;
 
-    itemSelectionAction(player, 'MAKING', [
+    itemSelectionDialogue(player, 'MAKING', [
         { itemId: 52, itemName: 'Arrow Shafts' },
         { itemId: 50, itemName: 'Shortbow' },
         { itemId: 48, itemName: 'Longbow' },

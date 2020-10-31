@@ -1,6 +1,6 @@
 import { World } from '@server/world/world';
 import { itemIds } from '@server/world/config/item-ids';
-import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
+import { itemOnObjectAction } from '@server/world/action/item-on-object-action';
 
 
 export const action: itemOnObjectAction = (details) => {
