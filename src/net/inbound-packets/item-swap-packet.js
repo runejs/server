@@ -1,4 +1,4 @@
-import { insertItemAction, swapItemAction } from '../../world/action/swap-item-action';
+import { actionHandler } from '../../world/action';
 
 const itemSwapPacket = (player, packet) => {
     const { buffer } = packet;
@@ -13,10 +13,9 @@ const itemSwapPacket = (player, packet) => {
     }
 
     if(swapType === 0) {
-        // Swap
-        swapItemAction(player, fromSlot, toSlot, { widgetId, containerId });
+        actionHandler.call('swap_items', player, fromSlot, toSlot, { widgetId, containerId })
     } else if(swapType === 1) {
-        insertItemAction(player, fromSlot, toSlot, { widgetId, containerId });
+        actionHandler.call('move_item', player, fromSlot, toSlot, { widgetId, containerId })
     }
 };
 
