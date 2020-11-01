@@ -1,4 +1,4 @@
-import { Action } from '@server/plugins/plugin';
+import { Action } from '@server/world/action/action';
 
 export interface Quest {
     // The unique ID string for the quest.
@@ -29,17 +29,3 @@ export interface QuestAction extends Action {
     quest: Quest;
 }
 
-// @TODO quest requirements
-export let quests: { [key: string]: Quest };
-
-export function setQuestActions(actions: Action[]): void {
-    if(!actions) {
-        return;
-    }
-
-    quests = {};
-
-    for(const plugin of actions as QuestAction[]) {
-        quests[plugin.quest.id] = plugin.quest;
-    }
-}

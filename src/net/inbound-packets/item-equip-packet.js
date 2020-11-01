@@ -1,4 +1,4 @@
-import { RunePlugin } from '../../plugins/plugin';
+import { actionHandler } from '../../game-server';
 
 const itemEquipPacket = (player, packet) => {
     const { buffer } = packet;
@@ -7,7 +7,7 @@ const itemEquipPacket = (player, packet) => {
     const slot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
     const itemId = buffer.get('SHORT', 'UNSIGNED');
 
-    RunePlugin.callActionEventListener('item_action', player, itemId, slot, widgetId, containerId, 'equip');
+    actionHandler.call('item_action', player, itemId, slot, widgetId, containerId, 'equip');
 };
 
 export default {

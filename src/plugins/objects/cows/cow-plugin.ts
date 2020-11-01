@@ -1,6 +1,6 @@
 import { objectAction } from '@server/world/action/object-action';
 import { cache } from '@server/game-server';
-import { dialogueAction, DialogueEmote } from '@server/world/action/dialogue-action';
+import { dialogueAction, DialogueEmote } from '@server/world/actor/player/dialogue-action';
 import { npcIds } from '@server/world/config/npc-ids';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';

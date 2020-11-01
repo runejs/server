@@ -1,10 +1,9 @@
 import { Player } from '@server/world/actor/player/player';
-import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
-import { ItemContainer } from '@server/world/items/item-container';
-import { Item } from '@server/world/items/item';
+import { questFilter } from '@server/plugins/plugin';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
-import { world } from '@server/game-server';
+import { getActionList, world } from '@server/game-server';
 import { ItemDetails } from '@server/world/config/item-data';
+import { Action } from '@server/world/action/action';
 
 /**
  * The definition for an item action function.
@@ -47,34 +46,8 @@ export interface ItemAction extends Action {
     cancelOtherActions?: boolean;
 }
 
-/**
- * A directory of all object interaction plugins.
- */
-let itemActions: ItemAction[] = [];
-
-/**
- * Sets the list of object interaction plugins.
- * @param actions The plugin list.
- */
-export const setItemActions = (actions: Action[]): void => {
-    itemActions = actions as ItemAction[];
-};
-
-export const getItemFromContainer = (itemId: number, slot: number, container: ItemContainer): Item => {
-    if(slot < 0 || slot > container.items.length - 1) {
-        return null;
-    }
-
-    const item = container.items[slot];
-    if(!item || item.itemId !== itemId) {
-        return null;
-    }
-
-    return item;
-};
-
 // @TODO priority and cancelling other (lower priority) actions
-const actionHandler = (player: Player, itemId: number, slot: number, widgetId: number, containerId: number, option: string): void => {
+const itemActionHandler = (player: Player, itemId: number, slot: number, widgetId: number, containerId: number, option: string): void => {
     if(player.busy) {
         return;
     }
@@ -82,7 +55,7 @@ const actionHandler = (player: Player, itemId: number, slot: number, widgetId: n
     let cancelActions = false;
 
     // Find all object action plugins that reference this location object
-    let interactionActions = itemActions.filter(plugin => {
+    let interactionActions = getActionList('item_action').filter(plugin => {
         if(!questFilter(player, plugin)) {
             return false;
         }
@@ -154,4 +127,7 @@ const actionHandler = (player: Player, itemId: number, slot: number, widgetId: n
 
 };
 
-RunePlugin.registerActionEventListener('item_action', actionHandler);
+export default {
+    action: 'item_action',
+    handler: itemActionHandler
+};

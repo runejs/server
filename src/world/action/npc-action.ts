@@ -1,10 +1,11 @@
 import { Player } from '@server/world/actor/player/player';
 import { Npc } from '@server/world/actor/npc/npc';
 import { Position } from '@server/world/position';
-import { walkToAction } from '@server/world/action/action';
+import { Action, walkToAction } from '@server/world/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { Action, questFilter } from '@server/plugins/plugin';
+import { questFilter } from '@server/plugins/plugin';
+import { getActionList } from '@server/game-server';
 
 /**
  * The definition for an NPC action function.
@@ -39,28 +40,14 @@ export interface NpcAction extends Action {
     action: npcAction;
 }
 
-/**
- * A directory of all NPC interaction plugins.
- */
-let npcActions: NpcAction[] = [
-];
-
-/**
- * Sets the list of NPC interaction plugins.
- * @param actions The plugin list.
- */
-export const setNpcPlugins = (actions: Action[]): void => {
-    npcActions = actions as NpcAction[];
-};
-
 // @TODO priority and cancelling other (lower priority) actions
-export const npcActionHandler = (player: Player, npc: Npc, position: Position, option: string): void => {
+const npcActionHandler = (player: Player, npc: Npc, position: Position, option: string): void => {
     if(player.busy) {
         return;
     }
 
     // Find all NPC action plugins that reference this NPC
-    let interactionActions = npcActions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.npcIds, npc.id, plugin.options, option));
+    let interactionActions = getActionList('npc_action').filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.npcIds, npc.id, plugin.options, option));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
@@ -93,4 +80,9 @@ export const npcActionHandler = (player: Player, npc: Npc, position: Position, o
     if(immediatePlugins.length !== 0) {
         immediatePlugins.forEach(plugin => plugin.action({ player, npc, position }));
     }
+};
+
+export default {
+    action: 'npc_action',
+    handler: npcActionHandler
 };

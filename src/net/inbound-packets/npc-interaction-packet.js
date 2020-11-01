@@ -1,7 +1,6 @@
-import { world } from '../../game-server';
+import { actionHandler, world } from '../../game-server';
 import { World } from '../../world/world';
 import { logger } from '@runejs/core';
-import { RunePlugin } from '../../plugins/plugin';
 
 const npcInteractionPacket = (player, packet) => {
     const { buffer, packetId } = packet;
@@ -56,7 +55,7 @@ const npcInteractionPacket = (player, packet) => {
         return;
     }
 
-    RunePlugin.callActionEventListener('npc_action', npc, position, optionName.toLowerCase());
+    actionHandler.call('npc_action', player, npc, position, optionName.toLowerCase());
 };
 
 export default [{

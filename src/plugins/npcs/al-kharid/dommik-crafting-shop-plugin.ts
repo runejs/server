@@ -1,7 +1,7 @@
 import { npcAction } from '@server/world/action/npc-action';
 import { openShop } from '@server/world/shops/shops';
 import { npcIds } from '@server/world/config/npc-ids';
-import { dialogueAction, DialogueEmote } from '@server/world/action/dialogue-action';
+import { dialogueAction, DialogueEmote } from '@server/world/actor/player/dialogue-action';
 
 const tradeAction: npcAction = (details) => {
     openShop(details.player, 'DOMMIK_CRAFTING_STORE');

@@ -1,11 +1,12 @@
 import { Player } from '@server/world/actor/player/player';
 import { Position } from '@server/world/position';
-import { walkToAction } from '@server/world/action/action';
+import { Action, walkToAction } from '@server/world/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { Action, questFilter } from '@server/plugins/plugin';
+import { questFilter } from '@server/plugins/plugin';
 import { Item } from '@server/world/items/item';
 import { Npc } from '@server/world/actor/npc/npc';
+import { getActionList } from '@server/game-server';
 
 /**
  * The definition for an item on npc action function.
@@ -46,28 +47,15 @@ export interface ItemOnNpcAction extends Action {
     action: itemOnNpcAction;
 }
 
-/**
- * A directory of all item on npc interaction plugins.
- */
-let itemOnNpcActions: ItemOnNpcAction[] = [];
-
-/**
- * Sets the list of item on npc interaction plugins.
- * @param actions The plugin list.
- */
-export const setItemOnNpcActions = (actions: Action[]): void => {
-    itemOnNpcActions = actions as ItemOnNpcAction[];
-};
-
 // @TODO priority and cancelling other (lower priority) actions
-export const itemOnNpcActionHandler = (player: Player, npc: Npc, position: Position, item: Item,
+const itemOnNpcActionHandler = (player: Player, npc: Npc, position: Position, item: Item,
                                        itemWidgetId: number, itemContainerId: number): void => {
     if(player.busy) {
         return;
     }
 
     // Find all item on npc action plugins that reference this npc and item
-    let interactionActions = itemOnNpcActions.filter(plugin =>
+    let interactionActions = getActionList('item_on_npc').filter(plugin =>
         questFilter(player, plugin) &&
         pluginFilter(plugin.npcsIds, npc.id) && pluginFilter(plugin.itemIds, item.itemId));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
@@ -118,4 +106,9 @@ export const itemOnNpcActionHandler = (player: Player, npc: Npc, position: Posit
             itemContainerId
         });
     }
+};
+
+export default {
+    action: 'item_on_npc',
+    handler: itemOnNpcActionHandler
 };

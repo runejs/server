@@ -1,5 +1,5 @@
 import { getItemOption } from '../../world/items/item';
-import { RunePlugin } from '../../plugins/plugin';
+import { actionHandler } from '../../game-server';
 
 const option1 = buffer => {
     const itemId = buffer.get('SHORT', 'UNSIGNED');
@@ -65,7 +65,7 @@ const itemInteractionPacket = (player, packet) => {
 
     const option = getItemOption(itemId, packetDetails.optionNumber, { widgetId, containerId });
 
-    RunePlugin.callActionEventListener('item_action', player, itemId, slot, widgetId, containerId, option);
+    actionHandler.call('item_action', player, itemId, slot, widgetId, containerId, option);
 };
 
 export default [{

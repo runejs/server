@@ -1,11 +1,12 @@
 import { buttonAction } from '@server/world/action/button-action';
 import { widgets } from '@server/world/config/widget';
-import { quests } from '@server/world/config/quests';
 import { wrapText } from '@server/util/strings';
+import { globalActionMap } from '@server/game-server';
 
 export const action: buttonAction = (details) => {
     const { player, buttonId } = details;
 
+    const quests = globalActionMap.quest;
     const questData = quests[Object.keys(quests).filter(questKey => quests[questKey].questTabId === buttonId)[0]];
     const playerQuest = player.quests.find(quest => quest.questId === questData.id);
     let playerStage = 'NOT_STARTED';

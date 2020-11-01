@@ -1,8 +1,9 @@
 import { npcAction } from '@server/world/action/npc-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { RunePlugin } from '@server/plugins/plugin';
 import { openShop } from '@server/world/shops/shops';
-import { dialogueAction, DialogueEmote } from '@server/world/action/dialogue-action';
+import { dialogueAction, DialogueEmote } from '@server/world/actor/player/dialogue-action';
 import { npcIds } from '@server/world/config/npc-ids';
+import { ActionType } from '@server/world/action/action';
 
 const tradeAction : npcAction = (details)  => {
     openShop(details.player, 'ALKHARID_GEM_TRADER');

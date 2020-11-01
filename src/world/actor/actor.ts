@@ -6,7 +6,6 @@ import { Skills } from '@server/world/actor/skills';
 import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
 import { DirectionData, directionFromIndex } from '@server/world/direction';
-import { CombatAction } from '@server/world/action/combat-action';
 import { Pathfinding } from '@server/world/actor/pathfinding';
 import { Subject } from 'rxjs';
 import { ActionCancelType } from '@server/world/action/action';
@@ -35,7 +34,6 @@ export abstract class Actor {
     private _runDirection: number;
     private _faceDirection: number;
     private _busy: boolean;
-    private _combatActions: CombatAction[];
 
     protected constructor() {
         this.updateFlags = new UpdateFlags();
@@ -47,7 +45,6 @@ export abstract class Actor {
         this._bank = new ItemContainer(376);
         this.skills = new Skills(this);
         this._busy = false;
-        this._combatActions = [];
         this.pathfinding = new Pathfinding(this);
         this.actionsCancelled = new Subject<ActionCancelType>();
         this.movementEvent = new Subject<Position>();
@@ -425,9 +422,5 @@ export abstract class Actor {
 
     public set busy(value: boolean) {
         this._busy = value;
-    }
-
-    public get combatActions(): CombatAction[] {
-        return this._combatActions;
     }
 }

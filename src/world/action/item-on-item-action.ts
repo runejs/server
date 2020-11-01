@@ -1,6 +1,8 @@
 import { Player } from '@server/world/actor/player/player';
 import { Item } from '@server/world/items/item';
-import { Action, questFilter } from '@server/plugins/plugin';
+import { questFilter } from '@server/plugins/plugin';
+import { Action } from '@server/world/action/action';
+import { getActionList } from '@server/game-server';
 
 /**
  * The definition for an item on item action function.
@@ -37,28 +39,14 @@ export interface ItemOnItemAction extends Action {
     action: itemOnItemAction;
 }
 
-/**
- * A directory of all item on item interaction plugins.
- */
-let itemOnItemActions: ItemOnItemAction[] = [
-];
-
-/**
- * Sets the list of item on item interaction plugins.
- * @param actions The plugin list.
- */
-export const setItemOnItemActions = (actions: Action[]): void => {
-    itemOnItemActions = actions as ItemOnItemAction[];
-};
-
-export const itemOnItemActionHandler = (player: Player, usedItem: Item, usedSlot: number, usedWidgetId: number,
+const itemOnItemActionHandler = (player: Player, usedItem: Item, usedSlot: number, usedWidgetId: number,
                                         usedWithItem: Item, usedWithSlot: number, usedWithWidgetId: number): void => {
     if(player.busy) {
         return;
     }
 
     // Find all item on item action plugins that match this action
-    let interactionActions = itemOnItemActions.filter(plugin =>
+    let interactionActions = getActionList('item_on_item').filter(plugin =>
         questFilter(player, plugin) &&
         (plugin.items.findIndex(i => i.item1 === usedItem.itemId && i.item2 === usedWithItem.itemId) !== -1 ||
         plugin.items.findIndex(i => i.item2 === usedItem.itemId && i.item1 === usedWithItem.itemId) !== -1));
@@ -80,4 +68,9 @@ export const itemOnItemActionHandler = (player: Player, usedItem: Item, usedSlot
         plugin.action({ player, usedItem, usedWithItem, usedSlot, usedWithSlot,
             usedWidgetId: usedWidgetId, usedWithWidgetId: usedWithWidgetId });
     }
+};
+
+export default {
+    action: 'item_on_item',
+    handler: itemOnItemActionHandler
 };

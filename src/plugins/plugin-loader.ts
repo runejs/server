@@ -59,7 +59,7 @@ const blacklist = ['plugin-loader.js', 'plugin.js', 'rune.js'];
 
 export const PLUGIN_DIRECTORY = './dist/plugins';
 
-export async function loadPlugins(): Promise<RunePlugin[]> {
+export async function parsePluginFiles(): Promise<RunePlugin[]> {
     const plugins: RunePlugin[] = [];
 
     for await(const path of getFiles(PLUGIN_DIRECTORY, blacklist)) {

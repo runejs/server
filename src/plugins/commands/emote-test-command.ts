@@ -1,4 +1,4 @@
-import { commandAction } from '@server/world/action/input-command-action';
+import { commandAction } from '@server/world/action/player-command-action';
 import { lockEmote, unlockEmote, unlockEmotes } from '@server/plugins/buttons/player-emotes-plugin';
 
 const action: commandAction = (details) => {

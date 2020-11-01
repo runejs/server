@@ -6,7 +6,7 @@ import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { ItemDetails, parseItemData } from './config/item-data';
 import { ExamineCache } from './config/examine-data';
-import { cache } from '@server/game-server';
+import { cache, loadPlugins } from '@server/game-server';
 import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './actor/npc/npc';
@@ -18,7 +18,7 @@ import { Item } from '@server/world/items/item';
 import { Chunk } from '@server/world/map/chunk';
 import { schedule } from '@server/task/task';
 import { parseScenerySpawns } from '@server/world/config/scenery-spawns';
-import { ActionType } from '@server/plugins/plugin';
+import { ActionType, loadActions } from '@server/world/action/action';
 
 
 export interface QuadtreeKey {
@@ -49,7 +49,6 @@ export class World {
     public readonly travelLocations: TravelLocations = new TravelLocations();
     public readonly playerTree: Quadtree<any>;
     public readonly npcTree: Quadtree<any>;
-    public readonly actionHandlers: Map<string, any> = new Map<string, any>();
 
     public constructor() {
         this.itemData = parseItemData(cache.itemDefinitions);
@@ -69,22 +68,13 @@ export class World {
     }
 
     public async init(): Promise<void> {
+        await loadPlugins();
+        await loadActions();
         await new Promise(() => {
             this.chunkManager.generateCollisionMaps();
             this.spawnNpcs();
             this.spawnScenery();
         });
-    }
-
-    public callActionHandler(action: ActionType, ...args: any[]): void {
-        const actionHandler = this.actionHandlers.get(action.toString());
-        if(actionHandler) {
-            actionHandler(...args);
-        }
-    }
-
-    public registerActionHandler(action: ActionType, actionHandler: (...args: any[]) => void): void {
-        this.actionHandlers.set(action.toString(), actionHandler);
     }
 
     /**

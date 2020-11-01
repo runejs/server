@@ -1,11 +1,12 @@
 import { Player } from '@server/world/actor/player/player';
 import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
-import { walkToAction } from '@server/world/action/action';
+import { Action, walkToAction } from '@server/world/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { Action, questFilter } from '@server/plugins/plugin';
+import { questFilter } from '@server/plugins/plugin';
 import { Item } from '@server/world/items/item';
+import { getActionList } from '@server/game-server';
 
 /**
  * The definition for an item on object action function.
@@ -50,21 +51,8 @@ export interface ItemOnObjectAction extends Action {
     action: itemOnObjectAction;
 }
 
-/**
- * A directory of all item on object interaction plugins.
- */
-let itemOnObjectActions: ItemOnObjectAction[] = [];
-
-/**
- * Sets the list of item on object interaction plugins.
- * @param actions The plugin list.
- */
-export const setItemOnObjectActions = (actions: Action[]): void => {
-    itemOnObjectActions = actions as ItemOnObjectAction[];
-};
-
 // @TODO priority and cancelling other (lower priority) actions
-export const itemOnObjectActionHandler = (player: Player, locationObject: LocationObject,
+const itemOnObjectActionHandler = (player: Player, locationObject: LocationObject,
                                           locationObjectDefinition: LocationObjectDefinition, position: Position,
                                           item: Item, itemWidgetId: number, itemContainerId: number,
                                           cacheOriginal: boolean): void => {
@@ -73,7 +61,7 @@ export const itemOnObjectActionHandler = (player: Player, locationObject: Locati
     }
 
     // Find all item on object action plugins that reference this location object
-    let interactionActions = itemOnObjectActions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, locationObject.objectId));
+    let interactionActions = getActionList('item_on_object').filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, locationObject.objectId));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
@@ -132,4 +120,9 @@ export const itemOnObjectActionHandler = (player: Player, locationObject: Locati
                 cacheOriginal
             }));
     }
+};
+
+export default {
+    action: 'item_on_object',
+    handler: itemOnObjectActionHandler
 };

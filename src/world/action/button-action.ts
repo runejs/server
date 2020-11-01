@@ -1,6 +1,8 @@
 import { Player } from '@server/world/actor/player/player';
 import { pluginFilter } from '@server/plugins/plugin-loader';
-import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
+import { questFilter } from '@server/plugins/plugin';
+import { Action } from '@server/world/action/action';
+import { getActionList } from '@server/game-server';
 
 /**
  * The definition for a button action function.
@@ -33,23 +35,9 @@ export interface ButtonAction extends Action {
     cancelActions?: boolean;
 }
 
-/**
- * A directory of all button interaction plugins.
- */
-let buttonActions: ButtonAction[] = [
-];
-
-/**
- * Sets the list of button interaction plugins.
- * @param actions The plugin list.
- */
-export const setButtonActions = (actions: Action[]): void => {
-    buttonActions = actions as ButtonAction[];
-};
-
-const actionHandler = (player: Player, widgetId: number, buttonId: number): void => {
+const buttonActionHandler = (player: Player, widgetId: number, buttonId: number): void => {
     // Find all item on item action plugins that match this action
-    let interactionActions = buttonActions.filter(plugin => questFilter(player, plugin) &&
+    let interactionActions = getActionList('button').filter(plugin => questFilter(player, plugin) &&
         plugin.widgetId === widgetId && (plugin.buttonIds === undefined || pluginFilter(plugin.buttonIds, buttonId)));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
@@ -78,4 +66,7 @@ const actionHandler = (player: Player, widgetId: number, buttonId: number): void
     }
 };
 
-RunePlugin.registerActionEventListener('button', actionHandler);
+export default {
+    action: 'button',
+    handler: buttonActionHandler
+};

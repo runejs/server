@@ -3,7 +3,8 @@ import { cache } from '@server/game-server';
 import { itemIds } from '@server/world/config/item-ids';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { RunePlugin } from '@server/plugins/plugin';
+import { ActionType } from '@server/world/action/action';
 
 const FountainIds: number[] = [879];
 const SinkIds: number[] = [14878, 873];

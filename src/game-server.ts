@@ -3,62 +3,64 @@ import { logger, parseServerConfig } from '@runejs/core';
 import { Cache } from '@runejs/cache-parser';
 import { ServerConfig } from '@server/net/server/server-config';
 
-import { loadPlugins } from '@server/plugins/plugin-loader';
-import { Action, sort } from '@server/plugins/plugin';
+import { parsePluginFiles } from '@server/plugins/plugin-loader';
+import { sort } from '@server/plugins/plugin';
 
-import { setNpcPlugins } from '@server/world/action/npc-action';
-import { setObjectPlugins } from '@server/world/action/object-action';
-import { setItemOnItemActions } from '@server/world/action/item-on-item-action';
-import { setButtonActions } from '@server/world/action/button-action';
-import { setCommandActions } from '@server/world/action/input-command-action';
-import { setWidgetActions } from '@server/world/action/widget-action';
-import { setItemActions } from '@server/world/action/item-action';
-import { setWorldItemActions } from '@server/world/action/world-item-action';
-import { setItemOnObjectActions } from '@server/world/action/item-on-object-action';
-import { setItemOnNpcActions } from '@server/world/action/item-on-npc-action';
-import { setPlayerInitPlugins } from '@server/world/actor/player/player';
-import { setNpcInitPlugins } from '@server/world/actor/npc/npc';
-import { setQuestActions } from '@server/world/config/quests';
-import { setPlayerActions } from '@server/world/action/player-action';
 import { loadPackets } from '@server/net/inbound-packets';
 import { watchForChanges, watchSource } from '@server/util/files';
-import { setEquipActions } from '@server/world/action/equip-action';
 import { openGameServer } from '@server/net/server/game-server';
+import { ActionType } from '@server/world/action/action';
 
 
 export let serverConfig: ServerConfig;
 export let cache: Cache;
 export let world: World;
 
-export async function injectPlugins(): Promise<void> {
-    const actionPluginMap: { [key: string]: Action[] } = {};
-    const plugins = await loadPlugins();
+export let globalActionMap: any = {};
+export const getActionList = (key: ActionType): any[] => globalActionMap[key];
+
+class ActionHandler {
+
+    handlerMap = new Map<string, any>();
+
+    get(action: ActionType): any {
+        this.handlerMap.get(action.toString());
+    }
+
+    call(action: ActionType, ...args: any[]): void {
+        const actionHandler = this.handlerMap.get(action.toString());
+        if(actionHandler) {
+            try {
+                actionHandler(...args);
+            } catch(error) {
+                logger.error(`Error handling action ${action.toString()}`);
+                logger.error(error);
+            }
+        }
+    }
+
+    register(action: ActionType, actionHandler: (...args: any[]) => void): void {
+        this.handlerMap.set(action.toString(), actionHandler);
+    }
+
+}
+
+export const actionHandler = new ActionHandler();
+
+export async function loadPlugins(): Promise<void> {
+    globalActionMap = {};
+    const plugins = await parsePluginFiles();
 
     plugins.map(plugin => plugin.actions).reduce((a, b) => a.concat(b)).forEach(action => {
-        if(!actionPluginMap.hasOwnProperty(action.type)) {
-            actionPluginMap[action.type] = [];
+        if(!globalActionMap.hasOwnProperty(action.type)) {
+            globalActionMap[action.type] = [];
         }
 
-        actionPluginMap[action.type].push(action);
+        globalActionMap[action.type].push(action);
     });
 
-    Object.keys(actionPluginMap).forEach(key => actionPluginMap[key] = sort(actionPluginMap[key]));
-
-    setQuestActions(actionPluginMap.quest);
-    setButtonActions(actionPluginMap.button);
-    setNpcPlugins(actionPluginMap.npc_action);
-    setObjectPlugins(actionPluginMap.object_action);
-    setItemOnObjectActions(actionPluginMap.item_on_object);
-    setItemOnNpcActions(actionPluginMap.item_on_npc);
-    setItemOnItemActions(actionPluginMap.item_on_item);
-    setItemActions(actionPluginMap.item_action);
-    setEquipActions(actionPluginMap.equip_action);
-    setWorldItemActions(actionPluginMap.world_item_action);
-    setCommandActions(actionPluginMap.player_command);
-    setWidgetActions(actionPluginMap.widget_action);
-    setPlayerInitPlugins(actionPluginMap.player_init);
-    setNpcInitPlugins(actionPluginMap.npc_init);
-    setPlayerActions(actionPluginMap.player_action);
+    // @TODO implement proper sorting rules
+    Object.keys(globalActionMap).forEach(key => globalActionMap[key] = sort(globalActionMap[key]));
 }
 
 export async function runGameServer(): Promise<void> {
@@ -85,8 +87,6 @@ export async function runGameServer(): Promise<void> {
     await loadPackets();
 
     world = new World();
-    await injectPlugins();
-
     world.init().then(() => delete cache.mapData);
 
     if(process.argv.indexOf('-fakePlayers') !== -1) {

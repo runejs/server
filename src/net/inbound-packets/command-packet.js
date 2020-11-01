@@ -1,5 +1,5 @@
 import { Rights } from '../../world/actor/player/player';
-import { RunePlugin } from '../../plugins/plugin';
+import { actionHandler } from '../../game-server';
 
 const commandPacket = (player, packet) => {
     const input = packet.buffer.getString();
@@ -17,7 +17,7 @@ const commandPacket = (player, packet) => {
     if(player.rights !== Rights.ADMIN) {
         player.sendLogMessage('You need to be an administrator to use commands.', isConsole);
     } else {
-        RunePlugin.callActionEventListener('player_command', player, command, isConsole, args);
+        actionHandler.call('player_command', player, command, isConsole, args);
     }
 };
 

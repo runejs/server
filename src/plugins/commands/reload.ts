@@ -1,5 +1,5 @@
-import { commandAction } from '@server/world/action/input-command-action';
-import { injectPlugins } from '@server/game-server';
+import { commandAction } from '@server/world/action/player-command-action';
+import { loadPlugins } from '@server/game-server';
 import { loadPackets } from '@server/net/inbound-packets';
 
 const action: commandAction = (details) => {
@@ -44,7 +44,7 @@ const action: commandAction = (details) => {
         delete require.cache[path];
     }
 
-    injectPlugins()
+    loadPlugins()
         .then(() => player.sendLogMessage('Content reloaded.', details.isConsole))
         .catch(() => player.sendLogMessage('Error reloading content.', details.isConsole));
     loadPackets();

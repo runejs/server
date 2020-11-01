@@ -4,7 +4,7 @@ import { Isaac } from '@server/net/isaac';
 import { PlayerUpdateTask } from './updating/player-update-task';
 import { Actor } from '../actor';
 import { Position } from '@server/world/position';
-import { cache, serverConfig, world } from '@server/game-server';
+import { actionHandler, cache, globalActionMap, serverConfig, world } from '@server/game-server';
 import { logger } from '@runejs/core';
 import {
     Appearance,
@@ -14,7 +14,7 @@ import {
     savePlayerData
 } from './player-data';
 import { PlayerWidget, widgets, widgetScripts } from '../../config/widget';
-import { ContainerUpdateEvent, ItemContainer } from '../../items/item-container';
+import { ContainerUpdateEvent, getItemFromContainer, ItemContainer } from '../../items/item-container';
 import { EquipmentBonuses, EquipmentSlot, ItemDetails, WeaponType } from '../../config/item-data';
 import { Item } from '../../items/item';
 import { Npc } from '../npc/npc';
@@ -24,17 +24,14 @@ import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { QuadtreeKey } from '@server/world/world';
 import { daysSinceLastLogin } from '@server/util/time';
 import { itemIds } from '@server/world/config/item-ids';
-import { dialogueAction } from '@server/world/action/dialogue-action';
-import { Action, RunePlugin } from '@server/plugins/plugin';
+import { dialogueAction } from '@server/world/actor/player/dialogue-action';
 import { songs } from '@server/world/config/songs';
 import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
-import { quests } from '@server/world/config/quests';
 import { ItemDefinition } from '@runejs/cache-parser';
-import { PlayerCommandAction, commandActions } from '@server/world/action/input-command-action';
+import { PlayerCommandAction } from '@server/world/action/player-command-action';
 import { take } from 'rxjs/operators';
-import { getItemFromContainer } from '@server/world/action/item-action';
 import { updateBonusStrings } from '@server/plugins/equipment/equipment-stats-plugin';
-import { equipAction } from '@server/world/action/equip-action';
+import { Action } from '@server/world/action/action';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -78,13 +75,7 @@ export enum Rights {
     USER = 0
 }
 
-let playerInitPlugins: PlayerInitAction[];
-
-export type playerInitAction = (details: { player: Player }) => void;
-
-export const setPlayerInitPlugins = (plugins: Action[]): void => {
-    playerInitPlugins = plugins as PlayerInitAction[];
-};
+export type playerInitAction = (data: { player: Player }) => void;
 
 export interface PlayerInitAction extends Action {
     // The action function to be performed.
@@ -250,7 +241,7 @@ export class Player extends Actor {
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
         for (const item of this.equipment.items) {
             if(item) {
-                RunePlugin.callActionEventListener('equip_action', this, item.itemId, 'EQUIP');
+                actionHandler.call('equip_action', this, item.itemId, 'EQUIP');
             }
         }
 
@@ -335,11 +326,11 @@ export class Player extends Actor {
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
 
         if(this.rights === Rights.ADMIN) {
-            this.sendCommandList(commandActions);
+            this.sendCommandList(globalActionMap.player_command);
         }
 
         new Promise(resolve => {
-            playerInitPlugins.forEach(plugin => plugin.action({ player: this }));
+            globalActionMap.player_init.forEach(plugin => plugin.action({ player: this }));
             resolve();
         }).then(() => {
             this.outgoingPackets.flushQueue();
@@ -536,8 +527,9 @@ export class Player extends Actor {
     private updateQuestTab(): void {
         this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, this.getQuestPoints());
 
-        Object.keys(quests).forEach(questKey => {
-            const questData = quests[questKey];
+        const questMap = globalActionMap.quest;
+        Object.keys(questMap).forEach(questKey => {
+            const questData = questMap[questKey];
             const playerQuest = this.quests.find(quest => quest.questId === questData.id);
             let stage = 'NOT_STARTED';
             let color = colors.red;
@@ -558,7 +550,7 @@ export class Player extends Actor {
 
         if(this.quests && this.quests.length !== 0) {
             this.quests.filter(quest => quest.stage === 'COMPLETE')
-                .forEach(quest => questPoints += quests[quest.questId].points);
+                .forEach(quest => questPoints += globalActionMap.quest[quest.questId].points);
         }
 
         return questPoints;
@@ -589,7 +581,7 @@ export class Player extends Actor {
      * @param stage The stage to set the quest to.
      */
     public setQuestStage(questId: string, stage: string): void {
-        const questData = quests[questId];
+        const questData = globalActionMap.quest[questId];
 
         let playerQuest = this.quests.find(quest => quest.questId === questId);
         if(!playerQuest) {
@@ -1006,7 +998,7 @@ export class Player extends Actor {
                 return false;
             }
 
-            RunePlugin.callActionEventListener('equip_action', this, itemToUnequip.itemId, 'UNEQUIP');
+            actionHandler.call('equip_action', this, itemToUnequip.itemId, 'UNEQUIP');
 
             this.equipment.remove(slot, false);
             this.inventory.remove(itemSlot, false);
@@ -1027,7 +1019,7 @@ export class Player extends Actor {
             }
         }
 
-        RunePlugin.callActionEventListener('equip_action', this, itemId, 'EQUIP');
+        actionHandler.call('equip_action', this, itemId, 'EQUIP');
         this.equipmentChanged();
         return true;
     }
@@ -1060,7 +1052,7 @@ export class Player extends Actor {
             return true;
         }
 
-        RunePlugin.callActionEventListener('equip_action', this, itemInSlot.itemId, 'UNEQUIP');
+        actionHandler.call('equip_action', this, itemInSlot.itemId, 'UNEQUIP');
 
         this.equipment.remove(slot);
         this.inventory.set(inventorySlot, itemInSlot);

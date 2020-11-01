@@ -1,6 +1,7 @@
 import { widgets } from '@server/world/config/widget';
-import { getItemFromContainer, itemAction } from '@server/world/action/item-action';
+import { itemAction } from '@server/world/action/item-action';
 import { equipmentSlotIndex } from '@server/world/config/item-data';
+import { getItemFromContainer } from '@server/world/items/item-container';
 
 export const action: itemAction = (details) => {
     const { player, itemId, itemSlot, itemDetails } = details;

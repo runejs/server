@@ -1,4 +1,4 @@
-import { commandAction } from '@server/world/action/input-command-action';
+import { commandAction } from '@server/world/action/player-command-action';
 import { cache, world } from '@server/game-server';
 import { Npc } from '@server/world/actor/npc/npc';
 

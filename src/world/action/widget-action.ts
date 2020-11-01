@@ -1,6 +1,8 @@
 import { Player } from '@server/world/actor/player/player';
 import { pluginFilter } from '@server/plugins/plugin-loader';
-import { Action, questFilter } from '@server/plugins/plugin';
+import { questFilter } from '@server/plugins/plugin';
+import { Action } from '@server/world/action/action';
+import { getActionList } from '@server/game-server';
 
 /**
  * The definition for a widget action function.
@@ -38,29 +40,15 @@ export interface WidgetAction extends Action {
 }
 
 /**
- * A directory of all button interaction plugins.
- */
-let widgetActions: WidgetAction[] = [
-];
-
-/**
- * Sets the list of widget interaction plugins.
- * @param actions The plugin list.
- */
-export const setWidgetActions = (actions: Action[]): void => {
-    widgetActions = actions as WidgetAction[];
-};
-
-/**
  * The actual widget action handler function.
  * @param player The player performing the action.
  * @param widgetId The ID of the widget.
  * @param childId The ID of the widget child being interacted with.
  * @param optionId The widget context option chosen by the player.
  */
-export const widgetActionHandler = (player: Player, widgetId: number, childId: number, optionId: number): void => {
+const widgetActionHandler = (player: Player, widgetId: number, childId: number, optionId: number): void => {
     // Find all item on item action plugins that match this action
-    let interactionActions = widgetActions.filter(plugin => {
+    let interactionActions = getActionList('widget_action').filter(plugin => {
         if(!questFilter(player, plugin)) {
             return false;
         }
@@ -98,4 +86,9 @@ export const widgetActionHandler = (player: Player, widgetId: number, childId: n
 
         plugin.action({ player, widgetId, childId, optionId });
     });
+};
+
+export default {
+    action: 'widget_action',
+    handler: widgetActionHandler
 };

@@ -1,10 +1,11 @@
 import { Player } from '@server/world/actor/player/player';
 import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
-import { walkToAction } from '@server/world/action/action';
+import { Action, walkToAction } from '@server/world/action/action';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { Action, questFilter } from '@server/plugins/plugin';
+import { questFilter } from '@server/plugins/plugin';
+import { getActionList } from '@server/game-server';
 
 /**
  * The definition for an object action function.
@@ -45,28 +46,15 @@ export interface ObjectAction extends Action {
     action: objectAction;
 }
 
-/**
- * A directory of all object interaction plugins.
- */
-let objectInteractions: ObjectAction[] = [];
-
-/**
- * Sets the list of object interaction plugins.
- * @param plugins The plugin list.
- */
-export const setObjectPlugins = (plugins: Action[]): void => {
-    objectInteractions = plugins as ObjectAction[];
-};
-
 // @TODO priority and cancelling other (lower priority) actions
-export const objectActionHandler = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
+const objectActionHandler = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
                                     position: Position, option: string, cacheOriginal: boolean): void => {
-    if(player.busy || player.metadata?.blockObjectInteractions) {
+    if(player.busy || player.metadata.blockObjectInteractions) {
         return;
     }
 
     // Find all object action plugins that reference this location object
-    let interactionActions = objectInteractions.filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, locationObject.objectId, plugin.options, option));
+    let interactionActions = getActionList('object_action').filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, locationObject.objectId, plugin.options, option));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
@@ -116,4 +104,9 @@ export const objectActionHandler = (player: Player, locationObject: LocationObje
                 cacheOriginal
             }));
     }
+};
+
+export default {
+    action: 'object_action',
+    handler: objectActionHandler
 };

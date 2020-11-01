@@ -1,9 +1,10 @@
 import { Player } from '@server/world/actor/player/player';
 import { Position } from '@server/world/position';
-import { walkToAction } from '@server/world/action/action';
+import { Action, walkToAction } from '@server/world/action/action';
 import { basicStringFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { Action, questFilter } from '@server/plugins/plugin';
+import { questFilter } from '@server/plugins/plugin';
+import { getActionList } from '@server/game-server';
 
 /**
  * The definition for a player action function.
@@ -35,28 +36,14 @@ export interface PlayerAction extends Action {
     action: playerAction;
 }
 
-/**
- * A directory of all player interaction plugins.
- */
-let playerActions: PlayerAction[] = [
-];
-
-/**
- * Sets the list of player interaction plugins.
- * @param actions The plugin list.
- */
-export const setPlayerActions = (actions: Action[]): void => {
-    playerActions = actions as PlayerAction[];
-};
-
 // @TODO priority and cancelling other (lower priority) actions
-export const playerActionHandler = (player: Player, otherPlayer: Player, position: Position, option: string): void => {
+const playerActionHandler = (player: Player, otherPlayer: Player, position: Position, option: string): void => {
     if(player.busy) {
         return;
     }
 
     // Find all player action plugins that reference this option
-    let interactionActions = playerActions.filter(plugin => questFilter(player, plugin) && basicStringFilter(plugin.options, option));
+    let interactionActions = getActionList('player_action').filter(plugin => questFilter(player, plugin) && basicStringFilter(plugin.options, option));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
@@ -88,4 +75,9 @@ export const playerActionHandler = (player: Player, otherPlayer: Player, positio
     if(immediatePlugins.length !== 0) {
         immediatePlugins.forEach(plugin => plugin.action({ player, otherPlayer, position }));
     }
+};
+
+export default {
+    action: 'player_action',
+    handler: playerActionHandler
 };

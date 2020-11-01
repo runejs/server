@@ -1,11 +1,12 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { commandAction } from '@server/world/action/input-command-action';
+import { RunePlugin } from '@server/plugins/plugin';
+import { commandAction } from '@server/world/action/player-command-action';
 import { world } from '@server/game-server';
 import { LocationObject } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
 import { objectIds } from '@server/world/config/object-ids';
 import { safeDump } from 'js-yaml';
 import { writeFileSync } from 'fs';
+import { ActionType } from '@server/world/action/action';
 
 const spawnSceneryAction: commandAction = (details) => {
     const { player, args } = details;

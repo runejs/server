@@ -3,12 +3,11 @@ import { NpcSpawn } from '@server/world/config/npc-spawn';
 import { NpcDefinition } from '@runejs/cache-parser';
 import uuidv4 from 'uuid/v4';
 import { Position } from '@server/world/position';
-import { world } from '@server/game-server';
+import { actionHandler, globalActionMap, world } from '@server/game-server';
 import { directionData } from '@server/world/direction';
 import { QuadtreeKey } from '@server/world/world';
-import { Action } from '@server/plugins/plugin';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
-import { schedule } from '@server/task/task';
+import { Action } from '@server/world/action/action';
 
 interface NpcAnimations {
     walk: number;
@@ -18,13 +17,7 @@ interface NpcAnimations {
     turnLeft: number;
 }
 
-let npcInitPlugins: NpcInitAction[];
-
-export type npcInitAction = (details: { npc: Npc }) => void;
-
-export const setNpcInitPlugins = (plugins: Action[]): void => {
-    npcInitPlugins = plugins as NpcInitAction[];
-};
+export type npcInitAction = (data: { npc: Npc }) => void;
 
 export interface NpcInitAction extends Action {
     // The action function to be performed.
@@ -73,12 +66,12 @@ export class Npc extends Actor {
         }
     }
 
-    public init(): void {
+    public async init(): Promise<void> {
         world.chunkManager.getChunkForWorldPosition(this.position).addNpc(this);
         this.initiateRandomMovement();
 
-        new Promise(resolve => {
-            npcInitPlugins
+        await new Promise(resolve => {
+            globalActionMap.npc_init
                 .filter(plugin => basicNumberFilter(plugin.npcIds, this.id))
                 .forEach(plugin => plugin.action({npc: this}));
             resolve();

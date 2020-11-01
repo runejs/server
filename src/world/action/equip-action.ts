@@ -1,8 +1,9 @@
 import { Player } from '@server/world/actor/player/player';
-import { Action, questFilter, RunePlugin } from '@server/plugins/plugin';
+import { questFilter } from '@server/plugins/plugin';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
-import { world } from '@server/game-server';
+import { getActionList, world } from '@server/game-server';
 import { ItemDetails } from '@server/world/config/item-data';
+import { Action } from '@server/world/action/action';
 
 /**
  * The definition for an equip action function.
@@ -37,21 +38,8 @@ export interface EquipAction extends Action {
     action: equipAction;
 }
 
-/**
- * A directory of all equipment plugins.
- */
-let equipActions: EquipAction[] = [];
-
-/**
- * Sets the list of equipment plugins.
- * @param actions The plugin list.
- */
-export const setEquipActions = (actions: Action[]): void => {
-    equipActions = actions as EquipAction[];
-};
-
-const actionHandler = (player: Player, itemId: number, equipType: EquipType): void => {
-    let filteredActions = equipActions.filter(plugin => {
+const equipActionHandler = (player: Player, itemId: number, equipType: EquipType): void => {
+    let filteredActions = getActionList('equip_action').filter(plugin => {
         if(!questFilter(player, plugin)) {
             return false;
         }
@@ -88,4 +76,7 @@ const actionHandler = (player: Player, itemId: number, equipType: EquipType): vo
     }
 };
 
-RunePlugin.registerActionEventListener('equip_action', actionHandler);
+export default {
+    action: 'equip_action',
+    handler: equipActionHandler
+};

@@ -9,6 +9,19 @@ export interface ContainerUpdateEvent {
     type: 'ADD' | 'REMOVE' | 'SWAP' | 'SET' | 'SET_ALL' | 'UPDATE_AMOUNT';
 }
 
+export const getItemFromContainer = (itemId: number, slot: number, container: ItemContainer): Item => {
+    if(slot < 0 || slot > container.items.length - 1) {
+        return null;
+    }
+
+    const item = container.items[slot];
+    if(!item || item.itemId !== itemId) {
+        return null;
+    }
+
+    return item;
+};
+
 export class ItemContainer {
 
     private readonly _size: number;
