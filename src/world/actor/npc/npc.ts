@@ -3,11 +3,11 @@ import { NpcSpawn } from '@server/world/config/npc-spawn';
 import { NpcDefinition } from '@runejs/cache-parser';
 import uuidv4 from 'uuid/v4';
 import { Position } from '@server/world/position';
-import { actionHandler, globalActionMap, world } from '@server/game-server';
+import { pluginActions, world } from '@server/game-server';
 import { directionData } from '@server/world/direction';
 import { QuadtreeKey } from '@server/world/world';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
-import { Action } from '@server/world/action/action';
+import { Action, actionHandler } from '@server/world/action';
 
 interface NpcAnimations {
     walk: number;
@@ -71,7 +71,7 @@ export class Npc extends Actor {
         this.initiateRandomMovement();
 
         await new Promise(resolve => {
-            globalActionMap.npc_init
+            pluginActions.npc_init
                 .filter(plugin => basicNumberFilter(plugin.npcIds, this.id))
                 .forEach(plugin => plugin.action({npc: this}));
             resolve();

@@ -1,4 +1,4 @@
-import { actionHandler } from '../../game-server';
+import { actionHandler } from '../../world/action';
 
 const dropItemPacket = (player, packet) => {
     const { buffer } = packet;

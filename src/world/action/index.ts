@@ -17,10 +17,10 @@ import { WorldItemAction } from '@server/world/action/world-item-action';
 import { QuestAction } from '@server/world/config/quests';
 import { PlayerAction } from '@server/world/action/player-action';
 import { EquipAction } from '@server/world/action/equip-action';
-import { QuestRequirement, RunePlugin } from '@server/plugins/plugin';
+import { QuestRequirement } from '@server/plugins/plugin';
 import { getFiles } from '@server/util/files';
 import { logger } from '@runejs/core';
-import { actionHandler } from '@server/game-server';
+import { pluginActions } from '@server/game-server';
 
 export type ActionCancelType = 'manual-movement' | 'pathing-movement' | 'generic' | 'keep-widgets-open' | 'button' | 'widget';
 
@@ -130,8 +130,38 @@ export const walkToAction = async (player: Player, position: Position, interacti
 
 export const ACTION_DIRECTORY = './dist/world/action';
 
+export const getActionList = (key: ActionType): any[] => pluginActions[key];
+
+class ActionHandler {
+
+    handlerMap = new Map<string, any>();
+
+    get(action: ActionType): any {
+        this.handlerMap.get(action.toString());
+    }
+
+    call(action: ActionType, ...args: any[]): void {
+        const actionHandler = this.handlerMap.get(action.toString());
+        if(actionHandler) {
+            try {
+                actionHandler(...args);
+            } catch(error) {
+                logger.error(`Error handling action ${ action.toString() }`);
+                logger.error(error);
+            }
+        }
+    }
+
+    register(action: ActionType, actionHandler: (...args: any[]) => void): void {
+        this.handlerMap.set(action.toString(), actionHandler);
+    }
+
+}
+
+export const actionHandler = new ActionHandler();
+
 export async function loadActions(): Promise<void> {
-    const blacklist = ['action.js'];
+    const blacklist = ['index.js'];
 
     for await(const path of getFiles(ACTION_DIRECTORY, blacklist)) {
         const location = '.' + path.substring(ACTION_DIRECTORY.length).replace('.js', '');
@@ -174,21 +204,6 @@ export type ActionType =
     | 'player_init'
     | 'npc_init'
     | 'quest'
-    | 'player_action';
-
-export type ActionDirectory =
-    NpcAction
-    | ObjectAction
-    | ButtonAction
-    | ItemOnItemAction
-    | ItemOnObjectAction
-    | ItemOnNpcAction
-    | PlayerCommandAction
-    | WidgetAction
-    | ItemAction
-    | WorldItemAction
-    | PlayerInitAction
-    | NpcInitAction
-    | QuestAction
-    | PlayerAction
-    | EquipAction;
+    | 'player_action'
+    | 'swap_items'
+    | 'move_item';

@@ -6,7 +6,7 @@ import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { ItemDetails, parseItemData } from './config/item-data';
 import { ExamineCache } from './config/examine-data';
-import { cache, loadPlugins } from '@server/game-server';
+import { cache, loadPlugins, pluginActions } from '@server/game-server';
 import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './actor/npc/npc';
@@ -18,7 +18,7 @@ import { Item } from '@server/world/items/item';
 import { Chunk } from '@server/world/map/chunk';
 import { schedule } from '@server/task/task';
 import { parseScenerySpawns } from '@server/world/config/scenery-spawns';
-import { ActionType, loadActions } from '@server/world/action/action';
+import { loadActions } from '@server/world/action';
 
 
 export interface QuadtreeKey {

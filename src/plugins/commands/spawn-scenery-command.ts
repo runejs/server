@@ -6,7 +6,8 @@ import { Position } from '@server/world/position';
 import { objectIds } from '@server/world/config/object-ids';
 import { safeDump } from 'js-yaml';
 import { writeFileSync } from 'fs';
-import { ActionType } from '@server/world/action/action';
+import { ActionType } from '@server/world/action';
+import { logger } from '@runejs/core';
 
 const spawnSceneryAction: commandAction = (details) => {
     const { player, args } = details;
@@ -72,7 +73,7 @@ const dumpSceneryAction: commandAction = (details) => {
 
     const path = `data/dump/scene-${ new Date().getTime() }.yml`;
     writeFileSync(path, safeDump(player.metadata.spawnedScenery));
-    console.log(path);
+    logger.info(path);
     player.metadata.spawnedScenery = [];
 };
 

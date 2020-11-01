@@ -1,5 +1,6 @@
 import { commandAction } from '@server/world/action/player-command-action';
 import { world } from '@server/game-server';
+import { logger } from '@runejs/core';
 
 const quadtreeAction: commandAction = (details) => {
     const { player } = details;
@@ -11,7 +12,7 @@ const quadtreeAction: commandAction = (details) => {
         height: 5
     });
 
-    console.log(values);
+    logger.info(values);
 };
 
 const trackedPlayersAction: commandAction = (details) => {

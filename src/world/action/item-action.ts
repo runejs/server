@@ -1,9 +1,9 @@
 import { Player } from '@server/world/actor/player/player';
 import { questFilter } from '@server/plugins/plugin';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
-import { getActionList, world } from '@server/game-server';
+import { world } from '@server/game-server';
 import { ItemDetails } from '@server/world/config/item-data';
-import { Action } from '@server/world/action/action';
+import { Action, getActionList } from '@server/world/action/index';
 
 /**
  * The definition for an item action function.

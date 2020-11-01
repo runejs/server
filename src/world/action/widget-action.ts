@@ -1,8 +1,7 @@
 import { Player } from '@server/world/actor/player/player';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { questFilter } from '@server/plugins/plugin';
-import { Action } from '@server/world/action/action';
-import { getActionList } from '@server/game-server';
+import { Action, getActionList } from '@server/world/action/index';
 
 /**
  * The definition for a widget action function.

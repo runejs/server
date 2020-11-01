@@ -8,7 +8,7 @@ import { Position } from '@server/world/position';
 import { DirectionData, directionFromIndex } from '@server/world/direction';
 import { Pathfinding } from '@server/world/actor/pathfinding';
 import { Subject } from 'rxjs';
-import { ActionCancelType } from '@server/world/action/action';
+import { ActionCancelType } from '@server/world/action';
 import { filter, take } from 'rxjs/operators';
 
 /**

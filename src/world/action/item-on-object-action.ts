@@ -1,12 +1,11 @@
 import { Player } from '@server/world/actor/player/player';
 import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
-import { Action, walkToAction } from '@server/world/action/action';
+import { Action, getActionList, walkToAction } from '@server/world/action/index';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
 import { questFilter } from '@server/plugins/plugin';
 import { Item } from '@server/world/items/item';
-import { getActionList } from '@server/game-server';
 
 /**
  * The definition for an item on object action function.

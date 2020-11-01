@@ -5,7 +5,7 @@ import { world } from '@server/game-server';
 import { action as doorAction } from '@server/plugins/objects/doors/door-plugin';
 import { objectAction } from '@server/world/action/object-action';
 import { RunePlugin } from '@server/plugins/plugin';
-import { ActionType } from '@server/world/action/action';
+import { ActionType } from '@server/world/action';
 
 const doubleDoors = [
     {

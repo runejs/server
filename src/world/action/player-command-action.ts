@@ -1,7 +1,6 @@
 import { Player } from '../actor/player/player';
 import { logger } from '@runejs/core';
-import { Action } from '@server/world/action/action';
-import { getActionList } from '@server/game-server';
+import { Action, getActionList } from '@server/world/action/index';
 
 /**
  * The definition for a command action function.

@@ -4,7 +4,7 @@ import { itemIds } from '@server/world/config/item-ids';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { RunePlugin } from '@server/plugins/plugin';
-import { ActionType } from '@server/world/action/action';
+import { ActionType } from '@server/world/action';
 
 const FountainIds: number[] = [879];
 const SinkIds: number[] = [14878, 873];

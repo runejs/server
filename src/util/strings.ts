@@ -99,7 +99,4 @@ export function stringToLong(s: string): bigint {
     return l;
 }
 
-export function colorText(s: string, hexColor: number): string {
-    console.log(hexToHexString(hexColor));
-    return `<col=${hexToHexString(hexColor)}>${s}</col>`;
-}
+export const colorText = (s: string, hexColor: number): string => `<col=${hexToHexString(hexColor)}>${s}</col>`;

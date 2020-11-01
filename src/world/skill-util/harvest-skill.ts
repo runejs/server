@@ -4,7 +4,7 @@ import { soundIds } from '@server/world/config/sound-ids';
 import { Skill } from '@server/world/actor/skills';
 import { cache, world } from '@server/game-server';
 import { getBestAxe, getBestPickaxe, HarvestTool } from '@server/world/config/harvest-tool';
-import { loopingAction } from '@server/world/action/action';
+import { loopingAction } from '@server/world/action';
 import { randomBetween } from '@server/util/num';
 import { ObjectActionData } from '@server/world/action/object-action';
 import { colors } from '@server/util/colors';

@@ -1,7 +1,8 @@
 import { widgets } from '../../world/config/widget';
 import { logger } from '@runejs/core';
 import { Position } from '../../world/position';
-import { actionHandler, cache, world } from '../../game-server';
+import { cache, world } from '../../game-server';
+import { actionHandler } from '../../world/action';
 
 const itemOnObjectPacket = (player, packet) => {
     const { buffer } = packet;

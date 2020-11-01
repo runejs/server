@@ -1,5 +1,5 @@
 import { Rights } from '../../world/actor/player/player';
-import { actionHandler } from '../../game-server';
+import { actionHandler } from '../../world/action';
 
 const commandPacket = (player, packet) => {
     const input = packet.buffer.getString();

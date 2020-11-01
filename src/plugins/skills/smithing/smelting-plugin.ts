@@ -8,7 +8,7 @@ import { itemIds } from '@server/world/config/item-ids';
 import { Subscription } from 'rxjs';
 import { Skill } from '@server/world/actor/skills';
 import { cache } from '@server/game-server';
-import { loopingAction } from '@server/world/action/action';
+import { loopingAction } from '@server/world/action';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { colors } from '@server/util/colors';

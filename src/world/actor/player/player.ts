@@ -4,7 +4,7 @@ import { Isaac } from '@server/net/isaac';
 import { PlayerUpdateTask } from './updating/player-update-task';
 import { Actor } from '../actor';
 import { Position } from '@server/world/position';
-import { actionHandler, cache, globalActionMap, serverConfig, world } from '@server/game-server';
+import { cache, pluginActions, serverConfig, world } from '@server/game-server';
 import { logger } from '@runejs/core';
 import {
     Appearance,
@@ -31,7 +31,7 @@ import { ItemDefinition } from '@runejs/cache-parser';
 import { PlayerCommandAction } from '@server/world/action/player-command-action';
 import { take } from 'rxjs/operators';
 import { updateBonusStrings } from '@server/plugins/equipment/equipment-stats-plugin';
-import { Action } from '@server/world/action/action';
+import { Action, actionHandler } from '@server/world/action';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -326,11 +326,11 @@ export class Player extends Actor {
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
 
         if(this.rights === Rights.ADMIN) {
-            this.sendCommandList(globalActionMap.player_command);
+            this.sendCommandList(pluginActions.player_command);
         }
 
         new Promise(resolve => {
-            globalActionMap.player_init.forEach(plugin => plugin.action({ player: this }));
+            pluginActions.player_init.forEach(plugin => plugin.action({ player: this }));
             resolve();
         }).then(() => {
             this.outgoingPackets.flushQueue();
@@ -527,7 +527,7 @@ export class Player extends Actor {
     private updateQuestTab(): void {
         this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, this.getQuestPoints());
 
-        const questMap = globalActionMap.quest;
+        const questMap = pluginActions.quest;
         Object.keys(questMap).forEach(questKey => {
             const questData = questMap[questKey];
             const playerQuest = this.quests.find(quest => quest.questId === questData.id);
@@ -550,7 +550,7 @@ export class Player extends Actor {
 
         if(this.quests && this.quests.length !== 0) {
             this.quests.filter(quest => quest.stage === 'COMPLETE')
-                .forEach(quest => questPoints += globalActionMap.quest[quest.questId].points);
+                .forEach(quest => questPoints += pluginActions.quest[quest.questId].points);
         }
 
         return questPoints;
@@ -581,7 +581,7 @@ export class Player extends Actor {
      * @param stage The stage to set the quest to.
      */
     public setQuestStage(questId: string, stage: string): void {
-        const questData = globalActionMap.quest[questId];
+        const questData = pluginActions.quest[questId];
 
         let playerQuest = this.quests.find(quest => quest.questId === questId);
         if(!playerQuest) {

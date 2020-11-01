@@ -1,6 +1,7 @@
-import { actionHandler, world } from '../../game-server';
+import { world } from '../../game-server';
 import { World } from '../../world/world';
 import { logger } from '@runejs/core';
+import { actionHandler } from '../../world/action';
 
 const npcInteractionPacket = (player, packet) => {
     const { buffer, packetId } = packet;

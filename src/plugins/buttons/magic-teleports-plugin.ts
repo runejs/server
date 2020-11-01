@@ -1,6 +1,6 @@
 import { buttonAction } from '@server/world/action/button-action';
 import { Player } from '@server/world/actor/player/player';
-import { loopingAction } from '@server/world/action/action';
+import { loopingAction } from '@server/world/action';
 import { Position } from '@server/world/position';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';

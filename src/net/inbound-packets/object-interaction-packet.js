@@ -1,6 +1,7 @@
 import { Position } from '../../world/position';
-import { actionHandler, cache, world } from '../../game-server';
+import { cache, world } from '../../game-server';
 import { logger } from '@runejs/core';
+import { actionHandler } from '../../world/action';
 
 const option1 = packet => {
     const { buffer } = packet;

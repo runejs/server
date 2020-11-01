@@ -1,5 +1,5 @@
 import { getItemOption } from '../../world/items/item';
-import { actionHandler } from '../../game-server';
+import { actionHandler } from '../../world/action';
 
 const option1 = buffer => {
     const itemId = buffer.get('SHORT', 'UNSIGNED');

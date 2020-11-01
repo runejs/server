@@ -1,4 +1,4 @@
-import { Action } from '@server/world/action/action';
+import { Action } from '@server/world/action';
 
 export interface Quest {
     // The unique ID string for the quest.

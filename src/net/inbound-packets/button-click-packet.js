@@ -1,4 +1,4 @@
-import { actionHandler } from '../../game-server';
+import { actionHandler } from '../../world/action';
 
 const ignoreButtons = [
     '269:99' // character design accept button

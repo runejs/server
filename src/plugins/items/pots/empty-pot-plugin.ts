@@ -4,7 +4,7 @@ import { soundIds } from '@server/world/config/sound-ids';
 import { RunePlugin } from '@server/plugins/plugin';
 import { itemIds } from '@server/world/config/item-ids';
 import { getItemFromContainer } from '@server/world/items/item-container';
-import { ActionType } from '@server/world/action/action';
+import { ActionType } from '@server/world/action';
 
 export const action: itemAction = (details) => {
     const {player, itemId, itemSlot} = details;

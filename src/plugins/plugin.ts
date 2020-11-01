@@ -1,5 +1,5 @@
 import { Player } from '@server/world/actor/player/player';
-import { Action, ActionDirectory } from '@server/world/action/action';
+import { Action } from '@server/world/action';
 
 export interface QuestRequirement {
     questId: string;
@@ -27,9 +27,9 @@ export function questFilter(player: Player, plugin: Action): boolean {
 
 export class RunePlugin {
 
-    public actions: ActionDirectory[];
+    public actions: Action[];
 
-    public constructor(actions: ActionDirectory | ActionDirectory[], questRequirement?: QuestRequirement) {
+    public constructor(actions: Action | Action[], questRequirement?: QuestRequirement) {
         if(!Array.isArray(actions)) {
             if(questRequirement !== undefined && !actions.questRequirement) {
                 actions.questRequirement = questRequirement;

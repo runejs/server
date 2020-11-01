@@ -3,7 +3,7 @@ import { buttonAction, ButtonActionData } from '@server/world/action/button-acti
 import { soundIds } from '@server/world/config/sound-ids';
 import { Subscription } from 'rxjs';
 import { itemIds } from '@server/world/config/item-ids';
-import { loopingAction } from '@server/world/action/action';
+import { loopingAction } from '@server/world/action';
 import { Skill } from '@server/world/actor/skills';
 import { cache } from '@server/game-server';
 import { widgets } from '@server/world/config/widget';

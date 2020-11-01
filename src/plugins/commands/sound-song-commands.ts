@@ -1,6 +1,6 @@
 import { RunePlugin } from '@server/plugins/plugin';
 import { commandAction } from '@server/world/action/player-command-action';
-import { ActionType } from '@server/world/action/action';
+import { ActionType } from '@server/world/action';
 
 const songAction: commandAction = (details) => {
     const { player, args } = details;

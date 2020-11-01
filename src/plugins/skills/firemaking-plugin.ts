@@ -1,6 +1,6 @@
 import { itemOnItemAction } from '@server/world/action/item-on-item-action';
 import { world } from '@server/game-server';
-import { loopingAction } from '@server/world/action/action';
+import { loopingAction } from '@server/world/action';
 import { LocationObject } from '@runejs/cache-parser';
 import { Player } from '@server/world/actor/player/player';
 import { WorldItem } from '@server/world/items/world-item';

@@ -35,7 +35,7 @@ export class ChunkManager {
                 chunk.setCacheLocationObject(locationObject, position);
             }
 
-            logger.info('Game world collision maps generated.', true);
+            logger.info('Game world collision maps generated.');
         }
 
         this._complete = true;

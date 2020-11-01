@@ -1,5 +1,6 @@
-import { actionHandler, world } from '../../game-server';
+import { world } from '../../game-server';
 import { Position } from '../../world/position';
+import { actionHandler } from '../../world/action';
 
 const pickupItemPacket = (player, packet) => {
     const { buffer } = packet;
