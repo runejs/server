@@ -7,7 +7,7 @@ import { Position } from '@server/world/position';
 import { LocationObject } from '@runejs/cache-parser';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { WorldItem } from '@server/world/items/world-item';
-import { ByteBuffer } from '@runejs/byte-buffer';
+import { ByteBuffer } from '@runejs/core';
 import { Npc } from '@server/world/actor/npc/npc';
 import { stringToLong } from '@server/util/strings';
 

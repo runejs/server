@@ -1,6 +1,6 @@
 import { Chunk } from './chunk';
 import { Position } from '../position';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 import { cache, serverConfig } from '@server/game-server';
 
 /**

@@ -1,7 +1,7 @@
 import { Player } from '../world/actor/player/player';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 import { getFiles } from '../util/files';
-import { ByteBuffer } from '@runejs/byte-buffer';
+import { ByteBuffer } from '@runejs/core';
 
 interface InboundPacket {
     opcode: number;

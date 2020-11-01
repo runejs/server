@@ -5,7 +5,7 @@ import { Player } from '../player';
 import { Position } from '@server/world/position';
 import { QuadtreeKey } from '@server/world/world';
 import { Actor } from '@server/world/actor/actor';
-import { ByteBuffer } from '@runejs/byte-buffer';
+import { ByteBuffer } from '@runejs/core';
 
 /**
  * Handles the registration of nearby NPCs or Players for the specified player.

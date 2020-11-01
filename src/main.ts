@@ -1,7 +1,7 @@
 import { runGameServer, world } from './game-server';
 import 'source-map-support/register';
 import { initErrorHandling } from '@server/error-handling';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 
 let killed: boolean = false;
 

@@ -4,7 +4,7 @@ import { Position } from '../position';
 import { Chunk } from '@server/world/map/chunk';
 import { Tile } from '@runejs/cache-parser';
 import { Player } from '@server/world/actor/player/player';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 
 class Point {
 

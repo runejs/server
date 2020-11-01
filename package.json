@@ -27,10 +27,8 @@
     "license": "GPL-3.0",
     "dependencies": {
         "@hapi/joi": "^16.1.8",
-        "@runejs/byte-buffer": "1.0.8",
         "@runejs/cache-parser": "0.6.3",
         "@runejs/core": "^1.0.0-beta.0",
-        "@runejs/logger": "^1.0.0",
         "@runejs/login-server": "^1.0.0-beta.2",
         "@runejs/update-server": "^1.0.0-beta.0",
         "bcrypt": "^5.0.0",
