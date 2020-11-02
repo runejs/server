@@ -359,7 +359,7 @@ export class OutboundPackets {
 
     public sendUpdateAllWidgetItemsById(widget: { widgetId: number, containerId: number }, itemIds: number[]): void {
         const container = new ItemContainer(itemIds.length);
-        const items = itemIds.map(id => (!id ? null : {itemId: id, amount: 1}));
+        const items = itemIds.map(id => (!id ? null : { itemId: id, amount: 1 }));
         container.setAll(items, false);
 
         this.sendUpdateAllWidgetItems(widget, container);

@@ -52,9 +52,9 @@ export interface ItemOnObjectAction extends Action {
 
 // @TODO priority and cancelling other (lower priority) actions
 const itemOnObjectActionHandler = (player: Player, locationObject: LocationObject,
-                                          locationObjectDefinition: LocationObjectDefinition, position: Position,
-                                          item: Item, itemWidgetId: number, itemContainerId: number,
-                                          cacheOriginal: boolean): void => {
+    locationObjectDefinition: LocationObjectDefinition, position: Position,
+    item: Item, itemWidgetId: number, itemContainerId: number,
+    cacheOriginal: boolean): void => {
     if(player.busy) {
         return;
     }

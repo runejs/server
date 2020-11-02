@@ -52,5 +52,5 @@ const action: commandAction = (details) => {
 
 export default {
     type: 'player_command', commands: [
-    'plugins', 'reload', 'content', 'hotload', 'refresh', 'restart', 'clear', 'r'
-], action };
+        'plugins', 'reload', 'content', 'hotload', 'refresh', 'restart', 'clear', 'r'
+    ], action };

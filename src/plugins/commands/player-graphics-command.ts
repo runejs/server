@@ -6,7 +6,7 @@ const action: commandAction = (details) => {
     const graphicsId: number = args.graphicsId as number;
     const height: number = args.height as number;
 
-    player.playGraphics({id: graphicsId, delay: 0, height: height});
+    player.playGraphics({ id: graphicsId, delay: 0, height: height });
 };
 
 export default {

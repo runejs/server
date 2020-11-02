@@ -39,7 +39,7 @@ export interface ItemOnItemAction extends Action {
 }
 
 const itemOnItemActionHandler = (player: Player, usedItem: Item, usedSlot: number, usedWidgetId: number,
-                                        usedWithItem: Item, usedWithSlot: number, usedWithWidgetId: number): void => {
+    usedWithItem: Item, usedWithSlot: number, usedWithWidgetId: number): void => {
     if(player.busy) {
         return;
     }

@@ -108,7 +108,7 @@ export function handleHarvesting(details: ObjectActionData, tool: HarvestTool, t
     details.player.playAnimation(tool.animation);
 
     // Create a looping action to handle the tick related actions in harvesting
-    const loop = loopingAction({player: details.player});
+    const loop = loopingAction({ player: details.player });
     let elapsedTicks = 0;
 
     loop.event.subscribe(() => {

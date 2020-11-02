@@ -34,5 +34,5 @@ const talkToAction : npcAction = (details) => {
 
 export default [
     { type: 'npc_action', npcIds: npcIds.dommik, options: 'trade', walkTo: true, action: tradeAction },
-    { type: 'npc_action', npcIds: npcIds.dommik, options: 'talk-to', walkTo: true, action: talkToAction}
+    { type: 'npc_action', npcIds: npcIds.dommik, options: 'talk-to', walkTo: true, action: talkToAction }
 ];

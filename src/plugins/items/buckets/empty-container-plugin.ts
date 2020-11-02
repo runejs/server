@@ -20,10 +20,10 @@ export const action: itemAction = (details) => {
     switch (itemId) {
         case itemIds.jugOfWater:
             player.giveItem(itemIds.jug);
-        break;
+            break;
         default:
             player.giveItem(itemIds.bucket);
-        break;
+            break;
     }
 
     // @TODO only update necessary slots

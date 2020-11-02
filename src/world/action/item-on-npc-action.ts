@@ -48,7 +48,7 @@ export interface ItemOnNpcAction extends Action {
 
 // @TODO priority and cancelling other (lower priority) actions
 const itemOnNpcActionHandler = (player: Player, npc: Npc, position: Position, item: Item,
-                                       itemWidgetId: number, itemContainerId: number): void => {
+    itemWidgetId: number, itemContainerId: number): void => {
     if(player.busy) {
         return;
     }

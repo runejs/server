@@ -75,13 +75,13 @@ export const depositItem: itemAction = (details) => {
         countToRemove = itemAmount;
     }
 
-    if (!playerBank.canFit({itemId: itemIdToAdd, amount: countToRemove}, true)) {
+    if (!playerBank.canFit({ itemId: itemIdToAdd, amount: countToRemove }, true)) {
         details.player.sendMessage('Your bank is full.');
         return;
     }
 
 
-    const itemToAdd: Item = {itemId: itemIdToAdd, amount: 0};
+    const itemToAdd: Item = { itemId: itemIdToAdd, amount: 0 };
     while (countToRemove > 0 && playerInventory.has(details.itemId)) {
         const invIndex = playerInventory.findIndex(details.itemId);
         const invItem = playerInventory.items[invIndex];
@@ -149,13 +149,13 @@ export const withdrawItem: itemAction = (details) => {
             countToRemove = slots;
         }
     }
-    if (!playerInventory.canFit({itemId: itemIdToAdd, amount: countToRemove}) || countToRemove === 0) {
+    if (!playerInventory.canFit({ itemId: itemIdToAdd, amount: countToRemove }) || countToRemove === 0) {
         details.player.sendMessage('Your inventory is full.');
         return;
     }
 
 
-    const itemToAdd: Item = {itemId: itemIdToAdd, amount: 0};
+    const itemToAdd: Item = { itemId: itemIdToAdd, amount: 0 };
     while (countToRemove > 0 && playerBank.has(details.itemId)) {
         const invIndex = playerBank.findIndex(details.itemId);
         const invItem = playerBank.items[invIndex];
@@ -170,7 +170,7 @@ export const withdrawItem: itemAction = (details) => {
         }
     }
     for (let i = 0; i < itemToAdd.amount; i++) {
-        playerInventory.add({itemId: itemIdToAdd, amount: 1});
+        playerInventory.add({ itemId: itemIdToAdd, amount: 1 });
     }
 
 
@@ -180,14 +180,14 @@ export const withdrawItem: itemAction = (details) => {
 };
 
 export const btnAction: buttonAction = (details) => {
-    const {player, buttonId} = details;
+    const { player, buttonId } = details;
     player.settingChanged(buttonId);
 
     const settingsMappings = {
-        92: {setting: 'bankWithdrawNoteMode', value: 1},
-        93: {setting: 'bankWithdrawNoteMode', value: 0},
-        98: {setting: 'bankInsertMode', value: 0},
-        99: {setting: 'bankInsertMode', value: 1},
+        92: { setting: 'bankWithdrawNoteMode', value: 1 },
+        93: { setting: 'bankWithdrawNoteMode', value: 0 },
+        98: { setting: 'bankInsertMode', value: 0 },
+        99: { setting: 'bankInsertMode', value: 1 },
     };
     if (!settingsMappings[buttonId]) {
         return;
@@ -200,7 +200,7 @@ export const btnAction: buttonAction = (details) => {
 const useBankBoothAction : objectAction = (details) => {
     const { player } = details;
 
-    dialogue([player, {npc: npcIds.banker1, key: 'banker'}], [
+    dialogue([player, { npc: npcIds.banker1, key: 'banker' }], [
         banker => [Emote.HAPPY, `Good day, how can I help you?`],
         options => [
             `I'd Like to access my bank account, please.`, [

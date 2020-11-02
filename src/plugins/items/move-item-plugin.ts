@@ -11,7 +11,7 @@ const movableWidgets: WidgetDetail[] = [
 ];
 
 function moveItem(player: Player, container: ItemContainer, widget: { widgetId: number, containerId: number },
-                  fromSlot: number, toSlot: number): void {
+    fromSlot: number, toSlot: number): void {
     if(toSlot > container.size - 1 || fromSlot > container.size - 1) {
         return;
     }
@@ -45,7 +45,7 @@ export const action: swapItemsAction = (details) => {
     const widgetDetails = movableWidgets.filter(widgetDetail => widgetDetail[0] === widgetId && widgetDetail[1] === containerId);
     if(widgetDetails && widgetDetails[0]) {
         const itemContainer: ItemContainer = widgetDetails[0][2](player);
-        moveItem(player, itemContainer, { widgetId, containerId}, fromSlot, toSlot);
+        moveItem(player, itemContainer, { widgetId, containerId }, fromSlot, toSlot);
     }
 };
 

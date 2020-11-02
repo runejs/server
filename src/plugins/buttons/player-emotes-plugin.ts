@@ -155,7 +155,7 @@ export const action: buttonAction = (details) => {
             if (skillCapeEmotes.some(item => item.itemIds.includes(player.getItemInEquipmentSlot('BACK')?.itemId))) {
                 const skillcapeEmote = skillCapeEmotes.filter(item => item.itemIds.includes(player.getItemInEquipmentSlot('BACK')?.itemId));
                 player.playAnimation(skillcapeEmote[0].animationId);
-                player.playGraphics({id: skillcapeEmote[0].graphicId, delay: 0, height: 0});
+                player.playGraphics({ id: skillcapeEmote[0].graphicId, delay: 0, height: 0 });
             }
         }  else {
             player.sendMessage(`You need to be wearing a skillcape in order to perform that emote.`, true);
@@ -173,7 +173,7 @@ export const action: buttonAction = (details) => {
         player.playAnimation(emote.animationId);
 
         if(emote.graphicId !== undefined) {
-            player.playGraphics({id: emote.graphicId, height: 0});
+            player.playGraphics({ id: emote.graphicId, height: 0 });
         }
     }
 };

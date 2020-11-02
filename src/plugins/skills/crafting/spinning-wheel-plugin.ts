@@ -23,8 +23,8 @@ interface SpinnableButton {
     spinnable: Spinnable;
 }
 
-const ballOfWool: Spinnable = {input: itemIds.wool, output: itemIds.ballOfWool, experience: 2.5, requiredLevel: 1};
-const bowString: Spinnable = {input: itemIds.flax, output: itemIds.bowstring, experience: 15, requiredLevel: 10};
+const ballOfWool: Spinnable = { input: itemIds.wool, output: itemIds.ballOfWool, experience: 2.5, requiredLevel: 1 };
+const bowString: Spinnable = { input: itemIds.flax, output: itemIds.bowstring, experience: 15, requiredLevel: 10 };
 const rootsCbowString: Spinnable = {
     input: [
         itemIds.oakRoots,
@@ -49,26 +49,26 @@ const magicAmuletString: Spinnable = {
     requiredLevel: 19
 };
 const widgetButtonIds: Map<number, SpinnableButton> = new Map<number, SpinnableButton>([
-    [100, {shouldTakeInput: false, count: 1, spinnable: ballOfWool}],
-    [99, {shouldTakeInput: false, count: 5, spinnable: ballOfWool}],
-    [98, {shouldTakeInput: false, count: 10, spinnable: ballOfWool}],
-    [97, {shouldTakeInput: true, count: 0, spinnable: ballOfWool}],
-    [95, {shouldTakeInput: false, count: 1, spinnable: bowString}],
-    [94, {shouldTakeInput: false, count: 5, spinnable: bowString}],
-    [93, {shouldTakeInput: false, count: 10, spinnable: bowString}],
-    [91, {shouldTakeInput: true, count: 0, spinnable: bowString}],
-    [107, {shouldTakeInput: false, count: 1, spinnable: magicAmuletString}],
-    [106, {shouldTakeInput: false, count: 5, spinnable: magicAmuletString}],
-    [105, {shouldTakeInput: false, count: 10, spinnable: magicAmuletString}],
-    [104, {shouldTakeInput: true, count: 0, spinnable: magicAmuletString}],
-    [121, {shouldTakeInput: false, count: 1, spinnable: rootsCbowString}],
-    [120, {shouldTakeInput: false, count: 5, spinnable: rootsCbowString}],
-    [119, {shouldTakeInput: false, count: 10, spinnable: rootsCbowString}],
-    [118, {shouldTakeInput: true, count: 0, spinnable: rootsCbowString}],
-    [114, {shouldTakeInput: false, count: 1, spinnable: sinewCbowString}],
-    [113, {shouldTakeInput: false, count: 5, spinnable: sinewCbowString}],
-    [112, {shouldTakeInput: false, count: 10, spinnable: sinewCbowString}],
-    [111, {shouldTakeInput: true, count: 0, spinnable: sinewCbowString}],
+    [100, { shouldTakeInput: false, count: 1, spinnable: ballOfWool }],
+    [99, { shouldTakeInput: false, count: 5, spinnable: ballOfWool }],
+    [98, { shouldTakeInput: false, count: 10, spinnable: ballOfWool }],
+    [97, { shouldTakeInput: true, count: 0, spinnable: ballOfWool }],
+    [95, { shouldTakeInput: false, count: 1, spinnable: bowString }],
+    [94, { shouldTakeInput: false, count: 5, spinnable: bowString }],
+    [93, { shouldTakeInput: false, count: 10, spinnable: bowString }],
+    [91, { shouldTakeInput: true, count: 0, spinnable: bowString }],
+    [107, { shouldTakeInput: false, count: 1, spinnable: magicAmuletString }],
+    [106, { shouldTakeInput: false, count: 5, spinnable: magicAmuletString }],
+    [105, { shouldTakeInput: false, count: 10, spinnable: magicAmuletString }],
+    [104, { shouldTakeInput: true, count: 0, spinnable: magicAmuletString }],
+    [121, { shouldTakeInput: false, count: 1, spinnable: rootsCbowString }],
+    [120, { shouldTakeInput: false, count: 5, spinnable: rootsCbowString }],
+    [119, { shouldTakeInput: false, count: 10, spinnable: rootsCbowString }],
+    [118, { shouldTakeInput: true, count: 0, spinnable: rootsCbowString }],
+    [114, { shouldTakeInput: false, count: 1, spinnable: sinewCbowString }],
+    [113, { shouldTakeInput: false, count: 5, spinnable: sinewCbowString }],
+    [112, { shouldTakeInput: false, count: 10, spinnable: sinewCbowString }],
+    [111, { shouldTakeInput: true, count: 0, spinnable: sinewCbowString }],
 ]);
 
 export const openSpinningInterface: objectAction = (details) => {

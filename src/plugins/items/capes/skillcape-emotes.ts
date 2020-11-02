@@ -7,12 +7,12 @@ export const skillcapeIds: Array<number> = Object.keys(
 );
 
 export const equip: equipAction = (details) => {
-    const {player} = details;
+    const { player } = details;
     unlockEmote(player, 'SKILLCAPE');
 };
 
 export const unequip: equipAction = (details) => {  
-    const {player} = details;
+    const { player } = details;
     lockEmote(player, 'SKILLCAPE');
     player.stopAnimation();
     player.stopGraphics();

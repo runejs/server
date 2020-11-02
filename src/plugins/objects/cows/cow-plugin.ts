@@ -39,19 +39,19 @@ export const actionItem: itemOnObjectAction = (details) => milkCow(details);
 export const actionInteract: objectAction = (details) => milkCow(details);
 
 export default
-    [
-        {
-            type: 'object_action',
-            objectIds: objectIds.milkableCow,
-            options: 'milk',
-            walkTo: true,
-            action: actionInteract
-        },
-        {
-            type: 'item_on_object',
-            objectIds: objectIds.milkableCow,
-            itemIds: itemIds.bucket,
-            walkTo: true,
-            action: actionItem
-        }
-    ];
+[
+    {
+        type: 'object_action',
+        objectIds: objectIds.milkableCow,
+        options: 'milk',
+        walkTo: true,
+        action: actionInteract
+    },
+    {
+        type: 'item_on_object',
+        objectIds: objectIds.milkableCow,
+        itemIds: itemIds.bucket,
+        walkTo: true,
+        action: actionItem
+    }
+];

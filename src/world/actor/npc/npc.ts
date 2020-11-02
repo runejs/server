@@ -74,7 +74,7 @@ export class Npc extends Actor {
         await new Promise(resolve => {
             pluginActions.npc_init
                 .filter(plugin => basicNumberFilter(plugin.npcIds, this.id))
-                .forEach(plugin => plugin.action({npc: this}));
+                .forEach(plugin => plugin.action({ npc: this }));
             resolve();
         });
     }
@@ -154,7 +154,7 @@ export class Npc extends Actor {
             world.npcTree.remove(this.quadtreeKey);
         }
 
-        this.quadtreeKey = {x: position.x, y: position.y, actor: this};
+        this.quadtreeKey = { x: position.x, y: position.y, actor: this };
         world.npcTree.push(this.quadtreeKey);
     }
 

@@ -29,27 +29,27 @@ function HomeTeleport(player: Player): void {
     loop.event.subscribe(() => {
         if (elapsedTicks === 0) {
             player.playAnimation(animationIds.homeTeleportDraw);
-            player.playGraphics({id: gfxIds.homeTeleportDraw, delay: 0, height: 0});
+            player.playGraphics({ id: gfxIds.homeTeleportDraw, delay: 0, height: 0 });
             player.outgoingPackets.playSound(soundIds.homeTeleportDraw, 10);
         }
         if (elapsedTicks === 7) {
             player.playAnimation(animationIds.homeTeleportSit);
-            player.playGraphics({id: gfxIds.homeTeleportFullDrawnCircle, delay: 0, height: 0});
+            player.playGraphics({ id: gfxIds.homeTeleportFullDrawnCircle, delay: 0, height: 0 });
             player.outgoingPackets.playSound(soundIds.homeTeleportSit, 10);
         }
         if (elapsedTicks === 12) {
             player.playAnimation(animationIds.homeTeleportPullOutAndReadBook);
-            player.playGraphics({id: gfxIds.homeTeleportPullOutBook, delay: 0, height: 0});
+            player.playGraphics({ id: gfxIds.homeTeleportPullOutBook, delay: 0, height: 0 });
             player.outgoingPackets.playSound(soundIds.homeTeleportPullOutBook, 10);
         }
         if (elapsedTicks === 16) {
             player.playAnimation(animationIds.homeTeleportReadBookAndGlowCircle);
-            player.playGraphics({id: gfxIds.homeTeleportCircleGlow, delay: 0, height: 0});
+            player.playGraphics({ id: gfxIds.homeTeleportCircleGlow, delay: 0, height: 0 });
             player.outgoingPackets.playSound(soundIds.homeTeleportCircleGlowAndTeleport, 10);
         }
         if (elapsedTicks === 20) {
             player.playAnimation(animationIds.homeTeleport);
-            player.playGraphics({id: gfxIds.homeTeleport, delay: 0, height: 0});
+            player.playGraphics({ id: gfxIds.homeTeleport, delay: 0, height: 0 });
         }
         if (elapsedTicks === 22) {
             player.teleport(new Position(3218, 3218));
@@ -61,7 +61,7 @@ function HomeTeleport(player: Player): void {
 }
 
 export const action: buttonAction = (details) => {
-    const {player, buttonId} = details;
+    const { player, buttonId } = details;
 
     switch (buttonId) {
         case Teleports.Home:
@@ -70,4 +70,4 @@ export const action: buttonAction = (details) => {
     }
 };
 
-export default {type: 'button', widgetId: 192, buttonIds: buttonIds, action};
+export default { type: 'button', widgetId: 192, buttonIds: buttonIds, action };

@@ -3,7 +3,7 @@ import { cache, world } from '@server/game-server';
 import { Npc } from '@server/world/actor/npc/npc';
 
 const action: commandAction = (details) => {
-    const {player, args} = details;
+    const { player, args } = details;
 
     const npcId: number = args.npcId as number;
     const npcDefinition = cache.npcDefinitions.get(npcId);

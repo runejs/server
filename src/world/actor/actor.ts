@@ -188,27 +188,27 @@ export abstract class Actor {
 
     public playAnimation(animation: number | Animation): void {
         if(typeof animation === 'number') {
-            animation = {id: animation, delay: 0};
+            animation = { id: animation, delay: 0 };
         }
 
         this.updateFlags.animation = animation;
     }
 
     public stopAnimation(): void {
-        const animation = {id: -1, delay: 0};
+        const animation = { id: -1, delay: 0 };
         this.updateFlags.animation = animation;
     }
 
     public playGraphics(graphics: number | Graphic): void {
         if(typeof graphics === 'number') {
-            graphics = {id: graphics, delay: 0, height: 120};
+            graphics = { id: graphics, delay: 0, height: 120 };
         }
 
         this.updateFlags.graphics = graphics;
     }
 
     public stopGraphics(): void {
-        const graphics = {id: -1, delay: 0, height: 120};
+        const graphics = { id: -1, delay: 0, height: 120 };
         this.updateFlags.graphics = graphics;
     }
 

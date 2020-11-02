@@ -354,7 +354,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
 }
 
 async function runDialogueAction(player: Player, dialogueAction: string | DialogueFunction | DialogueAction,
-                                 tag?: string, additionalOptions?: AdditionalOptions): Promise<string | undefined> {
+    tag?: string, additionalOptions?: AdditionalOptions): Promise<string | undefined> {
     if(dialogueAction instanceof DialogueFunction && !tag) {
         // Code execution dialogue.
         dialogueAction.execute();
@@ -558,7 +558,7 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
 }
 
 export async function dialogue(participants: (Player | NpcParticipant)[], dialogueTree: DialogueTree,
-                               additionalOptions?: AdditionalOptions): Promise<boolean> {
+    additionalOptions?: AdditionalOptions): Promise<boolean> {
     const player = participants.find(p => p instanceof Player) as Player;
 
     if(!player) {

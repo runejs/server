@@ -19,7 +19,7 @@ import { cache } from '@server/game-server';
 
 
 const craftRune: objectAction = (details: ObjectActionData) => {
-    const {player, object} = details;
+    const { player, object } = details;
     const rune = getEntityByAttr(runes, 'altar.craftingId', object.objectId);
     const runeDetails = cache.itemDefinitions.get(rune.id);
 
@@ -41,7 +41,7 @@ const craftRune: objectAction = (details: ObjectActionData) => {
             });
         });
         // Add crafted runes to inventory.
-        player.inventory.add({itemId: rune.id, amount: (runeMultiplier(rune.id, level) * essenceAvailable)});
+        player.inventory.add({ itemId: rune.id, amount: (runeMultiplier(rune.id, level) * essenceAvailable) });
         // Add experience
         player.skills.addExp(Skill.RUNECRAFTING, (rune.xp * essenceAvailable));
         // Update widget items.
@@ -65,7 +65,7 @@ function getCombinationRuneByAltar(itemId: number, objectId: number): Runecrafti
 }
 
 const craftCombinationRune: itemOnObjectAction = (details: ItemOnObjectActionData) => {
-    const {player, object, item} = details;
+    const { player, object, item } = details;
     const rune = getCombinationRuneByAltar(item.itemId, object.objectId);
     if (!rune) {
         player.sendMessage('Nothing interesting happens.');
@@ -106,7 +106,7 @@ const craftCombinationRune: itemOnObjectAction = (details: ItemOnObjectActionDat
             player.inventory.removeFirst(itemIds.essence.pure);
         }
         // Add crafted runes to inventory.
-        player.inventory.add({itemId: rune.id, amount: amountToCraft});
+        player.inventory.add({ itemId: rune.id, amount: amountToCraft });
         // Add experience
         player.skills.addExp(Skill.RUNECRAFTING, (rune.xp[altarIndex] * essenceAvailable));
         if (shouldBreakTalisman) {

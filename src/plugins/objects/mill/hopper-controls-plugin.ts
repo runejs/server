@@ -29,7 +29,7 @@ export const action: objectAction = (details) => {
             details.player.metadata['flour'] += details.player.metadata['grain'];
             details.player.metadata['grain'] = 0;
             const flourBinPos = new Position(3166, 3306);
-            const fullFlourBin: LocationObject = {objectId: 1782, x: 3166, y: 3306, orientation: 0, level: 0, type: 10};
+            const fullFlourBin: LocationObject = { objectId: 1782, x: 3166, y: 3306, orientation: 0, level: 0, type: 10 };
             world.addLocationObject(fullFlourBin, flourBinPos);
         } else {
             details.player.sendMessage(`You operate the hopper. Nothing interesting happens.`);

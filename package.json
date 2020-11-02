@@ -9,7 +9,6 @@
         "start:login-server": "node --max-old-space-size=1024 dist/login-server.js",
         "start:update-server": "node --max-old-space-size=1024 dist/update-server.js",
         "start:all": "concurrently \"npm run start:update-server\" \"npm run start:login-server\" \"npm run start:game-server\"",
-        "tslint": "tslint --project tsconfig.json",
         "lint": "eslint -c .eslintrc.js --ext .ts src",
         "fake-players": "concurrently \"npm run build:watch\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers\"",
         "fake-players-tick": "concurrently \"npm run build:watch\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers -tickTime\"",
@@ -74,7 +73,6 @@
         "mkdirp": "^1.0.4",
         "nodemon": "^2.0.6",
         "rimraf": "^3.0.2",
-        "tsconfig-paths": "^3.9.0",
-        "tslint": "^6.1.0"
+        "tsconfig-paths": "^3.9.0"
     }
 }

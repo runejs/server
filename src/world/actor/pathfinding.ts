@@ -74,7 +74,7 @@ export class Pathfinding {
     }
 
     public static canMoveDiagonally(origin: Position, destinationAdjacency: number[][], destinationLocalX: number, destinationLocalY: number,
-                                    initialX: number, initialY: number, offsetX: number, offsetY: number, destMask: number, cornerMask1: number, cornerMask2: number): boolean {
+        initialX: number, initialY: number, offsetX: number, offsetY: number, destMask: number, cornerMask1: number, cornerMask2: number): boolean {
         const cornerX1: number = initialX + offsetX;
         const cornerY1: number = initialY;
         const cornerX2: number = initialX;
@@ -426,7 +426,7 @@ export class Pathfinding {
     }
 
     private canPathDiagonally(originX: number, originY: number, position: Position, offsetX: number, offsetY: number,
-                              destMask: number, cornerMask1: number, cornerMask2: number): boolean {
+        destMask: number, cornerMask1: number, cornerMask2: number): boolean {
         const chunk = world.chunkManager.getChunkForWorldPosition(position);
         const destinationAdjacency: number[][] = chunk.collisionMap.adjacency;
         const destinationLocalX: number = position.x - chunk.collisionMap.insetX;

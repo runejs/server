@@ -6,8 +6,7 @@ module.exports = {
         "sourceType": "module"
     },
     "plugins": [
-        "@typescript-eslint",
-        "@typescript-eslint/tslint"
+        "@typescript-eslint"
     ],
     "extends": [
         "eslint:recommended",
@@ -38,40 +37,18 @@ module.exports = {
         "@typescript-eslint/require-await": "error",
         "@typescript-eslint/triple-slash-reference": "error",
         "max-len": "off",
+        "object-curly-spacing": [ "error", "always" ],
         "no-var": "error",
         "prefer-const": "error",
+        "indent": [ "error", 4, {
+            "SwitchCase": 1
+        } ],
         "@typescript-eslint/no-inferrable-types": 0,
         "@typescript-eslint/no-empty-function": 0,
         "@typescript-eslint/no-explicit-any": 0,
         "@typescript-eslint/ban-types": 0,
         "@typescript-eslint/no-unused-vars": 0,
-        "@typescript-eslint/no-var-requires": 0,
-        "@typescript-eslint/tslint/config": [
-            "error",
-            {
-                "rules": {
-                    "import-spacing": true,
-                    "typedef": [
-                        true,
-                        "call-signature",
-                        "parameter",
-                        "property-declaration"
-                    ],
-                    "whitespace": [
-                        true,
-                        "check-decl",
-                        "check-operator",
-                        "check-module",
-                        "check-separator",
-                        "check-rest-spread",
-                        "check-type",
-                        "check-typecast",
-                        "check-type-operator",
-                        "check-preblock"
-                    ]
-                }
-            }
-        ]
+        "@typescript-eslint/no-var-requires": 0
     }
 }
 

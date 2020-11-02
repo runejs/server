@@ -8,7 +8,7 @@ const tradeAction : npcAction = (details)  => {
 };
 
 const talkToAction : npcAction = (details) => {
-    const {player, npc} = details;
+    const { player, npc } = details;
     dialogueAction(player)
         .then(async d => d.npc(npc, DialogueEmote.CALM_TALK_1, [ 'Good day to you, traveller.', 'Would you be interested in buying some gems?']))
         .then(async d => d.options('Would you be interested in buying some gems?', ['Yes, please.', 'No, thank you.']))
@@ -33,6 +33,6 @@ const talkToAction : npcAction = (details) => {
 };
 
 export default [
-    {type: 'np_action', npcIds: npcIds.gemTrader, options: 'trade', walkTo: true, action: tradeAction},
-    {type: 'npc_action', npcIds: npcIds.gemTrader, options: 'talk-to', walkTo: true, action: talkToAction}
+    { type: 'np_action', npcIds: npcIds.gemTrader, options: 'trade', walkTo: true, action: tradeAction },
+    { type: 'npc_action', npcIds: npcIds.gemTrader, options: 'talk-to', walkTo: true, action: talkToAction }
 ];

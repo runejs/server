@@ -47,7 +47,7 @@ export interface ObjectAction extends Action {
 
 // @TODO priority and cancelling other (lower priority) actions
 const objectActionHandler = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
-                                    position: Position, option: string, cacheOriginal: boolean): void => {
+    position: Position, option: string, cacheOriginal: boolean): void => {
     if(player.busy || player.metadata.blockObjectInteractions) {
         return;
     }

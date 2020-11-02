@@ -7,7 +7,7 @@ import { getItemFromContainer } from '@server/world/items/item-container';
 import { ActionType } from '@server/world/action';
 
 export const action: itemAction = (details) => {
-    const {player, itemId, itemSlot} = details;
+    const { player, itemId, itemSlot } = details;
 
     const inventory = player.inventory;
     const item = getItemFromContainer(itemId, itemSlot, inventory);

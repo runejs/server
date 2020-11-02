@@ -26,93 +26,93 @@ export const tiaras: Map<string, RunecraftingTiara> = new Map<string, Runecrafti
         config: 1,
         level: 1,
         xp: 25.0,
-        recipe: {ingredients: [itemIds.talismans.air, itemIds.tiaras.blank]}
+        recipe: { ingredients: [itemIds.talismans.air, itemIds.tiaras.blank] }
     }],
     ['mind', {
         id: itemIds.tiaras.mind,
         config: 2,
         level: 1,
         xp: 27.5,
-        recipe: {ingredients: [itemIds.talismans.mind, itemIds.tiaras.blank]}
+        recipe: { ingredients: [itemIds.talismans.mind, itemIds.tiaras.blank] }
     }],
     ['water', {
         id: itemIds.tiaras.water,
         config: 4,
         level: 1,
         xp: 30,
-        recipe: {ingredients: [itemIds.talismans.water, itemIds.tiaras.blank]}
+        recipe: { ingredients: [itemIds.talismans.water, itemIds.tiaras.blank] }
     }],
     ['body', {
         id: itemIds.tiaras.body,
         config: 32,
         level: 1,
         xp: 37.5,
-        recipe: {ingredients: [itemIds.talismans.body, itemIds.tiaras.blank]}
+        recipe: { ingredients: [itemIds.talismans.body, itemIds.tiaras.blank] }
     }],
     ['earth', {
         id: itemIds.tiaras.earth,
         config: 8,
         level: 1,
         xp: 32.5,
-        recipe: {ingredients: [itemIds.talismans.earth, itemIds.tiaras.blank]}
+        recipe: { ingredients: [itemIds.talismans.earth, itemIds.tiaras.blank] }
     }],
     ['fire', {
         id: itemIds.tiaras.fire,
         config: 16,
         level: 1,
         xp: 35,
-        recipe: {ingredients: [itemIds.talismans.fire, itemIds.tiaras.blank]}
+        recipe: { ingredients: [itemIds.talismans.fire, itemIds.tiaras.blank] }
     }],
     ['cosmic', {
         id: itemIds.tiaras.cosmic,
         config: 64,
         level: 1,
         xp: 40,
-        recipe: {ingredients: [itemIds.talismans.cosmic, itemIds.tiaras.blank]}
+        recipe: { ingredients: [itemIds.talismans.cosmic, itemIds.tiaras.blank] }
     }],
     ['nature', {
         id: itemIds.tiaras.nature,
         config: 256,
         level: 1,
         xp: 45,
-        recipe: {ingredients: [itemIds.talismans.nature, itemIds.tiaras.blank]}
+        recipe: { ingredients: [itemIds.talismans.nature, itemIds.tiaras.blank] }
     }],
     ['chaos', {
         id: itemIds.tiaras.chaos,
         config: 128,
         level: 1,
         xp: 42.5,
-        recipe: {ingredients: [itemIds.talismans.chaos, itemIds.tiaras.blank]}
+        recipe: { ingredients: [itemIds.talismans.chaos, itemIds.tiaras.blank] }
     }],
     ['law', {
         id: itemIds.tiaras.law,
         config: 512,
         level: 1,
         xp: 47.5,
-        recipe: {ingredients: [itemIds.talismans.law, itemIds.tiaras.blank]}
+        recipe: { ingredients: [itemIds.talismans.law, itemIds.tiaras.blank] }
     }],
     ['death', {
         id: itemIds.tiaras.death,
         config: 1024,
         level: 1,
         xp: 50,
-        recipe: {ingredients: [itemIds.talismans.death, itemIds.tiaras.blank]}
+        recipe: { ingredients: [itemIds.talismans.death, itemIds.tiaras.blank] }
     }],
 ]);
 
 export const talismans: Map<string, RunecraftingTalisman> = new Map<string, RunecraftingTalisman>([
-    ['air', {id: itemIds.talismans.air}],
-    ['mind', {id: itemIds.talismans.mind}],
-    ['water', {id: itemIds.talismans.water}],
-    ['body', {id: itemIds.talismans.body}],
-    ['earth', {id: itemIds.talismans.earth}],
-    ['fire', {id: itemIds.talismans.fire}],
-    ['cosmic', {id: itemIds.talismans.cosmic}],
-    ['nature', {id: itemIds.talismans.nature}],
-    ['chaos', {id: itemIds.talismans.chaos}],
-    ['law', {id: itemIds.talismans.law}],
-    ['death', {id: itemIds.talismans.death}],
-    ['elemental', {id: itemIds.talismans.elemental}],
+    ['air', { id: itemIds.talismans.air }],
+    ['mind', { id: itemIds.talismans.mind }],
+    ['water', { id: itemIds.talismans.water }],
+    ['body', { id: itemIds.talismans.body }],
+    ['earth', { id: itemIds.talismans.earth }],
+    ['fire', { id: itemIds.talismans.fire }],
+    ['cosmic', { id: itemIds.talismans.cosmic }],
+    ['nature', { id: itemIds.talismans.nature }],
+    ['chaos', { id: itemIds.talismans.chaos }],
+    ['law', { id: itemIds.talismans.law }],
+    ['death', { id: itemIds.talismans.death }],
+    ['elemental', { id: itemIds.talismans.elemental }],
 ]);
 
 export const altars: Map<string, RunecraftingAltar> = new Map<string, RunecraftingAltar>([

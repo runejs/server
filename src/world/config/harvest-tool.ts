@@ -29,23 +29,23 @@ export enum Axe {
 
 
 const Pickaxes: HarvestTool[] = [
-    {itemId: 1265, level: 1, animation: 625},
-    {itemId: 1267, level: 1, animation: 626},
-    {itemId: 1269, level: 6, animation: 627},
-    {itemId: 1273, level: 21, animation: 629},
-    {itemId: 1271, level: 31, animation: 628},
-    {itemId: 1275, level: 41, animation: 624}
+    { itemId: 1265, level: 1, animation: 625 },
+    { itemId: 1267, level: 1, animation: 626 },
+    { itemId: 1269, level: 6, animation: 627 },
+    { itemId: 1273, level: 21, animation: 629 },
+    { itemId: 1271, level: 31, animation: 628 },
+    { itemId: 1275, level: 41, animation: 624 }
 ];
 
 
 const Axes: HarvestTool[] = [
-    {itemId: 1351, level: 1, animation: 879},
-    {itemId: 1349, level: 1, animation: 877},
-    {itemId: 1353, level: 6, animation: 875},
-    {itemId: 1355, level: 21, animation: 871},
-    {itemId: 1357, level: 31, animation: 869},
-    {itemId: 1359, level: 41, animation: 867},
-    {itemId: 6739, level: 61, animation: 2846}
+    { itemId: 1351, level: 1, animation: 879 },
+    { itemId: 1349, level: 1, animation: 877 },
+    { itemId: 1353, level: 6, animation: 875 },
+    { itemId: 1355, level: 21, animation: 871 },
+    { itemId: 1357, level: 31, animation: 869 },
+    { itemId: 1359, level: 41, animation: 867 },
+    { itemId: 6739, level: 61, animation: 2846 }
 ];
 
 /**

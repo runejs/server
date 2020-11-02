@@ -4,7 +4,7 @@ import { npcIds } from '@server/world/config/npc-ids';
 
 const talkTo : npcAction = (details) => {
     const { player, npc } = details;
-    dialogue([player, {npc, key: 'wilough'}, {npc: npcIds.shilop, key: 'shilop'}], [
+    dialogue([player, { npc, key: 'wilough' }, { npc: npcIds.shilop, key: 'shilop' }], [
         player => [Emote.GENERIC, `Hello again.`],
         wilough => [Emote.GENERIC, `You think you're tough do you?`],
         player => [Emote.GENERIC, `Pardon?`],

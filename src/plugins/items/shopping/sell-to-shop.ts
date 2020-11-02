@@ -77,7 +77,7 @@ export const action: itemAction = (details) => {
 
         if(coinsIndex === -1) {
             coinsIndex = inventory.getFirstOpenSlot();
-            inventory.set(coinsIndex, {itemId: itemIds.coins, amount: sellPrice});
+            inventory.set(coinsIndex, { itemId: itemIds.coins, amount: sellPrice });
         } else {
             inventory.items[coinsIndex].amount += sellPrice;
         }

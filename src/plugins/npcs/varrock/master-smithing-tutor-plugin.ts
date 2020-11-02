@@ -6,7 +6,7 @@ import { npcIds } from '@server/world/config/npc-ids';
 
 const talkTo : npcAction = (details) => {
     const { player, npc } = details;
-    dialogue([player, {npc, key: 'tutor'}], [
+    dialogue([player, { npc, key: 'tutor' }], [
         player => [Emote.GENERIC, `Hello.`],
         tutor => [Emote.GENERIC, `Well met! Are you interested in hearing about the art of smithing?`],
         options => [

@@ -3,13 +3,13 @@ import { dialogueAction } from '@server/world/actor/player/dialogue-action';
 import { World } from '@server/world';
 import { Position } from '@server/world/position';
 
-const planes = {min: 0, max: 3};
+const planes = { min: 0, max: 3 };
 const validate: (level: number) => boolean = (level) => {
     return planes.min <= level && level <= planes.max;
 }; //TODO: prevent no-clipping.
 
 export const action: objectAction = (details) => {
-    const {player, option} = details;
+    const { player, option } = details;
 
     if (option === 'climb') {
         dialogueAction(player)
@@ -24,7 +24,7 @@ export const action: objectAction = (details) => {
                 switch (d.action) {
                     case 1:
                     case 2:
-                        action({...details, option: `climb-${(d.action === 1 ? 'up' : 'down')}`});
+                        action({ ...details, option: `climb-${(d.action === 1 ? 'up' : 'down')}` });
                         return;
                 }
             });
@@ -32,7 +32,7 @@ export const action: objectAction = (details) => {
     }
 
     const up = option === 'climb-up';
-    const {position} = player;
+    const { position } = player;
     const level = position.level + (up ? 1 : -1);
 
     if (!validate(level)) return;

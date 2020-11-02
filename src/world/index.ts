@@ -228,7 +228,7 @@ export class World {
      * @param newObjectInCache Whether or not the object being added is the original game-cache object.
      */
     public toggleLocationObjects(newObject: LocationObject, oldObject: LocationObject, newPosition: Position, oldPosition: Position,
-                                 newChunk: Chunk, oldChunk: Chunk, newObjectInCache: boolean): void {
+        newChunk: Chunk, oldChunk: Chunk, newObjectInCache: boolean): void {
         if(newObjectInCache) {
             this.deleteRemovedLocationObjectMarker(newObject, newPosition, newChunk);
             this.deleteAddedLocationObjectMarker(oldObject, oldPosition, oldChunk);

@@ -18,7 +18,7 @@ import { Item } from '@server/world/items/item';
 
 
 const enterAltar: itemOnObjectAction = (details: ItemOnObjectActionData) => {
-    const {player, object, item} = details;
+    const { player, object, item } = details;
     const altar: RunecraftingAltar = getEntityByAttr(altars, 'entranceId', object.objectId);
     const rune: RunecraftingRune = getEntityByAttr(runes, 'altar.entranceId', object.objectId);
 
@@ -54,7 +54,7 @@ function finishEnterAltar(player: Player, item: Item, altar: RunecraftingAltar):
 
 
 const exitAltar: objectAction = (details: ObjectActionData) => {
-    const {player, object} = details;
+    const { player, object } = details;
     const altar = getEntityByAttr(altars, 'portalId', object.objectId);
     player.teleport(altar.exit);
 };
