@@ -13,7 +13,7 @@ export const action: objectAction = (details) => {
 
     if (option === 'climb') {
         dialogueAction(player)
-            .then(d => d.options(
+            .then(async d => d.options(
                 `Climb up or down the ${details.objectDefinition.name.toLowerCase()}?`,
                 [
                     `Climb up the ${details.objectDefinition.name.toLowerCase()}.`,
@@ -24,8 +24,7 @@ export const action: objectAction = (details) => {
                 switch (d.action) {
                     case 1:
                     case 2:
-                        const direction = d.action === 1 ? 'up' : 'down';
-                        action({...details, option: `climb-${direction}`});
+                        action({...details, option: `climb-${(d.action === 1 ? 'up' : 'down')}`});
                         return;
                 }
             });

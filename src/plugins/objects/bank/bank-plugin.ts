@@ -189,7 +189,7 @@ export const btnAction: buttonAction = (details) => {
         98: {setting: 'bankInsertMode', value: 0},
         99: {setting: 'bankInsertMode', value: 1},
     };
-    if (!settingsMappings.hasOwnProperty(buttonId)) {
+    if (!settingsMappings[buttonId]) {
         return;
     }
 

@@ -357,7 +357,7 @@ export const combinationRunes: Map<string, RunecraftingCombinationRune> = new Ma
     }]
 ]);
 
-export function getEntityByAttr<T>(entities: Map<any, T>, attr: string, value: any): T {
+export function getEntityByAttr<T>(entities: Map<any, T>, attr: string, value: unknown): T {
     let entity = undefined;
     const splits = attr.split('.');
 
@@ -381,7 +381,7 @@ export function getEntityByAttr<T>(entities: Map<any, T>, attr: string, value: a
 export function getEntityIds<T>(entities: Map<any, T>, property: keyof T): number[] {
     const entityIds : number[] = [];
     entities.forEach((entity: T) => {
-        if(entity.hasOwnProperty(property) && typeof entity[property] === 'number') {
+        if(entity[property] && typeof entity[property] === 'number') {
             const tempnum: number = entity[property] as any;
             entityIds.push(tempnum);
         }

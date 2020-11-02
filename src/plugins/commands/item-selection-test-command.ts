@@ -1,5 +1,6 @@
 import { commandAction } from '@server/world/action/player-command-action';
 import { itemSelectionDialogue } from '@server/world/actor/dialogue';
+import { logger } from '@runejs/core';
 
 const action: commandAction = async (details) => {
     const { player } = details;
@@ -17,7 +18,9 @@ const action: commandAction = async (details) => {
         }
 
         player.sendMessage(`Player selected itemId ${ choice.itemId } with amount ${ choice.amount }`);
-    } catch(error) {}
+    } catch(error) {
+        logger.error(error);
+    }
 };
 
 export default {

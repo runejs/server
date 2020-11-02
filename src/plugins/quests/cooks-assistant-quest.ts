@@ -15,7 +15,7 @@ const quest: Quest = {
     stages: {
         NOT_STARTED: `I can start this quest by speaking to the <col=800000>Cook</col> in the ` +
             `<col=800000>Kitchen</col> on the ground floor of <col=800000>Lumbridge Castle</col>.`,
-        COLLECTING: (player: Player) => {
+        COLLECTING: (player: Player): string => {
             let questLog = `It's the <col=800000>Duke of Lumbridge's</col> birthday and I have to help ` +
                 `his <col=800000>Cook</col> make him a <col=800000>birthday cake.</col> To do this I need to ` +
                 `bring him the following ingredients:\n`;

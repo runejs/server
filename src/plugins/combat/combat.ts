@@ -148,9 +148,9 @@ class Combat {
 
         if(victim instanceof Npc) {
             victim.kill(true);
-        } else if(victim instanceof Player) {
-
-        }
+        }/* else if(victim instanceof Player) {
+            // @TODO
+        }*/
 
         world.spawnWorldItem(itemIds.bones, deathPosition, this.assailant instanceof Player ? this.assailant : undefined, 300);
     }

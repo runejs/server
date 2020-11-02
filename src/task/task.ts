@@ -12,6 +12,6 @@ export const schedule = async (ticks: number): Promise<number> => {
     return timer(ticks * World.TICK_LENGTH).toPromise();
 };
 
-export const wait = async (waitLength): Promise<void> => {
+export const wait = async (waitLength: number): Promise<void> => {
     return of(null).pipe(delay(waitLength)).toPromise();
 };

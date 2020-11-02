@@ -1,4 +1,5 @@
 import { Action } from '@server/world/action';
+import { Player } from '@server/world/actor/player/player';
 
 export interface Quest {
     // The unique ID string for the quest.
@@ -11,11 +12,11 @@ export interface Quest {
     points: number;
     // The stages that the quest consists of. The given string should be the contents of the quest journal when opened for
     // that specific quest stage. A string or a function returning a string can be provided.
-    stages: { [key: string]: () => void | string | { color: number, text: string } };
+    stages: { [key: string]: ((player?: Player) => void) | string | { color: number, text: string } };
     // Data for what to show on the "Quest Complete" widget.
     completion: {
         rewards: string[];
-        onComplete: () => void;
+        onComplete: (player?: Player) => void;
         modelId?: number;
         itemId?: number;
         modelRotationX?: number;

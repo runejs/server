@@ -210,7 +210,7 @@ const smeltProduct = (details: ButtonActionData, bar: Bar, count: number) => {
 
     const theKnightsSwordQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
     if (bar.quest !== undefined && (theKnightsSwordQuest == undefined || theKnightsSwordQuest.stage !== 'COMPLETE')) {
-        details.player.sendMessage(`You need to complete The Knight\´s Sword quest first.`, true);
+        details.player.sendMessage(`You need to complete The Knight's Sword quest first.`, true);
         return;
     }
 
@@ -270,18 +270,15 @@ export const buttonClicked : buttonAction = (details) => {
     if (!product.takesInput) {
         smeltProduct(details, product.bar, product.count);
     } else {
-        let numericInputSpinSubscription: Subscription;
-        let actionCancelledSpinSubscription: Subscription;
-
-        numericInputSpinSubscription = details.player.numericInputEvent.subscribe((number) => {
-            actionCancelledSpinSubscription.unsubscribe();
-            numericInputSpinSubscription.unsubscribe();
+        const numericInputSpinSubscription = details.player.numericInputEvent.subscribe((number) => {
+            actionCancelledSpinSubscription?.unsubscribe();
+            numericInputSpinSubscription?.unsubscribe();
             smeltProduct(details, product.bar, number);
         });
 
-        actionCancelledSpinSubscription = details.player.actionsCancelled.subscribe(() => {
-            actionCancelledSpinSubscription.unsubscribe();
-            numericInputSpinSubscription.unsubscribe();
+        const actionCancelledSpinSubscription = details.player.actionsCancelled.subscribe(() => {
+            actionCancelledSpinSubscription?.unsubscribe();
+            numericInputSpinSubscription?.unsubscribe();
         });
 
         details.player.outgoingPackets.showNumberInputDialogue();

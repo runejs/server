@@ -156,20 +156,18 @@ export const buttonClicked: buttonAction = (details) => {
         // If the player has not chosen make X, we dont need to get input and can just start the crafting
         spinProduct(details, product.spinnable, product.count);
     } else {
-        let numericInputSpinSub: Subscription;
-        let actionCancelledSpinSub: Subscription;
         // We should prepare for a number to be sent from the client
-        numericInputSpinSub = details.player.numericInputEvent.subscribe((number) => {
-            actionCancelledSpinSub.unsubscribe();
-            numericInputSpinSub.unsubscribe();
+        const numericInputSpinSub = details.player.numericInputEvent.subscribe((number) => {
+            actionCancelledSpinSub?.unsubscribe();
+            numericInputSpinSub?.unsubscribe();
             // When a number is recieved we can start crafting the product
             spinProduct(details, product.spinnable, number);
         });
         // If the player moves or cancels the number input, we do not want to wait for input, as they could be depositing
         // items into their bank.
-        actionCancelledSpinSub = details.player.actionsCancelled.subscribe(() => {
-            actionCancelledSpinSub.unsubscribe();
-            numericInputSpinSub.unsubscribe();
+        const actionCancelledSpinSub = details.player.actionsCancelled.subscribe(() => {
+            actionCancelledSpinSub?.unsubscribe();
+            numericInputSpinSub?.unsubscribe();
         });
         // Ask the player to enter how many they want to create
         details.player.outgoingPackets.showNumberInputDialogue();

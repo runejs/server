@@ -22,12 +22,12 @@ function milkCow(details: { objectDefinition: LocationObjectDefinition, player: 
         player.sendMessage(`You milk the ${objectDefinition.name} and receive some milk.`);
     } else {
         dialogueAction(player)
-            .then(d => d.npc(npcIds.gillieGroats, DialogueEmote.LAUGH_1, [`Tee hee! You've never milked a cow before, have you?`]))
-            .then(d => d.player(DialogueEmote.CALM_TALK_1, ['Erm... No. How could you tell?']))
-            .then(d => d.npc(npcIds.gillieGroats, DialogueEmote.LAUGH_2, [`Because you're spilling milk all over the floor. What a`, 'waste! You need something to hold the milk.']))
-            .then(d => d.player(DialogueEmote.CONSIDERING, [`Ah yes, I really should have guessed that one, shouldn't`, 'I?']))
-            .then(d => d.npc(npcIds.gillieGroats, DialogueEmote.LAUGH_2, [`You're from the city aren't you... Try it again with a`, `${emptyBucketItem.name.toLowerCase()}.`]))
-            .then(d => d.player(DialogueEmote.CALM_TALK_2, [`Right, I'll do that.`]))
+            .then(async d => d.npc(npcIds.gillieGroats, DialogueEmote.LAUGH_1, [`Tee hee! You've never milked a cow before, have you?`]))
+            .then(async d => d.player(DialogueEmote.CALM_TALK_1, ['Erm... No. How could you tell?']))
+            .then(async d => d.npc(npcIds.gillieGroats, DialogueEmote.LAUGH_2, [`Because you're spilling milk all over the floor. What a`, 'waste! You need something to hold the milk.']))
+            .then(async d => d.player(DialogueEmote.CONSIDERING, [`Ah yes, I really should have guessed that one, shouldn't`, 'I?']))
+            .then(async d => d.npc(npcIds.gillieGroats, DialogueEmote.LAUGH_2, [`You're from the city aren't you... Try it again with a`, `${emptyBucketItem.name.toLowerCase()}.`]))
+            .then(async d => d.player(DialogueEmote.CALM_TALK_2, [`Right, I'll do that.`]))
             .then(d => {
                 d.close();
             });

@@ -7,6 +7,7 @@ import { npcAction } from '@server/world/action/npc-action';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Npc } from '@server/world/actor/npc/npc';
+import { logger } from '@runejs/core';
 
 function npcHint(player: Player, npcId: number): void {
     const npc = world.findNearbyNpcsById(player.position, npcId, 10)[0] || null;
@@ -307,7 +308,10 @@ export const guideAction: npcAction = async (details) => {
     if(dialogueHandler) {
         try {
             await dialogueHandler(player, npc);
-        } catch(e) {}
+        } catch(e) {
+            logger.error(e);
+        }
+
         await handleTutorial(player);
     }
 };
