@@ -29,7 +29,6 @@ module.exports = {
             }
         ],
         "@typescript-eslint/member-ordering": "error",
-        "@typescript-eslint/no-var-requires": "error",
         "@typescript-eslint/promise-function-async": "error",
         "@typescript-eslint/quotes": [
             "error",
