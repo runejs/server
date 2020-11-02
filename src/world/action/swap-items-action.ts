@@ -34,7 +34,7 @@ export interface SwapItemsAction extends Action {
     action: swapItemsAction;
 }
 
-const swapItemsActionHandler = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }) => {
+const swapItemsActionHandler = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }): Promise<void> => {
     const swapItemsActions = getActionList('swap_items')
         .filter(plugin => basicNumberFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 

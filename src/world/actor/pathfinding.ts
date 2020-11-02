@@ -60,11 +60,11 @@ export interface PathingOptions {
 
 export class Pathfinding {
 
+    public stopped = false;
     private currentPoint: Point;
     private points: Point[][];
     private closedPoints = new Set<Point>();
     private openPoints = new Set<Point>();
-    public stopped = false;
 
     public constructor(private actor: Actor) {
     }
@@ -101,7 +101,7 @@ export class Pathfinding {
         return { localX, localY, chunk: cornerChunk };
     }
 
-    public async walkTo(position: Position, options: PathingOptions): Promise<void> {
+    public walkTo(position: Position, options: PathingOptions): void {
         if(!options.pathingSearchRadius) {
             options.pathingSearchRadius = 16;
         }
@@ -140,7 +140,7 @@ export class Pathfinding {
         return null;
     }
 
-    public async createTileMap(searchRadius: number = 8): Promise<{ [key: string]: Tile }> {
+    public createTileMap(searchRadius: number = 8): { [key: string]: Tile } {
         const position = this.actor.position;
         const lowestX = position.x - searchRadius;
         const lowestY = position.y - searchRadius;
@@ -301,64 +301,6 @@ export class Pathfinding {
         return path.reverse();
     }
 
-    private calculateCost(point: Point): void {
-        if(!this.currentPoint || !point) {
-            return;
-        }
-
-        const nextStepCost = this.currentPoint.cost + this.calculateCostBetween(this.currentPoint, point);
-
-        if(nextStepCost < point.cost) {
-            this.openPoints.delete(point);
-            this.closedPoints.delete(point);
-        }
-
-        if(!this.openPoints.has(point) && !this.closedPoints.has(point)) {
-            point.parent = this.currentPoint;
-            point.cost = nextStepCost;
-            this.openPoints.add(point);
-        }
-    }
-
-    private calculateCostBetween(current: Point, destination: Point): number {
-        const deltaX = current.x - destination.x;
-        const deltaY = current.y - destination.y;
-        return (Math.abs(deltaX) + Math.abs(deltaY)) * 10;
-    }
-
-    private calculateBestPoint(): Point {
-        let bestPoint: Point = null;
-
-        this.openPoints.forEach(point => {
-            if(!bestPoint) {
-                bestPoint = point;
-            } else if(point.cost < bestPoint.cost) {
-                bestPoint = point;
-            }
-        });
-
-        return bestPoint;
-    }
-
-    private canPathNSEW(position: Position, i: number): boolean {
-        const chunk = world.chunkManager.getChunkForWorldPosition(position);
-        const destinationAdjacency: number[][] = chunk.collisionMap.adjacency;
-        const destinationLocalX: number = position.x - chunk.collisionMap.insetX;
-        const destinationLocalY: number = position.y - chunk.collisionMap.insetY;
-        return Pathfinding.canMoveNSEW(destinationAdjacency, destinationLocalX, destinationLocalY, i);
-    }
-
-    private canPathDiagonally(originX: number, originY: number, position: Position, offsetX: number, offsetY: number,
-                              destMask: number, cornerMask1: number, cornerMask2: number): boolean {
-        const chunk = world.chunkManager.getChunkForWorldPosition(position);
-        const destinationAdjacency: number[][] = chunk.collisionMap.adjacency;
-        const destinationLocalX: number = position.x - chunk.collisionMap.insetX;
-        const destinationLocalY: number = position.y - chunk.collisionMap.insetY;
-        return Pathfinding.canMoveDiagonally(position, destinationAdjacency, destinationLocalX, destinationLocalY,
-            originX, originY, offsetX, offsetY, destMask, cornerMask1, cornerMask2);
-    }
-
-
     public canMoveTo(origin: Position, destination: Position): boolean {
         const destinationChunk: Chunk = world.chunkManager.getChunkForWorldPosition(destination);
         const tile: Tile = destinationChunk.getTile(destination);
@@ -434,6 +376,63 @@ export class Pathfinding {
         }
 
         return true;
+    }
+
+    private calculateCost(point: Point): void {
+        if(!this.currentPoint || !point) {
+            return;
+        }
+
+        const nextStepCost = this.currentPoint.cost + this.calculateCostBetween(this.currentPoint, point);
+
+        if(nextStepCost < point.cost) {
+            this.openPoints.delete(point);
+            this.closedPoints.delete(point);
+        }
+
+        if(!this.openPoints.has(point) && !this.closedPoints.has(point)) {
+            point.parent = this.currentPoint;
+            point.cost = nextStepCost;
+            this.openPoints.add(point);
+        }
+    }
+
+    private calculateCostBetween(current: Point, destination: Point): number {
+        const deltaX = current.x - destination.x;
+        const deltaY = current.y - destination.y;
+        return (Math.abs(deltaX) + Math.abs(deltaY)) * 10;
+    }
+
+    private calculateBestPoint(): Point {
+        let bestPoint: Point = null;
+
+        this.openPoints.forEach(point => {
+            if(!bestPoint) {
+                bestPoint = point;
+            } else if(point.cost < bestPoint.cost) {
+                bestPoint = point;
+            }
+        });
+
+        return bestPoint;
+    }
+
+    private canPathNSEW(position: Position, i: number): boolean {
+        const chunk = world.chunkManager.getChunkForWorldPosition(position);
+        const destinationAdjacency: number[][] = chunk.collisionMap.adjacency;
+        const destinationLocalX: number = position.x - chunk.collisionMap.insetX;
+        const destinationLocalY: number = position.y - chunk.collisionMap.insetY;
+        return Pathfinding.canMoveNSEW(destinationAdjacency, destinationLocalX, destinationLocalY, i);
+    }
+
+    private canPathDiagonally(originX: number, originY: number, position: Position, offsetX: number, offsetY: number,
+                              destMask: number, cornerMask1: number, cornerMask2: number): boolean {
+        const chunk = world.chunkManager.getChunkForWorldPosition(position);
+        const destinationAdjacency: number[][] = chunk.collisionMap.adjacency;
+        const destinationLocalX: number = position.x - chunk.collisionMap.insetX;
+        const destinationLocalY: number = position.y - chunk.collisionMap.insetY;
+        return Pathfinding.canMoveDiagonally(position, destinationAdjacency, destinationLocalX, destinationLocalY,
+            originX, originY, offsetX, offsetY, destMask, cornerMask1, cornerMask2);
     }
 
 }

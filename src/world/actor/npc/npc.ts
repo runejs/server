@@ -31,14 +31,15 @@ export interface NpcInitAction extends Action {
  */
 export class Npc extends Actor {
 
-    public id: number;
     public readonly uuid: string;
+    public readonly options: string[];
+    public readonly initialPosition: Position;
+    public id: number;
+
     private _name: string;
     private _combatLevel: number;
     private _animations: NpcAnimations;
-    public readonly options: string[];
     private _movementRadius: number = 0;
-    public readonly initialPosition: Position;
     private quadtreeKey: QuadtreeKey = null;
     private _exists: boolean = true;
     private npcSpawn: NpcSpawn;

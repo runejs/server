@@ -33,7 +33,7 @@ export interface MoveItemAction extends Action {
     action: moveItemAction;
 }
 
-const moveItemActionHandler = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }) => {
+const moveItemActionHandler = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }): Promise<void> => {
     const moveItemActions = getActionList('move_item')
         .filter(plugin => basicNumberFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 

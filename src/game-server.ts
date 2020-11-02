@@ -21,7 +21,7 @@ export async function loadPlugins(): Promise<void> {
     const plugins = await parsePluginFiles();
 
     plugins.map(plugin => plugin.actions).reduce((a, b) => a.concat(b)).forEach(action => {
-        if(!pluginActions.hasOwnProperty(action.type)) {
+        if(!pluginActions[action.type]) {
             pluginActions[action.type] = [];
         }
 
@@ -65,6 +65,6 @@ export async function runGameServer(): Promise<void> {
     openGameServer(serverConfig.host, serverConfig.port);
 
     watchSource('src/').subscribe(() => world.saveOnlinePlayers());
-    watchForChanges('dist/plugins/', /[\/\\]plugins[\/\\]/);
-    watchForChanges('dist/net/inbound-packets/', /[\/\\]inbound-packets[\/\\]/);
+    watchForChanges('dist/plugins/', /[/\\]plugins[/\\]/);
+    watchForChanges('dist/net/inbound-packets/', /[/\\]inbound-packets[/\\]/);
 }

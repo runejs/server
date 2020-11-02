@@ -550,12 +550,8 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 
 async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTree, tag?: string, additionalOptions?: AdditionalOptions): Promise<boolean> {
     for(let i = 0; i < dialogueTree.length; i++) {
-        try {
-            tag = await runDialogueAction(player, dialogueTree[i], tag, additionalOptions);
-            player.activeWidget = null;
-        } catch(error) {
-            throw error;
-        }
+        tag = await runDialogueAction(player, dialogueTree[i], tag, additionalOptions);
+        player.activeWidget = null;
     }
 
     return tag === undefined;

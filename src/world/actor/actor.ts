@@ -95,7 +95,7 @@ export abstract class Actor {
         this.metadata['following'] = target;
 
         this.moveBehind(target);
-        const subscription = target.movementEvent.subscribe(() => this.moveBehind(target));
+        const subscription = target.movementEvent.subscribe(async () => this.moveBehind(target));
 
         this.actionsCancelled.pipe(
             filter(type => type !== 'pathing-movement'),
@@ -140,7 +140,7 @@ export abstract class Actor {
         this.metadata['tailing'] = target;
 
         this.moveTo(target);
-        const subscription = target.movementEvent.subscribe(() => this.moveTo(target));
+        const subscription = target.movementEvent.subscribe(async () => this.moveTo(target));
 
         this.actionsCancelled.pipe(
             filter(type => type !== 'pathing-movement'),
