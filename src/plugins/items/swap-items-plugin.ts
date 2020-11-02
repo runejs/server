@@ -6,7 +6,9 @@ import { Player } from '@server/world/actor/player/player';
 type WidgetDetail = [ number, number, (player: Player) => ItemContainer ];
 
 const swappableWidgets: WidgetDetail[] = [
+    // Player Inventory
     [ widgets.inventory.widgetId, widgets.inventory.containerId, player => player.inventory ],
+    // Player Bank Screen
     [ widgets.bank.screenWidget.widgetId, widgets.bank.screenWidget.containerId, player => player.bank ]
 ];
 

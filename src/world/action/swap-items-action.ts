@@ -1,8 +1,6 @@
 import { Player } from '../actor/player/player';
-import { widgets } from '../config/widget';
-import { Action, getActionList, walkToAction } from '@server/world/action/index';
-import { questFilter } from '@server/plugins/plugin';
-import { basicNumberFilter, pluginFilter } from '@server/plugins/plugin-loader';
+import { Action, getActionList } from '@server/world/action/index';
+import { basicNumberFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
 
 
@@ -38,7 +36,7 @@ export interface SwapItemsAction extends Action {
 
 const swapItemsActionHandler = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }) => {
     const swapItemsActions = getActionList('swap_items')
-        .filter(plugin => questFilter(player, plugin) && basicNumberFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
+        .filter(plugin => basicNumberFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 
     if(!swapItemsActions || swapItemsActions.length === 0) {
         await player.sendMessage(`Unhandled Swap Items action: widget[${widget.widgetId}] container[${widget.containerId}] fromSlot[${fromSlot} toSlot${toSlot}`);
