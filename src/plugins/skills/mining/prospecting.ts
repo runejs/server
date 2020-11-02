@@ -1,6 +1,6 @@
 import { objectAction } from '@server/world/action/object-action';
 import { soundIds } from '@server/world/config/sound-ids';
-import { World } from '@server/world/world';
+import { World } from '@server/world';
 import { cache } from '@server/game-server';
 import { getAllOreIds, getOreFromRock } from '@server/world/config/harvestable-object';
 

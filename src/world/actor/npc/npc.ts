@@ -5,7 +5,7 @@ import uuidv4 from 'uuid/v4';
 import { Position } from '@server/world/position';
 import { pluginActions, world } from '@server/game-server';
 import { directionData } from '@server/world/direction';
-import { QuadtreeKey } from '@server/world/world';
+import { QuadtreeKey } from '@server/world';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
 import { Action, actionHandler } from '@server/world/action';
 

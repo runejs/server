@@ -5,7 +5,7 @@ import { Actor } from '@server/world/actor/actor';
 import { Player } from '@server/world/actor/player/player';
 import { timer } from 'rxjs';
 import { Skills } from '@server/world/actor/skills';
-import { World } from '@server/world/world';
+import { World } from '@server/world';
 import { filter, take } from 'rxjs/operators';
 import { animationIds } from '@server/world/config/animation-ids';
 import { Npc } from '@server/world/actor/npc/npc';

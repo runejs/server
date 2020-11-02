@@ -1,5 +1,5 @@
 import { of, timer } from 'rxjs';
-import { World } from '@server/world/world';
+import { World } from '@server/world';
 import { delay } from 'rxjs/operators';
 
 export abstract class Task<T> {

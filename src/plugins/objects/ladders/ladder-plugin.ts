@@ -1,6 +1,6 @@
 import { objectAction } from '@server/world/action/object-action';
 import { dialogueAction } from '@server/world/actor/player/dialogue-action';
-import { World } from '@server/world/world';
+import { World } from '@server/world';
 import { Position } from '@server/world/position';
 
 const planes = {min: 0, max: 3};

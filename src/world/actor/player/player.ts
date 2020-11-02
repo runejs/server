@@ -21,7 +21,7 @@ import { Npc } from '../npc/npc';
 import { NpcUpdateTask } from './updating/npc-update-task';
 import { Observable, Subject } from 'rxjs';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
-import { QuadtreeKey } from '@server/world/world';
+import { QuadtreeKey } from '@server/world';
 import { daysSinceLastLogin } from '@server/util/time';
 import { itemIds } from '@server/world/config/item-ids';
 import { dialogueAction } from '@server/world/actor/player/dialogue-action';

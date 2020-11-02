@@ -3,7 +3,7 @@ import { Packet } from '@server/net/packet';
 import { Npc } from '@server/world/actor/npc/npc';
 import { Player } from '../player';
 import { Position } from '@server/world/position';
-import { QuadtreeKey } from '@server/world/world';
+import { QuadtreeKey } from '@server/world';
 import { Actor } from '@server/world/actor/actor';
 import { ByteBuffer } from '@runejs/core';
 

@@ -1,4 +1,4 @@
-import { World } from './world/world';
+import { World } from './world';
 import { logger, parseServerConfig } from '@runejs/core';
 import { Cache } from '@runejs/cache-parser';
 import { ServerConfig } from '@server/net/server/server-config';

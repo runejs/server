@@ -1,6 +1,6 @@
 import { playerOptions } from '../../world/actor/player/player';
 import { world } from '../../game-server';
-import { World } from '../../world/world';
+import { World } from '../../world';
 import { logger } from '@runejs/core';
 import { actionHandler } from '../../world/action';
 

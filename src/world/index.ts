@@ -6,7 +6,7 @@ import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { ItemDetails, parseItemData } from './config/item-data';
 import { ExamineCache } from './config/examine-data';
-import { cache, loadPlugins, pluginActions } from '@server/game-server';
+import { cache, loadPlugins } from '@server/game-server';
 import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './actor/npc/npc';

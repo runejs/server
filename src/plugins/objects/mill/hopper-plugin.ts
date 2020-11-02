@@ -1,4 +1,4 @@
-import { World } from '@server/world/world';
+import { World } from '@server/world';
 import { itemIds } from '@server/world/config/item-ids';
 import { itemOnObjectAction } from '@server/world/action/item-on-object-action';
 

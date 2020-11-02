@@ -1,6 +1,6 @@
 import { objectAction } from '@server/world/action/object-action';
 import { objectIds } from '@server/world/config/object-ids';
-import { World } from '@server/world/world';
+import { World } from '@server/world';
 import { animationIds } from '@server/world/config/animation-ids';
 
 export const enterDungeon: objectAction = (details) => {

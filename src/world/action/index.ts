@@ -1,7 +1,7 @@
 import { Player, PlayerInitAction } from '@server/world/actor/player/player';
 import { Position } from '@server/world/position';
 import { Subject, timer } from 'rxjs';
-import { World } from '@server/world/world';
+import { World } from '@server/world';
 import { LocationObject } from '@runejs/cache-parser';
 import { Npc, NpcInitAction } from '@server/world/actor/npc/npc';
 import { NpcAction } from '@server/world/action/npc-action';
