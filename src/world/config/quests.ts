@@ -11,11 +11,11 @@ export interface Quest {
     points: number;
     // The stages that the quest consists of. The given string should be the contents of the quest journal when opened for
     // that specific quest stage. A string or a function returning a string can be provided.
-    stages: { [key: string]: Function | string | { color: number, text: string } };
+    stages: { [key: string]: () => void | string | { color: number, text: string } };
     // Data for what to show on the "Quest Complete" widget.
     completion: {
         rewards: string[];
-        onComplete: Function;
+        onComplete: () => void;
         modelId?: number;
         itemId?: number;
         modelRotationX?: number;

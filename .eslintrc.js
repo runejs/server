@@ -15,16 +15,15 @@ module.exports = {
         "plugin:@typescript-eslint/recommended"
     ],
     "rules": {
-        "@typescript-eslint/indent": "error",
         "@typescript-eslint/member-delimiter-style": [
             "error",
             {
                 "multiline": {
-                    "delimiter": "none",
+                    "delimiter": "semi",
                     "requireLast": true
                 },
                 "singleline": {
-                    "delimiter": "semi",
+                    "delimiter": "comma",
                     "requireLast": false
                 }
             }
@@ -34,13 +33,17 @@ module.exports = {
         "@typescript-eslint/promise-function-async": "error",
         "@typescript-eslint/quotes": [
             "error",
-            "single"
+            "single",
+            { "allowTemplateLiterals": true }
         ],
         "@typescript-eslint/require-await": "error",
         "@typescript-eslint/triple-slash-reference": "error",
         "max-len": "off",
         "no-var": "error",
         "prefer-const": "error",
+        "@typescript-eslint/no-inferrable-types": 0,
+        "@typescript-eslint/no-empty-function": 0,
+        "@typescript-eslint/no-explicit-any": 0,
         "@typescript-eslint/tslint/config": [
             "error",
             {

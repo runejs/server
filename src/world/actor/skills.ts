@@ -259,7 +259,7 @@ export class Skills extends SkillShortcuts {
 
     private defaultValues(): SkillValue[] {
         const values: SkillValue[] = [];
-        skillDetails.forEach(s => values.push({exp: 0, level: 1}));
+        skillDetails.forEach(() => values.push({exp: 0, level: 1}));
         values[Skill.HITPOINTS] = {exp: 1154, level: 10};
         return values;
     }

@@ -10,10 +10,10 @@ const directionDeltaY = [1, 1, 1, 0, 0, -1, -1, -1];
  */
 export class Position {
 
+    public metadata: { [key: string]: any } = {};
     private _x: number;
     private _y: number;
     private _level: number;
-    public metadata: { [key: string]: any } = {};
 
     public constructor(x: number, y: number, level?: number) {
         this.move(x, y, level);
@@ -136,20 +136,20 @@ export class Position {
         return this._x;
     }
 
-    public get y(): number {
-        return this._y;
-    }
-
-    public get level(): number {
-        return this._level;
-    }
-
     public set x(value: number) {
         this._x = value;
     }
 
+    public get y(): number {
+        return this._y;
+    }
+
     public set y(value: number) {
         this._y = value;
+    }
+
+    public get level(): number {
+        return this._level;
     }
 
     public set level(value: number) {
