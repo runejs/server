@@ -2,7 +2,7 @@ import express, { Request } from 'express';
 import { cache, world } from './game-server';
 import { Player } from './world/actor/player/player';
 import { constants } from 'http2';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 import { ItemData, ItemDetails, saveItemData } from './world/config/item-data';
 import * as Joi from '@hapi/joi';
 import bodyParser from 'body-parser';

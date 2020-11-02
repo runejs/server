@@ -4,7 +4,7 @@ import { Packet, PacketType } from '@server/net/packet';
 import { Npc } from '@server/world/actor/npc/npc';
 import { world } from '@server/game-server';
 import { registerNewActors, updateTrackedActors } from './actor-updating';
-import { ByteBuffer } from '@runejs/byte-buffer';
+import { ByteBuffer } from '@runejs/core';
 
 /**
  * Handles the chonky npc updating packet for a specific player.

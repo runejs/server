@@ -1,5 +1,5 @@
 import { longToString } from '../../util/strings';
-import { world } from '@server/game-server';
+import { world } from '../../game-server';
 
 export default {
     opcode: 207,

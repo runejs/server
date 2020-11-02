@@ -6,10 +6,9 @@ import { Skills } from '@server/world/actor/skills';
 import { Item } from '@server/world/items/item';
 import { Position } from '@server/world/position';
 import { DirectionData, directionFromIndex } from '@server/world/direction';
-import { CombatAction } from '@server/world/actor/player/action/combat-action';
 import { Pathfinding } from '@server/world/actor/pathfinding';
 import { Subject } from 'rxjs';
-import { ActionCancelType } from '@server/world/actor/player/action/action';
+import { ActionCancelType } from '@server/world/action';
 import { filter, take } from 'rxjs/operators';
 
 /**
@@ -35,7 +34,6 @@ export abstract class Actor {
     private _runDirection: number;
     private _faceDirection: number;
     private _busy: boolean;
-    private _combatActions: CombatAction[];
 
     protected constructor() {
         this.updateFlags = new UpdateFlags();
@@ -47,7 +45,6 @@ export abstract class Actor {
         this._bank = new ItemContainer(376);
         this.skills = new Skills(this);
         this._busy = false;
-        this._combatActions = [];
         this.pathfinding = new Pathfinding(this);
         this.actionsCancelled = new Subject<ActionCancelType>();
         this.movementEvent = new Subject<Position>();
@@ -98,7 +95,7 @@ export abstract class Actor {
         this.metadata['following'] = target;
 
         this.moveBehind(target);
-        const subscription = target.movementEvent.subscribe(() => this.moveBehind(target));
+        const subscription = target.movementEvent.subscribe(async () => this.moveBehind(target));
 
         this.actionsCancelled.pipe(
             filter(type => type !== 'pathing-movement'),
@@ -143,7 +140,7 @@ export abstract class Actor {
         this.metadata['tailing'] = target;
 
         this.moveTo(target);
-        const subscription = target.movementEvent.subscribe(() => this.moveTo(target));
+        const subscription = target.movementEvent.subscribe(async () => this.moveTo(target));
 
         this.actionsCancelled.pipe(
             filter(type => type !== 'pathing-movement'),
@@ -191,27 +188,27 @@ export abstract class Actor {
 
     public playAnimation(animation: number | Animation): void {
         if(typeof animation === 'number') {
-            animation = {id: animation, delay: 0};
+            animation = { id: animation, delay: 0 };
         }
 
         this.updateFlags.animation = animation;
     }
 
     public stopAnimation(): void {
-        const animation = {id: -1, delay: 0};
+        const animation = { id: -1, delay: 0 };
         this.updateFlags.animation = animation;
     }
 
     public playGraphics(graphics: number | Graphic): void {
         if(typeof graphics === 'number') {
-            graphics = {id: graphics, delay: 0, height: 120};
+            graphics = { id: graphics, delay: 0, height: 120 };
         }
 
         this.updateFlags.graphics = graphics;
     }
 
     public stopGraphics(): void {
-        const graphics = {id: -1, delay: 0, height: 120};
+        const graphics = { id: -1, delay: 0, height: 120 };
         this.updateFlags.graphics = graphics;
     }
 
@@ -425,9 +422,5 @@ export abstract class Actor {
 
     public set busy(value: boolean) {
         this._busy = value;
-    }
-
-    public get combatActions(): CombatAction[] {
-        return this._combatActions;
     }
 }

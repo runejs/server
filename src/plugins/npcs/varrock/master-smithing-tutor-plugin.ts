@@ -1,5 +1,4 @@
-import { npcAction } from '@server/world/actor/player/action/npc-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { npcAction } from '@server/world/action/npc-action';
 import { dialogue, Emote, execute, goto } from '@server/world/actor/dialogue';
 import { itemIds } from '@server/world/config/item-ids';
 import { widgets } from '@server/world/config/widget';
@@ -7,7 +6,7 @@ import { npcIds } from '@server/world/config/npc-ids';
 
 const talkTo : npcAction = (details) => {
     const { player, npc } = details;
-    dialogue([player, {npc, key: 'tutor'}], [
+    dialogue([player, { npc, key: 'tutor' }], [
         player => [Emote.GENERIC, `Hello.`],
         tutor => [Emote.GENERIC, `Well met! Are you interested in hearing about the art of smithing?`],
         options => [
@@ -68,10 +67,10 @@ const talkTo : npcAction = (details) => {
     ]);
 };
 
-export default new RunePlugin({
-    type: ActionType.NPC_ACTION,
+export default {
+    type: 'npc_action',
     npcIds: [npcIds.masterSmithingTutor],
     options: ['talk-to'],
     walkTo: true,
     action: talkTo
-});
+};

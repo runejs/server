@@ -1,11 +1,10 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { objectIds } from '@server/world/config/object-ids';
 import { widgets, widgetScripts } from '@server/world/config/widget';
-import { objectAction } from '@server/world/actor/player/action/object-action';
+import { objectAction } from '@server/world/action/object-action';
 import { ItemContainer } from '@server/world/items/item-container';
-import { itemAction } from '@server/world/actor/player/action/item-action';
+import { itemAction } from '@server/world/action/item-action';
 import { fromNote, Item, toNote } from '@server/world/items/item';
-import { buttonAction } from '@server/world/actor/player/action/button-action';
+import { buttonAction } from '@server/world/action/button-action';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 import { npcIds } from '@server/world/config/npc-ids';
 
@@ -76,13 +75,13 @@ export const depositItem: itemAction = (details) => {
         countToRemove = itemAmount;
     }
 
-    if (!playerBank.canFit({itemId: itemIdToAdd, amount: countToRemove}, true)) {
+    if (!playerBank.canFit({ itemId: itemIdToAdd, amount: countToRemove }, true)) {
         details.player.sendMessage('Your bank is full.');
         return;
     }
 
 
-    const itemToAdd: Item = {itemId: itemIdToAdd, amount: 0};
+    const itemToAdd: Item = { itemId: itemIdToAdd, amount: 0 };
     while (countToRemove > 0 && playerInventory.has(details.itemId)) {
         const invIndex = playerInventory.findIndex(details.itemId);
         const invItem = playerInventory.items[invIndex];
@@ -150,13 +149,13 @@ export const withdrawItem: itemAction = (details) => {
             countToRemove = slots;
         }
     }
-    if (!playerInventory.canFit({itemId: itemIdToAdd, amount: countToRemove}) || countToRemove === 0) {
+    if (!playerInventory.canFit({ itemId: itemIdToAdd, amount: countToRemove }) || countToRemove === 0) {
         details.player.sendMessage('Your inventory is full.');
         return;
     }
 
 
-    const itemToAdd: Item = {itemId: itemIdToAdd, amount: 0};
+    const itemToAdd: Item = { itemId: itemIdToAdd, amount: 0 };
     while (countToRemove > 0 && playerBank.has(details.itemId)) {
         const invIndex = playerBank.findIndex(details.itemId);
         const invItem = playerBank.items[invIndex];
@@ -171,7 +170,7 @@ export const withdrawItem: itemAction = (details) => {
         }
     }
     for (let i = 0; i < itemToAdd.amount; i++) {
-        playerInventory.add({itemId: itemIdToAdd, amount: 1});
+        playerInventory.add({ itemId: itemIdToAdd, amount: 1 });
     }
 
 
@@ -181,16 +180,16 @@ export const withdrawItem: itemAction = (details) => {
 };
 
 export const btnAction: buttonAction = (details) => {
-    const {player, buttonId} = details;
+    const { player, buttonId } = details;
     player.settingChanged(buttonId);
 
     const settingsMappings = {
-        92: {setting: 'bankWithdrawNoteMode', value: 1},
-        93: {setting: 'bankWithdrawNoteMode', value: 0},
-        98: {setting: 'bankInsertMode', value: 0},
-        99: {setting: 'bankInsertMode', value: 1},
+        92: { setting: 'bankWithdrawNoteMode', value: 1 },
+        93: { setting: 'bankWithdrawNoteMode', value: 0 },
+        98: { setting: 'bankInsertMode', value: 0 },
+        99: { setting: 'bankInsertMode', value: 1 },
     };
-    if (!settingsMappings.hasOwnProperty(buttonId)) {
+    if (!settingsMappings[buttonId]) {
         return;
     }
 
@@ -201,7 +200,7 @@ export const btnAction: buttonAction = (details) => {
 const useBankBoothAction : objectAction = (details) => {
     const { player } = details;
 
-    dialogue([player, {npc: npcIds.banker1, key: 'banker'}], [
+    dialogue([player, { npc: npcIds.banker1, key: 'banker' }], [
         banker => [Emote.HAPPY, `Good day, how can I help you?`],
         options => [
             `I'd Like to access my bank account, please.`, [
@@ -225,26 +224,31 @@ const useBankBoothAction : objectAction = (details) => {
     ]);
 };
 
-export default new RunePlugin([{
-    type: ActionType.OBJECT_ACTION,
+export default [{
+    type: 'object_action',
     objectIds: objectIds.bankBooth,
     options: ['use'],
     walkTo: true,
     action: useBankBoothAction
 }, {
-    type: ActionType.OBJECT_ACTION,
+    type: 'object_action',
     objectIds: objectIds.bankBooth,
     options: ['use-quickly'],
     walkTo: true,
     action: openBankInterface
 }, {
-    type: ActionType.ITEM_ACTION,
+    type: 'item_action',
     widgets: widgets.bank.tabWidget,
     options: ['deposit-1', 'deposit-5', 'deposit-10', 'deposit-all'],
     action: depositItem,
 }, {
-    type: ActionType.ITEM_ACTION,
+    type: 'item_action',
     widgets: widgets.bank.screenWidget,
     options: ['withdraw-1', 'withdraw-5', 'withdraw-10', 'withdraw-all'],
     action: withdrawItem,
-}, {type: ActionType.BUTTON, widgetId: widgets.bank.screenWidget.widgetId, buttonIds: buttonIds, action: btnAction}]);
+}, {
+    type: 'button',
+    widgetId: widgets.bank.screenWidget.widgetId,
+    buttonIds: buttonIds,
+    action: btnAction
+}];

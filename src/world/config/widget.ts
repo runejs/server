@@ -1,4 +1,4 @@
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 export const widgets: any = {
     characterDesign: 269,
@@ -112,8 +112,8 @@ export interface PlayerWidget {
     disablePlayerMovement?: boolean;
     closeOnWalk?: boolean;
     permanent?: boolean;
-    forceClosed?: Function;
-    beforeOpened?: Function;
-    afterOpened?: Function;
+    forceClosed?: () => void;
+    beforeOpened?: () => void;
+    afterOpened?: () => void;
     closed?: Subject<void>;
 }

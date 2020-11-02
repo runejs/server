@@ -9,7 +9,7 @@
         "start:login-server": "node --max-old-space-size=1024 dist/login-server.js",
         "start:update-server": "node --max-old-space-size=1024 dist/update-server.js",
         "start:all": "concurrently \"npm run start:update-server\" \"npm run start:login-server\" \"npm run start:game-server\"",
-        "lint": "tslint --project tsconfig.json",
+        "lint": "eslint -c .eslintrc.js --ext .ts src",
         "fake-players": "concurrently \"npm run build:watch\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers\"",
         "fake-players-tick": "concurrently \"npm run build:watch\" \"node --max-old-space-size=4096 dist/main.js -fakePlayers -tickTime\"",
         "build:watch": "tsc --project tsconfig.json && babel ./src --out-dir dist --extensions \".ts,.tsx,.js\" --source-maps --watch",
@@ -27,10 +27,8 @@
     "license": "GPL-3.0",
     "dependencies": {
         "@hapi/joi": "^16.1.8",
-        "@runejs/byte-buffer": "1.0.8",
         "@runejs/cache-parser": "0.6.3",
         "@runejs/core": "^1.0.0-beta.0",
-        "@runejs/logger": "^1.0.0",
         "@runejs/login-server": "^1.0.0-beta.2",
         "@runejs/update-server": "^1.0.0-beta.0",
         "bcrypt": "^5.0.0",
@@ -65,13 +63,16 @@
         "@types/node": "^12.12.6",
         "@types/uuid": "^3.4.6",
         "@types/yargs": "^13.0.4",
+        "@typescript-eslint/eslint-plugin": "^4.6.0",
+        "@typescript-eslint/eslint-plugin-tslint": "^4.6.0",
+        "@typescript-eslint/parser": "^4.6.0",
         "babel-plugin-module-resolver": "^4.0.0",
         "chokidar": "^3.4.3",
         "concurrently": "^5.1.0",
+        "eslint": "^7.12.1",
         "mkdirp": "^1.0.4",
         "nodemon": "^2.0.6",
         "rimraf": "^3.0.2",
-        "tsconfig-paths": "^3.9.0",
-        "tslint": "^6.1.0"
+        "tsconfig-paths": "^3.9.0"
     }
 }

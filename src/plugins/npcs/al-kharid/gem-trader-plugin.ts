@@ -1,7 +1,6 @@
-import { npcAction } from '@server/world/actor/player/action/npc-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { openShop } from '@server/world/actor/player/action/shop-action';
-import { dialogueAction, DialogueEmote } from '@server/world/actor/player/action/dialogue-action';
+import { npcAction } from '@server/world/action/npc-action';
+import { openShop } from '@server/world/shops/shops';
+import { dialogueAction, DialogueEmote } from '@server/world/actor/player/dialogue-action';
 import { npcIds } from '@server/world/config/npc-ids';
 
 const tradeAction : npcAction = (details)  => {
@@ -9,10 +8,10 @@ const tradeAction : npcAction = (details)  => {
 };
 
 const talkToAction : npcAction = (details) => {
-    const {player, npc} = details;
+    const { player, npc } = details;
     dialogueAction(player)
-        .then(d => d.npc(npc, DialogueEmote.CALM_TALK_1, [ 'Good day to you, traveller.', 'Would you be interested in buying some gems?']))
-        .then(d => d.options('Would you be interested in buying some gems?', ['Yes, please.', 'No, thank you.']))
+        .then(async d => d.npc(npc, DialogueEmote.CALM_TALK_1, [ 'Good day to you, traveller.', 'Would you be interested in buying some gems?']))
+        .then(async d => d.options('Would you be interested in buying some gems?', ['Yes, please.', 'No, thank you.']))
         .then(async d => {
             switch (d.action) {
                 case 1:
@@ -23,7 +22,7 @@ const talkToAction : npcAction = (details) => {
                         });
                 case 2:
                     return d.player(DialogueEmote.CALM_TALK_1, ['No, thank you.'])
-                        .then(d => d.npc(npc, DialogueEmote.ANNOYED, ['Eh, suit yourself.']))
+                        .then(async d => d.npc(npc, DialogueEmote.ANNOYED, ['Eh, suit yourself.']))
                         .then(d => {
                             d.close();
                             return d;
@@ -33,7 +32,7 @@ const talkToAction : npcAction = (details) => {
         });
 };
 
-export default new RunePlugin([
-    {type: ActionType.NPC_ACTION, npcIds: npcIds.gemTrader, options: 'trade', walkTo: true, action: tradeAction},
-    {type: ActionType.NPC_ACTION, npcIds: npcIds.gemTrader, options: 'talk-to', walkTo: true, action: talkToAction}
-]);
+export default [
+    { type: 'np_action', npcIds: npcIds.gemTrader, options: 'trade', walkTo: true, action: tradeAction },
+    { type: 'npc_action', npcIds: npcIds.gemTrader, options: 'talk-to', walkTo: true, action: talkToAction }
+];

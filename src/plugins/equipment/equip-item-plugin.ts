@@ -1,6 +1,5 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { widgets } from '@server/world/config/widget';
-import { itemAction } from '@server/world/actor/player/action/item-action';
+import { itemAction } from '@server/world/action/item-action';
 import { equipmentSlotIndex } from '@server/world/config/item-data';
 
 export const action: itemAction = (details) => {
@@ -10,10 +9,10 @@ export const action: itemAction = (details) => {
     player.equipItem(itemId, itemSlot, equipmentSlot);
 };
 
-export default new RunePlugin({
-    type: ActionType.ITEM_ACTION,
+export default {
+    type: 'item_action',
     widgets: widgets.inventory,
     options: 'equip',
     action,
     cancelOtherActions: false
-});
+};

@@ -1,16 +1,17 @@
 import { Player } from '@server/world/actor/player/player';
 import { Item } from '@server/world/items/item';
-import { ActionPlugin, questFilter } from '@server/plugins/plugin';
+import { questFilter } from '@server/plugins/plugin';
+import { Action, getActionList } from '@server/world/action/index';
 
 /**
  * The definition for an item on item action function.
  */
-export type itemOnItemAction = (details: ItemOnItemActionDetails) => void;
+export type itemOnItemAction = (itemOnItemActionData: ItemOnItemActionData) => void;
 
 /**
  * Details about an item on item action.
  */
-export interface ItemOnItemActionDetails {
+export interface ItemOnItemActionData {
     // The player performing the action.
     player: Player;
     // The item being used.
@@ -30,40 +31,25 @@ export interface ItemOnItemActionDetails {
 /**
  * Defines an item on item interaction plugin.
  */
-export interface ItemOnItemActionPlugin extends ActionPlugin {
+export interface ItemOnItemAction extends Action {
     // The item pairs being used. Each item can be used on the other, so item order does not matter.
     items: { item1: number, item2: number }[];
     // The action function to be performed.
     action: itemOnItemAction;
 }
 
-/**
- * A directory of all item on item interaction plugins.
- */
-let itemOnItemInteractions: ItemOnItemActionPlugin[] = [
-];
-
-/**
- * Sets the list of item on item interaction plugins.
- * @param plugins The plugin list.
- */
-export const setItemOnItemPlugins = (plugins: ActionPlugin[]): void => {
-    itemOnItemInteractions = plugins as ItemOnItemActionPlugin[];
-};
-
-export const itemOnItemAction = (player: Player,
-                                 usedItem: Item, usedSlot: number, usedWidgetId: number,
-                                 usedWithItem: Item, usedWithSlot: number, usedWithWidgetId: number): void => {
+const itemOnItemActionHandler = (player: Player, usedItem: Item, usedSlot: number, usedWidgetId: number,
+    usedWithItem: Item, usedWithSlot: number, usedWithWidgetId: number): void => {
     if(player.busy) {
         return;
     }
 
     // Find all item on item action plugins that match this action
-    let interactionActions = itemOnItemInteractions.filter(plugin =>
+    let interactionActions = getActionList('item_on_item').filter(plugin =>
         questFilter(player, plugin) &&
         (plugin.items.findIndex(i => i.item1 === usedItem.itemId && i.item2 === usedWithItem.itemId) !== -1 ||
         plugin.items.findIndex(i => i.item2 === usedItem.itemId && i.item1 === usedWithItem.itemId) !== -1));
-    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
+    const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
         interactionActions = questActions;
@@ -81,4 +67,9 @@ export const itemOnItemAction = (player: Player,
         plugin.action({ player, usedItem, usedWithItem, usedSlot, usedWithSlot,
             usedWidgetId: usedWidgetId, usedWithWidgetId: usedWithWidgetId });
     }
+};
+
+export default {
+    action: 'item_on_item',
+    handler: itemOnItemActionHandler
 };

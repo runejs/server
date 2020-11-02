@@ -6,30 +6,30 @@ const examinePacket = (player, packet) => {
 
     let message;
 
-    if (packetId === 151) {
+    if(packetId === 151) {
         message = world.examine.getItem(id);
-    } else if (packetId === 148) {
+    } else if(packetId === 148) {
         message = world.examine.getObject(id);
-    } else if (packetId === 247) {
+    } else if(packetId === 247) {
         message = world.examine.getNpc(id);
     }
 
-    if (message) {
+    if(message) {
         player.sendMessage(message);
     }
 };
 
-export default [{
+export default [ {
     opcode: 148,
     size: 2,
     handler: examinePacket
-},{
+}, {
     opcode: 151,
     size: 2,
     handler: examinePacket
-},{
+}, {
     opcode: 247,
     size: 2,
     handler: examinePacket
-}];
+} ];
 

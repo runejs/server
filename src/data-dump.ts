@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { writeFileSync } from 'fs';
 import { cache } from '@server/game-server';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 import { ItemDefinition, NpcDefinition, Widget } from '@runejs/cache-parser';
 
 function dump<T>(fileName: string, definitions: Map<number, T>): boolean {

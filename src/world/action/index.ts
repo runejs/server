@@ -1,9 +1,26 @@
-import { Player } from '@server/world/actor/player/player';
+import { Player, PlayerInitAction } from '@server/world/actor/player/player';
 import { Position } from '@server/world/position';
 import { Subject, timer } from 'rxjs';
-import { World } from '@server/world/world';
+import { World } from '@server/world';
 import { LocationObject } from '@runejs/cache-parser';
-import { Npc } from '@server/world/actor/npc/npc';
+import { Npc, NpcInitAction } from '@server/world/actor/npc/npc';
+import { NpcAction } from '@server/world/action/npc-action';
+import { ObjectAction } from '@server/world/action/object-action';
+import { ButtonAction } from '@server/world/action/button-action';
+import { ItemOnItemAction } from '@server/world/action/item-on-item-action';
+import { ItemOnObjectAction } from '@server/world/action/item-on-object-action';
+import { ItemOnNpcAction } from '@server/world/action/item-on-npc-action';
+import { PlayerCommandAction } from '@server/world/action/player-command-action';
+import { WidgetAction } from '@server/world/action/widget-action';
+import { ItemAction } from '@server/world/action/item-action';
+import { WorldItemAction } from '@server/world/action/world-item-action';
+import { QuestAction } from '@server/world/config/quests';
+import { PlayerAction } from '@server/world/action/player-action';
+import { EquipAction } from '@server/world/action/equip-action';
+import { QuestRequirement } from '@server/plugins/plugin';
+import { getFiles } from '@server/util/files';
+import { logger } from '@runejs/core';
+import { pluginActions } from '@server/game-server';
 
 export type ActionCancelType = 'manual-movement' | 'pathing-movement' | 'generic' | 'keep-widgets-open' | 'button' | 'widget';
 
@@ -27,7 +44,8 @@ export interface InteractingAction {
  * `npc` the npc that the loop belongs to. This will Providing this field will cause the loop to cancel if
  *       this npc is flagged to no longer exist during the loop.
  */
-export const loopingAction = (options?: { ticks?: number, delayTicks?: number, npc?: Npc, player?: Player }) => {
+export const loopingAction = (options?: { ticks?: number, delayTicks?: number, npc?: Npc, player?: Player }):
+        { event: Subject<void>, cancel: () => void } => {
     if(!options) {
         options = {};
     }
@@ -110,3 +128,83 @@ export const walkToAction = async (player: Player, position: Position, interacti
         }, 100);
     });
 };
+
+export const ACTION_DIRECTORY = './dist/world/action';
+
+export const getActionList = (key: ActionType): any[] => pluginActions[key];
+
+class ActionHandler {
+
+    handlerMap = new Map<string, any>();
+
+    get(action: ActionType): any {
+        this.handlerMap.get(action.toString());
+    }
+
+    call(action: ActionType, ...args: any[]): void {
+        const actionHandler = this.handlerMap.get(action.toString());
+        if(actionHandler) {
+            try {
+                actionHandler(...args);
+            } catch(error) {
+                logger.error(`Error handling action ${ action.toString() }`);
+                logger.error(error);
+            }
+        }
+    }
+
+    register(action: ActionType, actionHandler: (...args: any[]) => void): void {
+        this.handlerMap.set(action.toString(), actionHandler);
+    }
+
+}
+
+export const actionHandler = new ActionHandler();
+
+export async function loadActions(): Promise<void> {
+    const blacklist = ['index.js'];
+
+    for await(const path of getFiles(ACTION_DIRECTORY, blacklist)) {
+        const location = '.' + path.substring(ACTION_DIRECTORY.length).replace('.js', '');
+
+        try {
+            const importedAction = require(location)?.default || null;
+            if(importedAction && importedAction.action && importedAction.handler) {
+                actionHandler.register(importedAction.action, importedAction.handler);
+            }
+        } catch(error) {
+            logger.error(`Error loading action file at ${location}:`);
+            logger.error(error);
+        }
+    }
+
+    return Promise.resolve();
+}
+
+export interface Action {
+    // The type of action to perform.
+    type: ActionType;
+    // The action's priority over other actions.
+    priority?: number;
+    // [optional] Details regarding what quest this action is for.
+    questRequirement?: QuestRequirement;
+}
+
+export type ActionType =
+    'button'
+    | 'widget_action'
+    | 'item_on_item'
+    | 'item_action'
+    | 'equip_action'
+    | 'world_item_action'
+    | 'npc_action'
+    | 'object_action'
+    | 'item_on_object'
+    | 'item_on_npc'
+    | 'player_command'
+    | 'player_init'
+    | 'npc_init'
+    | 'quest'
+    | 'player_action'
+    | 'swap_items'
+    | 'move_item';

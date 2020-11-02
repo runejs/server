@@ -1,5 +1,4 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { commandAction } from '@server/world/actor/player/action/input-command-action';
+import { commandAction } from '@server/world/action/player-command-action';
 import { Position } from '@server/world/position';
 
 const action: commandAction = (details) => {
@@ -12,8 +11,8 @@ const action: commandAction = (details) => {
     player.teleport(new Position(x, y, level));
 };
 
-export default new RunePlugin({
-    type: ActionType.COMMAND,
+export default {
+    type: 'player_command',
     commands: [ 'move', 'goto', 'teleport', 'tele', 'moveto', 'setpos' ],
     args: [
         {
@@ -31,4 +30,4 @@ export default new RunePlugin({
         }
     ],
     action
-});
+};

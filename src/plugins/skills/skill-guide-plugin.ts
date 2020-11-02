@@ -1,10 +1,9 @@
-import { buttonAction } from '@server/world/actor/player/action/button-action';
-import { logger } from '@runejs/logger';
+import { buttonAction } from '@server/world/action/button-action';
+import { logger } from '@runejs/core';
 import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 import { readFileSync } from 'fs';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { Player } from '@server/world/actor/player/player';
-import { widgetAction } from '@server/world/actor/player/action/widget-action';
+import { widgetAction } from '@server/world/action/widget-action';
 import { widgets } from '@server/world/config/widget';
 
 // @TODO fix me!
@@ -126,7 +125,7 @@ export const openSubGuideAction: widgetAction = (details) => {
     loadGuide(player, guide.id, subGuideId, false);
 };
 
-export default new RunePlugin([
-    { type: ActionType.BUTTON, widgetId: widgets.skillsTab, buttonIds, action: openGuideAction },
-    { type: ActionType.WIDGET_ACTION, widgetIds: widgets.skillGuide, childIds: sidebarTextIds, optionId: 0, action: openSubGuideAction }
-]);
+export default [
+    { type: 'button', widgetIds: widgets.skillsTab, buttonIds, action: openGuideAction },
+    { type: 'widget_action', widgetIds: widgets.skillGuide, childIds: sidebarTextIds, optionId: 0, action: openSubGuideAction }
+];

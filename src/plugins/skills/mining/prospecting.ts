@@ -1,7 +1,6 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { objectAction } from '@server/world/actor/player/action/object-action';
+import { objectAction } from '@server/world/action/object-action';
 import { soundIds } from '@server/world/config/sound-ids';
-import { World } from '@server/world/world';
+import { World } from '@server/world';
 import { cache } from '@server/game-server';
 import { getAllOreIds, getOreFromRock } from '@server/world/config/harvestable-object';
 
@@ -22,10 +21,10 @@ const action: objectAction = (details) => {
     }, World.TICK_LENGTH * 3);
 };
 
-export default new RunePlugin({
-    type: ActionType.OBJECT_ACTION,
+export default {
+    type: 'object_action',
     options: ['prospect'],
     objectIds: getAllOreIds(),
     walkTo: true,
     action
-});
+};

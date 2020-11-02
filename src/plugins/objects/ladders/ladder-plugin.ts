@@ -1,20 +1,19 @@
-import { objectAction } from '@server/world/actor/player/action/object-action';
-import { dialogueAction } from '@server/world/actor/player/action/dialogue-action';
-import { World } from '@server/world/world';
+import { objectAction } from '@server/world/action/object-action';
+import { dialogueAction } from '@server/world/actor/player/dialogue-action';
+import { World } from '@server/world';
 import { Position } from '@server/world/position';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
-const planes = {min: 0, max: 3};
+const planes = { min: 0, max: 3 };
 const validate: (level: number) => boolean = (level) => {
     return planes.min <= level && level <= planes.max;
 }; //TODO: prevent no-clipping.
 
 export const action: objectAction = (details) => {
-    const {player, option} = details;
+    const { player, option } = details;
 
     if (option === 'climb') {
         dialogueAction(player)
-            .then(d => d.options(
+            .then(async d => d.options(
                 `Climb up or down the ${details.objectDefinition.name.toLowerCase()}?`,
                 [
                     `Climb up the ${details.objectDefinition.name.toLowerCase()}.`,
@@ -25,8 +24,7 @@ export const action: objectAction = (details) => {
                 switch (d.action) {
                     case 1:
                     case 2:
-                        const direction = d.action === 1 ? 'up' : 'down';
-                        action({...details, option: `climb-${direction}`});
+                        action({ ...details, option: `climb-${(d.action === 1 ? 'up' : 'down')}` });
                         return;
                 }
             });
@@ -34,7 +32,7 @@ export const action: objectAction = (details) => {
     }
 
     const up = option === 'climb-up';
-    const {position} = player;
+    const { position } = player;
     const level = position.level + (up ? 1 : -1);
 
     if (!validate(level)) return;
@@ -48,10 +46,10 @@ export const action: objectAction = (details) => {
 
 };
 
-export default new RunePlugin({
-    type: ActionType.OBJECT_ACTION,
+export default {
+    type: 'object_action',
     objectIds: [1738, 1739, 1740, 1746, 1747, 1748, 12964, 12965, 12966],
     options: ['climb', 'climb-up', 'climb-down'],
     walkTo: true,
     action
-});
+};

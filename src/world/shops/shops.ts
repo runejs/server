@@ -1,12 +1,11 @@
 import { world } from '@server/game-server';
 import { Player } from '@server/world/actor/player/player';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 import { Shop, shopItemContainer } from '@server/world/config/shops';
 import { widgets } from '@server/world/config/widget';
 
-function findShop(identification: string): Shop {
-    return world.shops.find(shop => shop.identification === identification);
-}
+export const findShop = (identification: string): Shop =>
+    world.shops.find(shop => shop.identification === identification);
 
 export function openShop(player: Player, identification: string, closeOnWalk: boolean = true): void {
     if(player.busy) {

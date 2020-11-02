@@ -1,15 +1,14 @@
 import { Item } from '@server/world/items/item';
 import { ItemContainer } from '@server/world/items/item-container';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { objectIds } from '@server/world/config/object-ids';
-import { objectAction, ObjectActionDetails } from '@server/world/actor/player/action/object-action';
+import { objectAction, ObjectActionData } from '@server/world/action/object-action';
 import { widgets } from '@server/world/config/widget';
-import { buttonAction, ButtonActionDetails } from '@server/world/actor/player/action/button-action';
+import { buttonAction, ButtonActionData } from '@server/world/action/button-action';
 import { itemIds } from '@server/world/config/item-ids';
 import { Subscription } from 'rxjs';
 import { Skill } from '@server/world/actor/skills';
 import { cache } from '@server/game-server';
-import { loopingAction } from '@server/world/actor/player/action/action';
+import { loopingAction } from '@server/world/action';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { colors } from '@server/util/colors';
@@ -175,24 +174,24 @@ const widgetButtonIds : Map<number, Smeltable> = new Map<number, Smeltable>([
 ]);
 
 // We need to tell the widget what the bars actually look like.
-const loadSmeltingInterface = (details: ObjectActionDetails) => {
+const loadSmeltingInterface = (details: ObjectActionData) => {
     const theKnightsSwordQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
     // Send the items to the widget.
     widgetItems.forEach((item) => {
         details.player.outgoingPackets.setItemOnWidget(widgets.furnace.widgetId, item.slot.modelId, item.bar.barId, 125);
         if (!details.player.skills.hasLevel(Skill.SMITHING, item.bar.requiredLevel)) {
-            details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.red});
+            details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.red });
         } else {
-            details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.black});
+            details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.black });
         }
         // Check if the player has completed 'The Knight's Sword' quest, even if the level is okay.
         if (item.bar.quest !== undefined && (theKnightsSwordQuest == undefined || theKnightsSwordQuest.stage !== 'COMPLETE')) {
-            details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.red});
+            details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.red });
         }
     });
 };
 
-const hasIngredients = (details: ButtonActionDetails, ingredients: Item[], inventory: ItemContainer, loop) => {
+const hasIngredients = (details: ButtonActionData, ingredients: Item[], inventory: ItemContainer, loop) => {
     ingredients.forEach((item: Item) => {
         const itemIndex = inventory.findIndex(item);
         if (itemIndex === -1 || inventory.amountInStack(itemIndex) < item.amount) {
@@ -203,15 +202,15 @@ const hasIngredients = (details: ButtonActionDetails, ingredients: Item[], inven
     });
 };
 
-const canSmelt = (details: ButtonActionDetails, bar: Bar): boolean =>  {
+const canSmelt = (details: ButtonActionData, bar: Bar): boolean =>  {
     return details.player.skills.hasLevel(Skill.SMITHING, bar.requiredLevel);
 };
 
-const smeltProduct = (details: ButtonActionDetails, bar: Bar, count: number) => {
+const smeltProduct = (details: ButtonActionData, bar: Bar, count: number) => {
 
     const theKnightsSwordQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
     if (bar.quest !== undefined && (theKnightsSwordQuest == undefined || theKnightsSwordQuest.stage !== 'COMPLETE')) {
-        details.player.sendMessage(`You need to complete The Knight\´s Sword quest first.`, true);
+        details.player.sendMessage(`You need to complete The Knight's Sword quest first.`, true);
         return;
     }
 
@@ -271,36 +270,33 @@ export const buttonClicked : buttonAction = (details) => {
     if (!product.takesInput) {
         smeltProduct(details, product.bar, product.count);
     } else {
-        let numericInputSpinSubscription: Subscription;
-        let actionCancelledSpinSubscription: Subscription;
-
-        numericInputSpinSubscription = details.player.numericInputEvent.subscribe((number) => {
-            actionCancelledSpinSubscription.unsubscribe();
-            numericInputSpinSubscription.unsubscribe();
+        const numericInputSpinSubscription = details.player.numericInputEvent.subscribe((number) => {
+            actionCancelledSpinSubscription?.unsubscribe();
+            numericInputSpinSubscription?.unsubscribe();
             smeltProduct(details, product.bar, number);
         });
 
-        actionCancelledSpinSubscription = details.player.actionsCancelled.subscribe(() => {
-            actionCancelledSpinSubscription.unsubscribe();
-            numericInputSpinSubscription.unsubscribe();
+        const actionCancelledSpinSubscription = details.player.actionsCancelled.subscribe(() => {
+            actionCancelledSpinSubscription?.unsubscribe();
+            numericInputSpinSubscription?.unsubscribe();
         });
 
         details.player.outgoingPackets.showNumberInputDialogue();
     }
 };
 
-export default new RunePlugin([
+export default [
     {
-        type: ActionType.OBJECT_ACTION,
+        type: 'object_action',
         objectIds: [objectIds.furnace],
         options: ['smelt'],
         walkTo: true,
         action: openSmeltingInterface
     },
     {
-        type: ActionType.BUTTON,
+        type: 'button',
         widgetId: widgets.furnace.widgetId,
         buttonIds: Array.from(widgetButtonIds.keys()),
         action: buttonClicked
     }
-]);
+];

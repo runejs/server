@@ -1,19 +1,19 @@
 import { Player } from '@server/world/actor/player/player';
-import { walkToAction } from '@server/world/actor/player/action/action';
+import { Action, getActionList, walkToAction } from '@server/world/action/index';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
-import { logger } from '@runejs/logger';
-import { ActionPlugin, questFilter } from '@server/plugins/plugin';
+import { logger } from '@runejs/core';
+import { questFilter } from '@server/plugins/plugin';
 import { WorldItem } from '@server/world/items/world-item';
 
 /**
  * The definition for a world item action function.
  */
-export type worldItemAction = (details: WorldItemActionDetails) => void;
+export type worldItemAction = (worldItemActionData: WorldItemActionData) => void;
 
 /**
  * Details about a world item being interacted with.
  */
-export interface WorldItemActionDetails {
+export interface WorldItemActionData {
     // The player performing the action.
     player: Player;
     // The world item that the player is interacting with.
@@ -23,7 +23,7 @@ export interface WorldItemActionDetails {
 /**
  * Defines an world item interaction plugin.
  */
-export interface WorldItemActionPlugin extends ActionPlugin {
+export interface WorldItemAction extends Action {
     // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
     // A single option name or a list of option names that this action applies to.
@@ -34,28 +34,14 @@ export interface WorldItemActionPlugin extends ActionPlugin {
     action: worldItemAction;
 }
 
-/**
- * A directory of all world item interaction plugins.
- */
-let worldItemInteractions: WorldItemActionPlugin[] = [
-];
-
-/**
- * Sets the list of world item interaction plugins.
- * @param plugins The plugin list.
- */
-export const setWorldItemPlugins = (plugins: ActionPlugin[]): void => {
-    worldItemInteractions = plugins as WorldItemActionPlugin[];
-};
-
 // @TODO priority and cancelling other (lower priority) actions
-export const worldItemAction = (player: Player, worldItem: WorldItem, option: string): void => {
+const worldItemActionHandler = (player: Player, worldItem: WorldItem, option: string): void => {
     if(player.busy) {
         return;
     }
 
     // Find all world item action plugins that reference this world item
-    let interactionActions = worldItemInteractions.filter(plugin => {
+    let interactionActions = getActionList('world_item_action').filter(plugin => {
         if(!questFilter(player, plugin)) {
             return false;
         }
@@ -72,7 +58,7 @@ export const worldItemAction = (player: Player, worldItem: WorldItem, option: st
 
         return true;
     });
-    const questActions = interactionActions.filter(plugin => plugin.questAction !== undefined);
+    const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
         interactionActions = questActions;
@@ -100,4 +86,9 @@ export const worldItemAction = (player: Player, worldItem: WorldItem, option: st
     if(immediatePlugins.length !== 0) {
         immediatePlugins.forEach(plugin => plugin.action({ player, worldItem }));
     }
+};
+
+export default {
+    action: 'world_item_action',
+    handler: worldItemActionHandler
 };

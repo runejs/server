@@ -4,9 +4,9 @@ import { soundIds } from '@server/world/config/sound-ids';
 import { Skill } from '@server/world/actor/skills';
 import { cache, world } from '@server/game-server';
 import { getBestAxe, getBestPickaxe, HarvestTool } from '@server/world/config/harvest-tool';
-import { loopingAction } from '@server/world/actor/player/action/action';
+import { loopingAction } from '@server/world/action';
 import { randomBetween } from '@server/util/num';
-import { ObjectActionDetails } from '@server/world/actor/player/action/object-action';
+import { ObjectActionData } from '@server/world/action/object-action';
 import { colors } from '@server/util/colors';
 import { checkForGemBoost } from '@server/world/skill-util/glory-boost';
 import { colorText } from '@server/util/strings';
@@ -80,7 +80,7 @@ export function canInitiateHarvest(player: Player, target: IHarvestable, skill: 
 
 }
 
-export function handleHarvesting(details: ObjectActionDetails, tool: HarvestTool, target: IHarvestable, skill: Skill): void {
+export function handleHarvesting(details: ObjectActionData, tool: HarvestTool, target: IHarvestable, skill: Skill): void {
     let itemToAdd = target.itemId;
     if (itemToAdd === 1436 && details.player.skills.hasLevel(Skill.MINING, 30)) {
         itemToAdd = 7936;
@@ -108,7 +108,7 @@ export function handleHarvesting(details: ObjectActionDetails, tool: HarvestTool
     details.player.playAnimation(tool.animation);
 
     // Create a looping action to handle the tick related actions in harvesting
-    const loop = loopingAction({player: details.player});
+    const loop = loopingAction({ player: details.player });
     let elapsedTicks = 0;
 
     loop.event.subscribe(() => {

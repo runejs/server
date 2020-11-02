@@ -1,5 +1,4 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { commandAction } from '@server/world/actor/player/action/input-command-action';
+import { commandAction } from '@server/world/action/player-command-action';
 import { cache } from '@server/game-server';
 import { itemIds } from '@server/world/config/item-ids';
 
@@ -61,8 +60,8 @@ const action: commandAction = (details) => {
 
 };
 
-export default new RunePlugin({
-    type: ActionType.COMMAND,
+export default {
+    type: 'player_command',
     commands: [ 'give', 'item', 'spawn' ],
     args: [
         {
@@ -76,4 +75,4 @@ export default new RunePlugin({
         }
     ],
     action
-});
+};

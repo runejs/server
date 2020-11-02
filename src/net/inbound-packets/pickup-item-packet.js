@@ -1,6 +1,6 @@
-import { world } from '@server/game-server';
-import { Position } from '@server/world/position';
-import { worldItemAction } from '@server/world/actor/player/action/world-item-action';
+import { world } from '../../game-server';
+import { Position } from '../../world/position';
+import { actionHandler } from '../../world/action';
 
 const pickupItemPacket = (player, packet) => {
     const { buffer } = packet;
@@ -21,7 +21,7 @@ const pickupItemPacket = (player, packet) => {
         return;
     }
 
-    worldItemAction(player, worldItem, 'pick-up');
+    actionHandler.call('item_action', player, worldItem, 'pick-up');
 };
 
 export default {

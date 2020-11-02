@@ -1,7 +1,6 @@
-import { objectAction } from '@server/world/actor/player/action/object-action';
+import { objectAction } from '@server/world/action/object-action';
 import { cache, world } from '@server/game-server';
-import { World } from '@server/world/world';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { World } from '@server/world';
 import { itemIds } from '@server/world/config/item-ids';
 
 
@@ -42,5 +41,5 @@ export const action: objectAction = (details) => {
     }, World.TICK_LENGTH);
 };
 
-export default new RunePlugin({ type: ActionType.OBJECT_ACTION, objectIds: [313, 5583, 5584, 5585, 1161, 3366,
-        312, 2646], options: ['pick'], walkTo: true, action });
+export default { type: 'object_action', objectIds: [313, 5583, 5584, 5585, 1161, 3366,
+    312, 2646], options: ['pick'], walkTo: true, action };

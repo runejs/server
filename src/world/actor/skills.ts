@@ -39,29 +39,29 @@ export interface SkillDetail {
 }
 
 export const skillDetails: SkillDetail[] = [
-    {name: 'Attack', advancementWidgetId: 158},
-    {name: 'Defence', advancementWidgetId: 161},
-    {name: 'Strength', advancementWidgetId: 175},
-    {name: 'Hitpoints', advancementWidgetId: 167},
-    {name: 'Ranged', advancementWidgetId: 171},
-    {name: 'Prayer', advancementWidgetId: 170},
-    {name: 'Magic', advancementWidgetId: 168},
-    {name: 'Cooking', advancementWidgetId: 159},
-    {name: 'Woodcutting', advancementWidgetId: 177},
-    {name: 'Fletching', advancementWidgetId: 165},
-    {name: 'Fishing', advancementWidgetId: 164},
-    {name: 'Firemaking', advancementWidgetId: 163},
-    {name: 'Crafting', advancementWidgetId: 160},
-    {name: 'Smithing', advancementWidgetId: 174},
-    {name: 'Mining', advancementWidgetId: 169},
-    {name: 'Herblore', advancementWidgetId: 166},
-    {name: 'Agility', advancementWidgetId: 157},
-    {name: 'Thieving', advancementWidgetId: 176},
-    {name: 'Slayer', advancementWidgetId: 173},
-    {name: 'Farming', advancementWidgetId: 162},
-    {name: 'Runecrafting', advancementWidgetId: 172},
+    { name: 'Attack', advancementWidgetId: 158 },
+    { name: 'Defence', advancementWidgetId: 161 },
+    { name: 'Strength', advancementWidgetId: 175 },
+    { name: 'Hitpoints', advancementWidgetId: 167 },
+    { name: 'Ranged', advancementWidgetId: 171 },
+    { name: 'Prayer', advancementWidgetId: 170 },
+    { name: 'Magic', advancementWidgetId: 168 },
+    { name: 'Cooking', advancementWidgetId: 159 },
+    { name: 'Woodcutting', advancementWidgetId: 177 },
+    { name: 'Fletching', advancementWidgetId: 165 },
+    { name: 'Fishing', advancementWidgetId: 164 },
+    { name: 'Firemaking', advancementWidgetId: 163 },
+    { name: 'Crafting', advancementWidgetId: 160 },
+    { name: 'Smithing', advancementWidgetId: 174 },
+    { name: 'Mining', advancementWidgetId: 169 },
+    { name: 'Herblore', advancementWidgetId: 166 },
+    { name: 'Agility', advancementWidgetId: 157 },
+    { name: 'Thieving', advancementWidgetId: 176 },
+    { name: 'Slayer', advancementWidgetId: 173 },
+    { name: 'Farming', advancementWidgetId: 162 },
+    { name: 'Runecrafting', advancementWidgetId: 172 },
     null,
-    {name: 'Construction'}
+    { name: 'Construction' }
 ];
 
 export interface SkillValue {
@@ -233,7 +233,7 @@ export class Skills extends SkillShortcuts {
                 });
             },
             afterOpened: () => {
-                player.playGraphics({id: gfxIds.levelUpFireworks, delay: 0, height: 125});
+                player.playGraphics({ id: gfxIds.levelUpFireworks, delay: 0, height: 125 });
                 // @TODO sounds
             }
         });
@@ -259,8 +259,8 @@ export class Skills extends SkillShortcuts {
 
     private defaultValues(): SkillValue[] {
         const values: SkillValue[] = [];
-        skillDetails.forEach(s => values.push({exp: 0, level: 1}));
-        values[Skill.HITPOINTS] = {exp: 1154, level: 10};
+        skillDetails.forEach(() => values.push({ exp: 0, level: 1 }));
+        values[Skill.HITPOINTS] = { exp: 1154, level: 10 };
         return values;
     }
 

@@ -1,9 +1,8 @@
-import { npcAction } from '@server/world/actor/player/action/npc-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { npcAction } from '@server/world/action/npc-action';
 import { npcIds } from '@server/world/config/npc-ids';
 import { dialogue, Emote, goto } from '@server/world/actor/dialogue';
 
-const millieDialogue: npcAction = (details) =>
+const millieDialogue: npcAction = async (details) =>
     dialogue([ details.player, { npc: details.npc, key: 'millie' }], [
         millie => [ Emote.GENERIC, `Hello Adventurer. Welcome to Mill Lane Mill. Can I help you?` ],
         options => [
@@ -50,7 +49,7 @@ const millieDialogue: npcAction = (details) =>
         ]
     ]);
 
-const gillieDialogue: npcAction = (details) =>
+const gillieDialogue: npcAction = async (details) =>
     dialogue([ details.player, { npc: details.npc, key: 'gillie' }], [
         gillie => [ Emote.HAPPY, `Hello, I'm Gillie the Milkmaid. What can I do for you?` ],
         options => [
@@ -79,16 +78,16 @@ const gillieDialogue: npcAction = (details) =>
         ]
     ]);
 
-export default new RunePlugin([{
-    type: ActionType.NPC_ACTION,
+export default [{
+    type: 'npc_action',
     npcIds: npcIds.gillieGroats,
     options: 'talk-to',
     walkTo: true,
     action: gillieDialogue
 }, {
-    type: ActionType.NPC_ACTION,
+    type: 'npc_action',
     npcIds: npcIds.millieMiller,
     options: 'talk-to',
     walkTo: true,
     action: millieDialogue
-}]);
+}];

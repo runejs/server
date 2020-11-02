@@ -1,6 +1,5 @@
-import { npcAction } from '@server/world/actor/player/action/npc-action';
-import { openShop } from '@server/world/actor/player/action/shop-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { npcAction } from '@server/world/action/npc-action';
+import { openShop } from '@server/world/shops/shops';
 import { npcIds } from '@server/world/config/npc-ids';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 
@@ -38,16 +37,16 @@ const talkToAction : npcAction = (details) => {
     ]);
 };
 
-export default new RunePlugin([{
-    type: ActionType.NPC_ACTION,
+export default [{
+    type: 'npc_action',
     npcIds: npcIds.zaff,
     options: 'trade',
     walkTo: true,
     action: tradeAction
 }, {
-    type: ActionType.NPC_ACTION,
+    type: 'npc_action',
     npcIds: npcIds.zaff,
     options: 'talk-to',
     walkTo: true,
     action: talkToAction
-}]);
+}];

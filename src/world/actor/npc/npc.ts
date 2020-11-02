@@ -3,12 +3,11 @@ import { NpcSpawn } from '@server/world/config/npc-spawn';
 import { NpcDefinition } from '@runejs/cache-parser';
 import uuidv4 from 'uuid/v4';
 import { Position } from '@server/world/position';
-import { world } from '@server/game-server';
+import { pluginActions, world } from '@server/game-server';
 import { directionData } from '@server/world/direction';
-import { QuadtreeKey } from '@server/world/world';
-import { ActionPlugin } from '@server/plugins/plugin';
+import { QuadtreeKey } from '@server/world';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
-import { schedule } from '@server/task/task';
+import { Action, actionHandler } from '@server/world/action';
 
 interface NpcAnimations {
     walk: number;
@@ -18,15 +17,9 @@ interface NpcAnimations {
     turnLeft: number;
 }
 
-let npcInitPlugins: NpcInitPlugin[];
+export type npcInitAction = (data: { npc: Npc }) => void;
 
-export type npcInitAction = (details: { npc: Npc }) => void;
-
-export const setNpcInitPlugins = (plugins: ActionPlugin[]): void => {
-    npcInitPlugins = plugins as NpcInitPlugin[];
-};
-
-export interface NpcInitPlugin extends ActionPlugin {
+export interface NpcInitAction extends Action {
     // The action function to be performed.
     action: npcInitAction;
     // A single NPC ID or a list of NPC IDs that this action applies to.
@@ -38,14 +31,15 @@ export interface NpcInitPlugin extends ActionPlugin {
  */
 export class Npc extends Actor {
 
-    public id: number;
     public readonly uuid: string;
+    public readonly options: string[];
+    public readonly initialPosition: Position;
+    public id: number;
+
     private _name: string;
     private _combatLevel: number;
     private _animations: NpcAnimations;
-    public readonly options: string[];
     private _movementRadius: number = 0;
-    public readonly initialPosition: Position;
     private quadtreeKey: QuadtreeKey = null;
     private _exists: boolean = true;
     private npcSpawn: NpcSpawn;
@@ -73,14 +67,14 @@ export class Npc extends Actor {
         }
     }
 
-    public init(): void {
+    public async init(): Promise<void> {
         world.chunkManager.getChunkForWorldPosition(this.position).addNpc(this);
         this.initiateRandomMovement();
 
-        new Promise(resolve => {
-            npcInitPlugins
+        await new Promise(resolve => {
+            pluginActions.npc_init
                 .filter(plugin => basicNumberFilter(plugin.npcIds, this.id))
-                .forEach(plugin => plugin.action({npc: this}));
+                .forEach(plugin => plugin.action({ npc: this }));
             resolve();
         });
     }
@@ -160,7 +154,7 @@ export class Npc extends Actor {
             world.npcTree.remove(this.quadtreeKey);
         }
 
-        this.quadtreeKey = {x: position.x, y: position.y, actor: this};
+        this.quadtreeKey = { x: position.x, y: position.y, actor: this };
         world.npcTree.push(this.quadtreeKey);
     }
 

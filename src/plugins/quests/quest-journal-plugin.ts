@@ -1,12 +1,12 @@
-import { buttonAction } from '@server/world/actor/player/action/button-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { buttonAction } from '@server/world/action/button-action';
 import { widgets } from '@server/world/config/widget';
-import { quests } from '@server/world/config/quests';
 import { wrapText } from '@server/util/strings';
+import { pluginActions } from '@server/game-server';
 
 export const action: buttonAction = (details) => {
     const { player, buttonId } = details;
 
+    const quests = pluginActions.quest;
     const questData = quests[Object.keys(quests).filter(questKey => quests[questKey].questTabId === buttonId)[0]];
     const playerQuest = player.quests.find(quest => quest.questId === questData.id);
     let playerStage = 'NOT_STARTED';
@@ -54,4 +54,4 @@ export const action: buttonAction = (details) => {
     };
 };
 
-export default new RunePlugin({ type: ActionType.BUTTON, widgetId: widgets.questTab, action });
+export default { type: 'button', widgetId: widgets.questTab, action };

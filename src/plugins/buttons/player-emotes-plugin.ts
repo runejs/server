@@ -1,5 +1,4 @@
-import { buttonAction } from '@server/world/actor/player/action/button-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { buttonAction } from '@server/world/action/button-action';
 import { widgets } from '@server/world/config/widget';
 import { Player } from '@server/world/actor/player/player';
 import { itemIds } from '@server/world/config/item-ids';
@@ -156,7 +155,7 @@ export const action: buttonAction = (details) => {
             if (skillCapeEmotes.some(item => item.itemIds.includes(player.getItemInEquipmentSlot('BACK')?.itemId))) {
                 const skillcapeEmote = skillCapeEmotes.filter(item => item.itemIds.includes(player.getItemInEquipmentSlot('BACK')?.itemId));
                 player.playAnimation(skillcapeEmote[0].animationId);
-                player.playGraphics({id: skillcapeEmote[0].graphicId, delay: 0, height: 0});
+                player.playGraphics({ id: skillcapeEmote[0].graphicId, delay: 0, height: 0 });
             }
         }  else {
             player.sendMessage(`You need to be wearing a skillcape in order to perform that emote.`, true);
@@ -174,9 +173,9 @@ export const action: buttonAction = (details) => {
         player.playAnimation(emote.animationId);
 
         if(emote.graphicId !== undefined) {
-            player.playGraphics({id: emote.graphicId, height: 0});
+            player.playGraphics({ id: emote.graphicId, height: 0 });
         }
     }
 };
 
-export default new RunePlugin({ type: ActionType.BUTTON, widgetId: widgets.emotesTab, buttonIds, action });
+export default { type: 'button', widgetId: widgets.emotesTab, buttonIds, action };

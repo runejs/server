@@ -1,5 +1,4 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { commandAction } from '@server/world/actor/player/action/input-command-action';
+import { commandAction } from '@server/world/action/player-command-action';
 
 const action: commandAction = (details) => {
     const { player, args } = details;
@@ -8,8 +7,8 @@ const action: commandAction = (details) => {
     player.playAnimation(animationId);
 };
 
-export default new RunePlugin({
-    type: ActionType.COMMAND,
+export default {
+    type: 'player_command',
     commands: [ 'anim', 'animation', 'playanim' ],
     args: [
         {
@@ -18,4 +17,4 @@ export default new RunePlugin({
         }
     ],
     action
-});
+};

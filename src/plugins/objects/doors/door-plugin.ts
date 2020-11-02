@@ -1,8 +1,7 @@
 import { directionData, WNES } from '@server/world/direction';
 import { world } from '@server/game-server';
 import { Chunk } from '@server/world/map/chunk';
-import { objectAction } from '@server/world/actor/player/action/object-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { objectAction } from '@server/world/action/object-action';
 import { soundIds } from '@server/world/config/sound-ids';
 import { LocationObject } from '@runejs/cache-parser';
 
@@ -94,5 +93,5 @@ export const action: objectAction = (details): void => {
     player.playSound(opening ? soundIds.openDoor : soundIds.closeDoor, 7);
 };
 
-export default new RunePlugin({ type: ActionType.OBJECT_ACTION, objectIds: [1530, 4465, 4467, 3014, 3017, 3018,
-        3019, 1536, 1537, 1533, 1531, 1534, 12348, 11993, 11994], options: [ 'open', 'close' ], walkTo: true, action });
+export default { type: 'object_action', objectIds: [1530, 4465, 4467, 3014, 3017, 3018,
+    3019, 1536, 1537, 1533, 1531, 1534, 12348, 11993, 11994], options: [ 'open', 'close' ], walkTo: true, action };

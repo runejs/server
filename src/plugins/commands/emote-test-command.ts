@@ -1,5 +1,4 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { commandAction } from '@server/world/actor/player/action/input-command-action';
+import { commandAction } from '@server/world/action/player-command-action';
 import { lockEmote, unlockEmote, unlockEmotes } from '@server/plugins/buttons/player-emotes-plugin';
 
 const action: commandAction = (details) => {
@@ -22,18 +21,16 @@ const resetAction: commandAction = (details) => {
     unlockEmotes(player);
 };
 
-export default new RunePlugin([{
-    type: ActionType.COMMAND,
+export default [{
+    type: 'player_command',
     commands: 'emote',
-    args: [
-        {
-            name: 'emoteName',
-            type: 'string'
-        }
-    ],
+    args: [{
+        name: 'emoteName',
+        type: 'string'
+    }],
     action
 }, {
-    type: ActionType.COMMAND,
+    type: 'player_command',
     commands: 'emotereset',
     action: resetAction
-}]);
+}];

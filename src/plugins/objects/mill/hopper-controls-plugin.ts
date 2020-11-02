@@ -1,9 +1,8 @@
-import { objectAction } from '@server/world/actor/player/action/object-action';
-import { World } from '@server/world/world';
+import { objectAction } from '@server/world/action/object-action';
+import { World } from '@server/world';
 import { world } from '@server/game-server';
 import { Position } from '@server/world/position';
 import { LocationObject } from '@runejs/cache-parser';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 
 
 export const action: objectAction = (details) => {
@@ -30,7 +29,7 @@ export const action: objectAction = (details) => {
             details.player.metadata['flour'] += details.player.metadata['grain'];
             details.player.metadata['grain'] = 0;
             const flourBinPos = new Position(3166, 3306);
-            const fullFlourBin: LocationObject = {objectId: 1782, x: 3166, y: 3306, orientation: 0, level: 0, type: 10};
+            const fullFlourBin: LocationObject = { objectId: 1782, x: 3166, y: 3306, orientation: 0, level: 0, type: 10 };
             world.addLocationObject(fullFlourBin, flourBinPos);
         } else {
             details.player.sendMessage(`You operate the hopper. Nothing interesting happens.`);
@@ -40,10 +39,10 @@ export const action: objectAction = (details) => {
 
 };
 
-export default new RunePlugin({
-    type: ActionType.OBJECT_ACTION,
+export default {
+    type: 'object_action',
     objectIds: [2718],
     options: ['operate'],
     walkTo: true,
     action
-});
+};

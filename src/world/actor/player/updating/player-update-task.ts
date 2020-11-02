@@ -6,7 +6,7 @@ import { world } from '@server/game-server';
 import { EquipmentSlot, HelmetType, ItemDetails, TorsoType } from '@server/world/config/item-data';
 import { ItemContainer } from '@server/world/items/item-container';
 import { appendMovement, updateTrackedActors, registerNewActors } from './actor-updating';
-import { ByteBuffer } from '@runejs/byte-buffer';
+import { ByteBuffer } from '@runejs/core';
 import { stringToLong } from '@server/util/strings';
 
 /**

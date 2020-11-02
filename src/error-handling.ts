@@ -1,4 +1,4 @@
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 
 /*
  * Error handling! Feel free to add other types of errors or warnings here. :)
@@ -35,7 +35,7 @@ export function initErrorHandling(): void {
         }
 
         logger.error(`Unhandled promise rejection from ${promise}, reason: ${error}`);
-        if(error && error.hasOwnProperty('stack')) {
+        if(error && error['stack']) {
             logger.error((error as any).stack);
         }
     });

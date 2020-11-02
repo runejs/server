@@ -1,10 +1,9 @@
-import { getItemFromContainer, itemAction } from '@server/world/actor/player/action/item-action';
+import { itemAction } from '@server/world/action/item-action';
 import { widgets } from '@server/world/config/widget';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { Shop, shopItemContainer } from '@server/world/config/shops';
 import { world } from '@server/game-server';
 import { Item } from '@server/world/items/item';
-import { ItemContainer } from '@server/world/items/item-container';
+import { getItemFromContainer, ItemContainer } from '@server/world/items/item-container';
 import { itemIds } from '@server/world/config/item-ids';
 
 function removeCoins(inventory: ItemContainer, coinsIndex: number, cost: number): void {
@@ -111,10 +110,10 @@ export const action: itemAction = (details) => {
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, inventory);
 };
 
-export default new RunePlugin({
-    type: ActionType.ITEM_ACTION,
+export default {
+    type: 'item_action',
     widgets: widgets.shop,
     options: [ 'buy-1', 'buy-5', 'buy-10' ],
     action,
     cancelOtherActions: false
-});
+};

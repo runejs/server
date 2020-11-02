@@ -1,6 +1,6 @@
 import { Chunk } from './chunk';
 import { Position } from '../position';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 import { cache, serverConfig } from '@server/game-server';
 
 /**
@@ -35,7 +35,7 @@ export class ChunkManager {
                 chunk.setCacheLocationObject(locationObject, position);
             }
 
-            logger.info('Game world collision maps generated.', true);
+            logger.info('Game world collision maps generated.');
         }
 
         this._complete = true;

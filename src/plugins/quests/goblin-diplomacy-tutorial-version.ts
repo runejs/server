@@ -1,13 +1,13 @@
 import { DEFAULT_TAB_WIDGET_IDS, Player, playerInitAction, Tabs } from '@server/world/actor/player/player';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { widgets } from '@server/world/config/widget';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 import { serverConfig, world } from '@server/game-server';
 import { npcIds } from '@server/world/config/npc-ids';
-import { npcAction } from '@server/world/actor/player/action/npc-action';
+import { npcAction } from '@server/world/action/npc-action';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Npc } from '@server/world/actor/npc/npc';
+import { logger } from '@runejs/core';
 
 function npcHint(player: Player, npcId: number): void {
     const npc = world.findNearbyNpcsById(player.position, npcId, 10)[0] || null;
@@ -308,7 +308,10 @@ export const guideAction: npcAction = async (details) => {
     if(dialogueHandler) {
         try {
             await dialogueHandler(player, npc);
-        } catch(e) {}
+        } catch(e) {
+            logger.error(e);
+        }
+
         await handleTutorial(player);
     }
 };
@@ -328,12 +331,12 @@ export const action: playerInitAction = async (details) => {
     }
 };
 
-export default new RunePlugin([ {
-    type: ActionType.PLAYER_INIT,
+export default [{
+    type: 'player_init',
     action
 }, {
-    type: ActionType.NPC_ACTION,
+    type: 'npc_action',
     action: guideAction,
     npcIds: npcIds.runescapeGuide,
     walkTo: true
-}]);
+}];

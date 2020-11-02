@@ -7,7 +7,7 @@ import { Position } from '@server/world/position';
 import { LocationObject } from '@runejs/cache-parser';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { WorldItem } from '@server/world/items/world-item';
-import { ByteBuffer } from '@runejs/byte-buffer';
+import { ByteBuffer } from '@runejs/core';
 import { Npc } from '@server/world/actor/npc/npc';
 import { stringToLong } from '@server/util/strings';
 
@@ -18,10 +18,10 @@ export class OutboundPackets {
 
     private static privateMessageCounter: number = Math.floor(Math.random() * 100000000);
 
-    private updatingQueue: Buffer[];
-    private packetQueue: Buffer[];
     private readonly player: Player;
     private readonly socket: Socket;
+    private updatingQueue: Buffer[];
+    private packetQueue: Buffer[];
 
     public constructor(player: Player) {
         this.updatingQueue = [];
@@ -95,21 +95,6 @@ export class OutboundPackets {
         packet.put(delay, 'BYTE');
 
         this.queue(packet);
-    }
-
-    private getChunkPositionOffset(x: number, y: number, chunk: Chunk): number {
-        const offsetX = x - ((chunk.position.x + 6) * 8);
-        const offsetY = y - ((chunk.position.y + 6) * 8);
-        return (offsetX * 16 + offsetY);
-    }
-
-    private getChunkOffset(chunk: Chunk): { offsetX: number, offsetY: number } {
-        let offsetX = (chunk.position.x + 6) * 8;
-        let offsetY = (chunk.position.y + 6) * 8;
-        offsetX -= (this.player.lastMapRegionUpdatePosition.chunkX * 8);
-        offsetY -= (this.player.lastMapRegionUpdatePosition.chunkY * 8);
-
-        return { offsetX, offsetY };
     }
 
     public updateChunk(chunk: Chunk, chunkUpdates: ChunkUpdateItem[]): void {
@@ -367,41 +352,6 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    private strip(packet: Packet): Buffer {
-        const size = packet.writerIndex;
-        const buffer = new ByteBuffer(size);
-        packet.copy(buffer, 0, 0, size);
-        return Buffer.from(buffer);
-    }
-
-    private segment(container: ItemContainer, start: number): { bitset: number, buffer: Buffer } {
-        const bound = 7 * 8;
-        const payload = new Packet(-1, PacketType.FIXED, bound);
-
-        let bitset: number = 0;
-
-        for (let offset = 0; offset < 8; offset++) {
-            const item = container.items[start + offset];
-
-            if (!item) {
-                continue;
-            }
-
-            bitset |= 1 << offset;
-
-            const large = item.amount >= 255;
-
-            if (large) {
-                payload.put(255, 'BYTE');
-            }
-
-            payload.put(item.amount, large ? 'INT' : 'BYTE');
-            payload.put(item.itemId + 1, 'SHORT');
-        }
-
-        return { bitset, buffer: this.strip(payload) };
-    }
-
     public sendUpdateAllWidgetItems(widget: { widgetId: number, containerId: number }, container: ItemContainer): void {
         const packet = new Packet(12, PacketType.DYNAMIC_LARGE);
         this.update(packet, widget, container);
@@ -409,7 +359,7 @@ export class OutboundPackets {
 
     public sendUpdateAllWidgetItemsById(widget: { widgetId: number, containerId: number }, itemIds: number[]): void {
         const container = new ItemContainer(itemIds.length);
-        const items = itemIds.map(id => (!id ? null : {itemId: id, amount: 1}));
+        const items = itemIds.map(id => (!id ? null : { itemId: id, amount: 1 }));
         container.setAll(items, false);
 
         this.sendUpdateAllWidgetItems(widget, container);
@@ -621,6 +571,56 @@ export class OutboundPackets {
 
         const packetBuffer = packet.toBuffer(this.player.outCipher);
         queue.push(packetBuffer);
+    }
+
+    private getChunkPositionOffset(x: number, y: number, chunk: Chunk): number {
+        const offsetX = x - ((chunk.position.x + 6) * 8);
+        const offsetY = y - ((chunk.position.y + 6) * 8);
+        return (offsetX * 16 + offsetY);
+    }
+
+    private getChunkOffset(chunk: Chunk): { offsetX: number, offsetY: number } {
+        let offsetX = (chunk.position.x + 6) * 8;
+        let offsetY = (chunk.position.y + 6) * 8;
+        offsetX -= (this.player.lastMapRegionUpdatePosition.chunkX * 8);
+        offsetY -= (this.player.lastMapRegionUpdatePosition.chunkY * 8);
+
+        return { offsetX, offsetY };
+    }
+
+    private strip(packet: Packet): Buffer {
+        const size = packet.writerIndex;
+        const buffer = new ByteBuffer(size);
+        packet.copy(buffer, 0, 0, size);
+        return Buffer.from(buffer);
+    }
+
+    private segment(container: ItemContainer, start: number): { bitset: number, buffer: Buffer } {
+        const bound = 7 * 8;
+        const payload = new Packet(-1, PacketType.FIXED, bound);
+
+        let bitset: number = 0;
+
+        for (let offset = 0; offset < 8; offset++) {
+            const item = container.items[start + offset];
+
+            if (!item) {
+                continue;
+            }
+
+            bitset |= 1 << offset;
+
+            const large = item.amount >= 255;
+
+            if (large) {
+                payload.put(255, 'BYTE');
+            }
+
+            payload.put(item.amount, large ? 'INT' : 'BYTE');
+            payload.put(item.itemId + 1, 'SHORT');
+        }
+
+        return { bitset, buffer: this.strip(payload) };
     }
 
 }

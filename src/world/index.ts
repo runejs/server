@@ -6,7 +6,7 @@ import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { ItemDetails, parseItemData } from './config/item-data';
 import { ExamineCache } from './config/examine-data';
-import { cache } from '@server/game-server';
+import { cache, loadPlugins } from '@server/game-server';
 import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './actor/npc/npc';
@@ -18,6 +18,8 @@ import { Item } from '@server/world/items/item';
 import { Chunk } from '@server/world/map/chunk';
 import { schedule } from '@server/task/task';
 import { parseScenerySpawns } from '@server/world/config/scenery-spawns';
+import { loadActions } from '@server/world/action';
+
 
 export interface QuadtreeKey {
     x: number;
@@ -33,7 +35,6 @@ export class World {
     public static readonly MAX_PLAYERS = 1600;
     public static readonly MAX_NPCS = 30000;
     public static readonly TICK_LENGTH = 600;
-    private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
 
     public readonly playerList: Player[] = new Array(World.MAX_PLAYERS).fill(null);
     public readonly npcList: Npc[] = new Array(World.MAX_NPCS).fill(null);
@@ -44,19 +45,21 @@ export class World {
     public readonly scenerySpawns: LocationObject[];
     public readonly shops: Shop[];
     public readonly travelLocations: TravelLocations = new TravelLocations();
-    public readonly playerTree: Quadtree<any>;
-    public readonly npcTree: Quadtree<any>;
+    public readonly playerTree: Quadtree<QuadtreeKey>;
+    public readonly npcTree: Quadtree<QuadtreeKey>;
+
+    private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
 
     public constructor() {
         this.itemData = parseItemData(cache.itemDefinitions);
         this.npcSpawns = parseNpcSpawns();
         this.scenerySpawns = parseScenerySpawns();
         this.shops = parseShops();
-        this.playerTree = new Quadtree<any>({
+        this.playerTree = new Quadtree<QuadtreeKey>({
             width: 10000,
             height: 10000
         });
-        this.npcTree = new Quadtree<any>({
+        this.npcTree = new Quadtree<QuadtreeKey>({
             width: 10000,
             height: 10000
         });
@@ -65,6 +68,8 @@ export class World {
     }
 
     public async init(): Promise<void> {
+        await loadPlugins();
+        await loadActions();
         await new Promise(() => {
             this.chunkManager.generateCollisionMaps();
             this.spawnNpcs();
@@ -175,45 +180,6 @@ export class World {
     }
 
     /**
-     * Spawns the specified world item for players around the specified chunk.
-     * @param worldItem The WorldItem object to spawn.
-     * @param chunk The main central chunk that the WorldItem will spawn in.
-     * @param excludePlayer [optional] A player to be excluded from the world item spawn.
-     */
-    private async spawnWorldItemForPlayers(worldItem: WorldItem, chunk: Chunk, excludePlayer?: Player): Promise<void> {
-        return new Promise(resolve => {
-            const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
-
-            nearbyPlayers.forEach(player => {
-                if(excludePlayer && excludePlayer.equals(player)) {
-                    return;
-                }
-
-                player.outgoingPackets.setWorldItem(worldItem, worldItem.position);
-            });
-
-            resolve();
-        });
-    }
-
-    /**
-     * De-spawns the specified world item for players around the specified chunk.
-     * @param worldItem The WorldItem object to de-spawn.
-     * @param chunk The main central chunk that the WorldItem will de-spawn from.
-     */
-    private async deleteWorldItemForPlayers(worldItem: WorldItem, chunk: Chunk): Promise<void> {
-        return new Promise(resolve => {
-            const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
-
-            nearbyPlayers.forEach(player => {
-                player.outgoingPackets.removeWorldItem(worldItem, worldItem.position);
-            });
-
-            resolve();
-        });
-    }
-
-    /**
      * Replaces a location object within the world with a different object of the same object type, orientation, and position.
      * NOT to be confused with `toggleObjects`, which removes one object and adds a different one that may have a differing
      * type, orientation, or position (such as a door being opened).
@@ -262,7 +228,7 @@ export class World {
      * @param newObjectInCache Whether or not the object being added is the original game-cache object.
      */
     public toggleLocationObjects(newObject: LocationObject, oldObject: LocationObject, newPosition: Position, oldPosition: Position,
-                                 newChunk: Chunk, oldChunk: Chunk, newObjectInCache: boolean): void {
+        newChunk: Chunk, oldChunk: Chunk, newObjectInCache: boolean): void {
         if(newObjectInCache) {
             this.deleteRemovedLocationObjectMarker(newObject, newPosition, newChunk);
             this.deleteAddedLocationObjectMarker(oldObject, oldPosition, oldChunk);
@@ -444,7 +410,7 @@ export class World {
     }
 
     public setupWorldTick(): void {
-        timer(World.TICK_LENGTH).toPromise().then(() => this.worldTick());
+        timer(World.TICK_LENGTH).toPromise().then(async () => this.worldTick());
     }
 
     public generateFakePlayers(): void {
@@ -489,15 +455,15 @@ export class World {
 
         if(activePlayers.length === 0) {
             return Promise.resolve().then(() => {
-                setTimeout(() => this.worldTick(), World.TICK_LENGTH); //TODO: subtract processing time
+                setTimeout(async () => this.worldTick(), World.TICK_LENGTH); //TODO: subtract processing time
             });
         }
 
         const activeNpcs: Npc[] = this.npcList.filter(npc => npc !== null);
 
-        await Promise.all([ ...activePlayers.map(player => player.tick()), ...activeNpcs.map(npc => npc.tick()) ]);
-        await Promise.all(activePlayers.map(player => player.update()));
-        await Promise.all([ ...activePlayers.map(player => player.reset()), ...activeNpcs.map(npc => npc.reset()) ]);
+        await Promise.all([ ...activePlayers.map(async player => player.tick()), ...activeNpcs.map(async npc => npc.tick()) ]);
+        await Promise.all(activePlayers.map(async player => player.update()));
+        await Promise.all([ ...activePlayers.map(async player => player.reset()), ...activeNpcs.map(async npc => npc.reset()) ]);
 
         const hrEnd = Date.now();
         const duration = hrEnd - hrStart;
@@ -507,13 +473,18 @@ export class World {
             logger.info(`World tick completed in ${duration} ms, next tick in ${delay} ms.`);
         }
 
-        setTimeout(() => this.worldTick(), delay);
+        setTimeout(async () => this.worldTick(), delay);
         return Promise.resolve();
     }
 
     public async scheduleNpcRespawn(npc: Npc): Promise<void> {
         await schedule(10);
         this.registerNpc(npc);
+    }
+
+    public findPlayer(playerUsername: string): Player {
+        playerUsername = playerUsername.toLowerCase();
+        return this.playerList?.find(p => p !== null && p.username.toLowerCase() === playerUsername) || null;
     }
 
     public playerOnline(player: Player | string): boolean {
@@ -573,6 +544,45 @@ export class World {
     public deregisterNpc(npc: Npc): void {
         npc.exists = false;
         this.npcList[npc.worldIndex] = null;
+    }
+
+    /**
+     * Spawns the specified world item for players around the specified chunk.
+     * @param worldItem The WorldItem object to spawn.
+     * @param chunk The main central chunk that the WorldItem will spawn in.
+     * @param excludePlayer [optional] A player to be excluded from the world item spawn.
+     */
+    private async spawnWorldItemForPlayers(worldItem: WorldItem, chunk: Chunk, excludePlayer?: Player): Promise<void> {
+        return new Promise(resolve => {
+            const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
+
+            nearbyPlayers.forEach(player => {
+                if(excludePlayer && excludePlayer.equals(player)) {
+                    return;
+                }
+
+                player.outgoingPackets.setWorldItem(worldItem, worldItem.position);
+            });
+
+            resolve();
+        });
+    }
+
+    /**
+     * De-spawns the specified world item for players around the specified chunk.
+     * @param worldItem The WorldItem object to de-spawn.
+     * @param chunk The main central chunk that the WorldItem will de-spawn from.
+     */
+    private async deleteWorldItemForPlayers(worldItem: WorldItem, chunk: Chunk): Promise<void> {
+        return new Promise(resolve => {
+            const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
+
+            nearbyPlayers.forEach(player => {
+                player.outgoingPackets.removeWorldItem(worldItem, worldItem.position);
+            });
+
+            resolve();
+        });
     }
 
     public get ready(): boolean {

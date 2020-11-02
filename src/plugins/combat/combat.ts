@@ -1,12 +1,11 @@
 import { DamageType } from '../../world/actor/update-flags';
-import { ActionType, RunePlugin } from '../plugin';
-import { walkToAction } from '../../world/actor/player/action/action';
-import { npcAction } from '@server/world/actor/player/action/npc-action';
+import { walkToAction } from '../../world/action';
+import { npcAction } from '@server/world/action/npc-action';
 import { Actor } from '@server/world/actor/actor';
 import { Player } from '@server/world/actor/player/player';
 import { timer } from 'rxjs';
 import { Skills } from '@server/world/actor/skills';
-import { World } from '@server/world/world';
+import { World } from '@server/world';
 import { filter, take } from 'rxjs/operators';
 import { animationIds } from '@server/world/config/animation-ids';
 import { Npc } from '@server/world/actor/npc/npc';
@@ -149,9 +148,9 @@ class Combat {
 
         if(victim instanceof Npc) {
             victim.kill(true);
-        } else if(victim instanceof Player) {
-
-        }
+        }/* else if(victim instanceof Player) {
+            // @TODO
+        }*/
 
         world.spawnWorldItem(itemIds.bones, deathPosition, this.assailant instanceof Player ? this.assailant : undefined, 300);
     }
@@ -192,9 +191,9 @@ const attackNpcAction: npcAction = async details => {
     await combatInstance.initiateCombat();
 };
 
-export default new RunePlugin({
-    type: ActionType.NPC_ACTION,
+export default {
+    type: 'npc_action',
     options: 'attack',
     walkTo: true,
     action: attackNpcAction
-});
+};

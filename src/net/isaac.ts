@@ -116,6 +116,6 @@ export class Isaac {
     }
 
     public internals(): { a: number, b: number, c: number, m: number[], r: number[] } {
-        return {a: this.acc, b: this.brs, c: this.cnt, m: this.m, r: this.r};
+        return { a: this.acc, b: this.brs, c: this.cnt, m: this.m, r: this.r };
     }
 }

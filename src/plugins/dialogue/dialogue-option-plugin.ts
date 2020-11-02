@@ -1,5 +1,4 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { widgetAction } from '@server/world/actor/player/action/widget-action';
+import { widgetAction } from '@server/world/action/widget-action';
 
 const dialogueIds = [
     64, 65, 66, 67, 241,
@@ -16,4 +15,4 @@ export const action: widgetAction = (details) => {
     player.dialogueInteractionEvent.next(childId);
 };
 
-export default new RunePlugin({ type: ActionType.WIDGET_ACTION, widgetIds: dialogueIds, action, cancelActions: true });
+export default { type: 'widget_action', widgetIds: dialogueIds, action, cancelActions: true };

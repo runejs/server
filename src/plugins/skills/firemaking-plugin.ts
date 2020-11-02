@@ -1,12 +1,11 @@
-import { itemOnItemAction } from '@server/world/actor/player/action/item-on-item-action';
+import { itemOnItemAction } from '@server/world/action/item-on-item-action';
 import { world } from '@server/game-server';
-import { loopingAction } from '@server/world/actor/player/action/action';
+import { loopingAction } from '@server/world/action';
 import { LocationObject } from '@runejs/cache-parser';
 import { Player } from '@server/world/actor/player/player';
 import { WorldItem } from '@server/world/items/world-item';
 import { Position } from '@server/world/position';
 import { randomBetween } from '@server/util/num';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { objectIds } from '@server/world/config/object-ids';
 import { itemIds } from '@server/world/config/item-ids';
 import { soundIds } from '@server/world/config/sound-ids';
@@ -134,8 +133,8 @@ const action: itemOnItemAction = (details) => {
     }
 };
 
-export default new RunePlugin({
-    type: ActionType.ITEM_ON_ITEM_ACTION,
+export default {
+    type: 'item_on_item',
     items: logs.map(log => ({ item1: itemIds.tinderbox, item2: log.logId })),
     action
-});
+};

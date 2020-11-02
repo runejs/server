@@ -1,5 +1,4 @@
-import { npcAction } from '@server/world/actor/player/action/npc-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { npcAction } from '@server/world/action/npc-action';
 import { npcIds } from '@server/world/config/npc-ids';
 import { Quest } from '@server/world/config/quests';
 import { dialogue, DialogueTree, Emote, execute, goto } from '@server/world/actor/dialogue';
@@ -16,7 +15,7 @@ const quest: Quest = {
     stages: {
         NOT_STARTED: `I can start this quest by speaking to the <col=800000>Cook</col> in the ` +
             `<col=800000>Kitchen</col> on the ground floor of <col=800000>Lumbridge Castle</col>.`,
-        COLLECTING: (player: Player) => {
+        COLLECTING: (player: Player): string => {
             let questLog = `It's the <col=800000>Duke of Lumbridge's</col> birthday and I have to help ` +
                 `his <col=800000>Cook</col> make him a <col=800000>birthday cake.</col> To do this I need to ` +
                 `bring him the following ingredients:\n`;
@@ -255,21 +254,21 @@ const handInIngredientsAction: npcAction = (details) => {
     dialogue([ player, { npc, key: 'cook' }], dialogueTree);
 };
 
-export default new RunePlugin([{
-    type: ActionType.QUEST,
+export default [{
+    type: 'quest',
     quest
 }, {
-    type: ActionType.NPC_ACTION,
-    questAction: { questId: 'cooksAssistant', stage: 'NOT_STARTED' },
+    type: 'npc_action',
+    questRequirement: { questId: 'cooksAssistant', stage: 'NOT_STARTED' },
     npcIds: npcIds.lumbridgeCook,
     options: 'talk-to',
     walkTo: true,
     action: startQuestAction
 }, {
-    type: ActionType.NPC_ACTION,
-    questAction: { questId: 'cooksAssistant', stage: 'COLLECTING' },
+    type: 'npc_action',
+    questRequirement: { questId: 'cooksAssistant', stage: 'COLLECTING' },
     npcIds: npcIds.lumbridgeCook,
     options: 'talk-to',
     walkTo: true,
     action: handInIngredientsAction
-}]);
+}];
