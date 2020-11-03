@@ -321,11 +321,11 @@ export const guideAction: npcAction = async (details) => {
 };
 
 export const tutorialInitAction: playerInitAction = async ({ player }) => {
-    if(serverConfig.tutorialEnabled && !player.metadata.tutorialComplete) {
+    if(serverConfig.tutorialEnabled && !player.savedMetadata.tutorialComplete) {
         await handleTutorial(player);
     } else {
         defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) =>
-            this.outgoingPackets.sendTabWidget(tabIndex, widgetId));
+            player.outgoingPackets.sendTabWidget(tabIndex, widgetId));
     }
 };
 

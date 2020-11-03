@@ -21,7 +21,7 @@ const pickupItemPacket = (player, packet) => {
         return;
     }
 
-    actionHandler.call('item_action', player, worldItem, 'pick-up');
+    actionHandler.call('world_item_action', player, worldItem, 'pick-up');
 };
 
 export default {
