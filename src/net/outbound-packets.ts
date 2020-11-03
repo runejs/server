@@ -391,13 +391,13 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    public sendTabWidget(tabIndex: number, widgetId: number): void {
+    public sendTabWidget(tabIndex: number, widgetId: number | null): void {
         if(widgetId < 0) {
             return;
         }
 
         const packet = new Packet(140);
-        packet.put(widgetId, 'SHORT');
+        packet.put(widgetId === null || widgetId === -1 ? 65535 : widgetId, 'SHORT');
         packet.put(tabIndex);
 
         this.queue(packet);

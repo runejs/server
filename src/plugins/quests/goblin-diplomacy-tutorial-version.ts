@@ -1,4 +1,4 @@
-import { DEFAULT_TAB_WIDGET_IDS, Player, playerInitAction, Tabs } from '@server/world/actor/player/player';
+import { defaultPlayerTabWidgets, Player, playerInitAction, Tabs } from '@server/world/actor/player/player';
 import { widgets } from '@server/world/config/widget';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 import { serverConfig, world } from '@server/game-server';
@@ -20,9 +20,9 @@ const startTutorial = async (player: Player): Promise<void> => {
     player.savedMetadata.tutorialProgress = 0;
     player.metadata.blockObjectInteractions = true;
 
-    DEFAULT_TAB_WIDGET_IDS.forEach((widgetId: number, tabIndex: number) => {
+    defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
         if(widgetId !== -1) {
-            player.outgoingPackets.sendTabWidget(tabIndex, widgetId === widgets.logoutTab ? widgetId : -1);
+            player.outgoingPackets.sendTabWidget(tabIndex, widgetId === widgets.logoutTab ? widgetId : null);
         }
     });
 
@@ -31,15 +31,18 @@ const startTutorial = async (player: Player): Promise<void> => {
         type: 'SCREEN',
         disablePlayerMovement: true
     }).toPromise();
-
-    await handleTutorial(player);
 };
 
 const stageHandler: { [key: number]: (player: Player) => void } = {
-    0: player => {
+    0: async player => {
+        await startTutorial(player);
+        player.savedMetadata.tutorialProgress = 5;
+        await handleTutorial(player);
+    },
+    5: async player => {
         npcHint(player, npcIds.questGuide);
 
-        dialogue([ player ], [
+        await dialogue([ player ], [
             titled => [ `Getting Started`, `\nWelcome to RuneScape!\nSpeak with the Guide to begin your journey.` ]
         ], {
             permanent: true
@@ -50,6 +53,7 @@ const stageHandler: { [key: number]: (player: Player) => void } = {
             tabIndex: Tabs.settings,
             event: new Subject<boolean>()
         };
+
         dialogue([ player ], [
             titled => [ `Game Options`, `The Options menu can be used to modify various game settings.\nClick the blinking icon to open the Options menu.\n\nWhen you're finished, speak with the Guide to continue.` ]
         ], {
@@ -209,7 +213,7 @@ const stageHandler: { [key: number]: (player: Player) => void } = {
 };
 
 const guideDialogueHandler: { [key: number]: (player: Player, npc: Npc) => void } = {
-    0: async (player, npc) => {
+    5: async (player, npc) => {
         await dialogue([ player, { npc, key: 'guide' } ], [
             guide => [ Emote.GENERIC, `Greetings adventurer, welcome to RuneScape.` ],
             player => [ Emote.SKEPTICAL, `How did I get here?...` ],
@@ -284,9 +288,9 @@ async function handleTutorial(player: Player): Promise<void> {
     const progress = player.savedMetadata.tutorialProgress;
     const handler = stageHandler[progress];
 
-    DEFAULT_TAB_WIDGET_IDS.forEach((widgetId: number, tabIndex: number) => {
+    defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
         if(widgetId !== -1) {
-            player.outgoingPackets.sendTabWidget(tabIndex, widgetId === widgets.logoutTab ? widgetId : -1);
+            player.outgoingPackets.sendTabWidget(tabIndex, widgetId === widgets.logoutTab ? widgetId : null);
         }
     });
 
@@ -316,24 +320,18 @@ export const guideAction: npcAction = async (details) => {
     }
 };
 
-export const action: playerInitAction = async (details) => {
-    if(!serverConfig.tutorialEnabled) {
-        return;
-    }
-
-    const { player } = details;
-
-    const progress = player.savedMetadata?.tutorialProgress || 0;
-    if(progress === 0) {
-        await startTutorial(player);
-    } else if(!player.savedMetadata.tutorialComplete) {
+export const tutorialInitAction: playerInitAction = async ({ player }) => {
+    if(serverConfig.tutorialEnabled && !player.metadata.tutorialComplete) {
         await handleTutorial(player);
+    } else {
+        defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) =>
+            this.outgoingPackets.sendTabWidget(tabIndex, widgetId));
     }
 };
 
 export default [{
     type: 'player_init',
-    action
+    action: tutorialInitAction
 }, {
     type: 'npc_action',
     action: guideAction,

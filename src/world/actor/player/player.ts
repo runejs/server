@@ -46,9 +46,9 @@ export const playerOptions: { option: string, index: number, placement: 'TOP' | 
     }
 ];
 
-export const DEFAULT_TAB_WIDGET_IDS = [
+export const defaultPlayerTabWidgets = [
     widgets.defaultCombatStyle, widgets.skillsTab, widgets.questTab, widgets.inventory.widgetId,
-    widgets.equipment.widgetId, widgets.prayerTab, widgets.standardSpellbookTab, -1,
+    widgets.equipment.widgetId, widgets.prayerTab, widgets.standardSpellbookTab, null,
     widgets.friendsList, widgets.ignoreList, widgets.logoutTab, widgets.settingsTab, widgets.emotesTab,
     widgets.musicPlayerTab
 ];
@@ -165,11 +165,6 @@ export class Player extends Actor {
         this.outgoingPackets.updateCurrentMapChunk();
         this.chunkChanged(playerChunk);
         this.outgoingPackets.chatboxMessage('Welcome to RuneJS.');
-
-        if(this.savedMetadata.tutorialComplete || !serverConfig.tutorialEnabled) {
-            DEFAULT_TAB_WIDGET_IDS.forEach((widgetId: number, tabIndex: number) =>
-                this.outgoingPackets.sendTabWidget(tabIndex, widgetId));
-        }
 
         this.skills.values.forEach((skill, index) =>
             this.outgoingPackets.updateSkill(index, skill.level, skill.exp));
