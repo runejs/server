@@ -79,8 +79,16 @@ export class SkillShortcut {
         this.skills.addExp(this.skillName, exp);
     }
 
+    public set level(value: number) {
+        this.skills.setLevel(this.skillName, value);
+    }
+
     public get level(): number {
         return this.skills.getLevel(this.skillName);
+    }
+
+    public set exp(value: number) {
+        this.skills.setExp(this.skillName, value);
     }
 
     public get exp(): number {
@@ -135,7 +143,7 @@ export class Skills extends SkillShortcuts {
                 this[skillName] = new SkillShortcut(this, skillName as SkillName)
             );
 
-        if (values) {
+        if(values) {
             this._values = values;
         } else {
             this._values = this.defaultValues();
@@ -159,10 +167,10 @@ export class Skills extends SkillShortcuts {
         let points = 0;
         let output = 0;
 
-        for (let i = 1; i <= 99; i++) {
+        for(let i = 1; i <= 99; i++) {
             points += Math.floor(i + 300 * Math.pow(2, i / 7));
             output = Math.floor(points / 4);
-            if (output >= exp) {
+            if(output >= exp) {
                 return i;
             }
         }
@@ -170,11 +178,21 @@ export class Skills extends SkillShortcuts {
         return 99;
     }
 
+    public getExpForLevel(level: number): number {
+        let xp: number = 0;
+
+        for(let i = 1; i < level; i++) {
+            xp += Math.floor(i + 300 * Math.pow(2, i / 7));
+        }
+
+        return Math.floor(xp / 4);
+    }
+
     public addExp(skill: number | SkillName, exp: number): void {
         const currentExp = this.get(skill).exp;
         const currentLevel = this.getLevelForExp(currentExp);
         let finalExp = currentExp + (exp * serverConfig.expRate);
-        if (finalExp > 200000000) {
+        if(finalExp > 200000000) {
             finalExp = 200000000;
         }
 
@@ -182,28 +200,28 @@ export class Skills extends SkillShortcuts {
 
         this.setExp(skill, finalExp);
 
-        if (this.actor instanceof Player) {
+        if(this.actor instanceof Player) {
             this.actor.outgoingPackets.updateSkill(this.getSkillId(skill), finalLevel, finalExp);
         }
 
-        if (currentLevel !== finalLevel) {
+        if(currentLevel !== finalLevel) {
             this.setLevel(skill, finalLevel);
 
-            if (this.actor instanceof Player) {
+            if(this.actor instanceof Player) {
                 const achievementDetails = skillDetails[this.getSkillId(skill)];
-                if (!achievementDetails) {
+                if(!achievementDetails) {
                     return;
                 }
 
                 this.actor.sendMessage(`Congratulations, you just advanced a ` +
-                    `${achievementDetails.name.toLowerCase()} level.`);
+                    `${ achievementDetails.name.toLowerCase() } level.`);
                 this.showLevelUpDialogue(skill, finalLevel);
             }
         }
     }
 
     public showLevelUpDialogue(skill: number | SkillName, level: number): void {
-        if (!(this.actor instanceof Player)) {
+        if(!(this.actor instanceof Player)) {
             return;
         }
 
@@ -211,7 +229,7 @@ export class Skills extends SkillShortcuts {
         const achievementDetails = skillDetails[this.getSkillId(skill)];
         const widgetId = achievementDetails.advancementWidgetId;
 
-        if (!widgetId) {
+        if(!widgetId) {
             return;
         }
 
@@ -224,12 +242,12 @@ export class Skills extends SkillShortcuts {
             beforeOpened: () => {
                 player.modifyWidget(widgetId, {
                     childId: 0,
-                    text: `<col=000080>Congratulations, you just advanced ${startsWithVowel(skillName) ? 'an' : 'a'} ` +
-                        `${skillName} level.</col>`
+                    text: `<col=000080>Congratulations, you just advanced ${ startsWithVowel(skillName) ? 'an' : 'a' } ` +
+                        `${ skillName } level.</col>`
                 });
                 player.modifyWidget(widgetId, {
                     childId: 1,
-                    text: `Your ${skillName} level is now ${level}.`
+                    text: `Your ${ skillName } level is now ${ level }.`
                 });
             },
             afterOpened: () => {
@@ -240,7 +258,7 @@ export class Skills extends SkillShortcuts {
     }
 
     public getSkillId(skill: number | SkillName): number {
-        if (typeof skill === 'number') {
+        if(typeof skill === 'number') {
             return skill;
         } else {
             const skillName = skill.toString().toUpperCase();
@@ -249,7 +267,7 @@ export class Skills extends SkillShortcuts {
     }
 
     public get(skill: number | SkillName): SkillValue {
-        if (typeof skill === 'number') {
+        if(typeof skill === 'number') {
             return this._values[skill];
         } else {
             const skillName = skill.toString().toUpperCase();
@@ -257,21 +275,21 @@ export class Skills extends SkillShortcuts {
         }
     }
 
+    public setExp(skill: number | SkillName, exp: number): void {
+        const skillId = this.getSkillId(skill);
+        this._values[skillId].exp = exp;
+    }
+
+    public setLevel(skill: number | SkillName, level: number): void {
+        const skillId = this.getSkillId(skill);
+        this._values[skillId].level = level;
+    }
+
     private defaultValues(): SkillValue[] {
         const values: SkillValue[] = [];
         skillDetails.forEach(() => values.push({ exp: 0, level: 1 }));
         values[Skill.HITPOINTS] = { exp: 1154, level: 10 };
         return values;
-    }
-
-    private setExp(skill: number | SkillName, exp: number): void {
-        const skillId = this.getSkillId(skill);
-        this._values[skillId].exp = exp;
-    }
-
-    private setLevel(skill: number | SkillName, level: number): void {
-        const skillId = this.getSkillId(skill);
-        this._values[skillId].level = level;
     }
 
     public get values(): SkillValue[] {
