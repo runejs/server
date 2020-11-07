@@ -1,0 +1,38 @@
+{
+    "rs:bronze_dagger": {
+        "game_id": 1205,
+        "description": "It's a bronze dagger.",
+        "tradable": true,
+        "weight": 0.453,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_type": "weapon",
+            "equipment_slot": "main_hand",
+            "requirements": {
+                "skills": {
+                    "attack": 1,
+                    "defense": 1
+                },
+                "quests": {
+                    "cooks_assistant": 40
+                }
+            },
+            "offensive_bonuses": {
+                "speed": 4,
+                "stab": 4,
+                "slash": 2,
+                "crush": -4,
+                "magic": 1
+            },
+            "defensive_bonuses": {
+                "magic": 1
+            },
+            "skill_bonuses": {
+                "strength": 3
+            }
+        },
+        "metadata": {
+            "custom_description": "It's a bronze dagger."
+        }
+    }
+}

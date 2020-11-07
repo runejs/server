@@ -8,7 +8,7 @@ import { itemIds } from '@server/world/config/item-ids';
 import { QuestProgress } from '@server/world/actor/player/player-data';
 
 const quest: Quest = {
-    id: 'cooksAssistant',
+    id: 'cooks_assistant',
     questTabId: 27,
     name: `Cook's Assistant`,
     points: 1,
@@ -19,7 +19,7 @@ const quest: Quest = {
             let questLog = `It's the <col=800000>Duke of Lumbridge's</col> birthday and I have to help ` +
                 `his <col=800000>Cook</col> make him a <col=800000>birthday cake.</col> To do this I need to ` +
                 `bring him the following ingredients:\n`;
-            const quest = player.getQuest('cooksAssistant');
+            const quest = player.getQuest('cooks_assistant');
 
             if(player.hasItemInInventory(itemIds.bucketOfMilk) || quest.attributes.givenMilk) {
                 questLog += `I have found a <col=800000>bucket of milk</col> to give to the cook.\n`;
@@ -145,7 +145,7 @@ const startQuestAction: npcAction = (details) => {
         options => [
             `I'm always happy to help a cook in distress.`, [
                 execute(() => {
-                    player.setQuestStage('cooksAssistant', 'COLLECTING');
+                    player.setQuestStage('cooks_assistant', 'COLLECTING');
                 }),
                 player => [ Emote.GENERIC, `Yes, I'll help you.` ],
                 cook => [ Emote.HAPPY, `Oh thank you, thank you. I need milk, an egg and flour. I'd be very grateful ` +
@@ -185,7 +185,7 @@ const handInIngredientsAction: npcAction = (details) => {
         cook => [Emote.GENERIC, `How are you getting on with finding the ingredients?`]
     ];
 
-    const quest = player.quests.find(quest => quest.questId === 'cooksAssistant');
+    const quest = player.quests.find(quest => quest.questId === 'cooks_assistant');
 
     const ingredients = [
         { itemId: itemIds.bucketOfMilk, text: `Here's a bucket of milk.`, attr: 'givenMilk' },
@@ -206,7 +206,7 @@ const handInIngredientsAction: npcAction = (details) => {
         dialogueTree.push(
             player => [Emote.GENERIC, ingredient.text],
             execute(() => {
-                const quest = player.quests.find(quest => quest.questId === 'cooksAssistant');
+                const quest = player.quests.find(quest => quest.questId === 'cooks_assistant');
 
                 if(player.removeFirstItem(ingredient.itemId) !== -1) {
                     quest.attributes[ingredient.attr] = true;
@@ -235,7 +235,7 @@ const handInIngredientsAction: npcAction = (details) => {
             player => [Emote.GENERIC, `Well, maybe one day I'll be important enough to sit on the Duke's table.`],
             cook => [Emote.SKEPTICAL, `Maybe, but I won't be holding my breath.`],
             execute(() => {
-                player.setQuestStage('cooksAssistant', 'COMPLETE');
+                player.setQuestStage('cooks_assistant', 'COMPLETE');
             })
         ],
         (subtree, tag_NO_INGREDIENTS) => [
@@ -259,14 +259,14 @@ export default [{
     quest
 }, {
     type: 'npc_action',
-    questRequirement: { questId: 'cooksAssistant', stage: 'NOT_STARTED' },
+    questRequirement: { questId: 'cooks_assistant', stage: 'NOT_STARTED' },
     npcIds: npcIds.lumbridgeCook,
     options: 'talk-to',
     walkTo: true,
     action: startQuestAction
 }, {
     type: 'npc_action',
-    questRequirement: { questId: 'cooksAssistant', stage: 'COLLECTING' },
+    questRequirement: { questId: 'cooks_assistant', stage: 'COLLECTING' },
     npcIds: npcIds.lumbridgeCook,
     options: 'talk-to',
     walkTo: true,
