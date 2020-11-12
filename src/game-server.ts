@@ -9,17 +9,14 @@ import { sort } from '@server/plugins/plugin';
 import { loadPackets } from '@server/net/inbound-packets';
 import { watchForChanges, watchSource } from '@server/util/files';
 import { openGameServer } from '@server/net/server/game-server';
-import { loadItemConfigurations } from '@server/config/item-config';
+import { loadConfigurations } from '@server/config';
+
 
 export let serverConfig: ServerConfig;
 export let cache: Cache;
 export let world: World;
 
 export let pluginActions: { [key: string]: any } = {};
-
-async function loadConfigurations(): Promise<void> {
-    await loadItemConfigurations();
-}
 
 export async function loadPlugins(): Promise<void> {
     pluginActions = {};

@@ -6,8 +6,8 @@
         "weight": 0.453,
         "equippable": true,
         "equipment_data": {
-            "equipment_type": "weapon",
             "equipment_slot": "main_hand",
+            "equipment_type": "one_handed",
             "requirements": {
                 "skills": {
                     "attack": 1,

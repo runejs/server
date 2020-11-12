@@ -1,18 +1,56 @@
 import { loadConfigurationFiles } from '@server/config/index';
 import { cache } from '@server/game-server';
 
+export type EquipmentSlot = 'head' | 'back' | 'neck' | 'main_hand' | 'off_hand' | 'torso' |
+    'legs' | 'hands' | 'feet' | 'ring' | 'quiver';
+
+export const equipmentIndices = {
+    'head': 0,
+    'back': 1,
+    'neck': 2,
+    'main_hand': 3,
+    'torso': 4,
+    'off_hand': 5,
+    'legs': 7,
+    'hands': 9,
+    'feet': 10,
+    'ring': 12,
+    'quiver': 13
+};
+
+export const getEquipmentIndex = (equipmentSlot: EquipmentSlot): number => equipmentIndices[equipmentSlot];
+
+export type EquipmentType = 'hat' | 'helmet' | 'torso' | 'full_top' | 'one_handed' | 'two_handed';
+
 export interface ItemRequirements {
     skills?: { [key: string]: number };
     quests?: { [key: string]: number };
 }
 
+export interface OffensiveBonuses {
+    speed?: number;
+    stab?: number;
+    slash?: number;
+    crush?: number;
+    magic?: number;
+    ranged?: number;
+}
+
+export interface DefensiveBonuses {
+    stab?: number;
+    slash?: number;
+    crush?: number;
+    magic?: number;
+    ranged?: number;
+}
+
 export interface EquipmentData {
-    equipmentType: string;
-    equipmentSlot: string;
+    equipmentSlot: EquipmentSlot;
+    equipmentType?: EquipmentType;
     requirements?: ItemRequirements;
-    offensiveBonuses: { [key: string]: number };
-    defensiveBonuses: { [key: string]: number };
-    skillBonuses: { [key: string]: number };
+    offensiveBonuses?: OffensiveBonuses;
+    defensiveBonuses?: DefensiveBonuses;
+    skillBonuses?: { [key: string]: number };
 }
 
 export interface ItemConfiguration {
@@ -22,12 +60,12 @@ export interface ItemConfiguration {
     weight?: number;
     equippable?: boolean;
     equipment_data?: {
-        equipment_type: string;
-        equipment_slot: string;
+        equipment_slot: EquipmentSlot;
+        equipment_type?: EquipmentType;
         requirements?: ItemRequirements;
-        offensive_bonuses: { [key: string]: number };
-        defensive_bonuses: { [key: string]: number };
-        skill_bonuses: { [key: string]: number };
+        offensive_bonuses?: OffensiveBonuses;
+        defensive_bonuses?: DefensiveBonuses;
+        skill_bonuses?: { [key: string]: number };
     };
     metadata?: { [key: string]: unknown };
 }
