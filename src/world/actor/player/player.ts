@@ -15,7 +15,6 @@ import {
 } from './player-data';
 import { PlayerWidget, widgets, widgetScripts } from '../../config/widget';
 import { ContainerUpdateEvent, getItemFromContainer, ItemContainer } from '../../items/item-container';
-import { EquipmentBonuses, EquipmentSlot, ItemDetails, WeaponType } from '../../config/item-data';
 import { Item } from '../../items/item';
 import { Npc } from '../npc/npc';
 import { NpcUpdateTask } from './updating/npc-update-task';
@@ -32,6 +31,8 @@ import { PlayerCommandAction } from '@server/world/action/player-command-action'
 import { take } from 'rxjs/operators';
 import { updateBonusStrings } from '@server/plugins/equipment/equipment-stats-plugin';
 import { Action, actionHandler } from '@server/world/action';
+import { equipmentIndex, EquipmentSlot, ItemDetails } from '@server/config/item-config';
+import { findItem } from '@server/config';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -634,16 +635,8 @@ export class Player extends Actor {
         return true;
     }
 
-    public hasItemInEquipment(item: number | Item): boolean {
-        return this._equipment.has(item);
-    }
-
-    public getItemInEquipmentSlot(slot: string): Item {
-        return this._equipment.items[EquipmentSlot[slot]];
-    }
-
     public hasItemOnPerson(item: number | Item): boolean {
-        return this.hasItemInInventory(item) || this.hasItemInEquipment(item);
+        return this.hasItemInInventory(item) || this.isItemEquipped(item);
     }
 
     /**
@@ -792,6 +785,13 @@ export class Player extends Actor {
         return this.activeWidget && this.activeWidget.widgetId === widgetId;
     }
 
+    public isItemEquipped(item: number | Item): boolean {
+        return this._equipment.has(item);
+    }
+
+    public getEquippedItem(equipmentSlot: EquipmentSlot): Item | null {
+        return this.equipment.items[equipmentIndex(equipmentSlot)] || null;
+    }
 
     public equipItem(itemId: number, itemSlot: number, slot: EquipmentSlot): boolean {
         const itemToEquip = getItemFromContainer(itemId, itemSlot, this.inventory);
@@ -803,54 +803,54 @@ export class Player extends Actor {
         const itemToUnequip: Item = this.equipment.items[slot];
         let shouldUnequipOffHand: boolean = false;
         let shouldUnequipMainHand: boolean = false;
-        const itemDetails: ItemDetails = world.itemData.get(itemId);
+        const itemDetails: ItemDetails = findItem(itemId);
 
-        if(!itemDetails || !itemDetails.equipment || !itemDetails.equipment.slot) {
+        if(!itemDetails || !itemDetails.equipmentData || !itemDetails.equipmentData.slot) {
             this.sendMessage(`Unable to equip item ${ itemId }/${ itemDetails.name }: Missing equipment data.`);
             return;
         }
 
-        if(itemDetails && itemDetails.equipment) {
-            if(itemDetails.equipment.weaponType === WeaponType.TWO_HANDED) {
+        if(itemDetails && itemDetails.equipmentData) {
+            if(itemDetails.equipmentData.equipmentType === 'two_handed') {
                 shouldUnequipOffHand = true;
             }
 
-            if(slot === EquipmentSlot.OFF_HAND && this.equipment.items[EquipmentSlot.MAIN_HAND]) {
-                const mainHandItemData: ItemDetails = world.itemData.get(this.equipment.items[EquipmentSlot.MAIN_HAND].itemId);
+            if(slot === 'off_hand' && this.getEquippedItem('main_hand')) {
+                const mainHandItemData: ItemDetails = findItem(this.getEquippedItem('main_hand').itemId);
 
-                if(mainHandItemData && mainHandItemData.equipment && mainHandItemData.equipment.weaponType === WeaponType.TWO_HANDED) {
+                if(mainHandItemData && mainHandItemData.equipmentData && mainHandItemData.equipmentData.equipmentType === 'two_handed') {
                     shouldUnequipMainHand = true;
                 }
             }
         }
 
         if(itemToUnequip) {
-            if(shouldUnequipOffHand && !this.unequipItem(EquipmentSlot.OFF_HAND, false)) {
+            if(shouldUnequipOffHand && !this.unequipItem('off_hand', false)) {
                 return false;
             }
 
-            if(shouldUnequipMainHand && !this.unequipItem(EquipmentSlot.MAIN_HAND, false)) {
+            if(shouldUnequipMainHand && !this.unequipItem('main_hand', false)) {
                 return false;
             }
 
             actionHandler.call('equip_action', this, itemToUnequip.itemId, 'UNEQUIP');
 
-            this.equipment.remove(slot, false);
+            this.equipment.remove(equipmentIndex(slot), false);
             this.inventory.remove(itemSlot, false);
 
-            this.equipment.set(slot, itemToEquip);
+            this.equipment.set(equipmentIndex(slot), itemToEquip);
             this.inventory.set(itemSlot, itemToUnequip);
 
         } else {
-            this.equipment.set(slot, itemToEquip);
+            this.equipment.set(equipmentIndex(slot), itemToEquip);
             this.inventory.remove(itemSlot);
 
             if(shouldUnequipOffHand) {
-                this.unequipItem(EquipmentSlot.OFF_HAND);
+                this.unequipItem('off_hand');
             }
 
             if(shouldUnequipMainHand) {
-                this.unequipItem(EquipmentSlot.MAIN_HAND);
+                this.unequipItem('main_hand');
             }
         }
 
@@ -889,7 +889,7 @@ export class Player extends Actor {
 
         actionHandler.call('equip_action', this, itemInSlot.itemId, 'UNEQUIP');
 
-        this.equipment.remove(slot);
+        this.equipment.remove(equipmentIndex(slot));
         this.inventory.set(inventorySlot, itemInSlot);
         if(updateRequired) {
             this.equipmentChanged();
@@ -963,24 +963,26 @@ export class Player extends Actor {
     }
 
     private addBonuses(item: Item): void {
-        const itemData: ItemDetails = world.itemData.get(item.itemId);
+        const itemData: ItemDetails = findItem(item.itemId);
 
-        if(!itemData || !itemData.equipment || !itemData.equipment.bonuses) {
+        if(!itemData || !itemData.equipmentData) {
             return;
         }
 
-        const bonuses = itemData.equipment.bonuses;
+        const offensiveBonuses = itemData.equipmentData.offensiveBonuses;
+        const defensiveBonuses = itemData.equipmentData.defensiveBonuses;
+        const skillBonuses = itemData.equipmentData.skillBonuses;
 
-        if(bonuses.offencive) {
-            [ 'speed', 'stab', 'slash', 'crush', 'magic', 'ranged' ].forEach(bonus => this._bonuses.offencive[bonus] += (!bonuses.offencive[bonus] ? 0 : bonuses.offencive[bonus]));
+        if(offensiveBonuses) {
+            [ 'speed', 'stab', 'slash', 'crush', 'magic', 'ranged' ].forEach(bonus => this._bonuses.offencive[bonus] += (!offensiveBonuses[bonus] ? 0 : offensiveBonuses[bonus]));
         }
 
-        if(bonuses.defencive) {
-            [ 'stab', 'slash', 'crush', 'magic', 'ranged' ].forEach(bonus => this._bonuses.defencive[bonus] += (!bonuses.defencive[bonus] ? 0 : bonuses.defencive[bonus]));
+        if(defensiveBonuses) {
+            [ 'stab', 'slash', 'crush', 'magic', 'ranged' ].forEach(bonus => this._bonuses.defencive[bonus] += (!defensiveBonuses[bonus] ? 0 : defensiveBonuses[bonus]));
         }
 
-        if(bonuses.skill) {
-            [ 'strength', 'prayer' ].forEach(bonus => this._bonuses.skill[bonus] += (!bonuses.skill[bonus] ? 0 : bonuses.skill[bonus]));
+        if(skillBonuses) {
+            [ 'strength', 'prayer' ].forEach(bonus => this._bonuses.skill[bonus] += (!skillBonuses[bonus] ? 0 : skillBonuses[bonus]));
         }
     }
 

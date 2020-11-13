@@ -18,7 +18,7 @@ export const equipmentIndices = {
     'quiver': 13
 };
 
-export const getEquipmentIndex = (equipmentSlot: EquipmentSlot): number => equipmentIndices[equipmentSlot];
+export const equipmentIndex = (equipmentSlot: EquipmentSlot): number => equipmentIndices[equipmentSlot];
 
 export type EquipmentType = 'hat' | 'helmet' | 'torso' | 'full_top' | 'one_handed' | 'two_handed';
 
@@ -71,7 +71,6 @@ export interface ItemConfiguration {
 }
 
 export class ItemDetails {
-
     key: string;
     gameId: number;
     name: string = '';
@@ -91,7 +90,6 @@ export class ItemDetails {
     noteTemplateId: number;
     stackableIds: number[];
     stackableAmounts: number[];
-
 }
 
 function translateConfig(key: string, config: ItemConfiguration): any {
