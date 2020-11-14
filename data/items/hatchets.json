@@ -50,6 +50,11 @@
         "game_id": 1353,
         "weight": 1.36,
         "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 5
+                }
+            },
             "offensive_bonuses": {
                 "slash": 8,
                 "crush": 6
@@ -64,6 +69,11 @@
         "game_id": 1355,
         "weight": 1.133,
         "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 20
+                }
+            },
             "offensive_bonuses": {
                 "slash": 12,
                 "crush": 10
@@ -78,6 +88,11 @@
         "game_id": 1357,
         "weight": 1.587,
         "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 30
+                }
+            },
             "offensive_bonuses": {
                 "slash": 17,
                 "crush": 15
@@ -92,6 +107,11 @@
         "game_id": 1359,
         "weight": 1,
         "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 40
+                }
+            },
             "offensive_bonuses": {
                 "slash": 26,
                 "crush": 24

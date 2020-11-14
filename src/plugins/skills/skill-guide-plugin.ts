@@ -126,6 +126,6 @@ export const openSubGuideAction: widgetAction = (details) => {
 };
 
 export default [
-    { type: 'button', widgetIds: widgets.skillsTab, buttonIds, action: openGuideAction },
+    { type: 'button', widgetId: widgets.skillsTab, buttonIds, action: openGuideAction },
     { type: 'widget_action', widgetIds: widgets.skillGuide, childIds: sidebarTextIds, optionId: 0, action: openSubGuideAction }
 ];

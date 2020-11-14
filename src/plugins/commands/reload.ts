@@ -1,6 +1,7 @@
 import { commandAction } from '@server/world/action/player-command-action';
 import { loadPlugins } from '@server/game-server';
 import { loadPackets } from '@server/net/inbound-packets';
+import { loadConfigurations } from '@server/config';
 
 const action: commandAction = (details) => {
     const { player } = details;
@@ -48,6 +49,7 @@ const action: commandAction = (details) => {
         .then(() => player.sendLogMessage('Content reloaded.', details.isConsole))
         .catch(() => player.sendLogMessage('Error reloading content.', details.isConsole));
     loadPackets();
+    loadConfigurations();
 };
 
 export default {
