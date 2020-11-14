@@ -899,7 +899,6 @@ export class Player extends Actor {
         let slotIndex: number;
         if(typeof slot === 'number') {
             slotIndex = slot;
-            slot = getEquipmentSlot(slotIndex);
         } else {
             slotIndex = equipmentIndex(slot);
         }
@@ -925,6 +924,9 @@ export class Player extends Actor {
     }
 
     private inventoryUpdated(event: ContainerUpdateEvent): void {
+        if(event.type === 'CLEAR_ALL') {
+            this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
+        }
         this.updateCarryWeight();
     }
 
@@ -971,6 +973,9 @@ export class Player extends Actor {
         this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, this.getQuestPoints());
 
         const questMap = pluginActions.quest;
+        if(!questMap) {
+            return;
+        }
         Object.keys(questMap).forEach(questKey => {
             const questData = questMap[questKey];
             const playerQuest = this.quests.find(quest => quest.questId === questData.id);

@@ -1,6 +1,7 @@
 import { commandAction } from '@server/world/action/player-command-action';
 import { cache } from '@server/game-server';
 import { itemIds } from '@server/world/config/item-ids';
+import { findItem, itemIdMap } from '@server/config';
 
 const action: commandAction = (details) => {
     const { player, args } = details;
@@ -18,8 +19,13 @@ const action: commandAction = (details) => {
     if(itemSearch.match(/^[0-9]+$/)) {
         itemId = parseInt(itemSearch, 10);
     } else {
-        // @TODO nested item ids
-        itemId = itemIds[itemSearch];
+        if(itemSearch.indexOf(':') !== -1) {
+            console.log('honk');
+            itemId = findItem(itemSearch)?.gameId || null;
+        } else {
+            // @TODO nested item ids
+            itemId = itemIds[itemSearch];
+        }
     }
 
     if(isNaN(itemId)) {

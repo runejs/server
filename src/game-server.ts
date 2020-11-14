@@ -60,7 +60,8 @@ export async function runGameServer(): Promise<void> {
     await loadPackets();
 
     world = new World();
-    world.init().then(() => delete cache.mapData);
+    await world.init();
+    delete cache.mapData;
 
     if(process.argv.indexOf('-fakePlayers') !== -1) {
         world.generateFakePlayers();

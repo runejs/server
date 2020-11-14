@@ -1,5 +1,6 @@
 import { loadConfigurationFiles } from '@server/config/index';
 import { cache } from '@server/game-server';
+import _ from 'lodash';
 
 export type EquipmentSlot = 'head' | 'back' | 'neck' | 'main_hand' | 'off_hand' | 'torso' |
     'legs' | 'hands' | 'feet' | 'ring' | 'quiver';
@@ -59,7 +60,12 @@ export interface EquipmentData {
     skillBonuses?: SkillBonuses;
 }
 
+export interface PresetConfiguration {
+    [key: string]: ItemConfiguration;
+}
+
 export interface ItemConfiguration {
+    extends?: string | string[];
     game_id: number;
     description?: string;
     tradable?: boolean;
@@ -76,6 +82,9 @@ export interface ItemConfiguration {
     metadata?: { [key: string]: unknown };
 }
 
+/**
+ * Full server + cache details about a specific game item.
+ */
 export class ItemDetails {
     key: string;
     gameId: number;
@@ -119,17 +128,46 @@ function translateConfig(key: string, config: ItemConfiguration): any {
 }
 
 export async function loadItemConfigurations(): Promise<{ items: { [key: string]: ItemDetails }, idMap: { [key: number]: string } }> {
-    let itemConfigs: { [key: string]: ItemConfiguration } = {};
     const idMap: { [key: number]: string } = {};
     const items: { [key: string]: ItemDetails } = {};
+    let presets: PresetConfiguration = {};
 
-    itemConfigs = await loadConfigurationFiles<ItemConfiguration>('data/items');
+    const files = await loadConfigurationFiles('data/items');
 
-    const itemKeys = Object.keys(itemConfigs);
-    itemKeys.forEach(key => {
-        const itemConfig = itemConfigs[key];
-        idMap[itemConfig.game_id] = key;
-        items[key] = { ...translateConfig(key, itemConfig), ...cache.itemDefinitions.get(itemConfig.game_id) };
+    files.forEach(itemConfigs => {
+        const itemKeys = Object.keys(itemConfigs);
+        itemKeys.forEach(key => {
+            if(key === 'presets') {
+                // Preset items!
+                const newPresets = itemConfigs[key] as PresetConfiguration;
+                presets = { ...presets, ...newPresets };
+            } else {
+                // Standard items
+                const itemConfig: ItemConfiguration = itemConfigs[key] as ItemConfiguration;
+                idMap[itemConfig.game_id] = key;
+
+                let extensions = itemConfig.extends;
+                if(extensions) {
+                    if(typeof extensions === 'string') {
+                        extensions = [ extensions ];
+                    }
+                } else {
+                    extensions = [];
+                }
+
+                let itemDetails = { ...translateConfig(key, itemConfig),
+                    ...cache.itemDefinitions.get(itemConfig.game_id) };
+
+                extensions.forEach(presetKey => {
+                    const extensionItem = presets[presetKey];
+                    if(extensionItem) {
+                        itemDetails = _.merge(itemDetails, translateConfig(key, extensionItem));
+                    }
+                });
+
+                items[key] = itemDetails;
+            }
+        });
     });
 
     return { items, idMap };

@@ -1,0 +1,94 @@
+{
+    "presets": {
+        "rs:skillcape": {
+            "tradable": false,
+            "weight": 0.453,
+            "equippable": true,
+            "equipment_data": {
+                "equipment_slot": "back",
+                "defensive_bonuses": {
+                    "stab": 9,
+                    "slash": 9,
+                    "crush": 9,
+                    "magic": 9,
+                    "ranged": 9
+                }
+            }
+        },
+        "rs:skillcape_hood": {
+            "tradable": false,
+            "weight": 0.453,
+            "equippable": true,
+            "equipment_data": {
+                "equipment_slot": "head"
+            }
+        }
+    },
+
+    "rs:attack_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9747,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 99
+                }
+            }
+        }
+    },
+    "rs:attack_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9748,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 99
+                }
+            }
+        }
+    },
+    "rs:attack_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9749,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 99
+                }
+            }
+        }
+    },
+    "rs:strength_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9750,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "strength": 99
+                }
+            }
+        }
+    },
+    "rs:strength_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9751,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "strength": 99
+                }
+            }
+        }
+    },
+    "rs:strength_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9752,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "strength": 99
+                }
+            }
+        }
+    }
+}

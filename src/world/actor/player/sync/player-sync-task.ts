@@ -252,7 +252,7 @@ export class PlayerSyncTask extends Task<void> {
                 }
             }
 
-            if(!helmetType || helmetType === 'hat') {
+            if(helmetType === 'hat') {
                 appearanceData.put(0x100 + player.appearance.head, 'SHORT');
             } else {
                 appearanceData.put(0);

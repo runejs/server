@@ -2,16 +2,17 @@ import { getFiles } from '@server/util/files';
 import { logger } from '@runejs/core';
 import { readFileSync } from "fs";
 import { ItemDetails, loadItemConfigurations } from '@server/config/item-config';
+import { cache } from '@server/game-server';
 
-export async function loadConfigurationFiles<T>(configurationDir: string): Promise<{ [key: string]: T }> {
-    let configs: { [key: string]: T } = {};
+export async function loadConfigurationFiles(configurationDir: string): Promise<any[]> {
+    const files = [];
 
     for await(const path of getFiles(configurationDir)) {
         try {
             const configContent = JSON.parse(readFileSync(path, 'utf8'));
 
             if(configContent) {
-                configs = { ...configs, ...configContent };
+                files.push(configContent);
             }
         } catch(error) {
             logger.error(`Error loading configuration file at ${path}:`);
@@ -19,7 +20,7 @@ export async function loadConfigurationFiles<T>(configurationDir: string): Promi
         }
     }
 
-    return configs;
+    return files;
 }
 
 export let itemMap: { [key: string]: ItemDetails };
@@ -32,13 +33,31 @@ export async function loadConfigurations(): Promise<void> {
 }
 
 export const findItem = (itemKey: number | string): ItemDetails => {
+    if(!itemKey) {
+        return null;
+    }
+
     if(typeof itemKey === 'number') {
-        itemKey = itemIdMap[itemKey];
+        const gameId = itemKey;
+        itemKey = itemIdMap[gameId];
 
         if(!itemKey) {
-            throw new Error(`Item ${itemKey} is not yet configured on the server.`);
+            const cacheItem = cache.itemDefinitions.get(gameId);
+            if(cacheItem) {
+                logger.warn(`Item ${gameId} is not yet configured on the server.`);
+                return cacheItem as any;
+            } else {
+                logger.warn(`Item ${gameId} is not yet configured on the server and a matching cache item was not found.`);
+                return null;
+            }
         }
     }
 
-    return itemMap[itemKey];
+    const item = itemMap[itemKey];
+    if(!item) {
+        logger.warn(`Item ${itemKey} is not yet configured on the server and a matching cache item was not provided.`);
+        return null;
+    }
+
+    return item;
 };

@@ -1,0 +1,17 @@
+{
+    "presets": {
+        "rs:log": {
+            "tradable": true,
+            "weight": 2
+        }
+    },
+
+    "rs:logs": {
+        "extends": "rs:log",
+        "game_id": 1511
+    },
+    "rs:oak_logs": {
+        "extends": "rs:log",
+        "game_id": 1521
+    }
+}

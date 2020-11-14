@@ -67,11 +67,9 @@ export class World {
     public async init(): Promise<void> {
         await loadPlugins();
         await loadActions();
-        await new Promise(() => {
-            this.chunkManager.generateCollisionMaps();
-            this.spawnNpcs();
-            this.spawnScenery();
-        });
+        this.chunkManager.generateCollisionMaps();
+        this.spawnNpcs();
+        this.spawnScenery();
     }
 
     /**

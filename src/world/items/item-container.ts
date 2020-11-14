@@ -7,7 +7,7 @@ import { findItem } from '@server/config';
 export interface ContainerUpdateEvent {
     slot?: number;
     item?: Item;
-    type: 'ADD' | 'REMOVE' | 'SWAP' | 'SET' | 'SET_ALL' | 'UPDATE_AMOUNT';
+    type: 'ADD' | 'REMOVE' | 'SWAP' | 'SET' | 'SET_ALL' | 'UPDATE_AMOUNT' | 'CLEAR_ALL';
 }
 
 export const getItemFromContainer = (itemId: number, slot: number, container: ItemContainer): Item => {
@@ -36,6 +36,14 @@ export class ItemContainer {
 
         for(let i = 0; i < size; i++) {
             this._items[i] = null;
+        }
+    }
+
+    public clear(fireEvent: boolean = true): void {
+        this._items.forEach((item, index) => this._items[index] = null);
+
+        if(fireEvent) {
+            this._containerUpdated.next({ type: 'CLEAR_ALL' });
         }
     }
 
@@ -269,7 +277,7 @@ export class ItemContainer {
             }
 
             const itemData = findItem(item.itemId);
-            if(!!hasValueNotNull(itemData) || itemData.weight === undefined) {
+            if(!itemData?.weight) {
                 continue;
             }
 

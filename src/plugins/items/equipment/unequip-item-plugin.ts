@@ -13,6 +13,12 @@ export const action: itemAction = (details) => {
         return;
     }
 
+    if(!itemDetails) {
+        // The item is not yet configured on the server.
+        player.sendMessage(`Item ${itemId} is not yet configured on the server.`);
+        return;
+    }
+
     player.unequipItem(itemDetails.equipmentData?.equipmentSlot);
 };
 

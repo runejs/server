@@ -1,53 +1,5 @@
-# Fletching
-- id: 9783
-  desc: fletching cape
-  canTrade: false
-  weight: 0.050
-  equipment:
-    slot: BACK
-- id: 9784
-  desc: fletching cape (t)
-  canTrade: false
-  weight: 0.050
-  equipment:
-    slot: BACK
-- id: 9785
-  desc: fletching hood
-  canTrade: false
-  equipment:
-    slot: HEAD
 # Attack
-- id: 9747
-  desc: attack cape
-  canTrade: false
-  equipment:
-    slot: BACK
-- id: 9748
-  desc: attack cape (t)
-  canTrade: false
-  equipment:
-    slot: BACK
-- id: 9749
-  desc: attack hood
-  canTrade: false
-  equipment:
-    slot: HEAD
 # Strength
-- id: 9750
-  desc: strength cape
-  canTrade: false
-  equipment:
-    slot: BACK
-- id: 9751
-  desc: strength cape (t)
-  canTrade: false
-  equipment:
-    slot: BACK
-- id: 9752
-  desc: strength hood
-  canTrade: false
-  equipment:
-    slot: HEAD
 # Defence
 - id: 9753
   desc: defence cape
@@ -208,6 +160,24 @@
   canTrade: false
   equipment:
     slot: HEAD
+# Fletching
+- id: 9783
+  desc: fletching cape
+  canTrade: false
+  weight: 0.050
+  equipment:
+    slot: BACK
+- id: 9784
+  desc: fletching cape (t)
+  canTrade: false
+  weight: 0.050
+  equipment:
+    slot: BACK
+- id: 9785
+  desc: fletching hood
+  canTrade: false
+  equipment:
+    slot: HEAD
 # Slayer
 - id: 9786
   desc: slayer cape
@@ -363,13 +333,22 @@
   canTrade: false
   equipment:
     slot: HEAD
-- id: 590
-  desc: tinderbox
-  canTrade: true
-  weight: 0.035
-  alchemy:
-    high: 0
-    low: 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 - id: 1048
   desc: white partyhat
   canTrade: true
@@ -380,6 +359,9 @@
   equipment:
     slot: HEAD
     helmetType: HAT
+
+
+
 - id: 1061
   desc: leather boots
   canTrade: true
@@ -402,6 +384,9 @@
         crush: 1
         magic: 0
         ranged: 0
+
+
+
 - id: 1079
   desc: rune platelegs
   canTrade: true
@@ -523,74 +508,10 @@
       skill:
         strength: 70
         prayer: 0
-- id: 1351
-  desc: bronze axe
-  canTrade: true
-  weight: 1.35
-  alchemy:
-    high: 9
-    low: 6
-  equipment:
-    slot: MAIN_HAND
-    bonuses:
-      offencive:
-        speed: 5
-        stab: -2
-        slash: 4
-        crush: 2
-        magic: 0
-        ranged: 0
-      defencive:
-        stab: 0
-        slash: 1
-        crush: 0
-        magic: 0
-        ranged: 0
-      skill:
-        strength: 5
-        prayer: 0
-- id: 1359
-  desc: rune axe
-  canTrade: true
-  questItem: false
-  weight: 1
-  alchemy:
-    high: 7680
-    low: 5120
-  equipment:
-    bonuses:
-      offencive:
-        speed: 5
-        stab: -2
-        slash: 26
-        crush: 24
-        magic: 0
-        ranged: 0
-      defencive:
-        stab: 0
-        slash: 1
-        crush: 0
-        magic: 0
-        ranged: 0
-      skill:
-        strength: 29
-        prayer: 0
-    weaponType: ONE_HANDED
-    slot: MAIN_HAND
-- id: 1511
-  desc: normal logs
-  canTrade: true
-  weight: 2
-  alchemy:
-    high: 2
-    low: 1
-- id: 1521
-  desc: oak logs
-  canTrade: true
-  weight: 2
-  alchemy:
-    high: 12
-    low: 8
+
+
+
+
 
 
 
