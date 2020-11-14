@@ -1,0 +1,22 @@
+{
+    "rs:air_tiara": {
+        "game_id": 5527,
+        "tradable": true,
+        "weight": 1,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "hat"
+        }
+    },
+    "rs:mind_tiara": {
+        "game_id": 5529,
+        "tradable": true,
+        "weight": 1,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "hat"
+        }
+    }
+}

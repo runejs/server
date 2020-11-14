@@ -617,29 +617,6 @@
       skill:
         strength: 0
         prayer: 1
-- id: 5527
-  desc: air tiara
-  canTrade: true
-  weight: 1
-  alchemy:
-    high: 60
-    low: 30
-  equipment:
-    slot: HEAD
-    helmetType: HAT
-    bonuses:
-      offencive:
-        stab: 0
-        slash: 0
-        crush: 0
-        magic: 0
-        ranged: 0
-      defencive:
-        stab: 0
-        slash: 0
-        crush: 0
-        magic: 0
-        ranged: 0
 - id: 5521
   desc: Binding necklace
   canTrade: true
@@ -662,29 +639,9 @@
         crush: 0
         magic: 0
         ranged: 0
-- id: 5529
-  desc: Mind tiara
-  canTrade: true
-  weight: 1
-  alchemy:
-    high: 60
-    low: 30
-  equipment:
-    slot: HEAD
-    helmetType: HAT
-    bonuses:
-      offencive:
-        stab: 0
-        slash: 0
-        crush: 0
-        magic: 0
-        ranged: 0
-      defencive:
-        stab: 0
-        slash: 0
-        crush: 0
-        magic: 0
-        ranged: 0
+
+
+
 - id: 5531
   desc: Water tiara
   canTrade: true
