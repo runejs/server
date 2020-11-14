@@ -1,0 +1,31 @@
+{
+    "rs:white_full_helm": {
+        "game_id": 6623,
+        "tradable": true,
+        "weight": 2.721,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "helmet",
+            "requirements": {
+                "skills": {
+                    "defense": 10
+                }
+            },
+            "offensive_bonuses": {
+                "magic": -6,
+                "ranged": -2
+            },
+            "defensive_bonuses": {
+                "stab": 12,
+                "slash": 13,
+                "crush": 10,
+                "magic": -1,
+                "ranged": 12
+            },
+            "skill_bonuses": {
+                "prayer": 1
+            }
+        }
+    }
+}
