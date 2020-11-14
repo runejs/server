@@ -68,10 +68,10 @@ export function registerNewActors(packet: Packet, player: Player, trackedActors:
 }
 
 /**
- * Handles updating of nearby NPCs or Players for the specified player.
+ * Handles synchronization of nearby NPCs or Players for the specified player.
  */
-export function updateTrackedActors(packet: Packet, playerPosition: Position, appendUpdateMaskData: (actor: Actor) => void,
-    trackedActors: Actor[], nearbyActors: QuadtreeKey[]): Actor[] {
+export function syncTrackedActors(packet: Packet, playerPosition: Position, appendUpdateMaskData: (actor: Actor) => void,
+                                  trackedActors: Actor[], nearbyActors: QuadtreeKey[]): Actor[] {
     packet.putBits(8, trackedActors.length); // Tracked actor count
 
     if(trackedActors.length === 0) {
@@ -110,7 +110,7 @@ export function updateTrackedActors(packet: Packet, playerPosition: Position, ap
 }
 
 /**
- * Applends movement data of a player or NPC to the specified updating packet.
+ * Appends movement data of a player or NPC to the specified synchronization packet.
  */
 export function appendMovement(actor: Actor, packet: ByteBuffer): void {
     if(actor.walkDirection !== -1) {

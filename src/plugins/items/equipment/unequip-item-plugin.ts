@@ -1,6 +1,5 @@
 import { widgets } from '@server/world/config/widget';
 import { itemAction } from '@server/world/action/item-action';
-import { equipmentSlotIndex } from '@server/world/config/item-data';
 import { getItemFromContainer } from '@server/world/items/item-container';
 
 export const action: itemAction = (details) => {
@@ -14,8 +13,7 @@ export const action: itemAction = (details) => {
         return;
     }
 
-    const equipmentSlot = equipmentSlotIndex(itemDetails.equipment.slot);
-    player.unequipItem(equipmentSlot);
+    player.unequipItem(itemDetails.equipmentData?.equipmentSlot);
 };
 
 export default {

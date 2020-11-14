@@ -19,6 +19,8 @@ export const equipmentIndices = {
 };
 
 export const equipmentIndex = (equipmentSlot: EquipmentSlot): number => equipmentIndices[equipmentSlot];
+export const getEquipmentSlot = (index: number): EquipmentSlot =>
+    Object.keys(equipmentIndices).find(key => equipmentIndices[key] === index) as EquipmentSlot;
 
 export type EquipmentType = 'hat' | 'helmet' | 'torso' | 'full_top' | 'one_handed' | 'two_handed';
 
@@ -44,13 +46,17 @@ export interface DefensiveBonuses {
     ranged?: number;
 }
 
+export interface SkillBonuses {
+    [key: string]: number;
+}
+
 export interface EquipmentData {
     equipmentSlot: EquipmentSlot;
     equipmentType?: EquipmentType;
     requirements?: ItemRequirements;
     offensiveBonuses?: OffensiveBonuses;
     defensiveBonuses?: DefensiveBonuses;
-    skillBonuses?: { [key: string]: number };
+    skillBonuses?: SkillBonuses;
 }
 
 export interface ItemConfiguration {
@@ -65,7 +71,7 @@ export interface ItemConfiguration {
         requirements?: ItemRequirements;
         offensive_bonuses?: OffensiveBonuses;
         defensive_bonuses?: DefensiveBonuses;
-        skill_bonuses?: { [key: string]: number };
+        skill_bonuses?: SkillBonuses;
     };
     metadata?: { [key: string]: unknown };
 }

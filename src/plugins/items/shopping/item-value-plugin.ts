@@ -1,19 +1,12 @@
 import { itemAction } from '@server/world/action/item-action';
 import { widgets } from '@server/world/config/widget';
-import { world } from '@server/game-server';
 
 export const shopSellValueAction: itemAction = (details) => {
-    const { player, itemId } = details;
+    const { player, itemDetails } = details;
 
-    const item = world.itemData.get(itemId);
+    const itemValue = itemDetails.value || 1;
 
-    if(!item) {
-        return;
-    }
-
-    const itemValue = item.value || 1;
-
-    player.sendMessage(`${item.name}: currently costs ${itemValue} coins.`);
+    player.sendMessage(`${itemDetails.name}: currently costs ${itemValue} coins.`);
 };
 
 export const shopPurchaseValueAction: itemAction = (details) => {

@@ -3,13 +3,13 @@ import { Player } from '../player';
 import { Packet, PacketType } from '@server/net/packet';
 import { Npc } from '@server/world/actor/npc/npc';
 import { world } from '@server/game-server';
-import { registerNewActors, updateTrackedActors } from './actor-updating';
+import { registerNewActors, syncTrackedActors } from './actor-sync';
 import { ByteBuffer } from '@runejs/core';
 
 /**
- * Handles the chonky npc updating packet for a specific player.
+ * Handles the chonky npc synchronization packet for a specific player.
  */
-export class NpcUpdateTask extends Task<void> {
+export class NpcSyncTask extends Task<void> {
 
     private readonly player: Player;
 
@@ -32,7 +32,7 @@ export class NpcUpdateTask extends Task<void> {
                 height: 32
             });
 
-            this.player.trackedNpcs = updateTrackedActors(npcUpdatePacket, this.player.position,
+            this.player.trackedNpcs = syncTrackedActors(npcUpdatePacket, this.player.position,
                 actor => this.appendUpdateMaskData(actor as Npc, updateMaskData), this.player.trackedNpcs, nearbyNpcs) as Npc[];
 
             registerNewActors(npcUpdatePacket, this.player, this.player.trackedNpcs, nearbyNpcs, actor => {

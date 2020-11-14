@@ -22,8 +22,8 @@ export async function loadConfigurationFiles<T>(configurationDir: string): Promi
     return configs;
 }
 
-let itemMap: { [key: string]: ItemDetails };
-let itemIdMap: { [key: number]: string };
+export let itemMap: { [key: string]: ItemDetails };
+export let itemIdMap: { [key: number]: string };
 
 export async function loadConfigurations(): Promise<void> {
     const { items, idMap } = await loadItemConfigurations();

@@ -2,8 +2,9 @@ import { Player } from '@server/world/actor/player/player';
 import { questFilter } from '@server/plugins/plugin';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
 import { world } from '@server/game-server';
-import { ItemDetails } from '@server/world/config/item-data';
 import { Action, getActionList } from '@server/world/action/index';
+import { findItem } from '@server/config';
+import { ItemDetails } from '@server/config/item-config';
 
 /**
  * The definition for an equip action function.
@@ -70,7 +71,7 @@ const equipActionHandler = (player: Player, itemId: number, equipType: EquipType
         plugin.action({
             player,
             itemId,
-            itemDetails: world.itemData.get(itemId),
+            itemDetails: findItem(itemId),
             equipType
         });
     }

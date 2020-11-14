@@ -3,16 +3,16 @@ import { Task } from '@server/task/task';
 import { UpdateFlags } from '@server/world/actor/update-flags';
 import { Packet, PacketType } from '@server/net/packet';
 import { world } from '@server/game-server';
-import { EquipmentSlot, HelmetType, ItemDetails, TorsoType } from '@server/world/config/item-data';
-import { ItemContainer } from '@server/world/items/item-container';
-import { appendMovement, updateTrackedActors, registerNewActors } from './actor-updating';
+import { appendMovement, syncTrackedActors, registerNewActors } from './actor-sync';
 import { ByteBuffer } from '@runejs/core';
 import { stringToLong } from '@server/util/strings';
+import { findItem } from '@server/config';
+import { EquipmentSlot, ItemDetails } from '@server/config/item-config';
 
 /**
- * Handles the chonky player updating packet.
+ * Handles the chonky player synchronization packet.
  */
-export class PlayerUpdateTask extends Task<void> {
+export class PlayerSyncTask extends Task<void> {
 
     private readonly player: Player;
 
@@ -59,7 +59,7 @@ export class PlayerUpdateTask extends Task<void> {
                 });
             }
 
-            this.player.trackedPlayers = updateTrackedActors(playerUpdatePacket, this.player.position,
+            this.player.trackedPlayers = syncTrackedActors(playerUpdatePacket, this.player.position,
                 actor => this.appendUpdateMaskData(actor as Player, updateMaskData), this.player.trackedPlayers, nearbyPlayers) as Player[];
 
             registerNewActors(playerUpdatePacket, this.player, this.player.trackedPlayers, nearbyPlayers, actor => {
@@ -211,54 +211,55 @@ export class PlayerUpdateTask extends Task<void> {
                 }
             }
 
-            const torsoItem = equipment.items[EquipmentSlot.TORSO];
+            const torsoItem = player.getEquippedItem('torso');
             let torsoItemData: ItemDetails = null;
             if(torsoItem) {
-                torsoItemData = world.itemData.get(torsoItem.itemId);
+                torsoItemData = findItem(torsoItem.itemId);
                 appearanceData.put(0x200 + torsoItem.itemId, 'SHORT');
             } else {
                 appearanceData.put(0x100 + player.appearance.torso, 'SHORT');
             }
 
-            const offHandItem = equipment.items[EquipmentSlot.OFF_HAND];
+            const offHandItem = player.getEquippedItem('off_hand');
             if(offHandItem) {
                 appearanceData.put(0x200 + offHandItem.itemId, 'SHORT');
             } else {
                 appearanceData.put(0);
             }
 
-            if(torsoItemData && torsoItemData.equipment && torsoItemData.equipment.torsoType && torsoItemData.equipment.torsoType === TorsoType.FULL) {
+            if(torsoItemData && torsoItemData.equipmentData && torsoItemData.equipmentData.equipmentType &&
+                torsoItemData.equipmentData.equipmentType === 'full_top') {
                 appearanceData.put(0);
             } else {
                 appearanceData.put(0x100 + player.appearance.arms, 'SHORT');
             }
 
-            this.appendBasicAppearanceItem(appearanceData, equipment, player.appearance.legs, EquipmentSlot.LEGS);
+            this.appendBasicAppearanceItem(appearanceData, player, player.appearance.legs, 'legs');
 
-            const headItem = equipment.items[EquipmentSlot.HEAD];
+            const headItem = player.getEquippedItem('head');
             let helmetType = null;
             let fullHelmet = false;
 
             if(headItem) {
-                const headItemData = world.itemData.get(equipment.items[EquipmentSlot.HEAD].itemId);
+                const headItemData = findItem(headItem.itemId);
 
-                if(headItemData && headItemData.equipment && headItemData.equipment.helmetType) {
-                    helmetType = headItemData.equipment.helmetType;
+                if(headItemData && headItemData.equipmentData && headItemData.equipmentData.equipmentType) {
+                    helmetType = headItemData.equipmentData.equipmentType;
 
-                    if(helmetType === HelmetType.FULL_HELMET) {
+                    if(helmetType === 'helmet') {
                         fullHelmet = true;
                     }
                 }
             }
 
-            if(!helmetType || helmetType === HelmetType.HAT) {
+            if(!helmetType || helmetType === 'hat') {
                 appearanceData.put(0x100 + player.appearance.head, 'SHORT');
             } else {
                 appearanceData.put(0);
             }
 
-            this.appendBasicAppearanceItem(appearanceData, equipment, player.appearance.hands, EquipmentSlot.GLOVES);
-            this.appendBasicAppearanceItem(appearanceData, equipment, player.appearance.feet, EquipmentSlot.BOOTS);
+            this.appendBasicAppearanceItem(appearanceData, player, player.appearance.hands, 'hands');
+            this.appendBasicAppearanceItem(appearanceData, player, player.appearance.feet, 'feet');
 
             if(player.appearance.gender === 1 || fullHelmet) {
                 appearanceData.put(0);
@@ -301,8 +302,8 @@ export class PlayerUpdateTask extends Task<void> {
         }
     }
 
-    private appendBasicAppearanceItem(buffer: ByteBuffer, equipment: ItemContainer, appearanceInfo: number, equipmentSlot: EquipmentSlot): void {
-        const item = equipment.items[equipmentSlot];
+    private appendBasicAppearanceItem(buffer: ByteBuffer, player: Player, appearanceInfo: number, equipmentSlot: EquipmentSlot): void {
+        const item = player.getEquippedItem(equipmentSlot);
         if(item) {
             buffer.put(0x200 + item.itemId, 'SHORT');
         } else {

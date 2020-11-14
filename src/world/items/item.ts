@@ -1,4 +1,5 @@
 import { cache, world } from '@server/game-server';
+import { findItem, itemMap } from '@server/config';
 
 export interface Item {
     itemId: number;
@@ -59,12 +60,12 @@ export function parseItemId(item: number | Item): number {
 
 export function toNote(item: number | Item): number {
     item = parseItemId(item);
-    const notedItem = Array.from(world.itemData.values()).find(i => i.notedId === item);
-    return !notedItem ? -1 : notedItem.id;
+    const notedItem = Object.values(itemMap).find(i => i.notedId === item);
+    return !notedItem ? -1 : notedItem.gameId;
 }
 
 export function fromNote(item: number | Item): number {
     item = parseItemId(item);
-    const notedItem = world.itemData.get(item);
+    const notedItem = findItem(item);
     return !notedItem ? -1 : notedItem.notedId;
 }

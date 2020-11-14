@@ -2,6 +2,7 @@ import { Item } from './item';
 import { Subject } from 'rxjs';
 import { cache, world } from '@server/game-server';
 import { hasValueNotNull } from '@server/util/data';
+import { findItem } from '@server/config';
 
 export interface ContainerUpdateEvent {
     slot?: number;
@@ -52,7 +53,7 @@ export class ItemContainer {
             search = search.itemId;
         }
 
-        const stackable = world.itemData.get(search).stackable;
+        const stackable = findItem(search).stackable;
 
         if(stackable) {
             const index = this.findIndex(search);
@@ -117,7 +118,7 @@ export class ItemContainer {
         }
 
         const existingItemIndex = this.findItemIndex({ itemId: item.itemId, amount: 1 });
-        const cacheItem = world.itemData.get(item.itemId);
+        const cacheItem = findItem(item.itemId);
 
         if(existingItemIndex !== -1 && cacheItem.stackable) {
             const newItem = {
@@ -267,7 +268,7 @@ export class ItemContainer {
                 continue;
             }
 
-            const itemData = world.itemData.get(item.itemId);
+            const itemData = findItem(item.itemId);
             if(!!hasValueNotNull(itemData) || itemData.weight === undefined) {
                 continue;
             }

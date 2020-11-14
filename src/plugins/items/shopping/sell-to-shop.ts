@@ -1,12 +1,11 @@
 import { itemAction } from '@server/world/action/item-action';
 import { widgets } from '@server/world/config/widget';
 import { Shop, shopItemContainer } from '@server/world/config/shops';
-import { world } from '@server/game-server';
 import { itemIds } from '@server/world/config/item-ids';
 import { getItemFromContainer } from '@server/world/items/item-container';
 
 export const action: itemAction = (details) => {
-    const { player, itemId, itemSlot, widgetId, containerId, option } = details;
+    const { player, itemId, itemSlot, option, itemDetails } = details;
 
     if(!player.activeWidget || player.activeWidget.widgetId !== widgets.shop.widgetId) {
         return;
@@ -31,7 +30,6 @@ export const action: itemAction = (details) => {
         'sell-10': 10
     };
     let sellAmount = sellAmounts[option];
-    const itemDetails = world.itemData.get(itemId);
     const shopContainer = shopItemContainer(openedShop);
     const shopSpaces = shopContainer.items.filter(item => item === null);
 

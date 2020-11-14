@@ -5,14 +5,13 @@ import { widgets } from '../../world/config/widget';
 import { soundIds } from '@server/world/config/sound-ids';
 
 export const action: worldItemAction = (details) => {
-    const { player, worldItem } = details;
+    const { player, worldItem, itemDetails } = details;
 
     const inventory = player.inventory;
     let slot = -1;
-    const itemData = world.itemData.get(worldItem.itemId);
     let amount = worldItem.amount;
 
-    if(itemData.stackable) {
+    if(itemDetails.stackable) {
         const existingItemIndex = inventory.findIndex(worldItem.itemId);
         if(existingItemIndex !== -1) {
             const existingItem = inventory.items[existingItemIndex];
