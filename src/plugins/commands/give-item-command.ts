@@ -20,7 +20,6 @@ const action: commandAction = (details) => {
         itemId = parseInt(itemSearch, 10);
     } else {
         if(itemSearch.indexOf(':') !== -1) {
-            console.log('honk');
             itemId = findItem(itemSearch)?.gameId || null;
         } else {
             // @TODO nested item ids

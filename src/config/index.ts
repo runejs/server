@@ -1,6 +1,6 @@
 import { getFiles } from '@server/util/files';
 import { logger } from '@runejs/core';
-import { readFileSync } from "fs";
+import { readFileSync } from 'fs';
 import { ItemDetails, loadItemConfigurations } from '@server/config/item-config';
 import { cache } from '@server/game-server';
 
