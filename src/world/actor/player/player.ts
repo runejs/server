@@ -38,7 +38,8 @@ import {
     ItemDetails,
     OffensiveBonuses, SkillBonuses
 } from '@server/config/item-config';
-import { findItem } from '@server/config';
+import { findItem, npcIdMap } from '@server/config';
+import { NpcDetails } from '@server/config/npc-config';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -927,6 +928,38 @@ export class Player extends Actor {
             this.equipmentChanged();
         }
         return true;
+    }
+
+    /**
+     * Transform's the player's appearance into the specified NPC.
+     * @param npc The NPC to copy the appearance of.
+     */
+    public transformInto(npc: Npc | NpcDetails | string | number): void {
+        if(!npc) {
+            return;
+        }
+
+        if(typeof npc !== 'number') {
+            if(typeof npc === 'string') {
+                if(npc.indexOf(':') !== -1) {
+                    npc = npcIdMap[npc];
+                } else {
+                    npc = parseInt(npc, 10);
+                }
+            } else if(npc instanceof Npc) {
+                npc = npc.id;
+            } else {
+                npc = npc.gameId;
+            }
+        }
+
+        if(!npc) {
+            logger.error(`NPC not found.`);
+            return;
+        }
+
+        this.savedMetadata.npcTransformation = npc;
+        this.updateFlags.appearanceUpdateRequired = true;
     }
 
     public equals(player: Player): boolean {

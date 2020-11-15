@@ -324,7 +324,6 @@ export const tutorialInitAction: playerInitAction = async ({ player }) => {
     if(serverConfig.tutorialEnabled && !player.savedMetadata.tutorialComplete) {
         await handleTutorial(player);
     } else {
-        console.log('hello');
         defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
             if(tabIndex !== 0) {
                 player.outgoingPackets.sendTabWidget(tabIndex, widgetId);

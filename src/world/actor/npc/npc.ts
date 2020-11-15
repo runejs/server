@@ -7,7 +7,7 @@ import { pluginActions, world } from '@server/game-server';
 import { directionData } from '@server/world/direction';
 import { QuadtreeKey } from '@server/world';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
-import { Action, actionHandler } from '@server/world/action';
+import { Action } from '@server/world/action';
 
 interface NpcAnimations {
     walk: number;

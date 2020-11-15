@@ -6,7 +6,7 @@ import { world } from '@server/game-server';
 import { appendMovement, syncTrackedActors, registerNewActors } from './actor-sync';
 import { ByteBuffer } from '@runejs/core';
 import { stringToLong } from '@server/util/strings';
-import { findItem } from '@server/config';
+import { findItem, findNpc } from '@server/config';
 import { EquipmentSlot, ItemDetails } from '@server/config/item-config';
 
 /**
@@ -201,70 +201,75 @@ export class PlayerSyncTask extends Task<void> {
             appearanceData.put(-1); // Skull Icon
             appearanceData.put(-1); // Prayer Icon
 
-            for(let i = 0; i < 4; i++) {
-                const item = equipment.items[i];
+            if(player.savedMetadata.npcTransformation) {
+                appearanceData.put(65535, 'SHORT');
+                appearanceData.put(player.savedMetadata.npcTransformation, 'SHORT');
+            } else {
+                for(let i = 0; i < 4; i++) {
+                    const item = equipment.items[i];
 
-                if(item) {
-                    appearanceData.put(0x200 + item.itemId, 'SHORT');
+                    if(item) {
+                        appearanceData.put(0x200 + item.itemId, 'SHORT');
+                    } else {
+                        appearanceData.put(0);
+                    }
+                }
+
+                const torsoItem = player.getEquippedItem('torso');
+                let torsoItemData: ItemDetails = null;
+                if(torsoItem) {
+                    torsoItemData = findItem(torsoItem.itemId);
+                    appearanceData.put(0x200 + torsoItem.itemId, 'SHORT');
+                } else {
+                    appearanceData.put(0x100 + player.appearance.torso, 'SHORT');
+                }
+
+                const offHandItem = player.getEquippedItem('off_hand');
+                if(offHandItem) {
+                    appearanceData.put(0x200 + offHandItem.itemId, 'SHORT');
                 } else {
                     appearanceData.put(0);
                 }
-            }
 
-            const torsoItem = player.getEquippedItem('torso');
-            let torsoItemData: ItemDetails = null;
-            if(torsoItem) {
-                torsoItemData = findItem(torsoItem.itemId);
-                appearanceData.put(0x200 + torsoItem.itemId, 'SHORT');
-            } else {
-                appearanceData.put(0x100 + player.appearance.torso, 'SHORT');
-            }
+                if(torsoItemData && torsoItemData.equipmentData && torsoItemData.equipmentData.equipmentType &&
+                    torsoItemData.equipmentData.equipmentType === 'full_top') {
+                    appearanceData.put(0);
+                } else {
+                    appearanceData.put(0x100 + player.appearance.arms, 'SHORT');
+                }
 
-            const offHandItem = player.getEquippedItem('off_hand');
-            if(offHandItem) {
-                appearanceData.put(0x200 + offHandItem.itemId, 'SHORT');
-            } else {
-                appearanceData.put(0);
-            }
+                this.appendBasicAppearanceItem(appearanceData, player, player.appearance.legs, 'legs');
 
-            if(torsoItemData && torsoItemData.equipmentData && torsoItemData.equipmentData.equipmentType &&
-                torsoItemData.equipmentData.equipmentType === 'full_top') {
-                appearanceData.put(0);
-            } else {
-                appearanceData.put(0x100 + player.appearance.arms, 'SHORT');
-            }
+                const headItem = player.getEquippedItem('head');
+                let helmetType = null;
+                let fullHelmet = false;
 
-            this.appendBasicAppearanceItem(appearanceData, player, player.appearance.legs, 'legs');
+                if(headItem) {
+                    const headItemData = findItem(headItem.itemId);
 
-            const headItem = player.getEquippedItem('head');
-            let helmetType = null;
-            let fullHelmet = false;
+                    if(headItemData && headItemData.equipmentData && headItemData.equipmentData.equipmentType) {
+                        helmetType = headItemData.equipmentData.equipmentType;
 
-            if(headItem) {
-                const headItemData = findItem(headItem.itemId);
-
-                if(headItemData && headItemData.equipmentData && headItemData.equipmentData.equipmentType) {
-                    helmetType = headItemData.equipmentData.equipmentType;
-
-                    if(helmetType === 'helmet') {
-                        fullHelmet = true;
+                        if(helmetType === 'helmet') {
+                            fullHelmet = true;
+                        }
                     }
                 }
-            }
 
-            if(!headItem || helmetType === 'hat') {
-                appearanceData.put(0x100 + player.appearance.head, 'SHORT');
-            } else {
-                appearanceData.put(0);
-            }
+                if(!headItem || helmetType === 'hat') {
+                    appearanceData.put(0x100 + player.appearance.head, 'SHORT');
+                } else {
+                    appearanceData.put(0);
+                }
 
-            this.appendBasicAppearanceItem(appearanceData, player, player.appearance.hands, 'hands');
-            this.appendBasicAppearanceItem(appearanceData, player, player.appearance.feet, 'feet');
+                this.appendBasicAppearanceItem(appearanceData, player, player.appearance.hands, 'hands');
+                this.appendBasicAppearanceItem(appearanceData, player, player.appearance.feet, 'feet');
 
-            if(player.appearance.gender === 1 || fullHelmet) {
-                appearanceData.put(0);
-            } else {
-                appearanceData.put(0x100 + player.appearance.facialHair, 'SHORT');
+                if(player.appearance.gender === 1 || fullHelmet) {
+                    appearanceData.put(0);
+                } else {
+                    appearanceData.put(0x100 + player.appearance.facialHair, 'SHORT');
+                }
             }
 
             [
@@ -275,7 +280,7 @@ export class PlayerSyncTask extends Task<void> {
                 player.appearance.skinColor,
             ].forEach(color => appearanceData.put(color));
 
-            [
+            let animations = [
                 0x328, // stand
                 0x337, // stand turn
                 0x333, // walk
@@ -283,7 +288,22 @@ export class PlayerSyncTask extends Task<void> {
                 0x335, // turn 90
                 0x336, // turn 90 reverse
                 0x338, // run
-            ].forEach(animationId => appearanceData.put(animationId, 'SHORT'));
+            ];
+
+            if(player.savedMetadata.npcTransformation) {
+                const npc = findNpc(player.savedMetadata.npcTransformation);
+                animations = [
+                    npc?.animations?.stand || 0x328, // stand
+                    npc?.animations?.turnAround || 0x337, // stand turn
+                    npc?.animations?.walk || 0x333, // walk
+                    npc?.animations?.turnAround || 0x334, // turn 180
+                    npc?.animations?.turnRight || 0x335, // turn 90
+                    npc?.animations?.turnLeft || 0x336, // turn 90 reverse
+                    npc?.animations?.walk || 0x338, // run
+                ];
+            }
+
+            animations.forEach(animationId => appearanceData.put(animationId, 'SHORT'));
 
             appearanceData.put(stringToLong(player.username), 'LONG'); // Username
             appearanceData.put(player.skills.getCombatLevel()); // Combat Level
