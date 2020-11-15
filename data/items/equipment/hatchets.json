@@ -12,6 +12,9 @@
                 },
                 "defensive_bonuses": {
                     "slash": 1
+                },
+                "weapon_info": {
+                    "style": "axe"
                 }
             }
         }

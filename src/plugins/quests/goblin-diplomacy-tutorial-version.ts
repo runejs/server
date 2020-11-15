@@ -21,7 +21,7 @@ const startTutorial = async (player: Player): Promise<void> => {
     player.metadata.blockObjectInteractions = true;
 
     defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
-        if(widgetId !== -1) {
+        if(tabIndex !== 0 && widgetId !== -1) {
             player.outgoingPackets.sendTabWidget(tabIndex, widgetId === widgets.logoutTab ? widgetId : null);
         }
     });
@@ -289,7 +289,7 @@ async function handleTutorial(player: Player): Promise<void> {
     const handler = stageHandler[progress];
 
     defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
-        if(widgetId !== -1) {
+        if(tabIndex !== 0 && widgetId !== -1) {
             player.outgoingPackets.sendTabWidget(tabIndex, widgetId === widgets.logoutTab ? widgetId : null);
         }
     });
@@ -324,8 +324,11 @@ export const tutorialInitAction: playerInitAction = async ({ player }) => {
     if(serverConfig.tutorialEnabled && !player.savedMetadata.tutorialComplete) {
         await handleTutorial(player);
     } else {
-        defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) =>
-            player.outgoingPackets.sendTabWidget(tabIndex, widgetId));
+        defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
+            if(tabIndex !== 0) {
+                player.outgoingPackets.sendTabWidget(tabIndex, widgetId);
+            }
+        });
     }
 };
 

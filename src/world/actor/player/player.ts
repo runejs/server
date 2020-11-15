@@ -542,6 +542,15 @@ export class Player extends Actor {
     }
 
     /**
+     * Sets the player's specified sidebar widget to the given widget id.
+     * @param sidebarId The sidebar to change.
+     * @param widgetId The widget to insert into the sidebar.
+     */
+    public setSidebarWidget(sidebarId: number, widgetId: number): void {
+        this.outgoingPackets.sendTabWidget(sidebarId, widgetId || null);
+    }
+
+    /**
      * Plays the given song for the player.
      * @param songId The id of the song to play.
      */
@@ -848,7 +857,7 @@ export class Player extends Actor {
                 return false;
             }
 
-            actionHandler.call('equip_action', this, itemToUnequip.itemId, 'UNEQUIP');
+            actionHandler.call('equip_action', this, itemToUnequip.itemId, 'UNEQUIP', slot);
 
             this.equipment.remove(slotIndex, false);
             this.inventory.remove(itemSlot, false);
@@ -869,7 +878,7 @@ export class Player extends Actor {
             }
         }
 
-        actionHandler.call('equip_action', this, itemId, 'EQUIP');
+        actionHandler.call('equip_action', this, itemId, 'EQUIP', slot);
         this.equipmentChanged();
         return true;
     }
@@ -899,6 +908,7 @@ export class Player extends Actor {
         let slotIndex: number;
         if(typeof slot === 'number') {
             slotIndex = slot;
+            slot = getEquipmentSlot(slotIndex);
         } else {
             slotIndex = equipmentIndex(slot);
         }
@@ -909,7 +919,7 @@ export class Player extends Actor {
             return true;
         }
 
-        actionHandler.call('equip_action', this, itemInSlot.itemId, 'UNEQUIP');
+        actionHandler.call('equip_action', this, itemInSlot.itemId, 'UNEQUIP', slot);
 
         this.equipment.remove(slotIndex);
         this.inventory.set(inventorySlot, itemInSlot);

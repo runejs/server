@@ -18,6 +18,7 @@ export const animationIds = {
         punch: 422,
         kick: 423,
         stab: 412,
+        slash: 451,
         armBlock: 424
     }
 };

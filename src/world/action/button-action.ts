@@ -25,7 +25,9 @@ export interface ButtonActionData {
  */
 export interface ButtonAction extends Action {
     // The ID of the UI widget that the button is on.
-    widgetId: number;
+    widgetId?: number;
+    // The IDs of the UI widgets that the buttons are on.
+    widgetIds?: number[];
     // The child ID or list of child IDs of the button(s) within the UI widget.
     buttonIds?: number | number[];
     // The action function to be performed.
@@ -37,7 +39,8 @@ export interface ButtonAction extends Action {
 const buttonActionHandler = (player: Player, widgetId: number, buttonId: number): void => {
     // Find all item on item action plugins that match this action
     let interactionActions = getActionList('button').filter(plugin => questFilter(player, plugin) &&
-        plugin.widgetId === widgetId && (plugin.buttonIds === undefined || pluginFilter(plugin.buttonIds, buttonId)));
+        ((plugin.widgetId && plugin.widgetId === widgetId) || (plugin.widgetIds && pluginFilter(plugin.widgetIds, widgetId)))
+        && (plugin.buttonIds === undefined || pluginFilter(plugin.buttonIds, buttonId)));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
