@@ -154,6 +154,19 @@ export class Skills extends SkillShortcuts {
         this.setLevel(Skill.HITPOINTS, hitpoints);
     }
 
+    public getTotalLevel(): number {
+        return this._values.map(skillValue => skillValue.level)
+            .reduce((accumulator, currentValue) => accumulator + currentValue);
+    }
+
+    public getCombatLevel(): number {
+        const combatLevel = (this.defence.level + this.hitpoints.level + Math.floor(this.prayer.level / 2)) * 0.25;
+        const melee = (this.attack.level + this.strength.level) * 0.325;
+        const ranger = this.ranged.level * 0.4875;
+        const mage = this.magic.level * 0.4875;
+        return combatLevel + Math.max(melee, Math.max(ranger, mage));
+    }
+
     public getLevel(skill: number | SkillName, ignoreLevelModifications: boolean = false): number {
         const s = this.get(skill);
         return (s.modifiedLevel !== undefined && !ignoreLevelModifications ? s.modifiedLevel : s.level);

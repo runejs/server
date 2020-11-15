@@ -252,7 +252,7 @@ export class PlayerSyncTask extends Task<void> {
                 }
             }
 
-            if(helmetType === 'hat') {
+            if(!headItem || helmetType === 'hat') {
                 appearanceData.put(0x100 + player.appearance.head, 'SHORT');
             } else {
                 appearanceData.put(0);
@@ -286,8 +286,8 @@ export class PlayerSyncTask extends Task<void> {
             ].forEach(animationId => appearanceData.put(animationId, 'SHORT'));
 
             appearanceData.put(stringToLong(player.username), 'LONG'); // Username
-            appearanceData.put(3); // Combat Level
-            appearanceData.put(0, 'SHORT'); // Skill Level (Total Level)
+            appearanceData.put(player.skills.getCombatLevel()); // Combat Level
+            appearanceData.put(player.skills.getTotalLevel(), 'SHORT'); // Skill Level (Total Level)
 
             const appearanceDataSize = appearanceData.writerIndex;
 

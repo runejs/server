@@ -24,6 +24,9 @@
             },
             "skill_bonuses": {
                 "strength": 3
+            },
+            "weapon_info": {
+                "style": "dagger"
             }
         }
     }

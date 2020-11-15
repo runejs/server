@@ -4,7 +4,7 @@ import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loa
 import { world } from '@server/game-server';
 import { Action, getActionList } from '@server/world/action/index';
 import { findItem } from '@server/config';
-import { ItemDetails } from '@server/config/item-config';
+import { EquipmentSlot, ItemDetails } from '@server/config/item-config';
 
 /**
  * The definition for an equip action function.
@@ -25,6 +25,8 @@ export interface EquipActionData {
     itemDetails: ItemDetails;
     // If the item was equipped or unequiped.
     equipType: EquipType;
+    // The equipment slot.
+    equipmentSlot: EquipmentSlot;
 }
 
 /**
@@ -39,7 +41,7 @@ export interface EquipAction extends Action {
     action: equipAction;
 }
 
-const equipActionHandler = (player: Player, itemId: number, equipType: EquipType): void => {
+const equipActionHandler = (player: Player, itemId: number, equipType: EquipType, slot: EquipmentSlot): void => {
     let filteredActions = getActionList('equip_action').filter(plugin => {
         if(!questFilter(player, plugin)) {
             return false;
@@ -72,7 +74,8 @@ const equipActionHandler = (player: Player, itemId: number, equipType: EquipType
             player,
             itemId,
             itemDetails: findItem(itemId),
-            equipType
+            equipType,
+            equipmentSlot: slot
         });
     }
 };

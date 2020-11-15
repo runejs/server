@@ -12,6 +12,71 @@ import { Npc } from '@server/world/actor/npc/npc';
 import { world } from '@server/game-server';
 import { itemIds } from '@server/world/config/item-ids';
 import { soundIds } from '@server/world/config/sound-ids';
+import { findItem } from '@server/config';
+
+const combatStyles = {
+    unarmed: [
+        {
+            type: 'crush',
+            exp: 'attack',
+            anim: animationIds.combat.punch
+        },
+        {
+            type: 'crush',
+            exp: 'strength',
+            anim: animationIds.combat.kick
+        },
+        {
+            type: 'crush',
+            exp: 'defence',
+            anim: animationIds.combat.punch
+        }
+    ],
+    axe: [
+        {
+            type: 'slash',
+            exp: 'attack',
+            anim: animationIds.combat.slash
+        },
+        {
+            type: 'slash',
+            exp: 'strength',
+            anim: animationIds.combat.slash
+        },
+        {
+            type: 'crush',
+            exp: 'strength',
+            anim: animationIds.combat.slash
+        },
+        {
+            type: 'slash',
+            exp: 'defence',
+            anim: animationIds.combat.slash
+        }
+    ],
+    dagger: [
+        {
+            type: 'stab',
+            exp: 'attack',
+            anim: animationIds.combat.stab
+        },
+        {
+            type: 'stab',
+            exp: 'strength',
+            anim: animationIds.combat.stab
+        },
+        {
+            type: 'slash',
+            exp: 'strength',
+            anim: animationIds.combat.slash
+        },
+        {
+            type: 'stab',
+            exp: 'defence',
+            anim: animationIds.combat.stab
+        }
+    ]
+};
 
 class Combat {
 
@@ -115,8 +180,18 @@ class Combat {
             defenderRemainingHealth = 0;
         }
 
+        let combatStyle = [ 'unarmed', 0 ];
+
+        if(attacker instanceof Player) {
+            if(attacker.savedMetadata.combatStyle) {
+                combatStyle = attacker.savedMetadata.combatStyle;
+            }
+        }
+
+        const attackAnim = combatStyles[combatStyle[0]][combatStyle[1]].anim;
+
         // Animate attacking the opponent and play the sound of them defending
-        attacker.playAnimation(animationIds.combat.punch);
+        attacker.playAnimation(attackAnim);
         world.playLocationSound(defender.position, defender instanceof Player ? soundIds.npc.human.playerDefence :
             soundIds.npc.human.maleDefence, 5);
 
