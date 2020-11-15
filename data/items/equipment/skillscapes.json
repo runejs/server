@@ -1,0 +1,762 @@
+{
+    "presets": {
+        "rs:skillcape": {
+            "tradable": false,
+            "weight": 0.453,
+            "equippable": true,
+            "equipment_data": {
+                "equipment_slot": "back",
+                "defensive_bonuses": {
+                    "stab": 9,
+                    "slash": 9,
+                    "crush": 9,
+                    "magic": 9,
+                    "ranged": 9
+                }
+            }
+        },
+        "rs:skillcape_hood": {
+            "tradable": false,
+            "weight": 0.453,
+            "equippable": true,
+            "equipment_data": {
+                "equipment_slot": "head"
+            }
+        }
+    },
+
+    "rs:attack_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9747,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 99
+                }
+            }
+        }
+    },
+    "rs:attack_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9748,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 99
+                }
+            }
+        }
+    },
+    "rs:attack_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9749,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 99
+                }
+            }
+        }
+    },
+    "rs:strength_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9750,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "strength": 99
+                }
+            }
+        }
+    },
+    "rs:strength_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9751,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "strength": 99
+                }
+            }
+        }
+    },
+    "rs:strength_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9752,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "strength": 99
+                }
+            }
+        }
+    },
+    "rs:defence_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9753,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "defence": 99
+                }
+            }
+        }
+    },
+    "rs:defence_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9754,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "defence": 99
+                }
+            }
+        }
+    },
+    "rs:defence_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9755,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "defence": 99
+                }
+            }
+        }
+    },
+    "rs:ranged_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9756,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "ranged": 99
+                }
+            }
+        }
+    },
+    "rs:ranged_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9757,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "ranged": 99
+                }
+            }
+        }
+    },
+    "rs:ranged_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9758,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "ranged": 99
+                }
+            }
+        }
+    },
+    "rs:prayer_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9759,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "prayer": 99
+                }
+            }
+        }
+    },
+    "rs:prayer_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9760,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "prayer": 99
+                }
+            }
+        }
+    },
+    "rs:prayer_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9761,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "prayer": 99
+                }
+            }
+        }
+    },
+    "rs:magic_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9762,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "magic": 99
+                }
+            }
+        }
+    },
+    "rs:magic_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9763,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "magic": 99
+                }
+            }
+        }
+    },
+    "rs:magic_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9764,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "magic": 99
+                }
+            }
+        }
+    },
+    "rs:runecrafting_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9765,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "runecrafting": 99
+                }
+            }
+        }
+    },
+    "rs:runecrafting_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9766,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "runecrafting": 99
+                }
+            }
+        }
+    },
+    "rs:runecrafting_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9767,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "runecrafting": 99
+                }
+            }
+        }
+    },
+    "rs:hitpoints_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9768,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "hitpoints": 99
+                }
+            }
+        }
+    },
+    "rs:hitpoints_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9769,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "hitpoints": 99
+                }
+            }
+        }
+    },
+    "rs:hitpoints_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9770,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "hitpoints": 99
+                }
+            }
+        }
+    },
+    "rs:agility_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9771,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "agility": 99
+                }
+            }
+        }
+    },
+    "rs:agility_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9772,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "agility": 99
+                }
+            }
+        }
+    },
+    "rs:agility_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9773,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "agility": 99
+                }
+            }
+        }
+    },
+    "rs:herblore_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9774,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "herblore": 99
+                }
+            }
+        }
+    },
+    "rs:herblore_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9775,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "herblore": 99
+                }
+            }
+        }
+    },
+    "rs:herblore_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9776,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "herblore": 99
+                }
+            }
+        }
+    },
+    "rs:thieving_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9777,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "thieving": 99
+                }
+            }
+        }
+    },
+    "rs:thieving_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9778,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "thieving": 99
+                }
+            }
+        }
+    },
+    "rs:thieving_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9779,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "thieving": 99
+                }
+            }
+        }
+    },
+    "rs:crafting_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9780,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "crafting": 99
+                }
+            }
+        }
+    },
+    "rs:crafting_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9781,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "crafting": 99
+                }
+            }
+        }
+    },
+    "rs:crafting_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9782,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "crafting": 99
+                }
+            }
+        }
+    },
+    "rs:fletching_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9783,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "fletching": 99
+                }
+            }
+        }
+    },
+    "rs:fletching_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9784,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "fletching": 99
+                }
+            }
+        }
+    },
+    "rs:fletching_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9785,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "fletching": 99
+                }
+            }
+        }
+    },
+    "rs:slayer_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9786,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "slayer": 99
+                }
+            }
+        }
+    },
+    "rs:slayer_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9787,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "slayer": 99
+                }
+            }
+        }
+    },
+    "rs:slayer_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9788,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "slayer": 99
+                }
+            }
+        }
+    },
+    "rs:construction_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9789,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "construction": 99
+                }
+            }
+        }
+    },
+    "rs:construction_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9790,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "construction": 99
+                }
+            }
+        }
+    },
+    "rs:construction_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9791,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "construction": 99
+                }
+            }
+        }
+    },
+    "rs:mining_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9792,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "mining": 99
+                }
+            }
+        }
+    },
+    "rs:mining_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9793,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "mining": 99
+                }
+            }
+        }
+    },
+    "rs:mining_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9794,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "mining": 99
+                }
+            }
+        }
+    },
+    "rs:smithing_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9795,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "smithing": 99
+                }
+            }
+        }
+    },
+    "rs:smithing_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9796,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "smithing": 99
+                }
+            }
+        }
+    },
+    "rs:smithing_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9797,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "smithing": 99
+                }
+            }
+        }
+    },
+    "rs:fishing_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9798,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "fishing": 99
+                }
+            }
+        }
+    },
+    "rs:fishing_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9799,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "fishing": 99
+                }
+            }
+        }
+    },
+    "rs:fishing_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9800,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "fishing": 99
+                }
+            }
+        }
+    },
+    "rs:cooking_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9801,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "cooking": 99
+                }
+            }
+        }
+    },
+    "rs:cooking_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9802,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "cooking": 99
+                }
+            }
+        }
+    },
+    "rs:cooking_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9803,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "cooking": 99
+                }
+            }
+        }
+    },
+    "rs:firemaking_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9804,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "firemaking": 99
+                }
+            }
+        }
+    },
+    "rs:firemaking_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9805,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "firemaking": 99
+                }
+            }
+        }
+    },
+    "rs:firemaking_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9806,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "firemaking": 99
+                }
+            }
+        }
+    },
+    "rs:woodcutting_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9807,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "woodcutting": 99
+                }
+            }
+        }
+    },
+    "rs:woodcutting_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9808,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "woodcutting": 99
+                }
+            }
+        }
+    },
+    "rs:woodcutting_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9809,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "woodcutting": 99
+                }
+            }
+        }
+    },
+    "rs:farming_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9810,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "farming": 99
+                }
+            }
+        }
+    },
+    "rs:farming_cape_t": {
+        "extends": "rs:skillcape",
+        "game_id": 9811,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "farming": 99
+                }
+            }
+        }
+    },
+    "rs:farming_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9812,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "farming": 99
+                }
+            }
+        }
+    },
+    "rs:quest_cape": {
+        "extends": "rs:skillcape",
+        "game_id": 9813
+    },
+    "rs:quest_hood": {
+        "extends": "rs:skillcape_hood",
+        "game_id": 9814
+    }
+}

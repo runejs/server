@@ -6,7 +6,7 @@ import { Observable, Subject } from 'rxjs';
 const readdir = util.promisify(fs.readdir);
 const stat = util.promisify(fs.stat);
 
-export async function* getFiles(directory: string, blacklist: string[]): AsyncGenerator<string> {
+export async function* getFiles(directory: string, blacklist: string[] = []): AsyncGenerator<string> {
     const files = await readdir(directory);
 
     for(const file of files) {

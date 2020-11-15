@@ -151,9 +151,9 @@ export const action: buttonAction = (details) => {
     const emote = emotes[buttonId];
     
     if(emote.name === 'SKILLCAPE') {
-        if (player.getItemInEquipmentSlot('BACK')) {            
-            if (skillCapeEmotes.some(item => item.itemIds.includes(player.getItemInEquipmentSlot('BACK')?.itemId))) {
-                const skillcapeEmote = skillCapeEmotes.filter(item => item.itemIds.includes(player.getItemInEquipmentSlot('BACK')?.itemId));
+        if (player.getEquippedItem('back')) {
+            if (skillCapeEmotes.some(item => item.itemIds.includes(player.getEquippedItem('back')?.itemId))) {
+                const skillcapeEmote = skillCapeEmotes.filter(item => item.itemIds.includes(player.getEquippedItem('back')?.itemId));
                 player.playAnimation(skillcapeEmote[0].animationId);
                 player.playGraphics({ id: skillcapeEmote[0].graphicId, delay: 0, height: 0 });
             }

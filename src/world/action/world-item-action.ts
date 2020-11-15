@@ -4,6 +4,8 @@ import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loa
 import { logger } from '@runejs/core';
 import { questFilter } from '@server/plugins/plugin';
 import { WorldItem } from '@server/world/items/world-item';
+import { ItemDetails } from '@server/config/item-config';
+import { findItem } from '@server/config';
 
 /**
  * The definition for a world item action function.
@@ -18,6 +20,8 @@ export interface WorldItemActionData {
     player: Player;
     // The world item that the player is interacting with.
     worldItem: WorldItem;
+    // Details about the item
+    itemDetails: ItemDetails;
 }
 
 /**
@@ -75,16 +79,22 @@ const worldItemActionHandler = (player: Player, worldItem: WorldItem, option: st
     const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);
     const immediatePlugins = interactionActions.filter(plugin => !plugin.walkTo);
 
+    const itemDetails = findItem(worldItem.itemId);
+
     // Make sure we walk to the NPC before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
         walkToAction(player, worldItem.position)
-            .then(() => walkToPlugins.forEach(plugin => plugin.action({ player, worldItem })))
+            .then(() => walkToPlugins.forEach(plugin => plugin.action({
+                player, worldItem, itemDetails
+            })))
             .catch(() => logger.warn(`Unable to complete walk-to action.`));
     }
 
     // Immediately run any non-walk-to plugins
     if(immediatePlugins.length !== 0) {
-        immediatePlugins.forEach(plugin => plugin.action({ player, worldItem }));
+        immediatePlugins.forEach(plugin => plugin.action({
+            player, worldItem, itemDetails
+        }));
     }
 };
 

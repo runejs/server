@@ -4,7 +4,6 @@ import Quadtree from 'quadtree-lib';
 import { timer } from 'rxjs';
 import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
-import { ItemDetails, parseItemData } from './config/item-data';
 import { ExamineCache } from './config/examine-data';
 import { cache, loadPlugins } from '@server/game-server';
 import { Position } from './position';
@@ -39,7 +38,6 @@ export class World {
     public readonly playerList: Player[] = new Array(World.MAX_PLAYERS).fill(null);
     public readonly npcList: Npc[] = new Array(World.MAX_NPCS).fill(null);
     public readonly chunkManager: ChunkManager = new ChunkManager();
-    public readonly itemData: Map<number, ItemDetails>;
     public readonly examine: ExamineCache = new ExamineCache();
     public readonly npcSpawns: NpcSpawn[];
     public readonly scenerySpawns: LocationObject[];
@@ -51,7 +49,6 @@ export class World {
     private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
 
     public constructor() {
-        this.itemData = parseItemData(cache.itemDefinitions);
         this.npcSpawns = parseNpcSpawns();
         this.scenerySpawns = parseScenerySpawns();
         this.shops = parseShops();
@@ -70,11 +67,9 @@ export class World {
     public async init(): Promise<void> {
         await loadPlugins();
         await loadActions();
-        await new Promise(() => {
-            this.chunkManager.generateCollisionMaps();
-            this.spawnNpcs();
-            this.spawnScenery();
-        });
+        this.chunkManager.generateCollisionMaps();
+        this.spawnNpcs();
+        this.spawnScenery();
     }
 
     /**

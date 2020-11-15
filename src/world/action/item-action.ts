@@ -2,8 +2,9 @@ import { Player } from '@server/world/actor/player/player';
 import { questFilter } from '@server/plugins/plugin';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
 import { world } from '@server/game-server';
-import { ItemDetails } from '@server/world/config/item-data';
 import { Action, getActionList } from '@server/world/action/index';
+import { ItemDetails } from '@server/config/item-config';
+import { findItem } from '@server/config';
 
 /**
  * The definition for an item action function.
@@ -120,7 +121,7 @@ const itemActionHandler = (player: Player, itemId: number, slot: number, widgetI
             itemSlot: slot,
             widgetId,
             containerId,
-            itemDetails: world.itemData.get(itemId),
+            itemDetails: findItem(itemId),
             option
         });
     }

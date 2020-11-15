@@ -1,0 +1,15 @@
+{
+    "rs:leather_boots": {
+        "game_id": 1061,
+        "tradable": true,
+        "weight": 0.34,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "feet",
+            "defensive_bonuses": {
+                "slash": 1,
+                "crush": 1
+            }
+        }
+    }
+}

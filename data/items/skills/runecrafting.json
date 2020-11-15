@@ -1,0 +1,11 @@
+{
+    "rs:binding_necklace": {
+        "game_id": 5521,
+        "tradable": true,
+        "weight": 0.01,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "neck"
+        }
+    }
+}

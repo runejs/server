@@ -9,6 +9,8 @@ import { sort } from '@server/plugins/plugin';
 import { loadPackets } from '@server/net/inbound-packets';
 import { watchForChanges, watchSource } from '@server/util/files';
 import { openGameServer } from '@server/net/server/game-server';
+import { loadConfigurations } from '@server/config';
+
 
 export let serverConfig: ServerConfig;
 export let cache: Cache;
@@ -48,6 +50,8 @@ export async function runGameServer(): Promise<void> {
         widgets: true
     });
 
+    await loadConfigurations();
+
     delete cache.dataChannel;
     delete cache.metaChannel;
     delete cache.indexChannels;
@@ -56,7 +60,8 @@ export async function runGameServer(): Promise<void> {
     await loadPackets();
 
     world = new World();
-    world.init().then(() => delete cache.mapData);
+    await world.init();
+    delete cache.mapData;
 
     if(process.argv.indexOf('-fakePlayers') !== -1) {
         world.generateFakePlayers();

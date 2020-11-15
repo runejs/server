@@ -1,12 +1,16 @@
 import { widgets } from '@server/world/config/widget';
 import { itemAction } from '@server/world/action/item-action';
-import { equipmentSlotIndex } from '@server/world/config/item-data';
 
 export const action: itemAction = (details) => {
     const { player, itemId, itemSlot, itemDetails } = details;
 
-    const equipmentSlot = equipmentSlotIndex(itemDetails.equipment.slot);
-    player.equipItem(itemId, itemSlot, equipmentSlot);
+    if(!itemDetails) {
+        // The item is not yet configured on the server.
+        player.sendMessage(`Item ${itemId} is not yet configured on the server.`);
+        return;
+    }
+
+    player.equipItem(itemId, itemSlot, itemDetails.equipmentData?.equipmentSlot);
 };
 
 export default {

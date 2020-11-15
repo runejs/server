@@ -2,11 +2,12 @@ import { Item } from './item';
 import { Subject } from 'rxjs';
 import { cache, world } from '@server/game-server';
 import { hasValueNotNull } from '@server/util/data';
+import { findItem } from '@server/config';
 
 export interface ContainerUpdateEvent {
     slot?: number;
     item?: Item;
-    type: 'ADD' | 'REMOVE' | 'SWAP' | 'SET' | 'SET_ALL' | 'UPDATE_AMOUNT';
+    type: 'ADD' | 'REMOVE' | 'SWAP' | 'SET' | 'SET_ALL' | 'UPDATE_AMOUNT' | 'CLEAR_ALL';
 }
 
 export const getItemFromContainer = (itemId: number, slot: number, container: ItemContainer): Item => {
@@ -38,6 +39,14 @@ export class ItemContainer {
         }
     }
 
+    public clear(fireEvent: boolean = true): void {
+        this._items.forEach((item, index) => this._items[index] = null);
+
+        if(fireEvent) {
+            this._containerUpdated.next({ type: 'CLEAR_ALL' });
+        }
+    }
+
     public has(item: number | Item): boolean {
         return this.findIndex(item) !== -1;
     }
@@ -52,7 +61,7 @@ export class ItemContainer {
             search = search.itemId;
         }
 
-        const stackable = world.itemData.get(search).stackable;
+        const stackable = findItem(search).stackable;
 
         if(stackable) {
             const index = this.findIndex(search);
@@ -117,7 +126,7 @@ export class ItemContainer {
         }
 
         const existingItemIndex = this.findItemIndex({ itemId: item.itemId, amount: 1 });
-        const cacheItem = world.itemData.get(item.itemId);
+        const cacheItem = findItem(item.itemId);
 
         if(existingItemIndex !== -1 && cacheItem.stackable) {
             const newItem = {
@@ -267,8 +276,8 @@ export class ItemContainer {
                 continue;
             }
 
-            const itemData = world.itemData.get(item.itemId);
-            if(!!hasValueNotNull(itemData) || itemData.weight === undefined) {
+            const itemData = findItem(item.itemId);
+            if(!itemData?.weight) {
                 continue;
             }
 

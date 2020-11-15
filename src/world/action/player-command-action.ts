@@ -38,6 +38,8 @@ export interface PlayerCommandAction extends Action {
 }
 
 const playerCommandActionHandler = (player: Player, command: string, isConsole: boolean, inputArgs: string[]): void => {
+    command = command.toLowerCase();
+
     const plugins = getActionList('player_command').filter(plugin => {
         if(Array.isArray(plugin.commands)) {
             return plugin.commands.indexOf(command) !== -1;

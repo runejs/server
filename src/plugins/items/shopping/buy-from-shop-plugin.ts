@@ -1,10 +1,10 @@
 import { itemAction } from '@server/world/action/item-action';
 import { widgets } from '@server/world/config/widget';
 import { Shop, shopItemContainer } from '@server/world/config/shops';
-import { world } from '@server/game-server';
 import { Item } from '@server/world/items/item';
 import { getItemFromContainer, ItemContainer } from '@server/world/items/item-container';
 import { itemIds } from '@server/world/config/item-ids';
+import { findItem } from '@server/config';
 
 function removeCoins(inventory: ItemContainer, coinsIndex: number, cost: number): void {
     const coins = inventory.items[coinsIndex];
@@ -13,7 +13,7 @@ function removeCoins(inventory: ItemContainer, coinsIndex: number, cost: number)
 }
 
 export const action: itemAction = (details) => {
-    const { player, itemId, itemSlot, widgetId, containerId, option } = details;
+    const { player, itemId, itemSlot, widgetId, option } = details;
 
     if(!player.activeWidget || player.activeWidget.widgetId !== widgetId) {
         return;
@@ -47,7 +47,7 @@ export const action: itemAction = (details) => {
         buyAmount = shopItem.amount;
     }
 
-    const buyItem = world.itemData.get(itemId);
+    const buyItem = findItem(itemId);
     const buyItemValue = buyItem.value || 0;
     let buyCost = buyAmount * buyItemValue;
     const coinsIndex = player.hasCoins(buyCost);

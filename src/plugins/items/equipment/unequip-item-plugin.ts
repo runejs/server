@@ -1,6 +1,5 @@
 import { widgets } from '@server/world/config/widget';
 import { itemAction } from '@server/world/action/item-action';
-import { equipmentSlotIndex } from '@server/world/config/item-data';
 import { getItemFromContainer } from '@server/world/items/item-container';
 
 export const action: itemAction = (details) => {
@@ -14,8 +13,13 @@ export const action: itemAction = (details) => {
         return;
     }
 
-    const equipmentSlot = equipmentSlotIndex(itemDetails.equipment.slot);
-    player.unequipItem(equipmentSlot);
+    if(!itemDetails) {
+        // The item is not yet configured on the server.
+        player.sendMessage(`Item ${itemId} is not yet configured on the server.`);
+        return;
+    }
+
+    player.unequipItem(itemDetails.equipmentData?.equipmentSlot);
 };
 
 export default {
