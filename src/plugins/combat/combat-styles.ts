@@ -28,7 +28,9 @@ function showUnarmed(player: Player): void {
 function setWeaponWidget(player: Player, weaponStyle: WeaponStyle, itemDetails: ItemDetails): void {
     player.modifyWidget(weaponWidgetIds[weaponStyle], { childId: 0, text: itemDetails.name || 'Unknown' });
     player.setSidebarWidget(0, weaponWidgetIds[weaponStyle]);
-    updateCombatStyle(player, weaponStyle, player.savedMetadata.combatStyle[1] || 0);
+    if(player.savedMetadata.combatStyle) {
+        updateCombatStyle(player, weaponStyle, player.savedMetadata.combatStyle[1] || 0);
+    }
 }
 
 const equip: equipAction = details => {

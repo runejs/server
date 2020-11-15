@@ -1,0 +1,35 @@
+{
+    "presets": {
+        "rs:human_male": {
+            "killable": true,
+            "respawn_time": 3,
+            "skills": {
+                "hitpoints": 7
+            },
+            "offensive_stats": {
+                "speed": 4
+            },
+            "defensive_stats": {
+                "stab": -21,
+                "slash": -21,
+                "crush": -21,
+                "magic": -21,
+                "ranged": -21
+            },
+            "animations": {
+                "attack": 422,
+                "defend": 424,
+                "death": 512
+            },
+            "drop_table": [
+                [ "rs:bones",           "always",   1 ],
+                [ "rs:bronze_dagger",   "1/128",    1, 12 ]
+            ]
+        }
+    },
+
+    "rs:generic_man_1": {
+        "extends": "rs:human_male",
+        "game_id": 1
+    }
+}

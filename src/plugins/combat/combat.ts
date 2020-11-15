@@ -12,7 +12,8 @@ import { Npc } from '@server/world/actor/npc/npc';
 import { world } from '@server/game-server';
 import { itemIds } from '@server/world/config/item-ids';
 import { soundIds } from '@server/world/config/sound-ids';
-import { findItem } from '@server/config';
+import { findItem, findNpc } from '@server/config';
+import { NpcDetails } from '@server/config/npc-config';
 
 const combatStyles = {
     unarmed: [
@@ -180,15 +181,21 @@ class Combat {
             defenderRemainingHealth = 0;
         }
 
-        let combatStyle = [ 'unarmed', 0 ];
+        let attackAnim: number = animationIds.combat.punch;
+        let npcData: NpcDetails;
 
         if(attacker instanceof Player) {
+            let combatStyle = [ 'unarmed', 0 ];
+
             if(attacker.savedMetadata.combatStyle) {
                 combatStyle = attacker.savedMetadata.combatStyle;
             }
-        }
 
-        const attackAnim = combatStyles[combatStyle[0]][combatStyle[1]].anim;
+            attackAnim = combatStyles[combatStyle[0]][combatStyle[1]].anim;
+        } else if(attacker instanceof Npc) {
+            npcData = findNpc(attacker.id);
+            attackAnim = npcData?.animations?.attack || animationIds.combat.punch;
+        }
 
         // Animate attacking the opponent and play the sound of them defending
         attacker.playAnimation(attackAnim);
@@ -208,7 +215,11 @@ class Combat {
         if(defenderRemainingHealth === 0) {
             this.processDeath(defender);
         } else {
-            defender.playAnimation(animationIds.combat.armBlock);
+            let blockAnim: number = animationIds.combat.armBlock;
+            if(attacker instanceof Npc) {
+                blockAnim = npcData?.animations?.defend || animationIds.combat.armBlock;
+            }
+            defender.playAnimation(blockAnim);
         }
     }
 
