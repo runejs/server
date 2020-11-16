@@ -6,8 +6,18 @@ export interface NpcSkills {
     [key: string]: number;
 }
 
-export interface NpcAnimations {
+export interface OffensiveStats {
+    speed?: number;
     attack?: number;
+    strength?: number;
+    magic?: number;
+    magicStrength?: number;
+    ranged?: number;
+    rangedStrength?: number;
+}
+
+export interface NpcAnimations {
+    attack?: number | number[];
     defend?: number;
     death?: number;
     stand?: number;
@@ -29,7 +39,15 @@ export interface NpcConfiguration {
     skills?: NpcSkills;
     killable?: boolean;
     respawn_time?: number;
-    offensive_stats?: OffensiveBonuses;
+    offensive_stats?: {
+        speed?: number;
+        attack?: number;
+        strength?: number;
+        magic?: number;
+        magic_strength?: number;
+        ranged?: number;
+        ranged_strength?: number;
+    };
     defensive_stats?: DefensiveBonuses;
     animations?: NpcAnimations;
     drop_table?: DropTable;
@@ -46,7 +64,7 @@ export class NpcDetails {
     skills?: NpcSkills;
     killable?: boolean;
     respawnTime?: number;
-    offensiveStats?: OffensiveBonuses;
+    offensiveStats?: OffensiveStats;
     defensiveStats?: DefensiveBonuses;
     animations?: NpcAnimations;
     dropTable?: DropTable;
@@ -73,7 +91,15 @@ export function translateNpcConfig(npcKey: string, config: NpcConfiguration): an
         skills: config.skills || {},
         killable: config.killable || false,
         respawnTime: config.respawn_time || 1,
-        offensiveStats: config.offensive_stats || undefined,
+        offensiveStats: config.offensive_stats ? {
+            speed: config.offensive_stats.speed || undefined,
+            attack: config.offensive_stats.attack || undefined,
+            strength: config.offensive_stats.strength || undefined,
+            magic: config.offensive_stats.magic || undefined,
+            magicStrength: config.offensive_stats.magic_strength || undefined,
+            ranged: config.offensive_stats.ranged || undefined,
+            rangedStrength: config.offensive_stats.ranged_strength || undefined
+        } : undefined,
         defensiveStats: config.defensive_stats || undefined,
         animations: config.animations || {},
         dropTable: config.drop_table || [],

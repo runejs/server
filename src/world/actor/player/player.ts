@@ -936,6 +936,8 @@ export class Player extends Actor {
      */
     public transformInto(npc: Npc | NpcDetails | string | number): void {
         if(!npc) {
+            delete this.savedMetadata.npcTransformation;
+            this.updateFlags.appearanceUpdateRequired = true;
             return;
         }
 

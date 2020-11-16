@@ -3,7 +3,8 @@ module.exports = {
     commands: 'transform',
     args: [{
         name: 'npcKey',
-        type: 'either'
+        type: 'either',
+        defaultValue: null
     }],
-    action: details => details.player.transformInto(details?.args?.npcKey)
+    action: details => details.player.transformInto(details && details.args ? details.args['npcKey'] : null)
 };

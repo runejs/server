@@ -1,0 +1,48 @@
+{
+    "presets": {
+        "rs:goblin_base": {
+            "killable": true,
+            "respawn_time": 3,
+            "skills": {
+                "hitpoints": 5
+            },
+            "offensive_stats": {
+                "speed": 4,
+                "attack": -21,
+                "strength": -15,
+                "magic": 0,
+                "magic_strength": 0,
+                "ranged": 0,
+                "ranged_strength": 0
+            },
+            "defensive_stats": {
+                "stab": -15,
+                "slash": -15,
+                "crush": -15,
+                "magic": -15,
+                "ranged": -15
+            },
+            "animations": {
+                "attack": [ 310, 309 ],
+                "defend": 312,
+                "death": 313
+            },
+            "drop_table": [
+                [ "rs:bones",           "always",   1 ]
+            ]
+        }
+    },
+
+    "rs:goblin": {
+        "extends": "rs:goblin_base",
+        "game_id": 100
+    },
+    "rs:goblin_with_spear": {
+        "extends": "rs:goblin_base",
+        "game_id": 101
+    },
+    "rs:goblin_with_helmet": {
+        "extends": "rs:goblin_base",
+        "game_id": 102
+    }
+}

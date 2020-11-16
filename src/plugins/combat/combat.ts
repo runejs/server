@@ -12,8 +12,8 @@ import { Npc } from '@server/world/actor/npc/npc';
 import { world } from '@server/game-server';
 import { itemIds } from '@server/world/config/item-ids';
 import { soundIds } from '@server/world/config/sound-ids';
-import { findItem, findNpc } from '@server/config';
-import { NpcDetails } from '@server/config/npc-config';
+import { findNpc } from '@server/config';
+
 
 const combatStyles = {
     unarmed: [
@@ -181,8 +181,7 @@ class Combat {
             defenderRemainingHealth = 0;
         }
 
-        let attackAnim: number = animationIds.combat.punch;
-        let npcData: NpcDetails;
+        let attackAnim: number | number[] = animationIds.combat.punch;
 
         if(attacker instanceof Player) {
             let combatStyle = [ 'unarmed', 0 ];
@@ -191,10 +190,16 @@ class Combat {
                 combatStyle = attacker.savedMetadata.combatStyle;
             }
 
-            attackAnim = combatStyles[combatStyle[0]][combatStyle[1]].anim;
+            attackAnim = combatStyles[combatStyle[0]][combatStyle[1]]?.anim || animationIds.combat.punch;
         } else if(attacker instanceof Npc) {
-            npcData = findNpc(attacker.id);
+            const npcData = findNpc(attacker.id);
             attackAnim = npcData?.animations?.attack || animationIds.combat.punch;
+        }
+
+        if(Array.isArray(attackAnim)) {
+            // Actor has multiple attack animations possible, pick a random one from the list to use
+            const idx = Math.floor(Math.random() * attackAnim.length);
+            attackAnim = attackAnim[idx];
         }
 
         // Animate attacking the opponent and play the sound of them defending
@@ -216,7 +221,8 @@ class Combat {
             this.processDeath(defender);
         } else {
             let blockAnim: number = animationIds.combat.armBlock;
-            if(attacker instanceof Npc) {
+            if(defender instanceof Npc) {
+                const npcData = findNpc(defender.id);
                 blockAnim = npcData?.animations?.defend || animationIds.combat.armBlock;
             }
             defender.playAnimation(blockAnim);
@@ -226,8 +232,14 @@ class Combat {
     public async processDeath(victim: Actor): Promise<void> {
         const deathPosition = victim.position;
 
+        let deathAnim: number = animationIds.death;
+
+        if(victim instanceof Npc) {
+            deathAnim = findNpc(victim.id)?.animations?.death || animationIds.death
+        }
+
         this.cancelCombat();
-        victim.playAnimation(animationIds.death);
+        victim.playAnimation(deathAnim);
         world.playLocationSound(deathPosition, soundIds.npc.human.maleDeath, 5);
 
         await timer(2 * World.TICK_LENGTH).toPromise();
