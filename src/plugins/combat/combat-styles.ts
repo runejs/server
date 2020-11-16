@@ -1,4 +1,4 @@
-import { equipAction } from '@server/world/action/equip-action';
+import { equipAction, EquipActionData } from '@server/world/action/equip-action';
 import { ItemDetails, WeaponStyle, weaponWidgetIds } from '@server/config/item-config';
 import { widgets, widgetScripts } from '@server/world/config/widget';
 import { Player, playerInitAction } from '@server/world/actor/player/player';
@@ -107,7 +107,7 @@ export default [{
 }, {
     type: 'equip_action',
     equipType: 'UNEQUIP',
-    action: details => {
+    action: (details: EquipActionData): void => {
         if(details.equipmentSlot === 'main_hand') {
             showUnarmed(details.player);
         }
