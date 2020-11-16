@@ -1,0 +1,9 @@
+{
+    "rs:hans": {
+        "game_id": 0,
+        "skills": {
+            "hitpoints": 10,
+            "herblore": 99
+        }
+    }
+}

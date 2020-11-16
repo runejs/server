@@ -1,4 +1,4 @@
-import { equipAction } from '@server/world/action/equip-action';
+import { equipAction, EquipActionData } from '@server/world/action/equip-action';
 import { ItemDetails, WeaponStyle, weaponWidgetIds } from '@server/config/item-config';
 import { widgets, widgetScripts } from '@server/world/config/widget';
 import { Player, playerInitAction } from '@server/world/actor/player/player';
@@ -28,7 +28,9 @@ function showUnarmed(player: Player): void {
 function setWeaponWidget(player: Player, weaponStyle: WeaponStyle, itemDetails: ItemDetails): void {
     player.modifyWidget(weaponWidgetIds[weaponStyle], { childId: 0, text: itemDetails.name || 'Unknown' });
     player.setSidebarWidget(0, weaponWidgetIds[weaponStyle]);
-    updateCombatStyle(player, weaponStyle, player.savedMetadata.combatStyle[1] || 0);
+    if(player.savedMetadata.combatStyle) {
+        updateCombatStyle(player, weaponStyle, player.savedMetadata.combatStyle[1] || 0);
+    }
 }
 
 const equip: equipAction = details => {
@@ -105,7 +107,7 @@ export default [{
 }, {
     type: 'equip_action',
     equipType: 'UNEQUIP',
-    action: details => {
+    action: (details: EquipActionData): void => {
         if(details.equipmentSlot === 'main_hand') {
             showUnarmed(details.player);
         }

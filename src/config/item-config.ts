@@ -92,7 +92,7 @@ export interface EquipmentData {
     weaponInfo?: WeaponInfo;
 }
 
-export interface PresetConfiguration {
+export interface ItemPresetConfiguration {
     [key: string]: ItemConfiguration;
 }
 
@@ -119,6 +119,7 @@ export interface ItemConfiguration {
  * Full server + cache details about a specific game item.
  */
 export class ItemDetails {
+    extends?: string | string[];
     key: string;
     gameId: number;
     name: string = '';
@@ -140,9 +141,10 @@ export class ItemDetails {
     stackableAmounts: number[];
 }
 
-function translateConfig(key: string, config: ItemConfiguration): any {
+export function translateItemConfig(key: string, config: ItemConfiguration): any {
     return {
         key,
+        extends: config.extends || undefined,
         gameId: config.game_id,
         description: config.description,
         tradable: config.tradable,
@@ -161,10 +163,11 @@ function translateConfig(key: string, config: ItemConfiguration): any {
     };
 }
 
-export async function loadItemConfigurations(): Promise<{ items: { [key: string]: ItemDetails }, idMap: { [key: number]: string } }> {
-    const idMap: { [key: number]: string } = {};
+export async function loadItemConfigurations(): Promise<{ items: { [key: string]: ItemDetails };
+    itemIds: { [key: number]: string }; itemPresets: ItemPresetConfiguration; }> {
+    const itemIds: { [key: number]: string } = {};
     const items: { [key: string]: ItemDetails } = {};
-    let presets: PresetConfiguration = {};
+    let itemPresets: ItemPresetConfiguration = {};
 
     const files = await loadConfigurationFiles('data/items');
 
@@ -172,37 +175,15 @@ export async function loadItemConfigurations(): Promise<{ items: { [key: string]
         const itemKeys = Object.keys(itemConfigs);
         itemKeys.forEach(key => {
             if(key === 'presets') {
-                // Preset items!
-                const newPresets = itemConfigs[key] as PresetConfiguration;
-                presets = { ...presets, ...newPresets };
+                itemPresets = { ...itemPresets, ...itemConfigs[key] };
             } else {
-                // Standard items
                 const itemConfig: ItemConfiguration = itemConfigs[key] as ItemConfiguration;
-                idMap[itemConfig.game_id] = key;
-
-                let extensions = itemConfig.extends;
-                if(extensions) {
-                    if(typeof extensions === 'string') {
-                        extensions = [ extensions ];
-                    }
-                } else {
-                    extensions = [];
-                }
-
-                let itemDetails = { ...translateConfig(key, itemConfig),
+                itemIds[itemConfig.game_id] = key;
+                items[key] = { ...translateItemConfig(key, itemConfig),
                     ...cache.itemDefinitions.get(itemConfig.game_id) };
-
-                extensions.forEach(presetKey => {
-                    const extensionItem = presets[presetKey];
-                    if(extensionItem) {
-                        itemDetails = _.merge(itemDetails, translateConfig(key, extensionItem));
-                    }
-                });
-
-                items[key] = itemDetails;
             }
         });
     });
 
-    return { items, idMap };
+    return { items, itemIds, itemPresets };
 }
