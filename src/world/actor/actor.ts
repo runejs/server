@@ -50,10 +50,6 @@ export abstract class Actor {
         this.movementEvent = new Subject<Position>();
     }
 
-    public abstract getAttackAnimation(): number;
-
-    public abstract getBlockAnimation(): number;
-
     public damage(amount: number, damageType: DamageType = DamageType.DAMAGE): 'alive' | 'dead' {
         let remainingHitpoints: number = this.skills.hitpoints.level - amount;
         const maximumHitpoints: number = this.skills.hitpoints.levelForExp;
@@ -366,6 +362,8 @@ export abstract class Actor {
         }
     }
 
+    public abstract getAttackAnimation(): number;
+    public abstract getBlockAnimation(): number;
     public abstract equals(actor: Actor): boolean;
 
     public get position(): Position {
