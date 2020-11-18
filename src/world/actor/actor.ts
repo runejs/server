@@ -50,7 +50,22 @@ export abstract class Actor {
         this.movementEvent = new Subject<Position>();
     }
 
-    public damage(amount: number, damageType: DamageType = DamageType.DAMAGE): void {
+    public abstract getAttackAnimation(): number;
+
+    public abstract getBlockAnimation(): number;
+
+    public damage(amount: number, damageType: DamageType = DamageType.DAMAGE): 'alive' | 'dead' {
+        let remainingHitpoints: number = this.skills.hitpoints.level - amount;
+        const maximumHitpoints: number = this.skills.hitpoints.levelForExp;
+        if(remainingHitpoints < 0) {
+            remainingHitpoints = 0;
+        }
+
+        this.skills.setHitpoints(remainingHitpoints);
+        this.updateFlags.addDamage(amount, amount === 0 ? DamageType.NO_DAMAGE : damageType,
+            remainingHitpoints, maximumHitpoints);
+
+        return remainingHitpoints === 0 ? 'dead' : 'alive';
     }
 
     public async moveBehind(target: Actor): Promise<boolean> {

@@ -40,6 +40,8 @@ import {
 } from '@server/config/item-config';
 import { findItem, npcIdMap } from '@server/config';
 import { NpcDetails } from '@server/config/npc-config';
+import { animationIds } from '@server/world/config/animation-ids';
+import { combatStyles } from '@server/world/actor/combat';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -298,6 +300,27 @@ export class Player extends Actor {
 
     public save(): void {
         savePlayerData(this);
+    }
+
+    public getAttackAnimation(): number {
+        let combatStyle = [ 'unarmed', 0 ];
+
+        if(this.savedMetadata.combatStyle) {
+            combatStyle = this.savedMetadata.combatStyle;
+        }
+
+        let attackAnim = combatStyles[combatStyle[0]][combatStyle[1]]?.anim || animationIds.combat.punch;
+        if(Array.isArray(attackAnim)) {
+            // Player has multiple attack animations possible, pick a random one from the list to use
+            const idx = Math.floor(Math.random() * attackAnim.length);
+            attackAnim = attackAnim[idx];
+        }
+
+        return animationIds.combat[attackAnim] || animationIds.combat.kick;
+    }
+
+    public getBlockAnimation(): number {
+        return animationIds.combat.armBlock; // @TODO
     }
 
     public privateMessageReceived(fromPlayer: Player, messageBytes: number[]): void {

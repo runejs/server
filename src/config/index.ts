@@ -43,12 +43,12 @@ export let npcIdMap: { [key: number]: string };
 export let npcPresetMap: NpcPresetConfiguration;
 
 export async function loadConfigurations(): Promise<void> {
-    const { items, itemIds, itemPresets } = await loadItemConfigurations();
+    const { items, itemIds, itemPresets } = await loadItemConfigurations('data/config/items');
     itemMap = items;
     itemIdMap = itemIds;
     itemPresetMap = itemPresets;
 
-    const { npcs, npcIds, npcPresets } = await loadNpcConfigurations();
+    const { npcs, npcIds, npcPresets } = await loadNpcConfigurations('data/config/npcs');
     npcMap = npcs;
     npcIdMap = npcIds;
     npcPresetMap = npcPresets;

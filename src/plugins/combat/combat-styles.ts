@@ -4,6 +4,7 @@ import { widgets, widgetScripts } from '@server/world/config/widget';
 import { Player, playerInitAction } from '@server/world/actor/player/player';
 import { findItem } from '@server/config';
 import { buttonAction } from '@server/world/action/button-action';
+import { combatStyles } from '@server/world/actor/combat';
 
 
 function updateCombatStyle(player: Player, weaponStyle: WeaponStyle, styleIndex: number): void {
@@ -69,34 +70,19 @@ const initAction: playerInitAction = details => {
 const combatStyleSelection: buttonAction = details => {
     const { player, buttonId } = details;
 
-    const indices = {
-        unarmed: {
-            2: 0,
-            3: 1,
-            4: 2
-        },
-        axe: {
-            2: 0,
-            5: 1,
-            4: 2,
-            3: 3
-        },
-        dagger: {
-            2: 0,
-            3: 1,
-            4: 2,
-            5: 3
-        }
-    };
-
     const equippedItem = player.getEquippedItem('main_hand');
-    if(!equippedItem) {
-        player.savedMetadata.combatStyle = [ 'unarmed', indices['unarmed'][buttonId] ];
-    } else {
-        const weaponStyle = findItem(equippedItem.itemId)?.equipmentData?.weaponInfo?.style || null;
-        if(weaponStyle && indices[weaponStyle][buttonId]) {
-            player.savedMetadata.combatStyle = [ weaponStyle, indices[weaponStyle][buttonId] ];
+    let weaponStyle = 'unarmed';
+
+    if(equippedItem) {
+        weaponStyle = findItem(equippedItem.itemId)?.equipmentData?.weaponInfo?.style || null;
+        if(!weaponStyle || !combatStyles[weaponStyle]) {
+            weaponStyle = 'unarmed';
         }
+    }
+
+    const combatStyle = combatStyles[weaponStyle].findIndex(combatStyle => combatStyle.button_id === buttonId);
+    if(combatStyle) {
+        player.savedMetadata.combatStyle = [ weaponStyle, combatStyle ];
     }
 };
 
