@@ -8,6 +8,8 @@ import { directionData } from '@server/world/direction';
 import { QuadtreeKey } from '@server/world';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
 import { Action } from '@server/world/action';
+import { findNpc } from '@server/config';
+import { animationIds } from '@server/world/config/animation-ids';
 
 interface NpcAnimations {
     walk: number;
@@ -77,6 +79,21 @@ export class Npc extends Actor {
                 .forEach(plugin => plugin.action({ npc: this }));
             resolve();
         });
+    }
+
+    public getAttackAnimation(): number {
+        let attackAnim = findNpc(this.id)?.animations?.attack || animationIds.combat.punch;
+        if(Array.isArray(attackAnim)) {
+            // NPC has multiple attack animations possible, pick a random one from the list to use
+            const idx = Math.floor(Math.random() * attackAnim.length);
+            attackAnim = attackAnim[idx];
+        }
+
+        return attackAnim;
+    }
+
+    public getBlockAnimation(): number {
+        return findNpc(this.id)?.animations?.defend || animationIds.combat.armBlock;
     }
 
     public kill(respawn: boolean = true): void {
