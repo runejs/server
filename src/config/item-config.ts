@@ -163,13 +163,13 @@ export function translateItemConfig(key: string, config: ItemConfiguration): any
     };
 }
 
-export async function loadItemConfigurations(): Promise<{ items: { [key: string]: ItemDetails };
+export async function loadItemConfigurations(path: string): Promise<{ items: { [key: string]: ItemDetails };
     itemIds: { [key: number]: string }; itemPresets: ItemPresetConfiguration; }> {
     const itemIds: { [key: number]: string } = {};
     const items: { [key: string]: ItemDetails } = {};
     let itemPresets: ItemPresetConfiguration = {};
 
-    const files = await loadConfigurationFiles('data/items');
+    const files = await loadConfigurationFiles(path);
 
     files.forEach(itemConfigs => {
         const itemKeys = Object.keys(itemConfigs);

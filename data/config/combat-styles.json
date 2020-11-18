@@ -1,0 +1,74 @@
+{
+    "unarmed": [
+        {
+            "type": "crush",
+            "exp": "attack",
+            "anim": "punch",
+            "button_id": 2
+        },
+        {
+            "type": "crush",
+            "exp": "strength",
+            "anim": "kick",
+            "button_id": 3
+        },
+        {
+            "type": "crush",
+            "exp": "defence",
+            "anim": "punch",
+            "button_id": 4
+        }
+    ],
+    "axe": [
+        {
+            "type": "slash",
+            "exp": "attack",
+            "anim": "slash",
+            "button_id": 2
+        },
+        {
+            "type": "slash",
+            "exp": "strength",
+            "anim": "slash",
+            "button_id": 5
+        },
+        {
+            "type": "crush",
+            "exp": "strength",
+            "anim": "slash",
+            "button_id": 4
+        },
+        {
+            "type": "slash",
+            "exp": "defence",
+            "anim": "slash",
+            "button_id": 3
+        }
+    ],
+    "dagger": [
+        {
+            "type": "stab",
+            "exp": "attack",
+            "anim": "stab",
+            "button_id": 2
+        },
+        {
+            "type": "stab",
+            "exp": "strength",
+            "anim": "stab",
+            "button_id": 3
+        },
+        {
+            "type": "slash",
+            "exp": "strength",
+            "anim": "slash",
+            "button_id": 4
+        },
+        {
+            "type": "stab",
+            "exp": "defence",
+            "anim": "stab",
+            "button_id": 5
+        }
+    ]
+}

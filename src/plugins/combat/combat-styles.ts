@@ -80,7 +80,7 @@ const combatStyleSelection: buttonAction = details => {
         }
     }
 
-    const combatStyle = combatStyles[weaponStyle].findIndex(combatStyle => combatStyle.buttonId === buttonId);
+    const combatStyle = combatStyles[weaponStyle].findIndex(combatStyle => combatStyle.button_id === buttonId);
     if(combatStyle) {
         player.savedMetadata.combatStyle = [ weaponStyle, combatStyle ];
     }

@@ -316,7 +316,7 @@ export class Player extends Actor {
             attackAnim = attackAnim[idx];
         }
 
-        return attackAnim;
+        return animationIds.combat[attackAnim] || animationIds.combat.kick;
     }
 
     public getBlockAnimation(): number {

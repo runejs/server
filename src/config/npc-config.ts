@@ -107,13 +107,13 @@ export function translateNpcConfig(npcKey: string, config: NpcConfiguration): an
     };
 }
 
-export async function loadNpcConfigurations(): Promise<{ npcs: { [key: string]: NpcDetails };
+export async function loadNpcConfigurations(path: string): Promise<{ npcs: { [key: string]: NpcDetails };
     npcIds: { [key: number]: string }; npcPresets: NpcPresetConfiguration; }> {
     const npcIds: { [key: number]: string } = {};
     const npcs: { [key: string]: NpcDetails } = {};
     let npcPresets: NpcPresetConfiguration = {};
 
-    const files = await loadConfigurationFiles('data/npcs');
+    const files = await loadConfigurationFiles(path);
 
     files.forEach(npcConfigs => {
         const npcKeys = Object.keys(npcConfigs);
