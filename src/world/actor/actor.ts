@@ -34,6 +34,7 @@ export abstract class Actor {
     private _runDirection: number;
     private _faceDirection: number;
     private _busy: boolean;
+    private _instanceId: string = null;
 
     protected constructor() {
         this.updateFlags = new UpdateFlags();
@@ -435,5 +436,13 @@ export abstract class Actor {
 
     public set busy(value: boolean) {
         this._busy = value;
+    }
+
+    public get instanceId(): string {
+        return this._instanceId;
+    }
+
+    public set instanceId(value: string) {
+        this._instanceId = value;
     }
 }

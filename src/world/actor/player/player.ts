@@ -1010,24 +1010,28 @@ export class Player extends Actor {
 
             const chunkUpdateItems: ChunkUpdateItem[] = [];
 
-            if(chunk.removedLocationObjects.size !== 0) {
-                chunk.removedLocationObjects.forEach(object => chunkUpdateItems.push({ object, type: 'REMOVE' }));
-            }
+            if(this.instanceId === null) {
+                if(chunk.removedLocationObjects.size !== 0) {
+                    chunk.removedLocationObjects.forEach(object => chunkUpdateItems.push({ object, type: 'REMOVE' }));
+                }
 
-            if(chunk.addedLocationObjects.size !== 0) {
-                chunk.addedLocationObjects.forEach(object => chunkUpdateItems.push({ object, type: 'ADD' }));
-            }
+                if(chunk.addedLocationObjects.size !== 0) {
+                    chunk.addedLocationObjects.forEach(object => chunkUpdateItems.push({ object, type: 'ADD' }));
+                }
 
-            if(chunk.worldItems.size !== 0) {
-                chunk.worldItems.forEach(worldItemList => {
-                    if(worldItemList && worldItemList.length !== 0) {
-                        worldItemList.forEach(worldItem => {
-                            if(!worldItem.initiallyVisibleTo || worldItem.initiallyVisibleTo.equals(this)) {
-                                chunkUpdateItems.push({ worldItem, type: 'ADD' });
-                            }
-                        });
-                    }
-                });
+                if(chunk.worldItems.size !== 0) {
+                    chunk.worldItems.forEach(worldItemList => {
+                        if(worldItemList && worldItemList.length !== 0) {
+                            worldItemList.forEach(worldItem => {
+                                if(!worldItem.initiallyVisibleTo || worldItem.initiallyVisibleTo.equals(this)) {
+                                    chunkUpdateItems.push({ worldItem, type: 'ADD' });
+                                }
+                            });
+                        }
+                    });
+                }
+            } else {
+                // @TODO instanced location objects
             }
 
             if(chunkUpdateItems.length !== 0) {

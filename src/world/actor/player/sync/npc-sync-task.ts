@@ -30,7 +30,7 @@ export class NpcSyncTask extends Task<void> {
                 y: this.player.position.y - 15,
                 width: 32,
                 height: 32
-            });
+            }).filter(collision => collision?.actor && collision?.actor.instanceId === this.player.instanceId);
 
             this.player.trackedNpcs = syncTrackedActors(npcUpdatePacket, this.player.position,
                 actor => this.appendUpdateMaskData(actor as Npc, updateMaskData), this.player.trackedNpcs, nearbyNpcs) as Npc[];

@@ -18,7 +18,8 @@ export function registerNewActors(packet: Packet, player: Player, trackedActors:
 
     // We only want to send about 20 new actors at a time, to help save some memory and computing time
     // Any remaining players or npcs will be automatically picked up by subsequent updates
-    let newActors: QuadtreeKey[] = nearbyActors.filter(m1 => !trackedActors.includes(m1.actor));
+    let newActors: QuadtreeKey[] = nearbyActors.filter(m1 => !trackedActors.includes(m1.actor)
+        && m1.actor.instanceId === player.instanceId);
     if(newActors.length > 50) {
         // We also sort the list of players or npcs here by how close they are to the current player if there are more than 80, so we can render the nearest first
         newActors = newActors

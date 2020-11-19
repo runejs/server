@@ -285,7 +285,9 @@ export class World {
             const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
             nearbyPlayers.forEach(player => {
-                player.outgoingPackets.removeLocationObject(object, position);
+                if(!player.instanceId) {
+                    player.outgoingPackets.removeLocationObject(object, position);
+                }
             });
 
             setTimeout(() => {
@@ -311,7 +313,9 @@ export class World {
             const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
             nearbyPlayers.forEach(player => {
-                player.outgoingPackets.removeLocationObject(object, position);
+                if(!player.instanceId) {
+                    player.outgoingPackets.removeLocationObject(object, position);
+                }
             });
 
             resolve(chunk);
@@ -331,7 +335,9 @@ export class World {
             const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
             nearbyPlayers.forEach(player => {
-                player.outgoingPackets.setLocationObject(object, position);
+                if(!player.instanceId) {
+                    player.outgoingPackets.setLocationObject(object, position);
+                }
             });
 
             resolve();
@@ -556,7 +562,9 @@ export class World {
                     return;
                 }
 
-                player.outgoingPackets.setWorldItem(worldItem, worldItem.position);
+                if(!player.instanceId) {
+                    player.outgoingPackets.setWorldItem(worldItem, worldItem.position);
+                }
             });
 
             resolve();

@@ -322,6 +322,7 @@ export const guideAction: npcAction = async (details) => {
 
 export const tutorialInitAction: playerInitAction = async ({ player }) => {
     if(serverConfig.tutorialEnabled && !player.savedMetadata.tutorialComplete) {
+        player.instanceId = 'test instance';
         await handleTutorial(player);
     } else {
         defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
