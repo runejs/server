@@ -149,6 +149,4 @@ The game server will spin up and be accessible via port 43594.
 
 #### Supported Game Clients
 
-RuneJS supports the (Java-based) rev435 RuneScape game client currently being refactored by [Promises](https://github.com/Promises) and [TheBlackParade](https://github.com/TheBlackParade):
-
-- [refactored-client-435](https://github.com/Promises/refactored-client-435)
+RuneJS supports the Java rev435 RuneScape game client: [refactored-client-435](https://github.com/Promises/refactored-client-435)

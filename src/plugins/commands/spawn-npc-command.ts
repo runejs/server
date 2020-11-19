@@ -1,28 +1,42 @@
 import { commandAction } from '@server/world/action/player-command-action';
-import { cache, world } from '@server/game-server';
+import { world } from '@server/game-server';
 import { Npc } from '@server/world/actor/npc/npc';
+import { findNpc } from '@server/config';
+import { NpcDetails } from '@server/config/npc-config';
 
 const action: commandAction = (details) => {
     const { player, args } = details;
 
-    const npcId: number = args.npcId as number;
-    const npcDefinition = cache.npcDefinitions.get(npcId);
-    const npc = new Npc({
-        npcId: npcId,
+    let npcKey: number | string = args.npcKey;
+    let npcDetails: NpcDetails;
+
+    if(typeof npcKey === 'string') {
+        npcDetails = findNpc(npcKey) || null;
+
+        if(!npcDetails) {
+            player.sendMessage(`NPC ${npcKey} is not yet registered on the server.`);
+            return;
+        }
+
+        npcKey = npcDetails.gameId;
+    }
+
+    const npc = new Npc(npcDetails ? npcDetails : npcKey, {
+        npcId: npcKey,
         x: player.position.x,
         y: player.position.y
-    }, npcDefinition);
+    });
 
     world.registerNpc(npc);
 };
 
 export default {
     type: 'player_command',
-    commands: [ 'npc' ],
+    commands: [ 'npc', 'spawnnpc', 'spawn_npc' ],
     args: [
         {
-            name: 'npcId',
-            type: 'number'
+            name: 'npcKey',
+            type: 'either'
         }
     ],
     action

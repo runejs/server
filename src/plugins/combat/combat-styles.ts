@@ -5,6 +5,7 @@ import { Player, playerInitAction } from '@server/world/actor/player/player';
 import { findItem } from '@server/config';
 import { buttonAction } from '@server/world/action/button-action';
 import { combatStyles } from '@server/world/actor/combat';
+import { serverConfig } from '@server/game-server';
 
 
 function updateCombatStyle(player: Player, weaponStyle: WeaponStyle, styleIndex: number): void {
@@ -52,18 +53,20 @@ const equip: equipAction = details => {
 const initAction: playerInitAction = details => {
     const { player } = details;
 
-    const equippedItem = player.getEquippedItem('main_hand');
-    if(equippedItem) {
-        const itemDetails = findItem(equippedItem.itemId);
-        const weaponStyle = itemDetails?.equipmentData?.weaponInfo?.style || null;
+    if(!serverConfig.tutorialEnabled || player.savedMetadata.tutorialProgress >= 100 || player.savedMetadata.tutorialComplete) {
+        const equippedItem = player.getEquippedItem('main_hand');
+        if(equippedItem) {
+            const itemDetails = findItem(equippedItem.itemId);
+            const weaponStyle = itemDetails?.equipmentData?.weaponInfo?.style || null;
 
-        if(weaponStyle) {
-            setWeaponWidget(player, weaponStyle, itemDetails);
+            if(weaponStyle) {
+                setWeaponWidget(player, weaponStyle, itemDetails);
+            } else {
+                showUnarmed(player);
+            }
         } else {
             showUnarmed(player);
         }
-    } else {
-        showUnarmed(player);
     }
 };
 

@@ -18,6 +18,9 @@ import { Chunk } from '@server/world/map/chunk';
 import { schedule } from '@server/task/task';
 import { parseScenerySpawns } from '@server/world/config/scenery-spawns';
 import { loadActions } from '@server/world/action';
+import { findNpc } from '@server/config';
+import { NpcDetails } from '@server/config/npc-config';
+import { type } from 'os';
 
 
 export interface QuadtreeKey {
@@ -398,16 +401,46 @@ export class World {
 
     public spawnNpcs(): void {
         this.npcSpawns.forEach(npcSpawn => {
-            const npcDefinition = cache.npcDefinitions.get(npcSpawn.npcId);
-            const npc = new Npc(npcSpawn, npcDefinition);
-            this.registerNpc(npc);
+            const npcDetails = findNpc(npcSpawn.npcId) || null;
+            if(npcDetails) {
+                this.registerNpc(new Npc(npcDetails, npcSpawn));
+            } else {
+                this.registerNpc(new Npc(npcSpawn.npcId, npcSpawn));
+            }
         });
     }
 
+    public spawnNpc(npcKey: string | number, position: Position, instanceId: string = null): Npc {
+        if(!npcKey) {
+            return null;
+        }
+
+        let npcData: NpcDetails | number = findNpc(npcKey);
+        if(!npcData) {
+            logger.warn(`NPC ${npcKey} not yet registered on the server.`);
+
+            if(typeof npcKey === 'number') {
+                npcData = npcKey;
+            } else {
+                return null;
+            }
+        }
+
+        const npc = new Npc(npcData, {
+            npcId: typeof npcData === 'number' ? npcData : npcData.gameId,
+            x: position.x,
+            y: position.y,
+            level: position.level || 0
+        }, instanceId);
+
+        this.registerNpc(npc);
+
+        return npc;
+    }
+
     public spawnScenery(): void {
-        this.scenerySpawns.forEach(locationObject => {
-            this.addLocationObject(locationObject, new Position(locationObject.x, locationObject.y, locationObject.level));
-        });
+        this.scenerySpawns.forEach(locationObject =>
+            this.addLocationObject(locationObject, new Position(locationObject.x, locationObject.y, locationObject.level)));
     }
 
     public setupWorldTick(): void {
@@ -503,6 +536,10 @@ export class World {
     }
 
     public registerPlayer(player: Player): boolean {
+        if(!player) {
+            return false;
+        }
+
         const index = this.playerList.findIndex(p => p === null);
 
         if(index === -1) {
@@ -529,6 +566,10 @@ export class World {
     }
 
     public registerNpc(npc: Npc): boolean {
+        if(!npc) {
+            return false;
+        }
+
         const index = this.npcList.findIndex(n => n === null);
 
         if(index === -1) {

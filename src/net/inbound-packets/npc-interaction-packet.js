@@ -45,6 +45,7 @@ const npcInteractionPacket = (player, packet) => {
     if(npc.options && npc.options.length >= actionIdx) {
         if(!npc.options[actionIdx] || npc.options[actionIdx].toLowerCase() === 'hidden') {
             // Invalid action
+            logger.info(npc);
             logger.error(`1: Invalid npc ${npc.id} option ${actionIdx + 1}, options: ${JSON.stringify(npc.options)}`);
             return;
         }
