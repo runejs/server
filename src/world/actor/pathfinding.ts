@@ -147,7 +147,7 @@ export class Pathfinding {
         const highestX = position.x + searchRadius;
         const highestY = position.y + searchRadius;
 
-        let tiles = [];
+        const tiles = [];
         for(let x = lowestX; x < highestX; x++) {
             for(let y = lowestY; y < highestY; y++) {
                 tiles.push(world.chunkManager.tileMap.get(`${x},${y},${this.actor.position.level}`));
