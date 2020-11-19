@@ -90,7 +90,7 @@ export class Pathfinding {
     private static calculateLocalCornerPosition(cornerX: number, cornerY: number, origin: Position): { localX: number, localY: number, chunk: Chunk } {
         const cornerPosition: Position = new Position(cornerX, cornerY, origin.level + 1);
         let cornerChunk: Chunk = world.chunkManager.getChunkForWorldPosition(cornerPosition);
-        const tileAbove: Tile = cornerChunk.getTile(cornerPosition);
+        const tileAbove: Tile = world.chunkManager.tileMap.get(cornerPosition.key);
         if(!tileAbove || !tileAbove.bridge) {
             cornerPosition.level = cornerPosition.level - 1;
             cornerChunk = world.chunkManager.getChunkForWorldPosition(cornerPosition);
@@ -147,12 +147,12 @@ export class Pathfinding {
         const highestX = position.x + searchRadius;
         const highestY = position.y + searchRadius;
 
-        const chunks: Chunk[] = world.chunkManager.getSurroundingChunks(
-            world.chunkManager.getChunkForWorldPosition(position));
-
         let tiles = [];
-        chunks.forEach(chunk => tiles = tiles.concat(...chunk.tileList
-            .filter(tile => tile.x >= lowestX && tile.x <= highestX && tile.y >= lowestY && tile.y <= highestY)));
+        for(let x = lowestX; x < highestX; x++) {
+            for(let y = lowestY; y < highestY; y++) {
+                tiles.push(world.chunkManager.tileMap.get(`${x},${y},${this.actor.position.level}`));
+            }
+        }
 
         return Object.fromEntries(
             tiles.map(tile => [ `${tile.x},${tile.y}`, tile ])
@@ -303,7 +303,7 @@ export class Pathfinding {
 
     public canMoveTo(origin: Position, destination: Position): boolean {
         const destinationChunk: Chunk = world.chunkManager.getChunkForWorldPosition(destination);
-        const tile: Tile = destinationChunk.getTile(destination);
+        const tile: Tile = world.chunkManager.tileMap.get(destination.key);
 
         if(tile && tile.nonWalkable) {
             return false;

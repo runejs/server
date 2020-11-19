@@ -2,7 +2,7 @@ import { Position } from '../position';
 import { Player } from '../actor/player/player';
 import { CollisionMap } from './collision-map';
 import { cache, world } from '../../game-server';
-import { LocationObject, LocationObjectDefinition, Tile } from '@runejs/cache-parser';
+import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Npc } from '../actor/npc/npc';
 import { WorldItem } from '@server/world/items/world-item';
 
@@ -21,7 +21,6 @@ export class Chunk {
     private readonly _players: Player[];
     private readonly _npcs: Npc[];
     private readonly _collisionMap: CollisionMap;
-    private readonly _tileList: Tile[];
     private readonly _cacheLocationObjects: Map<string, LocationObject>;
     private readonly _addedLocationObjects: Map<string, LocationObject>;
     private readonly _removedLocationObjects: Map<string, LocationObject>;
@@ -32,7 +31,6 @@ export class Chunk {
         this._players = [];
         this._npcs = [];
         this._collisionMap = new CollisionMap(8, 8, (position.x + 6) * 8, (position.y + 6) * 8, this);
-        this._tileList = [];
         this._cacheLocationObjects = new Map<string, LocationObject>();
         this._addedLocationObjects = new Map<string, LocationObject>();
         this._removedLocationObjects = new Map<string, LocationObject>();
@@ -79,75 +77,19 @@ export class Chunk {
     }
 
     public setCacheLocationObject(locationObject: LocationObject, objectPosition: Position): void {
-        let tile = this.getTile(objectPosition);
+        const tile = world.chunkManager.tileMap.get(objectPosition.key);
 
-        if(!tile) {
-            tile = new Tile(objectPosition.x, objectPosition.y, objectPosition.level);
-            tile.bridge = false;
-            tile.nonWalkable = false;
-            this.addTile(tile, objectPosition);
-        }
-
-        if(tile.bridge) {
+        if(tile?.bridge) {
             // Move this marker down one level if it's on a bridge tile
             objectPosition.level = objectPosition.level - 1;
             const lowerChunk = world.chunkManager.getChunkForWorldPosition(objectPosition);
             locationObject.level -= 1;
             lowerChunk.markOnCollisionMap(locationObject, objectPosition, true);
             lowerChunk.cacheLocationObjects.set(`${ objectPosition.x },${ objectPosition.y },${ locationObject.objectId }`, locationObject);
-        } else if(tile.bridge !== null) {
+        } else if(tile?.bridge !== null) {
             this.markOnCollisionMap(locationObject, objectPosition, true);
             this._cacheLocationObjects.set(`${ objectPosition.x },${ objectPosition.y },${ locationObject.objectId }`, locationObject);
         }
-    }
-
-    public addTile(tile: Tile, tilePosition: Position): void {
-        const existingTile = this.getTile(tilePosition);
-        if(existingTile) {
-            return;
-        }
-
-        if(tile.bridge) {
-            // Move this tile down one level if it's a bridge tile
-            const newTilePosition = new Position(tilePosition.x, tilePosition.y, tilePosition.level - 1);
-            const lowerChunk = world.chunkManager.getChunkForWorldPosition(newTilePosition);
-            const newTile = new Tile(tilePosition.x, tilePosition.y, tilePosition.level - 1);
-            newTile.nonWalkable = tile.nonWalkable;
-            newTile.bridge = null;
-            lowerChunk.setTile(newTile, newTilePosition);
-        }
-
-        this._tileList.push(tile);
-    }
-
-    public getTile(position: Position): Tile {
-        for(const tile of this._tileList) {
-            if(position.equalsIgnoreLevel({ x: tile.x, y: tile.y })) {
-                return tile;
-            }
-        }
-
-        return null;
-    }
-
-    public findTile(position: Position): number {
-        for(let i = 0; i < this._tileList.length; i++) {
-            if(position.equalsIgnoreLevel({ x: this._tileList[i].x, y: this._tileList[i].y })) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    public setTile(tile: Tile, tilePosition: Position): void {
-        const existingTileIndex = this.findTile(tilePosition);
-
-        if(existingTileIndex !== -1) {
-            this._tileList.splice(existingTileIndex, 1);
-        }
-
-        this._tileList.push(tile);
     }
 
     public addPlayer(player: Player): void {
@@ -249,10 +191,6 @@ export class Chunk {
 
     public get collisionMap(): CollisionMap {
         return this._collisionMap;
-    }
-
-    public get tileList(): Tile[] {
-        return this._tileList;
     }
 
     public get cacheLocationObjects(): Map<string, LocationObject> {

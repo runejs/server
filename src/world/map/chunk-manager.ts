@@ -2,12 +2,14 @@ import { Chunk } from './chunk';
 import { Position } from '../position';
 import { logger } from '@runejs/core';
 import { cache, serverConfig } from '@server/game-server';
+import { Tile } from '@runejs/cache-parser';
 
 /**
  * Controls all of the game world's map chunks.
  */
 export class ChunkManager {
 
+    public readonly tileMap: Map<string, Tile> = new Map<string, Tile>();
     private readonly chunkMap: Map<string, Chunk>;
     private _complete: boolean = false;
 
@@ -17,14 +19,24 @@ export class ChunkManager {
 
     public generateCollisionMaps(): void {
         if(!serverConfig.clippingDisabled) {
+            const hrstart = process.hrtime();
             logger.info('Generating game world collision maps...');
 
             const tileList = cache.mapData.tiles;
 
             for(const tile of tileList) {
-                const position = new Position(tile.x, tile.y, tile.level);
-                const chunk = this.getChunkForWorldPosition(position);
-                chunk.addTile(tile, position);
+                const key = `${tile.x},${tile.y},${tile.level}`;
+
+                if(tile.bridge) {
+                    // Move this tile down one level if it's a bridge tile
+                    const newTile = new Tile(tile.x, tile.y, tile.level - 1);
+                    newTile.nonWalkable = tile.nonWalkable;
+                    newTile.bridge = null;
+                    this.tileMap.set(`${tile.x},${tile.y},${tile.level - 1}`, newTile);
+                } else if(!this.tileMap.has(key)) {
+                    // Otherwise add a new tile if it hasn't already been set (IE by a bridge tile above)
+                    this.tileMap.set(key, tile);
+                }
             }
 
             const objectList = cache.mapData.locationObjects;
@@ -35,7 +47,8 @@ export class ChunkManager {
                 chunk.setCacheLocationObject(locationObject, position);
             }
 
-            logger.info('Game world collision maps generated.');
+            const hrend = process.hrtime(hrstart);
+            logger.info(`Game world collision maps generated in ${hrend[1] / 1000000}ms.`);
         }
 
         this._complete = true;

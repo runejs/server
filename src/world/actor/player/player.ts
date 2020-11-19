@@ -319,6 +319,8 @@ export class Player extends Actor {
         return animationIds.combat[attackAnim] || animationIds.combat.kick;
     }
 
+
+
     public getBlockAnimation(): number {
         return animationIds.combat.armBlock; // @TODO
     }
