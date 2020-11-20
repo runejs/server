@@ -91,7 +91,7 @@ export class Pathfinding {
         const cornerPosition: Position = new Position(cornerX, cornerY, origin.level + 1);
         let cornerChunk: Chunk = world.chunkManager.getChunkForWorldPosition(cornerPosition);
         const tileAbove: Tile = world.chunkManager.tileMap.get(cornerPosition.key);
-        if(!tileAbove || !tileAbove.bridge) {
+        if(!tileAbove?.bridge) {
             cornerPosition.level = cornerPosition.level - 1;
             cornerChunk = world.chunkManager.getChunkForWorldPosition(cornerPosition);
         }
@@ -150,7 +150,14 @@ export class Pathfinding {
         const tiles = [];
         for(let x = lowestX; x < highestX; x++) {
             for(let y = lowestY; y < highestY; y++) {
-                tiles.push(world.chunkManager.tileMap.get(`${x},${y},${this.actor.position.level}`));
+                let tile = world.chunkManager.tileMap.get(`${x},${y},${this.actor.position.level}`);
+                if(!tile) {
+                    tile = new Tile(x, y, this.actor.position.level);
+                    tile.bridge = false;
+                    tile.nonWalkable = false;
+                }
+
+                tiles.push(tile);
             }
         }
 
@@ -305,7 +312,7 @@ export class Pathfinding {
         const destinationChunk: Chunk = world.chunkManager.getChunkForWorldPosition(destination);
         const tile: Tile = world.chunkManager.tileMap.get(destination.key);
 
-        if(tile && tile.nonWalkable) {
+        if(tile?.nonWalkable) {
             return false;
         }
 

@@ -42,6 +42,7 @@ import { findItem, npcIdMap } from '@server/config';
 import { NpcDetails } from '@server/config/npc-config';
 import { animationIds } from '@server/world/config/animation-ids';
 import { combatStyles } from '@server/world/actor/combat';
+import { PlayerInstance } from '@server/world/actor/player/instances';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -104,6 +105,7 @@ export class Player extends Actor {
     public readonly npcUpdateTask: NpcSyncTask;
     public readonly numericInputEvent: Subject<number>;
     public readonly dialogueInteractionEvent: Subject<number>;
+    public readonly mainInstance = new PlayerInstance();
     public isLowDetail: boolean;
     public trackedPlayers: Player[];
     public trackedNpcs: Npc[];

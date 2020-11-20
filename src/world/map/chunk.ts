@@ -77,19 +77,8 @@ export class Chunk {
     }
 
     public setCacheLocationObject(locationObject: LocationObject, objectPosition: Position): void {
-        const tile = world.chunkManager.tileMap.get(objectPosition.key);
-
-        if(tile?.bridge) {
-            // Move this marker down one level if it's on a bridge tile
-            objectPosition.level = objectPosition.level - 1;
-            const lowerChunk = world.chunkManager.getChunkForWorldPosition(objectPosition);
-            locationObject.level -= 1;
-            lowerChunk.markOnCollisionMap(locationObject, objectPosition, true);
-            lowerChunk.cacheLocationObjects.set(`${ objectPosition.x },${ objectPosition.y },${ locationObject.objectId }`, locationObject);
-        } else if(tile?.bridge !== null) {
-            this.markOnCollisionMap(locationObject, objectPosition, true);
-            this._cacheLocationObjects.set(`${ objectPosition.x },${ objectPosition.y },${ locationObject.objectId }`, locationObject);
-        }
+        this.markOnCollisionMap(locationObject, objectPosition, true);
+        this._cacheLocationObjects.set(`${ objectPosition.x },${ objectPosition.y },${ locationObject.objectId }`, locationObject);
     }
 
     public addPlayer(player: Player): void {
