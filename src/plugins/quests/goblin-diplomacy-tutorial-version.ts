@@ -5,12 +5,15 @@ import { serverConfig, world } from '@server/game-server';
 import { npcIds } from '@server/world/config/npc-ids';
 import { npcAction } from '@server/world/action/npc-action';
 import { Subject } from 'rxjs';
+import uuidv4 from 'uuid/v4';
 import { take } from 'rxjs/operators';
 import { Npc } from '@server/world/actor/npc/npc';
 import { logger } from '@runejs/core';
+import { Position } from '@server/world/position';
 
 function npcHint(player: Player, npcId: number): void {
-    const npc = world.findNearbyNpcsById(player.position, npcId, 10)[0] || null;
+    const npc = world.findNpcsById(npcId, player.instanceId)[0] || null;
+
     if(npc) {
         player.outgoingPackets.showNpcHintIcon(npc);
     }
@@ -300,12 +303,10 @@ async function handleTutorial(player: Player): Promise<void> {
     }
 }
 
-export const guideAction: npcAction = async (details) => {
+export const guideAction: npcAction = async ({ player, npc }) => {
     if(!serverConfig.tutorialEnabled) {
         return;
     }
-
-    const { player, npc } = details;
 
     const progress = player.savedMetadata.tutorialProgress;
     const dialogueHandler = guideDialogueHandler[progress];
@@ -320,9 +321,14 @@ export const guideAction: npcAction = async (details) => {
     }
 };
 
+function spawnQuestNpcs(player: Player): void {
+    world.spawnNpc('rs:runescape_guide', new Position(3230, 3238), player.instanceId);
+}
+
 export const tutorialInitAction: playerInitAction = async ({ player }) => {
     if(serverConfig.tutorialEnabled && !player.savedMetadata.tutorialComplete) {
-        player.instanceId = 'test instance';
+        player.instanceId = uuidv4();
+        spawnQuestNpcs(player);
         await handleTutorial(player);
     } else {
         defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {

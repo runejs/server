@@ -351,14 +351,24 @@ export class World {
      * @param position The center position to search from.
      * @param npcId The ID of the NPCs to find.
      * @param distance The maximum distance to search for NPCs.
+     * @param instanceId The NPC's active instance.
      */
-    public findNearbyNpcsById(position: Position, npcId: number, distance: number): Npc[] {
+    public findNearbyNpcsById(position: Position, npcId: number, distance: number, instanceId: string = null): Npc[] {
         return this.npcTree.colliding({
             x: position.x - (distance / 2),
             y: position.y - (distance / 2),
             width: distance,
             height: distance
-        }).map(quadree => quadree.actor as Npc).filter(npc => npc.id === npcId);
+        }).map(quadree => quadree.actor as Npc).filter(npc => npc.id === npcId && npc.instanceId === instanceId);
+    }
+
+    /**
+     * Finds all NPCs within the game world that have the specified Npc ID.
+     * @param npcId The ID of the NPCs to find.
+     * @param instanceId The NPC's active instance.
+     */
+    public findNpcsById(npcId: number, instanceId: string = null): Npc[] {
+        return this.npcList.filter(npc => npc && npc.id === npcId && npc.instanceId === instanceId);
     }
 
     /**
