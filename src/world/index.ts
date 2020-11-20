@@ -440,7 +440,7 @@ export class World {
     }
 
     public spawnScenery(): void {
-        this.scenerySpawns.forEach(locationObject =>
+        this.scenerySpawns.forEach(async locationObject =>
             this.addLocationObject(locationObject, new Position(locationObject.x, locationObject.y, locationObject.level)));
     }
 
