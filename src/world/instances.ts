@@ -8,7 +8,7 @@ import { World } from '@server/world/index';
 
 
 /**
- * Modifications made to a single game world map chunk.
+ * Modifications made to a single game tile.
  */
 interface WorldModifications {
     spawnedObjects?: LocationObject[];
@@ -24,7 +24,7 @@ export class WorldInstance {
     /**
      * A list of game world chunks that have modifications made to them in this instance.
      */
-    public readonly chunkModifications: Map<string, Map<string, WorldModifications>> = new Map<string, Map<string, WorldModifications>>();
+    public readonly chunkModifications = new Map<string, Map<string, WorldModifications>>();
 
     public constructor(public readonly instanceId: string = null) {
     }
