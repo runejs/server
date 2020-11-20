@@ -21,11 +21,22 @@ interface WorldModifications {
  */
 export class WorldInstance {
 
+    /**
+     * A list of game world chunks that have modifications made to them in this instance.
+     */
     public readonly chunkModifications: Map<string, Map<string, WorldModifications>> = new Map<string, Map<string, WorldModifications>>();
 
     public constructor(public readonly instanceId: string = null) {
     }
 
+    /**
+     * Spawns a new world item in this instance.
+     * @param item The item to spawn into the game world.
+     * @param position The position to spawn the item at.
+     * @param owner [optional] The original owner of the item, if there is one.
+     * @param expires [optional] When the world object should expire and de-spawn.
+     * If not provided, the item will stay within the instance indefinitely.
+     */
     public spawnWorldItem(item: Item | number, position: Position, owner?: Player, expires?: number): WorldItem {
         if(typeof item === 'number') {
             item = { itemId: item, amount: 1 };
@@ -85,6 +96,10 @@ export class WorldInstance {
         return worldItem;
     }
 
+    /**
+     * De-spawns a world item from this instance.
+     * @param worldItem The world item to de-spawn.
+     */
     public despawnWorldItem(worldItem: WorldItem): void {
         const chunkMap = this.getWorldModifications(worldItem.position);
 
@@ -109,6 +124,13 @@ export class WorldInstance {
         this.worldItemRemoved(worldItem);
     }
 
+    /**
+     * Adds a world item to the view of any nearby players in this instance.
+     * @param worldItem The world item that was added.
+     * @param excludePlayer [optional] A specific player to not show this world item update to.
+     * Usually this is used when a player drops the item and it should appear for them immediately, but have a delay
+     * before being shown to other players in the instance.
+     */
     public worldItemAdded(worldItem: WorldItem, excludePlayer?: Player): void {
         const nearbyPlayers = world.findNearbyPlayers(worldItem.position, 16, this.instanceId) || [];
 
@@ -121,6 +143,10 @@ export class WorldInstance {
         });
     }
 
+    /**
+     * Removes a world item from the view of any nearby players in this instance.
+     * @param worldItem The world item that was removed.
+     */
     public worldItemRemoved(worldItem: WorldItem): void {
         const nearbyPlayers = world.findNearbyPlayers(worldItem.position, 16, this.instanceId) || [];
 
@@ -152,7 +178,7 @@ export class WorldInstance {
     }
 
     /**
-     * Remove a previously spawned game object from the game.
+     * Remove a previously spawned game object from the instance.
      * @param object The game object to de-spawn.
      */
     public despawnGameObject(object: LocationObject): void {
@@ -179,8 +205,8 @@ export class WorldInstance {
     }
 
     /**
-     * Removes a static game object from the player's view.
-     * @param object The cache game object to hide from view.
+     * Hides a static game object from an instance.
+     * @param object The cache game object to hide from the instance.
      */
     public hideGameObject(object: LocationObject): void {
         const position = new Position(object.x, object.y, object.level);
@@ -228,16 +254,16 @@ export class WorldInstance {
     }
 
     /**
-     * Fetch a chunk modification map from this instance.
+     * Fetch a list of world modifications from this instance.
      * @param worldPosition The game world position to find the chunk for.
      */
     public getWorldModifications(worldPosition: Position): Map<string, WorldModifications>;
 
 
     /**
-     * Fetch a chunk modification map from this instance.
-     * @param x The X coordinate to find the chunk for.
-     * @param y The Y coordinate to find the chunk for.
+     * Fetch a list of world modifications from this instance.
+     * @param x The X coordinate to find the chunk of.
+     * @param y The Y coordinate to find the chunk of.
      * @param level The height level of the chunk.
      */
     public getWorldModifications(x: number, y: number, level: number): Map<string, WorldModifications>;
