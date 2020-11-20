@@ -10,9 +10,10 @@ import { take } from 'rxjs/operators';
 import { Npc } from '@server/world/actor/npc/npc';
 import { logger } from '@runejs/core';
 import { Position } from '@server/world/position';
+import { WorldInstance } from '@server/world/instances';
 
 function npcHint(player: Player, npcId: number): void {
-    const npc = world.findNpcsById(npcId, player.instanceId)[0] || null;
+    const npc = world.findNpcsById(npcId, player.instance.instanceId)[0] || null;
 
     if(npc) {
         player.outgoingPackets.showNpcHintIcon(npc);
@@ -322,12 +323,12 @@ export const guideAction: npcAction = async ({ player, npc }) => {
 };
 
 function spawnQuestNpcs(player: Player): void {
-    world.spawnNpc('rs:runescape_guide', new Position(3230, 3238), player.instanceId);
+    world.spawnNpc('rs:runescape_guide', new Position(3230, 3238), player.instance.instanceId);
 }
 
 export const tutorialInitAction: playerInitAction = async ({ player }) => {
     if(serverConfig.tutorialEnabled && !player.savedMetadata.tutorialComplete) {
-        player.instanceId = uuidv4();
+        player.instance = new WorldInstance(uuidv4());
         spawnQuestNpcs(player);
         await handleTutorial(player);
     } else {

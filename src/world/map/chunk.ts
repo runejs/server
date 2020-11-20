@@ -25,7 +25,6 @@ export class Chunk {
     private readonly _cacheLocationObjects: Map<string, LocationObject>;
     private readonly _addedLocationObjects: Map<string, LocationObject>;
     private readonly _removedLocationObjects: Map<string, LocationObject>;
-    private readonly _worldItems: Map<string, WorldItem[]>;
 
     public constructor(position: Position) {
         this._position = position;
@@ -35,7 +34,6 @@ export class Chunk {
         this._cacheLocationObjects = new Map<string, LocationObject>();
         this._addedLocationObjects = new Map<string, LocationObject>();
         this._removedLocationObjects = new Map<string, LocationObject>();
-        this._worldItems = new Map<string, WorldItem[]>();
         this.registerMapRegion();
     }
 
@@ -43,45 +41,6 @@ export class Chunk {
         const mapRegionX = Math.floor(this.position.x / 8);
         const mapRegionY = Math.floor(this.position.y / 8);
         world.chunkManager.registerMapRegion(mapRegionX, mapRegionY);
-    }
-
-    public getWorldItem(itemId: number, position: Position): WorldItem {
-        const key = position.key;
-
-        if(this._worldItems.has(key)) {
-            const list = this._worldItems.get(key);
-            const worldItem = list.find(item => item.itemId === itemId);
-
-            if(!worldItem) {
-                return null;
-            }
-
-            return worldItem;
-        }
-
-        return null;
-    }
-
-    public addWorldItem(worldItem: WorldItem): void {
-        const key = worldItem.position.key;
-
-        if(this._worldItems.has(key)) {
-            const list = this._worldItems.get(key);
-            list.push(worldItem);
-            this._worldItems.set(key, list);
-        } else {
-            this._worldItems.set(worldItem.position.key, [worldItem]);
-        }
-    }
-
-    public removeWorldItem(worldItem: WorldItem): void {
-        const key = worldItem.position.key;
-
-        if(this._worldItems.has(key)) {
-            const list = this._worldItems.get(key);
-            list.splice(list.indexOf(worldItem), 1);
-            this._worldItems.set(key, list);
-        }
     }
 
     public setCacheLocationObject(locationObject: LocationObject, objectPosition: Position): void {
@@ -200,9 +159,5 @@ export class Chunk {
 
     public get removedLocationObjects(): Map<string, LocationObject> {
         return this._removedLocationObjects;
-    }
-
-    public get worldItems(): Map<string, WorldItem[]> {
-        return this._worldItems;
     }
 }

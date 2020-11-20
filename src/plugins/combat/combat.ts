@@ -113,7 +113,7 @@ class Combat {
 
         if(defenderState === 'dead') {
             // @TODO death sounds
-            this.processDeath(defender);
+            this.processDeath(defender, attacker);
         } else {
             // Play the sound of the defender being hit or blocking
             world.playLocationSound(defender.position, defender instanceof Player ? soundIds.npc.human.noArmorHitPlayer :
@@ -122,7 +122,7 @@ class Combat {
         }
     }
 
-    public async processDeath(victim: Actor): Promise<void> {
+    public async processDeath(victim: Actor, assailant?: Actor): Promise<void> {
         const deathPosition = victim.position;
 
         let deathAnim: number = animationIds.death;
@@ -137,13 +137,19 @@ class Combat {
 
         await timer(2 * World.TICK_LENGTH).toPromise();
 
+        let instance = world.globalInstance;
         if(victim instanceof Npc) {
             victim.kill(true);
-        }/* else if(victim instanceof Player) {
-            // @TODO
-        }*/
 
-        world.spawnWorldItem(itemIds.bones, deathPosition, this.assailant instanceof Player ? this.assailant : undefined, 300);
+            if(assailant && assailant instanceof Player) {
+                instance = assailant.instance;
+            }
+        } else if(victim instanceof Player) {
+            // @TODO
+            instance = victim.instance;
+        }
+
+        instance.spawnWorldItem(itemIds.bones, deathPosition, this.assailant instanceof Player ? this.assailant : undefined, 300);
     }
 
     // https://forum.tip.it/topic/199687-runescape-formulas-revealed

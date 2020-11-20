@@ -5,22 +5,20 @@ import { timer } from 'rxjs';
 import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { ExamineCache } from './config/examine-data';
-import { cache, loadPlugins } from '@server/game-server';
+import { loadPlugins } from '@server/game-server';
 import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './actor/npc/npc';
 import { parseShops, Shop } from '@server/world/config/shops';
 import TravelLocations from '@server/world/config/travel-locations';
 import { Actor } from '@server/world/actor/actor';
-import { WorldItem } from '@server/world/items/world-item';
-import { Item } from '@server/world/items/item';
 import { Chunk } from '@server/world/map/chunk';
 import { schedule } from '@server/task/task';
 import { parseScenerySpawns } from '@server/world/config/scenery-spawns';
 import { loadActions } from '@server/world/action';
 import { findNpc } from '@server/config';
 import { NpcDetails } from '@server/config/npc-config';
-import { type } from 'os';
+import { WorldInstance } from '@server/world/instances';
 
 
 export interface QuadtreeKey {
@@ -48,6 +46,7 @@ export class World {
     public readonly travelLocations: TravelLocations = new TravelLocations();
     public readonly playerTree: Quadtree<QuadtreeKey>;
     public readonly npcTree: Quadtree<QuadtreeKey>;
+    public readonly globalInstance = new WorldInstance();
 
     private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
 
@@ -108,72 +107,6 @@ export class World {
                 volume
             );
         });
-    }
-
-    /**
-     * Removes a world item from the world.
-     * @param worldItem The WorldItem object to spawn remove.
-     */
-    public removeWorldItem(worldItem: WorldItem): void {
-        const chunk = this.chunkManager.getChunkForWorldPosition(worldItem.position);
-        chunk.removeWorldItem(worldItem);
-        worldItem.removed = true;
-        this.deleteWorldItemForPlayers(worldItem, chunk);
-    }
-
-    /**
-     * Spawns a world item into the world at the specified position.
-     * @param item The Item object to spawn as a world item.
-     * @param position The position to spawn the world item.
-     * @param initiallyVisibleTo [optional] Who this world item is initially visible to. If not provided, it will be
-     * initially visible to all players.
-     * @param expires [optional] The amount of game ticks/cycles before the world item will be automatically deleted
-     * from the world. If not provided, it will remain within the game world forever.
-     */
-    public spawnWorldItem(item: Item | number, position: Position, initiallyVisibleTo?: Player, expires?: number): WorldItem {
-        if(typeof item === 'number') {
-            item = { itemId: item, amount: 1 };
-        }
-        const chunk = this.chunkManager.getChunkForWorldPosition(position);
-        const worldItem: WorldItem = {
-            itemId: item.itemId,
-            amount: item.amount,
-            position,
-            initiallyVisibleTo,
-            expires
-        };
-
-        chunk.addWorldItem(worldItem);
-
-        if(initiallyVisibleTo) {
-            // If this world item is only visible to one player initially, we setup a timeout to spawn it for all other
-            // players after 100 game cycles.
-            initiallyVisibleTo.outgoingPackets.setWorldItem(worldItem, worldItem.position);
-            setTimeout(() => {
-                if(worldItem.removed) {
-                    return;
-                }
-
-                this.spawnWorldItemForPlayers(worldItem, chunk, initiallyVisibleTo);
-                worldItem.initiallyVisibleTo = undefined;
-            }, 100 * World.TICK_LENGTH);
-        } else {
-            this.spawnWorldItemForPlayers(worldItem, chunk);
-        }
-
-        if(expires) {
-            // If the world item is set to expire, set up a timeout to remove it from the game world after the
-            // specified number of game cycles.
-            setTimeout(() => {
-                if(worldItem.removed) {
-                    return;
-                }
-
-                this.removeWorldItem(worldItem);
-            }, expires * World.TICK_LENGTH);
-        }
-
-        return worldItem;
     }
 
     /**
@@ -287,7 +220,7 @@ export class World {
             const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
             nearbyPlayers.forEach(player => {
-                if(!player.instanceId) {
+                if(!player.instance) {
                     player.outgoingPackets.removeLocationObject(object, position);
                 }
             });
@@ -315,7 +248,7 @@ export class World {
             const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
             nearbyPlayers.forEach(player => {
-                if(!player.instanceId) {
+                if(!player.instance) {
                     player.outgoingPackets.removeLocationObject(object, position);
                 }
             });
@@ -337,7 +270,7 @@ export class World {
             const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
 
             nearbyPlayers.forEach(player => {
-                if(!player.instanceId) {
+                if(!player.instance) {
                     player.outgoingPackets.setLocationObject(object, position);
                 }
             });
@@ -398,7 +331,7 @@ export class World {
             y: position.y - (distance / 2),
             width: distance,
             height: distance
-        }).map(quadree => quadree.actor as Player).filter(player => player.instanceId === instanceId);
+        }).map(quadree => quadree.actor as Player).filter(player => player.instance.instanceId === instanceId);
     }
 
     /**
@@ -593,47 +526,6 @@ export class World {
     public deregisterNpc(npc: Npc): void {
         npc.exists = false;
         this.npcList[npc.worldIndex] = null;
-    }
-
-    /**
-     * Spawns the specified world item for players around the specified chunk.
-     * @param worldItem The WorldItem object to spawn.
-     * @param chunk The main central chunk that the WorldItem will spawn in.
-     * @param excludePlayer [optional] A player to be excluded from the world item spawn.
-     */
-    private async spawnWorldItemForPlayers(worldItem: WorldItem, chunk: Chunk, excludePlayer?: Player): Promise<void> {
-        return new Promise(resolve => {
-            const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
-
-            nearbyPlayers.forEach(player => {
-                if(excludePlayer && excludePlayer.equals(player)) {
-                    return;
-                }
-
-                if(!player.instanceId) {
-                    player.outgoingPackets.setWorldItem(worldItem, worldItem.position);
-                }
-            });
-
-            resolve();
-        });
-    }
-
-    /**
-     * De-spawns the specified world item for players around the specified chunk.
-     * @param worldItem The WorldItem object to de-spawn.
-     * @param chunk The main central chunk that the WorldItem will de-spawn from.
-     */
-    private async deleteWorldItemForPlayers(worldItem: WorldItem, chunk: Chunk): Promise<void> {
-        return new Promise(resolve => {
-            const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
-
-            nearbyPlayers.forEach(player => {
-                player.outgoingPackets.removeWorldItem(worldItem, worldItem.position);
-            });
-
-            resolve();
-        });
     }
 
 }

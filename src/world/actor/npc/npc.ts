@@ -31,6 +31,7 @@ export class Npc extends Actor {
     public readonly initialPosition: Position;
     public id: number;
     public animations: NpcAnimations;
+    public instanceId: string = null;
 
     private _name: string;
     private _combatLevel: number;

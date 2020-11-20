@@ -42,7 +42,7 @@ import { findItem, npcIdMap } from '@server/config';
 import { NpcDetails } from '@server/config/npc-config';
 import { animationIds } from '@server/world/config/animation-ids';
 import { combatStyles } from '@server/world/actor/combat';
-import { PlayerInstance } from '@server/world/actor/player/instances';
+import { WorldInstance } from '@server/world/instances';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -105,7 +105,7 @@ export class Player extends Actor {
     public readonly npcUpdateTask: NpcSyncTask;
     public readonly numericInputEvent: Subject<number>;
     public readonly dialogueInteractionEvent: Subject<number>;
-    public readonly mainInstance = new PlayerInstance();
+    public readonly mainInstance = new WorldInstance();
     public isLowDetail: boolean;
     public trackedPlayers: Player[];
     public trackedNpcs: Npc[];
@@ -1009,30 +1009,24 @@ export class Player extends Actor {
             this.outgoingPackets.clearChunk(chunk);
 
             const chunkUpdateItems: ChunkUpdateItem[] = [];
+            const instance: WorldInstance = this.instance || world.globalInstance;
 
-            if(this.instanceId === null) {
-                if(chunk.removedLocationObjects.size !== 0) {
-                    chunk.removedLocationObjects.forEach(object => chunkUpdateItems.push({ object, type: 'REMOVE' }));
-                }
-
-                if(chunk.addedLocationObjects.size !== 0) {
-                    chunk.addedLocationObjects.forEach(object => chunkUpdateItems.push({ object, type: 'ADD' }));
-                }
-
-                if(chunk.worldItems.size !== 0) {
-                    chunk.worldItems.forEach(worldItemList => {
-                        if(worldItemList && worldItemList.length !== 0) {
-                            worldItemList.forEach(worldItem => {
-                                if(!worldItem.initiallyVisibleTo || worldItem.initiallyVisibleTo.equals(this)) {
-                                    chunkUpdateItems.push({ worldItem, type: 'ADD' });
-                                }
-                            });
-                        }
-                    });
-                }
-            } else {
-                // @TODO instanced location objects
+            if(chunk.removedLocationObjects.size !== 0) {
+                chunk.removedLocationObjects.forEach(object => chunkUpdateItems.push({ object, type: 'REMOVE' }));
             }
+
+            if(chunk.addedLocationObjects.size !== 0) {
+                chunk.addedLocationObjects.forEach(object => chunkUpdateItems.push({ object, type: 'ADD' }));
+            }
+
+            const chunkModifications = instance.getWorldModifications(chunk.position.x, chunk.position.y, chunk.position.level);
+            Array.from(chunkModifications.values()).forEach(worldMods => {
+                worldMods.worldItems.forEach(worldItem => {
+                    if(!worldItem.owner || worldItem.owner.equals(this)) {
+                        chunkUpdateItems.push({ worldItem, type: 'ADD' });
+                    }
+                });
+            });
 
             if(chunkUpdateItems.length !== 0) {
                 this.outgoingPackets.updateChunk(chunk, chunkUpdateItems);

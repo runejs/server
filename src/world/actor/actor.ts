@@ -11,6 +11,7 @@ import { Subject } from 'rxjs';
 import { ActionCancelType } from '@server/world/action';
 import { filter, take } from 'rxjs/operators';
 import { world } from '@server/game-server';
+import { WorldInstance } from '@server/world/instances';
 
 /**
  * Handles an actor within the game world.
@@ -35,7 +36,7 @@ export abstract class Actor {
     private _runDirection: number;
     private _faceDirection: number;
     private _busy: boolean;
-    private _instanceId: string = null;
+    private _instance: WorldInstance = null;
 
     protected constructor() {
         this.updateFlags = new UpdateFlags();
@@ -449,11 +450,11 @@ export abstract class Actor {
         this._busy = value;
     }
 
-    public get instanceId(): string {
-        return this._instanceId;
+    public get instance(): WorldInstance {
+        return this._instance || world.globalInstance;
     }
 
-    public set instanceId(value: string) {
-        this._instanceId = value;
+    public set instance(value: WorldInstance) {
+        this._instance = value;
     }
 }
