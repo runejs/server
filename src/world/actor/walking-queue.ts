@@ -127,7 +127,7 @@ export class WalkingQueue {
     }
 
     public process(): void {
-        if(!world.ready || this.actor.busy || this.queue.length === 0 || !this.valid) {
+        if(this.actor.busy || this.queue.length === 0 || !this.valid) {
             this.resetDirections();
             return;
         }

@@ -70,7 +70,6 @@ export class World {
     public async init(): Promise<void> {
         await loadPlugins();
         await loadActions();
-        this.chunkManager.generateCollisionMaps();
         this.spawnNpcs();
         this.spawnScenery();
     }
@@ -348,10 +347,10 @@ export class World {
     }
 
     /**
-     * Finds all Npcs within the given distance from the given position that have the specified Npc ID.
+     * Finds all NPCs within the given distance from the given position that have the specified Npc ID.
      * @param position The center position to search from.
-     * @param npcId The ID of the Npcs to find.
-     * @param distance The maximum distance to search for Npcs.
+     * @param npcId The ID of the NPCs to find.
+     * @param distance The maximum distance to search for NPCs.
      */
     public findNearbyNpcsById(position: Position, npcId: number, distance: number): Npc[] {
         return this.npcTree.colliding({
@@ -363,31 +362,33 @@ export class World {
     }
 
     /**
-     * Finds all Npcs within the given distance from the given position.
+     * Finds all NPCs within the given distance from the given position.
      * @param position The center position to search from.
-     * @param distance The maximum distance to search for Npcs.
+     * @param distance The maximum distance to search for NPCs.
+     * @param instanceId The NPC's active instance.
      */
-    public findNearbyNpcs(position: Position, distance: number): Npc[] {
+    public findNearbyNpcs(position: Position, distance: number, instanceId: string = null): Npc[] {
         return this.npcTree.colliding({
             x: position.x - (distance / 2),
             y: position.y - (distance / 2),
             width: distance,
             height: distance
-        }).map(quadree => quadree.actor as Npc);
+        }).map(quadree => quadree.actor as Npc).filter(npc => npc.instanceId === instanceId);
     }
 
     /**
      * Finds all Players within the given distance from the given position.
      * @param position The center position to search from.
      * @param distance The maximum distance to search for Players.
+     * @param instanceId The player's active instance.
      */
-    public findNearbyPlayers(position: Position, distance: number): Player[] {
+    public findNearbyPlayers(position: Position, distance: number, instanceId: string = null): Player[] {
         return this.playerTree.colliding({
             x: position.x - (distance / 2),
             y: position.y - (distance / 2),
             width: distance,
             height: distance
-        }).map(quadree => quadree.actor as Player);
+        }).map(quadree => quadree.actor as Player).filter(player => player.instanceId === instanceId);
     }
 
     /**
@@ -480,10 +481,6 @@ export class World {
     }
 
     public async worldTick(): Promise<void> {
-        if(!this.ready) {
-            return;
-        }
-
         const hrStart = Date.now();
         const activePlayers: Player[] = this.playerList.filter(player => player !== null);
 
@@ -627,10 +624,6 @@ export class World {
 
             resolve();
         });
-    }
-
-    public get ready(): boolean {
-        return this.chunkManager && this.chunkManager.complete;
     }
 
 }

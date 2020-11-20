@@ -10,6 +10,7 @@ import { Pathfinding } from '@server/world/actor/pathfinding';
 import { Subject } from 'rxjs';
 import { ActionCancelType } from '@server/world/action';
 import { filter, take } from 'rxjs/operators';
+import { world } from '@server/game-server';
 
 /**
  * Handles an actor within the game world.
@@ -255,69 +256,79 @@ export abstract class Actor {
     }
 
     public initiateRandomMovement(): void {
-        this.randomMovementInterval = setInterval(() => {
-            if(!this.canMove()) {
+        this.randomMovementInterval = setInterval(() => this.moveSomewhere(), 1000);
+    }
+
+    public moveSomewhere(): void {
+        if(!this.canMove()) {
+            return;
+        }
+
+        if(this instanceof Npc) {
+            const nearbyPlayers = world.findNearbyPlayers(this.position, 24, this.instanceId);
+            if(nearbyPlayers.length === 0) {
+                // No need for this NPC to move if there are no players nearby to see it
                 return;
             }
+        }
 
-            const movementChance = Math.floor(Math.random() * 10);
+        const movementChance = Math.floor(Math.random() * 10);
 
-            if(movementChance < 7) {
-                return;
+        if(movementChance < 7) {
+            return;
+        }
+
+        let px: number;
+        let py: number;
+        let movementAllowed = false;
+
+        while(!movementAllowed) {
+            px = this.position.x;
+            py = this.position.y;
+
+            const moveXChance = Math.floor(Math.random() * 10);
+
+            if(moveXChance > 6) {
+                const moveXAmount = Math.floor(Math.random() * 5);
+                const moveXMod = Math.floor(Math.random() * 2);
+
+                if(moveXMod === 0) {
+                    px -= moveXAmount;
+                } else {
+                    px += moveXAmount;
+                }
             }
 
-            let px: number;
-            let py: number;
-            let movementAllowed = false;
+            const moveYChance = Math.floor(Math.random() * 10);
 
-            while(!movementAllowed) {
-                px = this.position.x;
-                py = this.position.y;
+            if(moveYChance > 6) {
+                const moveYAmount = Math.floor(Math.random() * 5);
+                const moveYMod = Math.floor(Math.random() * 2);
 
-                const moveXChance = Math.floor(Math.random() * 10);
-
-                if(moveXChance > 6) {
-                    const moveXAmount = Math.floor(Math.random() * 5);
-                    const moveXMod = Math.floor(Math.random() * 2);
-
-                    if(moveXMod === 0) {
-                        px -= moveXAmount;
-                    } else {
-                        px += moveXAmount;
-                    }
+                if(moveYMod === 0) {
+                    py -= moveYAmount;
+                } else {
+                    py += moveYAmount;
                 }
-
-                const moveYChance = Math.floor(Math.random() * 10);
-
-                if(moveYChance > 6) {
-                    const moveYAmount = Math.floor(Math.random() * 5);
-                    const moveYMod = Math.floor(Math.random() * 2);
-
-                    if(moveYMod === 0) {
-                        py -= moveYAmount;
-                    } else {
-                        py += moveYAmount;
-                    }
-                }
-
-                let valid = true;
-
-                if(this instanceof Npc) {
-                    if(px > this.initialPosition.x + this.movementRadius || px < this.initialPosition.x - this.movementRadius
-                        || py > this.initialPosition.y + this.movementRadius || py < this.initialPosition.y - this.movementRadius) {
-                        valid = false;
-                    }
-                }
-
-                movementAllowed = valid;
             }
 
-            if(px !== this.position.x || py !== this.position.y) {
-                this.walkingQueue.clear();
-                this.walkingQueue.valid = true;
-                this.walkingQueue.add(px, py);
+            let valid = true;
+
+            if(this instanceof Npc) {
+                if(px > this.initialPosition.x + this.movementRadius || px < this.initialPosition.x - this.movementRadius
+                    || py > this.initialPosition.y + this.movementRadius || py < this.initialPosition.y - this.movementRadius) {
+                    valid = false;
+                }
             }
-        }, 1000);
+
+            movementAllowed = valid;
+        }
+
+        if(px !== this.position.x || py !== this.position.y) {
+            this.walkingQueue.clear();
+            this.walkingQueue.valid = true;
+            this.walkingQueue.add(px, py);
+        }
     }
 
     public forceMovement(direction: number, steps: number): void {

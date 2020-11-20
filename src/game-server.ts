@@ -46,22 +46,14 @@ export async function runGameServer(): Promise<void> {
         items: true,
         npcs: true,
         locationObjects: true,
-        mapData: !serverConfig.clippingDisabled,
         widgets: true
     });
 
     await loadConfigurations();
-
-    delete cache.dataChannel;
-    delete cache.metaChannel;
-    delete cache.indexChannels;
-    delete cache.indices;
-
     await loadPackets();
 
     world = new World();
     await world.init();
-    delete cache.mapData;
 
     if(process.argv.indexOf('-fakePlayers') !== -1) {
         world.generateFakePlayers();

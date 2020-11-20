@@ -6,6 +6,7 @@ import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Npc } from '../actor/npc/npc';
 import { WorldItem } from '@server/world/items/world-item';
 
+
 export interface ChunkUpdateItem {
     object?: LocationObject;
     worldItem?: WorldItem;
@@ -35,6 +36,13 @@ export class Chunk {
         this._addedLocationObjects = new Map<string, LocationObject>();
         this._removedLocationObjects = new Map<string, LocationObject>();
         this._worldItems = new Map<string, WorldItem[]>();
+        this.registerMapRegion();
+    }
+
+    public registerMapRegion(): void {
+        const mapRegionX = Math.floor(this.position.x / 8);
+        const mapRegionY = Math.floor(this.position.y / 8);
+        world.chunkManager.registerMapRegion(mapRegionX, mapRegionY);
     }
 
     public getWorldItem(itemId: number, position: Position): WorldItem {
