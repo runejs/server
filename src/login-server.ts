@@ -1,6 +1,6 @@
 import { launchLoginServer } from '@runejs/login-server';
 import { logger, parseServerConfig } from '@runejs/core';
-import { ServerConfig } from '@server/net/server/server-config';
+import { ServerConfig } from '@server/config/server-config';
 
 const startLoginServer = (): void => {
     const serverConfig = parseServerConfig<ServerConfig>();

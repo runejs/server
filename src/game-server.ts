@@ -1,7 +1,7 @@
 import { World } from './world';
 import { logger, parseServerConfig } from '@runejs/core';
 import { Cache } from '@runejs/cache-parser';
-import { ServerConfig } from '@server/net/server/server-config';
+import { ServerConfig } from '@server/config/server-config';
 
 import { parsePluginFiles } from '@server/plugins/plugin-loader';
 import { sort } from '@server/plugins/plugin';
