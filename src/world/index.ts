@@ -402,7 +402,7 @@ export class World {
     public spawnNpcs(): void {
         this.npcSpawns.forEach(npcSpawn => {
             const npcDetails = findNpc(npcSpawn.npcId) || null;
-            if(npcDetails) {
+            if(npcDetails && npcDetails.gameId !== undefined) {
                 this.registerNpc(new Npc(npcDetails, npcSpawn));
             } else {
                 this.registerNpc(new Npc(npcSpawn.npcId, npcSpawn));
