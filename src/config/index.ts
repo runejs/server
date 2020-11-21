@@ -15,6 +15,7 @@ import {
     translateNpcConfig
 } from '@server/config/npc-config';
 import _ from 'lodash';
+import { loadNpcSpawnConfigurations, NpcSpawn } from '@server/config/npc-spawn-config';
 
 export async function loadConfigurationFiles(configurationDir: string): Promise<any[]> {
     const files = [];
@@ -41,6 +42,7 @@ export let itemPresetMap: ItemPresetConfiguration;
 export let npcMap: { [key: string]: NpcDetails };
 export let npcIdMap: { [key: number]: string };
 export let npcPresetMap: NpcPresetConfiguration;
+export let npcSpawns: NpcSpawn[] = [];
 
 export async function loadConfigurations(): Promise<void> {
     const { items, itemIds, itemPresets } = await loadItemConfigurations('data/config/items');
@@ -52,6 +54,8 @@ export async function loadConfigurations(): Promise<void> {
     npcMap = npcs;
     npcIdMap = npcIds;
     npcPresetMap = npcPresets;
+
+    npcSpawns = await loadNpcSpawnConfigurations('data/config/npc-spawns')
 }
 
 export const findItem = (itemKey: number | string): ItemDetails => {

@@ -1,6 +1,6 @@
 {
     "presets": {
-        "rs:goblin_base": {
+        "rs:goblin_base_l2": {
             "killable": true,
             "respawn_time": 3,
             "skills": {
@@ -34,15 +34,59 @@
     },
 
     "rs:goblin": {
-        "extends": "rs:goblin_base",
-        "game_id": 100
+        "extends": "rs:goblin_base_l2",
+        "game_id": 100,
+        "metadata": {
+            "level": 2
+        }
     },
     "rs:goblin_with_spear": {
-        "extends": "rs:goblin_base",
-        "game_id": 101
+        "extends": "rs:goblin_base_l2",
+        "game_id": 101,
+        "metadata": {
+            "level": 5
+        }
     },
     "rs:goblin_with_helmet": {
-        "extends": "rs:goblin_base",
-        "game_id": 102
+        "extends": "rs:goblin_base_l2",
+        "game_id": 102,
+        "metadata": {
+            "level": 13
+        }
+    },
+    "rs:goblin_green_with_sprear": {
+        "extends": "rs:goblin_base_l2",
+        "game_id": 298,
+        "metadata": {
+            "level": 5
+        }
+    },
+    "rs:goblin_red_with_sprear": {
+        "extends": "rs:goblin_base_l2",
+        "game_id": 299,
+        "metadata": {
+            "level": 5
+        }
+    },
+    "rs:goblin_red_with_shield": {
+        "extends": "rs:goblin_base_l2",
+        "game_id": 444,
+        "metadata": {
+            "level": 5
+        }
+    },
+    "rs:goblin_green_with_shield": {
+        "extends": "rs:goblin_base_l2",
+        "game_id": 445,
+        "metadata": {
+            "level": 5
+        }
+    },
+    "rs:goblin_guard": {
+        "extends": "rs:goblin_base_l2",
+        "game_id": 489,
+        "metadata": {
+            "level": 42
+        }
     }
 }

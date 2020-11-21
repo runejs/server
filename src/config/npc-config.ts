@@ -1,4 +1,4 @@
-import { DefensiveBonuses, OffensiveBonuses } from '@server/config/item-config';
+import { DefensiveBonuses } from '@server/config/item-config';
 import { loadConfigurationFiles } from '@server/config/index';
 import { cache } from '@server/game-server';
 
@@ -59,8 +59,9 @@ export interface NpcConfiguration {
  */
 export class NpcDetails {
     extends?: string | string[];
+    key: string;
     gameId: number;
-    name: string;
+    name?: string;
     skills?: NpcSkills;
     killable?: boolean;
     respawnTime?: number;
@@ -69,21 +70,21 @@ export class NpcDetails {
     animations?: NpcAnimations;
     dropTable?: DropTable;
     metadata: { [key: string]: unknown } = {};
-    options: string[];
-    models: number[];
-    headModels: number[];
-    minimapVisible: boolean;
-    combatLevel: number;
-    boundary: number;
-    sizeX: number;
-    sizeY: number;
-    renderPriority: boolean;
-    headIcon: number;
-    clickable: boolean;
-    turnDegrees: number;
+    options?: string[];
+    models?: number[];
+    headModels?: number[];
+    minimapVisible?: boolean;
+    combatLevel?: number;
+    boundary?: number;
+    sizeX?: number;
+    sizeY?: number;
+    renderPriority?: boolean;
+    headIcon?: number;
+    clickable?: boolean;
+    turnDegrees?: number;
 }
 
-export function translateNpcConfig(npcKey: string, config: NpcConfiguration): any {
+export function translateNpcConfig(npcKey: string, config: NpcConfiguration): NpcDetails {
     return {
         key: npcKey,
         extends: config.extends || undefined,
@@ -102,7 +103,7 @@ export function translateNpcConfig(npcKey: string, config: NpcConfiguration): an
         } : undefined,
         defensiveStats: config.defensive_stats || undefined,
         animations: config.animations || {},
-        dropTable: config.drop_table || [],
+        dropTable: config.drop_table || undefined,
         metadata: config.metadata || {}
     };
 }

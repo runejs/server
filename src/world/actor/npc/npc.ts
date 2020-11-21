@@ -1,5 +1,4 @@
 import { Actor } from '@server/world/actor/actor';
-import { NpcSpawn } from '@server/world/config/npc-spawn';
 import uuidv4 from 'uuid/v4';
 import { Position } from '@server/world/position';
 import { cache, pluginActions, world } from '@server/game-server';
@@ -11,6 +10,7 @@ import { findNpc } from '@server/config';
 import { animationIds } from '@server/world/config/animation-ids';
 import { NpcAnimations, NpcDetails } from '@server/config/npc-config';
 import { SkillName } from '@server/world/actor/skills';
+import { NpcSpawn } from '@server/config/npc-spawn-config';
 
 export type npcInitAction = (data: { npc: Npc }) => void;
 
@@ -45,17 +45,17 @@ export class Npc extends Actor {
         super();
 
         this.uuid = uuidv4();
-        this.position = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
-        this.initialPosition = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
+        this.position = npcSpawn.spawnPosition.clone();
+        this.initialPosition = this.position.clone();
         this.npcSpawn = npcSpawn;
         this.instanceId = instanceId;
 
-        if(npcSpawn.radius) {
-            this._movementRadius = npcSpawn.radius;
+        if(npcSpawn.movementRadius) {
+            this._movementRadius = npcSpawn.movementRadius;
         }
 
-        if(npcSpawn.face) {
-            this.faceDirection = directionData[npcSpawn.face].index;
+        if(npcSpawn.faceDirection) {
+            this.faceDirection = directionData[npcSpawn.faceDirection].index;
         }
 
         if(typeof npcDetails === 'number') {
