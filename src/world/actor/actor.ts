@@ -12,6 +12,7 @@ import { ActionCancelType } from '@server/world/action';
 import { filter, take } from 'rxjs/operators';
 import { world } from '@server/game-server';
 import { WorldInstance } from '@server/world/instances';
+import { Player } from '@server/world/actor/player/player';
 
 /**
  * Handles an actor within the game world.
@@ -455,6 +456,17 @@ export abstract class Actor {
     }
 
     public set instance(value: WorldInstance) {
+        if(this instanceof Player) {
+            const currentInstance = this._instance;
+            if(currentInstance?.instanceId) {
+                currentInstance.removePlayer(this);
+            }
+
+            if(value) {
+                value.addPlayer(this);
+            }
+        }
+
         this._instance = value;
     }
 }

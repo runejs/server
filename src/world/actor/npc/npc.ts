@@ -39,6 +39,7 @@ export class Npc extends Actor {
     private quadtreeKey: QuadtreeKey = null;
     private _exists: boolean = true;
     private npcSpawn: NpcSpawn;
+    private _initialized: boolean = false;
 
     public constructor(npcDetails: NpcDetails | number, npcSpawn: NpcSpawn, instanceId: string = null) {
         super();
@@ -100,6 +101,8 @@ export class Npc extends Actor {
                 .forEach(plugin => plugin.action({ npc: this }));
             resolve();
         });
+
+        this._initialized = true;
     }
 
     public getAttackAnimation(): number {
@@ -218,5 +221,9 @@ export class Npc extends Actor {
 
     public set exists(value: boolean) {
         this._exists = value;
+    }
+
+    public get initialized(): boolean {
+        return this._initialized;
     }
 }

@@ -12,4 +12,5 @@ export interface ServerConfig {
     giveAchievements: boolean;
     checkCredentials: boolean;
     tutorialEnabled: boolean;
+    adminDropsEnabled: boolean;
 }

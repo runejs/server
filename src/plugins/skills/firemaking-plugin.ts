@@ -1,5 +1,4 @@
 import { itemOnItemAction } from '@server/world/action/item-on-item-action';
-import { world } from '@server/game-server';
 import { loopingAction } from '@server/world/action';
 import { LocationObject } from '@runejs/cache-parser';
 import { Player } from '@server/world/actor/player/player';
@@ -59,7 +58,8 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
             }
         }
     }
-    world.addTemporaryLocationObject(fireObject, position, fireDuration()).then(() => {
+
+    player.instance.spawnTemporaryGameObject(fireObject, position, fireDuration()).then(() => {
         player.instance.spawnWorldItem({ itemId: itemIds.ashes, amount: 1 }, position, null, 300);
     });
 

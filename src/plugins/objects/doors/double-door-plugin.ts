@@ -77,9 +77,34 @@ const action: objectAction = (details) => {
     const otherDoorPosition = new Position(door.x + deltaX, door.y + deltaY, door.level);
     const otherDoorChunk = world.chunkManager.getChunkForWorldPosition(otherDoorPosition);
 
+    const chunkModifications = player.instance
+        .getInstancedChunk(otherDoorChunk.position.x, otherDoorChunk.position.y, otherDoorChunk.position.level);
+    const personalChunkModifications = player.personalInstance?.getInstancedChunk(otherDoorChunk.position.x,
+        otherDoorChunk.position.y, otherDoorChunk.position.level) || null;
+
+    const tileModifications = chunkModifications?.mods?.get(otherDoorPosition.key) || {};
+    const personalTileModifications = personalChunkModifications?.mods?.get(otherDoorPosition.key) || {};
+
+    if(!tileModifications.spawnedObjects) {
+        tileModifications.spawnedObjects = [];
+    }
+    if(!personalTileModifications.spawnedObjects) {
+        personalTileModifications.spawnedObjects = [];
+    }
+    if(!tileModifications.hiddenObjects) {
+        tileModifications.hiddenObjects = [];
+    }
+    if(!personalTileModifications.hiddenObjects) {
+        personalTileModifications.hiddenObjects = [];
+    }
+
     let otherDoor = otherDoorChunk.getCacheObject(otherDoorId, otherDoorPosition);
     if(!otherDoor) {
-        otherDoor = otherDoorChunk.getAddedObject(otherDoorId, otherDoorPosition);
+        const tileObjects = [ ...tileModifications.spawnedObjects,
+            ...personalTileModifications.spawnedObjects ];
+
+        otherDoor = tileObjects.find(spawnedObject =>
+            spawnedObject.objectId === otherDoorId && spawnedObject.x === otherDoorPosition.x && spawnedObject.y === otherDoorPosition.y) || null;
 
         if(!otherDoor) {
             logger.error('Could not find other door ' + otherDoorId + ' at ' + (door.x + deltaX) + ',' + (door.y + deltaY) + ',' + door.level);
@@ -87,7 +112,11 @@ const action: objectAction = (details) => {
         }
     }
 
-    if(otherDoorChunk.getRemovedObject(otherDoorId, otherDoorPosition)) {
+    const hiddenTileObjects = [ ...tileModifications.hiddenObjects,
+        ...personalTileModifications.hiddenObjects ];
+
+    if(hiddenTileObjects.findIndex(spawnedObject =>
+        spawnedObject.objectId === otherDoorId && spawnedObject.x === otherDoorPosition.x && spawnedObject.y === otherDoorPosition.y) !== -1) {
         return;
     }
 

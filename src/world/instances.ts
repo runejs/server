@@ -5,15 +5,25 @@ import { WorldItem } from '@server/world/items/world-item';
 import { Item } from '@server/world/items/item';
 import { Player } from '@server/world/actor/player/player';
 import { World } from '@server/world/index';
+import { schedule } from '@server/task/task';
+import { CollisionMap } from '@server/world/map/collision-map';
 
 
 /**
- * Modifications made to a single game tile.
+ * Modifications made to a single game tile within an instance.
  */
-interface WorldModifications {
+export interface WorldModifications {
     spawnedObjects?: LocationObject[];
     hiddenObjects?: LocationObject[];
     worldItems?: WorldItem[];
+}
+
+/**
+ * A game world chunk that is tied to a specific instance.
+ */
+export interface InstancedChunk {
+    collisionMap: CollisionMap;
+    mods: Map<string, WorldModifications>;
 }
 
 /**
@@ -24,7 +34,8 @@ export class WorldInstance {
     /**
      * A list of game world chunks that have modifications made to them in this instance.
      */
-    public readonly chunkModifications = new Map<string, Map<string, WorldModifications>>();
+    public readonly chunkModifications = new Map<string, InstancedChunk>();
+    public readonly players: Map<string, Player> = new Map<string, Player>();
 
     public constructor(public readonly instanceId: string = null) {
     }
@@ -50,11 +61,11 @@ export class WorldInstance {
             instanceId: this.instanceId
         };
 
-        const chunkMap = this.getWorldModifications(position);
+        const chunkMap = this.getInstancedChunk(position);
 
         let chunkMod: WorldModifications = {};
-        if(chunkMap.has(position.key)) {
-            chunkMod = chunkMap.get(position.key);
+        if(chunkMap.mods.has(position.key)) {
+            chunkMod = chunkMap.mods.get(position.key);
         }
 
         if(!chunkMod.worldItems) {
@@ -63,7 +74,7 @@ export class WorldInstance {
 
         chunkMod.worldItems.push(worldItem);
 
-        chunkMap.set(position.key, chunkMod);
+        chunkMap.mods.set(position.key, chunkMod);
 
         if(owner) {
             // If this world item is only visible to one player initially, we setup a timeout to spawn it for all other
@@ -101,14 +112,14 @@ export class WorldInstance {
      * @param worldItem The world item to de-spawn.
      */
     public despawnWorldItem(worldItem: WorldItem): void {
-        const chunkMap = this.getWorldModifications(worldItem.position);
+        const chunkMap = this.getInstancedChunk(worldItem.position);
 
-        if(!chunkMap.has(worldItem.position.key)) {
+        if(!chunkMap.mods.has(worldItem.position.key)) {
             // Object no longer exists
             return;
         }
 
-        const chunkMod = chunkMap.get(worldItem.position.key);
+        const chunkMod = chunkMap.mods.get(worldItem.position.key);
         if(chunkMod.worldItems && chunkMod.worldItems.length !== 0) {
             const idx = chunkMod.worldItems.findIndex(i => i.itemId === worldItem.itemId && i.amount === worldItem.amount);
             if(idx !== -1) {
@@ -155,17 +166,92 @@ export class WorldInstance {
         });
     }
 
+
+    /**
+     * Temporarily hides a game object from the game world.
+     * @param object The game object to temporarily hide from view.
+     * @param hideTicks The number of game cycles/ticks before the object will be shown again.
+     */
+    public async hideGameObjectTemporarily(object: LocationObject, hideTicks: number): Promise<void> {
+        this.hideGameObject(object);
+        await schedule(hideTicks);
+        this.showGameObject(object);
+    }
+
+
+    /**
+     * Spawns a temporary game object within the game world.
+     * @param object The game object to spawn.
+     * @param position The position to spawn the object at.
+     * @param despawnTicks The number of game cycles/ticks before the object will de-spawn.
+     */
+    public async spawnTemporaryGameObject(object: LocationObject, position: Position, despawnTicks: number): Promise<void> {
+        this.spawnGameObject(object);
+        await schedule(despawnTicks);
+        this.despawnGameObject(object);
+    }
+
+    /**
+     * Removes one game object and adds another to the game world. The new object may be completely different from
+     * the one being removed, and in different positions. NOT to be confused with `replaceObject`, which will replace
+     * and existing object with another object of the same type, orientation, and position.
+     * @param newObject The game object being spawned.
+     * @param oldObject The game object being removed.
+     * @param newObjectInCache Whether or not the object being added is the original game-cache object.
+     */
+    public toggleGameObjects(newObject: LocationObject, oldObject: LocationObject, newObjectInCache: boolean): void {
+        if(newObjectInCache) {
+            this.showGameObject(newObject);
+            this.despawnGameObject(oldObject);
+        } else {
+            this.hideGameObject(oldObject);
+            this.spawnGameObject(newObject);
+        }
+    }
+
+    /**
+     * Replaces a game object within the instance with a different object of the same object type, orientation, and position.
+     * NOT to be confused with `toggleGameObjects`, which removes one object and adds a different one that may have a differing
+     * type, orientation, or position (such as a door being opened).
+     * @param newObject The new game object to spawn, or the id of the location object to spawn.
+     * @param oldObject The game object being replaced. Usually a game-cache-stored object.
+     * @param respawnTicks [optional] How many ticks it will take before the original location object respawns.
+     * If not provided, the original game object will never re-spawn and the new location object will forever
+     * remain in it's place (in this instance).
+     */
+    public async replaceGameObject(newObject: LocationObject | number, oldObject: LocationObject, respawnTicks?: number): Promise<void> {
+        if(typeof newObject === 'number') {
+            newObject = {
+                objectId: newObject,
+                x: oldObject.x,
+                y: oldObject.y,
+                level: oldObject.level,
+                type: oldObject.type,
+                orientation: oldObject.orientation
+            } as LocationObject;
+        }
+
+        this.hideGameObject(oldObject);
+        this.spawnGameObject(newObject);
+
+        if(respawnTicks !== undefined) {
+            await schedule(respawnTicks);
+            this.despawnGameObject(newObject as LocationObject);
+            this.showGameObject(oldObject);
+        }
+    }
+
     /**
      * Spawn a new game object into the instance.
      * @param object The game object to spawn.
      */
     public spawnGameObject(object: LocationObject): void {
         const position = new Position(object.x, object.y, object.level);
-        const chunkMap = this.getWorldModifications(position);
+        const instancedChunk = this.getInstancedChunk(position);
 
         let chunkMod: WorldModifications = {};
-        if(chunkMap.has(position.key)) {
-            chunkMod = chunkMap.get(position.key);
+        if(instancedChunk.mods.has(position.key)) {
+            chunkMod = instancedChunk.mods.get(position.key);
         }
 
         if(!chunkMod.spawnedObjects) {
@@ -173,8 +259,12 @@ export class WorldInstance {
         }
 
         chunkMod.spawnedObjects.push(object);
+        instancedChunk.mods.set(position.key, chunkMod);
 
-        chunkMap.set(position.key, chunkMod);
+        instancedChunk.collisionMap.markGameObject(object, true);
+
+        const nearbyPlayers = world.findNearbyPlayers(position, 16, this.instanceId) || [];
+        nearbyPlayers.forEach(player => player.outgoingPackets.setLocationObject(object, position));
     }
 
     /**
@@ -183,14 +273,14 @@ export class WorldInstance {
      */
     public despawnGameObject(object: LocationObject): void {
         const position = new Position(object.x, object.y, object.level);
-        const chunkMap = this.getWorldModifications(position);
+        const instancedChunk = this.getInstancedChunk(position);
 
-        if(!chunkMap.has(position.key)) {
+        if(!instancedChunk.mods.has(position.key)) {
             // Object no longer exists
             return;
         }
 
-        const chunkMod = chunkMap.get(position.key);
+        const chunkMod = instancedChunk.mods.get(position.key);
         if(chunkMod.spawnedObjects && chunkMod.spawnedObjects.length !== 0) {
             const idx = chunkMod.spawnedObjects.findIndex(o => o.objectId === object.objectId &&
                 o.type === object.type && o.orientation === object.orientation);
@@ -202,6 +292,11 @@ export class WorldInstance {
         if(chunkMod.spawnedObjects.length === 0) {
             delete chunkMod.spawnedObjects;
         }
+
+        instancedChunk.collisionMap.markGameObject(object, false);
+
+        const nearbyPlayers = world.findNearbyPlayers(position, 16, this.instanceId) || [];
+        nearbyPlayers.forEach(player => player.outgoingPackets.removeLocationObject(object, position));
     }
 
     /**
@@ -210,11 +305,11 @@ export class WorldInstance {
      */
     public hideGameObject(object: LocationObject): void {
         const position = new Position(object.x, object.y, object.level);
-        const chunkMap = this.getWorldModifications(position);
+        const instancedChunk = this.getInstancedChunk(position);
 
         let chunkMod: WorldModifications = {};
-        if(chunkMap.has(position.key)) {
-            chunkMod = chunkMap.get(position.key);
+        if(instancedChunk.mods.has(position.key)) {
+            chunkMod = instancedChunk.mods.get(position.key);
         }
 
         if(!chunkMod.hiddenObjects) {
@@ -222,8 +317,12 @@ export class WorldInstance {
         }
 
         chunkMod.hiddenObjects.push(object);
+        instancedChunk.mods.set(position.key, chunkMod);
 
-        chunkMap.set(position.key, chunkMod);
+        instancedChunk.collisionMap.markGameObject(object, false);
+
+        const nearbyPlayers = world.findNearbyPlayers(position, 16, this.instanceId) || [];
+        nearbyPlayers.forEach(player => player.outgoingPackets.removeLocationObject(object, position));
     }
 
     /**
@@ -232,14 +331,14 @@ export class WorldInstance {
      */
     public showGameObject(object: LocationObject): void {
         const position = new Position(object.x, object.y, object.level);
-        const chunkMap = this.getWorldModifications(position);
+        const instancedChunk = this.getInstancedChunk(position);
 
-        if(!chunkMap.has(position.key)) {
+        if(!instancedChunk.mods.has(position.key)) {
             // Object no longer exists
             return;
         }
 
-        const chunkMod = chunkMap.get(position.key);
+        const chunkMod = instancedChunk.mods.get(position.key);
         if(chunkMod.hiddenObjects && chunkMod.hiddenObjects.length !== 0) {
             const idx = chunkMod.hiddenObjects.findIndex(o => o.objectId === object.objectId &&
                 o.type === object.type && o.orientation === object.orientation);
@@ -251,13 +350,18 @@ export class WorldInstance {
         if(chunkMod.hiddenObjects.length === 0) {
             delete chunkMod.hiddenObjects;
         }
+
+        instancedChunk.collisionMap.markGameObject(object, true);
+
+        const nearbyPlayers = world.findNearbyPlayers(position, 16, this.instanceId) || [];
+        nearbyPlayers.forEach(player => player.outgoingPackets.setLocationObject(object, position));
     }
 
     /**
      * Fetch a list of world modifications from this instance.
      * @param worldPosition The game world position to find the chunk for.
      */
-    public getWorldModifications(worldPosition: Position): Map<string, WorldModifications>;
+    public getInstancedChunk(worldPosition: Position): InstancedChunk;
 
 
     /**
@@ -266,9 +370,9 @@ export class WorldInstance {
      * @param y The Y coordinate to find the chunk of.
      * @param level The height level of the chunk.
      */
-    public getWorldModifications(x: number, y: number, level: number): Map<string, WorldModifications>;
+    public getInstancedChunk(x: number, y: number, level: number): InstancedChunk;
 
-    public getWorldModifications(worldPositionOrX: Position | number, y?: number, level?: number): Map<string, WorldModifications> {
+    public getInstancedChunk(worldPositionOrX: Position | number, y?: number, level?: number): InstancedChunk {
         let chunkPosition: Position;
 
         if(typeof worldPositionOrX === 'number') {
@@ -282,14 +386,44 @@ export class WorldInstance {
 
         if(!chunkPosition) {
             // Chunk not found - fail gracefully
-            return new Map<string, WorldModifications>();
+            return {
+                collisionMap: new CollisionMap(chunkPosition.x, chunkPosition.y, chunkPosition.level, { instance: this }),
+                mods: new Map<string, WorldModifications>()
+            };
         }
 
         if(!this.chunkModifications.has(chunkPosition.key)) {
-            this.chunkModifications.set(chunkPosition.key, new Map<string, WorldModifications>());
+            this.chunkModifications.set(chunkPosition.key, {
+                collisionMap: new CollisionMap(chunkPosition.x, chunkPosition.y, chunkPosition.level, { instance: this }),
+                mods: new Map<string, WorldModifications>()
+            });
         }
 
         return this.chunkModifications.get(chunkPosition.key);
+    }
+
+    /**
+     * Adds a new player to this instance.
+     * @param player The player to allow in.
+     */
+    public addPlayer(player: Player): void {
+        this.players.set(player.username, player);
+    }
+
+    /**
+     * Removes a player from this instance.
+     * If the instance is not the global instance and
+     * there are no more players within it, then this will gracefully close the instance.
+     * @param player The player remove from the instance.
+     */
+    public removePlayer(player: Player): void {
+        this.players.delete(player.username);
+
+        if(this.instanceId !== null && this.players.size === 0) {
+            this.chunkModifications.clear();
+            const instancedNpcs = world.findNpcsByInstance(this.instanceId);
+            instancedNpcs?.forEach(npc => world.deregisterNpc(npc));
+        }
     }
 
 }

@@ -4,13 +4,16 @@ import { Npc } from '@server/world/actor/npc/npc';
 import { findNpc } from '@server/config';
 import { NpcDetails } from '@server/config/npc-config';
 
-const action: commandAction = (details) => {
-    const { player, args } = details;
-
-    let npcKey: number | string = args.npcKey;
+const action: commandAction = ({ player, args }) => {
+    let npcKey: string | number = args.npcKey;
     let npcDetails: NpcDetails;
 
+    if(typeof npcKey === 'string' && npcKey.match(/^[0-9]+$/)) {
+        npcKey = parseInt(npcKey, 10);
+    }
+
     if(typeof npcKey === 'string') {
+        console.log('string');
         npcDetails = findNpc(npcKey) || null;
 
         if(!npcDetails) {
@@ -25,7 +28,7 @@ const action: commandAction = (details) => {
         npcId: npcKey,
         x: player.position.x,
         y: player.position.y
-    });
+    }, player.instance.instanceId);
 
     world.registerNpc(npc);
 };

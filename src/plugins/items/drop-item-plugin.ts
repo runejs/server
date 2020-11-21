@@ -2,6 +2,8 @@ import { widgets } from '@server/world/config/widget';
 import { itemAction } from '@server/world/action/item-action';
 import { soundIds } from '@server/world/config/sound-ids';
 import { getItemFromContainer } from '@server/world/items/item-container';
+import { serverConfig } from '@server/game-server';
+import { Rights } from '@server/world/actor/player/player';
 
 export const action: itemAction = ({ player, itemId, itemSlot }) => {
     const inventory = player.inventory;
@@ -12,7 +14,7 @@ export const action: itemAction = ({ player, itemId, itemSlot }) => {
         return;
     }
 
-    if(player.rights == 2) {
+    if(!serverConfig.adminDropsEnabled && player.rights === Rights.ADMIN) {
         player.sendMessage('Administrators are not allowed to drop items.', true);
         return;
     }

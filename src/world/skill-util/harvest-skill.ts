@@ -159,7 +159,8 @@ export function handleHarvesting(details: ObjectActionData, tool: HarvestTool, t
                     details.player.skills.addExp(skill, target.experience);
                     if (randomBetween(0, 100) <= target.break) {
                         details.player.playSound(soundIds.oreDepeleted);
-                        world.replaceLocationObject(target.objects.get(details.object.objectId), details.object, randomBetween(target.respawnLow, target.respawnHigh));
+                        details.player.instance.replaceGameObject(target.objects.get(details.object.objectId),
+                            details.object, randomBetween(target.respawnLow, target.respawnHigh));
                         loop.cancel();
                         details.player.playAnimation(null);
                         return;

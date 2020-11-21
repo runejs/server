@@ -11,9 +11,20 @@ import { Npc } from '@server/world/actor/npc/npc';
 import { logger } from '@runejs/core';
 import { Position } from '@server/world/position';
 import { WorldInstance } from '@server/world/instances';
+import { findNpc } from '@server/config';
 
-function npcHint(player: Player, npcId: number): void {
-    const npc = world.findNpcsById(npcId, player.instance.instanceId)[0] || null;
+function npcHint(player: Player, npcKey: string | number): void {
+    if(typeof npcKey === 'string') {
+        const npc = findNpc(npcKey) || null;
+        if(!npc) {
+            logger.warn(`Can not provide NPC hint; NPC ${npcKey} is not yet registered on the server.`);
+            return;
+        }
+
+        npcKey = npc.gameId;
+    }
+
+    const npc = world.findNpcsById(npcKey as number, player.instance.instanceId)[0] || null;
 
     if(npc) {
         player.outgoingPackets.showNpcHintIcon(npc);
@@ -22,7 +33,6 @@ function npcHint(player: Player, npcId: number): void {
 
 const startTutorial = async (player: Player): Promise<void> => {
     player.savedMetadata.tutorialProgress = 0;
-    player.metadata.blockObjectInteractions = true;
 
     defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
         if(widgetId !== -1) {
@@ -44,7 +54,7 @@ const stageHandler: { [key: number]: (player: Player) => void } = {
         await handleTutorial(player);
     },
     5: async player => {
-        npcHint(player, npcIds.questGuide);
+        npcHint(player, 'rs:runescape_guide');
 
         await dialogue([ player ], [
             titled => [ `Getting Started`, `\nWelcome to RuneScape!\nSpeak with the Guide to begin your journey.` ]
@@ -75,7 +85,7 @@ const stageHandler: { [key: number]: (player: Player) => void } = {
         });
     },
     15: player => {
-        npcHint(player, npcIds.questGuide);
+        npcHint(player, 'rs:runescape_guide');
 
         player.outgoingPackets.sendTabWidget(Tabs.settings, widgets.settingsTab);
 
@@ -157,7 +167,7 @@ const stageHandler: { [key: number]: (player: Player) => void } = {
         });
     },
     35: player => {
-        npcHint(player, npcIds.questGuide);
+        npcHint(player, 'rs:runescape_guide');
 
         player.outgoingPackets.sendTabWidget(Tabs.settings, widgets.settingsTab);
         player.outgoingPackets.sendTabWidget(Tabs.friends, widgets.friendsList);
@@ -198,7 +208,8 @@ const stageHandler: { [key: number]: (player: Player) => void } = {
         });
     },
     45: player => {
-        npcHint(player, npcIds.questGuide);
+        player.metadata.blockObjectInteractions = false;
+        npcHint(player, 'rs:melee_combat_tutor');
 
         player.outgoingPackets.sendTabWidget(Tabs.settings, widgets.settingsTab);
         player.outgoingPackets.sendTabWidget(Tabs.friends, widgets.friendsList);
@@ -323,12 +334,14 @@ export const guideAction: npcAction = async ({ player, npc }) => {
 };
 
 function spawnQuestNpcs(player: Player): void {
-    world.spawnNpc('rs:runescape_guide', new Position(3230, 3238), player.instance.instanceId);
+    world.spawnNpc('rs:runescape_guide', new Position(3230, 3238), 'SOUTH', 2, player.instance.instanceId);
+    world.spawnNpc('rs:melee_combat_tutor', new Position(3219, 3238), 'EAST', 1, player.instance.instanceId);
 }
 
 export const tutorialInitAction: playerInitAction = async ({ player }) => {
     if(serverConfig.tutorialEnabled && !player.savedMetadata.tutorialComplete) {
         player.instance = new WorldInstance(uuidv4());
+        player.metadata.blockObjectInteractions = true;
         spawnQuestNpcs(player);
         await handleTutorial(player);
     } else {

@@ -95,7 +95,7 @@ export class ChunkManager {
                 position.level -= 1;
             }
 
-            this.getChunkForWorldPosition(position).setCacheLocationObject(locationObject, position);
+            this.getChunkForWorldPosition(position).setCacheLocationObject(locationObject);
         }
     }
 

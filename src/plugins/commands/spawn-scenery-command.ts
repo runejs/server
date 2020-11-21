@@ -1,17 +1,11 @@
-import { RunePlugin } from '@server/plugins/plugin';
 import { commandAction } from '@server/world/action/player-command-action';
-import { world } from '@server/game-server';
 import { LocationObject } from '@runejs/cache-parser';
-import { Position } from '@server/world/position';
 import { objectIds } from '@server/world/config/object-ids';
 import { safeDump } from 'js-yaml';
 import { writeFileSync } from 'fs';
-import { ActionType } from '@server/world/action';
 import { logger } from '@runejs/core';
 
-const spawnSceneryAction: commandAction = (details) => {
-    const { player, args } = details;
-
+const spawnSceneryAction: commandAction = ({ player, args }) => {
     const locationObjectSearch: string = (args.locationObjectSearch as string).trim();
     let locationObjectId: number;
 
@@ -48,7 +42,7 @@ const spawnSceneryAction: commandAction = (details) => {
 
     player.metadata.spawnedScenery.push(locationObject);
 
-    world.addLocationObject(locationObject, position);
+    player.instance.spawnGameObject(locationObject);
 };
 
 const undoSceneryAction: commandAction = (details) => {
@@ -60,7 +54,7 @@ const undoSceneryAction: commandAction = (details) => {
         return;
     }
 
-    world.removeLocationObject(o, new Position(o.x, o.y, o.level));
+    player.instance.despawnGameObject(o);
     delete player.metadata.lastSpawnedScenery;
 
     if(player.metadata.spawnedScenery) {

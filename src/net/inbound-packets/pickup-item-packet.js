@@ -10,8 +10,8 @@ const pickupItemPacket = (player, packet) => {
     const level = player.position.level;
     const worldItemPosition = new Position(x, y, level);
 
-    const worldMods = player.instance.getWorldModifications(worldItemPosition);
-    const worldItems = worldMods?.get(worldItemPosition.key)?.worldItems || [];
+    const worldMods = player.instance.getInstancedChunk(worldItemPosition);
+    const worldItems = worldMods?.mods?.get(worldItemPosition.key)?.worldItems || [];
     const worldItem = worldItems.find(i => i.itemId === itemId) || null;
 
     if(worldItem && !worldItem.removed) {
