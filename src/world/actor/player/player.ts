@@ -43,7 +43,7 @@ import { findItem, npcIdMap } from '@server/config';
 import { NpcDetails } from '@server/config/npc-config';
 import { animationIds } from '@server/world/config/animation-ids';
 import { combatStyles } from '@server/world/actor/combat';
-import { WorldInstance, WorldModifications } from '@server/world/instances';
+import { WorldInstance, TileModifications } from '@server/world/instances';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -1026,7 +1026,7 @@ export class Player extends Actor {
         });
     }
 
-    private findChunkUpdates(chunkMods: Map<string, WorldModifications>, chunkUpdateItems: ChunkUpdateItem[]): void {
+    private findChunkUpdates(chunkMods: Map<string, TileModifications>, chunkUpdateItems: ChunkUpdateItem[]): void {
         if(!chunkMods) {
             return;
         }

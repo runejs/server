@@ -5,7 +5,7 @@ import { timer } from 'rxjs';
 import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { ExamineCache } from './config/examine-data';
-import { loadPlugins } from '@server/game-server';
+import { loadPlugins, world } from '@server/game-server';
 import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './actor/npc/npc';
@@ -71,6 +71,50 @@ export class World {
         await loadActions();
         this.spawnNpcs();
         this.spawnScenery();
+    }
+
+    /**
+     * Searched for an object by ID at the given position in any of the player's active instances.
+     * @param player The player to find the object for.
+     * @param objectId The game ID of the object.
+     * @param objectPosition The game world position that the object is expected at.
+     */
+    public findObjectAtLocation(player: Player, objectId: number, objectPosition: Position): { object: LocationObject, cacheOriginal: boolean } {
+        const x = objectPosition.x;
+        const y = objectPosition.y;
+        const objectChunk = this.chunkManager.getChunkForWorldPosition(objectPosition);
+        let cacheOriginal = true;
+
+        const tileModifications = player.instance.getTileModifications(objectPosition);
+        const personalTileModifications = player.personalInstance.getTileModifications(objectPosition);
+
+        let locationObject = objectChunk.getCacheObject(objectId, objectPosition);
+        if(!locationObject) {
+            const tileObjects = [ ...tileModifications.mods.spawnedObjects,
+                ...personalTileModifications.mods.spawnedObjects ];
+
+            locationObject = tileObjects.find(spawnedObject =>
+                spawnedObject.objectId === objectId && spawnedObject.x === x && spawnedObject.y === y) || null;
+
+            cacheOriginal = false;
+
+            if(!locationObject) {
+                return { object: null, cacheOriginal: false };
+            }
+        }
+
+        const hiddenTileObjects = [ ...tileModifications.mods.hiddenObjects,
+            ...personalTileModifications.mods.hiddenObjects ];
+
+        if(hiddenTileObjects.findIndex(spawnedObject =>
+            spawnedObject.objectId === objectId && spawnedObject.x === x && spawnedObject.y === y) !== -1) {
+            return { object: null, cacheOriginal: false };
+        }
+
+        return {
+            object: locationObject,
+            cacheOriginal
+        };
     }
 
     /**
