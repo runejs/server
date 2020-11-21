@@ -1,0 +1,50 @@
+[
+    {
+        "npc": "rs:hans",
+        "spawn_x": 3222,
+        "spawn_y": 3222,
+        "movement_radius": 8
+    },
+    {
+        "npc": "rs:generic_man_1",
+        "spawn_x": 3222,
+        "spawn_y": 3218,
+        "movement_radius": 12
+    },
+    {
+        "npc": "rs:lumbridge_bob",
+        "spawn_x": 3230,
+        "spawn_y": 3203,
+        "movement_radius": 1
+    },
+    {
+        "npc": "rs:lumbridge_shop_keeper",
+        "spawn_x": 3211,
+        "spawn_y": 3247,
+        "movement_radius": 1
+    },
+    {
+        "npc": "rs:gillie_groats",
+        "spawn_x": 3253,
+        "spawn_y": 3274,
+        "movement_radius": 1
+    },
+    {
+        "npc": "rs:millie_miller",
+        "spawn_x": 3168,
+        "spawn_y": 3306,
+        "movement_radius": 3
+    },
+    {
+        "npc": "rs:lumbridge_castle_cook",
+        "spawn_x": 3210,
+        "spawn_y": 3215,
+        "movement_radius": 4
+    },
+    {
+        "npc": "rs:runescape_guide",
+        "spawn_x": 3230,
+        "spawn_y": 3238,
+        "movement_radius": 1
+    }
+]

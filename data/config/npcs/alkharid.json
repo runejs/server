@@ -1,0 +1,17 @@
+{
+    "rs:alkharid_gem_trader": {
+        "game_id": 540
+    },
+    "rs:alkharid_dommik": {
+        "game_id": 545
+    },
+    "rs:alkharid_louie": {
+        "game_id": 542
+    },
+    "rs:alkharid_ranael": {
+        "game_id": 544
+    },
+    "rs:alkharid_karim": {
+        "game_id": 543
+    }
+}
