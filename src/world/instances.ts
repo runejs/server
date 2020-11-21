@@ -10,20 +10,49 @@ import { CollisionMap } from '@server/world/map/collision-map';
 
 
 /**
- * Modifications made to a single game tile within an instance.
- */
-export interface WorldModifications {
-    spawnedObjects?: LocationObject[];
-    hiddenObjects?: LocationObject[];
-    worldItems?: WorldItem[];
-}
-
-/**
  * A game world chunk that is tied to a specific instance.
  */
 export interface InstancedChunk {
+
+    /**
+     * A specific instanced game chunk's collision map.
+     */
     collisionMap: CollisionMap;
-    mods: Map<string, WorldModifications>;
+
+    /**
+     * Tile modifications made to this instanced chunk.
+     */
+    mods: Map<string, TileModifications>;
+
+}
+
+/**
+ * Modifications made to a single game tile within an instance.
+ */
+export class TileModifications {
+
+    /**
+     * New game objects that have been introduced to an instance.
+     */
+    public readonly spawnedObjects: LocationObject[] = [];
+
+    /**
+     * Cache/standard game objects that have been hidden from an instance.
+     */
+    public readonly hiddenObjects: LocationObject[] = [];
+
+    /**
+     * World items spawned onto this tile within an instance.
+     */
+    public readonly worldItems: WorldItem[] = [];
+
+    /**
+     * Checks if this tile is devoid of any modifications.
+     */
+    public get empty(): boolean {
+        return this.spawnedObjects.length === 0 && this.hiddenObjects.length === 0 && this.worldItems.length === 0;
+    }
+
 }
 
 /**
@@ -35,8 +64,17 @@ export class WorldInstance {
      * A list of game world chunks that have modifications made to them in this instance.
      */
     public readonly chunkModifications = new Map<string, InstancedChunk>();
+
+    /**
+     * A list of players currently in this instance.
+     */
     public readonly players: Map<string, Player> = new Map<string, Player>();
 
+    /**
+     * Creates a new game world instance.
+     * @param instanceId [optional] The instanceId to apply to this new world instance.
+     * If not provided, the instance will be considered a public global world instance.
+     */
     public constructor(public readonly instanceId: string = null) {
     }
 
@@ -61,20 +99,11 @@ export class WorldInstance {
             instanceId: this.instanceId
         };
 
-        const chunkMap = this.getInstancedChunk(position);
+        const { chunk: instancedChunk, mods } = this.getTileModifications(position);
 
-        let chunkMod: WorldModifications = {};
-        if(chunkMap.mods.has(position.key)) {
-            chunkMod = chunkMap.mods.get(position.key);
-        }
+        mods.worldItems.push(worldItem);
 
-        if(!chunkMod.worldItems) {
-            chunkMod.worldItems = [];
-        }
-
-        chunkMod.worldItems.push(worldItem);
-
-        chunkMap.mods.set(position.key, chunkMod);
+        instancedChunk.mods.set(position.key, mods);
 
         if(owner) {
             // If this world item is only visible to one player initially, we setup a timeout to spawn it for all other
@@ -128,7 +157,7 @@ export class WorldInstance {
         }
 
         if(chunkMod.worldItems.length === 0) {
-            delete chunkMod.worldItems;
+            this.clearTileIfEmpty(worldItem.position);
         }
 
         worldItem.removed = true;
@@ -247,19 +276,11 @@ export class WorldInstance {
      */
     public spawnGameObject(object: LocationObject): void {
         const position = new Position(object.x, object.y, object.level);
-        const instancedChunk = this.getInstancedChunk(position);
 
-        let chunkMod: WorldModifications = {};
-        if(instancedChunk.mods.has(position.key)) {
-            chunkMod = instancedChunk.mods.get(position.key);
-        }
+        const { chunk: instancedChunk, mods } = this.getTileModifications(position);
 
-        if(!chunkMod.spawnedObjects) {
-            chunkMod.spawnedObjects = [];
-        }
-
-        chunkMod.spawnedObjects.push(object);
-        instancedChunk.mods.set(position.key, chunkMod);
+        mods.spawnedObjects.push(object);
+        instancedChunk.mods.set(position.key, mods);
 
         instancedChunk.collisionMap.markGameObject(object, true);
 
@@ -280,17 +301,17 @@ export class WorldInstance {
             return;
         }
 
-        const chunkMod = instancedChunk.mods.get(position.key);
-        if(chunkMod.spawnedObjects && chunkMod.spawnedObjects.length !== 0) {
-            const idx = chunkMod.spawnedObjects.findIndex(o => o.objectId === object.objectId &&
+        const tileModifications = instancedChunk.mods.get(position.key);
+        if(tileModifications.spawnedObjects && tileModifications.spawnedObjects.length !== 0) {
+            const idx = tileModifications.spawnedObjects.findIndex(o => o.objectId === object.objectId &&
                 o.type === object.type && o.orientation === object.orientation);
             if(idx !== -1) {
-                chunkMod.spawnedObjects.splice(idx, 1);
+                tileModifications.spawnedObjects.splice(idx, 1);
             }
         }
 
-        if(chunkMod.spawnedObjects.length === 0) {
-            delete chunkMod.spawnedObjects;
+        if(tileModifications.spawnedObjects.length === 0) {
+            this.clearTileIfEmpty(position);
         }
 
         instancedChunk.collisionMap.markGameObject(object, false);
@@ -305,19 +326,11 @@ export class WorldInstance {
      */
     public hideGameObject(object: LocationObject): void {
         const position = new Position(object.x, object.y, object.level);
-        const instancedChunk = this.getInstancedChunk(position);
 
-        let chunkMod: WorldModifications = {};
-        if(instancedChunk.mods.has(position.key)) {
-            chunkMod = instancedChunk.mods.get(position.key);
-        }
+        const { chunk: instancedChunk, mods } = this.getTileModifications(position);
 
-        if(!chunkMod.hiddenObjects) {
-            chunkMod.hiddenObjects = [];
-        }
-
-        chunkMod.hiddenObjects.push(object);
-        instancedChunk.mods.set(position.key, chunkMod);
+        mods.hiddenObjects.push(object);
+        instancedChunk.mods.set(position.key, mods);
 
         instancedChunk.collisionMap.markGameObject(object, false);
 
@@ -338,17 +351,17 @@ export class WorldInstance {
             return;
         }
 
-        const chunkMod = instancedChunk.mods.get(position.key);
-        if(chunkMod.hiddenObjects && chunkMod.hiddenObjects.length !== 0) {
-            const idx = chunkMod.hiddenObjects.findIndex(o => o.objectId === object.objectId &&
+        const tileModifications = instancedChunk.mods.get(position.key);
+        if(tileModifications.hiddenObjects && tileModifications.hiddenObjects.length !== 0) {
+            const idx = tileModifications.hiddenObjects.findIndex(o => o.objectId === object.objectId &&
                 o.type === object.type && o.orientation === object.orientation);
             if(idx !== -1) {
-                chunkMod.hiddenObjects.splice(idx, 1);
+                tileModifications.hiddenObjects.splice(idx, 1);
             }
         }
 
-        if(chunkMod.hiddenObjects.length === 0) {
-            delete chunkMod.hiddenObjects;
+        if(tileModifications.hiddenObjects.length === 0) {
+            this.clearTileIfEmpty(position);
         }
 
         instancedChunk.collisionMap.markGameObject(object, true);
@@ -388,18 +401,31 @@ export class WorldInstance {
             // Chunk not found - fail gracefully
             return {
                 collisionMap: new CollisionMap(chunkPosition.x, chunkPosition.y, chunkPosition.level, { instance: this }),
-                mods: new Map<string, WorldModifications>()
+                mods: new Map<string, TileModifications>()
             };
         }
 
         if(!this.chunkModifications.has(chunkPosition.key)) {
             this.chunkModifications.set(chunkPosition.key, {
                 collisionMap: new CollisionMap(chunkPosition.x, chunkPosition.y, chunkPosition.level, { instance: this }),
-                mods: new Map<string, WorldModifications>()
+                mods: new Map<string, TileModifications>()
             });
         }
 
         return this.chunkModifications.get(chunkPosition.key);
+    }
+
+    /**
+     * Fetches the list of tile modifications for a specific game tile in this instance.
+     * @param worldPosition The world position to find the modifications for.
+     */
+    public getTileModifications(worldPosition: Position): { chunk: InstancedChunk, mods: TileModifications } {
+        const instancedChunk = this.getInstancedChunk(worldPosition);
+        if(instancedChunk.mods.has(worldPosition.key)) {
+            return { chunk: instancedChunk, mods: instancedChunk.mods.get(worldPosition.key) };
+        } else {
+            return { chunk: instancedChunk, mods: new TileModifications() };
+        }
     }
 
     /**
@@ -423,6 +449,22 @@ export class WorldInstance {
             this.chunkModifications.clear();
             const instancedNpcs = world.findNpcsByInstance(this.instanceId);
             instancedNpcs?.forEach(npc => world.deregisterNpc(npc));
+        }
+    }
+
+    /**
+     * Checks to see if the specified world tile is devoid of modifications for this instance.
+     * If it is, this method will delete the `TileModifications` entry to free up memory.
+     * @param worldPosition The position of the game world tile to check.
+     * @private
+     */
+    private clearTileIfEmpty(worldPosition: Position): void {
+        const instancedChunk = this.getInstancedChunk(worldPosition);
+        if(instancedChunk.mods.has(worldPosition.key)) {
+            const mods = instancedChunk.mods.get(worldPosition.key);
+            if(mods.empty) {
+                instancedChunk.mods.delete(worldPosition.key);
+            }
         }
     }
 
