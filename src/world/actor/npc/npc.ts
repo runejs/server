@@ -1,23 +1,16 @@
 import { Actor } from '@server/world/actor/actor';
 import { NpcSpawn } from '@server/world/config/npc-spawn';
-import { NpcDefinition } from '@runejs/cache-parser';
 import uuidv4 from 'uuid/v4';
 import { Position } from '@server/world/position';
-import { pluginActions, world } from '@server/game-server';
+import { cache, pluginActions, world } from '@server/game-server';
 import { directionData } from '@server/world/direction';
 import { QuadtreeKey } from '@server/world';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
 import { Action } from '@server/world/action';
 import { findNpc } from '@server/config';
 import { animationIds } from '@server/world/config/animation-ids';
-
-interface NpcAnimations {
-    walk: number;
-    stand: number;
-    turnAround: number;
-    turnRight: number;
-    turnLeft: number;
-}
+import { NpcAnimations, NpcDetails } from '@server/config/npc-config';
+import { SkillName } from '@server/world/actor/skills';
 
 export type npcInitAction = (data: { npc: Npc }) => void;
 
@@ -37,28 +30,25 @@ export class Npc extends Actor {
     public readonly options: string[];
     public readonly initialPosition: Position;
     public id: number;
+    public animations: NpcAnimations;
+    public instanceId: string = null;
 
     private _name: string;
     private _combatLevel: number;
-    private _animations: NpcAnimations;
     private _movementRadius: number = 0;
     private quadtreeKey: QuadtreeKey = null;
     private _exists: boolean = true;
     private npcSpawn: NpcSpawn;
-    private cacheData: NpcDefinition;
+    private _initialized: boolean = false;
 
-    public constructor(npcSpawn: NpcSpawn, cacheData: NpcDefinition) {
+    public constructor(npcDetails: NpcDetails | number, npcSpawn: NpcSpawn, instanceId: string = null) {
         super();
-        this.id = cacheData.id;
+
         this.uuid = uuidv4();
-        this._name = cacheData.name;
-        this._combatLevel = cacheData.combatLevel;
-        this._animations = cacheData.animations as NpcAnimations;
-        this.options = cacheData.options;
         this.position = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
         this.initialPosition = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
         this.npcSpawn = npcSpawn;
-        this.cacheData = cacheData;
+        this.instanceId = instanceId;
 
         if(npcSpawn.radius) {
             this._movementRadius = npcSpawn.radius;
@@ -66,6 +56,38 @@ export class Npc extends Actor {
 
         if(npcSpawn.face) {
             this.faceDirection = directionData[npcSpawn.face].index;
+        }
+
+        if(typeof npcDetails === 'number') {
+            const cacheDetails = cache.npcDefinitions.get(npcDetails);
+            this.id = npcDetails;
+
+            if(cacheDetails) {
+                // NPC not registered on the server, but exists in the game cache - use that for our info and assume it's
+                // Not a combatant NPC since we have no useful combat information for it.
+                this._name = cacheDetails.name;
+                this._combatLevel = cacheDetails.combatLevel;
+                this.options = cacheDetails.options;
+                this.animations = {
+                    walk: cacheDetails.animations?.walk || undefined,
+                    turnAround: cacheDetails.animations?.turnAround || undefined,
+                    turnLeft: cacheDetails.animations?.turnLeft || undefined,
+                    turnRight: cacheDetails.animations?.turnRight || undefined,
+                    stand: cacheDetails.animations?.stand || undefined
+                };
+            } else {
+                this._name = 'Unknown';
+            }
+        } else {
+            this.id = npcDetails.gameId;
+            this._combatLevel = npcDetails.combatLevel;
+            this.animations = npcDetails.animations;
+            this.options = npcDetails.options;
+
+            if(npcDetails.skills) {
+                const skillNames = Object.keys(npcDetails.skills);
+                skillNames.forEach(skillName => this.skills.setLevel(skillName as SkillName, npcDetails.skills[skillName]));
+            }
         }
     }
 
@@ -79,6 +101,8 @@ export class Npc extends Actor {
                 .forEach(plugin => plugin.action({ npc: this }));
             resolve();
         });
+
+        this._initialized = true;
     }
 
     public getAttackAnimation(): number {
@@ -102,7 +126,7 @@ export class Npc extends Actor {
         world.deregisterNpc(this);
 
         if(respawn) {
-            world.scheduleNpcRespawn(new Npc(this.npcSpawn, this.cacheData));
+            world.scheduleNpcRespawn(new Npc(findNpc(this.id), this.npcSpawn));
         }
     }
 
@@ -187,10 +211,6 @@ export class Npc extends Actor {
         return this._combatLevel;
     }
 
-    public get animations(): NpcAnimations {
-        return this._animations;
-    }
-
     public get movementRadius(): number {
         return this._movementRadius;
     }
@@ -201,5 +221,9 @@ export class Npc extends Actor {
 
     public set exists(value: boolean) {
         this._exists = value;
+    }
+
+    public get initialized(): boolean {
+        return this._initialized;
     }
 }

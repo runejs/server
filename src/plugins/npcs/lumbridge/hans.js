@@ -1,4 +1,4 @@
-import { dialogue, Emote, execute, goto, ActionType, animationIds, npcIds, Achievements, giveAchievement } from '../../rune.js';
+import { dialogue, Emote, execute, goto, animationIds, npcIds, Achievements, giveAchievement } from '../../rune.js';
 
 const action = async details => {
     const { player, npc } = details;
@@ -7,7 +7,7 @@ const action = async details => {
 
     const dialogueSuccessful = await dialogue([ player, { npc, key: 'hans' } ], [
         hans => [ Emote.GENERIC, `Welcome to RuneScape!` ],
-        (hans, tag_Hans_Question) => [ Emote.HAPPY, `How do you feel about Rune.JS so far?\n` +
+        (hans, tag_Hans_Question) => [ Emote.HAPPY, `How do you feel about RuneJS so far?\n` +
         `Please take a moment to let us know what you think!` ],
         options => ([
             `Love it!`, [

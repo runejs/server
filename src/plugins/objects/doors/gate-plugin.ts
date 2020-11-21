@@ -31,8 +31,8 @@ const action: objectAction = (details) => {
     if((gate as ModifiedLocationObject).metadata) {
         const metadata = (gate as ModifiedLocationObject).metadata;
 
-        world.toggleLocationObjects(metadata.originalMain, metadata.main, metadata.originalMainPosition, metadata.mainPosition, metadata.originalMainChunk, metadata.mainChunk, true);
-        world.toggleLocationObjects(metadata.originalSecond, metadata.second, metadata.originalSecondPosition, metadata.secondPosition, metadata.originalSecondChunk, metadata.secondChunk, true);
+        player.instance.toggleGameObjects(metadata.originalMain, metadata.main, true);
+        player.instance.toggleGameObjects(metadata.originalSecond, metadata.second, true);
         player.playSound(soundIds.closeGate, 7);
     } else {
         let details = gates.find(g => g.main === gate.objectId);
@@ -159,7 +159,6 @@ const action: objectAction = (details) => {
         const newDirection = hinge === 'LEFT' ? leftHingeDirections[direction] : rightHingeDirections[direction];
 
         if(!clickedSecondary) {
-            hingeChunk = world.chunkManager.getChunkForWorldPosition(position);
             gateSecondPosition = new Position(gate.x + deltaX, gate.y + deltaY, gate.level);
         }
 
@@ -170,9 +169,7 @@ const action: objectAction = (details) => {
         }
 
         const newPosition = position.step(1, direction);
-        const newHingeChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
         const newSecondPosition = new Position(newPosition.x + newX, newPosition.y + newY, gate.level);
-        const newSecondChunk = world.chunkManager.getChunkForWorldPosition(newSecondPosition);
 
         const newHinge = {
             objectId: details.mainOpen,
@@ -194,23 +191,15 @@ const action: objectAction = (details) => {
         const metadata = {
             second: JSON.parse(JSON.stringify(newSecond)),
             originalSecond: secondGate,
-            secondChunk: newSecondChunk,
-            originalSecondChunk: gateSecondChunk,
-            secondPosition: newSecondPosition,
-            originalSecondPosition: gateSecondPosition,
             main: JSON.parse(JSON.stringify(newHinge)),
-            originalMain: gate,
-            mainChunk: newHingeChunk,
-            originalMainChunk: hingeChunk,
-            mainPosition: newPosition,
-            originalMainPosition: position
+            originalMain: gate
         };
 
         newHinge.metadata = metadata;
         newSecond.metadata = metadata;
 
-        world.toggleLocationObjects(newHinge, gate, newPosition, position, newHingeChunk, hingeChunk, !cacheOriginal);
-        world.toggleLocationObjects(newSecond, secondGate, newSecondPosition, gateSecondPosition, newSecondChunk, gateSecondChunk, !cacheOriginal);
+        player.instance.toggleGameObjects(newHinge, gate, !cacheOriginal);
+        player.instance.toggleGameObjects(newSecond, secondGate, !cacheOriginal);
         player.playSound(soundIds.openGate, 7);
     }
 };

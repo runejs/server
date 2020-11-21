@@ -1,12 +1,9 @@
 import { worldItemAction } from '@server/world/action/world-item-action';
-import { world } from '../../game-server';
 import { Item } from '../../world/items/item';
 import { widgets } from '../../world/config/widget';
 import { soundIds } from '@server/world/config/sound-ids';
 
-export const action: worldItemAction = (details) => {
-    const { player, worldItem, itemDetails } = details;
-
+export const action: worldItemAction = ({ player, worldItem, itemDetails }) => {
     const inventory = player.inventory;
     let slot = -1;
     let amount = worldItem.amount;
@@ -32,7 +29,7 @@ export const action: worldItemAction = (details) => {
         return;
     }
 
-    world.removeWorldItem(worldItem);
+    player.instance.despawnWorldItem(worldItem);
 
     const item: Item = {
         itemId: worldItem.itemId,

@@ -28,7 +28,7 @@
                 "death": 313
             },
             "drop_table": [
-                [ "rs:bones",           "always",   1 ]
+                [ "rs:bones", "always", 1 ]
             ]
         }
     },

@@ -5,5 +5,11 @@
             "hitpoints": 10,
             "herblore": 99
         }
+    },
+    "rs:runescape_guide": {
+        "game_id": 945
+    },
+    "rs:melee_combat_tutor": {
+        "game_id": 705
     }
 }

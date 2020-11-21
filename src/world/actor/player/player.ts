@@ -6,6 +6,7 @@ import { Actor } from '../actor';
 import { Position } from '@server/world/position';
 import { cache, pluginActions, serverConfig, world } from '@server/game-server';
 import { logger } from '@runejs/core';
+import uuidv4 from 'uuid/v4';
 import {
     Appearance,
     defaultAppearance, defaultSettings,
@@ -42,6 +43,7 @@ import { findItem, npcIdMap } from '@server/config';
 import { NpcDetails } from '@server/config/npc-config';
 import { animationIds } from '@server/world/config/animation-ids';
 import { combatStyles } from '@server/world/actor/combat';
+import { WorldInstance, WorldModifications } from '@server/world/instances';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -104,6 +106,7 @@ export class Player extends Actor {
     public readonly npcUpdateTask: NpcSyncTask;
     public readonly numericInputEvent: Subject<number>;
     public readonly dialogueInteractionEvent: Subject<number>;
+    public readonly personalInstance = new WorldInstance(uuidv4());
     public isLowDetail: boolean;
     public trackedPlayers: Player[];
     public trackedNpcs: Npc[];
@@ -291,6 +294,7 @@ export class Player extends Actor {
         this.actionsCancelled.complete();
         this.movementEvent.complete();
         this.outgoingPackets.logout();
+        this.instance = null;
         world.chunkManager.getChunkForWorldPosition(this.position).removePlayer(this);
         world.deregisterPlayer(this);
 
@@ -318,8 +322,6 @@ export class Player extends Actor {
 
         return animationIds.combat[attackAnim] || animationIds.combat.kick;
     }
-
-
 
     public getBlockAnimation(): number {
         return animationIds.combat.armBlock; // @TODO
@@ -1010,29 +1012,37 @@ export class Player extends Actor {
 
             const chunkUpdateItems: ChunkUpdateItem[] = [];
 
-            if(chunk.removedLocationObjects.size !== 0) {
-                chunk.removedLocationObjects.forEach(object => chunkUpdateItems.push({ object, type: 'REMOVE' }));
-            }
+            const chunkModifications = this.instance
+                .getInstancedChunk(chunk.position.x, chunk.position.y, chunk.position.level) || null;
+            const personalChunkModifications = this.personalInstance?.getInstancedChunk(chunk.position.x,
+                chunk.position.y, chunk.position.level) || null;
 
-            if(chunk.addedLocationObjects.size !== 0) {
-                chunk.addedLocationObjects.forEach(object => chunkUpdateItems.push({ object, type: 'ADD' }));
-            }
-
-            if(chunk.worldItems.size !== 0) {
-                chunk.worldItems.forEach(worldItemList => {
-                    if(worldItemList && worldItemList.length !== 0) {
-                        worldItemList.forEach(worldItem => {
-                            if(!worldItem.initiallyVisibleTo || worldItem.initiallyVisibleTo.equals(this)) {
-                                chunkUpdateItems.push({ worldItem, type: 'ADD' });
-                            }
-                        });
-                    }
-                });
-            }
+            this.findChunkUpdates(chunkModifications?.mods, chunkUpdateItems);
+            this.findChunkUpdates(personalChunkModifications?.mods, chunkUpdateItems);
 
             if(chunkUpdateItems.length !== 0) {
                 this.outgoingPackets.updateChunk(chunk, chunkUpdateItems);
             }
+        });
+    }
+
+    private findChunkUpdates(chunkMods: Map<string, WorldModifications>, chunkUpdateItems: ChunkUpdateItem[]): void {
+        if(!chunkMods) {
+            return;
+        }
+
+        Array.from(chunkMods.values()).forEach(worldMods => {
+            worldMods.hiddenObjects?.forEach(object =>
+                chunkUpdateItems.push({ object, type: 'REMOVE' }));
+
+            worldMods.spawnedObjects?.forEach(object =>
+                chunkUpdateItems.push({ object, type: 'ADD' }));
+
+            worldMods.worldItems?.forEach(worldItem => {
+                if(!worldItem.owner || worldItem.owner.equals(this)) {
+                    chunkUpdateItems.push({ worldItem, type: 'ADD' });
+                }
+            });
         });
     }
 

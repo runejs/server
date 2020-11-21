@@ -110,7 +110,6 @@ export const findNpc = (npcKey: number | string): NpcDetails => {
         if(!npcKey) {
             const cacheNpc = cache.npcDefinitions.get(gameId);
             if(cacheNpc) {
-                logger.warn(`NPC ${gameId} is not yet configured on the server.`);
                 return cacheNpc as any;
             } else {
                 logger.warn(`NPC ${gameId} is not yet configured on the server and a matching cache NPC was not found.`);

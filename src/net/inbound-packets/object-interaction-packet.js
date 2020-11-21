@@ -45,9 +45,35 @@ const objectInteractionPacket = (player, packet) => {
     const objectChunk = world.chunkManager.getChunkForWorldPosition(objectPosition);
     let cacheOriginal = true;
 
+    const chunkModifications = player.instance
+        .getInstancedChunk(objectChunk.position.x, objectChunk.position.y, objectChunk.position.level);
+    const personalChunkModifications = player.personalInstance?.getInstancedChunk(objectChunk.position.x,
+        objectChunk.position.y, objectChunk.position.level) || null;
+
+    const tileModifications = chunkModifications?.mods?.get(objectPosition.key) || {};
+    const personalTileModifications = personalChunkModifications?.mods?.get(objectPosition.key) || {};
+
+    if(!tileModifications.spawnedObjects) {
+        tileModifications.spawnedObjects = [];
+    }
+    if(!personalTileModifications.spawnedObjects) {
+        personalTileModifications.spawnedObjects = [];
+    }
+    if(!tileModifications.hiddenObjects) {
+        tileModifications.hiddenObjects = [];
+    }
+    if(!personalTileModifications.hiddenObjects) {
+        personalTileModifications.hiddenObjects = [];
+    }
+
     let locationObject = objectChunk.getCacheObject(objectId, objectPosition);
     if(!locationObject) {
-        locationObject = objectChunk.getAddedObject(objectId, objectPosition);
+        const tileObjects = [ ...tileModifications.spawnedObjects,
+            ...personalTileModifications.spawnedObjects ];
+
+        locationObject = tileObjects.find(spawnedObject =>
+            spawnedObject.objectId === objectId && spawnedObject.x === x && spawnedObject.y === y) || null;
+
         cacheOriginal = false;
 
         if(!locationObject) {
@@ -55,7 +81,11 @@ const objectInteractionPacket = (player, packet) => {
         }
     }
 
-    if(objectChunk.getRemovedObject(objectId, objectPosition)) {
+    const hiddenTileObjects = [ ...tileModifications.hiddenObjects,
+        ...personalTileModifications.hiddenObjects ];
+
+    if(hiddenTileObjects.findIndex(spawnedObject =>
+        spawnedObject.objectId === objectId && spawnedObject.x === x && spawnedObject.y === y) !== -1) {
         return;
     }
 

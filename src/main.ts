@@ -2,7 +2,7 @@ import { runGameServer, world } from './game-server';
 import 'source-map-support/register';
 import { initErrorHandling } from '@server/error-handling';
 import { logger } from '@runejs/core';
-import { dumpNpcs } from '@server/data-dump';
+
 
 let killed: boolean = false;
 
@@ -29,5 +29,3 @@ const shutdown = (signal, cb) => {
 
 initErrorHandling();
 runGameServer();
-
-dumpNpcs();

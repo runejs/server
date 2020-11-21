@@ -1,7 +1,7 @@
 import { World } from './world';
 import { logger, parseServerConfig } from '@runejs/core';
 import { Cache } from '@runejs/cache-parser';
-import { ServerConfig } from '@server/net/server/server-config';
+import { ServerConfig } from '@server/config/server-config';
 
 import { parsePluginFiles } from '@server/plugins/plugin-loader';
 import { sort } from '@server/plugins/plugin';
@@ -46,22 +46,14 @@ export async function runGameServer(): Promise<void> {
         items: true,
         npcs: true,
         locationObjects: true,
-        mapData: !serverConfig.clippingDisabled,
         widgets: true
     });
 
     await loadConfigurations();
-
-    delete cache.dataChannel;
-    delete cache.metaChannel;
-    delete cache.indexChannels;
-    delete cache.indices;
-
     await loadPackets();
 
     world = new World();
     await world.init();
-    delete cache.mapData;
 
     if(process.argv.indexOf('-fakePlayers') !== -1) {
         world.generateFakePlayers();

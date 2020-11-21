@@ -139,7 +139,7 @@ export function handleHarvesting(details: ObjectActionData, tool: HarvestTool, t
                             if (roll === 1) {
                                 randomLoot = true;
                                 details.player.sendMessage(colorText('A bird\'s nest falls out of the tree.', colors.red));
-                                world.spawnWorldItem(rollBirdsNestType(), details.player.position, details.player, 300);
+                                world.globalInstance.spawnWorldItem(rollBirdsNestType(), details.player.position, details.player, 300);
                             }
                             break;
                     }
@@ -159,7 +159,8 @@ export function handleHarvesting(details: ObjectActionData, tool: HarvestTool, t
                     details.player.skills.addExp(skill, target.experience);
                     if (randomBetween(0, 100) <= target.break) {
                         details.player.playSound(soundIds.oreDepeleted);
-                        world.replaceLocationObject(target.objects.get(details.object.objectId), details.object, randomBetween(target.respawnLow, target.respawnHigh));
+                        details.player.instance.replaceGameObject(target.objects.get(details.object.objectId),
+                            details.object, randomBetween(target.respawnLow, target.respawnHigh));
                         loop.cancel();
                         details.player.playAnimation(null);
                         return;

@@ -1,6 +1,4 @@
 import { directionData, WNES } from '@server/world/direction';
-import { world } from '@server/game-server';
-import { Chunk } from '@server/world/map/chunk';
 import { objectAction } from '@server/world/action/object-action';
 import { soundIds } from '@server/world/config/sound-ids';
 import { LocationObject } from '@runejs/cache-parser';
@@ -52,8 +50,7 @@ const rightHingeDir: { [key: string]: string } = {
     'EAST': 'SOUTH'
 };
 
-export const action: objectAction = (details): void => {
-    const { player, object: door, position, cacheOriginal } = details;
+export const action: objectAction = ({ player, object: door, position, cacheOriginal }): void => {
     let opening = true;
     let doorConfig = doors.find(d => d.closed === door.objectId);
     let hingeConfig;
@@ -72,7 +69,6 @@ export const action: objectAction = (details): void => {
         replacementDoorId = doorConfig.open;
     }
 
-    const startDoorChunk: Chunk = world.chunkManager.getChunkForWorldPosition(position);
     const startDir = WNES[door.orientation];
     const endDir = hingeConfig[startDir];
     const endPosition = position.step(opening ? 1 : -1, opening ? startDir : endDir);
@@ -86,9 +82,7 @@ export const action: objectAction = (details): void => {
         orientation: directionData[endDir].rotation
     };
 
-    const replacementDoorChunk = world.chunkManager.getChunkForWorldPosition(endPosition);
-
-    world.toggleLocationObjects(replacementDoor, door, endPosition, position, replacementDoorChunk, startDoorChunk, !cacheOriginal);
+    player.instance.toggleGameObjects(replacementDoor, door, !cacheOriginal);
     // 70 = close gate, 71 = open gate, 62 = open door, 60 = close door
     player.playSound(opening ? soundIds.openDoor : soundIds.closeDoor, 7);
 };

@@ -1,10 +1,11 @@
 import { Position } from '../position';
 import { Player } from '../actor/player/player';
 import { CollisionMap } from './collision-map';
-import { cache, world } from '../../game-server';
-import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
+import { world } from '../../game-server';
+import { LocationObject } from '@runejs/cache-parser';
 import { Npc } from '../actor/npc/npc';
 import { WorldItem } from '@server/world/items/world-item';
+
 
 export interface ChunkUpdateItem {
     object?: LocationObject;
@@ -22,74 +23,25 @@ export class Chunk {
     private readonly _npcs: Npc[];
     private readonly _collisionMap: CollisionMap;
     private readonly _cacheLocationObjects: Map<string, LocationObject>;
-    private readonly _addedLocationObjects: Map<string, LocationObject>;
-    private readonly _removedLocationObjects: Map<string, LocationObject>;
-    private readonly _worldItems: Map<string, WorldItem[]>;
 
     public constructor(position: Position) {
         this._position = position;
         this._players = [];
         this._npcs = [];
-        this._collisionMap = new CollisionMap(8, 8, (position.x + 6) * 8, (position.y + 6) * 8, this);
+        this._collisionMap = new CollisionMap(position.x, position.y, position.level, { chunk: this });
         this._cacheLocationObjects = new Map<string, LocationObject>();
-        this._addedLocationObjects = new Map<string, LocationObject>();
-        this._removedLocationObjects = new Map<string, LocationObject>();
-        this._worldItems = new Map<string, WorldItem[]>();
+        this.registerMapRegion();
     }
 
-    public getWorldItem(itemId: number, position: Position): WorldItem {
-        const key = position.key;
-
-        if(this._worldItems.has(key)) {
-            const list = this._worldItems.get(key);
-            const worldItem = list.find(item => item.itemId === itemId);
-
-            if(!worldItem) {
-                return null;
-            }
-
-            return worldItem;
-        }
-
-        return null;
+    public registerMapRegion(): void {
+        const mapRegionX = Math.floor(this.position.x / 8);
+        const mapRegionY = Math.floor(this.position.y / 8);
+        world.chunkManager.registerMapRegion(mapRegionX, mapRegionY);
     }
 
-    public addWorldItem(worldItem: WorldItem): void {
-        const key = worldItem.position.key;
-
-        if(this._worldItems.has(key)) {
-            const list = this._worldItems.get(key);
-            list.push(worldItem);
-            this._worldItems.set(key, list);
-        } else {
-            this._worldItems.set(worldItem.position.key, [worldItem]);
-        }
-    }
-
-    public removeWorldItem(worldItem: WorldItem): void {
-        const key = worldItem.position.key;
-
-        if(this._worldItems.has(key)) {
-            const list = this._worldItems.get(key);
-            list.splice(list.indexOf(worldItem), 1);
-            this._worldItems.set(key, list);
-        }
-    }
-
-    public setCacheLocationObject(locationObject: LocationObject, objectPosition: Position): void {
-        const tile = world.chunkManager.tileMap.get(objectPosition.key);
-
-        if(tile?.bridge) {
-            // Move this marker down one level if it's on a bridge tile
-            objectPosition.level = objectPosition.level - 1;
-            const lowerChunk = world.chunkManager.getChunkForWorldPosition(objectPosition);
-            locationObject.level -= 1;
-            lowerChunk.markOnCollisionMap(locationObject, objectPosition, true);
-            lowerChunk.cacheLocationObjects.set(`${ objectPosition.x },${ objectPosition.y },${ locationObject.objectId }`, locationObject);
-        } else if(tile?.bridge !== null) {
-            this.markOnCollisionMap(locationObject, objectPosition, true);
-            this._cacheLocationObjects.set(`${ objectPosition.x },${ objectPosition.y },${ locationObject.objectId }`, locationObject);
-        }
+    public setCacheLocationObject(locationObject: LocationObject): void {
+        this._collisionMap.markGameObject(locationObject, true);
+        this._cacheLocationObjects.set(`${ locationObject.x },${ locationObject.y },${ locationObject.objectId }`, locationObject);
     }
 
     public addPlayer(player: Player): void {
@@ -118,59 +70,8 @@ export class Chunk {
         }
     }
 
-    public markOnCollisionMap(locationObject: LocationObject, position: Position, mark: boolean): void {
-        const x: number = position.x;
-        const y: number = position.y;
-        const objectType = locationObject.type;
-        const objectOrientation = locationObject.orientation;
-        const objectDetails: LocationObjectDefinition = cache.locationObjectDefinitions.get(locationObject.objectId);
-
-        if(objectDetails.solid) {
-            if(objectType === 22) {
-                if(objectDetails.hasOptions) {
-                    this.collisionMap.markBlocked(x, y, mark);
-                }
-            } else if(objectType >= 9) {
-                this.collisionMap.markSolidOccupant(x, y, objectDetails.sizeX, objectDetails.sizeY, objectOrientation, objectDetails.nonWalkable, mark);
-            } else if(objectType >= 0 && objectType <= 3) {
-                if(mark) {
-                    this.collisionMap.markWall(x, y, objectType, objectOrientation, objectDetails.nonWalkable);
-                } else {
-                    this.collisionMap.unmarkWall(x, y, objectType, objectOrientation, objectDetails.nonWalkable);
-                }
-            }
-        }
-    }
-
-    public removeObject(object: LocationObject, position: Position, markRemoved: boolean = true): void {
-        if(markRemoved && this.getCacheObject(object.objectId, position)) {
-            // Only add this as an "removed" object if it's from the cache, as that's all we care about
-            this.removedLocationObjects.set(`${position.x},${position.y},${object.objectId}`, object);
-        }
-
-        this.markOnCollisionMap(object, position, false);
-    }
-
-    public addObject(object: LocationObject, position: Position): void {
-        if(!this.getCacheObject(object.objectId, position)) {
-            // Only add this as an "added" object if there's not a cache object with the same id and position
-            // This becomes a "custom" added object
-            this.addedLocationObjects.set(`${position.x},${position.y},${object.objectId}`, object);
-        }
-
-        this.markOnCollisionMap(object, position, true);
-    }
-
     public getCacheObject(objectId: number, position: Position): LocationObject {
         return this.cacheLocationObjects.get(`${position.x},${position.y},${objectId}`);
-    }
-
-    public getAddedObject(objectId: number, position: Position): LocationObject {
-        return this.addedLocationObjects.get(`${position.x},${position.y},${objectId}`);
-    }
-
-    public getRemovedObject(objectId: number, position: Position): LocationObject {
-        return this.removedLocationObjects.get(`${position.x},${position.y},${objectId}`);
     }
 
     public equals(chunk: Chunk): boolean {
@@ -195,17 +96,5 @@ export class Chunk {
 
     public get cacheLocationObjects(): Map<string, LocationObject> {
         return this._cacheLocationObjects;
-    }
-
-    public get addedLocationObjects(): Map<string, LocationObject> {
-        return this._addedLocationObjects;
-    }
-
-    public get removedLocationObjects(): Map<string, LocationObject> {
-        return this._removedLocationObjects;
-    }
-
-    public get worldItems(): Map<string, WorldItem[]> {
-        return this._worldItems;
     }
 }

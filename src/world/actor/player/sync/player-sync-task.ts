@@ -48,7 +48,7 @@ export class PlayerSyncTask extends Task<void> {
                 y: this.player.position.y - 15,
                 width: 32,
                 height: 32
-            });
+            }).filter(collision => collision?.actor && collision.actor.instance === this.player.instance);
 
             if(nearbyPlayers.length > 200) {
                 nearbyPlayers = world.playerTree.colliding({

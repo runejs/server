@@ -11,6 +11,6 @@ export interface ServerConfig {
     expRate: number;
     giveAchievements: boolean;
     checkCredentials: boolean;
-    clippingDisabled: boolean;
     tutorialEnabled: boolean;
+    adminDropsEnabled: boolean;
 }

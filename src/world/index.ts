@@ -5,19 +5,20 @@ import { timer } from 'rxjs';
 import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { ExamineCache } from './config/examine-data';
-import { cache, loadPlugins } from '@server/game-server';
+import { loadPlugins } from '@server/game-server';
 import { Position } from './position';
 import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './actor/npc/npc';
 import { parseShops, Shop } from '@server/world/config/shops';
 import TravelLocations from '@server/world/config/travel-locations';
 import { Actor } from '@server/world/actor/actor';
-import { WorldItem } from '@server/world/items/world-item';
-import { Item } from '@server/world/items/item';
-import { Chunk } from '@server/world/map/chunk';
 import { schedule } from '@server/task/task';
 import { parseScenerySpawns } from '@server/world/config/scenery-spawns';
 import { loadActions } from '@server/world/action';
+import { findNpc } from '@server/config';
+import { NpcDetails } from '@server/config/npc-config';
+import { WorldInstance } from '@server/world/instances';
+import { Direction } from '@server/world/direction';
 
 
 export interface QuadtreeKey {
@@ -45,6 +46,7 @@ export class World {
     public readonly travelLocations: TravelLocations = new TravelLocations();
     public readonly playerTree: Quadtree<QuadtreeKey>;
     public readonly npcTree: Quadtree<QuadtreeKey>;
+    public readonly globalInstance = new WorldInstance();
 
     private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
 
@@ -67,7 +69,6 @@ export class World {
     public async init(): Promise<void> {
         await loadPlugins();
         await loadActions();
-        this.chunkManager.generateCollisionMaps();
         this.spawnNpcs();
         this.spawnScenery();
     }
@@ -109,276 +110,68 @@ export class World {
     }
 
     /**
-     * Removes a world item from the world.
-     * @param worldItem The WorldItem object to spawn remove.
-     */
-    public removeWorldItem(worldItem: WorldItem): void {
-        const chunk = this.chunkManager.getChunkForWorldPosition(worldItem.position);
-        chunk.removeWorldItem(worldItem);
-        worldItem.removed = true;
-        this.deleteWorldItemForPlayers(worldItem, chunk);
-    }
-
-    /**
-     * Spawns a world item into the world at the specified position.
-     * @param item The Item object to spawn as a world item.
-     * @param position The position to spawn the world item.
-     * @param initiallyVisibleTo [optional] Who this world item is initially visible to. If not provided, it will be
-     * initially visible to all players.
-     * @param expires [optional] The amount of game ticks/cycles before the world item will be automatically deleted
-     * from the world. If not provided, it will remain within the game world forever.
-     */
-    public spawnWorldItem(item: Item | number, position: Position, initiallyVisibleTo?: Player, expires?: number): WorldItem {
-        if(typeof item === 'number') {
-            item = { itemId: item, amount: 1 };
-        }
-        const chunk = this.chunkManager.getChunkForWorldPosition(position);
-        const worldItem: WorldItem = {
-            itemId: item.itemId,
-            amount: item.amount,
-            position,
-            initiallyVisibleTo,
-            expires
-        };
-
-        chunk.addWorldItem(worldItem);
-
-        if(initiallyVisibleTo) {
-            // If this world item is only visible to one player initially, we setup a timeout to spawn it for all other
-            // players after 100 game cycles.
-            initiallyVisibleTo.outgoingPackets.setWorldItem(worldItem, worldItem.position);
-            setTimeout(() => {
-                if(worldItem.removed) {
-                    return;
-                }
-
-                this.spawnWorldItemForPlayers(worldItem, chunk, initiallyVisibleTo);
-                worldItem.initiallyVisibleTo = undefined;
-            }, 100 * World.TICK_LENGTH);
-        } else {
-            this.spawnWorldItemForPlayers(worldItem, chunk);
-        }
-
-        if(expires) {
-            // If the world item is set to expire, set up a timeout to remove it from the game world after the
-            // specified number of game cycles.
-            setTimeout(() => {
-                if(worldItem.removed) {
-                    return;
-                }
-
-                this.removeWorldItem(worldItem);
-            }, expires * World.TICK_LENGTH);
-        }
-
-        return worldItem;
-    }
-
-    /**
-     * Replaces a location object within the world with a different object of the same object type, orientation, and position.
-     * NOT to be confused with `toggleObjects`, which removes one object and adds a different one that may have a differing
-     * type, orientation, or position (such as a door being opened).
-     * @param newObject The new location object to spawn, or the id of the location object to spawn.
-     * @param oldObject The location object being replaced. Usually a game-cache-stored object.
-     * @param respawnTicks [optional] How many ticks it will take before the original location object respawns.
-     * If not provided, the original location object will never re-spawn and the new location object will forever
-     * remain in it's place.
-     */
-    public replaceLocationObject(newObject: LocationObject | number, oldObject: LocationObject, respawnTicks: number = -1): void {
-        if(typeof newObject === 'number') {
-            newObject = {
-                objectId: newObject,
-                x: oldObject.x,
-                y: oldObject.y,
-                level: oldObject.level,
-                type: oldObject.type,
-                orientation: oldObject.orientation
-            } as LocationObject;
-        }
-
-        const position = new Position(newObject.x, newObject.y, newObject.level);
-        const chunk = this.chunkManager.getChunkForWorldPosition(position);
-
-        this.deleteAddedLocationObjectMarker(oldObject, position, chunk);
-        this.addLocationObject(newObject, position);
-
-        if(respawnTicks !== -1) {
-            schedule(respawnTicks).then(() => {
-                this.deleteAddedLocationObjectMarker(newObject as LocationObject, position, chunk);
-                this.addLocationObject(oldObject, position);
-            });
-        }
-    }
-
-    /**
-     * Removes one location object and adds another to the game world. The new object may be completely different from
-     * the one being removed, and in different positions. NOT to be confused with `replaceObject`, which will replace
-     * and existing object with another object of the same type, orientation, and position.
-     * @param newObject The location object being spawned.
-     * @param oldObject The location object being removed.
-     * @param newPosition The position of the location object being added.
-     * @param oldPosition The position of the location object being removed.
-     * @param newChunk The chunk which the location object being added resides in.
-     * @param oldChunk The chunk which the location object being removed resides in.
-     * @param newObjectInCache Whether or not the object being added is the original game-cache object.
-     */
-    public toggleLocationObjects(newObject: LocationObject, oldObject: LocationObject, newPosition: Position, oldPosition: Position,
-        newChunk: Chunk, oldChunk: Chunk, newObjectInCache: boolean): void {
-        if(newObjectInCache) {
-            this.deleteRemovedLocationObjectMarker(newObject, newPosition, newChunk);
-            this.deleteAddedLocationObjectMarker(oldObject, oldPosition, oldChunk);
-        }
-
-        this.addLocationObject(newObject, newPosition);
-        this.removeLocationObject(oldObject, oldPosition);
-    }
-
-    /**
-     * Deletes the tracked record of a spawned location object within a single game chunk.
-     * @param object The location object to delete the record of.
-     * @param position The position which the location object was spawned.
-     * @param chunk The map chunk which the location object was spawned.
-     */
-    public deleteAddedLocationObjectMarker(object: LocationObject, position: Position, chunk: Chunk): void {
-        chunk.addedLocationObjects.delete(`${position.x},${position.y},${object.objectId}`);
-    }
-
-    /**
-     * Deletes the tracked record of a removed/de-spawned location object within a single game chunk.
-     * @param object The location object to delete the record of.
-     * @param position The position which the location object was removed.
-     * @param chunk The map chunk which the location object was removed.
-     */
-    public deleteRemovedLocationObjectMarker(object: LocationObject, position: Position, chunk: Chunk): void {
-        chunk.removedLocationObjects.delete(`${position.x},${position.y},${object.objectId}`);
-    }
-
-    /**
-     * Spawns a temporary location object within the game world.
-     * @param object The location object to spawn.
-     * @param position The position to spawn the object at.
-     * @param expireTicks The number of game cycles/ticks before the object will de-spawn.
-     */
-    public async addTemporaryLocationObject(object: LocationObject, position: Position, expireTicks: number): Promise<void> {
-        return new Promise(resolve => {
-            this.addLocationObject(object, position);
-
-            setTimeout(() => {
-                this.removeLocationObject(object, position, false)
-                    .then(chunk => this.deleteAddedLocationObjectMarker(object, position, chunk));
-                resolve();
-            }, expireTicks * World.TICK_LENGTH);
-        });
-    }
-
-    /**
-     * Temporarily de-spawns a location object from the game world.
-     * @param object The location object to de-spawn temporarily.
-     * @param position The position of the location object.
-     * @param expireTicks The number of game cycles/ticks before the object will re-spawn.
-     */
-    public async removeLocationObjectTemporarily(object: LocationObject, position: Position, expireTicks: number): Promise<void> {
-        const chunk = this.chunkManager.getChunkForWorldPosition(position);
-        chunk.removeObject(object, position);
-
-        return new Promise(resolve => {
-            const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
-
-            nearbyPlayers.forEach(player => {
-                player.outgoingPackets.removeLocationObject(object, position);
-            });
-
-            setTimeout(() => {
-                this.deleteRemovedLocationObjectMarker(object, position, chunk);
-                this.addLocationObject(object, position);
-                resolve();
-            }, expireTicks * World.TICK_LENGTH);
-        });
-    }
-
-    /**
-     * Removes/de-spawns a location object from the game world.
-     * @param object The location object to de-spawn.
-     * @param position The position of the location object.
-     * @param markRemoved [optional] Whether or not to mark the object as removed within it's map chunk. If not provided,
-     * the object will be marked as removed.
-     */
-    public async removeLocationObject(object: LocationObject, position: Position, markRemoved: boolean = true): Promise<Chunk> {
-        const chunk = this.chunkManager.getChunkForWorldPosition(position);
-        chunk.removeObject(object, position, markRemoved);
-
-        return new Promise(resolve => {
-            const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
-
-            nearbyPlayers.forEach(player => {
-                player.outgoingPackets.removeLocationObject(object, position);
-            });
-
-            resolve(chunk);
-        });
-    }
-
-    /**
-     * Spawns a new location object within the game world.
-     * @param object The location object to spawn.
-     * @param position The position at which to spawn the object.
-     */
-    public async addLocationObject(object: LocationObject, position: Position): Promise<void> {
-        const chunk = this.chunkManager.getChunkForWorldPosition(position);
-        chunk.addObject(object, position);
-
-        return new Promise(resolve => {
-            const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
-
-            nearbyPlayers.forEach(player => {
-                player.outgoingPackets.setLocationObject(object, position);
-            });
-
-            resolve();
-        });
-    }
-
-    /**
-     * Finds all Npcs within the given distance from the given position that have the specified Npc ID.
+     * Finds all NPCs within the given distance from the given position that have the specified Npc ID.
      * @param position The center position to search from.
-     * @param npcId The ID of the Npcs to find.
-     * @param distance The maximum distance to search for Npcs.
+     * @param npcId The ID of the NPCs to find.
+     * @param distance The maximum distance to search for NPCs.
+     * @param instanceId The NPC's active instance.
      */
-    public findNearbyNpcsById(position: Position, npcId: number, distance: number): Npc[] {
+    public findNearbyNpcsById(position: Position, npcId: number, distance: number, instanceId: string = null): Npc[] {
         return this.npcTree.colliding({
             x: position.x - (distance / 2),
             y: position.y - (distance / 2),
             width: distance,
             height: distance
-        }).map(quadree => quadree.actor as Npc).filter(npc => npc.id === npcId);
+        }).map(quadree => quadree.actor as Npc).filter(npc => npc.id === npcId && npc.instanceId === instanceId);
     }
 
     /**
-     * Finds all Npcs within the given distance from the given position.
-     * @param position The center position to search from.
-     * @param distance The maximum distance to search for Npcs.
+     * Finds all NPCs within the game world that have the specified Npc ID.
+     * @param npcId The ID of the NPCs to find.
+     * @param instanceId The NPC's active instance.
      */
-    public findNearbyNpcs(position: Position, distance: number): Npc[] {
+    public findNpcsById(npcId: number, instanceId: string = null): Npc[] {
+        return this.npcList.filter(npc => npc && npc.id === npcId && npc.instanceId === instanceId);
+    }
+
+    /**
+     * Finds all NPCs within the specified instance.
+     * @param instanceId The NPC's active instance.
+     */
+    public findNpcsByInstance(instanceId: string): Npc[] {
+        return this.npcList.filter(npc => npc && npc.instanceId === instanceId);
+    }
+
+    /**
+     * Finds all NPCs within the given distance from the given position.
+     * @param position The center position to search from.
+     * @param distance The maximum distance to search for NPCs.
+     * @param instanceId The NPC's active instance.
+     */
+    public findNearbyNpcs(position: Position, distance: number, instanceId: string = null): Npc[] {
         return this.npcTree.colliding({
             x: position.x - (distance / 2),
             y: position.y - (distance / 2),
             width: distance,
             height: distance
-        }).map(quadree => quadree.actor as Npc);
+        }).map(quadree => quadree.actor as Npc).filter(npc => npc.instanceId === instanceId);
     }
 
     /**
      * Finds all Players within the given distance from the given position.
      * @param position The center position to search from.
      * @param distance The maximum distance to search for Players.
+     * @param instanceId The player's active instance.
      */
-    public findNearbyPlayers(position: Position, distance: number): Player[] {
+    public findNearbyPlayers(position: Position, distance: number, instanceId: string = null): Player[] {
         return this.playerTree.colliding({
             x: position.x - (distance / 2),
             y: position.y - (distance / 2),
             width: distance,
             height: distance
-        }).map(quadree => quadree.actor as Player);
+        })
+            .map(quadree => quadree.actor as Player)
+            .filter(player => player.instance.instanceId === instanceId);
     }
 
     /**
@@ -392,20 +185,54 @@ export class World {
 
     public spawnNpcs(): void {
         this.npcSpawns.forEach(npcSpawn => {
-            const npcDefinition = cache.npcDefinitions.get(npcSpawn.npcId);
-            const npc = new Npc(npcSpawn, npcDefinition);
-            this.registerNpc(npc);
+            const npcDetails = findNpc(npcSpawn.npcId) || null;
+            if(npcDetails && npcDetails.gameId !== undefined) {
+                this.registerNpc(new Npc(npcDetails, npcSpawn));
+            } else {
+                this.registerNpc(new Npc(npcSpawn.npcId, npcSpawn));
+            }
         });
+    }
+
+    public spawnNpc(npcKey: string | number, position: Position, face: Direction,
+        movementRadius: number = 0, instanceId: string = null): Npc {
+        if(!npcKey) {
+            return null;
+        }
+
+        let npcData: NpcDetails | number = findNpc(npcKey);
+        if(!npcData) {
+            logger.warn(`NPC ${npcKey} not yet registered on the server.`);
+
+            if(typeof npcKey === 'number') {
+                npcData = npcKey;
+            } else {
+                return null;
+            }
+        }
+
+        const npc = new Npc(npcData, {
+            npcId: typeof npcData === 'number' ? npcData : npcData.gameId,
+            x: position.x,
+            y: position.y,
+            level: position.level || 0,
+            face,
+            radius: movementRadius
+        }, instanceId);
+
+        this.registerNpc(npc);
+
+        return npc;
     }
 
     public spawnScenery(): void {
-        this.scenerySpawns.forEach(locationObject => {
-            this.addLocationObject(locationObject, new Position(locationObject.x, locationObject.y, locationObject.level));
-        });
+        this.scenerySpawns.forEach(locationObject =>
+            this.globalInstance.spawnGameObject(locationObject));
     }
 
-    public setupWorldTick(): void {
-        timer(World.TICK_LENGTH).toPromise().then(async () => this.worldTick());
+    public async setupWorldTick(): Promise<void> {
+        await schedule(1);
+        this.worldTick();
     }
 
     public generateFakePlayers(): void {
@@ -441,10 +268,6 @@ export class World {
     }
 
     public async worldTick(): Promise<void> {
-        if(!this.ready) {
-            return;
-        }
-
         const hrStart = Date.now();
         const activePlayers: Player[] = this.playerList.filter(player => player !== null);
 
@@ -497,6 +320,10 @@ export class World {
     }
 
     public registerPlayer(player: Player): boolean {
+        if(!player) {
+            return false;
+        }
+
         const index = this.playerList.findIndex(p => p === null);
 
         if(index === -1) {
@@ -523,6 +350,10 @@ export class World {
     }
 
     public registerNpc(npc: Npc): boolean {
+        if(!npc) {
+            return false;
+        }
+
         const index = this.npcList.findIndex(n => n === null);
 
         if(index === -1) {
@@ -539,49 +370,6 @@ export class World {
     public deregisterNpc(npc: Npc): void {
         npc.exists = false;
         this.npcList[npc.worldIndex] = null;
-    }
-
-    /**
-     * Spawns the specified world item for players around the specified chunk.
-     * @param worldItem The WorldItem object to spawn.
-     * @param chunk The main central chunk that the WorldItem will spawn in.
-     * @param excludePlayer [optional] A player to be excluded from the world item spawn.
-     */
-    private async spawnWorldItemForPlayers(worldItem: WorldItem, chunk: Chunk, excludePlayer?: Player): Promise<void> {
-        return new Promise(resolve => {
-            const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
-
-            nearbyPlayers.forEach(player => {
-                if(excludePlayer && excludePlayer.equals(player)) {
-                    return;
-                }
-
-                player.outgoingPackets.setWorldItem(worldItem, worldItem.position);
-            });
-
-            resolve();
-        });
-    }
-
-    /**
-     * De-spawns the specified world item for players around the specified chunk.
-     * @param worldItem The WorldItem object to de-spawn.
-     * @param chunk The main central chunk that the WorldItem will de-spawn from.
-     */
-    private async deleteWorldItemForPlayers(worldItem: WorldItem, chunk: Chunk): Promise<void> {
-        return new Promise(resolve => {
-            const nearbyPlayers = this.chunkManager.getSurroundingChunks(chunk).map(chunk => chunk.players).flat();
-
-            nearbyPlayers.forEach(player => {
-                player.outgoingPackets.removeWorldItem(worldItem, worldItem.position);
-            });
-
-            resolve();
-        });
-    }
-
-    public get ready(): boolean {
-        return this.chunkManager && this.chunkManager.complete;
     }
 
 }

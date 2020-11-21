@@ -1,5 +1,5 @@
 import { objectAction } from '@server/world/action/object-action';
-import { cache, world } from '@server/game-server';
+import { cache } from '@server/game-server';
 import { World } from '@server/world';
 import { itemIds } from '@server/world/config/item-ids';
 
@@ -7,7 +7,7 @@ import { itemIds } from '@server/world/config/item-ids';
 export const action: objectAction = (details) => {
     details.player.busy = true;
     details.player.playAnimation(827);
-    let itemId: number = itemIds.cabbage;
+    let itemId: number;
     let prefix = 'some';
     switch (details.objectDefinition.name) {
         case 'Wheat':
@@ -34,7 +34,7 @@ export const action: objectAction = (details) => {
         details.player.sendMessage(`You ${details.option} the ${details.objectDefinition.name.toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`);
         details.player.playSound(2581, 7);
         if (details.objectDefinition.name !== 'Flax' || Math.floor(Math.random() * 10) === 1) {
-            world.removeLocationObjectTemporarily(details.object, details.position, 30);
+            details.player.instance.hideGameObjectTemporarily(details.object, 30);
         }
         details.player.giveItem(pickedItem.id);
         details.player.busy = false;
