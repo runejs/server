@@ -1,7 +1,7 @@
 import { npcAction } from '@server/world/action/npc-action';
 import { openShop } from '@server/world/shops/shops';
-import { npcIds } from '@server/world/config/npc-ids';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
+
 
 const tradeAction : npcAction = (details) => {
     openShop(details.player, 'VARROCK_ZAFFS_SUPERIOR_STAFFS');
@@ -39,13 +39,13 @@ const talkToAction : npcAction = (details) => {
 
 export default [{
     type: 'npc_action',
-    npcIds: npcIds.zaff,
+    npcs: 'rs:varrock_zaff',
     options: 'trade',
     walkTo: true,
     action: tradeAction
 }, {
     type: 'npc_action',
-    npcIds: npcIds.zaff,
+    npcs: 'rs:varrock_zaff',
     options: 'talk-to',
     walkTo: true,
     action: talkToAction

@@ -6,7 +6,7 @@ import { itemAction } from '@server/world/action/item-action';
 import { fromNote, Item, toNote } from '@server/world/items/item';
 import { buttonAction } from '@server/world/action/button-action';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
-import { npcIds } from '@server/world/config/npc-ids';
+
 
 const buttonIds: number[] = [
     92, // as note
@@ -15,22 +15,22 @@ const buttonIds: number[] = [
     99, // insert
 ];
 
-export const openBankInterface: objectAction = (details) => {
-    details.player.activeWidget = {
+export const openBankInterface: objectAction = ({ player }) => {
+    player.activeWidget = {
         widgetId: widgets.bank.screenWidget.widgetId,
         secondaryWidgetId: widgets.bank.tabWidget.widgetId,
         type: 'SCREEN_AND_TAB',
         closeOnWalk: true
     };
 
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, details.player.inventory);
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, details.player.bank);
-    details.player.outgoingPackets.updateClientConfig(widgetScripts.bankInsertMode, details.player.settings.bankInsertMode);
-    details.player.outgoingPackets.updateClientConfig(widgetScripts.bankWithdrawNoteMode, details.player.settings.bankWithdrawNoteMode);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, player.inventory);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, player.bank);
+    player.outgoingPackets.updateClientConfig(widgetScripts.bankInsertMode, player.settings.bankInsertMode);
+    player.outgoingPackets.updateClientConfig(widgetScripts.bankWithdrawNoteMode, player.settings.bankWithdrawNoteMode);
 };
 
-export const openPinSettings: objectAction = (details) => {
-    details.player.activeWidget = {
+export const openPinSettings: objectAction = ({ player }) => {
+    player.activeWidget = {
         widgetId: widgets.bank.pinSettingsWidget.widgetId,
         type: 'SCREEN',
         closeOnWalk: true
@@ -200,7 +200,7 @@ export const btnAction: buttonAction = (details) => {
 const useBankBoothAction : objectAction = (details) => {
     const { player } = details;
 
-    dialogue([player, { npc: npcIds.banker1, key: 'banker' }], [
+    dialogue([player, { npc: 'rs:generic_banker', key: 'banker' }], [
         banker => [Emote.HAPPY, `Good day, how can I help you?`],
         options => [
             `I'd Like to access my bank account, please.`, [

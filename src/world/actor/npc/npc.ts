@@ -29,6 +29,7 @@ export class Npc extends Actor {
     public readonly uuid: string;
     public readonly options: string[];
     public readonly initialPosition: Position;
+    public readonly key: string;
     public id: number;
     public animations: NpcAnimations;
     public instanceId: string = null;
@@ -44,6 +45,7 @@ export class Npc extends Actor {
     public constructor(npcDetails: NpcDetails | number, npcSpawn: NpcSpawn, instanceId: string = null) {
         super();
 
+        this.key = npcSpawn.npcKey;
         this.uuid = uuidv4();
         this.position = npcSpawn.spawnPosition.clone();
         this.initialPosition = this.position.clone();
@@ -169,6 +171,15 @@ export class Npc extends Actor {
      */
     public playSound(soundId: number, volume: number): void {
         world.playLocationSound(this.position, soundId, volume);
+    }
+
+    /**
+     * Transforms the Npc visually into a different Npc.
+     * @param npcKey The unique string key of the Npc to transform into.
+     */
+    public transformInto(npcKey: string): void {
+        this.id = findNpc(npcKey).gameId;
+        this.updateFlags.appearanceUpdateRequired = true;
     }
 
     /**

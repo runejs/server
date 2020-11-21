@@ -2,7 +2,7 @@ import { Player } from '@server/world/actor/player/player';
 import { Npc } from '@server/world/actor/npc/npc';
 import { Position } from '@server/world/position';
 import { Action, getActionList, walkToAction } from '@server/world/action/index';
-import { pluginFilter } from '@server/plugins/plugin-loader';
+import { basicStringFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
 import { questFilter } from '@server/plugins/plugin';
 
@@ -29,8 +29,8 @@ export interface NpcActionData {
  * and whether or not the player must first walk to the NPC.
  */
 export interface NpcAction extends Action {
-    // A single NPC ID or a list of NPC IDs that this action applies to.
-    npcIds?: number | number[];
+    // A single NPC key or a list of NPC keys that this action applies to.
+    npcs?: string | string[];
     // A single option name or a list of option names that this action applies to.
     options: string | string[];
     // Whether or not the player needs to walk to this NPC before performing the action.
@@ -46,7 +46,8 @@ const npcActionHandler = (player: Player, npc: Npc, position: Position, option: 
     }
 
     // Find all NPC action plugins that reference this NPC
-    let interactionActions = getActionList('npc_action').filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.npcIds, npc.id, plugin.options, option));
+    let interactionActions = getActionList('npc_action')
+        .filter(plugin => questFilter(player, plugin) && basicStringFilter(plugin.npcs, npc.key) && basicStringFilter(plugin.options, option));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
@@ -54,7 +55,7 @@ const npcActionHandler = (player: Player, npc: Npc, position: Position, option: 
     }
 
     if(interactionActions.length === 0) {
-        player.sendMessage(`Unhandled NPC interaction: ${option} ${npc.name} (id-${npc.id}) @ ${position.x},${position.y},${position.level}`);
+        player.sendMessage(`Unhandled NPC interaction: ${option} ${npc.key} (id-${npc.id}) @ ${position.x},${position.y},${position.level}`);
         return;
     }
 

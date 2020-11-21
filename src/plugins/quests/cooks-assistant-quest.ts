@@ -1,11 +1,11 @@
 import { npcAction } from '@server/world/action/npc-action';
-import { npcIds } from '@server/world/config/npc-ids';
 import { Quest } from '@server/world/config/quests';
 import { dialogue, DialogueTree, Emote, execute, goto } from '@server/world/actor/dialogue';
 import { Player } from '@server/world/actor/player/player';
 import { Skill } from '@server/world/actor/skills';
 import { itemIds } from '@server/world/config/item-ids';
 import { QuestProgress } from '@server/world/actor/player/player-data';
+
 
 const quest: Quest = {
     id: 'cooks_assistant',
@@ -260,14 +260,14 @@ export default [{
 }, {
     type: 'npc_action',
     questRequirement: { questId: 'cooks_assistant', stage: 'NOT_STARTED' },
-    npcIds: npcIds.lumbridgeCook,
+    npcs: 'rs:lumbridge_castle_cook',
     options: 'talk-to',
     walkTo: true,
     action: startQuestAction
 }, {
     type: 'npc_action',
     questRequirement: { questId: 'cooks_assistant', stage: 'COLLECTING' },
-    npcIds: npcIds.lumbridgeCook,
+    npcs: 'rs:lumbridge_castle_cook',
     options: 'talk-to',
     walkTo: true,
     action: handInIngredientsAction

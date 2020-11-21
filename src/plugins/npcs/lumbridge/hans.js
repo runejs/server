@@ -1,4 +1,4 @@
-import { dialogue, Emote, execute, goto, animationIds, npcIds, Achievements, giveAchievement } from '../../rune.js';
+import { dialogue, Emote, execute, goto, animationIds, Achievements, giveAchievement } from '../../rune.js';
 
 const action = async details => {
     const { player, npc } = details;
@@ -52,7 +52,7 @@ const action = async details => {
 
 module.exports = {
     type: 'npc_action',
-    npcIds: npcIds.hans,
+    npcs: 'rs:hans',
     options: 'talk-to',
     walkTo: true,
     action
