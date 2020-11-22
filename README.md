@@ -25,6 +25,8 @@ The server runs on the 435 revision of the game, which was a game update made on
 
 ### Game World
 
+* Private & group Player Instances :heavy_check_mark:
+* Personal player instance objects and world items :heavy_check_mark:
 * Bank :yellow_square: 
     * Withdraw/Deposit 1,5,10,All :heavy_check_mark:
     * As note  :heavy_check_mark: 
@@ -39,44 +41,22 @@ The server runs on the 435 revision of the game, which was a game update made on
     * Sounds :yellow_square:
         * Playing sounds :heavy_check_mark:
         * Sound effects for actions :yellow_square:
-* Climbing ladders :yellow_square:
-* Climbing stairs :yellow_square:
-* Lumbridge mill :yellow_square:
-    * Replacing objects for local player only :x:
-    * Grain in hopper :heavy_check_mark:
-    * Operating levers :heavy_check_mark:
-    * Removing flour if and only if grain has been processed :heavy_check_mark:
-* Cow milking :heavy_check_mark:
-* Container filling :heavy_check_mark:
-    * Buckets, Jugs, Wells, Sinks, Fountains :heavy_check_mark:
-    * Emptying Containers :heavy_check_mark:
 * Home Teleport :heavy_check_mark:
-    * Animation :heavy_check_mark:
-* Emotes :yellow_square:
-    * Skillcape emotes :yellow_square:
+* Emotes :heavy_check_mark:
+    * Skillcape emotes :heavy_check_mark:
     * Unlockable emotes w/ requirements :heavy_check_mark:
-* Shops :yellow_square: 
-    * Shop logic :heavy_check_mark:
-    * World Shops :yellow_square:
-        * Al Kahrid gem trader :heavy_check_mark:
-        * Louie Armoured legs :heavy_check_mark:
-        * Dommik crafting shop :heavy_check_mark:
-        * Raneal Super skirt :heavy_check_mark:
-        * Bob's axes :heavy_check_mark:
-* Inventory :yellow_square: 
+* Shop support :heavy_check_mark:
+* Inventory support :heavy_check_mark:
     * Swapping items :heavy_check_mark:
     * Dropping items :heavy_check_mark:
     * Picking up ground items :heavy_check_mark:
-    * Equipping items :yellow_square: 
-        * Complete equiment stats and slot info :yellow_square: 
-        * Wielding logic (Weight, Stats, Equipping) :heavy_check_mark:
-* Pickables :heavy_check_mark:
-    * Wheat, Flax, Potato, Onion, Cabbage :heavy_check_mark:
+    * Equipping items :heavy_check_mark:
 * Doors/gates :yellow_square: 
     * NSEW doors :heavy_check_mark:
     * Diagonal doors :yellow_square:
     * Double doors :heavy_check_mark: 
     * Wooden gates :heavy_check_mark: 
+* Climbing ladders & stairs :yellow_square:
 * Clue Scrolls :x:
 
 ### Skills
