@@ -1,6 +1,6 @@
 import { loadConfigurationFiles } from '@server/config/index';
 import { cache } from '@server/game-server';
-import _ from 'lodash';
+
 
 export type WeaponStyle = 'axe' | 'hammer' | 'bow' | 'claws' | 'crossbow' | 'longsword' |
     '2h_sword' | 'pickaxe' | 'halberd' | 'staff_standard' | 'scythe' | 'spear' | 'mace' |
@@ -99,7 +99,7 @@ export interface ItemPresetConfiguration {
 export interface ItemConfiguration {
     extends?: string | string[];
     game_id: number;
-    description?: string;
+    examine?: string;
     tradable?: boolean;
     weight?: number;
     equippable?: boolean;
@@ -123,7 +123,7 @@ export class ItemDetails {
     key: string;
     gameId: number;
     name: string = '';
-    description: string = '';
+    examine: string = '';
     tradable: boolean = false;
     equippable: boolean = false;
     weight: number;
@@ -146,7 +146,7 @@ export function translateItemConfig(key: string, config: ItemConfiguration): any
         key,
         extends: config.extends || undefined,
         gameId: config.game_id,
-        description: config.description,
+        examine: config.examine,
         tradable: config.tradable,
         equippable: config.equippable,
         weight: config.weight,

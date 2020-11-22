@@ -1,0 +1,20 @@
+{
+    "rs:pot": {
+        "game_id": 1931,
+        "examine": "This pot is empty.",
+        "tradable": true,
+        "weight": 0.453
+    },
+    "rs:jug": {
+        "game_id": 1935,
+        "examine": "This jug is empty.",
+        "tradable": true,
+        "weight": 0.453
+    },
+    "rs:bucket": {
+        "game_id": 1925,
+        "examine": "It's a wooden bucket.",
+        "tradable": true,
+        "weight": 1
+    }
+}

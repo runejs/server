@@ -1,0 +1,28 @@
+{
+    "rs:iron_battleaxe": {
+        "game_id": 1363,
+        "examine": "A vicious looking axe.",
+        "tradable": true,
+        "weight": 2.721,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "one_handed",
+            "offensive_bonuses": {
+                "speed": 6,
+                "stab": -2,
+                "slash": 8,
+                "crush": 5
+            },
+            "defensive_bonuses": {
+                "ranged": -1
+            },
+            "skill_bonuses": {
+                "strength": 13
+            },
+            "weapon_info": {
+                "style": "axe"
+            }
+        }
+    }
+}
