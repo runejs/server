@@ -25,6 +25,8 @@ The server runs on the 435 revision of the game, which was a game update made on
 
 ### Game World
 
+* Private & group Player Instances :heavy_check_mark:
+* Personal player instance objects and world items :heavy_check_mark:
 * Bank :yellow_square: 
     * Withdraw/Deposit 1,5,10,All :heavy_check_mark:
     * As note  :heavy_check_mark: 
@@ -39,15 +41,6 @@ The server runs on the 435 revision of the game, which was a game update made on
     * Sounds :yellow_square:
         * Playing sounds :heavy_check_mark:
         * Sound effects for actions :yellow_square:
-* Lumbridge mill :yellow_square:
-    * Replacing objects for local player only :x:
-    * Grain in hopper :heavy_check_mark:
-    * Operating levers :heavy_check_mark:
-    * Removing flour if and only if grain has been processed :heavy_check_mark:
-* Cow milking :heavy_check_mark:
-* Container filling :heavy_check_mark:
-    * Buckets, Jugs, Wells, Sinks, Fountains :heavy_check_mark:
-    * Emptying Containers :heavy_check_mark:
 * Home Teleport :heavy_check_mark:
 * Emotes :heavy_check_mark:
     * Skillcape emotes :heavy_check_mark:
