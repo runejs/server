@@ -35,7 +35,7 @@ export function translateNpcSpawnConfig(config: NpcSpawnConfiguration): NpcSpawn
 }
 
 export async function loadNpcSpawnConfigurations(path: string): Promise<NpcSpawn[]> {
-    let npcSpawns = [];
+    const npcSpawns = [];
 
     const files = await loadConfigurationFiles(path);
     files.forEach(spawns => spawns.forEach(npcSpawn => npcSpawns.push(translateNpcSpawnConfig(npcSpawn))));
