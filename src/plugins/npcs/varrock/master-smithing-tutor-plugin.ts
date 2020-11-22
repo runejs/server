@@ -2,7 +2,7 @@ import { npcAction } from '@server/world/action/npc-action';
 import { dialogue, Emote, execute, goto } from '@server/world/actor/dialogue';
 import { itemIds } from '@server/world/config/item-ids';
 import { widgets } from '@server/world/config/widget';
-import { npcIds } from '@server/world/config/npc-ids';
+
 
 const talkTo : npcAction = (details) => {
     const { player, npc } = details;
@@ -69,7 +69,7 @@ const talkTo : npcAction = (details) => {
 
 export default {
     type: 'npc_action',
-    npcIds: [npcIds.masterSmithingTutor],
+    npcs: 'rs:master_smithing_tutor',
     options: ['talk-to'],
     walkTo: true,
     action: talkTo

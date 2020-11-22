@@ -1,13 +1,11 @@
 import { logger } from '@runejs/core';
 import { LocationObject } from '@runejs/cache-parser';
 import Quadtree from 'quadtree-lib';
-import { timer } from 'rxjs';
 import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { ExamineCache } from './config/examine-data';
 import { loadPlugins, world } from '@server/game-server';
 import { Position } from './position';
-import { NpcSpawn, parseNpcSpawns } from './config/npc-spawn';
 import { Npc } from './actor/npc/npc';
 import { parseShops, Shop } from '@server/world/config/shops';
 import TravelLocations from '@server/world/config/travel-locations';
@@ -15,10 +13,11 @@ import { Actor } from '@server/world/actor/actor';
 import { schedule } from '@server/task/task';
 import { parseScenerySpawns } from '@server/world/config/scenery-spawns';
 import { loadActions } from '@server/world/action';
-import { findNpc } from '@server/config';
+import { findNpc, npcSpawns } from '@server/config';
 import { NpcDetails } from '@server/config/npc-config';
 import { WorldInstance } from '@server/world/instances';
 import { Direction } from '@server/world/direction';
+import { NpcSpawn } from '@server/config/npc-spawn-config';
 
 
 export interface QuadtreeKey {
@@ -40,7 +39,6 @@ export class World {
     public readonly npcList: Npc[] = new Array(World.MAX_NPCS).fill(null);
     public readonly chunkManager: ChunkManager = new ChunkManager();
     public readonly examine: ExamineCache = new ExamineCache();
-    public readonly npcSpawns: NpcSpawn[];
     public readonly scenerySpawns: LocationObject[];
     public readonly shops: Shop[];
     public readonly travelLocations: TravelLocations = new TravelLocations();
@@ -51,7 +49,6 @@ export class World {
     private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
 
     public constructor() {
-        this.npcSpawns = parseNpcSpawns();
         this.scenerySpawns = parseScenerySpawns();
         this.shops = parseShops();
         this.playerTree = new Quadtree<QuadtreeKey>({
@@ -69,7 +66,7 @@ export class World {
     public async init(): Promise<void> {
         await loadPlugins();
         await loadActions();
-        this.spawnNpcs();
+        this.spawnGlobalNpcs();
         this.spawnScenery();
     }
 
@@ -227,13 +224,13 @@ export class World {
         return this.playerList.find(p => p && p.username.toLowerCase() === username);
     }
 
-    public spawnNpcs(): void {
-        this.npcSpawns.forEach(npcSpawn => {
-            const npcDetails = findNpc(npcSpawn.npcId) || null;
+    public spawnGlobalNpcs(): void {
+        npcSpawns.forEach(npcSpawn => {
+            const npcDetails = findNpc(npcSpawn.npcKey) || null;
             if(npcDetails && npcDetails.gameId !== undefined) {
                 this.registerNpc(new Npc(npcDetails, npcSpawn));
             } else {
-                this.registerNpc(new Npc(npcSpawn.npcId, npcSpawn));
+                logger.error(`NPC ${npcSpawn.npcKey} can not be spawned; it has not yet been registered on the server.`);
             }
         });
     }
@@ -255,14 +252,9 @@ export class World {
             }
         }
 
-        const npc = new Npc(npcData, {
-            npcId: typeof npcData === 'number' ? npcData : npcData.gameId,
-            x: position.x,
-            y: position.y,
-            level: position.level || 0,
-            face,
-            radius: movementRadius
-        }, instanceId);
+        const npc = new Npc(npcData,
+            new NpcSpawn(typeof npcData === 'number' ? `unknown_${npcData}` : npcData.key,
+                position, movementRadius, face), instanceId);
 
         this.registerNpc(npc);
 

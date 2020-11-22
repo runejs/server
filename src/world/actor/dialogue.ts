@@ -5,6 +5,7 @@ import { logger } from '@runejs/core';
 import _ from 'lodash';
 import { wrapText } from '@server/util/strings';
 import { take } from 'rxjs/operators';
+import { findNpc } from '@server/config';
 
 export enum Emote {
     POMPOUS = 'POMPOUS',
@@ -143,7 +144,7 @@ export interface AdditionalOptions {
 }
 
 interface NpcParticipant {
-    npc: Npc | number;
+    npc: Npc | number | string;
     key: string;
 }
 
@@ -310,7 +311,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
             // Player or Npc dialogue.
 
             let dialogueDetails: [ Emote, string ];
-            let npc: Npc | number;
+            let npc: Npc | number | string;
 
             if(dialogueType !== 'player') {
                 const participant = npcParticipants.find(p => p.key === dialogueType) as NpcParticipant;
@@ -321,7 +322,11 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
 
                 npc = participant.npc;
                 if(typeof npc !== 'number') {
-                    npc = npc.id;
+                    if(typeof npc === 'string') {
+                        npc = findNpc(npc)?.gameId || 0;
+                    } else {
+                        npc = npc.id;
+                    }
                 }
 
                 dialogueDetails = dialogueAction(npc);

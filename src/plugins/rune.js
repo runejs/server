@@ -2,7 +2,6 @@ export * from '../world/actor/dialogue';
 export * from '../world/config/animation-ids';
 export * from '../world/config/gfx-ids';
 export * from '../world/config/item-ids';
-export * from '../world/config/npc-ids';
 export * from '../world/config/object-ids';
 export * from '../world/config/sound-ids';
 export * from '../world/config/songs';

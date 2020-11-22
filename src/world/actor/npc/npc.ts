@@ -1,5 +1,4 @@
 import { Actor } from '@server/world/actor/actor';
-import { NpcSpawn } from '@server/world/config/npc-spawn';
 import uuidv4 from 'uuid/v4';
 import { Position } from '@server/world/position';
 import { cache, pluginActions, world } from '@server/game-server';
@@ -11,6 +10,7 @@ import { findNpc } from '@server/config';
 import { animationIds } from '@server/world/config/animation-ids';
 import { NpcAnimations, NpcDetails } from '@server/config/npc-config';
 import { SkillName } from '@server/world/actor/skills';
+import { NpcSpawn } from '@server/config/npc-spawn-config';
 
 export type npcInitAction = (data: { npc: Npc }) => void;
 
@@ -29,6 +29,7 @@ export class Npc extends Actor {
     public readonly uuid: string;
     public readonly options: string[];
     public readonly initialPosition: Position;
+    public readonly key: string;
     public id: number;
     public animations: NpcAnimations;
     public instanceId: string = null;
@@ -44,18 +45,19 @@ export class Npc extends Actor {
     public constructor(npcDetails: NpcDetails | number, npcSpawn: NpcSpawn, instanceId: string = null) {
         super();
 
+        this.key = npcSpawn.npcKey;
         this.uuid = uuidv4();
-        this.position = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
-        this.initialPosition = new Position(npcSpawn.x, npcSpawn.y, npcSpawn.level);
+        this.position = npcSpawn.spawnPosition.clone();
+        this.initialPosition = this.position.clone();
         this.npcSpawn = npcSpawn;
         this.instanceId = instanceId;
 
-        if(npcSpawn.radius) {
-            this._movementRadius = npcSpawn.radius;
+        if(npcSpawn.movementRadius) {
+            this._movementRadius = npcSpawn.movementRadius;
         }
 
-        if(npcSpawn.face) {
-            this.faceDirection = directionData[npcSpawn.face].index;
+        if(npcSpawn.faceDirection) {
+            this.faceDirection = directionData[npcSpawn.faceDirection].index;
         }
 
         if(typeof npcDetails === 'number') {
@@ -169,6 +171,15 @@ export class Npc extends Actor {
      */
     public playSound(soundId: number, volume: number): void {
         world.playLocationSound(this.position, soundId, volume);
+    }
+
+    /**
+     * Transforms the Npc visually into a different Npc.
+     * @param npcKey The unique string key of the Npc to transform into.
+     */
+    public transformInto(npcKey: string): void {
+        this.id = findNpc(npcKey).gameId;
+        this.updateFlags.appearanceUpdateRequired = true;
     }
 
     /**

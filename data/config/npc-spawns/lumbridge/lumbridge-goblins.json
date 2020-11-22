@@ -1,0 +1,74 @@
+[
+    {
+        "npc": "rs:goblin",
+        "spawn_x": 3263,
+        "spawn_y": 3232,
+        "movement_radius": 8
+    },
+    {
+        "npc": "rs:goblin",
+        "spawn_x": 3262,
+        "spawn_y": 3235,
+        "movement_radius": 8
+    },
+    {
+        "npc": "rs:goblin",
+        "spawn_x": 3259,
+        "spawn_y": 3225,
+        "movement_radius": 8
+    },
+    {
+        "npc": "rs:goblin",
+        "spawn_x": 3254,
+        "spawn_y": 3231,
+        "movement_radius": 8
+    },
+    {
+        "npc": "rs:goblin",
+        "spawn_x": 3249,
+        "spawn_y": 3229,
+        "movement_radius": 8
+    },
+    {
+        "npc": "rs:goblin",
+        "spawn_x": 3251,
+        "spawn_y": 3237,
+        "movement_radius": 8
+    },
+    {
+        "npc": "rs:goblin",
+        "spawn_x": 3246,
+        "spawn_y": 3238,
+        "movement_radius": 8
+    },
+    {
+        "npc": "rs:goblin",
+        "spawn_x": 3252,
+        "spawn_y": 3243,
+        "movement_radius": 8
+    },
+    {
+        "npc": "rs:goblin",
+        "spawn_x": 3263,
+        "spawn_y": 3239,
+        "movement_radius": 8
+    },
+    {
+        "npc": "rs:goblin",
+        "spawn_x": 3259,
+        "spawn_y": 3235,
+        "movement_radius": 8
+    },
+    {
+        "npc": "rs:goblin",
+        "spawn_x": 3257,
+        "spawn_y": 3245,
+        "movement_radius": 8
+    },
+    {
+        "npc": "rs:goblin",
+        "spawn_x": 3252,
+        "spawn_y": 3250,
+        "movement_radius": 8
+    }
+]

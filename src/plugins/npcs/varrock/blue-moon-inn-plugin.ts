@@ -1,4 +1,3 @@
-import { npcIds } from '@server/world/config/npc-ids';
 import { npcAction } from '@server/world/action/npc-action';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 import { itemIds } from '@server/world/config/item-ids';
@@ -158,10 +157,10 @@ const talkToCook : npcAction = (details) => {
 
 export default [{
     type: 'npc_action',
-    npcIds: npcIds.varrockBartender,
+    npcs: 'rs:blue_moon_innk_bartender',
     action: talkToBartender,
 }, {
     type: 'npc_action',
-    npcIds: npcIds.varrockCharlieTheCook,
+    npcs: 'rs:blue_moon_inn_cook',
     action: talkToCook
 }];

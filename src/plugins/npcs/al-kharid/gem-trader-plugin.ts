@@ -1,7 +1,7 @@
 import { npcAction } from '@server/world/action/npc-action';
 import { openShop } from '@server/world/shops/shops';
 import { dialogueAction, DialogueEmote } from '@server/world/actor/player/dialogue-action';
-import { npcIds } from '@server/world/config/npc-ids';
+
 
 const tradeAction : npcAction = (details)  => {
     openShop(details.player, 'ALKHARID_GEM_TRADER');
@@ -33,6 +33,6 @@ const talkToAction : npcAction = (details) => {
 };
 
 export default [
-    { type: 'np_action', npcIds: npcIds.gemTrader, options: 'trade', walkTo: true, action: tradeAction },
-    { type: 'npc_action', npcIds: npcIds.gemTrader, options: 'talk-to', walkTo: true, action: talkToAction }
+    { type: 'np_action', npcs: 'rs:alkharid_gem_trader', options: 'trade', walkTo: true, action: tradeAction },
+    { type: 'npc_action', npcs: 'rs:alkharid_gem_trader', options: 'talk-to', walkTo: true, action: talkToAction }
 ];

@@ -1,5 +1,4 @@
 import { npcAction } from '@server/world/action/npc-action';
-import { npcIds } from '@server/world/config/npc-ids';
 import { dialogue, Emote, goto } from '@server/world/actor/dialogue';
 
 const millieDialogue: npcAction = async (details) =>
@@ -80,13 +79,13 @@ const gillieDialogue: npcAction = async (details) =>
 
 export default [{
     type: 'npc_action',
-    npcIds: npcIds.gillieGroats,
+    npcs: 'rs:gillie_groats',
     options: 'talk-to',
     walkTo: true,
     action: gillieDialogue
 }, {
     type: 'npc_action',
-    npcIds: npcIds.millieMiller,
+    npcs: 'rs:millie_miller',
     options: 'talk-to',
     walkTo: true,
     action: millieDialogue

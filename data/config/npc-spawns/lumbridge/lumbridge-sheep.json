@@ -1,0 +1,38 @@
+[
+    {
+        "npc": "rs:spy_penguin_sheep",
+        "spawn_x": 3197,
+        "spawn_y": 3262,
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:sheep",
+        "spawn_x": 3199,
+        "spawn_y": 3267,
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:sheep",
+        "spawn_x": 3203,
+        "spawn_y": 3271,
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:sheep",
+        "spawn_x": 3199,
+        "spawn_y": 3273,
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:sheep",
+        "spawn_x": 3208,
+        "spawn_y": 3273,
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:sheep",
+        "spawn_x": 3209,
+        "spawn_y": 3260,
+        "movement_radius": 10
+    }
+]

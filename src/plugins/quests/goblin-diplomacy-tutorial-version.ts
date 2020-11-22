@@ -2,7 +2,6 @@ import { defaultPlayerTabWidgets, Player, playerInitAction, Tabs } from '@server
 import { widgets } from '@server/world/config/widget';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 import { serverConfig, world } from '@server/game-server';
-import { npcIds } from '@server/world/config/npc-ids';
 import { npcAction } from '@server/world/action/npc-action';
 import { Subject } from 'rxjs';
 import uuidv4 from 'uuid/v4';
@@ -357,6 +356,6 @@ export default [{
 }, {
     type: 'npc_action',
     action: guideAction,
-    npcIds: npcIds.runescapeGuide,
+    npcs: 'rs:runescape_guide',
     walkTo: true
 }];

@@ -1,0 +1,11 @@
+{
+    "rs:spy_penguin_sheep": {
+        "game_id": 3579
+    },
+    "rs:sheep": {
+        "game_id": 43
+    },
+    "rs:naked_sheep": {
+        "game_id": 42
+    }
+}

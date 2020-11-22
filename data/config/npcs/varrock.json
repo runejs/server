@@ -1,0 +1,41 @@
+{
+    "rs:varrock_zaff": {
+        "game_id": 546
+    },
+    "rs:blue_moon_inn_bartender": {
+        "game_id": 734
+    },
+    "rs:blue_moon_inn_charlie": {
+        "game_id": 794
+    },
+    "rs:jonny_the_beard": {
+        "game_id": 645
+    },
+    "rs:dr_harlow": {
+        "game_id": 756
+    },
+    "rs:varrock_horvic": {
+        "game_id": 549
+    },
+    "rs:varrock_wilough": {
+        "game_id": 783
+    },
+    "rs:varrock_shilop": {
+        "game_id": 781
+    },
+    "rs:varrock_baraek": {
+        "game_id": 547
+    },
+    "rs:romeo": {
+        "game_id": 639
+    },
+    "rs:varrock_shop_keeper": {
+        "game_id": 520
+    },
+    "rs:varrock_shop_assistant": {
+        "game_id": 521
+    },
+    "rs:master_smithing_tutor": {
+        "game_id": 4905
+    }
+}

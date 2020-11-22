@@ -1,6 +1,5 @@
 import { npcAction } from '@server/world/action/npc-action';
 import { openShop } from '@server/world/shops/shops';
-import { npcIds } from '@server/world/config/npc-ids';
 import { dialogueAction, DialogueEmote } from '@server/world/actor/player/dialogue-action';
 
 const tradeAction: npcAction = (details) => {
@@ -16,7 +15,7 @@ const talkToAction : npcAction = (details) => {
             switch (d.action) {
                 case 1:
                     return d.player(DialogueEmote.JOYFUL, [ 'No thanks; I\'ve got all the Crafting equipment I need.' ])
-                        .then(async d => d.npc(npcIds.dommik, DialogueEmote.CALM_TALK_2, ['Okay. Fare well on your travels.']))
+                        .then(async d => d.npc(npc, DialogueEmote.CALM_TALK_2, ['Okay. Fare well on your travels.']))
                         .then(d => {
                             d.close();
                             return d;
@@ -33,6 +32,6 @@ const talkToAction : npcAction = (details) => {
 };
 
 export default [
-    { type: 'npc_action', npcIds: npcIds.dommik, options: 'trade', walkTo: true, action: tradeAction },
-    { type: 'npc_action', npcIds: npcIds.dommik, options: 'talk-to', walkTo: true, action: talkToAction }
+    { type: 'npc_action', npcs: 'rs:alkharid_dommik', options: 'trade', walkTo: true, action: tradeAction },
+    { type: 'npc_action', npcs: 'rs:alkharid_dommik', options: 'talk-to', walkTo: true, action: talkToAction }
 ];

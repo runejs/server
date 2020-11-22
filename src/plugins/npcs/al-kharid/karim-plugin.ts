@@ -1,5 +1,4 @@
 import { npcAction } from '@server/world/action/npc-action';
-import { npcIds } from '@server/world/config/npc-ids';
 import { itemIds } from '@server/world/config/item-ids';
 import { widgets } from '@server/world/config/widget';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
@@ -49,5 +48,5 @@ const talkToAction : npcAction = (details) => {
 };
 
 export default [
-    { type: 'npc_action', npcIds: npcIds.karim, options: 'talk-to', walkTo: true, action: talkToAction }
+    { type: 'npc_action', npcs: 'rs:alkharid_karim', options: 'talk-to', walkTo: true, action: talkToAction }
 ];
