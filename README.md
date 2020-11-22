@@ -51,8 +51,6 @@ The server runs on the 435 revision of the game, which was a game update made on
     * Dropping items :heavy_check_mark:
     * Picking up ground items :heavy_check_mark:
     * Equipping items :heavy_check_mark:
-* Pickables :heavy_check_mark:
-    * Wheat, Flax, Potato, Onion, Cabbage :heavy_check_mark:
 * Doors/gates :yellow_square: 
     * NSEW doors :heavy_check_mark:
     * Diagonal doors :yellow_square:
