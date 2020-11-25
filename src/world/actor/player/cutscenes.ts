@@ -104,4 +104,44 @@ export class Cutscene {
         this.player.cutscene = null;
     }
 
+
+    public get cameraX(): number {
+        return this._cameraX;
+    }
+
+    public get cameraY(): number {
+        return this._cameraY;
+    }
+
+    public get cameraHeight(): number {
+        return this._cameraHeight;
+    }
+
+    public get cameraMovementSpeed(): number {
+        return this._cameraMovementSpeed;
+    }
+
+    public get cameraAcceleration(): number {
+        return this._cameraAcceleration;
+    }
+
+    public get lookX(): number {
+        return this._lookX;
+    }
+
+    public get lookY(): number {
+        return this._lookY;
+    }
+
+    public get lookHeight(): number {
+        return this._lookHeight;
+    }
+
+    public get lookMovementSpeed(): number {
+        return this._lookMovementSpeed;
+    }
+
+    public get lookAcceleration(): number {
+        return this._lookAcceleration;
+    }
 }
