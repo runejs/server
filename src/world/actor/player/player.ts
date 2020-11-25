@@ -44,6 +44,7 @@ import { NpcDetails } from '@server/config/npc-config';
 import { animationIds } from '@server/world/config/animation-ids';
 import { combatStyles } from '@server/world/actor/combat';
 import { WorldInstance, TileModifications } from '@server/world/instances';
+import { Cutscene } from '@server/world/actor/player/cutscenes';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -116,6 +117,7 @@ export class Player extends Actor {
     public achievements: string[] = [];
     public friendsList: string[] = [];
     public ignoreList: string[] = [];
+    public cutscene: Cutscene = null;
 
     private readonly _socket: Socket;
     private readonly _inCipher: Isaac;

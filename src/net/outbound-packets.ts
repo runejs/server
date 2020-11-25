@@ -30,6 +30,22 @@ export class OutboundPackets {
         this.socket = player.socket;
     }
 
+    public resetCamera(): void {
+        this.queue(new Packet(7));
+    }
+
+    public snapCameraTo(position: Position, height: number, speed: number, acceleration: number): void {
+        const packet = new Packet(253);
+        this.putCameraPosition(packet, position, height, speed, acceleration);
+        this.queue(packet);
+    }
+
+    public turnCameraTowards(position: Position, height: number, speed: number, acceleration: number): void {
+        const packet = new Packet(234);
+        this.putCameraPosition(packet, position, height, speed, acceleration);
+        this.queue(packet);
+    }
+
     public updateSocialSettings(): void {
         const packet = new Packet(196);
         packet.put(this.player.settings.publicChatMode || 0);
@@ -571,6 +587,14 @@ export class OutboundPackets {
 
         const packetBuffer = packet.toBuffer(this.player.outCipher);
         queue.push(packetBuffer);
+    }
+
+    private putCameraPosition(packet: Packet, position: Position, height: number, speed: number, acceleration: number): void {
+        packet.put(position.calculateChunkLocalX(this.player.lastMapRegionUpdatePosition));
+        packet.put(position.calculateChunkLocalY(this.player.lastMapRegionUpdatePosition));
+        packet.put(height, 'SHORT');
+        packet.put(speed);
+        packet.put(acceleration);
     }
 
     private getChunkPositionOffset(x: number, y: number, chunk: Chunk): number {
