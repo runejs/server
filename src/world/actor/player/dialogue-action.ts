@@ -10,10 +10,12 @@ export const dialogueWidgetIds = {
     TEXT: [ 210, 211, 212, 213, 214 ]
 };
 
+type LineConstraint = [ number, number ];
+
 /**
  * Min -> max lines for a specific dialogue type.
  */
-const lineConstraints = {
+const lineConstraints: { [key: string]: LineConstraint } = {
     PLAYER: [ 1, 4 ],
     NPC: [ 1, 4 ],
     OPTIONS: [ 2, 5 ],
