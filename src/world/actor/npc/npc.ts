@@ -95,7 +95,10 @@ export class Npc extends Actor {
 
     public async init(): Promise<void> {
         world.chunkManager.getChunkForWorldPosition(this.position).addNpc(this);
-        this.initiateRandomMovement();
+
+        if(this.movementRadius > 0) {
+            this.initiateRandomMovement();
+        }
 
         await new Promise(resolve => {
             pluginActions.npc_init

@@ -244,8 +244,8 @@ export class World {
         });
     }
 
-    public spawnNpc(npcKey: string | number, position: Position, face: Direction,
-        movementRadius: number = 0, instanceId: string = null): Npc {
+    public async spawnNpc(npcKey: string | number, position: Position, face: Direction,
+        movementRadius: number = 0, instanceId: string = null): Promise<Npc> {
         if(!npcKey) {
             return null;
         }
@@ -265,7 +265,7 @@ export class World {
             new NpcSpawn(typeof npcData === 'number' ? `unknown_${npcData}` : npcData.key,
                 position, movementRadius, face), instanceId);
 
-        this.registerNpc(npc);
+        await this.registerNpc(npc);
 
         return npc;
     }
@@ -340,9 +340,9 @@ export class World {
         return Promise.resolve();
     }
 
-    public async scheduleNpcRespawn(npc: Npc): Promise<void> {
+    public async scheduleNpcRespawn(npc: Npc): Promise<boolean> {
         await schedule(10);
-        this.registerNpc(npc);
+        return await this.registerNpc(npc);
     }
 
     public findPlayer(playerUsername: string): Player {
@@ -394,7 +394,7 @@ export class World {
         return foundNpc.equals(npc);
     }
 
-    public registerNpc(npc: Npc): boolean {
+    public async registerNpc(npc: Npc): Promise<boolean> {
         if(!npc) {
             return false;
         }
@@ -408,7 +408,7 @@ export class World {
 
         npc.worldIndex = index;
         this.npcList[index] = npc;
-        npc.init();
+        await npc.init();
         return true;
     }
 

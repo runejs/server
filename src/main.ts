@@ -24,7 +24,7 @@ const shutdown = (signal, cb) => {
     'SIGBUS', 'SIGFPE', 'SIGUSR1', 'SIGSEGV', 'SIGUSR2', 'SIGTERM'
 ].forEach(signal => process.on(signal as any, () => {
     logger.warn(`${signal} received.`);
-    shutdown(signal, () => process.exit());
+    shutdown(signal, () => process.exit(0));
 }));
 
 initErrorHandling();

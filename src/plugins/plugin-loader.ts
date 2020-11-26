@@ -67,12 +67,14 @@ export async function parsePluginFiles(): Promise<RunePlugin[]> {
 
         try {
             const plugin = require(location);
-            if(plugin.default) {
-                // TS plugin
-                plugins.push(new RunePlugin(plugin.default));
-            } else {
-                // JS plugin
-                plugins.push(new RunePlugin(plugin));
+            if(plugin) {
+                if(plugin.default) {
+                    // TS plugin
+                    plugins.push(new RunePlugin(plugin.default));
+                } else {
+                    // JS plugin
+                    plugins.push(new RunePlugin(plugin));
+                }
             }
         } catch(error) {
             logger.error(`Error loading plugin file at ${location}:`);
