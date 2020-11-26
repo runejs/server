@@ -60,7 +60,7 @@ export const action: itemAction = (details) => {
         }
     }
 
-    const itemValue = itemDetails.value || 0;
+    const itemValue = openedShop.getBuyPrice(itemDetails); // @TODO scale price per item, not per sale
 
     if(!shopItem) {
         shopContainer.set(shopContainer.getFirstOpenSlot(), { itemId, amount: sellAmount });
@@ -68,7 +68,7 @@ export const action: itemAction = (details) => {
         shopItem.amount += sellAmount;
     }
 
-    const sellPrice = sellAmount * itemValue; // @TODO player inventory item devaluation/saturation
+    const sellPrice = sellAmount * itemValue; // @TODO scale price per item, not per sale
     if(sellPrice > 0) {
         let coinsIndex = player.hasCoins(1);
 

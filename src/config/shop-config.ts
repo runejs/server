@@ -2,6 +2,7 @@ import { ItemContainer } from '@server/world/items/item-container';
 import { findItem, loadConfigurationFiles } from '@server/config/index';
 import { Player } from '@server/world/actor/player/player';
 import { widgets } from '@server/world/config/widget';
+import { ItemDetails } from '@server/config/item-config';
 
 
 export type ShopStock = [ [ string, number ] ];
@@ -13,14 +14,16 @@ export class Shop {
     public readonly container: ItemContainer;
     public readonly originalSellRate: number;
     public readonly originalBuyRate: number;
+    public readonly generalStore: boolean;
     public name: string;
     public sellRate: number;
     public buyRate: number;
     public rateModifier: number;
 
-    public constructor(key: string, name: string, stock: ShopStock, sellRate: number, buyRate: number, modifier: number) {
+    public constructor(key: string, name: string, generalStore: boolean, stock: ShopStock, sellRate: number, buyRate: number, modifier: number) {
         this.key = key;
         this.name = name;
+        this.generalStore = generalStore;
         this.buyRate = buyRate;
         this.sellRate = sellRate;
         this.originalBuyRate = buyRate;
@@ -43,6 +46,28 @@ export class Shop {
         }
     }
 
+    public getBuyPrice(item: ItemDetails): number {
+        const itemKey = item.key;
+        const itemSoldHere: boolean = this.isItemSoldHere(itemKey);
+        let originalStockAmount: number = 0;
+        const itemStock = this.container.amount(item.gameId);
+
+        if(itemSoldHere) {
+            originalStockAmount = this.originalStock.find(stock => stock && stock[0] === itemKey)[1];
+        } else if(!this.generalStore) {
+            return -1; // Can not sell this item to this shop (shop is not a general store!)
+        }
+
+        if(itemStock >= originalStockAmount) {
+            const overstockAmount = (itemStock - originalStockAmount) + 1;
+            const decrementAmount = Math.floor(0.075 * overstockAmount);
+            const finalAmount = item.lowAlchValue - decrementAmount;
+            return finalAmount < 0 ? 0 : finalAmount;
+        } else {
+            return item.lowAlchValue;
+        }
+    }
+
     public open(player: Player): void {
         player.metadata['lastOpenedShop'] = this;
         player.outgoingPackets.updateWidgetString(widgets.shop.widgetId, widgets.shop.title, this.name);
@@ -57,10 +82,20 @@ export class Shop {
         };
     }
 
+    public isItemSoldHere(itemKey: string): boolean {
+        for(const stock of this.originalStock) {
+            if(stock && stock[0] === itemKey) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
 
 export interface ShopConfiguration {
     name: string;
+    general_store?: boolean;
     shop_sell_rate?: number;
     shop_buy_rate?: number;
     rate_modifier?: number;
@@ -68,7 +103,7 @@ export interface ShopConfiguration {
 }
 
 export function shopFactory(key: string, config: ShopConfiguration): Shop {
-    return new Shop(key, config.name, config.stock,
+    return new Shop(key, config.name, config.general_store || false, config.stock,
         config.shop_sell_rate || 100, config.shop_buy_rate || 0.65, config.rate_modifier || 0.2);
 }
 

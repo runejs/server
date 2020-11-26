@@ -139,6 +139,23 @@ export class ItemDetails {
     noteTemplateId: number;
     stackableIds: number[];
     stackableAmounts: number[];
+
+    public constructor(item: ItemDetails) {
+        const keys = Object.keys(item);
+        keys.forEach(key => this[key] = item[key]);
+    }
+
+    get lowAlchValue(): number {
+        return Math.floor(this.value * 0.4);
+    }
+
+    get highAlchValue(): number {
+        return Math.floor(this.lowAlchValue * 1.5);
+    }
+
+    get minimumValue(): number {
+        return Math.floor(this.lowAlchValue * 0.25);
+    }
 }
 
 export function translateItemConfig(key: string, config: ItemConfiguration): any {

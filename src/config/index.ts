@@ -107,7 +107,7 @@ export const findItem = (itemKey: number | string): ItemDetails => {
         });
     }
 
-    return item;
+    return new ItemDetails(item);
 };
 
 

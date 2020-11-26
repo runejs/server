@@ -52,6 +52,12 @@ export class ItemContainer {
         return this.findIndex(item) !== -1;
     }
 
+    public amount(item: number | Item): number {
+        const itemId = typeof item === 'number' ? item : item.itemId;
+        return this._items.map(item => item && item.itemId === itemId ? (item.amount || 0) : 0)
+            .reduce((accumulator, currentValue) => accumulator + currentValue);
+    }
+
     /**
      * Finds all slots within the container that contain the specified items.
      * @param search The item id or Item object to search for.
