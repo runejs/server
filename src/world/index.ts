@@ -167,6 +167,15 @@ export class World {
     }
 
     /**
+     * Finds all NPCs within the game world that have the specified Npc Key.
+     * @param npcKey The Key of the NPCs to find.
+     * @param instanceId The NPC's active instance.
+     */
+    public findNpcsByKey(npcKey: string, instanceId: string = null): Npc[] {
+        return this.npcList.filter(npc => npc && npc.key === npcKey && npc.instanceId === instanceId);
+    }
+
+    /**
      * Finds all NPCs within the game world that have the specified Npc ID.
      * @param npcId The ID of the NPCs to find.
      * @param instanceId The NPC's active instance.

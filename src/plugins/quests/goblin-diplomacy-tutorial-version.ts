@@ -346,6 +346,14 @@ const stageHandler: { [key: number]: (player: Player) => void } = {
         npcHint(player, 'rs:melee_combat_tutor');
         unlockAvailableTabs(player, 8);
 
+        const goblin = world.spawnNpc('rs:goblin', new Position(3215, 3262), 'SOUTH',
+            0, player.instance.instanceId);
+
+        goblin.pathfinding.walkTo(new Position(3219, 3246), {
+            pathingSearchRadius: 36,
+            ignoreDestination: false
+        });
+
         dialogue([ player ], [
             titled => [ `Continue`, `\nTalk-to the Melee Combat Tutor to continue.` ]
         ], {
