@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { cache, world } from '@server/game-server';
 import { hasValueNotNull } from '@server/util/data';
 import { findItem } from '@server/config';
+import { logger } from '@runejs/core';
 
 export interface ContainerUpdateEvent {
     slot?: number;
@@ -120,9 +121,17 @@ export class ItemContainer {
         return -1;
     }
 
-    public add(item: number | Item, fireEvent: boolean = true): { item: Item, slot: number } {
+    public add(item: number | string | Item, fireEvent: boolean = true): { item: Item, slot: number } {
         if(typeof item === 'number') {
             item = { itemId: item, amount: 1 } as Item;
+        } else if(typeof item === 'string') {
+            const itemDetails = findItem(item);
+            if(!itemDetails) {
+                logger.warn(`Item ${item} not configured on the server.`);
+                return null;
+            }
+
+            item = { itemId: itemDetails.gameId, amount: 1 };
         }
 
         const existingItemIndex = this.findItemIndex({ itemId: item.itemId, amount: 1 });

@@ -47,7 +47,7 @@ const npcActionHandler = (player: Player, npc: Npc, position: Position, option: 
 
     // Find all NPC action plugins that reference this NPC
     let interactionActions = getActionList('npc_action')
-        .filter(plugin => questFilter(player, plugin) && basicStringFilter(plugin.npcs, npc.key) && basicStringFilter(plugin.options, option));
+        .filter(plugin => questFilter(player, plugin) && basicStringFilter(plugin.npcs, npc.key) && (plugin.options && basicStringFilter(plugin.options, option)));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
@@ -55,7 +55,8 @@ const npcActionHandler = (player: Player, npc: Npc, position: Position, option: 
     }
 
     if(interactionActions.length === 0) {
-        player.sendMessage(`Unhandled NPC interaction: ${option} ${npc.key} (id-${npc.id}) @ ${position.x},${position.y},${position.level}`);
+        logger.warn(`Unhandled NPC interaction: ${option} ${npc.key} (id-${npc.id}) @ ${position.x},${position.y},${position.level}`);
+        logger.warn(npc.id, npc.key, npc.name);
         return;
     }
 
