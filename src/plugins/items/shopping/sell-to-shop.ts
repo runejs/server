@@ -1,8 +1,9 @@
 import { itemAction } from '@server/world/action/item-action';
 import { widgets } from '@server/world/config/widget';
-import { Shop, shopItemContainer } from '@server/world/config/shops';
 import { itemIds } from '@server/world/config/item-ids';
 import { getItemFromContainer } from '@server/world/items/item-container';
+import { Shop } from '@server/config/shop-config';
+
 
 export const action: itemAction = (details) => {
     const { player, itemId, itemSlot, option, itemDetails } = details;
@@ -30,7 +31,7 @@ export const action: itemAction = (details) => {
         'sell-10': 10
     };
     let sellAmount = sellAmounts[option];
-    const shopContainer = shopItemContainer(openedShop);
+    const shopContainer = openedShop.container;
     const shopSpaces = shopContainer.items.filter(item => item === null);
 
     const shopItemIndex = shopContainer.items.findIndex(item => item !== null && item.itemId === itemId);
@@ -63,10 +64,8 @@ export const action: itemAction = (details) => {
 
     if(!shopItem) {
         shopContainer.set(shopContainer.getFirstOpenSlot(), { itemId, amount: sellAmount });
-        openedShop.items.push({ amountInStock: sellAmount, id: itemId, name: itemDetails.name, price: itemValue });
     } else {
         shopItem.amount += sellAmount;
-        openedShop.items[shopItemIndex].amountInStock += sellAmount;
     }
 
     const sellPrice = sellAmount * itemValue; // @TODO player inventory item devaluation/saturation

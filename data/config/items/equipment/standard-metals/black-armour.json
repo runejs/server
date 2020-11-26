@@ -1,0 +1,57 @@
+{
+    "presets": {
+        "rs:black_armour_base": {
+            "tradable": true,
+            "equippable": true,
+            "equipment_data": {
+                "requirements": {
+                    "skills": {
+                        "defence": 10
+                    }
+                }
+            }
+        }
+    },
+
+    "rs:black_platelegs": {
+        "extends": "rs:black_armour_base",
+        "game_id": 1077,
+        "examine": "Big, black and heavy looking.",
+        "weight": 9.071,
+        "equipment_data": {
+            "equipment_slot": "legs",
+            "offensive_bonuses": {
+                "magic": -21,
+                "ranged": -7
+            },
+            "defensive_bonuses": {
+                "stab": 21,
+                "slash": 20,
+                "crush": 19,
+                "magic": -4,
+                "ranged": 20
+            }
+        }
+    },
+
+    "rs:black_plateskirt": {
+        "extends": "rs:black_armour_base",
+        "game_id": 1089,
+        "examine": "Big, black and heavy looking.",
+        "weight": 8.164,
+        "equipment_data": {
+            "equipment_slot": "legs",
+            "offensive_bonuses": {
+                "magic": -21,
+                "ranged": -7
+            },
+            "defensive_bonuses": {
+                "stab": 21,
+                "slash": 20,
+                "crush": 19,
+                "magic": -4,
+                "ranged": 20
+            }
+        }
+    }
+}

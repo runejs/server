@@ -22,5 +22,17 @@
         "examine": "Good for hitting things!",
         "tradable": true,
         "weight": 0.907
+    },
+    "rs:needle": {
+        "game_id": 1733,
+        "examine": "Used with a thread to make clothes.",
+        "tradable": true,
+        "weight": 0
+    },
+    "rs:thread": {
+        "game_id": 1734,
+        "examine": "Used with a needle to make clothes.",
+        "tradable": true,
+        "weight": 0
     }
 }

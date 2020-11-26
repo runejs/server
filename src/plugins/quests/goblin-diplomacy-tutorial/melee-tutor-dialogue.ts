@@ -47,5 +47,15 @@ export const harlanDialogueHandler: { [key: number]: (player: Player, npc: Npc) 
                 player.savedMetadata.tutorialProgress = 75;
             })
         ]);
+    },
+    75: async (player, npc) => {
+        await dialogue([ player, { npc, key: 'harlan' } ], [
+            harlan => [ Emote.GENERIC, `Speak with me once you've opened your equipment.` ]
+        ]);
+    },
+    80: async (player, npc) => {
+        await dialogue([ player, { npc, key: 'harlan' } ], [
+            harlan => [ Emote.GENERIC, `` ]
+        ]);
     }
 };

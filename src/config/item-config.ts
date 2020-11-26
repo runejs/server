@@ -3,8 +3,8 @@ import { cache } from '@server/game-server';
 
 
 export type WeaponStyle = 'axe' | 'hammer' | 'bow' | 'claws' | 'crossbow' | 'longsword' |
-    '2h_sword' | 'pickaxe' | 'halberd' | 'staff_standard' | 'scythe' | 'spear' | 'mace' |
-    'dagger' | 'staff_spellbook' | 'darts' | 'unarmed';
+    '2h_sword' | 'pickaxe' | 'halberd' | 'staff' | 'scythe' | 'spear' | 'mace' |
+    'dagger' | 'magical_staff' | 'darts' | 'unarmed';
 
 export const weaponWidgetIds = {
     'axe': 75,
@@ -17,12 +17,12 @@ export const weaponWidgetIds = {
     '2h_sword': 82,
     'pickaxe': 83,
     'halberd': 84,
-    'staff_standard': 85,
+    'staff': 85,
     'scythe': 86,
     'spear': 87,
     'mace': 88,
     'dagger': 89,
-    'staff_spellbook': 90,
+    'magical_staff': 90,
     'darts': 91,
     'unarmed': 92,
     // @TODO 93

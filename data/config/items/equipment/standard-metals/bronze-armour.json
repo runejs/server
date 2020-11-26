@@ -1,0 +1,45 @@
+{
+    "rs:bronze_platelegs": {
+        "game_id": 1075,
+        "examine": "These look pretty heavy.",
+        "weight": 9.071,
+        "tradable": true,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "legs",
+            "offensive_bonuses": {
+                "magic": -21,
+                "ranged": -7
+            },
+            "defensive_bonuses": {
+                "stab": 8,
+                "slash": 7,
+                "crush": 6,
+                "magic": -4,
+                "ranged": 7
+            }
+        }
+    },
+
+    "rs:bronze_plateskirt": {
+        "game_id": 1087,
+        "examine": "Designer leg protection.",
+        "weight": 8.164,
+        "tradable": true,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "legs",
+            "offensive_bonuses": {
+                "magic": -21,
+                "ranged": -7
+            },
+            "defensive_bonuses": {
+                "stab": 8,
+                "slash": 7,
+                "crush": 6,
+                "magic": -4,
+                "ranged": 7
+            }
+        }
+    }
+}

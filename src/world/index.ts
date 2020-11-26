@@ -4,10 +4,9 @@ import Quadtree from 'quadtree-lib';
 import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { ExamineCache } from './config/examine-data';
-import { loadPlugins, world } from '@server/game-server';
+import { loadPlugins } from '@server/game-server';
 import { Position } from './position';
 import { Npc } from './actor/npc/npc';
-import { parseShops, Shop } from '@server/world/config/shops';
 import TravelLocations from '@server/world/config/travel-locations';
 import { Actor } from '@server/world/actor/actor';
 import { schedule } from '@server/task/task';
@@ -40,7 +39,6 @@ export class World {
     public readonly chunkManager: ChunkManager = new ChunkManager();
     public readonly examine: ExamineCache = new ExamineCache();
     public readonly scenerySpawns: LocationObject[];
-    public readonly shops: Shop[];
     public readonly travelLocations: TravelLocations = new TravelLocations();
     public readonly playerTree: Quadtree<QuadtreeKey>;
     public readonly npcTree: Quadtree<QuadtreeKey>;
@@ -50,7 +48,6 @@ export class World {
 
     public constructor() {
         this.scenerySpawns = parseScenerySpawns();
-        this.shops = parseShops();
         this.playerTree = new Quadtree<QuadtreeKey>({
             width: 10000,
             height: 10000

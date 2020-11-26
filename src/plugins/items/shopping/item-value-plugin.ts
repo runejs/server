@@ -1,17 +1,12 @@
 import { itemAction } from '@server/world/action/item-action';
 import { widgets } from '@server/world/config/widget';
 
-export const shopSellValueAction: itemAction = (details) => {
-    const { player, itemDetails } = details;
-
+export const shopSellValueAction: itemAction = ({ player, itemDetails }) => {
     const itemValue = itemDetails.value || 1;
-
     player.sendMessage(`${itemDetails.name}: currently costs ${itemValue} coins.`);
 };
 
-export const shopPurchaseValueAction: itemAction = (details) => {
-    const { player } = details;
-
+export const shopPurchaseValueAction: itemAction = ({ player }) => {
     player.sendMessage(`Shop purchase value is TBD`);
 };
 

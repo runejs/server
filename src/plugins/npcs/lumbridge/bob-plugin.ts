@@ -1,8 +1,14 @@
 import { npcAction } from '@server/world/action/npc-action';
-import { openShop } from '@server/world/shops/shops';
+import { findShop } from '@server/config';
 
-const tradeAction: npcAction = (details) => {
-    openShop(details.player, 'BOBS_AXES');
+
+const action: npcAction = ({ player }) =>
+    findShop('rs:lumbridge_bobs_axes')?.open(player);
+
+export default {
+    type: 'npc_action',
+    npcs: 'rs:lumbridge_bob',
+    options: 'trade',
+    walkTo: true,
+    action
 };
-
-export default { type: 'npc_action', npcs: 'rs:lumbridge_bob', options: 'trade', walkTo: true, action: tradeAction };
