@@ -125,8 +125,6 @@ The server runs on the 435 revision of the game, which was a game update made on
 
 The game server will spin up and be accessible via port 43594.
 
-## Additional Information
+## Game Client
 
-#### Supported Game Clients
-
-RuneJS supports the Java rev435 RuneScape game client: [refactored-client-435](https://github.com/Promises/refactored-client-435)
+The [RuneScape Java Client #435](https://github.com/rune-js/refactored-client-435) must be used to log into a RuneJS game server.
