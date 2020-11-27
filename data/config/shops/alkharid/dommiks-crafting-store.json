@@ -2,7 +2,7 @@
     "rs:dommiks_crafting_store": {
         "name": "Dommik's Crafting Store",
         "shop_buy_rate": 0.65,
-        "rate_modifier": 0.2,
+        "rate_modifier": 0.02,
         "stock": [
             [ "rs:chisel", 2 ],
             [ "rs:ring_mould", 4 ],

@@ -58,14 +58,34 @@ export class Shop {
             return -1; // Can not sell this item to this shop (shop is not a general store!)
         }
 
-        if(itemStock >= originalStockAmount) {
-            const overstockAmount = (itemStock - originalStockAmount) + 1;
-            const decrementAmount = Math.floor(0.075 * overstockAmount);
-            const finalAmount = item.lowAlchValue - decrementAmount;
+        if(itemStock > originalStockAmount) {
+            const overstockAmount = (itemStock - originalStockAmount);
+            let finalAmount: number = 0;
+
+            if(this.generalStore) {
+                const decrementAmount = 0.075 * overstockAmount;
+                finalAmount = item.lowAlchValue - decrementAmount;
+            } else {
+                let shopBuyRate = this.buyRate;
+                shopBuyRate -= (this.rateModifier * overstockAmount);
+                finalAmount = item.value * shopBuyRate;
+            }
+
+            finalAmount = Math.floor(finalAmount);
+
             return finalAmount < 0 ? 0 : finalAmount;
         } else {
             return item.lowAlchValue;
         }
+    }
+
+    public isItemSoldHere(itemKey: string): boolean {
+        for(const stock of this.originalStock) {
+            if(stock && stock[0] === itemKey) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public open(player: Player): void {
@@ -80,15 +100,6 @@ export class Shop {
             type: 'SCREEN_AND_TAB',
             closeOnWalk: true
         };
-    }
-
-    public isItemSoldHere(itemKey: string): boolean {
-        for(const stock of this.originalStock) {
-            if(stock && stock[0] === itemKey) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }

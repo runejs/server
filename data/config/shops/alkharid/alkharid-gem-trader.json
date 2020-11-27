@@ -2,7 +2,7 @@
     "rs:alkharid_gem_trader": {
         "name": "Gem Trader",
         "shop_buy_rate": 0.70,
-        "rate_modifier": 0.3,
+        "rate_modifier": 0.03,
         "stock": [
             [ "rs:uncut_sapphire", 1 ],
             [ "rs:uncut_emerald", 1 ],

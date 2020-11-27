@@ -2,7 +2,7 @@
     "rs:louies_armored_legs": {
         "name": "Louie's Armoured Legs Bazaar",
         "shop_buy_rate": 0.65,
-        "rate_modifier": 0.1,
+        "rate_modifier": 0.01,
         "stock": [
             [ "rs:bronze_platelegs", 5 ],
             [ "rs:iron_platelegs", 3 ],
