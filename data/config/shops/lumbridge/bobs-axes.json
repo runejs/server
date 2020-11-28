@@ -1,6 +1,6 @@
 {
     "rs:lumbridge_bobs_axes": {
-        "name": "Bob's Brilliant Axes",
+        "name": "Bob's Brilliant Axes.",
         "shop_buy_rate": 0.60,
         "rate_modifier": 0.02,
         "stock": [

@@ -60,7 +60,8 @@ export class Shop {
 
         if(itemStock > originalStockAmount) {
             const overstockAmount = (itemStock - originalStockAmount);
-            let finalAmount: number = 0;
+
+            let finalAmount: number;
 
             if(this.generalStore) {
                 const decrementAmount = 0.075 * overstockAmount;
@@ -71,11 +72,11 @@ export class Shop {
                 finalAmount = item.value * shopBuyRate;
             }
 
-            finalAmount = Math.floor(finalAmount);
+            finalAmount = Math.round(finalAmount);
 
             return finalAmount < 0 ? 0 : finalAmount;
         } else {
-            return item.lowAlchValue;
+            return this.generalStore ? item.lowAlchValue : Math.round(item.value * this.buyRate);
         }
     }
 
