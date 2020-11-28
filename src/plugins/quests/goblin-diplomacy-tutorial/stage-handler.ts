@@ -8,6 +8,12 @@ import {
     startTutorial,
     unlockAvailableTabs
 } from '@server/plugins/quests/goblin-diplomacy-tutorial/index';
+import { Position } from '@server/world/position';
+import { schedule } from '@server/task/task';
+import { world } from '@server/game-server';
+import { findNpc } from '@server/config';
+import { Cutscene } from '@server/world/actor/player/cutscenes';
+import { soundIds } from '@server/world/config/sound-ids';
 
 export const goblinDiplomacyStageHandler: { [key: number]: (player: Player) => void } = {
     0: async player => {
@@ -161,7 +167,7 @@ export const goblinDiplomacyStageHandler: { [key: number]: (player: Player) => v
             permanent: true
         });
     },
-    90: player => {
+    90: async player => {
         npcHint(player, 'rs:melee_combat_tutor');
         unlockAvailableTabs(player, 8);
 
@@ -170,5 +176,33 @@ export const goblinDiplomacyStageHandler: { [key: number]: (player: Player) => v
         ], {
             permanent: true
         });
+
+        // @TODO vvv this is all placeholder code for the cutscene that will be needed later :)
+        await spawnGoblinBoi(player, 'beginning');
+
+        await schedule(10);
+
+        const cameraX = 3219;
+        const cameraY = 3240;
+        const cameraHeight = 320;
+        const lookX = 3219;
+        const lookY = 3246;
+        const lookHeight = 300;
+        const speed = 0;
+        const acceleration = 64;
+
+        player.cutscene = new Cutscene(player);
+        player.cutscene.snapCameraTo(cameraX, cameraY, cameraHeight, speed, acceleration);
+        player.cutscene.lookAt(lookX, lookY, lookHeight, speed, acceleration);
+
+        await schedule(3);
+
+        const goblinDetails = findNpc('rs:goblin');
+        let anim = goblinDetails.animations.attack;
+        if(Array.isArray(anim)) {
+            anim = anim[0];
+        }
+        world.findNpcsByKey('rs:goblin', player.instance.instanceId)[0].playAnimation(anim);
+        player.playSound(soundIds.npc.human.maleDefence, 5);
     }
 };

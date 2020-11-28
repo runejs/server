@@ -37,6 +37,8 @@ export class Cutscene {
     private _lookAcceleration: number;
 
     public constructor(player: Player, options?: CameraOptions) {
+        this.player = player;
+
         if(options) {
             this.setCamera(options);
         }
