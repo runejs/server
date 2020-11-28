@@ -1,6 +1,7 @@
-import { getFiles } from '@server/util/files';
 import { logger } from '@runejs/core';
 import { readFileSync } from 'fs';
+import _ from 'lodash';
+import { getFiles } from '@server/util/files';
 import {
     ItemDetails,
     ItemPresetConfiguration,
@@ -14,8 +15,9 @@ import {
     NpcPresetConfiguration,
     translateNpcConfig
 } from '@server/config/npc-config';
-import _ from 'lodash';
 import { loadNpcSpawnConfigurations, NpcSpawn } from '@server/config/npc-spawn-config';
+import { loadShopConfigurations, Shop } from '@server/config/shop-config';
+
 
 export async function loadConfigurationFiles(configurationDir: string): Promise<any[]> {
     const files = [];
@@ -36,6 +38,7 @@ export async function loadConfigurationFiles(configurationDir: string): Promise<
     return files;
 }
 
+
 export let itemMap: { [key: string]: ItemDetails };
 export let itemIdMap: { [key: number]: string };
 export let itemPresetMap: ItemPresetConfiguration;
@@ -43,6 +46,8 @@ export let npcMap: { [key: string]: NpcDetails };
 export let npcIdMap: { [key: number]: string };
 export let npcPresetMap: NpcPresetConfiguration;
 export let npcSpawns: NpcSpawn[] = [];
+export let shopMap: { [key: string]: Shop };
+
 
 export async function loadConfigurations(): Promise<void> {
     const { items, itemIds, itemPresets } = await loadItemConfigurations('data/config/items');
@@ -55,52 +60,59 @@ export async function loadConfigurations(): Promise<void> {
     npcIdMap = npcIds;
     npcPresetMap = npcPresets;
 
-    npcSpawns = await loadNpcSpawnConfigurations('data/config/npc-spawns')
+    npcSpawns = await loadNpcSpawnConfigurations('data/config/npc-spawns');
+
+    shopMap = await loadShopConfigurations('data/config/shops');
 }
+
 
 export const findItem = (itemKey: number | string): ItemDetails => {
     if(!itemKey) {
         return null;
     }
 
+    let gameId: number;
     if(typeof itemKey === 'number') {
-        const gameId = itemKey;
+        gameId = itemKey;
         itemKey = itemIdMap[gameId];
 
         if(!itemKey) {
-            const cacheItem = cache.itemDefinitions.get(gameId);
-            if(cacheItem) {
-                logger.warn(`Item ${gameId} is not yet configured on the server.`);
-                return cacheItem as any;
-            } else {
-                logger.warn(`Item ${gameId} is not yet configured on the server and a matching cache item was not found.`);
-                return null;
-            }
+            logger.warn(`Item ${gameId} is not yet registered on the server.`);
         }
     }
 
-    let item = itemMap[itemKey];
-    if(!item) {
-        logger.warn(`Item ${itemKey} is not yet configured on the server and a matching cache item was not provided.`);
-        return null;
-    }
+    let item;
 
-    if(item.extends) {
-        let extensions = item.extends;
-        if(typeof extensions === 'string') {
-            extensions = [ extensions ];
+    if(itemKey) {
+        item = itemMap[itemKey];
+
+        if(item?.gameId) {
+            gameId = item.gameId;
         }
 
-        extensions.forEach(extKey => {
-            const extensionItem = itemPresetMap[extKey];
-            if(extensionItem) {
-                item = _.merge(item, translateItemConfig(undefined, extensionItem));
+        if(item?.extends) {
+            let extensions = item.extends;
+            if(typeof extensions === 'string') {
+                extensions = [ extensions ];
             }
-        });
+
+            extensions.forEach(extKey => {
+                const extensionItem = itemPresetMap[extKey];
+                if(extensionItem) {
+                    item = _.merge(item, translateItemConfig(undefined, extensionItem));
+                }
+            });
+        }
     }
 
-    return item;
+    if(gameId) {
+        const cacheItem = cache.itemDefinitions.get(gameId);
+        item = _.merge(item, cacheItem);
+    }
+
+    return item ? new ItemDetails(item) : null;
 };
+
 
 export const findNpc = (npcKey: number | string): NpcDetails => {
     if(!npcKey) {
@@ -143,4 +155,13 @@ export const findNpc = (npcKey: number | string): NpcDetails => {
     }
 
     return npc;
+};
+
+
+export const findShop = (shopKey: string): Shop => {
+    if(!shopKey) {
+        return null;
+    }
+
+    return shopMap[shopKey] || null;
 };

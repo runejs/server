@@ -1,0 +1,18 @@
+{
+    "rs:dommiks_crafting_store": {
+        "name": "Dommik's Crafting Store",
+        "shop_buy_rate": 0.65,
+        "rate_modifier": 0.02,
+        "stock": [
+            [ "rs:chisel", 2 ],
+            [ "rs:ring_mould", 4 ],
+            [ "rs:necklace_mould", 2 ],
+            [ "rs:amulet_mould", 2 ],
+            [ "rs:needle", 3 ],
+            [ "rs:thread", 100 ],
+            [ "rs:holy_mould", 3 ],
+            [ "rs:sickle_mould", 6 ],
+            [ "rs:tiara_mould", 10 ]
+        ]
+    }
+}

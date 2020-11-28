@@ -1,11 +1,10 @@
 import { npcAction } from '@server/world/action/npc-action';
-import { openShop } from '@server/world/shops/shops';
 import { dialogueAction, DialogueEmote } from '@server/world/actor/player/dialogue-action';
+import { findShop } from '@server/config';
 
 
-const tradeAction : npcAction = (details)  => {
-    openShop(details.player, 'ALKHARID_GEM_TRADER');
-};
+const tradeAction: npcAction = ({ player }) =>
+    findShop('rs:alkharid_gem_trader')?.open(player);
 
 const talkToAction : npcAction = (details) => {
     const { player, npc } = details;

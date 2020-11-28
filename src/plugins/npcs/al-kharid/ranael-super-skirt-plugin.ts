@@ -1,9 +1,9 @@
 import { npcAction } from '@server/world/action/npc-action';
-import { openShop } from '@server/world/shops/shops';
+import { findShop } from '@server/config';
 
-const tradeAction : npcAction = (details) => {
-    openShop(details.player, 'RANAELS_SUPER_SKIRT_STORE');
-};
+
+const tradeAction: npcAction = ({ player }) =>
+    findShop('rs:ranaels_skirt_store')?.open(player);
 
 export default {
     type: 'npc_action',

@@ -116,6 +116,14 @@ export class Position {
         return this._x === position.x && this._y === position.y && this._level === position.level;
     }
 
+    public calculateChunkLocalX(position: Position): number {
+        return this._x - 8 * position.chunkX;
+    }
+
+    public calculateChunkLocalY(position: Position): number {
+        return this._y - 8 * position.chunkY;
+    }
+
     public get chunkX(): number {
         return (this._x >> 3) - 6;
     }

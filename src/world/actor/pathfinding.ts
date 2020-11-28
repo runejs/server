@@ -136,7 +136,6 @@ export class Pathfinding {
     }
 
     public pathTo(destinationX: number, destinationY: number, searchRadius: number = 16): Point[] {
-        const instance = this.actor instanceof Player ? this.actor.instance : world.globalInstance;
         const position = this.actor.position;
         const lowestX = position.x - searchRadius;
         const lowestY = position.y - searchRadius;

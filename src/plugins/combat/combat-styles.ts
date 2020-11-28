@@ -8,13 +8,15 @@ import { combatStyles } from '@server/world/actor/combat';
 import { serverConfig } from '@server/game-server';
 
 
-function updateCombatStyle(player: Player, weaponStyle: WeaponStyle, styleIndex: number): void {
+export function updateCombatStyle(player: Player, weaponStyle: WeaponStyle, styleIndex: number): void {
     player.savedMetadata.combatStyle = [ weaponStyle, styleIndex ];
     player.settings.attackStyle = styleIndex;
-    player.outgoingPackets.updateClientConfig(widgetScripts.attackStyle, styleIndex);
+
+    const buttonId = combatStyles[weaponStyle][styleIndex].button_id;
+    player.outgoingPackets.updateClientConfig(widgetScripts.attackStyle, buttonId);
 }
 
-function showUnarmed(player: Player): void {
+export function showUnarmed(player: Player): void {
     player.modifyWidget(widgets.defaultCombatStyle, { childId: 0, text: 'Unarmed' });
     player.setSidebarWidget(0, widgets.defaultCombatStyle);
     let style = 0;
@@ -27,7 +29,7 @@ function showUnarmed(player: Player): void {
     updateCombatStyle(player, 'unarmed', style);
 }
 
-function setWeaponWidget(player: Player, weaponStyle: WeaponStyle, itemDetails: ItemDetails): void {
+export function setWeaponWidget(player: Player, weaponStyle: WeaponStyle, itemDetails: ItemDetails): void {
     player.modifyWidget(weaponWidgetIds[weaponStyle], { childId: 0, text: itemDetails.name || 'Unknown' });
     player.setSidebarWidget(0, weaponWidgetIds[weaponStyle]);
     if(player.savedMetadata.combatStyle) {
@@ -35,9 +37,23 @@ function setWeaponWidget(player: Player, weaponStyle: WeaponStyle, itemDetails: 
     }
 }
 
-const equip: equipAction = details => {
-    const { player, itemDetails, equipmentSlot } = details;
+export function updateCombatStyleWidget(player: Player): void {
+    const equippedItem = player.getEquippedItem('main_hand');
+    if(equippedItem) {
+        const itemDetails = findItem(equippedItem.itemId);
+        const weaponStyle = itemDetails?.equipmentData?.weaponInfo?.style || null;
 
+        if(weaponStyle) {
+            setWeaponWidget(player, weaponStyle, itemDetails);
+        } else {
+            showUnarmed(player);
+        }
+    } else {
+        showUnarmed(player);
+    }
+}
+
+const equip: equipAction = ({ player, itemDetails, equipmentSlot }) => {
     if(equipmentSlot === 'main_hand') {
         const weaponStyle = itemDetails?.equipmentData?.weaponInfo?.style || null;
 
@@ -50,29 +66,13 @@ const equip: equipAction = details => {
     }
 };
 
-const initAction: playerInitAction = details => {
-    const { player } = details;
-
-    if(!serverConfig.tutorialEnabled || player.savedMetadata.tutorialProgress >= 100 || player.savedMetadata.tutorialComplete) {
-        const equippedItem = player.getEquippedItem('main_hand');
-        if(equippedItem) {
-            const itemDetails = findItem(equippedItem.itemId);
-            const weaponStyle = itemDetails?.equipmentData?.weaponInfo?.style || null;
-
-            if(weaponStyle) {
-                setWeaponWidget(player, weaponStyle, itemDetails);
-            } else {
-                showUnarmed(player);
-            }
-        } else {
-            showUnarmed(player);
-        }
+const initAction: playerInitAction = ({ player }) => {
+    if(!serverConfig.tutorialEnabled || player.savedMetadata.tutorialComplete) {
+        updateCombatStyleWidget(player);
     }
 };
 
-const combatStyleSelection: buttonAction = details => {
-    const { player, buttonId } = details;
-
+const combatStyleSelection: buttonAction = ({ player, buttonId }) => {
     const equippedItem = player.getEquippedItem('main_hand');
     let weaponStyle = 'unarmed';
 
@@ -84,7 +84,7 @@ const combatStyleSelection: buttonAction = details => {
     }
 
     const combatStyle = combatStyles[weaponStyle].findIndex(combatStyle => combatStyle.button_id === buttonId);
-    if(combatStyle) {
+    if(combatStyle !== -1) {
         player.savedMetadata.combatStyle = [ weaponStyle, combatStyle ];
     }
 };

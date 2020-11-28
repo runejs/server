@@ -1,11 +1,10 @@
 import { npcAction } from '@server/world/action/npc-action';
-import { openShop } from '@server/world/shops/shops';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
+import { findShop } from '@server/config';
 
 
-const tradeAction : npcAction = (details) => {
-    openShop(details.player, 'VARROCK_ZAFFS_SUPERIOR_STAFFS');
-};
+const tradeAction: npcAction = ({ player }) =>
+    findShop('rs:zaffs_staffs')?.open(player);
 
 const talkToAction : npcAction = (details) => {
     const { player, npc } = details;
@@ -15,7 +14,7 @@ const talkToAction : npcAction = (details) => {
         options => [
             `Yes, please!`, [
                 execute(() => {
-                    openShop(player, 'VARROCK_ZAFFS_SUPERIOR_STAFFS');
+                    tradeAction(details);
                 })
             ],
 

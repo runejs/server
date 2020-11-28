@@ -1,10 +1,10 @@
 import { npcAction } from '@server/world/action/npc-action';
-import { openShop } from '@server/world/shops/shops';
 import { dialogueAction, DialogueEmote } from '@server/world/actor/player/dialogue-action';
+import { findShop } from '@server/config';
 
-const tradeAction: npcAction = (details) => {
-    openShop(details.player, 'DOMMIK_CRAFTING_STORE');
-};
+
+const tradeAction: npcAction = ({ player }) =>
+    findShop('rs:dommiks_crafting_store')?.open(player);
 
 const talkToAction : npcAction = (details) => {
     const { player, npc } = details;

@@ -70,6 +70,12 @@ class Combat {
 
         if(!this.contactInitiated) {
             this.contactInitiated = true;
+
+            if(this.victim instanceof Npc) {
+                const player = this.assailant as Player;
+                player.sendMessage(`Victim max health is ${this.victim.skills.hitpoints.level}.`)
+            }
+
             this.processVictim(true);
         }
 

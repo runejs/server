@@ -1,10 +1,9 @@
 import { loadConfigurationFiles } from '@server/config/index';
-import { cache } from '@server/game-server';
-import _ from 'lodash';
+
 
 export type WeaponStyle = 'axe' | 'hammer' | 'bow' | 'claws' | 'crossbow' | 'longsword' |
-    '2h_sword' | 'pickaxe' | 'halberd' | 'staff_standard' | 'scythe' | 'spear' | 'mace' |
-    'dagger' | 'staff_spellbook' | 'darts' | 'unarmed';
+    '2h_sword' | 'pickaxe' | 'halberd' | 'staff' | 'scythe' | 'spear' | 'mace' |
+    'dagger' | 'magical_staff' | 'darts' | 'unarmed';
 
 export const weaponWidgetIds = {
     'axe': 75,
@@ -17,12 +16,12 @@ export const weaponWidgetIds = {
     '2h_sword': 82,
     'pickaxe': 83,
     'halberd': 84,
-    'staff_standard': 85,
+    'staff': 85,
     'scythe': 86,
     'spear': 87,
     'mace': 88,
     'dagger': 89,
-    'staff_spellbook': 90,
+    'magical_staff': 90,
     'darts': 91,
     'unarmed': 92,
     // @TODO 93
@@ -99,10 +98,11 @@ export interface ItemPresetConfiguration {
 export interface ItemConfiguration {
     extends?: string | string[];
     game_id: number;
-    description?: string;
+    examine?: string;
     tradable?: boolean;
     weight?: number;
     equippable?: boolean;
+    destroy?: string | boolean;
     equipment_data?: {
         equipment_slot: EquipmentSlot;
         equipment_type?: EquipmentType;
@@ -123,9 +123,10 @@ export class ItemDetails {
     key: string;
     gameId: number;
     name: string = '';
-    description: string = '';
+    examine: string = '';
     tradable: boolean = false;
     equippable: boolean = false;
+    destroy?: string | boolean;
     weight: number;
     equipmentData: EquipmentData;
     metadata: { [key: string]: unknown } = {};
@@ -139,6 +140,25 @@ export class ItemDetails {
     noteTemplateId: number;
     stackableIds: number[];
     stackableAmounts: number[];
+
+    public constructor(item?: ItemDetails) {
+        if(item) {
+            const keys = Object.keys(item);
+            keys.forEach(key => this[key] = item[key]);
+        }
+    }
+
+    get lowAlchValue(): number {
+        return Math.floor(this.value * 0.4);
+    }
+
+    get highAlchValue(): number {
+        return Math.floor(this.lowAlchValue * 1.5);
+    }
+
+    get minimumValue(): number {
+        return Math.floor(this.lowAlchValue * 0.25);
+    }
 }
 
 export function translateItemConfig(key: string, config: ItemConfiguration): any {
@@ -146,10 +166,11 @@ export function translateItemConfig(key: string, config: ItemConfiguration): any
         key,
         extends: config.extends || undefined,
         gameId: config.game_id,
-        description: config.description,
+        examine: config.examine,
         tradable: config.tradable,
         equippable: config.equippable,
         weight: config.weight,
+        destroy: config.destroy || undefined,
         equipmentData: config.equipment_data ? {
             equipmentType: config.equipment_data?.equipment_type || undefined,
             equipmentSlot: config.equipment_data?.equipment_slot || undefined,
@@ -179,8 +200,7 @@ export async function loadItemConfigurations(path: string): Promise<{ items: { [
             } else {
                 const itemConfig: ItemConfiguration = itemConfigs[key] as ItemConfiguration;
                 itemIds[itemConfig.game_id] = key;
-                items[key] = { ...translateItemConfig(key, itemConfig),
-                    ...cache.itemDefinitions.get(itemConfig.game_id) };
+                items[key] = { ...translateItemConfig(key, itemConfig) };
             }
         });
     });

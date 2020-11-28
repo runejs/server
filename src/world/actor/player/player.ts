@@ -44,6 +44,7 @@ import { NpcDetails } from '@server/config/npc-config';
 import { animationIds } from '@server/world/config/animation-ids';
 import { combatStyles } from '@server/world/actor/combat';
 import { WorldInstance, TileModifications } from '@server/world/instances';
+import { Cutscene } from '@server/world/actor/player/cutscenes';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -59,7 +60,7 @@ export const playerOptions: { option: string, index: number, placement: 'TOP' | 
 ];
 
 export const defaultPlayerTabWidgets = [
-    widgets.defaultCombatStyle, widgets.skillsTab, widgets.questTab, widgets.inventory.widgetId,
+    -1, widgets.skillsTab, widgets.questTab, widgets.inventory.widgetId,
     widgets.equipment.widgetId, widgets.prayerTab, widgets.standardSpellbookTab, null,
     widgets.friendsList, widgets.ignoreList, widgets.logoutTab, widgets.settingsTab, widgets.emotesTab,
     widgets.musicPlayerTab
@@ -116,6 +117,7 @@ export class Player extends Actor {
     public achievements: string[] = [];
     public friendsList: string[] = [];
     public ignoreList: string[] = [];
+    public cutscene: Cutscene = null;
 
     private readonly _socket: Socket;
     private readonly _inCipher: Isaac;
@@ -167,7 +169,7 @@ export class Player extends Actor {
         this.loadSaveData();
     }
 
-    public init(): void {
+    public async init(): Promise<void> {
         this.loggedIn = true;
         this.updateFlags.mapRegionUpdateRequired = true;
         this.updateFlags.appearanceUpdateRequired = true;
@@ -176,7 +178,6 @@ export class Player extends Actor {
         playerChunk.addPlayer(this);
 
         this.outgoingPackets.updateCurrentMapChunk();
-        this.chunkChanged(playerChunk);
         this.outgoingPackets.chatboxMessage('Welcome to RuneJS.');
 
         this.skills.values.forEach((skill, index) =>
@@ -274,13 +275,15 @@ export class Player extends Actor {
             this.sendCommandList(pluginActions.player_command);
         }
 
-        new Promise(resolve => {
+        await new Promise(resolve => {
             pluginActions.player_init.forEach(plugin => plugin.action({ player: this }));
             resolve();
-        }).then(() => {
-            this.outgoingPackets.flushQueue();
-            logger.info(`${ this.username }:${ this.worldIndex } has logged in.`);
         });
+
+        this.chunkChanged(playerChunk);
+
+        this.outgoingPackets.flushQueue();
+        logger.info(`${ this.username }:${ this.worldIndex } has logged in.`);
     }
 
     public logout(): void {
@@ -314,6 +317,7 @@ export class Player extends Actor {
         }
 
         let attackAnim = combatStyles[combatStyle[0]][combatStyle[1]]?.anim || animationIds.combat.punch;
+
         if(Array.isArray(attackAnim)) {
             // Player has multiple attack animations possible, pick a random one from the list to use
             const idx = Math.floor(Math.random() * attackAnim.length);
@@ -828,7 +832,13 @@ export class Player extends Actor {
         return this.activeWidget && this.activeWidget.widgetId === widgetId;
     }
 
-    public isItemEquipped(item: number | Item): boolean {
+    public isItemEquipped(item: number | Item | string): boolean {
+        if(typeof item === 'string') {
+            item = findItem(item)?.gameId || 0;
+            if(!item) {
+                return false;
+            }
+        }
         return this._equipment.has(item);
     }
 
@@ -998,6 +1008,8 @@ export class Player extends Actor {
     private inventoryUpdated(event: ContainerUpdateEvent): void {
         if(event.type === 'CLEAR_ALL') {
             this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
+        } else if(event.type === 'ADD') {
+            this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, event.slot, event.item);
         }
         this.updateCarryWeight();
     }

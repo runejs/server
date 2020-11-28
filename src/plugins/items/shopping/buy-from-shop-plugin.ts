@@ -1,10 +1,11 @@
 import { itemAction } from '@server/world/action/item-action';
 import { widgets } from '@server/world/config/widget';
-import { Shop, shopItemContainer } from '@server/world/config/shops';
 import { Item } from '@server/world/items/item';
 import { getItemFromContainer, ItemContainer } from '@server/world/items/item-container';
 import { itemIds } from '@server/world/config/item-ids';
 import { findItem } from '@server/config';
+import { Shop } from '@server/config/shop-config';
+
 
 function removeCoins(inventory: ItemContainer, coinsIndex: number, cost: number): void {
     const coins = inventory.items[coinsIndex];
@@ -24,7 +25,7 @@ export const action: itemAction = (details) => {
         return;
     }
 
-    const shopContainer = shopItemContainer(openedShop);
+    const shopContainer = openedShop.container;
     const shopItem = getItemFromContainer(itemId, itemSlot, shopContainer);
 
     if(!shopItem) {
@@ -75,7 +76,6 @@ export const action: itemAction = (details) => {
             }
 
             shopContainer.set(itemSlot, { itemId, amount: shopItem.amount - buyAmount });
-            openedShop.items[itemSlot].amountInStock -= buyAmount;
             removeCoins(inventory, coinsIndex, buyCost);
 
             const item: Item = {
@@ -100,7 +100,6 @@ export const action: itemAction = (details) => {
         }
 
         shopContainer.set(itemSlot, { itemId, amount: shopItem.amount - bought });
-        openedShop.items[itemSlot].amountInStock -= bought;
         buyCost = bought * buyItemValue;
         removeCoins(inventory, coinsIndex, buyCost);
     }

@@ -1,0 +1,196 @@
+{
+    "presets": {
+        "rs:staff_base": {
+            "tradable": true,
+            "equippable": true,
+            "equipment_data": {
+                "equipment_slot": "main_hand",
+                "equipment_type": "two_handed",
+                "weapon_info": {
+                    "style": "magical_staff"
+                }
+            }
+        }
+    },
+
+    "rs:battlestaff": {
+        "extends": "rs:staff_base",
+        "game_id": 1391,
+        "examine": "It's a slightly magical stick.",
+        "weight": 2.267,
+        "equipment_data": {
+            "offensive_bonuses": {
+                "speed": 5,
+                "stab": 7,
+                "slash": -1,
+                "crush": 25,
+                "magic": 10
+            },
+            "defensive_bonuses": {
+                "stab": 2,
+                "slash": 3,
+                "crush": 1,
+                "magic": 10
+            },
+            "skill_bonuses": {
+                "strength": 32
+            },
+            "requirements": {
+                "skills": {
+                    "attack": 30,
+                    "magic": 30
+                }
+            }
+        }
+    },
+
+    "rs:staff": {
+        "extends": "rs:staff_base",
+        "game_id": 1379,
+        "examine": "It's a slightly magical stick.",
+        "weight": 1.814,
+        "equipment_data": {
+            "offensive_bonuses": {
+                "speed": 5,
+                "stab": 0,
+                "slash": -1,
+                "crush": 7,
+                "magic": 4
+            },
+            "defensive_bonuses": {
+                "stab": 2,
+                "slash": 3,
+                "crush": 1,
+                "magic": 4
+            },
+            "skill_bonuses": {
+                "strength": 3
+            }
+        }
+    },
+
+    "rs:magic_staff": {
+        "extends": "rs:staff_base",
+        "game_id": 1389,
+        "examine": "A Magical staff.",
+        "weight": 2.267,
+        "equipment_data": {
+            "offensive_bonuses": {
+                "speed": 5,
+                "stab": 2,
+                "slash": -1,
+                "crush": 10,
+                "magic": 10
+            },
+            "defensive_bonuses": {
+                "stab": 2,
+                "slash": 3,
+                "crush": 1,
+                "magic": 10
+            },
+            "skill_bonuses": {
+                "strength": 7
+            }
+        }
+    },
+
+    "rs:staff_of_air": {
+        "extends": "rs:staff_base",
+        "game_id": 1381,
+        "examine": "A Magical staff.",
+        "weight": 2.267,
+        "equipment_data": {
+            "offensive_bonuses": {
+                "speed": 5,
+                "stab": 0,
+                "slash": -1,
+                "crush": 7,
+                "magic": 10
+            },
+            "defensive_bonuses": {
+                "stab": 2,
+                "slash": 3,
+                "crush": 1,
+                "magic": 10
+            },
+            "skill_bonuses": {
+                "strength": 3
+            }
+        }
+    },
+
+    "rs:staff_of_water": {
+        "extends": "rs:staff_base",
+        "game_id": 1383,
+        "examine": "A Magical staff.",
+        "weight": 2.267,
+        "equipment_data": {
+            "offensive_bonuses": {
+                "speed": 5,
+                "stab": 0,
+                "slash": -1,
+                "crush": 7,
+                "magic": 10
+            },
+            "defensive_bonuses": {
+                "stab": 2,
+                "slash": 3,
+                "crush": 1,
+                "magic": 10
+            },
+            "skill_bonuses": {
+                "strength": 3
+            }
+        }
+    },
+
+    "rs:staff_of_earth": {
+        "extends": "rs:staff_base",
+        "game_id": 1385,
+        "examine": "A Magical staff.",
+        "weight": 2.267,
+        "equipment_data": {
+            "offensive_bonuses": {
+                "speed": 5,
+                "stab": 1,
+                "slash": -1,
+                "crush": 9,
+                "magic": 10
+            },
+            "defensive_bonuses": {
+                "stab": 2,
+                "slash": 3,
+                "crush": 1,
+                "magic": 10
+            },
+            "skill_bonuses": {
+                "strength": 5
+            }
+        }
+    },
+
+    "rs:staff_of_fire": {
+        "extends": "rs:staff_base",
+        "game_id": 1387,
+        "examine": "A Magical staff.",
+        "weight": 2.267,
+        "equipment_data": {
+            "offensive_bonuses": {
+                "speed": 5,
+                "stab": 3,
+                "slash": -1,
+                "crush": 9,
+                "magic": 10
+            },
+            "defensive_bonuses": {
+                "stab": 2,
+                "slash": 3,
+                "crush": 1,
+                "magic": 10
+            },
+            "skill_bonuses": {
+                "strength": 6
+            }
+        }
+    }
+}
