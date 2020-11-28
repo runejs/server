@@ -1,13 +1,13 @@
 import { swapItemsAction } from '@server/world/action/swap-items-action';
-import { widgets } from '@server/world/config/widget';
 import { ItemContainer } from '@server/world/items/item-container';
 import { Player } from '@server/world/actor/player/player';
+import { gameInterfaces } from '@server/config';
 
 type WidgetDetail = [ number, number, (player: Player) => ItemContainer ];
 
 const movableWidgets: WidgetDetail[] = [
     // Player Bank Screen
-    [ widgets.bank.screenWidget.widgetId, widgets.bank.screenWidget.containerId, player => player.bank ]
+    [ gameInterfaces.bank.screenWidget.widgetId, gameInterfaces.bank.screenWidget.containerId, player => player.bank ]
 ];
 
 function moveItem(player: Player, container: ItemContainer, widget: { widgetId: number, containerId: number },

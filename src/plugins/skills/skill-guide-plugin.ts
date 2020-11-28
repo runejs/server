@@ -4,7 +4,7 @@ import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 import { readFileSync } from 'fs';
 import { Player } from '@server/world/actor/player/player';
 import { widgetAction } from '@server/world/action/widget-action';
-import { widgets } from '@server/world/config/widget';
+import { gameInterfaces } from '@server/config';
 
 // @TODO fix me!
 
@@ -53,17 +53,17 @@ function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refr
     const guide: SkillGuide = guides.find(g => g.id === guideId);
 
     if(refreshSidebar) {
-        player.modifyWidget(widgets.skillGuide, { childId: 133, text: (guide.members ? 'Members only skill' : '') });
+        player.modifyWidget(gameInterfaces.skillGuide, { childId: 133, text: (guide.members ? 'Members only skill' : '') });
 
         for(let i = 0; i < sidebarTextIds.length; i++) {
             const sidebarId = sidebarIds[i];
             let hidden: boolean = true;
 
             if(i >= guide.subGuides.length) {
-                player.modifyWidget(widgets.skillGuide, { childId: sidebarTextIds[i], text: '' });
+                player.modifyWidget(gameInterfaces.skillGuide, { childId: sidebarTextIds[i], text: '' });
                 hidden = true;
             } else {
-                player.modifyWidget(widgets.skillGuide, { childId: sidebarTextIds[i], text: guide.subGuides[i].name });
+                player.modifyWidget(gameInterfaces.skillGuide, { childId: sidebarTextIds[i], text: guide.subGuides[i].name });
                 hidden = false;
             }
 
@@ -71,30 +71,30 @@ function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refr
                 // Apparently you can never have only TWO subguides...
                 // Because childId 98 deletes both options 2 AND 3. So, good thing there are no guides with only 2 sections, I guess?...
                 // Verified this in an interface editor, and they are indeed grouped in a single layer for some reason...
-                player.modifyWidget(widgets.skillGuide, { childId: sidebarIds[i], hidden });
+                player.modifyWidget(gameInterfaces.skillGuide, { childId: sidebarIds[i], hidden });
             }
         }
     }
 
     const subGuide: SkillSubGuide = guide.subGuides[subGuideId];
 
-    player.modifyWidget(widgets.skillGuide, { childId: 1, text: (guide.name + ' - ' + subGuide.name) });
+    player.modifyWidget(gameInterfaces.skillGuide, { childId: 1, text: (guide.name + ' - ' + subGuide.name) });
 
     const itemIds: number[] = subGuide.lines.map(g => g.itemId).concat(new Array(30 - subGuide.lines.length).fill(null));
-    player.outgoingPackets.sendUpdateAllWidgetItemsById({ widgetId: widgets.skillGuide, containerId: 132 }, itemIds);
+    player.outgoingPackets.sendUpdateAllWidgetItemsById({ widgetId: gameInterfaces.skillGuide, containerId: 132 }, itemIds);
 
     for(let i = 0; i < 30; i++) {
         if(subGuide.lines.length <= i) {
-            player.modifyWidget(widgets.skillGuide, { childId: 5 + i, text: '' });
-            player.modifyWidget(widgets.skillGuide, { childId: 45 + i, text: '' });
+            player.modifyWidget(gameInterfaces.skillGuide, { childId: 5 + i, text: '' });
+            player.modifyWidget(gameInterfaces.skillGuide, { childId: 45 + i, text: '' });
         } else {
-            player.modifyWidget(widgets.skillGuide, { childId: 5 + i, text: subGuide.lines[i].level.toString() });
-            player.modifyWidget(widgets.skillGuide, { childId: 45 + i, text: subGuide.lines[i].text });
+            player.modifyWidget(gameInterfaces.skillGuide, { childId: 5 + i, text: subGuide.lines[i].level.toString() });
+            player.modifyWidget(gameInterfaces.skillGuide, { childId: 45 + i, text: subGuide.lines[i].text });
         }
     }
 
     player.activeWidget = {
-        widgetId: widgets.skillGuide,
+        widgetId: gameInterfaces.skillGuide,
         type: 'SCREEN',
         closeOnWalk: true
     };
@@ -126,6 +126,6 @@ export const openSubGuideAction: widgetAction = (details) => {
 };
 
 export default [
-    { type: 'button', widgetId: widgets.skillsTab, buttonIds, action: openGuideAction },
-    { type: 'widget_action', widgetIds: widgets.skillGuide, childIds: sidebarTextIds, optionId: 0, action: openSubGuideAction }
+    { type: 'button', widgetId: gameInterfaces.skillsTab, buttonIds, action: openGuideAction },
+    { type: 'widget_action', widgetIds: gameInterfaces.skillGuide, childIds: sidebarTextIds, optionId: 0, action: openSubGuideAction }
 ];

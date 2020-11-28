@@ -4,7 +4,6 @@
 
 import { objectAction, ObjectActionData } from '@server/world/action/object-action';
 import { Skill } from '@server/world/actor/skills';
-import { widgets } from '@server/world/config/widget';
 import {
     altars, combinationRunes,
     getEntityByAttr,
@@ -16,6 +15,7 @@ import { RunecraftingCombinationRune } from '@server/plugins/skills/runecrafting
 import { randomBetween } from '@server/util/num';
 import { itemIds } from '@server/world/config/item-ids';
 import { cache } from '@server/game-server';
+import { gameInterfaces } from '@server/config';
 
 
 const craftRune: objectAction = (details: ObjectActionData) => {
@@ -45,7 +45,7 @@ const craftRune: objectAction = (details: ObjectActionData) => {
         // Add experience
         player.skills.addExp(Skill.RUNECRAFTING, (rune.xp * essenceAvailable));
         // Update widget items.
-        player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
+        player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, player.inventory);
         return;
     }
 
@@ -113,7 +113,7 @@ const craftCombinationRune: itemOnObjectAction = (details: ItemOnObjectActionDat
             player.inventory.removeFirst(item.itemId);
         }
         // Update widget items.
-        player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
+        player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, player.inventory);
         player.sendMessage(`You craft some ${runeDetails.name}.`);
         return;
     }

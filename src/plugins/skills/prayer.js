@@ -3,7 +3,7 @@ import { soundIds } from '../../world/config/sound-ids';
 import { animationIds } from '../../world/config/animation-ids';
 import { Achievements, giveAchievement } from '../../world/actor/player/achievements';
 import { Skill } from '../../world/actor/skills';
-import { widgets } from '../../world/config/widget';
+import { gameInterfaces } from '../../config';
 
 const action = async details => {
     const { player, itemSlot } = details;
@@ -18,7 +18,7 @@ const action = async details => {
 
 module.exports = {
     type: 'item_action',
-    widgets: widgets.inventory,
+    widgets: gameInterfaces.inventory,
     options: 'bury',
     itemIds: itemIds.bones,
     action,

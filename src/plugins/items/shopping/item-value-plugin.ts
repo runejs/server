@@ -1,6 +1,6 @@
 import { itemAction } from '@server/world/action/item-action';
-import { widgets } from '@server/world/config/widget';
 import { Shop } from '@server/config/shop-config';
+import { gameInterfaces } from '@server/config';
 
 export const shopSellValueAction: itemAction = ({ player, itemDetails }) => {
     const itemValue = itemDetails.value || 1;
@@ -24,13 +24,13 @@ export const shopPurchaseValueAction: itemAction = ({ player, itemDetails }) => 
 
 export default [{
     type: 'item_action',
-    widgets: widgets.shop,
+    widgets: gameInterfaces.shop,
     options: 'value',
     action: shopSellValueAction,
     cancelOtherActions: false
 }, {
     type: 'item_action',
-    widgets: widgets.shopPlayerInventory,
+    widgets: gameInterfaces.shopPlayerInventory,
     options: 'value',
     action: shopPurchaseValueAction,
     cancelOtherActions: false

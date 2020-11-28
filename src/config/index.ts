@@ -17,6 +17,7 @@ import {
 } from '@server/config/npc-config';
 import { loadNpcSpawnConfigurations, NpcSpawn } from '@server/config/npc-spawn-config';
 import { loadShopConfigurations, Shop } from '@server/config/shop-config';
+import json5 from 'json5';
 
 
 export async function loadConfigurationFiles(configurationDir: string): Promise<any[]> {
@@ -47,6 +48,7 @@ export let npcIdMap: { [key: number]: string };
 export let npcPresetMap: NpcPresetConfiguration;
 export let npcSpawns: NpcSpawn[] = [];
 export let shopMap: { [key: string]: Shop };
+export let gameInterfaces: { [key: string]: any };
 
 
 export async function loadConfigurations(): Promise<void> {
@@ -63,6 +65,8 @@ export async function loadConfigurations(): Promise<void> {
     npcSpawns = await loadNpcSpawnConfigurations('data/config/npc-spawns');
 
     shopMap = await loadShopConfigurations('data/config/shops');
+
+    gameInterfaces = json5.parse(readFileSync('data/config/game-interfaces.json5', 'utf8'));
 }
 
 

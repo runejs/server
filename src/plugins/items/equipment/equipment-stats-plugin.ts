@@ -1,6 +1,6 @@
 import { buttonAction } from '@server/world/action/button-action';
-import { widgets } from '@server/world/config/widget';
 import { Player } from '@server/world/actor/player/player';
+import { gameInterfaces } from '@server/config';
 
 export function updateBonusStrings(player: Player): void {
     [
@@ -16,7 +16,7 @@ export function updateBonusStrings(player: Player): void {
         { id: 117, text: 'Range', value: player.bonuses.defensive.ranged },
         { id: 119, text: 'Strength', value: player.bonuses.skill.strength },
         { id: 120, text: 'Prayer', value: player.bonuses.skill.prayer },
-    ].forEach(bonus => player.modifyWidget(widgets.equipmentStats.widgetId, { childId: bonus.id,
+    ].forEach(bonus => player.modifyWidget(gameInterfaces.equipmentStats.widgetId, { childId: bonus.id,
         text: `${bonus.text}: ${bonus.value > 0 ? `+${bonus.value}` : bonus.value}` }));
 }
 
@@ -27,15 +27,15 @@ export const action: buttonAction = (details) => {
 
     updateBonusStrings(player);
 
-    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipmentStats, player.equipment);
-    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
+    player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.equipmentStats, player.equipment);
+    player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, player.inventory);
 
     player.activeWidget = {
-        widgetId: widgets.equipmentStats.widgetId,
-        secondaryWidgetId: widgets.inventory.widgetId,
+        widgetId: gameInterfaces.equipmentStats.widgetId,
+        secondaryWidgetId: gameInterfaces.inventory.widgetId,
         type: 'SCREEN_AND_TAB',
         closeOnWalk: true
     };
 };
 
-export default { type: 'button', widgetId: widgets.equipment.widgetId, buttonIds: 24, action };
+export default { type: 'button', widgetId: gameInterfaces.equipment.widgetId, buttonIds: 24, action };

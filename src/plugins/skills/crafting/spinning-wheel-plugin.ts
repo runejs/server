@@ -6,9 +6,9 @@ import { itemIds } from '@server/world/config/item-ids';
 import { loopingAction } from '@server/world/action';
 import { Skill } from '@server/world/actor/skills';
 import { cache } from '@server/game-server';
-import { widgets } from '@server/world/config/widget';
 import { animationIds } from '@server/world/config/animation-ids';
 import { objectIds } from '@server/world/config/object-ids';
+import { gameInterfaces } from '@server/config';
 
 interface Spinnable {
     input: number | number[];
@@ -73,7 +73,7 @@ const widgetButtonIds: Map<number, SpinnableButton> = new Map<number, SpinnableB
 
 export const openSpinningInterface: objectAction = (details) => {
     details.player.activeWidget = {
-        widgetId: widgets.whatWouldYouLikeToSpin,
+        widgetId: gameInterfaces.whatWouldYouLikeToSpin,
         type: 'SCREEN',
         closeOnWalk: true
     };
@@ -186,7 +186,7 @@ export default [
     },
     {
         type: 'button',
-        widgetId: widgets.whatWouldYouLikeToSpin,
+        widgetId: gameInterfaces.whatWouldYouLikeToSpin,
         buttonIds: Array.from(widgetButtonIds.keys()),
         action: buttonClicked
     }

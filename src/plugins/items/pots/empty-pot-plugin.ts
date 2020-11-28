@@ -1,10 +1,10 @@
 import { itemAction } from '@server/world/action/item-action';
-import { widgets } from '@server/world/config/widget';
 import { soundIds } from '@server/world/config/sound-ids';
 import { RunePlugin } from '@server/plugins/plugin';
 import { itemIds } from '@server/world/config/item-ids';
 import { getItemFromContainer } from '@server/world/items/item-container';
 import { ActionType } from '@server/world/action';
+import { gameInterfaces } from '@server/config';
 
 export const action: itemAction = (details) => {
     const { player, itemId, itemSlot } = details;
@@ -24,7 +24,7 @@ export const action: itemAction = (details) => {
 
 export default {
     type: 'item_action',
-    widgets: widgets.inventory,
+    widgets: gameInterfaces.inventory,
     options: 'empty',
     itemIds: [itemIds.potOfFlour],
     action,

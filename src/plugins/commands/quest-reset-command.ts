@@ -1,11 +1,11 @@
 import { commandAction } from '@server/world/action/player-command-action';
-import { widgetScripts } from '@server/world/config/widget';
+import { interfaceScripts } from '@server/world/config/widget';
 
 const action: commandAction = (details) => {
     const { player } = details;
 
     player.quests.find(quest => quest.questId === 'cooksAssistant').stage = 'COLLECTING';
-    player.outgoingPackets.updateClientConfig(widgetScripts.questPoints, 1000);
+    player.outgoingPackets.updateClientConfig(interfaceScripts.questPoints, 1000);
 };
 
 export default {

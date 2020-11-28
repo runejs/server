@@ -1,5 +1,4 @@
 import { defaultPlayerTabWidgets, Player, playerInitAction, Tabs } from '@server/world/actor/player/player';
-import { widgets } from '@server/world/config/widget';
 import { serverConfig, world } from '@server/game-server';
 import { npcAction } from '@server/world/action/npc-action';
 import uuidv4 from 'uuid/v4';
@@ -7,7 +6,7 @@ import { Npc } from '@server/world/actor/npc/npc';
 import { logger } from '@runejs/core';
 import { Position } from '@server/world/position';
 import { WorldInstance } from '@server/world/instances';
-import { findNpc } from '@server/config';
+import { findNpc, gameInterfaces } from '@server/config';
 import { updateCombatStyleWidget } from '@server/plugins/combat/combat-styles';
 import { runescapeGuideDialogueHandler } from '@server/plugins/quests/goblin-diplomacy-tutorial/runescape-guide-dialogue';
 import { harlanDialogueHandler } from '@server/plugins/quests/goblin-diplomacy-tutorial/melee-tutor-dialogue';
@@ -19,14 +18,14 @@ import { equipAction } from '@server/world/action/equip-action';
 
 
 export const tutorialTabWidgetOrder = [
-    [ Tabs.settings, widgets.settingsTab ],
-    [ Tabs.friends, widgets.friendsList ],
-    [ Tabs.ignoreList, widgets.ignoreList ],
-    [ Tabs.emotes, widgets.emotesTab ],
-    [ Tabs.music, widgets.musicPlayerTab ],
-    [ Tabs.inventory, widgets.inventory.widgetId ],
-    [ Tabs.skills, widgets.skillsTab ],
-    [ Tabs.equipment, widgets.equipment.widgetId ],
+    [ Tabs.settings, gameInterfaces.settingsTab ],
+    [ Tabs.friends, gameInterfaces.friendsList ],
+    [ Tabs.ignoreList, gameInterfaces.ignoreList ],
+    [ Tabs.emotes, gameInterfaces.emotesTab ],
+    [ Tabs.music, gameInterfaces.musicPlayerTab ],
+    [ Tabs.inventory, gameInterfaces.inventory.widgetId ],
+    [ Tabs.skills, gameInterfaces.skillsTab ],
+    [ Tabs.equipment, gameInterfaces.equipment.widgetId ],
     [ Tabs.combatStyle, -1 ],
     // @TODO prayer, magic,
 ];
@@ -95,7 +94,7 @@ export const startTutorial = async (player: Player): Promise<void> => {
 
     defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
         if(widgetId !== -1) {
-            player.outgoingPackets.sendTabWidget(tabIndex, widgetId === widgets.logoutTab ? widgetId : null);
+            player.outgoingPackets.sendTabWidget(tabIndex, widgetId === gameInterfaces.logoutTab ? widgetId : null);
         }
     });
 
@@ -105,10 +104,10 @@ export const startTutorial = async (player: Player): Promise<void> => {
     player.inventory.add('rs:coins');
     player.inventory.add('rs:coins');
     player.inventory.add('rs:coins');
-    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
+    player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, player.inventory);
 
     await player.openInteractiveWidget({
-        widgetId: widgets.characterDesign,
+        widgetId: gameInterfaces.characterDesign,
         type: 'SCREEN',
         disablePlayerMovement: true
     }).toPromise();
@@ -144,7 +143,7 @@ export async function handleTutorial(player: Player): Promise<void> {
 
     defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
         if(widgetId !== -1) {
-            player.setSidebarWidget(tabIndex, widgetId === widgets.logoutTab ? widgetId : null);
+            player.setSidebarWidget(tabIndex, widgetId === gameInterfaces.logoutTab ? widgetId : null);
         }
     });
 

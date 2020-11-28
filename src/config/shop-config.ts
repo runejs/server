@@ -1,7 +1,6 @@
 import { ItemContainer } from '@server/world/items/item-container';
-import { findItem, loadConfigurationFiles } from '@server/config/index';
+import { findItem, loadConfigurationFiles, gameInterfaces } from '@server/config/index';
 import { Player } from '@server/world/actor/player/player';
-import { widgets } from '@server/world/config/widget';
 import { ItemDetails } from '@server/config/item-config';
 
 
@@ -92,13 +91,13 @@ export class Shop {
 
     public open(player: Player): void {
         player.metadata['lastOpenedShop'] = this;
-        player.outgoingPackets.updateWidgetString(widgets.shop.widgetId, widgets.shop.title, this.name);
-        player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shop, this.container);
-        player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shopPlayerInventory, player.inventory);
+        player.outgoingPackets.updateWidgetString(gameInterfaces.shop.widgetId, gameInterfaces.shop.title, this.name);
+        player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.shop, this.container);
+        player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.shopPlayerInventory, player.inventory);
 
         player.activeWidget = {
-            widgetId: widgets.shop.widgetId,
-            secondaryWidgetId: widgets.shopPlayerInventory.widgetId,
+            widgetId: gameInterfaces.shop.widgetId,
+            secondaryWidgetId: gameInterfaces.shopPlayerInventory.widgetId,
             type: 'SCREEN_AND_TAB',
             closeOnWalk: true
         };
