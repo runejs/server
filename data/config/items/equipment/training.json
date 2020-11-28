@@ -1,0 +1,48 @@
+{
+    "rs:training_sword": {
+        "game_id": 9703,
+        "examine": "Basic training sword.",
+        "tradable": false,
+        "weight": 1.814,
+        "equippable": true,
+        "destroy": "You can get another Training sword by talking to the Melee Combat skill tutor north of Lumbridge Castle.",
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "one_handed",
+            "offensive_bonuses": {
+                "speed": 4,
+                "stab": 4,
+                "slash": 3,
+                "crush": -2
+            },
+            "defensive_bonuses": {
+                "slash": 2,
+                "crush": 1
+            },
+            "skill_bonuses": {
+                "strength": 5
+            },
+            "weapon_info": {
+                "style": "dagger"
+            }
+        }
+    },
+    "rs:training_shield": {
+        "game_id": 9704,
+        "examine": "Made of flimsy painted wood.",
+        "tradable": false,
+        "weight": 5.443,
+        "equippable": true,
+        "destroy": "You can get another Training shield by talking to the Melee Combat skill tutor north of Lumbridge Castle.",
+        "equipment_data": {
+            "equipment_slot": "off_hand",
+            "defensive_bonuses": {
+                "stab": 4,
+                "slash": 5,
+                "crush": 3,
+                "magic": 1,
+                "ranged": 4
+            }
+        }
+    }
+}

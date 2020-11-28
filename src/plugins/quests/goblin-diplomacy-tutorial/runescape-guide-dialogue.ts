@@ -1,10 +1,11 @@
-import { Player } from '@server/world/actor/player/player';
+import { defaultPlayerTabWidgets, Player } from '@server/world/actor/player/player';
 import { Npc } from '@server/world/actor/npc/npc';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
+import { updateCombatStyleWidget } from '@server/plugins/combat/combat-styles';
 
 
 export const runescapeGuideDialogueHandler: { [key: number]: (player: Player, npc: Npc) => void } = {
-    5: async (player, npc) => {
+    5: async (player: Player, npc) => {
         await dialogue([ player, { npc, key: 'guide' } ], [
             guide => [ Emote.GENERIC, `Greetings adventurer, welcome to RuneScape.` ],
             player => [ Emote.SKEPTICAL, `How did I get here?...` ],
@@ -23,7 +24,16 @@ export const runescapeGuideDialogueHandler: { [key: number]: (player: Player, np
                     player => [ Emote.HAPPY, `This isn't my first time here, I'm good.` ],
                     guide => [ Emote.HAPPY, `Oh good, I won't tell you what you already know then.` ],
                     execute(() => {
-                        player.savedMetadata.tutorialProgress = 100;
+                        player.savedMetadata.tutorialComplete = true;
+                        player.savedMetadata.tutorialProgress = 1000;
+                        player.instance = null;
+                        defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
+                            if(widgetId !== -1) {
+                                player.setSidebarWidget(tabIndex, widgetId);
+                            }
+                        });
+                        updateCombatStyleWidget(player);
+                        player.metadata.blockObjectInteractions = false;
                     })
                 ]
             ]

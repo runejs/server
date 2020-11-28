@@ -58,10 +58,10 @@ export class Shop {
             return -1; // Can not sell this item to this shop (shop is not a general store!)
         }
 
+        let finalAmount: number;
+
         if(itemStock > originalStockAmount) {
             const overstockAmount = (itemStock - originalStockAmount);
-
-            let finalAmount: number;
 
             if(this.generalStore) {
                 const decrementAmount = 0.075 * overstockAmount;
@@ -73,11 +73,12 @@ export class Shop {
             }
 
             finalAmount = Math.round(finalAmount);
-
-            return finalAmount < 0 ? 0 : finalAmount;
         } else {
-            return this.generalStore ? item.lowAlchValue : Math.round(item.value * this.buyRate);
+            finalAmount = this.generalStore ? item.lowAlchValue : Math.round(item.value * this.buyRate);
         }
+
+        const min = item.minimumValue || 0;
+        return finalAmount < min ? min : finalAmount;
     }
 
     public isItemSoldHere(itemKey: string): boolean {

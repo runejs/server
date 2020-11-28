@@ -15,6 +15,7 @@ import { goblinDiplomacyStageHandler } from '@server/plugins/quests/goblin-diplo
 import { Subject } from 'rxjs';
 import { dialogue } from '@server/world/actor/dialogue';
 import { take } from 'rxjs/operators';
+import { equipAction } from '@server/world/action/equip-action';
 
 
 export const tutorialTabWidgetOrder = [
@@ -53,14 +54,17 @@ export function showTabWidgetHint(player: Player, tabIndex: number, availableTab
     });
 }
 
-export function unlockAvailableTabs(player: Player, availableTabs: number): void {
+export function unlockAvailableTabs(player: Player, availableTabs?: number): void {
     let doCombatStyleTab = false;
 
+    if(availableTabs === undefined) {
+        availableTabs = tutorialTabWidgetOrder.length;
+    }
     for(let i = 0; i < availableTabs; i++) {
         if(tutorialTabWidgetOrder[i][1] === -1) {
             doCombatStyleTab = true;
         }
-        player.outgoingPackets.sendTabWidget(tutorialTabWidgetOrder[i][0], tutorialTabWidgetOrder[i][1]);
+        player.setSidebarWidget(tutorialTabWidgetOrder[i][0], tutorialTabWidgetOrder[i][1]);
     }
 
     if(doCombatStyleTab) {
@@ -101,6 +105,7 @@ export const startTutorial = async (player: Player): Promise<void> => {
     player.inventory.add('rs:coins');
     player.inventory.add('rs:coins');
     player.inventory.add('rs:coins');
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
 
     await player.openInteractiveWidget({
         widgetId: widgets.characterDesign,
@@ -139,7 +144,7 @@ export async function handleTutorial(player: Player): Promise<void> {
 
     defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
         if(widgetId !== -1) {
-            player.outgoingPackets.sendTabWidget(tabIndex, widgetId === widgets.logoutTab ? widgetId : null);
+            player.setSidebarWidget(tabIndex, widgetId === widgets.logoutTab ? widgetId : null);
         }
     });
 
@@ -182,8 +187,25 @@ const tutorialInitAction: playerInitAction = async ({ player }) => {
         await handleTutorial(player);
     } else {
         defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
-            player.outgoingPackets.sendTabWidget(tabIndex, widgetId);
+            if(widgetId !== -1) {
+                player.setSidebarWidget(tabIndex, widgetId);
+            }
         });
+    }
+};
+
+const trainingSwordEquipAction: equipAction = async ({ player, itemDetails }) => {
+    const progress = player.savedMetadata.tutorialProgress || 0;
+
+    if(progress === 85) {
+        const swordEquipped = player.isItemEquipped('rs:training_sword');
+        const shieldEquipped = player.isItemEquipped('rs:training_shield');
+
+        if((itemDetails.key === 'rs:training_sword' && shieldEquipped) ||
+            (itemDetails.key === 'rs:training_shield' && swordEquipped)) {
+            player.savedMetadata.tutorialProgress = 90;
+            await handleTutorial(player);
+        }
     }
 };
 
@@ -205,5 +227,11 @@ export default [
         npcs: 'rs:melee_combat_tutor',
         options: 'talk-to',
         walkTo: true
+    },
+    {
+        type: 'equip_action',
+        equipType: 'EQUIP',
+        action: trainingSwordEquipAction,
+        itemIds: [ 9703, 9704 ]
     }
 ];

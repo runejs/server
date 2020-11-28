@@ -1,5 +1,4 @@
 import { loadConfigurationFiles } from '@server/config/index';
-import { cache } from '@server/game-server';
 
 
 export type WeaponStyle = 'axe' | 'hammer' | 'bow' | 'claws' | 'crossbow' | 'longsword' |
@@ -103,6 +102,7 @@ export interface ItemConfiguration {
     tradable?: boolean;
     weight?: number;
     equippable?: boolean;
+    destroy?: string | boolean;
     equipment_data?: {
         equipment_slot: EquipmentSlot;
         equipment_type?: EquipmentType;
@@ -126,6 +126,7 @@ export class ItemDetails {
     examine: string = '';
     tradable: boolean = false;
     equippable: boolean = false;
+    destroy?: string | boolean;
     weight: number;
     equipmentData: EquipmentData;
     metadata: { [key: string]: unknown } = {};
@@ -140,9 +141,11 @@ export class ItemDetails {
     stackableIds: number[];
     stackableAmounts: number[];
 
-    public constructor(item: ItemDetails) {
-        const keys = Object.keys(item);
-        keys.forEach(key => this[key] = item[key]);
+    public constructor(item?: ItemDetails) {
+        if(item) {
+            const keys = Object.keys(item);
+            keys.forEach(key => this[key] = item[key]);
+        }
     }
 
     get lowAlchValue(): number {
@@ -167,6 +170,7 @@ export function translateItemConfig(key: string, config: ItemConfiguration): any
         tradable: config.tradable,
         equippable: config.equippable,
         weight: config.weight,
+        destroy: config.destroy || undefined,
         equipmentData: config.equipment_data ? {
             equipmentType: config.equipment_data?.equipment_type || undefined,
             equipmentSlot: config.equipment_data?.equipment_slot || undefined,
@@ -196,8 +200,7 @@ export async function loadItemConfigurations(path: string): Promise<{ items: { [
             } else {
                 const itemConfig: ItemConfiguration = itemConfigs[key] as ItemConfiguration;
                 itemIds[itemConfig.game_id] = key;
-                items[key] = { ...translateItemConfig(key, itemConfig),
-                    ...cache.itemDefinitions.get(itemConfig.game_id) };
+                items[key] = { ...translateItemConfig(key, itemConfig) };
             }
         });
     });

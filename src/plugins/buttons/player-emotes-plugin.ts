@@ -84,8 +84,10 @@ export const emotes: { [key: number]: Emote } = {
 
 export function unlockEmote(player: Player, emoteName: string): void {
     const unlockedEmotes: string[] = player.savedMetadata.unlockedEmotes || [];
-    unlockedEmotes.push(emoteName);
-    player.savedMetadata.unlockedEmotes = unlockedEmotes;
+    if(unlockedEmotes.indexOf(emoteName) === -1) {
+        unlockedEmotes.push(emoteName);
+        player.savedMetadata.unlockedEmotes = unlockedEmotes;
+    }
     unlockEmotes(player);
 }
 
@@ -96,8 +98,9 @@ export function lockEmote(player: Player, emoteName: string): void {
     if(index !== -1) {
         unlockedEmotes.splice(index, 1);
         player.savedMetadata.unlockedEmotes = unlockedEmotes;
-        unlockEmotes(player);
     }
+
+    unlockEmotes(player);
 }
 
 export function unlockEmotes(player: Player): void {

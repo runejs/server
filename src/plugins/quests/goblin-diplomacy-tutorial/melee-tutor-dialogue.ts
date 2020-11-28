@@ -55,7 +55,18 @@ export const harlanDialogueHandler: { [key: number]: (player: Player, npc: Npc) 
     },
     80: async (player, npc) => {
         await dialogue([ player, { npc, key: 'harlan' } ], [
-            harlan => [ Emote.GENERIC, `` ]
+            harlan => [ Emote.GENERIC, `Have this training equipment and try it on.` ],
+            execute(() => {
+                player.inventory.add('rs:training_sword');
+                player.inventory.add('rs:training_shield');
+                player.savedMetadata.tutorialProgress = 85;
+            }),
+            text => `Harlan hands you a Training sword and shield.`
+        ]);
+    },
+    85: async (player, npc) => {
+        await dialogue([ player, { npc, key: 'harlan' } ], [
+            harlan => [ Emote.GENERIC, `Try on the Training sword and shield and we can continue.` ]
         ]);
     }
 };

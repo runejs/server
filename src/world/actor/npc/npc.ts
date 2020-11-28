@@ -61,25 +61,7 @@ export class Npc extends Actor {
         }
 
         if(typeof npcDetails === 'number') {
-            const cacheDetails = cache.npcDefinitions.get(npcDetails);
             this.id = npcDetails;
-
-            if(cacheDetails) {
-                // NPC not registered on the server, but exists in the game cache - use that for our info and assume it's
-                // Not a combatant NPC since we have no useful combat information for it.
-                this._name = cacheDetails.name;
-                this._combatLevel = cacheDetails.combatLevel;
-                this.options = cacheDetails.options;
-                this.animations = {
-                    walk: cacheDetails.animations?.walk || undefined,
-                    turnAround: cacheDetails.animations?.turnAround || undefined,
-                    turnLeft: cacheDetails.animations?.turnLeft || undefined,
-                    turnRight: cacheDetails.animations?.turnRight || undefined,
-                    stand: cacheDetails.animations?.stand || undefined
-                };
-            } else {
-                this._name = 'Unknown';
-            }
         } else {
             this.id = npcDetails.gameId;
             this._combatLevel = npcDetails.combatLevel;
@@ -90,6 +72,24 @@ export class Npc extends Actor {
                 const skillNames = Object.keys(npcDetails.skills);
                 skillNames.forEach(skillName => this.skills.setLevel(skillName as SkillName, npcDetails.skills[skillName]));
             }
+        }
+
+        const cacheDetails = cache.npcDefinitions.get(this.id);
+        if(cacheDetails) {
+            // NPC not registered on the server, but exists in the game cache - use that for our info and assume it's
+            // Not a combatant NPC since we have no useful combat information for it.
+            this._name = cacheDetails.name;
+            this._combatLevel = cacheDetails.combatLevel;
+            this.options = cacheDetails.options;
+            this.animations = {
+                walk: cacheDetails.animations?.walk || undefined,
+                turnAround: cacheDetails.animations?.turnAround || undefined,
+                turnLeft: cacheDetails.animations?.turnLeft || undefined,
+                turnRight: cacheDetails.animations?.turnRight || undefined,
+                stand: cacheDetails.animations?.stand || undefined
+            };
+        } else {
+            this._name = 'Unknown';
         }
     }
 

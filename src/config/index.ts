@@ -71,43 +71,46 @@ export const findItem = (itemKey: number | string): ItemDetails => {
         return null;
     }
 
+    let gameId: number;
     if(typeof itemKey === 'number') {
-        const gameId = itemKey;
+        gameId = itemKey;
         itemKey = itemIdMap[gameId];
 
         if(!itemKey) {
-            const cacheItem = cache.itemDefinitions.get(gameId);
-            if(cacheItem) {
-                logger.warn(`Item ${gameId} is not yet configured on the server.`);
-                return cacheItem as any;
-            } else {
-                logger.warn(`Item ${gameId} is not yet configured on the server and a matching cache item was not found.`);
-                return null;
-            }
+            logger.warn(`Item ${gameId} is not yet registered on the server.`);
         }
     }
 
-    let item = itemMap[itemKey];
-    if(!item) {
-        logger.warn(`Item ${itemKey} is not yet configured on the server and a matching cache item was not provided.`);
-        return null;
-    }
+    let item;
 
-    if(item.extends) {
-        let extensions = item.extends;
-        if(typeof extensions === 'string') {
-            extensions = [ extensions ];
+    if(itemKey) {
+        item = itemMap[itemKey];
+
+        if(item?.gameId) {
+            gameId = item.gameId;
         }
 
-        extensions.forEach(extKey => {
-            const extensionItem = itemPresetMap[extKey];
-            if(extensionItem) {
-                item = _.merge(item, translateItemConfig(undefined, extensionItem));
+        if(item?.extends) {
+            let extensions = item.extends;
+            if(typeof extensions === 'string') {
+                extensions = [ extensions ];
             }
-        });
+
+            extensions.forEach(extKey => {
+                const extensionItem = itemPresetMap[extKey];
+                if(extensionItem) {
+                    item = _.merge(item, translateItemConfig(undefined, extensionItem));
+                }
+            });
+        }
     }
 
-    return new ItemDetails(item);
+    if(gameId) {
+        const cacheItem = cache.itemDefinitions.get(gameId);
+        item = _.merge(item, cacheItem);
+    }
+
+    return item ? new ItemDetails(item) : null;
 };
 
 

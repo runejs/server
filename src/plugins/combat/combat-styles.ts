@@ -11,7 +11,9 @@ import { serverConfig } from '@server/game-server';
 export function updateCombatStyle(player: Player, weaponStyle: WeaponStyle, styleIndex: number): void {
     player.savedMetadata.combatStyle = [ weaponStyle, styleIndex ];
     player.settings.attackStyle = styleIndex;
-    player.outgoingPackets.updateClientConfig(widgetScripts.attackStyle, styleIndex);
+
+    const buttonId = combatStyles[weaponStyle][styleIndex].button_id;
+    player.outgoingPackets.updateClientConfig(widgetScripts.attackStyle, buttonId);
 }
 
 export function showUnarmed(player: Player): void {
@@ -82,7 +84,7 @@ const combatStyleSelection: buttonAction = ({ player, buttonId }) => {
     }
 
     const combatStyle = combatStyles[weaponStyle].findIndex(combatStyle => combatStyle.button_id === buttonId);
-    if(combatStyle) {
+    if(combatStyle !== -1) {
         player.savedMetadata.combatStyle = [ weaponStyle, combatStyle ];
     }
 };

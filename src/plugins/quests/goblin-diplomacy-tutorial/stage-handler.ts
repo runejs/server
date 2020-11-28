@@ -146,8 +146,6 @@ export const goblinDiplomacyStageHandler: { [key: number]: (player: Player) => v
         npcHint(player, 'rs:melee_combat_tutor');
         unlockAvailableTabs(player, 8);
 
-        spawnGoblinBoi(player, 'beginning');
-
         dialogue([ player ], [
             titled => [ `Continue`, `\nTalk-to the Melee Combat Tutor to continue.` ]
         ], {
@@ -155,6 +153,22 @@ export const goblinDiplomacyStageHandler: { [key: number]: (player: Player) => v
         });
     },
     85: player => {
+        unlockAvailableTabs(player, 8);
 
+        dialogue([ player ], [
+            titled => [ `Continue`, `\nEquip the Training sword and shield.` ]
+        ], {
+            permanent: true
+        });
+    },
+    90: player => {
+        npcHint(player, 'rs:melee_combat_tutor');
+        unlockAvailableTabs(player, 8);
+
+        dialogue([ player ], [
+            titled => [ `Continue`, `\nTalk-to the Melee Combat Tutor to continue.` ]
+        ], {
+            permanent: true
+        });
     }
 };
