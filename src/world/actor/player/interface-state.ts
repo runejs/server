@@ -2,42 +2,58 @@ import { Player } from '@server/world/actor/player/player';
 import { ItemContainer } from '@server/world/items/item-container';
 
 
-export type TabType = 'combat_options' | 'skills' | 'quests' | 'inventory' | 'equipment' | 'prayers' |
-    'spellbook' | 'friends_list' | 'ignore_list' | 'logout' | 'emotes' | 'game_settings' | 'music_player';
-export type GameInterfacePosition = 'gamescreen' | 'fullscreen' | 'chatbox' | 'tabarea';
-export type GameInterfaceType = 'queued' | 'queued_solo' | 'multi' | 'solo';
+export type TabType = 'combat' | 'skills' | 'quests' | 'inventory' | 'equipment' | 'prayers' |
+    'spells' | 'friends' | 'ignores' | 'logout' | 'emotes' | 'settings' | 'music';
+
+export type GameInterfacePosition = 'screen' | 'full' | 'chatbox' | 'tabarea';
+
 
 export const tabIndex: { [key: string]: number } = {
-    'combat_options': 0,
+    'combat': 0,
     'skills': 1,
     'quests': 2,
     'inventory': 3,
     'equipment': 4,
     'prayers': 5,
-    'spellbook': 6,
-    'friends_list': 8,
-    'ignore_list': 9,
+    'spells': 6,
+    'friends': 8,
+    'ignores': 9,
     'logout': 10,
     'emotes': 11,
-    'game_settings': 12,
-    'music_player': 13
+    'settings': 12,
+    'music': 13
 };
+
+
+export interface GameInterfaceOptions {
+    position: GameInterfacePosition;
+    multi?: boolean;
+    queued?: boolean;
+    containerId?: number;
+    container?: ItemContainer;
+    walkable?: boolean;
+}
 
 export class GameInterface {
 
     public interfaceId: number;
     public position: GameInterfacePosition;
-    public type: GameInterfaceType;
+    public multi: boolean = false;
+    public queued: boolean = false;
+    public containerId: number;
     public container: ItemContainer = null;
     public walkable: boolean = false;
 
-    public constructor(interfaceId: number, position: GameInterfacePosition, type: GameInterfaceType = 'multi',
-        container: ItemContainer = null, walkable: boolean = false) {
+    public constructor(interfaceId: number, options: GameInterfaceOptions) {
+        const { position, multi, queued, containerId, container, walkable } = options;
+
         this.interfaceId = interfaceId;
         this.position = position;
-        this.type = type;
-        this.container = container;
-        this.walkable = walkable;
+        this.multi = multi || false;
+        this.queued = queued || false;
+        this.containerId = containerId || -1;
+        this.container = container || null;
+        this.walkable = walkable || false;
     }
 
 }
@@ -47,39 +63,53 @@ export class InterfaceState {
 
     public readonly tabs: { [key: string]: GameInterface };
     public readonly interfaces: { [key: string]: GameInterface };
-    private readonly player: Player
+    private readonly player: Player;
 
     public constructor(player: Player) {
         this.tabs = {
-            'combat_options': null,
+            'combat': null,
             'skills': null,
             'quests': null,
             'inventory': null,
             'equipment': null,
             'prayers': null,
-            'spellbook': null,
-            'friends_list': null,
-            'ignore_list': null,
+            'spells': null,
+            'friend': null,
+            'ignores': null,
             'logout': null,
             'emotes': null,
-            'game_settings': null,
-            'music_player': null
+            'settings': null,
+            'music': null
         };
         this.interfaces = {
-            'gamescreen': null,
-            'fullscreen': null,
+            'screen': null,
+            'full': null,
             'chatbox': null,
             'tabarea': null
         };
         this.player = player;
     }
 
-    public showGameInterface(interfaceId: number, position: GameInterfacePosition,
-        type: GameInterfaceType, walkable: boolean): void {
-        this.showInterface(new GameInterface(interfaceId, position, type, null, walkable));
+    public openInterface(interfaceId: number, options: GameInterfaceOptions): void {
+        this.showInterface(new GameInterface(interfaceId, options));
     }
 
-    public setTab(type: TabType, gameInterface: GameInterface): void {
+    public setTab(type: TabType, gameInterface: GameInterface | number): void {
+        if(typeof gameInterface === 'number') {
+            let container: ItemContainer | undefined;
+            if(type === 'inventory') {
+                container = this.player.inventory;
+            } else if(type === 'equipment') {
+                container = this.player.equipment;
+            }
+
+            gameInterface = new GameInterface(gameInterface, {
+                position: 'tabarea',
+                multi: true,
+                walkable: true,
+                container
+            })
+        }
         this.tabs[type] = gameInterface;
     }
 
@@ -95,16 +125,19 @@ export class InterfaceState {
         this.interfaces[gameInterface.position] = gameInterface;
     }
 
-    get gamescreenInterface(): GameInterface | null {
-        return this.interfaces.gamescreen || null;
+    public get screenInterface(): GameInterface | null {
+        return this.interfaces.screen || null;
     }
-    get fullscreenInterface(): GameInterface | null {
-        return this.interfaces.fullscreen || null;
+
+    public get fullScreenInterface(): GameInterface | null {
+        return this.interfaces.full || null;
     }
-    get chatboxInterface(): GameInterface | null {
+
+    public get chatboxInterface(): GameInterface | null {
         return this.interfaces.chatbox || null;
     }
-    get tabareaInterface(): GameInterface | null {
+
+    public get tabareaInterface(): GameInterface | null {
         return this.interfaces.tabarea || null;
     }
 
