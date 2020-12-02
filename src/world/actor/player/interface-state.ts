@@ -34,6 +34,7 @@ export interface GameInterfaceOptions {
     walkable?: boolean;
 }
 
+
 export class GameInterface {
 
     public interfaceId: number;
@@ -61,8 +62,8 @@ export class GameInterface {
 
 export class InterfaceState {
 
-    public readonly tabs: { [key: string]: GameInterface };
-    public readonly interfaces: { [key: string]: GameInterface };
+    public readonly tabs: { [key: string]: GameInterface | null };
+    public readonly interfaces: { [key: string]: GameInterface | null };
     private readonly player: Player;
 
     public constructor(player: Player) {
@@ -81,21 +82,27 @@ export class InterfaceState {
             'settings': null,
             'music': null
         };
+
         this.interfaces = {
             'screen': null,
             'full': null,
             'chatbox': null,
             'tabarea': null
         };
+
         this.player = player;
     }
 
     public openInterface(interfaceId: number, options: GameInterfaceOptions): void {
-        this.showInterface(new GameInterface(interfaceId, options));
+        const gameInterface = new GameInterface(interfaceId, options);
+        this.interfaces[gameInterface.position] = gameInterface;
+        this.showInterface(gameInterface);
     }
 
-    public setTab(type: TabType, gameInterface: GameInterface | number): void {
-        if(typeof gameInterface === 'number') {
+    public setTab(type: TabType, gameInterface: GameInterface | number | null): void {
+        if(gameInterface && typeof gameInterface === 'number') {
+            // Create a new tab interface instance
+
             let container: ItemContainer | undefined;
             if(type === 'inventory') {
                 container = this.player.inventory;
@@ -108,9 +115,13 @@ export class InterfaceState {
                 multi: true,
                 walkable: true,
                 container
-            })
+            });
         }
+
+        gameInterface = gameInterface as GameInterface || null;
+
         this.tabs[type] = gameInterface;
+        this.player.outgoingPackets.sendTabWidget(tabIndex[type], gameInterface === null ? -1 : gameInterface.interfaceId);
     }
 
     public getTab(type: TabType): GameInterface | null {
@@ -122,7 +133,7 @@ export class InterfaceState {
     }
 
     private showInterface(gameInterface: GameInterface): void {
-        this.interfaces[gameInterface.position] = gameInterface;
+        // @TODO determine which packet to ship and then shipit
     }
 
     public get screenInterface(): GameInterface | null {
