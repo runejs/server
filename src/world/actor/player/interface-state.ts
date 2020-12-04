@@ -5,7 +5,7 @@ import { ItemContainer } from '@server/world/items/item-container';
 export type TabType = 'combat' | 'skills' | 'quests' | 'inventory' | 'equipment' | 'prayers' |
     'spells' | 'friends' | 'ignores' | 'logout' | 'emotes' | 'settings' | 'music';
 
-export type GameInterfacePosition = 'screen' | 'full' | 'chatbox' | 'tabarea';
+export type GameInterfaceSlot = 'full' | 'screen' | 'chatbox' | 'tabarea';
 
 
 export const tabIndex: { [key: string]: number } = {
@@ -25,8 +25,8 @@ export const tabIndex: { [key: string]: number } = {
 };
 
 
-export interface GameInterfaceOptions {
-    position: GameInterfacePosition;
+export interface WidgetOptions {
+    slot: GameInterfaceSlot;
     multi?: boolean;
     queued?: boolean;
     containerId?: number;
@@ -35,21 +35,21 @@ export interface GameInterfaceOptions {
 }
 
 
-export class GameInterface {
+export class Widget {
 
-    public interfaceId: number;
-    public position: GameInterfacePosition;
+    public widgetId: number;
+    public slot: GameInterfaceSlot;
     public multi: boolean = false;
     public queued: boolean = false;
     public containerId: number;
     public container: ItemContainer = null;
     public walkable: boolean = false;
 
-    public constructor(interfaceId: number, options: GameInterfaceOptions) {
-        const { position, multi, queued, containerId, container, walkable } = options;
+    public constructor(interfaceId: number, options: WidgetOptions) {
+        const { slot, multi, queued, containerId, container, walkable } = options;
 
-        this.interfaceId = interfaceId;
-        this.position = position;
+        this.widgetId = interfaceId;
+        this.slot = slot;
         this.multi = multi || false;
         this.queued = queued || false;
         this.containerId = containerId || -1;
@@ -62,8 +62,8 @@ export class GameInterface {
 
 export class InterfaceState {
 
-    public readonly tabs: { [key: string]: GameInterface | null };
-    public readonly interfaces: { [key: string]: GameInterface | null };
+    public readonly tabs: { [key: string]: Widget | null };
+    public readonly widgetSlots: { [key: string]: Widget | null };
     private readonly player: Player;
 
     public constructor(player: Player) {
@@ -75,7 +75,7 @@ export class InterfaceState {
             'equipment': null,
             'prayers': null,
             'spells': null,
-            'friend': null,
+            'friends': null,
             'ignores': null,
             'logout': null,
             'emotes': null,
@@ -83,24 +83,29 @@ export class InterfaceState {
             'music': null
         };
 
-        this.interfaces = {
-            'screen': null,
-            'full': null,
-            'chatbox': null,
-            'tabarea': null
-        };
+        this.widgetSlots = {};
+        this.clearSlots();
 
         this.player = player;
     }
 
-    public openInterface(interfaceId: number, options: GameInterfaceOptions): void {
-        const gameInterface = new GameInterface(interfaceId, options);
-        this.interfaces[gameInterface.position] = gameInterface;
-        this.showInterface(gameInterface);
+    public openWidget(widgetId: number, options: WidgetOptions): void {
+        const widget = new Widget(widgetId, options);
+
+        if(widget.queued) {
+            // @TODO queued widgets
+        }
+
+        if(widget.slot === 'full' || !widget.multi) {
+            this.clearSlots();
+        }
+
+        this.widgetSlots[widget.slot] = widget;
+        this.showWidget(widget);
     }
 
-    public setTab(type: TabType, gameInterface: GameInterface | number | null): void {
-        if(gameInterface && typeof gameInterface === 'number') {
+    public setTab(type: TabType, widget: Widget | number | null): void {
+        if(widget && typeof widget === 'number') {
             // Create a new tab interface instance
 
             let container: ItemContainer | undefined;
@@ -110,46 +115,61 @@ export class InterfaceState {
                 container = this.player.equipment;
             }
 
-            gameInterface = new GameInterface(gameInterface, {
-                position: 'tabarea',
+            widget = new Widget(widget, {
+                slot: 'tabarea',
                 multi: true,
                 walkable: true,
                 container
             });
         }
 
-        gameInterface = gameInterface as GameInterface || null;
+        widget = widget as Widget || null;
 
-        this.tabs[type] = gameInterface;
-        this.player.outgoingPackets.sendTabWidget(tabIndex[type], gameInterface === null ? -1 : gameInterface.interfaceId);
+        this.tabs[type] = widget;
+        this.player.outgoingPackets.sendTabWidget(tabIndex[type], widget === null ? -1 : widget.widgetId);
     }
 
-    public getTab(type: TabType): GameInterface | null {
+    public getTab(type: TabType): Widget | null {
         return this.tabs[type] || null;
     }
 
-    public getInterface(position: GameInterfacePosition): GameInterface | null {
-        return this.interfaces[position] || null;
+    public getWidget(slot: GameInterfaceSlot): Widget | null {
+        return this.widgetSlots[slot] || null;
     }
 
-    private showInterface(gameInterface: GameInterface): void {
-        // @TODO determine which packet to ship and then shipit
+    private showWidget(widget: Widget): void {
+        if(widget.slot === 'full' && widget.containerId !== undefined) {
+            this.player.outgoingPackets.showFullscreenWidget(widget.widgetId, widget.containerId);
+        } else if(widget.slot === 'screen') {
+
+        } else if(widget.slot === 'chatbox') {
+
+        } else if(widget.slot === 'tabarea') {
+
+        }
     }
 
-    public get screenInterface(): GameInterface | null {
-        return this.interfaces.screen || null;
+    private clearSlots(): void {
+        this.widgetSlots.full = null;
+        this.widgetSlots.screen = null;
+        this.widgetSlots.chatbox = null;
+        this.widgetSlots.tabarea = null;
     }
 
-    public get fullScreenInterface(): GameInterface | null {
-        return this.interfaces.full || null;
+    public get fullScreenWidget(): Widget | null {
+        return this.widgetSlots.full || null;
     }
 
-    public get chatboxInterface(): GameInterface | null {
-        return this.interfaces.chatbox || null;
+    public get screenWidget(): Widget | null {
+        return this.widgetSlots.screen || null;
     }
 
-    public get tabareaInterface(): GameInterface | null {
-        return this.interfaces.tabarea || null;
+    public get chatboxWidget(): Widget | null {
+        return this.widgetSlots.chatbox || null;
+    }
+
+    public get tabareaWidget(): Widget | null {
+        return this.widgetSlots.tabarea || null;
     }
 
 }
