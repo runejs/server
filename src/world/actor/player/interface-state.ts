@@ -1,5 +1,6 @@
 import { Player } from '@server/world/actor/player/player';
 import { ItemContainer } from '@server/world/items/item-container';
+import { Subject, lastValueFrom } from 'rxjs';
 
 
 export type TabType = 'combat' | 'skills' | 'quests' | 'inventory' | 'equipment' | 'prayers' |
@@ -64,6 +65,7 @@ export class InterfaceState {
 
     public readonly tabs: { [key: string]: Widget | null };
     public readonly widgetSlots: { [key: string]: Widget | null };
+    public readonly closed: Subject<Widget> = new Subject<Widget>();
     private readonly player: Player;
 
     public constructor(player: Player) {
@@ -87,6 +89,25 @@ export class InterfaceState {
         this.clearSlots();
 
         this.player = player;
+    }
+
+    public async widgetClosed(slot: GameInterfaceSlot): Promise<Widget> {
+        const widget = this.widgetSlots[slot];
+        if(!widget) {
+            return null;
+        }
+
+        return await lastValueFrom(this.closed.asObservable());
+    }
+
+    public closeWidget(slot: GameInterfaceSlot): void {
+        const widget = this.widgetSlots[slot];
+        if(!widget) {
+            return;
+        }
+
+        this.closed.next(widget);
+        this.widgetSlots[slot] = null;
     }
 
     public openWidget(widgetId: number, options: WidgetOptions): void {
