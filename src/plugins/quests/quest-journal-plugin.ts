@@ -9,12 +9,12 @@ export const action: buttonAction = (details) => {
     const quest = questData.quest;
 
     const [playerQuest] = player.quests.filter(
-    (playerQuest) => playerQuest.questId === quest.questTabId
+        (playerQuest) => playerQuest.questId === quest.questTabId
     );
 
     let playerStage = "NOT_STARTED";
     if (playerQuest && playerQuest.stage) {
-    playerStage = playerQuest.stage;
+        playerStage = playerQuest.stage;
     }
 
     let stageText = quest.stages[playerStage];
