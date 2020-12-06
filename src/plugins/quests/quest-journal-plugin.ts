@@ -6,6 +6,9 @@ import { pluginActions } from '@server/game-server';
 export const action: buttonAction = (details) => {
     const { player, buttonId } = details;
     const [questData] = pluginActions.quest.filter((quest) => quest.quest.questTabId === buttonId);
+    if(!questData) {
+        return;
+    }
     const quest = questData.quest;
 
     const [playerQuest] = player.quests.filter(
