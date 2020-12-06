@@ -5,17 +5,22 @@ import { widgets } from '@server/config';
 
 export const action: buttonAction = (details) => {
     const { player, buttonId } = details;
+    const [questData] = pluginActions.quest.filter((quest) => quest.quest.questTabId === buttonId);
+    if(!questData) {
+        return;
+    }
+    const quest = questData.quest;
 
-    const quests = pluginActions.quest;
-    const questData = quests[Object.keys(quests).filter(questKey => quests[questKey].questTabId === buttonId)[0]];
-    const playerQuest = player.quests.find(quest => quest.questId === questData.id);
-    let playerStage = 'NOT_STARTED';
+    const [playerQuest] = player.quests.filter(
+        (playerQuest) => playerQuest.questId === quest.questTabId
+    );
 
-    if(playerQuest && playerQuest.stage) {
+    let playerStage = "NOT_STARTED";
+    if (playerQuest && playerQuest.stage) {
         playerStage = playerQuest.stage;
     }
 
-    let stageText = questData.stages[playerStage];
+    let stageText = quest.stages[playerStage];
     let color = 128;
 
     if(typeof stageText === 'function') {
@@ -32,7 +37,7 @@ export const action: buttonAction = (details) => {
         lines = [ 'Invalid Quest Stage' ];
     }
 
-    player.modifyWidget(widgets.questJournal, { childId: 2, text: '@dre@' + questData.name });
+    player.modifyWidget(widgets.questJournal, { childId: 2, text: '@dre@' + quest.name });
 
     for(let i = 0; i <= 100; i++) {
         if(i === 0) {
