@@ -17,12 +17,14 @@ const buttonIds: number[] = [
 ];
 
 export const openBankInterface: objectAction = ({ player }) => {
-    player.activeWidget = {
-        widgetId: widgets.bank.screenWidget.widgetId,
-        secondaryWidgetId: widgets.bank.tabWidget.widgetId,
-        type: 'SCREEN_AND_TAB',
-        closeOnWalk: true
-    };
+    player.interfaceState.openWidget(widgets.bank.screenWidget.widgetId, {
+        slot: 'screen',
+        multi: true
+    });
+    player.interfaceState.openWidget(widgets.bank.tabWidget.widgetId, {
+        slot: 'tabarea',
+        multi: true
+    });
 
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, player.inventory);
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, player.bank);
@@ -31,18 +33,14 @@ export const openBankInterface: objectAction = ({ player }) => {
 };
 
 export const openPinSettings: objectAction = ({ player }) => {
-    player.activeWidget = {
-        widgetId: widgets.bank.pinSettingsWidget.widgetId,
-        type: 'SCREEN',
-        closeOnWalk: true
-    };
+    player.interfaceState.openWidget(widgets.bank.pinSettingsWidget.widgetId, {
+        slot: 'screen'
+    });
 };
 
 export const depositItem: itemAction = (details) => {
     // Check if player might be spawning widget clientside
-    if (!details.player.activeWidget ||
-        !(details.player.activeWidget.widgetId === widgets.bank.screenWidget.widgetId) ||
-        !(details.player.activeWidget.secondaryWidgetId === widgets.bank.tabWidget.widgetId)) {
+    if (!details.player.interfaceState.findWidget(widgets.bank.screenWidget.widgetId)) {
         return;
     }
 
@@ -108,9 +106,7 @@ export const depositItem: itemAction = (details) => {
 
 export const withdrawItem: itemAction = (details) => {
     // Check if player might be spawning widget clientside
-    if (!details.player.activeWidget ||
-        !(details.player.activeWidget.widgetId === widgets.bank.screenWidget.widgetId) ||
-        !(details.player.activeWidget.secondaryWidgetId === widgets.bank.tabWidget.widgetId)) {
+    if (!details.player.interfaceState.findWidget(widgets.bank.screenWidget.widgetId)) {
         return;
     }
     // Check if the player has the item

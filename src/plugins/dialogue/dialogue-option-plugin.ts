@@ -11,8 +11,8 @@ const dialogueIds = [
  * Handles a basic NPC/Player/Option/Text dialogue choice/action.
  */
 export const action: widgetAction = (details) => {
-    const { player, childId } = details;
-    player.dialogueInteractionEvent.next(childId);
+    const { player, widgetId, childId } = details;
+    player.interfaceState.closeWidget(widgetId, childId);
 };
 
 export default { type: 'widget_action', widgetIds: dialogueIds, action, cancelActions: true };

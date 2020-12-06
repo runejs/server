@@ -1,17 +1,11 @@
 import { actionHandler } from '../../world/action';
 
-const ignoreButtons = [
-    '269:99' // character design accept button
-];
-
 const buttonClickPacket = (player, packet) => {
     const { buffer } = packet;
     const widgetId = buffer.get('SHORT');
     const buttonId = buffer.get('SHORT');
 
-    if(ignoreButtons.indexOf(`${widgetId}:${buttonId}`) === -1) {
-        actionHandler.call('button', player, widgetId, buttonId);
-    }
+    actionHandler.call('button', player, widgetId, buttonId);
 };
 
 export default {

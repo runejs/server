@@ -17,7 +17,7 @@ const widgetIds = [
  */
 export const action: widgetAction = (details) => {
     const { player } = details;
-    player.closeActiveWidgets();
+    player.interfaceState.closeChatOverlayWidget();
 };
 
 export default { type: 'widget_action', widgetIds, action, cancelActions: false };

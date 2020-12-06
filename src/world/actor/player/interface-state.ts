@@ -1,6 +1,7 @@
 import { Player } from '@server/world/actor/player/player';
 import { ItemContainer } from '@server/world/items/item-container';
 import { Subject, lastValueFrom } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 
 
 export type TabType = 'combat' | 'skills' | 'quests' | 'inventory' | 'equipment' | 'prayers' |
@@ -57,6 +58,11 @@ export class Widget {
 
 }
 
+interface WidgetClosedEvent {
+    widget: Widget;
+    data?: number;
+}
+
 /**
  * Control's a Player's Game Interface state.
  */
@@ -64,9 +70,10 @@ export class InterfaceState {
 
     public readonly tabs: { [key: string]: Widget | null };
     public readonly widgetSlots: { [key: string]: Widget | null };
-    public readonly closed: Subject<Widget> = new Subject<Widget>();
+    public readonly closed: Subject<WidgetClosedEvent> = new Subject<WidgetClosedEvent>();
     private readonly player: Player;
     private _screenOverlayWidget: number | null;
+    private _chatOverlayWidget: number | null;
 
     public constructor(player: Player) {
         this.tabs = {
@@ -87,9 +94,20 @@ export class InterfaceState {
 
         this.widgetSlots = {};
         this._screenOverlayWidget = null;
+        this._chatOverlayWidget = null;
         this.clearSlots();
 
         this.player = player;
+    }
+
+    public openChatOverlayWidget(widgetId: number): void {
+        this._chatOverlayWidget = widgetId;
+        this.player.outgoingPackets.showChatDialogue(widgetId);
+    }
+
+    public closeChatOverlayWidget(): void {
+        this._chatOverlayWidget = null;
+        this.player.outgoingPackets.showChatDialogue(-1);
     }
 
     public openScreenOverlayWidget(widgetId: number): void {
@@ -102,27 +120,33 @@ export class InterfaceState {
         this.player.outgoingPackets.showScreenOverlayWidget(-1);
     }
 
-    public async widgetClosed(slot: GameInterfaceSlot): Promise<Widget> {
-        const widget = this.widgetSlots[slot];
-        if(!widget) {
-            return null;
-        }
-
-        return await lastValueFrom(this.closed.asObservable());
+    public async widgetClosed(slot: GameInterfaceSlot): Promise<WidgetClosedEvent> {
+        return await lastValueFrom(this.closed.pipe(
+            filter(event => event.widget.slot === slot)).pipe(take(1)));
     }
 
-    public closeWidget(slot: GameInterfaceSlot): void {
-        const widget = this.widgetSlots[slot];
+    public closeWidget(widgetId: number, data?: number): void;
+    public closeWidget(slot: GameInterfaceSlot, data?: number): void;
+    public closeWidget(i: GameInterfaceSlot | number, data?: number): void {
+        let widget: Widget | null;
+
+        if(typeof i === 'number') {
+            widget = this.findWidget(i);
+        } else {
+            widget = this.widgetSlots[i] || null;
+        }
+
         if(!widget) {
             return;
         }
 
-        this.closed.next(widget);
-        this.widgetSlots[slot] = null;
+        this.closed.next({ widget, data });
+        this.widgetSlots[widget.slot] = null;
     }
 
     public openWidget(widgetId: number, options: WidgetOptions): void {
         if(this.widgetOpen(options.slot, widgetId)) {
+            console.log('already open');
             return;
         }
 
@@ -168,17 +192,33 @@ export class InterfaceState {
         return this.tabs[type] || null;
     }
 
-    public widgetOpen(slot: GameInterfaceSlot, widgetId: number): boolean {
-        return this.getWidget(slot)?.widgetId === widgetId;
+    public findWidget(widgetId: number): Widget | null {
+        const slots: GameInterfaceSlot[] = Object.keys(this.widgetSlots) as GameInterfaceSlot[];
+        let widget: Widget;
+        slots.forEach(slot => {
+            if(this.widgetSlots[slot]?.widgetId === widgetId) {
+                widget = this.widgetSlots[slot];
+            }
+        });
+        return widget || null;
+    }
+
+    public widgetOpen(slot: GameInterfaceSlot, widgetId?: number): boolean {
+        if(widgetId === undefined) {
+            return this.getWidget(slot) !== null;
+        } else {
+            return this.getWidget(slot)?.widgetId === widgetId;
+        }
     }
 
     public getWidget(slot: GameInterfaceSlot): Widget | null {
         return this.widgetSlots[slot] || null;
     }
 
-    public closeAll(): void {
+    public closeAllSlots(): void {
         const slots: GameInterfaceSlot[] = Object.keys(this.widgetSlots) as GameInterfaceSlot[];
         slots.forEach(slot => this.closeWidget(slot));
+        this.player.outgoingPackets.closeActiveWidgets();
     }
 
     private showWidget(widget: Widget): void {

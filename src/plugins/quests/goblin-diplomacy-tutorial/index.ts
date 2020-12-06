@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 import { dialogue } from '@server/world/actor/dialogue';
 import { take } from 'rxjs/operators';
 import { equipAction } from '@server/world/action/equip-action';
+import { buttonAction } from '@server/world/action/button-action';
 
 
 export const tutorialTabWidgetOrder = [
@@ -106,11 +107,17 @@ export const startTutorial = async (player: Player): Promise<void> => {
     player.inventory.add('rs:coins');
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
 
-    await player.openInteractiveWidget({
-        widgetId: widgets.characterDesign,
-        type: 'SCREEN',
-        disablePlayerMovement: true
-    }).toPromise();
+    await dialogue([ player ], [
+        titled => [ `Getting Started`, `\nCreate your character!` ]
+    ], {
+        permanent: true
+    });
+
+    player.interfaceState.openWidget(widgets.characterDesign, {
+        slot: 'screen'
+    });
+
+    await player.interfaceState.widgetClosed('screen');
 };
 
 export async function spawnGoblinBoi(player: Player, spawnPoint: 'beginning' | 'end'): Promise<void> {
@@ -208,6 +215,10 @@ const trainingSwordEquipAction: equipAction = async ({ player, itemDetails }) =>
     }
 };
 
+const createCharacterAction: buttonAction = ({ player }): void => {
+    player.interfaceState.closeAllSlots();
+};
+
 export default [
     {
         type: 'player_init',
@@ -232,5 +243,10 @@ export default [
         equipType: 'EQUIP',
         action: trainingSwordEquipAction,
         itemIds: [ 9703, 9704 ]
+    },
+    {
+        type: 'button',
+        widgetId: widgets.characterDesign,
+        action: createCharacterAction
     }
 ];

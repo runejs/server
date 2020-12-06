@@ -30,13 +30,6 @@ export const action: buttonAction = (details) => {
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipmentStats, player.equipment);
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
 
-    player.activeWidget = {
-        widgetId: widgets.equipmentStats.widgetId,
-        secondaryWidgetId: widgets.inventory.widgetId,
-        type: 'SCREEN_AND_TAB',
-        closeOnWalk: true
-    };
-
     player.interfaceState.openWidget(widgets.equipmentStats.widgetId, {
         multi: true,
         slot: 'screen'

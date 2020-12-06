@@ -136,14 +136,11 @@ export class WalkingQueue {
 
         if(this.actor instanceof Player) {
             this.actor.actionsCancelled.next('pathing-movement');
-
-            const activeWidget = this.actor.activeWidget;
-            if(activeWidget && (!walkPosition.metadata || !walkPosition.metadata.ignoreWidgets)) {
-                if(activeWidget.disablePlayerMovement) {
-                    this.resetDirections();
-                    return;
-                }
-            }
+            // if(activeWidget.disablePlayerMovement) {
+            //     this.resetDirections();
+            //     return;
+            // }
+            //this.actor.interfaceState.closeAllSlots();
         }
 
         if(this.actor.metadata['faceActorClearedByWalking'] === undefined || this.actor.metadata['faceActorClearedByWalking']) {

@@ -8,7 +8,7 @@ import { widgets } from '@server/config';
 export const action: itemAction = (details) => {
     const { player, itemId, itemSlot, option, itemDetails } = details;
 
-    if(!player.activeWidget || player.activeWidget.widgetId !== widgets.shop.widgetId) {
+    if(!player.interfaceState.findWidget(widgets.shop.widgetId)) {
         return;
     }
 

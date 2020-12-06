@@ -519,34 +519,30 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
     }
 
     if(tag === undefined && widgetId) {
-        let closeOnWalk = true;
-        if(additionalOptions && additionalOptions.closeOnWalk !== undefined) {
-            closeOnWalk = additionalOptions.closeOnWalk;
-        }
-
         const permanent = additionalOptions?.permanent || false;
 
-        player.interfaceState.openWidget(widgetId, {
-            slot: 'chatbox',
-            multi: true
-        });
+        if(permanent) {
+            player.interfaceState.openChatOverlayWidget(widgetId);
+        } else {
+            player.interfaceState.openWidget(widgetId, {
+                slot: 'chatbox',
+                multi: false
+            });
 
-        const dialogueChoice = await Promise.race([ lastValueFrom(player.dialogueInteractionEvent.pipe(take(1))),
-            lastValueFrom(player.interfaceState.closed.pipe(take(1))) ]);
+            const widgetClosedEvent = await player.interfaceState.widgetClosed('chatbox');
 
-        console.log(dialogueChoice);
+            if(widgetClosedEvent.data === undefined) {
+                throw new Error('Dialogue Cancelled.');
+            }
 
-        if(dialogueChoice === undefined) {
-            throw new Error('Dialogue Cancelled');
-        }
-
-        if(isOptions && typeof dialogueChoice === 'number') {
-            const optionsAction = dialogueAction as OptionsDialogueAction;
-            const options = Object.keys(optionsAction.options);
-            const trees = options.map(option => optionsAction.options[option]);
-            const tree: ParsedDialogueTree = trees[dialogueChoice - 1];
-            if(tree && tree.length !== 0) {
-                await runParsedDialogue(player, tree, tag, additionalOptions);
+            if(isOptions && typeof widgetClosedEvent.data === 'number') {
+                const optionsAction = dialogueAction as OptionsDialogueAction;
+                const options = Object.keys(optionsAction.options);
+                const trees = options.map(option => optionsAction.options[option]);
+                const tree: ParsedDialogueTree = trees[widgetClosedEvent.data - 1];
+                if(tree && tree.length !== 0) {
+                    await runParsedDialogue(player, tree, tag, additionalOptions);
+                }
             }
         }
     }
@@ -557,7 +553,6 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTree, tag?: string, additionalOptions?: AdditionalOptions): Promise<boolean> {
     for(let i = 0; i < dialogueTree.length; i++) {
         tag = await runDialogueAction(player, dialogueTree[i], tag, additionalOptions);
-        player.interfaceState.closeWidget('chatbox');
     }
 
     return tag === undefined;
@@ -585,7 +580,6 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
             runParsedDialogue(player, parsedDialogueTree, undefined, additionalOptions).then(() => {
                 resolve();
             }).catch(error => {
-                player.interfaceState.closeWidget('chatbox');
                 reject(error);
             });
         });
@@ -593,8 +587,10 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
 
     try {
         await run();
+        player.interfaceState.closeAllSlots();
         return true;
     } catch(error) {
+        player.interfaceState.closeAllSlots();
         logger.warn(`Dialogue cancelled.`);
         return false;
     }

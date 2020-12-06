@@ -131,7 +131,6 @@ export class Player extends Actor {
     private _lastAddress: string;
     private firstTimePlayer: boolean;
     private _appearance: Appearance;
-    private _activeWidget: PlayerWidget;
     private queuedWidgets: PlayerWidget[];
     private _bonuses: { offensive: OffensiveBonuses, defensive: DefensiveBonuses, skill: SkillBonuses };
     private _carryWeight: number;
@@ -157,7 +156,6 @@ export class Player extends Actor {
         this.npcUpdateTask = new NpcSyncTask(this);
         this.trackedPlayers = [];
         this.trackedNpcs = [];
-        this._activeWidget = null;
         this.queuedWidgets = [];
         this._carryWeight = 0;
         this._equipment = new ItemContainer(14);
@@ -236,6 +234,22 @@ export class Player extends Actor {
         this.updateQuestTab();
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
+
+        this.actionsCancelled.subscribe(type => {
+            let closeWidget: boolean;
+
+            if(type === 'manual-movement' || type === 'pathing-movement') {
+                closeWidget = true;
+            } else if(type === 'keep-widgets-open' || type === 'button' || type === 'widget') {
+                closeWidget = false;
+            } else {
+                closeWidget = true;
+            }
+
+            if(closeWidget) {
+                this.interfaceState.closeAllSlots();
+            }
+        });
 
         this._loginDate = new Date();
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';

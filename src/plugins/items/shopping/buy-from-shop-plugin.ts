@@ -15,7 +15,7 @@ function removeCoins(inventory: ItemContainer, coinsIndex: number, cost: number)
 export const action: itemAction = (details) => {
     const { player, itemId, itemSlot, widgetId, option } = details;
 
-    if(!player.activeWidget || player.activeWidget.widgetId !== widgetId) {
+    if(!player.interfaceState.findWidget(widgetId)) {
         return;
     }
 
