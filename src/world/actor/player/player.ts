@@ -45,6 +45,8 @@ import { animationIds } from '@server/world/config/animation-ids';
 import { combatStyles } from '@server/world/actor/combat';
 import { WorldInstance, TileModifications } from '@server/world/instances';
 import { Cutscene } from '@server/world/actor/player/cutscenes';
+import { InterfaceState } from '@server/world/actor/player/interface-state';
+import { dialogue } from '@server/world/actor/dialogue';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -108,6 +110,7 @@ export class Player extends Actor {
     public readonly numericInputEvent: Subject<number>;
     public readonly dialogueInteractionEvent: Subject<number>;
     public readonly personalInstance = new WorldInstance(uuidv4());
+    public readonly interfaceState = new InterfaceState(this);
     public isLowDetail: boolean;
     public trackedPlayers: Player[];
     public trackedNpcs: Npc[];
@@ -193,11 +196,16 @@ export class Player extends Actor {
 
         if(this.firstTimePlayer) {
             if(!serverConfig.tutorialEnabled) {
-                this.openInteractiveWidget({
+                this.interfaceState.openWidget(gameInterfaces.characterDesign, {
+                    slot: 'screen',
+                    multi: false,
+                    walkable: false
+                })
+                /*this.openInteractiveWidget({
                     widgetId: gameInterfaces.characterDesign,
                     type: 'SCREEN',
                     disablePlayerMovement: true
-                }).toPromise();
+                }).toPromise();*/
             }
         } else if(serverConfig.showWelcome && this.savedMetadata.tutorialComplete) {
             const daysSinceLogin = daysSinceLastLogin(this.loginDate);
@@ -219,11 +227,10 @@ export class Player extends Actor {
             this.outgoingPackets.updateWidgetString(gameInterfaces.welcomeScreen, 21, `To start a subscripton:\\n1) Logout and return to the frontpage of this website.\\n2) Choose 'Start a new subscription'`);
             this.outgoingPackets.updateWidgetString(gameInterfaces.welcomeScreen, 19, `You are not a member.\\n\\nChoose to subscribe and\\nyou'll get loads of extra\\nbenefits and features.`);
 
-            this.activeWidget = {
-                widgetId: gameInterfaces.welcomeScreen,
-                secondaryWidgetId: gameInterfaces.welcomeScreenChildren.question,
-                type: 'FULLSCREEN'
-            };
+            this.interfaceState.openWidget(gameInterfaces.welcomeScreen, {
+                slot: 'full',
+                containerId: gameInterfaces.welcomeScreenChildren.question
+            });
         }
 
         for(const playerOption of playerOptions) {
@@ -238,7 +245,7 @@ export class Player extends Actor {
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
 
-        this.actionsCancelled.subscribe(type => {
+        /*this.actionsCancelled.subscribe(type => {
             let closeWidget = false;
 
             const widget = this.activeWidget;
@@ -266,7 +273,7 @@ export class Player extends Actor {
                 this.outgoingPackets.closeActiveWidgets();
                 this._activeWidget = null;
             }
-        });
+        });*/
 
         this._loginDate = new Date();
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
@@ -607,23 +614,21 @@ export class Player extends Actor {
      * @returns A Promise<void> that resolves when the player has clicked the "click to continue" button or
      * after their chat messages have been sent.
      */
-    public async sendMessage(messages: string | string[], showDialogue: boolean = false): Promise<void> {
+    public async sendMessage(messages: string | string[], showDialogue: boolean = false): Promise<boolean> {
         if(!Array.isArray(messages)) {
             messages = [ messages ];
         }
 
         if(!showDialogue) {
             messages.forEach(message => this.outgoingPackets.chatboxMessage(message));
-            return Promise.resolve();
         } else {
-            if(messages.length > 5) {
-                throw new Error(`Dialogues have a maximum of 5 lines!`);
+            for(let i = 0; i < messages.length; i++) {
+                messages[i] = messages[i]?.trim() || '';
             }
 
-            return dialogueAction(this, { type: 'TEXT', lines: messages }).then(async d => {
-                d.close();
-                return Promise.resolve();
-            });
+            return await dialogue([ this ], [
+                text => (messages as string[]).join(' ')
+            ]);
         }
     }
 

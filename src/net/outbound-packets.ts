@@ -407,6 +407,12 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
+    public showTabWidget(widgetId: number): void {
+        const packet = new Packet(237);
+        packet.put(widgetId, 'SHORT');
+        this.queue(packet);
+    }
+
     public sendTabWidget(tabIndex: number, widgetId: number | null): void {
         if(widgetId < 0) {
             return;
@@ -440,6 +446,12 @@ export class OutboundPackets {
 
     public showTextInputDialogue(): void {
         const packet = new Packet(124);
+        this.queue(packet);
+    }
+
+    public showChatDialogue(widgetId: number): void {
+        const packet = new Packet(185);
+        packet.put(widgetId, 'SHORT');
         this.queue(packet);
     }
 

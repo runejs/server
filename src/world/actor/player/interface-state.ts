@@ -60,7 +60,9 @@ export class Widget {
 
 }
 
-
+/**
+ * Control's a Player's Game Interface state.
+ */
 export class InterfaceState {
 
     public readonly tabs: { [key: string]: Widget | null };
@@ -159,15 +161,42 @@ export class InterfaceState {
     }
 
     private showWidget(widget: Widget): void {
-        if(widget.slot === 'full' && widget.containerId !== undefined) {
-            this.player.outgoingPackets.showFullscreenWidget(widget.widgetId, widget.containerId);
-        } else if(widget.slot === 'screen') {
+        const { outgoingPackets: packets } = this.player;
+        const { widgetId, containerId, slot, multi, walkable } = widget;
 
-        } else if(widget.slot === 'chatbox') {
-
-        } else if(widget.slot === 'tabarea') {
-
+        if(slot === 'full' || !multi) {
+            this.closeOthers(slot);
         }
+
+        if(slot === 'full' && containerId !== undefined) {
+            packets.showFullscreenWidget(widgetId, containerId);
+        } else if(slot === 'screen') {
+            if(walkable) {
+
+            } else {
+                packets.showScreenWidget(widgetId);
+            }
+        } else if(slot === 'chatbox') {
+            if(multi) {
+                // Dialogue Widget
+                packets.showChatDialogue(widgetId);
+            } else {
+                // Chatbox Widget
+                packets.showChatboxWidget(widgetId);
+            }
+        } else if(slot === 'tabarea') {
+            if(multi) {
+
+            } else {
+                packets.showTabWidget(widgetId);
+            }
+        }
+    }
+
+    private closeOthers(openSlot: GameInterfaceSlot): void {
+        const slots: GameInterfaceSlot[] = Object.keys(this.widgetSlots)
+            .filter(slot => slot !== openSlot) as GameInterfaceSlot[];
+        slots.forEach(slot => this.closeWidget(slot));
     }
 
     private clearSlots(): void {
