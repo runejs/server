@@ -52,11 +52,10 @@ export const action: buttonAction = (details) => {
         }
     }
 
-    player.activeWidget = {
-        widgetId: widgets.questJournal,
-        type: 'SCREEN',
-        closeOnWalk: true
-    };
+    player.interfaceState.openWidget(widgets.questJournal, {
+        slot: 'screen',
+        multi: false
+    });
 };
 
 export default { type: 'button', widgetId: widgets.questTab, action };

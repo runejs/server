@@ -93,11 +93,10 @@ function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refr
         }
     }
 
-    player.activeWidget = {
-        widgetId: widgets.skillGuide,
-        type: 'SCREEN',
-        closeOnWalk: true
-    };
+    player.interfaceState.openWidget(widgets.skillGuide, {
+        slot: 'screen',
+        multi: false
+    });
     player.metadata['activeSkillGuide'] = guideId;
 }
 

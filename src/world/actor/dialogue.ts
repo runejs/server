@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { wrapText } from '@server/util/strings';
 import { take } from 'rxjs/operators';
 import { findNpc } from '@server/config';
+import { lastValueFrom } from 'rxjs';
 
 export enum Emote {
     POMPOUS = 'POMPOUS',
@@ -525,15 +526,15 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 
         const permanent = additionalOptions?.permanent || false;
 
-        player.activeWidget = {
-            widgetId: widgetId,
-            type: 'CHAT',
-            closeOnWalk,
-            permanent
-        };
+        player.interfaceState.openWidget(widgetId, {
+            slot: 'chatbox',
+            multi: true
+        });
 
-        const dialogueChoice = await Promise.race([ player.dialogueInteractionEvent.pipe(take(1)).toPromise(),
-            player.activeWidget.closed.pipe(take(1)).toPromise() ]);
+        const dialogueChoice = await Promise.race([ lastValueFrom(player.dialogueInteractionEvent.pipe(take(1))),
+            lastValueFrom(player.interfaceState.closed.pipe(take(1))) ]);
+
+        console.log(dialogueChoice);
 
         if(dialogueChoice === undefined) {
             throw new Error('Dialogue Cancelled');
@@ -556,7 +557,7 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTree, tag?: string, additionalOptions?: AdditionalOptions): Promise<boolean> {
     for(let i = 0; i < dialogueTree.length; i++) {
         tag = await runDialogueAction(player, dialogueTree[i], tag, additionalOptions);
-        player.activeWidget = null;
+        player.interfaceState.closeWidget('chatbox');
     }
 
     return tag === undefined;
@@ -584,7 +585,7 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
             runParsedDialogue(player, parsedDialogueTree, undefined, additionalOptions).then(() => {
                 resolve();
             }).catch(error => {
-                player.activeWidget = null;
+                player.interfaceState.closeWidget('chatbox');
                 reject(error);
             });
         });
@@ -681,11 +682,10 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
     });
 
     return new Promise((resolve, reject) => {
-        player.activeWidget = {
-            widgetId,
-            type: 'CHAT',
-            closeOnWalk: true
-        };
+        player.interfaceState.openWidget(widgetId, {
+            slot: 'chatbox',
+            multi: true
+        });
 
         let actionsSub = player.actionsCancelled.subscribe(() => {
             actionsSub.unsubscribe();
@@ -693,7 +693,7 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
         });
 
         const interactionSub = player.dialogueInteractionEvent.subscribe(childId => {
-            if(!player.activeWidget || player.activeWidget.widgetId !== widgetId) {
+            if(!player.interfaceState.widgetOpen('chatbox', widgetId)) {
                 interactionSub.unsubscribe();
                 actionsSub.unsubscribe();
                 reject('Active Widget Mismatch');
@@ -739,10 +739,10 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
                     interactionSub.unsubscribe();
 
                     if(input < 1 || input > 2147483647) {
-                        player.closeActiveWidgets();
+                        player.interfaceState.closeWidget('chatbox');
                         reject('Invalid User Amount Input');
                     } else {
-                        player.closeActiveWidgets();
+                        player.interfaceState.closeWidget('chatbox');
                         resolve({ itemId, amount: input } as ItemSelection);
                     }
                 });
@@ -753,7 +753,7 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
 
                 actionsSub.unsubscribe();
                 interactionSub.unsubscribe();
-                player.closeActiveWidgets();
+                player.interfaceState.closeWidget('chatbox');
                 resolve({ itemId, amount } as ItemSelection);
             }
         });
