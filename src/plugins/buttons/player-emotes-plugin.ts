@@ -1,7 +1,7 @@
 import { buttonAction } from '@server/world/action/button-action';
 import { Player } from '@server/world/actor/player/player';
 import { itemIds } from '@server/world/config/item-ids';
-import { gameInterfaces } from '@server/config';
+import { widgets } from '@server/config';
 
 interface Emote {
     animationId: number;
@@ -181,4 +181,4 @@ export const action: buttonAction = (details) => {
     }
 };
 
-export default { type: 'button', widgetId: gameInterfaces.emotesTab, buttonIds, action };
+export default { type: 'button', widgetId: widgets.emotesTab, buttonIds, action };

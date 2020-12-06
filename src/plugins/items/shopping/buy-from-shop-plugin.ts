@@ -2,7 +2,7 @@ import { itemAction } from '@server/world/action/item-action';
 import { Item } from '@server/world/items/item';
 import { getItemFromContainer, ItemContainer } from '@server/world/items/item-container';
 import { itemIds } from '@server/world/config/item-ids';
-import { findItem, gameInterfaces } from '@server/config';
+import { findItem, widgets } from '@server/config';
 import { Shop } from '@server/config/shop-config';
 
 
@@ -103,14 +103,14 @@ export const action: itemAction = (details) => {
         removeCoins(inventory, coinsIndex, buyCost);
     }
 
-    player.outgoingPackets.sendUpdateSingleWidgetItem(gameInterfaces.shop, itemSlot, shopContainer.items[itemSlot]);
-    player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.shopPlayerInventory, inventory);
-    player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, inventory);
+    player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.shop, itemSlot, shopContainer.items[itemSlot]);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shopPlayerInventory, inventory);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, inventory);
 };
 
 export default {
     type: 'item_action',
-    widgets: gameInterfaces.shop,
+    widgets: widgets.shop,
     options: [ 'buy-1', 'buy-5', 'buy-10' ],
     action,
     cancelOtherActions: false

@@ -1,7 +1,7 @@
 import { npcAction } from '@server/world/action/npc-action';
 import { itemIds } from '@server/world/config/item-ids';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
-import { gameInterfaces } from '@server/config';
+import { widgets } from '@server/config';
 
 const talkToAction : npcAction = (details) => {
     const { player, npc } = details;
@@ -31,7 +31,7 @@ const talkToAction : npcAction = (details) => {
                         }
 
                         inventory.add({ itemId: itemIds.kebab, amount: 1 });
-                        player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, inventory);
+                        player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, inventory);
                         return;
                     }
 

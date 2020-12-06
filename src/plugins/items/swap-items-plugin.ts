@@ -1,15 +1,15 @@
 import { swapItemsAction } from '@server/world/action/swap-items-action';
 import { ItemContainer } from '@server/world/items/item-container';
 import { Player } from '@server/world/actor/player/player';
-import { gameInterfaces } from '@server/config';
+import { widgets } from '@server/config';
 
 type WidgetDetail = [ number, number, (player: Player) => ItemContainer ];
 
 const swappableWidgets: WidgetDetail[] = [
     // Player Inventory
-    [ gameInterfaces.inventory.widgetId, gameInterfaces.inventory.containerId, player => player.inventory ],
+    [ widgets.inventory.widgetId, widgets.inventory.containerId, player => player.inventory ],
     // Player Bank Screen
-    [ gameInterfaces.bank.screenWidget.widgetId, gameInterfaces.bank.screenWidget.containerId, player => player.bank ]
+    [ widgets.bank.screenWidget.widgetId, widgets.bank.screenWidget.containerId, player => player.bank ]
 ];
 
 function swapItems(container: ItemContainer, fromSlot: number, toSlot: number): void {

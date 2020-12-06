@@ -1,7 +1,7 @@
 import { npcAction } from '@server/world/action/npc-action';
 import { dialogue, Emote, execute, goto } from '@server/world/actor/dialogue';
 import { itemIds } from '@server/world/config/item-ids';
-import { gameInterfaces } from '@server/config';
+import { widgets } from '@server/config';
 
 
 const talkTo : npcAction = (details) => {
@@ -16,7 +16,7 @@ const talkTo : npcAction = (details) => {
                 execute(() => {
                     player.inventory.add(itemIds.hammer);
                     player.sendMessage('The Master Smithing Tutor gives you a hammer.', true);
-                    player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, player.inventory);
+                    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
                 }),
                 tutor => [Emote.GENERIC, `You're going to get your hand on some metal bars.`],
                 tutor => [Emote.GENERIC, `You could do this by mining your own ores and smelting them at a furnace.`],

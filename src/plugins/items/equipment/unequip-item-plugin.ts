@@ -1,6 +1,6 @@
 import { itemAction } from '@server/world/action/item-action';
 import { getItemFromContainer } from '@server/world/items/item-container';
-import { gameInterfaces } from '@server/config';
+import { widgets } from '@server/config';
 
 export const action: itemAction = (details) => {
     const { player, itemId, itemSlot, itemDetails } = details;
@@ -25,8 +25,8 @@ export const action: itemAction = (details) => {
 export default {
     type: 'item_action',
     widgets: [
-        gameInterfaces.equipment,
-        gameInterfaces.equipmentStats
+        widgets.equipment,
+        widgets.equipmentStats
     ],
     options: 'remove',
     action,

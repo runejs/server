@@ -11,7 +11,7 @@ import { loopingAction } from '@server/world/action';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { colors } from '@server/util/colors';
-import { gameInterfaces } from '@server/config';
+import { widgets } from '@server/config';
 
 export interface Bar {
     barId: number;
@@ -110,7 +110,7 @@ const RUNEITE : Bar = {
 
 export const openSmeltingInterface: objectAction = (details) => {
     details.player.activeWidget = {
-        widgetId: gameInterfaces.furnace.widgetId,
+        widgetId: widgets.furnace.widgetId,
         type: 'CHAT',
         closeOnWalk: true
     };
@@ -118,14 +118,14 @@ export const openSmeltingInterface: objectAction = (details) => {
 };
 
 const widgetItems = [
-    { slot: gameInterfaces.furnace.slots.slot1, bar: BLURITE },
-    { slot: gameInterfaces.furnace.slots.slot2, bar: IRON },
-    { slot: gameInterfaces.furnace.slots.slot3, bar: SILVER },
-    { slot: gameInterfaces.furnace.slots.slot4, bar: STEEL },
-    { slot: gameInterfaces.furnace.slots.slot5, bar: GOLD },
-    { slot: gameInterfaces.furnace.slots.slot6, bar: MITHRIL },
-    { slot: gameInterfaces.furnace.slots.slot7, bar: ADAMANTITE },
-    { slot: gameInterfaces.furnace.slots.slot8, bar: RUNEITE }
+    { slot: widgets.furnace.slots.slot1, bar: BLURITE },
+    { slot: widgets.furnace.slots.slot2, bar: IRON },
+    { slot: widgets.furnace.slots.slot3, bar: SILVER },
+    { slot: widgets.furnace.slots.slot4, bar: STEEL },
+    { slot: widgets.furnace.slots.slot5, bar: GOLD },
+    { slot: widgets.furnace.slots.slot6, bar: MITHRIL },
+    { slot: widgets.furnace.slots.slot7, bar: ADAMANTITE },
+    { slot: widgets.furnace.slots.slot8, bar: RUNEITE }
 ];
 
 interface Smeltable {
@@ -178,15 +178,15 @@ const loadSmeltingInterface = (details: ObjectActionData) => {
     const theKnightsSwordQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
     // Send the items to the widget.
     widgetItems.forEach((item) => {
-        details.player.outgoingPackets.setItemOnWidget(gameInterfaces.furnace.widgetId, item.slot.modelId, item.bar.barId, 125);
+        details.player.outgoingPackets.setItemOnWidget(widgets.furnace.widgetId, item.slot.modelId, item.bar.barId, 125);
         if (!details.player.skills.hasLevel(Skill.SMITHING, item.bar.requiredLevel)) {
-            details.player.modifyWidget(gameInterfaces.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.red });
+            details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.red });
         } else {
-            details.player.modifyWidget(gameInterfaces.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.black });
+            details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.black });
         }
         // Check if the player has completed 'The Knight's Sword' quest, even if the level is okay.
         if (item.bar.quest !== undefined && (theKnightsSwordQuest == undefined || theKnightsSwordQuest.stage !== 'COMPLETE')) {
-            details.player.modifyWidget(gameInterfaces.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.red });
+            details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.red });
         }
     });
 };
@@ -259,7 +259,7 @@ const smeltProduct = (details: ButtonActionData, bar: Bar, count: number) => {
 export const buttonClicked : buttonAction = (details) => {
 
     // Check if player might be spawning widget clientside
-    if (!details.player.activeWidget || !(details.player.activeWidget.widgetId === gameInterfaces.furnace.widgetId)) {
+    if (!details.player.activeWidget || !(details.player.activeWidget.widgetId === widgets.furnace.widgetId)) {
         return;
     }
 
@@ -295,7 +295,7 @@ export default [
     },
     {
         type: 'button',
-        widgetId: gameInterfaces.furnace.widgetId,
+        widgetId: widgets.furnace.widgetId,
         buttonIds: Array.from(widgetButtonIds.keys()),
         action: buttonClicked
     }

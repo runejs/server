@@ -1,7 +1,7 @@
 import { buttonAction } from '@server/world/action/button-action';
 import { wrapText } from '@server/util/strings';
 import { pluginActions } from '@server/game-server';
-import { gameInterfaces } from '@server/config';
+import { widgets } from '@server/config';
 
 export const action: buttonAction = (details) => {
     const { player, buttonId } = details;
@@ -32,26 +32,26 @@ export const action: buttonAction = (details) => {
         lines = [ 'Invalid Quest Stage' ];
     }
 
-    player.modifyWidget(gameInterfaces.questJournal, { childId: 2, text: '@dre@' + questData.name });
+    player.modifyWidget(widgets.questJournal, { childId: 2, text: '@dre@' + questData.name });
 
     for(let i = 0; i <= 100; i++) {
         if(i === 0) {
-            player.modifyWidget(gameInterfaces.questJournal, { childId: 3, text: `<col=${color}>${lines[0]}</col>` });
+            player.modifyWidget(widgets.questJournal, { childId: 3, text: `<col=${color}>${lines[0]}</col>` });
             continue;
         }
 
         if(lines.length > i) {
-            player.modifyWidget(gameInterfaces.questJournal, { childId: (i + 4), text: `<col=${color}>${lines[i]}</col>` });
+            player.modifyWidget(widgets.questJournal, { childId: (i + 4), text: `<col=${color}>${lines[i]}</col>` });
         } else {
-            player.modifyWidget(gameInterfaces.questJournal, { childId: (i + 4), text: '' });
+            player.modifyWidget(widgets.questJournal, { childId: (i + 4), text: '' });
         }
     }
 
     player.activeWidget = {
-        widgetId: gameInterfaces.questJournal,
+        widgetId: widgets.questJournal,
         type: 'SCREEN',
         closeOnWalk: true
     };
 };
 
-export default { type: 'button', widgetId: gameInterfaces.questTab, action };
+export default { type: 'button', widgetId: widgets.questTab, action };

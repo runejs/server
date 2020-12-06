@@ -1,7 +1,7 @@
-import { gameInterfaces } from '../../config';
+import { widgets } from '../../config';
 
 const characterDesignPacket = (player, packet) => {
-    if(!player.activeWidget || player.activeWidget.widgetId !== gameInterfaces.characterDesign) {
+    if(!player.activeWidget || player.activeWidget.widgetId !== widgets.characterDesign) {
         return;
     }
 

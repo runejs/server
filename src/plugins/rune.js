@@ -13,4 +13,4 @@ export * from '../world/actor/update-flags';
 export * from '../world/actor/skills';
 export * from '../world/actor/player/achievements';
 export * from '../task/task';
-export { gameInterfaces } from '../config';
+export { widgets } from '../config';

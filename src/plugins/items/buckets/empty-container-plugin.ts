@@ -2,7 +2,7 @@ import { itemAction } from '@server/world/action/item-action';
 import { soundIds } from '@server/world/config/sound-ids';
 import { itemIds } from '@server/world/config/item-ids';
 import { getItemFromContainer } from '@server/world/items/item-container';
-import { gameInterfaces } from '@server/config';
+import { widgets } from '@server/config';
 
 export const action: itemAction = (details) => {
     const { player, itemId, itemSlot } = details;
@@ -27,12 +27,12 @@ export const action: itemAction = (details) => {
     }
 
     // @TODO only update necessary slots
-    player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, inventory);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, inventory);
 };
 
 export default {
     type: 'item_action',
-    widgets: gameInterfaces.inventory,
+    widgets: widgets.inventory,
     options: 'empty',
     itemIds: [itemIds.bucketOfMilk, itemIds.bucketOfWater, itemIds.jugOfWater],
     action,

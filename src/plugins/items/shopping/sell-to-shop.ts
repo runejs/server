@@ -2,13 +2,13 @@ import { itemAction } from '@server/world/action/item-action';
 import { itemIds } from '@server/world/config/item-ids';
 import { getItemFromContainer } from '@server/world/items/item-container';
 import { Shop } from '@server/config/shop-config';
-import { gameInterfaces } from '@server/config';
+import { widgets } from '@server/config';
 
 
 export const action: itemAction = (details) => {
     const { player, itemId, itemSlot, option, itemDetails } = details;
 
-    if(!player.activeWidget || player.activeWidget.widgetId !== gameInterfaces.shop.widgetId) {
+    if(!player.activeWidget || player.activeWidget.widgetId !== widgets.shop.widgetId) {
         return;
     }
 
@@ -80,14 +80,14 @@ export const action: itemAction = (details) => {
         }
     }
 
-    player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.shop, shopContainer);
-    player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.shopPlayerInventory, inventory);
-    player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, inventory);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shop, shopContainer);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shopPlayerInventory, inventory);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, inventory);
 };
 
 export default {
     type: 'item_action',
-    widgets: gameInterfaces.shopPlayerInventory,
+    widgets: widgets.shopPlayerInventory,
     options: [ 'sell-1', 'sell-5', 'sell-10' ],
     action,
     cancelOtherActions: false

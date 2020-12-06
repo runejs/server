@@ -2,7 +2,7 @@ import { logger } from '@runejs/core';
 import { world } from '../../game-server';
 import { World } from '../../world';
 import { actionHandler } from '../../world/action';
-import { gameInterfaces } from '../../config';
+import { widgets } from '../../config';
 
 const itemOnNpcPacket = (player, packet) => {
     const { buffer } = packet;
@@ -13,7 +13,7 @@ const itemOnNpcPacket = (player, packet) => {
     const itemContainerId = buffer.get('SHORT');
 
     let usedItem;
-    if(itemWidgetId === gameInterfaces.inventory.widgetId && itemContainerId === gameInterfaces.inventory.containerId) {
+    if(itemWidgetId === widgets.inventory.widgetId && itemContainerId === widgets.inventory.containerId) {
         if(itemSlot < 0 || itemSlot > 27) {
             return;
         }

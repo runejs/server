@@ -48,7 +48,7 @@ export let npcIdMap: { [key: number]: string };
 export let npcPresetMap: NpcPresetConfiguration;
 export let npcSpawns: NpcSpawn[] = [];
 export let shopMap: { [key: string]: Shop };
-export let gameInterfaces: { [key: string]: any };
+export let widgets: { [key: string]: any };
 
 
 export async function loadConfigurations(): Promise<void> {
@@ -66,7 +66,7 @@ export async function loadConfigurations(): Promise<void> {
 
     shopMap = await loadShopConfigurations('data/config/shops');
 
-    gameInterfaces = json5.parse(readFileSync('data/config/game-interfaces.json5', 'utf8'));
+    widgets = json5.parse(readFileSync('data/config/widgets.json5', 'utf8'));
 }
 
 

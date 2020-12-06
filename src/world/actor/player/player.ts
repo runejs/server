@@ -39,7 +39,7 @@ import {
     ItemDetails,
     OffensiveBonuses, SkillBonuses
 } from '@server/config/item-config';
-import { findItem, npcIdMap, gameInterfaces } from '@server/config';
+import { findItem, npcIdMap, widgets } from '@server/config';
 import { NpcDetails } from '@server/config/npc-config';
 import { animationIds } from '@server/world/config/animation-ids';
 import { combatStyles } from '@server/world/actor/combat';
@@ -62,10 +62,10 @@ export const playerOptions: { option: string, index: number, placement: 'TOP' | 
 ];
 
 export const defaultPlayerTabWidgets = [
-    -1, gameInterfaces.skillsTab, gameInterfaces.questTab, gameInterfaces.inventory.widgetId,
-    gameInterfaces.equipment.widgetId, gameInterfaces.prayerTab, gameInterfaces.standardSpellbookTab, null,
-    gameInterfaces.friendsList, gameInterfaces.ignoreList, gameInterfaces.logoutTab, gameInterfaces.settingsTab, gameInterfaces.emotesTab,
-    gameInterfaces.musicPlayerTab
+    -1, widgets.skillsTab, widgets.questTab, widgets.inventory.widgetId,
+    widgets.equipment.widgetId, widgets.prayerTab, widgets.standardSpellbookTab, null,
+    widgets.friendsList, widgets.ignoreList, widgets.logoutTab, widgets.settingsTab, widgets.emotesTab,
+    widgets.musicPlayerTab
 ];
 
 export enum Tabs {
@@ -186,8 +186,8 @@ export class Player extends Actor {
         this.skills.values.forEach((skill, index) =>
             this.outgoingPackets.updateSkill(index, skill.level, skill.exp));
 
-        this.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, this.inventory);
-        this.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.equipment, this.equipment);
+        this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
+        this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
         for(const item of this.equipment.items) {
             if(item) {
                 actionHandler.call('equip_action', this, item.itemId, 'EQUIP');
@@ -196,7 +196,7 @@ export class Player extends Actor {
 
         if(this.firstTimePlayer) {
             if(!serverConfig.tutorialEnabled) {
-                this.interfaceState.openWidget(gameInterfaces.characterDesign, {
+                this.interfaceState.openWidget(widgets.characterDesign, {
                     slot: 'screen',
                     multi: false,
                     walkable: false
@@ -218,18 +218,18 @@ export class Player extends Actor {
             } else {
                 loginDaysStr = daysSinceLogin + ' days ago';
             }
-            this.outgoingPackets.updateWidgetString(gameInterfaces.welcomeScreenChildren.question, 1, `Want to help RuneJS improve?\\nSend us a pull request over on Github!`);
-            this.outgoingPackets.updateWidgetString(gameInterfaces.welcomeScreen, 13, `You last logged in @red@${ loginDaysStr }@bla@ from: @red@${ this.lastAddress }`);
-            this.outgoingPackets.updateWidgetString(gameInterfaces.welcomeScreen, 16, `You have @yel@0 unread messages\\nin your message centre.`);
-            this.outgoingPackets.updateWidgetString(gameInterfaces.welcomeScreen, 14, `\\nYou have not yet set any recovery questions.\\nIt is @lre@strongly@yel@ recommended that you do so.\\n\\nIf you don't you will be @lre@unable to recover your\\n@lre@password@yel@ if you forget it, or it is stolen.`);
-            this.outgoingPackets.updateWidgetString(gameInterfaces.welcomeScreen, 22, `To change your recovery questions:\\n1) Logout and return to the frontpage of this website.\\n2) Choose 'Set new recovery questions'.`);
-            this.outgoingPackets.updateWidgetString(gameInterfaces.welcomeScreen, 17, `\\nYou do not have a Bank PIN.\\nPlease visit a bank if you would like one.`);
-            this.outgoingPackets.updateWidgetString(gameInterfaces.welcomeScreen, 21, `To start a subscripton:\\n1) Logout and return to the frontpage of this website.\\n2) Choose 'Start a new subscription'`);
-            this.outgoingPackets.updateWidgetString(gameInterfaces.welcomeScreen, 19, `You are not a member.\\n\\nChoose to subscribe and\\nyou'll get loads of extra\\nbenefits and features.`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreenChildren.question, 1, `Want to help RuneJS improve?\\nSend us a pull request over on Github!`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 13, `You last logged in @red@${ loginDaysStr }@bla@ from: @red@${ this.lastAddress }`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 16, `You have @yel@0 unread messages\\nin your message centre.`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 14, `\\nYou have not yet set any recovery questions.\\nIt is @lre@strongly@yel@ recommended that you do so.\\n\\nIf you don't you will be @lre@unable to recover your\\n@lre@password@yel@ if you forget it, or it is stolen.`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 22, `To change your recovery questions:\\n1) Logout and return to the frontpage of this website.\\n2) Choose 'Set new recovery questions'.`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 17, `\\nYou do not have a Bank PIN.\\nPlease visit a bank if you would like one.`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 21, `To start a subscripton:\\n1) Logout and return to the frontpage of this website.\\n2) Choose 'Start a new subscription'`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 19, `You are not a member.\\n\\nChoose to subscribe and\\nyou'll get loads of extra\\nbenefits and features.`);
 
-            this.interfaceState.openWidget(gameInterfaces.welcomeScreen, {
+            this.interfaceState.openWidget(widgets.welcomeScreen, {
                 slot: 'full',
-                containerId: gameInterfaces.welcomeScreenChildren.question
+                containerId: widgets.welcomeScreenChildren.question
             });
         }
 
@@ -239,7 +239,7 @@ export class Player extends Actor {
 
         this.updateBonuses();
         this.updateCarryWeight(true);
-        this.modifyWidget(gameInterfaces.musicPlayerTab, { childId: 82, textColor: colors.green }); // Set "Harmony" to green/unlocked on the music tab
+        this.modifyWidget(widgets.musicPlayerTab, { childId: 82, textColor: colors.green }); // Set "Harmony" to green/unlocked on the music tab
         this.playSong(songs.harmony);
         this.updateQuestTab();
 
@@ -516,41 +516,41 @@ export class Player extends Actor {
         }
 
         if(playerQuest.stage === 'NOT_STARTED' && stage !== 'COMPLETE') {
-            this.modifyWidget(gameInterfaces.questTab, { childId: questData.questTabId, textColor: colors.yellow });
+            this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
         } else if(playerQuest.stage !== 'COMPLETE' && stage === 'COMPLETE') {
             this.outgoingPackets.updateClientConfig(interfaceScripts.questPoints, questData.points + this.getQuestPoints());
-            this.modifyWidget(gameInterfaces.questReward, { childId: 2, text: `You have completed ${ questData.name }!` });
-            this.modifyWidget(gameInterfaces.questReward, {
+            this.modifyWidget(widgets.questReward, { childId: 2, text: `You have completed ${ questData.name }!` });
+            this.modifyWidget(widgets.questReward, {
                 childId: 8,
                 text: `${ questData.points } Quest Point${ questData.points > 1 ? 's' : '' }`
             });
 
             for(let i = 0; i < 5; i++) {
                 if(i >= questData.completion.rewards.length) {
-                    this.modifyWidget(gameInterfaces.questReward, { childId: 9 + i, text: '' });
+                    this.modifyWidget(widgets.questReward, { childId: 9 + i, text: '' });
                 } else {
-                    this.modifyWidget(gameInterfaces.questReward, { childId: 9 + i, text: questData.completion.rewards[i] });
+                    this.modifyWidget(widgets.questReward, { childId: 9 + i, text: questData.completion.rewards[i] });
                 }
             }
 
             if(questData.completion.itemId) {
-                this.outgoingPackets.updateWidgetModel1(gameInterfaces.questReward, 3,
+                this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3,
                     (cache.itemDefinitions.get(questData.completion.itemId) as ItemDefinition).inventoryModelId);
             } else if(questData.completion.modelId) {
-                this.outgoingPackets.updateWidgetModel1(gameInterfaces.questReward, 3, questData.completion.modelId);
+                this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.completion.modelId);
             }
 
-            this.outgoingPackets.setWidgetModelRotationAndZoom(gameInterfaces.questReward, 3,
+            this.outgoingPackets.setWidgetModelRotationAndZoom(widgets.questReward, 3,
                 questData.completion.modelRotationX || 0, questData.completion.modelRotationY || 0,
                 questData.completion.modelZoom || 0);
 
             this.activeWidget = {
-                widgetId: gameInterfaces.questReward,
+                widgetId: widgets.questReward,
                 type: 'SCREEN',
                 closeOnWalk: true
             };
 
-            this.modifyWidget(gameInterfaces.questTab, { childId: questData.questTabId, textColor: colors.green });
+            this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.green });
 
             questData.completion.onComplete(this);
         }
@@ -571,7 +571,7 @@ export class Player extends Actor {
                 this.outgoingPackets.updateWidgetString(widgetId, childId, text);
             }
             if(hidden !== undefined) {
-                this.outgoingPackets.toggleWidgetVisibility(gameInterfaces.skillGuide, childId, hidden);
+                this.outgoingPackets.toggleWidgetVisibility(widgets.skillGuide, childId, hidden);
             }
             if(textColor !== undefined) {
                 const { r, g, b } = hexToRgb(textColor);
@@ -663,7 +663,7 @@ export class Player extends Actor {
             return -1;
         }
 
-        this.outgoingPackets.sendUpdateSingleWidgetItem(gameInterfaces.inventory, slot, null);
+        this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, slot, null);
         return slot;
     }
 
@@ -674,7 +674,7 @@ export class Player extends Actor {
 
     public removeItem(slot: number): void {
         this.inventory.remove(slot);
-        this.outgoingPackets.sendUpdateSingleWidgetItem(gameInterfaces.inventory, slot, null);
+        this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, slot, null);
     }
 
     public giveItem(item: number | Item): boolean {
@@ -683,7 +683,7 @@ export class Player extends Actor {
             return false;
         }
 
-        this.outgoingPackets.sendUpdateSingleWidgetItem(gameInterfaces.inventory, addedItem.slot, addedItem.item);
+        this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, addedItem.slot, addedItem.item);
         return true;
     }
 
@@ -930,11 +930,11 @@ export class Player extends Actor {
         this.updateBonuses();
 
         // @TODO change packets to only update modified container slots
-        this.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, this.inventory);
-        this.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.equipment, this.equipment);
+        this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
+        this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
 
-        if(this.hasWidgetOpen(gameInterfaces.equipmentStats.widgetId)) {
-            this.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.equipmentStats, this.equipment);
+        if(this.hasWidgetOpen(widgets.equipmentStats.widgetId)) {
+            this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipmentStats, this.equipment);
             updateBonusStrings(this);
         }
 
@@ -1012,9 +1012,9 @@ export class Player extends Actor {
 
     private inventoryUpdated(event: ContainerUpdateEvent): void {
         if(event.type === 'CLEAR_ALL') {
-            this.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, this.inventory);
+            this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
         } else if(event.type === 'ADD') {
-            this.outgoingPackets.sendUpdateSingleWidgetItem(gameInterfaces.inventory, event.slot, event.item);
+            this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, event.slot, event.item);
         }
         this.updateCarryWeight();
     }
@@ -1083,7 +1083,7 @@ export class Player extends Actor {
                 color = stage === 'COMPLETE' ? colors.green : colors.yellow;
             }
 
-            this.modifyWidget(gameInterfaces.questTab, { childId: questData.questTabId, textColor: color });
+            this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: color });
         });
     }
 

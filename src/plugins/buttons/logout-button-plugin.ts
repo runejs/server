@@ -1,6 +1,6 @@
 import { buttonAction } from '@server/world/action/button-action';
 import { world } from '@server/game-server';
-import { gameInterfaces } from '@server/config';
+import { widgets } from '@server/config';
 
 export const action: buttonAction = (details) => {
     const { player } = details;
@@ -14,4 +14,4 @@ export const action: buttonAction = (details) => {
     }
 };
 
-export default { type: 'button', widgetId: gameInterfaces.logoutTab, buttonIds: 6, action };
+export default { type: 'button', widgetId: widgets.logoutTab, buttonIds: 6, action };

@@ -1,5 +1,5 @@
 import { buttonAction } from '@server/world/action/button-action';
-import { gameInterfaces } from '@server/config';
+import { widgets } from '@server/config';
 
 const buttonIds: number[] = [
     0, // walk/run
@@ -19,4 +19,4 @@ export const action: buttonAction = (details) => {
     player.settingChanged(buttonId);
 };
 
-export default { type: 'button', widgetId: gameInterfaces.settingsTab, buttonIds: buttonIds, action };
+export default { type: 'button', widgetId: widgets.settingsTab, buttonIds: buttonIds, action };

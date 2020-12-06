@@ -3,7 +3,7 @@ import { soundIds } from '@server/world/config/sound-ids';
 import { getItemFromContainer } from '@server/world/items/item-container';
 import { serverConfig } from '@server/game-server';
 import { Rights } from '@server/world/actor/player/player';
-import { gameInterfaces } from '@server/config';
+import { widgets } from '@server/config';
 
 export const action: itemAction = ({ player, itemId, itemSlot }) => {
     const inventory = player.inventory;
@@ -20,7 +20,7 @@ export const action: itemAction = ({ player, itemId, itemSlot }) => {
     }
 
     inventory.remove(itemSlot);
-    player.outgoingPackets.sendUpdateSingleWidgetItem(gameInterfaces.inventory, itemSlot, null);
+    player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, itemSlot, null);
     player.playSound(soundIds.dropItem, 5);
     player.instance.spawnWorldItem(item, player.position, player, 300);
     player.actionsCancelled.next();
@@ -28,7 +28,7 @@ export const action: itemAction = ({ player, itemId, itemSlot }) => {
 
 export default {
     type: 'item_action',
-    widgets: gameInterfaces.inventory,
+    widgets: widgets.inventory,
     options: 'drop',
     action,
     cancelOtherActions: false

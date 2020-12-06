@@ -1,6 +1,6 @@
 import { logger } from '@runejs/core';
 import { actionHandler } from '../../world/action';
-import { gameInterfaces } from '../../config';
+import { widgets } from '../../config';
 
 const itemOnItemPacket = (player, packet) => {
     const { buffer } = packet;
@@ -13,8 +13,8 @@ const itemOnItemPacket = (player, packet) => {
     const usedItemId = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
     const usedSlot = buffer.get('SHORT', 'UNSIGNED');
 
-    if(usedWidgetId === gameInterfaces.inventory.widgetId && usedContainerId === gameInterfaces.inventory.containerId &&
-        usedWithWidgetId === gameInterfaces.inventory.widgetId && usedWithContainerId === gameInterfaces.inventory.containerId) {
+    if(usedWidgetId === widgets.inventory.widgetId && usedContainerId === widgets.inventory.containerId &&
+        usedWithWidgetId === widgets.inventory.widgetId && usedWithContainerId === widgets.inventory.containerId) {
         if(usedSlot < 0 || usedSlot > 27 || usedWithSlot < 0 || usedWithSlot > 27) {
             return;
         }

@@ -6,7 +6,7 @@ import { itemAction } from '@server/world/action/item-action';
 import { fromNote, Item, toNote } from '@server/world/items/item';
 import { buttonAction } from '@server/world/action/button-action';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
-import { gameInterfaces } from '@server/config';
+import { widgets } from '@server/config';
 
 
 const buttonIds: number[] = [
@@ -18,21 +18,21 @@ const buttonIds: number[] = [
 
 export const openBankInterface: objectAction = ({ player }) => {
     player.activeWidget = {
-        widgetId: gameInterfaces.bank.screenWidget.widgetId,
-        secondaryWidgetId: gameInterfaces.bank.tabWidget.widgetId,
+        widgetId: widgets.bank.screenWidget.widgetId,
+        secondaryWidgetId: widgets.bank.tabWidget.widgetId,
         type: 'SCREEN_AND_TAB',
         closeOnWalk: true
     };
 
-    player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.bank.tabWidget, player.inventory);
-    player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.bank.screenWidget, player.bank);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, player.inventory);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, player.bank);
     player.outgoingPackets.updateClientConfig(interfaceScripts.bankInsertMode, player.settings.bankInsertMode);
     player.outgoingPackets.updateClientConfig(interfaceScripts.bankWithdrawNoteMode, player.settings.bankWithdrawNoteMode);
 };
 
 export const openPinSettings: objectAction = ({ player }) => {
     player.activeWidget = {
-        widgetId: gameInterfaces.bank.pinSettingsWidget.widgetId,
+        widgetId: widgets.bank.pinSettingsWidget.widgetId,
         type: 'SCREEN',
         closeOnWalk: true
     };
@@ -41,8 +41,8 @@ export const openPinSettings: objectAction = ({ player }) => {
 export const depositItem: itemAction = (details) => {
     // Check if player might be spawning widget clientside
     if (!details.player.activeWidget ||
-        !(details.player.activeWidget.widgetId === gameInterfaces.bank.screenWidget.widgetId) ||
-        !(details.player.activeWidget.secondaryWidgetId === gameInterfaces.bank.tabWidget.widgetId)) {
+        !(details.player.activeWidget.widgetId === widgets.bank.screenWidget.widgetId) ||
+        !(details.player.activeWidget.secondaryWidgetId === widgets.bank.tabWidget.widgetId)) {
         return;
     }
 
@@ -100,17 +100,17 @@ export const depositItem: itemAction = (details) => {
     playerBank.addStacking(itemToAdd);
 
 
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.bank.tabWidget, details.player.inventory);
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, details.player.inventory);
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.bank.screenWidget, details.player.bank);
+    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, details.player.inventory);
+    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, details.player.inventory);
+    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, details.player.bank);
 };
 
 
 export const withdrawItem: itemAction = (details) => {
     // Check if player might be spawning widget clientside
     if (!details.player.activeWidget ||
-        !(details.player.activeWidget.widgetId === gameInterfaces.bank.screenWidget.widgetId) ||
-        !(details.player.activeWidget.secondaryWidgetId === gameInterfaces.bank.tabWidget.widgetId)) {
+        !(details.player.activeWidget.widgetId === widgets.bank.screenWidget.widgetId) ||
+        !(details.player.activeWidget.secondaryWidgetId === widgets.bank.tabWidget.widgetId)) {
         return;
     }
     // Check if the player has the item
@@ -175,9 +175,9 @@ export const withdrawItem: itemAction = (details) => {
     }
 
 
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.bank.tabWidget, details.player.inventory);
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, details.player.inventory);
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.bank.screenWidget, details.player.bank);
+    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, details.player.inventory);
+    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, details.player.inventory);
+    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, details.player.bank);
 };
 
 export const btnAction: buttonAction = (details) => {
@@ -239,17 +239,17 @@ export default [{
     action: openBankInterface
 }, {
     type: 'item_action',
-    widgets: gameInterfaces.bank.tabWidget,
+    widgets: widgets.bank.tabWidget,
     options: ['deposit-1', 'deposit-5', 'deposit-10', 'deposit-all'],
     action: depositItem,
 }, {
     type: 'item_action',
-    widgets: gameInterfaces.bank.screenWidget,
+    widgets: widgets.bank.screenWidget,
     options: ['withdraw-1', 'withdraw-5', 'withdraw-10', 'withdraw-all'],
     action: withdrawItem,
 }, {
     type: 'button',
-    widgetId: gameInterfaces.bank.screenWidget.widgetId,
+    widgetId: widgets.bank.screenWidget.widgetId,
     buttonIds: buttonIds,
     action: btnAction
 }];

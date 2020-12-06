@@ -1,7 +1,7 @@
 import { npcAction } from '@server/world/action/npc-action';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 import { itemIds } from '@server/world/config/item-ids';
-import { gameInterfaces } from '@server/config';
+import { widgets } from '@server/config';
 
 
 const talkToBartender : npcAction = (details) => {
@@ -43,7 +43,7 @@ const talkToBartender : npcAction = (details) => {
 
                         // Give the beer.
                         player.inventory.add(itemIds.beer);
-                        player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, player.inventory);
+                        player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
                     }
                 }),
             ],
@@ -123,7 +123,7 @@ const talkToCook : npcAction = (details) => {
 
                                         // Give the cabbage.
                                         player.inventory.add(itemIds.cabbage);
-                                        player.outgoingPackets.sendUpdateAllWidgetItems(gameInterfaces.inventory, player.inventory);
+                                        player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
                                     }),
                                     cook => [Emote.HAPPY, `It's a deal. Now, make sure you eat it all up. Cabbage is good for you.`],
                                 ],

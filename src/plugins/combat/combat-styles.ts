@@ -2,7 +2,7 @@ import { equipAction, EquipActionData } from '@server/world/action/equip-action'
 import { ItemDetails, WeaponStyle, weaponWidgetIds } from '@server/config/item-config';
 import { interfaceScripts } from '@server/world/config/widget';
 import { Player, playerInitAction } from '@server/world/actor/player/player';
-import { findItem, gameInterfaces } from '@server/config';
+import { findItem, widgets } from '@server/config';
 import { buttonAction } from '@server/world/action/button-action';
 import { combatStyles } from '@server/world/actor/combat';
 import { serverConfig } from '@server/game-server';
@@ -17,8 +17,8 @@ export function updateCombatStyle(player: Player, weaponStyle: WeaponStyle, styl
 }
 
 export function showUnarmed(player: Player): void {
-    player.modifyWidget(gameInterfaces.defaultCombatStyle, { childId: 0, text: 'Unarmed' });
-    player.setSidebarWidget(0, gameInterfaces.defaultCombatStyle);
+    player.modifyWidget(widgets.defaultCombatStyle, { childId: 0, text: 'Unarmed' });
+    player.setSidebarWidget(0, widgets.defaultCombatStyle);
     let style = 0;
     if(player.savedMetadata.combatStyle) {
         style = player.savedMetadata.combatStyle[1] || null;
