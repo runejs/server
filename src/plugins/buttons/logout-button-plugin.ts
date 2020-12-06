@@ -1,6 +1,6 @@
 import { buttonAction } from '@server/world/action/button-action';
-import { widgets } from '@server/world/config/widget';
 import { world } from '@server/game-server';
+import { widgets } from '@server/config';
 
 export const action: buttonAction = (details) => {
     const { player } = details;

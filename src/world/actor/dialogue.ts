@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { wrapText } from '@server/util/strings';
 import { take } from 'rxjs/operators';
 import { findNpc } from '@server/config';
+import { lastValueFrom } from 'rxjs';
 
 export enum Emote {
     POMPOUS = 'POMPOUS',
@@ -518,34 +519,30 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
     }
 
     if(tag === undefined && widgetId) {
-        let closeOnWalk = true;
-        if(additionalOptions && additionalOptions.closeOnWalk !== undefined) {
-            closeOnWalk = additionalOptions.closeOnWalk;
-        }
-
         const permanent = additionalOptions?.permanent || false;
 
-        player.activeWidget = {
-            widgetId: widgetId,
-            type: 'CHAT',
-            closeOnWalk,
-            permanent
-        };
+        if(permanent) {
+            player.interfaceState.openChatOverlayWidget(widgetId);
+        } else {
+            player.interfaceState.openWidget(widgetId, {
+                slot: 'chatbox',
+                multi: false
+            });
 
-        const dialogueChoice = await Promise.race([ player.dialogueInteractionEvent.pipe(take(1)).toPromise(),
-            player.activeWidget.closed.pipe(take(1)).toPromise() ]);
+            const widgetClosedEvent = await player.interfaceState.widgetClosed('chatbox');
 
-        if(dialogueChoice === undefined) {
-            throw new Error('Dialogue Cancelled');
-        }
+            if(widgetClosedEvent.data === undefined) {
+                throw new Error('Dialogue Cancelled.');
+            }
 
-        if(isOptions && typeof dialogueChoice === 'number') {
-            const optionsAction = dialogueAction as OptionsDialogueAction;
-            const options = Object.keys(optionsAction.options);
-            const trees = options.map(option => optionsAction.options[option]);
-            const tree: ParsedDialogueTree = trees[dialogueChoice - 1];
-            if(tree && tree.length !== 0) {
-                await runParsedDialogue(player, tree, tag, additionalOptions);
+            if(isOptions && typeof widgetClosedEvent.data === 'number') {
+                const optionsAction = dialogueAction as OptionsDialogueAction;
+                const options = Object.keys(optionsAction.options);
+                const trees = options.map(option => optionsAction.options[option]);
+                const tree: ParsedDialogueTree = trees[widgetClosedEvent.data - 1];
+                if(tree && tree.length !== 0) {
+                    await runParsedDialogue(player, tree, tag, additionalOptions);
+                }
             }
         }
     }
@@ -556,7 +553,6 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTree, tag?: string, additionalOptions?: AdditionalOptions): Promise<boolean> {
     for(let i = 0; i < dialogueTree.length; i++) {
         tag = await runDialogueAction(player, dialogueTree[i], tag, additionalOptions);
-        player.activeWidget = null;
     }
 
     return tag === undefined;
@@ -584,7 +580,6 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
             runParsedDialogue(player, parsedDialogueTree, undefined, additionalOptions).then(() => {
                 resolve();
             }).catch(error => {
-                player.activeWidget = null;
                 reject(error);
             });
         });
@@ -592,8 +587,10 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
 
     try {
         await run();
+        player.interfaceState.closeAllSlots();
         return true;
     } catch(error) {
+        player.interfaceState.closeAllSlots();
         logger.warn(`Dialogue cancelled.`);
         return false;
     }
@@ -681,11 +678,10 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
     });
 
     return new Promise((resolve, reject) => {
-        player.activeWidget = {
-            widgetId,
-            type: 'CHAT',
-            closeOnWalk: true
-        };
+        player.interfaceState.openWidget(widgetId, {
+            slot: 'chatbox',
+            multi: true
+        });
 
         let actionsSub = player.actionsCancelled.subscribe(() => {
             actionsSub.unsubscribe();
@@ -693,7 +689,7 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
         });
 
         const interactionSub = player.dialogueInteractionEvent.subscribe(childId => {
-            if(!player.activeWidget || player.activeWidget.widgetId !== widgetId) {
+            if(!player.interfaceState.widgetOpen('chatbox', widgetId)) {
                 interactionSub.unsubscribe();
                 actionsSub.unsubscribe();
                 reject('Active Widget Mismatch');
@@ -739,10 +735,10 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
                     interactionSub.unsubscribe();
 
                     if(input < 1 || input > 2147483647) {
-                        player.closeActiveWidgets();
+                        player.interfaceState.closeWidget('chatbox');
                         reject('Invalid User Amount Input');
                     } else {
-                        player.closeActiveWidgets();
+                        player.interfaceState.closeWidget('chatbox');
                         resolve({ itemId, amount: input } as ItemSelection);
                     }
                 });
@@ -753,7 +749,7 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
 
                 actionsSub.unsubscribe();
                 interactionSub.unsubscribe();
-                player.closeActiveWidgets();
+                player.interfaceState.closeWidget('chatbox');
                 resolve({ itemId, amount } as ItemSelection);
             }
         });

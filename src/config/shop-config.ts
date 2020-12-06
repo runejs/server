@@ -1,7 +1,6 @@
 import { ItemContainer } from '@server/world/items/item-container';
-import { findItem, loadConfigurationFiles } from '@server/config/index';
+import { findItem, loadConfigurationFiles, widgets } from '@server/config/index';
 import { Player } from '@server/world/actor/player/player';
-import { widgets } from '@server/world/config/widget';
 import { ItemDetails } from '@server/config/item-config';
 
 
@@ -96,12 +95,14 @@ export class Shop {
         player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shop, this.container);
         player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shopPlayerInventory, player.inventory);
 
-        player.activeWidget = {
-            widgetId: widgets.shop.widgetId,
-            secondaryWidgetId: widgets.shopPlayerInventory.widgetId,
-            type: 'SCREEN_AND_TAB',
-            closeOnWalk: true
-        };
+        player.interfaceState.openWidget(widgets.shop.widgetId, {
+            slot: 'screen',
+            multi: true
+        });
+        player.interfaceState.openWidget(widgets.shopPlayerInventory.widgetId, {
+            slot: 'tabarea',
+            multi: true
+        });
     }
 
 }

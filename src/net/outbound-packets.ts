@@ -312,10 +312,15 @@ export class OutboundPackets {
         this.queue(new Packet(180));
     }
 
-    public showScreenWidget(widgetId: number): void {
+    public showScreenOverlayWidget(widgetId: number): void {
+        const packet = new Packet(56);
+        packet.put(widgetId, 'SHORT');
+        this.queue(packet);
+    }
+
+    public showStandaloneScreenWidget(widgetId: number): void {
         const packet = new Packet(118);
         packet.put(widgetId, 'SHORT');
-
         this.queue(packet);
     }
 
@@ -407,6 +412,12 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
+    public showTabWidget(widgetId: number): void {
+        const packet = new Packet(237);
+        packet.put(widgetId, 'SHORT');
+        this.queue(packet);
+    }
+
     public sendTabWidget(tabIndex: number, widgetId: number | null): void {
         if(widgetId < 0) {
             return;
@@ -440,6 +451,12 @@ export class OutboundPackets {
 
     public showTextInputDialogue(): void {
         const packet = new Packet(124);
+        this.queue(packet);
+    }
+
+    public showChatDialogue(widgetId: number): void {
+        const packet = new Packet(185);
+        packet.put(widgetId, 'SHORT');
         this.queue(packet);
     }
 

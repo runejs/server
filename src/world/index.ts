@@ -288,7 +288,7 @@ export class World {
         for(let i = 0; i < 1000; i++) {
             const player = new Player(null, null, null, i, `test${i}`, 'abs', true);
             this.registerPlayer(player);
-            player.activeWidget = null;
+            player.interfaceState.closeAllSlots();
 
             xOffset++;
 

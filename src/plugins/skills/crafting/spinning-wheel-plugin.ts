@@ -6,9 +6,9 @@ import { itemIds } from '@server/world/config/item-ids';
 import { loopingAction } from '@server/world/action';
 import { Skill } from '@server/world/actor/skills';
 import { cache } from '@server/game-server';
-import { widgets } from '@server/world/config/widget';
 import { animationIds } from '@server/world/config/animation-ids';
 import { objectIds } from '@server/world/config/object-ids';
+import { widgets } from '@server/config';
 
 interface Spinnable {
     input: number | number[];
@@ -72,11 +72,9 @@ const widgetButtonIds: Map<number, SpinnableButton> = new Map<number, SpinnableB
 ]);
 
 export const openSpinningInterface: objectAction = (details) => {
-    details.player.activeWidget = {
-        widgetId: widgets.whatWouldYouLikeToSpin,
-        type: 'SCREEN',
-        closeOnWalk: true
-    };
+    details.player.interfaceState.openWidget(widgets.whatWouldYouLikeToSpin, {
+        slot: 'screen'
+    });
 };
 
 const spinProduct: any = (details: ButtonActionData, spinnable: Spinnable, count: number) => {
@@ -139,13 +137,13 @@ const spinProduct: any = (details: ButtonActionData, spinnable: Spinnable, count
 
 export const buttonClicked: buttonAction = (details) => {
     // Check if player might be spawning widget clientside
-    if (!details.player.activeWidget || !(details.player.activeWidget.widgetId === 459)) {
+    if (!details.player.interfaceState.findWidget(459)) {
         return;
     }
     const product = widgetButtonIds.get(details.buttonId);
 
     // Close the widget as it is no longer needed
-    details.player.closeActiveWidgets();
+    details.player.interfaceState.closeAllSlots();
 
     if (!details.player.skills.hasLevel(Skill.CRAFTING, product.spinnable.requiredLevel)) {
         details.player.sendMessage(`You need a crafting level of ${product.spinnable.requiredLevel} to craft ${cache.itemDefinitions.get(product.spinnable.output).name.toLowerCase()}.`, true);

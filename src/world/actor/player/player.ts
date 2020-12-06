@@ -14,22 +14,20 @@ import {
     PlayerSave, PlayerSettings, QuestProgress,
     savePlayerData
 } from './player-data';
-import { PlayerWidget, widgets, widgetScripts } from '../../config/widget';
+import { PlayerWidget, widgetScripts } from '../../config/widget';
 import { ContainerUpdateEvent, getItemFromContainer, ItemContainer } from '../../items/item-container';
 import { Item } from '../../items/item';
 import { Npc } from '../npc/npc';
 import { NpcSyncTask } from './sync/npc-sync-task';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { QuadtreeKey } from '@server/world';
 import { daysSinceLastLogin } from '@server/util/time';
 import { itemIds } from '@server/world/config/item-ids';
-import { dialogueAction } from '@server/world/actor/player/dialogue-action';
 import { songs } from '@server/world/config/songs';
 import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 import { ItemDefinition } from '@runejs/cache-parser';
 import { PlayerCommandAction } from '@server/world/action/player-command-action';
-import { take } from 'rxjs/operators';
 import { updateBonusStrings } from '@server/plugins/items/equipment/equipment-stats-plugin';
 import { Action, actionHandler } from '@server/world/action';
 import {
@@ -39,12 +37,14 @@ import {
     ItemDetails,
     OffensiveBonuses, SkillBonuses
 } from '@server/config/item-config';
-import { findItem, npcIdMap } from '@server/config';
+import { findItem, npcIdMap, widgets } from '@server/config';
 import { NpcDetails } from '@server/config/npc-config';
 import { animationIds } from '@server/world/config/animation-ids';
 import { combatStyles } from '@server/world/actor/combat';
 import { WorldInstance, TileModifications } from '@server/world/instances';
 import { Cutscene } from '@server/world/actor/player/cutscenes';
+import { InterfaceState } from '@server/world/actor/player/interface-state';
+import { dialogue } from '@server/world/actor/dialogue';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -108,6 +108,7 @@ export class Player extends Actor {
     public readonly numericInputEvent: Subject<number>;
     public readonly dialogueInteractionEvent: Subject<number>;
     public readonly personalInstance = new WorldInstance(uuidv4());
+    public readonly interfaceState = new InterfaceState(this);
     public isLowDetail: boolean;
     public trackedPlayers: Player[];
     public trackedNpcs: Npc[];
@@ -130,7 +131,6 @@ export class Player extends Actor {
     private _lastAddress: string;
     private firstTimePlayer: boolean;
     private _appearance: Appearance;
-    private _activeWidget: PlayerWidget;
     private queuedWidgets: PlayerWidget[];
     private _bonuses: { offensive: OffensiveBonuses, defensive: DefensiveBonuses, skill: SkillBonuses };
     private _carryWeight: number;
@@ -156,7 +156,6 @@ export class Player extends Actor {
         this.npcUpdateTask = new NpcSyncTask(this);
         this.trackedPlayers = [];
         this.trackedNpcs = [];
-        this._activeWidget = null;
         this.queuedWidgets = [];
         this._carryWeight = 0;
         this._equipment = new ItemContainer(14);
@@ -193,11 +192,10 @@ export class Player extends Actor {
 
         if(this.firstTimePlayer) {
             if(!serverConfig.tutorialEnabled) {
-                this.openInteractiveWidget({
-                    widgetId: widgets.characterDesign,
-                    type: 'SCREEN',
-                    disablePlayerMovement: true
-                }).toPromise();
+                this.interfaceState.openWidget(widgets.characterDesign, {
+                    slot: 'screen',
+                    multi: false
+                });
             }
         } else if(serverConfig.showWelcome && this.savedMetadata.tutorialComplete) {
             const daysSinceLogin = daysSinceLastLogin(this.loginDate);
@@ -219,11 +217,10 @@ export class Player extends Actor {
             this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 21, `To start a subscripton:\\n1) Logout and return to the frontpage of this website.\\n2) Choose 'Start a new subscription'`);
             this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 19, `You are not a member.\\n\\nChoose to subscribe and\\nyou'll get loads of extra\\nbenefits and features.`);
 
-            this.activeWidget = {
-                widgetId: widgets.welcomeScreen,
-                secondaryWidgetId: widgets.welcomeScreenChildren.question,
-                type: 'FULLSCREEN'
-            };
+            this.interfaceState.openWidget(widgets.welcomeScreen, {
+                slot: 'full',
+                containerId: widgets.welcomeScreenChildren.question
+            });
         }
 
         for(const playerOption of playerOptions) {
@@ -239,32 +236,18 @@ export class Player extends Actor {
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
 
         this.actionsCancelled.subscribe(type => {
-            let closeWidget = false;
+            let closeWidget: boolean;
 
-            const widget = this.activeWidget;
-
-            if(widget && !widget.permanent) {
-                if(type === 'manual-movement' || type === 'pathing-movement') {
-                    if(widget.closeOnWalk) {
-                        closeWidget = true;
-                    }
-                } else if(type === 'keep-widgets-open' || type === 'button' || type === 'widget') {
-                    closeWidget = false;
-                } else {
-                    closeWidget = true;
-                }
+            if(type === 'manual-movement' || type === 'pathing-movement') {
+                closeWidget = true;
+            } else if(type === 'keep-widgets-open' || type === 'button' || type === 'widget') {
+                closeWidget = false;
+            } else {
+                closeWidget = true;
             }
 
             if(closeWidget) {
-                widget.closed.next();
-                widget.closed.complete();
-
-                if(widget.forceClosed !== undefined) {
-                    widget.forceClosed();
-                }
-
-                this.outgoingPackets.closeActiveWidgets();
-                this._activeWidget = null;
+                this.interfaceState.closeAllSlots();
             }
         });
 
@@ -376,29 +359,6 @@ export class Player extends Actor {
         // @TODO emit event to friend service watcher
         this.ignoreList.splice(index, 1);
         return true;
-    }
-
-    public openInteractiveWidget(widget: PlayerWidget): Observable<number> {
-        const subject = new Subject<number>();
-        this.activeWidget = widget;
-
-        this.actionsCancelled.pipe(take(1)).subscribe(() => {
-            subject.next(-1);
-            subject.complete();
-        });
-
-        this.metadata.buttonListener = {
-            widgetId: widget.widgetId,
-            event: new Subject<number>()
-        };
-
-        this.metadata.buttonListener.event.pipe(take(1)).subscribe(buttonId => {
-            delete this.metadata.buttonListener;
-            subject.next(buttonId);
-            subject.complete();
-        });
-
-        return subject.asObservable();
     }
 
     /**
@@ -537,11 +497,10 @@ export class Player extends Actor {
                 questData.completion.modelRotationX || 0, questData.completion.modelRotationY || 0,
                 questData.completion.modelZoom || 0);
 
-            this.activeWidget = {
-                widgetId: widgets.questReward,
-                type: 'SCREEN',
-                closeOnWalk: true
-            };
+            this.interfaceState.openWidget(widgets.questReward, {
+                slot: 'screen',
+                multi: false
+            });
 
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.green });
 
@@ -607,23 +566,21 @@ export class Player extends Actor {
      * @returns A Promise<void> that resolves when the player has clicked the "click to continue" button or
      * after their chat messages have been sent.
      */
-    public async sendMessage(messages: string | string[], showDialogue: boolean = false): Promise<void> {
+    public async sendMessage(messages: string | string[], showDialogue: boolean = false): Promise<boolean> {
         if(!Array.isArray(messages)) {
             messages = [ messages ];
         }
 
         if(!showDialogue) {
             messages.forEach(message => this.outgoingPackets.chatboxMessage(message));
-            return Promise.resolve();
         } else {
-            if(messages.length > 5) {
-                throw new Error(`Dialogues have a maximum of 5 lines!`);
+            for(let i = 0; i < messages.length; i++) {
+                messages[i] = messages[i]?.trim() || '';
             }
 
-            return dialogueAction(this, { type: 'TEXT', lines: messages }).then(async d => {
-                d.close();
-                return Promise.resolve();
-            });
+            return await dialogue([ this ], [
+                text => (messages as string[]).join(' ')
+            ]);
         }
     }
 
@@ -759,19 +716,6 @@ export class Player extends Actor {
         }
     }
 
-    /**
-     * Queues up a widget to be displayed when the active widget is closed.
-     * If there is no active widget, the provided widget will be automatically displayed.
-     * @param widget The widget to queue.
-     */
-    public queueWidget(widget: PlayerWidget): void {
-        if(this.activeWidget === null) {
-            this.activeWidget = widget;
-        } else {
-            this.queuedWidgets.push(widget);
-        }
-    }
-
     public sendLogMessage(message: string, isConsole: boolean): void {
         if(isConsole) {
             this.outgoingPackets.consoleMessage(message);
@@ -800,36 +744,6 @@ export class Player extends Actor {
             }
             this.outgoingPackets.sendConsoleCommand(strCmd, strHelp);
         }
-    }
-
-    /**
-     * Closes the currently active widget or widget pair.
-     * @param notifyClient [optional] Whether or not to notify the game client that widgets should be cleared. Defaults to true.
-     */
-    public closeActiveWidgets(notifyClient: boolean = true): void {
-        if(notifyClient) {
-            if(this.queuedWidgets.length !== 0) {
-                this.activeWidget = this.queuedWidgets.shift();
-            } else {
-                this.activeWidget = null;
-            }
-        } else {
-            this._activeWidget = null;
-
-            if(this.queuedWidgets.length !== 0) {
-                this.activeWidget = this.queuedWidgets.shift();
-            } else {
-                this.actionsCancelled.next('keep-widgets-open');
-            }
-        }
-    }
-
-    /**
-     * Checks to see if the player has the specified widget ID open on their screen or not.
-     * @param widgetId The ID of the widget to look for.
-     */
-    public hasWidgetOpen(widgetId: number): boolean {
-        return this.activeWidget && this.activeWidget.widgetId === widgetId;
     }
 
     public isItemEquipped(item: number | Item | string): boolean {
@@ -928,7 +842,7 @@ export class Player extends Actor {
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
 
-        if(this.hasWidgetOpen(widgets.equipmentStats.widgetId)) {
+        if(this.interfaceState.widgetOpen('screen', widgets.equipmentStats.widgetId)) {
             this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipmentStats, this.equipment);
             updateBonusStrings(this);
         }
@@ -1234,39 +1148,6 @@ export class Player extends Actor {
 
     public set appearance(value: Appearance) {
         this._appearance = value;
-    }
-
-    public get activeWidget(): PlayerWidget {
-        return this._activeWidget;
-    }
-
-    public set activeWidget(value: PlayerWidget) {
-        if(value !== null) {
-            value.closed = new Subject<void>();
-
-            if(value.beforeOpened !== undefined) {
-                value.beforeOpened();
-            }
-
-            if(value.type === 'SCREEN') {
-                this.outgoingPackets.showScreenWidget(value.widgetId);
-            } else if(value.type === 'CHAT') {
-                this.outgoingPackets.showChatboxWidget(value.widgetId);
-            } else if(value.type === 'FULLSCREEN') {
-                this.outgoingPackets.showFullscreenWidget(value.widgetId, value.secondaryWidgetId);
-            } else if(value.type === 'SCREEN_AND_TAB') {
-                this.outgoingPackets.showScreenAndTabWidgets(value.widgetId, value.secondaryWidgetId);
-            }
-
-            if(value.afterOpened !== undefined) {
-                value.afterOpened();
-            }
-        } else {
-            this.outgoingPackets.closeActiveWidgets();
-        }
-
-        this.actionsCancelled.next('keep-widgets-open');
-        this._activeWidget = value;
     }
 
     public get equipment(): ItemContainer {

@@ -1,7 +1,7 @@
 import { worldItemAction } from '@server/world/action/world-item-action';
 import { Item } from '../../world/items/item';
-import { widgets } from '../../world/config/widget';
 import { soundIds } from '@server/world/config/sound-ids';
+import { widgets } from '@server/config';
 
 export const action: worldItemAction = ({ player, worldItem, itemDetails }) => {
     const inventory = player.inventory;

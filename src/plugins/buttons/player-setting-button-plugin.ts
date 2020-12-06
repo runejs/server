@@ -1,5 +1,5 @@
 import { buttonAction } from '@server/world/action/button-action';
-import { widgets } from '@server/world/config/widget';
+import { widgets } from '@server/config';
 
 const buttonIds: number[] = [
     0, // walk/run

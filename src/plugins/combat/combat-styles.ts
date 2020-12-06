@@ -1,8 +1,8 @@
 import { equipAction, EquipActionData } from '@server/world/action/equip-action';
 import { ItemDetails, WeaponStyle, weaponWidgetIds } from '@server/config/item-config';
-import { widgets, widgetScripts } from '@server/world/config/widget';
+import { widgetScripts } from '@server/world/config/widget';
 import { Player, playerInitAction } from '@server/world/actor/player/player';
-import { findItem } from '@server/config';
+import { findItem, widgets } from '@server/config';
 import { buttonAction } from '@server/world/action/button-action';
 import { combatStyles } from '@server/world/actor/combat';
 import { serverConfig } from '@server/game-server';

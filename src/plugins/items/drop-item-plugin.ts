@@ -1,9 +1,9 @@
-import { widgets } from '@server/world/config/widget';
 import { itemAction } from '@server/world/action/item-action';
 import { soundIds } from '@server/world/config/sound-ids';
 import { getItemFromContainer } from '@server/world/items/item-container';
 import { serverConfig } from '@server/game-server';
 import { Rights } from '@server/world/actor/player/player';
+import { widgets } from '@server/config';
 
 export const action: itemAction = ({ player, itemId, itemSlot }) => {
     const inventory = player.inventory;

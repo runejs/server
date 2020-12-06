@@ -2,7 +2,6 @@ import { Item } from '@server/world/items/item';
 import { ItemContainer } from '@server/world/items/item-container';
 import { objectIds } from '@server/world/config/object-ids';
 import { objectAction, ObjectActionData } from '@server/world/action/object-action';
-import { widgets } from '@server/world/config/widget';
 import { buttonAction, ButtonActionData } from '@server/world/action/button-action';
 import { itemIds } from '@server/world/config/item-ids';
 import { Subscription } from 'rxjs';
@@ -12,6 +11,7 @@ import { loopingAction } from '@server/world/action';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { colors } from '@server/util/colors';
+import { widgets } from '@server/config';
 
 export interface Bar {
     barId: number;
@@ -109,11 +109,9 @@ const RUNEITE : Bar = {
 };
 
 export const openSmeltingInterface: objectAction = (details) => {
-    details.player.activeWidget = {
-        widgetId: widgets.furnace.widgetId,
-        type: 'CHAT',
-        closeOnWalk: true
-    };
+    details.player.interfaceState.openWidget(widgets.furnace.widgetId, {
+        slot: 'chatbox'
+    })
     loadSmeltingInterface(details);
 };
 
@@ -259,13 +257,13 @@ const smeltProduct = (details: ButtonActionData, bar: Bar, count: number) => {
 export const buttonClicked : buttonAction = (details) => {
 
     // Check if player might be spawning widget clientside
-    if (!details.player.activeWidget || !(details.player.activeWidget.widgetId === widgets.furnace.widgetId)) {
+    if (!details.player.interfaceState.findWidget(widgets.furnace.widgetId)) {
         return;
     }
 
     const product = widgetButtonIds.get(details.buttonId);
 
-    details.player.closeActiveWidgets();
+    details.player.interfaceState.closeAllSlots();
 
     if (!product.takesInput) {
         smeltProduct(details, product.bar, product.count);
@@ -288,7 +286,7 @@ export const buttonClicked : buttonAction = (details) => {
 export default [
     {
         type: 'object_action',
-        objectIds: [objectIds.furnace],
+        objectIds: [objectIds.furnace, 11666],
         options: ['smelt'],
         walkTo: true,
         action: openSmeltingInterface

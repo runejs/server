@@ -1,14 +1,11 @@
 import { Player, Tabs } from '@server/world/actor/player/player';
 import { dialogue } from '@server/world/actor/dialogue';
-import { Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
 import {
     handleTutorial,
     npcHint, showTabWidgetHint, spawnGoblinBoi,
     startTutorial,
     unlockAvailableTabs
 } from '@server/plugins/quests/goblin-diplomacy-tutorial/index';
-import { Position } from '@server/world/position';
 import { schedule } from '@server/task/task';
 import { world } from '@server/game-server';
 import { findNpc } from '@server/config';
@@ -42,13 +39,11 @@ export const goblinDiplomacyStageHandler: { [key: number]: (player: Player) => v
 
         unlockAvailableTabs(player, 1);
 
-        if(!player.activeWidget) {
-            dialogue([ player ], [
-                titled => [ `Getting Started`, `\nSpeak with the Guide to continue.` ]
-            ], {
-                permanent: true
-            });
-        }
+        dialogue([ player ], [
+            titled => [ `Getting Started`, `\nSpeak with the Guide to continue.` ]
+        ], {
+            permanent: true
+        });
     },
     20: player => {
         showTabWidgetHint(player, Tabs.friends, 2, 25,
@@ -71,13 +66,11 @@ export const goblinDiplomacyStageHandler: { [key: number]: (player: Player) => v
 
         unlockAvailableTabs(player, 4);
 
-        if(!player.activeWidget) {
-            dialogue([ player ], [
-                titled => [ `Continue`, `\nSpeak with the Guide to continue.` ]
-            ], {
-                permanent: true
-            });
-        }
+        dialogue([ player ], [
+            titled => [ `Continue`, `\nSpeak with the Guide to continue.` ]
+        ], {
+            permanent: true
+        });
     },
     40: player => {
         showTabWidgetHint(player, Tabs.music, 5, 45,
@@ -89,26 +82,22 @@ export const goblinDiplomacyStageHandler: { [key: number]: (player: Player) => v
         npcHint(player, 'rs:runescape_guide');
         unlockAvailableTabs(player, 5);
 
-        if(!player.activeWidget) {
-            dialogue([ player ], [
-                titled => [ `Continue`, `\nSpeak with the Guide to continue.` ]
-            ], {
-                permanent: true
-            });
-        }
+        dialogue([ player ], [
+            titled => [ `Continue`, `\nSpeak with the Guide to continue.` ]
+        ], {
+            permanent: true
+        });
     },
     50: player => {
         player.metadata.blockObjectInteractions = false;
         npcHint(player, 'rs:melee_combat_tutor');
         unlockAvailableTabs(player, 5);
 
-        if(!player.activeWidget) {
-            dialogue([ player ], [
-                titled => [ `Continue`, `\nSpeak with the Melee Combat Tutor to continue.` ]
-            ], {
-                permanent: true
-            });
-        }
+        dialogue([ player ], [
+            titled => [ `Continue`, `\nSpeak with the Melee Combat Tutor to continue.` ]
+        ], {
+            permanent: true
+        });
     },
     55: player => {
         showTabWidgetHint(player, Tabs.inventory, 6, 60,

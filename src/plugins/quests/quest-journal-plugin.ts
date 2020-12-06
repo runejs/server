@@ -1,7 +1,7 @@
 import { buttonAction } from '@server/world/action/button-action';
-import { widgets } from '@server/world/config/widget';
 import { wrapText } from '@server/util/strings';
 import { pluginActions } from '@server/game-server';
+import { widgets } from '@server/config';
 
 export const action: buttonAction = (details) => {
     const { player, buttonId } = details;
@@ -15,7 +15,7 @@ export const action: buttonAction = (details) => {
         (playerQuest) => playerQuest.questId === quest.questTabId
     );
 
-    let playerStage = "NOT_STARTED";
+    let playerStage = 'NOT_STARTED';
     if (playerQuest && playerQuest.stage) {
         playerStage = playerQuest.stage;
     }
@@ -52,11 +52,10 @@ export const action: buttonAction = (details) => {
         }
     }
 
-    player.activeWidget = {
-        widgetId: widgets.questJournal,
-        type: 'SCREEN',
-        closeOnWalk: true
-    };
+    player.interfaceState.openWidget(widgets.questJournal, {
+        slot: 'screen',
+        multi: false
+    });
 };
 
 export default { type: 'button', widgetId: widgets.questTab, action };

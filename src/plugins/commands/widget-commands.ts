@@ -7,18 +7,18 @@ const action: commandAction = (details) => {
     const secondaryWidgetId: number = args.secondaryWidgetId as number;
 
     if(secondaryWidgetId === 1) {
-        player.activeWidget = {
-            type: 'SCREEN',
-            widgetId,
-            closeOnWalk: true
-        };
+        player.interfaceState.openWidget(widgetId, {
+            slot: 'screen'
+        });
     } else {
-        player.activeWidget = {
-            type: 'SCREEN_AND_TAB',
-            widgetId,
-            secondaryWidgetId,
-            closeOnWalk: true
-        };
+        player.interfaceState.openWidget(widgetId, {
+            slot: 'screen',
+            multi: true
+        });
+        player.interfaceState.openWidget(secondaryWidgetId, {
+            slot: 'tabarea',
+            multi: true
+        });
     }
 };
 

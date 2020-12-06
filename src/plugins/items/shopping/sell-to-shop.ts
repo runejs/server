@@ -1,14 +1,14 @@
 import { itemAction } from '@server/world/action/item-action';
-import { widgets } from '@server/world/config/widget';
 import { itemIds } from '@server/world/config/item-ids';
 import { getItemFromContainer } from '@server/world/items/item-container';
 import { Shop } from '@server/config/shop-config';
+import { widgets } from '@server/config';
 
 
 export const action: itemAction = (details) => {
     const { player, itemId, itemSlot, option, itemDetails } = details;
 
-    if(!player.activeWidget || player.activeWidget.widgetId !== widgets.shop.widgetId) {
+    if(!player.interfaceState.findWidget(widgets.shop.widgetId)) {
         return;
     }
 

@@ -4,7 +4,6 @@
 
 import { objectAction, ObjectActionData } from '@server/world/action/object-action';
 import { Skill } from '@server/world/actor/skills';
-import { widgets } from '@server/world/config/widget';
 import {
     altars, combinationRunes,
     getEntityByAttr,
@@ -16,6 +15,7 @@ import { RunecraftingCombinationRune } from '@server/plugins/skills/runecrafting
 import { randomBetween } from '@server/util/num';
 import { itemIds } from '@server/world/config/item-ids';
 import { cache } from '@server/game-server';
+import { widgets } from '@server/config';
 
 
 const craftRune: objectAction = (details: ObjectActionData) => {

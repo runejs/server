@@ -1,7 +1,7 @@
 import { swapItemsAction } from '@server/world/action/swap-items-action';
-import { widgets } from '@server/world/config/widget';
 import { ItemContainer } from '@server/world/items/item-container';
 import { Player } from '@server/world/actor/player/player';
+import { widgets } from '@server/config';
 
 type WidgetDetail = [ number, number, (player: Player) => ItemContainer ];
 

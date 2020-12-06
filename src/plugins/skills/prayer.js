@@ -3,7 +3,7 @@ import { soundIds } from '../../world/config/sound-ids';
 import { animationIds } from '../../world/config/animation-ids';
 import { Achievements, giveAchievement } from '../../world/actor/player/achievements';
 import { Skill } from '../../world/actor/skills';
-import { widgets } from '../../world/config/widget';
+import { widgets } from '../../config';
 
 const action = async details => {
     const { player, itemSlot } = details;

@@ -1,9 +1,8 @@
 import { itemAction } from '@server/world/action/item-action';
-import { widgets } from '@server/world/config/widget';
 import { Item } from '@server/world/items/item';
 import { getItemFromContainer, ItemContainer } from '@server/world/items/item-container';
 import { itemIds } from '@server/world/config/item-ids';
-import { findItem } from '@server/config';
+import { findItem, widgets } from '@server/config';
 import { Shop } from '@server/config/shop-config';
 
 
@@ -16,7 +15,7 @@ function removeCoins(inventory: ItemContainer, coinsIndex: number, cost: number)
 export const action: itemAction = (details) => {
     const { player, itemId, itemSlot, widgetId, option } = details;
 
-    if(!player.activeWidget || player.activeWidget.widgetId !== widgetId) {
+    if(!player.interfaceState.findWidget(widgetId)) {
         return;
     }
 

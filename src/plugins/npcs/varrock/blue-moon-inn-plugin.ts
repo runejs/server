@@ -1,7 +1,7 @@
 import { npcAction } from '@server/world/action/npc-action';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 import { itemIds } from '@server/world/config/item-ids';
-import { widgets } from '@server/world/config/widget';
+import { widgets } from '@server/config';
 
 
 const talkToBartender : npcAction = (details) => {

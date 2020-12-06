@@ -1,6 +1,6 @@
 import { buttonAction } from '@server/world/action/button-action';
-import { widgets } from '@server/world/config/widget';
 import { Player } from '@server/world/actor/player/player';
+import { widgets } from '@server/config';
 
 export function updateBonusStrings(player: Player): void {
     [
@@ -30,12 +30,14 @@ export const action: buttonAction = (details) => {
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipmentStats, player.equipment);
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
 
-    player.activeWidget = {
-        widgetId: widgets.equipmentStats.widgetId,
-        secondaryWidgetId: widgets.inventory.widgetId,
-        type: 'SCREEN_AND_TAB',
-        closeOnWalk: true
-    };
+    player.interfaceState.openWidget(widgets.equipmentStats.widgetId, {
+        multi: true,
+        slot: 'screen'
+    });
+    player.interfaceState.openWidget(widgets.inventory.widgetId, {
+        multi: true,
+        slot: 'tabarea'
+    });
 };
 
 export default { type: 'button', widgetId: widgets.equipment.widgetId, buttonIds: 24, action };

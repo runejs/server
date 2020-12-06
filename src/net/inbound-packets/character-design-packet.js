@@ -1,4 +1,4 @@
-import { widgets } from '../../world/config/widget';
+import { widgets } from '../../config';
 
 const characterDesignPacket = (player, packet) => {
     if(!player.activeWidget || player.activeWidget.widgetId !== widgets.characterDesign) {
@@ -38,7 +38,7 @@ const characterDesignPacket = (player, packet) => {
     };
 
     player.updateFlags.appearanceUpdateRequired = true;
-    player.closeActiveWidgets();
+    player.player.interfaceState.closeAllSlots();
 };
 
 export default {

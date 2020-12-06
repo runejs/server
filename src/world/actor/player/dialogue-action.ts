@@ -137,12 +137,9 @@ export class DialogueAction {
         }
 
         return new Promise<DialogueAction>((resolve, reject) => {
-            this.p.activeWidget = {
-                widgetId: widgetId,
-                type: 'CHAT',
-                closeOnWalk: true,
-                forceClosed: () => reject(new WidgetsClosedWarning())
-            };
+            this.p.interfaceState.openWidget(widgetId, {
+                slot: 'chatbox'
+            })
 
             const sub = this.p.dialogueInteractionEvent.subscribe(action => {
                 sub.unsubscribe();

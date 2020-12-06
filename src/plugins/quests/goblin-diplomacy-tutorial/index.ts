@@ -1,5 +1,4 @@
 import { defaultPlayerTabWidgets, Player, playerInitAction, Tabs } from '@server/world/actor/player/player';
-import { widgets } from '@server/world/config/widget';
 import { serverConfig, world } from '@server/game-server';
 import { npcAction } from '@server/world/action/npc-action';
 import uuidv4 from 'uuid/v4';
@@ -7,7 +6,7 @@ import { Npc } from '@server/world/actor/npc/npc';
 import { logger } from '@runejs/core';
 import { Position } from '@server/world/position';
 import { WorldInstance } from '@server/world/instances';
-import { findNpc } from '@server/config';
+import { findNpc, widgets } from '@server/config';
 import { updateCombatStyleWidget } from '@server/plugins/combat/combat-styles';
 import { runescapeGuideDialogueHandler } from '@server/plugins/quests/goblin-diplomacy-tutorial/runescape-guide-dialogue';
 import { harlanDialogueHandler } from '@server/plugins/quests/goblin-diplomacy-tutorial/melee-tutor-dialogue';
@@ -16,6 +15,7 @@ import { Subject } from 'rxjs';
 import { dialogue } from '@server/world/actor/dialogue';
 import { take } from 'rxjs/operators';
 import { equipAction } from '@server/world/action/equip-action';
+import { buttonAction } from '@server/world/action/button-action';
 
 
 export const tutorialTabWidgetOrder = [
@@ -107,11 +107,17 @@ export const startTutorial = async (player: Player): Promise<void> => {
     player.inventory.add('rs:coins');
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
 
-    await player.openInteractiveWidget({
-        widgetId: widgets.characterDesign,
-        type: 'SCREEN',
-        disablePlayerMovement: true
-    }).toPromise();
+    await dialogue([ player ], [
+        titled => [ `Getting Started`, `\nCreate your character!` ]
+    ], {
+        permanent: true
+    });
+
+    player.interfaceState.openWidget(widgets.characterDesign, {
+        slot: 'screen'
+    });
+
+    await player.interfaceState.widgetClosed('screen');
 };
 
 export async function spawnGoblinBoi(player: Player, spawnPoint: 'beginning' | 'end'): Promise<void> {
@@ -209,6 +215,10 @@ const trainingSwordEquipAction: equipAction = async ({ player, itemDetails }) =>
     }
 };
 
+const createCharacterAction: buttonAction = ({ player }): void => {
+    player.interfaceState.closeAllSlots();
+};
+
 export default [
     {
         type: 'player_init',
@@ -233,5 +243,10 @@ export default [
         equipType: 'EQUIP',
         action: trainingSwordEquipAction,
         itemIds: [ 9703, 9704 ]
+    },
+    {
+        type: 'button',
+        widgetId: widgets.characterDesign,
+        action: createCharacterAction
     }
 ];

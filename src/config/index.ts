@@ -17,7 +17,8 @@ import {
 } from '@server/config/npc-config';
 import { loadNpcSpawnConfigurations, NpcSpawn } from '@server/config/npc-spawn-config';
 import { loadShopConfigurations, Shop } from '@server/config/shop-config';
-
+import json5 from 'json5';
+require('json5/lib/register');
 
 export async function loadConfigurationFiles(configurationDir: string): Promise<any[]> {
     const files = [];
@@ -47,6 +48,7 @@ export let npcIdMap: { [key: number]: string };
 export let npcPresetMap: NpcPresetConfiguration;
 export let npcSpawns: NpcSpawn[] = [];
 export let shopMap: { [key: string]: Shop };
+export const widgets: { [key: string]: any } = require('../../data/config/widgets.json5');
 
 
 export async function loadConfigurations(): Promise<void> {
