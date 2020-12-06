@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 
-export const interfaceScripts = {
+export const widgetScripts = {
     musicPlayer: 18,
     attackStyle: 43,
     brightness: 166,

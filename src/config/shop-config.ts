@@ -95,12 +95,14 @@ export class Shop {
         player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shop, this.container);
         player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shopPlayerInventory, player.inventory);
 
-        player.activeWidget = {
-            widgetId: widgets.shop.widgetId,
-            secondaryWidgetId: widgets.shopPlayerInventory.widgetId,
-            type: 'SCREEN_AND_TAB',
-            closeOnWalk: true
-        };
+        player.interfaceState.openWidget(widgets.shop.widgetId, {
+            slot: 'screen',
+            multi: true
+        });
+        player.interfaceState.openWidget(widgets.shopPlayerInventory.widgetId, {
+            slot: 'tabarea',
+            multi: true
+        });
     }
 
 }

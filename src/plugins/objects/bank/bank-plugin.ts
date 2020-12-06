@@ -1,5 +1,5 @@
 import { objectIds } from '@server/world/config/object-ids';
-import { interfaceScripts } from '@server/world/config/widget';
+import { widgetScripts } from '@server/world/config/widget';
 import { objectAction } from '@server/world/action/object-action';
 import { ItemContainer } from '@server/world/items/item-container';
 import { itemAction } from '@server/world/action/item-action';
@@ -26,8 +26,8 @@ export const openBankInterface: objectAction = ({ player }) => {
 
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, player.inventory);
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, player.bank);
-    player.outgoingPackets.updateClientConfig(interfaceScripts.bankInsertMode, player.settings.bankInsertMode);
-    player.outgoingPackets.updateClientConfig(interfaceScripts.bankWithdrawNoteMode, player.settings.bankWithdrawNoteMode);
+    player.outgoingPackets.updateClientConfig(widgetScripts.bankInsertMode, player.settings.bankInsertMode);
+    player.outgoingPackets.updateClientConfig(widgetScripts.bankWithdrawNoteMode, player.settings.bankWithdrawNoteMode);
 };
 
 export const openPinSettings: objectAction = ({ player }) => {

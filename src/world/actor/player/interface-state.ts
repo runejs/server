@@ -32,7 +32,6 @@ export interface WidgetOptions {
     queued?: boolean;
     containerId?: number;
     container?: ItemContainer;
-    walkable?: boolean;
 }
 
 
@@ -44,10 +43,9 @@ export class Widget {
     public queued: boolean = false;
     public containerId: number;
     public container: ItemContainer = null;
-    public walkable: boolean = false;
 
     public constructor(interfaceId: number, options: WidgetOptions) {
-        const { slot, multi, queued, containerId, container, walkable } = options;
+        const { slot, multi, queued, containerId, container } = options;
 
         this.widgetId = interfaceId;
         this.slot = slot;
@@ -55,7 +53,6 @@ export class Widget {
         this.queued = queued || false;
         this.containerId = containerId || -1;
         this.container = container || null;
-        this.walkable = walkable || false;
     }
 
 }
@@ -69,6 +66,7 @@ export class InterfaceState {
     public readonly widgetSlots: { [key: string]: Widget | null };
     public readonly closed: Subject<Widget> = new Subject<Widget>();
     private readonly player: Player;
+    private _screenOverlayWidget: number | null;
 
     public constructor(player: Player) {
         this.tabs = {
@@ -88,9 +86,20 @@ export class InterfaceState {
         };
 
         this.widgetSlots = {};
+        this._screenOverlayWidget = null;
         this.clearSlots();
 
         this.player = player;
+    }
+
+    public openScreenOverlayWidget(widgetId: number): void {
+        this._screenOverlayWidget = widgetId;
+        this.player.outgoingPackets.showScreenOverlayWidget(widgetId);
+    }
+
+    public closeScreenOverlayWidget(): void {
+        this._screenOverlayWidget = null;
+        this.player.outgoingPackets.showScreenOverlayWidget(-1);
     }
 
     public async widgetClosed(slot: GameInterfaceSlot): Promise<Widget> {
@@ -141,7 +150,6 @@ export class InterfaceState {
             widget = new Widget(widget, {
                 slot: 'tabarea',
                 multi: true,
-                walkable: true,
                 container
             });
         }
@@ -156,13 +164,22 @@ export class InterfaceState {
         return this.tabs[type] || null;
     }
 
+    public widgetOpen(slot: GameInterfaceSlot, widgetId: number): boolean {
+        return this.getWidget(slot)?.widgetId === widgetId;
+    }
+
     public getWidget(slot: GameInterfaceSlot): Widget | null {
         return this.widgetSlots[slot] || null;
     }
 
+    public closeAll(): void {
+        const slots: GameInterfaceSlot[] = Object.keys(this.widgetSlots) as GameInterfaceSlot[];
+        slots.forEach(slot => this.closeWidget(slot));
+    }
+
     private showWidget(widget: Widget): void {
         const { outgoingPackets: packets } = this.player;
-        const { widgetId, containerId, slot, multi, walkable } = widget;
+        const { widgetId, containerId, slot, multi } = widget;
 
         if(slot === 'full' || !multi) {
             this.closeOthers(slot);
@@ -171,10 +188,11 @@ export class InterfaceState {
         if(slot === 'full' && containerId !== undefined) {
             packets.showFullscreenWidget(widgetId, containerId);
         } else if(slot === 'screen') {
-            if(walkable) {
-
+            const tabWidget = this.getWidget('tabarea');
+            if(multi && tabWidget) {
+                packets.showScreenAndTabWidgets(widgetId, tabWidget.widgetId);
             } else {
-                packets.showScreenWidget(widgetId);
+                packets.showStandaloneScreenWidget(widgetId);
             }
         } else if(slot === 'chatbox') {
             if(multi) {
@@ -185,8 +203,9 @@ export class InterfaceState {
                 packets.showChatboxWidget(widgetId);
             }
         } else if(slot === 'tabarea') {
+            const screenWidget = this.getWidget('screen');
             if(multi) {
-
+                packets.showScreenAndTabWidgets(screenWidget.widgetId, widgetId);
             } else {
                 packets.showTabWidget(widgetId);
             }
@@ -222,4 +241,7 @@ export class InterfaceState {
         return this.widgetSlots.tabarea || null;
     }
 
+    public get screenOverlayWidget(): number | null {
+        return this._screenOverlayWidget;
+    }
 }

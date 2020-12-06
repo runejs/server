@@ -38,7 +38,7 @@ const characterDesignPacket = (player, packet) => {
     };
 
     player.updateFlags.appearanceUpdateRequired = true;
-    player.closeActiveWidgets();
+    player.player.interfaceState.closeAll();
 };
 
 export default {

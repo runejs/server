@@ -1,5 +1,5 @@
 export default {
     opcode: 176,
     size: 0,
-    handler: player => player.closeActiveWidgets(false)
+    handler: player => player.interfaceState.closeAll()
 };

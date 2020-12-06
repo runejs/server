@@ -312,10 +312,15 @@ export class OutboundPackets {
         this.queue(new Packet(180));
     }
 
-    public showScreenWidget(widgetId: number): void {
+    public showScreenOverlayWidget(widgetId: number): void {
+        const packet = new Packet(56);
+        packet.put(widgetId, 'SHORT');
+        this.queue(packet);
+    }
+
+    public showStandaloneScreenWidget(widgetId: number): void {
         const packet = new Packet(118);
         packet.put(widgetId, 'SHORT');
-
         this.queue(packet);
     }
 

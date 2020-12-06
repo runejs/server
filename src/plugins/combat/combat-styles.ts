@@ -1,6 +1,6 @@
 import { equipAction, EquipActionData } from '@server/world/action/equip-action';
 import { ItemDetails, WeaponStyle, weaponWidgetIds } from '@server/config/item-config';
-import { interfaceScripts } from '@server/world/config/widget';
+import { widgetScripts } from '@server/world/config/widget';
 import { Player, playerInitAction } from '@server/world/actor/player/player';
 import { findItem, widgets } from '@server/config';
 import { buttonAction } from '@server/world/action/button-action';
@@ -13,7 +13,7 @@ export function updateCombatStyle(player: Player, weaponStyle: WeaponStyle, styl
     player.settings.attackStyle = styleIndex;
 
     const buttonId = combatStyles[weaponStyle][styleIndex].button_id;
-    player.outgoingPackets.updateClientConfig(interfaceScripts.attackStyle, buttonId);
+    player.outgoingPackets.updateClientConfig(widgetScripts.attackStyle, buttonId);
 }
 
 export function showUnarmed(player: Player): void {

@@ -14,22 +14,20 @@ import {
     PlayerSave, PlayerSettings, QuestProgress,
     savePlayerData
 } from './player-data';
-import { PlayerWidget, interfaceScripts } from '../../config/widget';
+import { PlayerWidget, widgetScripts } from '../../config/widget';
 import { ContainerUpdateEvent, getItemFromContainer, ItemContainer } from '../../items/item-container';
 import { Item } from '../../items/item';
 import { Npc } from '../npc/npc';
 import { NpcSyncTask } from './sync/npc-sync-task';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { QuadtreeKey } from '@server/world';
 import { daysSinceLastLogin } from '@server/util/time';
 import { itemIds } from '@server/world/config/item-ids';
-import { dialogueAction } from '@server/world/actor/player/dialogue-action';
 import { songs } from '@server/world/config/songs';
 import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 import { ItemDefinition } from '@runejs/cache-parser';
 import { PlayerCommandAction } from '@server/world/action/player-command-action';
-import { take } from 'rxjs/operators';
 import { updateBonusStrings } from '@server/plugins/items/equipment/equipment-stats-plugin';
 import { Action, actionHandler } from '@server/world/action';
 import {
@@ -198,14 +196,8 @@ export class Player extends Actor {
             if(!serverConfig.tutorialEnabled) {
                 this.interfaceState.openWidget(widgets.characterDesign, {
                     slot: 'screen',
-                    multi: false,
-                    walkable: false
-                })
-                /*this.openInteractiveWidget({
-                    widgetId: gameInterfaces.characterDesign,
-                    type: 'SCREEN',
-                    disablePlayerMovement: true
-                }).toPromise();*/
+                    multi: false
+                });
             }
         } else if(serverConfig.showWelcome && this.savedMetadata.tutorialComplete) {
             const daysSinceLogin = daysSinceLastLogin(this.loginDate);
@@ -244,36 +236,6 @@ export class Player extends Actor {
         this.updateQuestTab();
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
-
-        /*this.actionsCancelled.subscribe(type => {
-            let closeWidget = false;
-
-            const widget = this.activeWidget;
-
-            if(widget && !widget.permanent) {
-                if(type === 'manual-movement' || type === 'pathing-movement') {
-                    if(widget.closeOnWalk) {
-                        closeWidget = true;
-                    }
-                } else if(type === 'keep-widgets-open' || type === 'button' || type === 'widget') {
-                    closeWidget = false;
-                } else {
-                    closeWidget = true;
-                }
-            }
-
-            if(closeWidget) {
-                widget.closed.next();
-                widget.closed.complete();
-
-                if(widget.forceClosed !== undefined) {
-                    widget.forceClosed();
-                }
-
-                this.outgoingPackets.closeActiveWidgets();
-                this._activeWidget = null;
-            }
-        });*/
 
         this._loginDate = new Date();
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
@@ -383,29 +345,6 @@ export class Player extends Actor {
         // @TODO emit event to friend service watcher
         this.ignoreList.splice(index, 1);
         return true;
-    }
-
-    public openInteractiveWidget(widget: PlayerWidget): Observable<number> {
-        const subject = new Subject<number>();
-        this.activeWidget = widget;
-
-        this.actionsCancelled.pipe(take(1)).subscribe(() => {
-            subject.next(-1);
-            subject.complete();
-        });
-
-        this.metadata.buttonListener = {
-            widgetId: widget.widgetId,
-            event: new Subject<number>()
-        };
-
-        this.metadata.buttonListener.event.pipe(take(1)).subscribe(buttonId => {
-            delete this.metadata.buttonListener;
-            subject.next(buttonId);
-            subject.complete();
-        });
-
-        return subject.asObservable();
     }
 
     /**
@@ -518,7 +457,7 @@ export class Player extends Actor {
         if(playerQuest.stage === 'NOT_STARTED' && stage !== 'COMPLETE') {
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
         } else if(playerQuest.stage !== 'COMPLETE' && stage === 'COMPLETE') {
-            this.outgoingPackets.updateClientConfig(interfaceScripts.questPoints, questData.points + this.getQuestPoints());
+            this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, questData.points + this.getQuestPoints());
             this.modifyWidget(widgets.questReward, { childId: 2, text: `You have completed ${ questData.name }!` });
             this.modifyWidget(widgets.questReward, {
                 childId: 8,
@@ -544,11 +483,10 @@ export class Player extends Actor {
                 questData.completion.modelRotationX || 0, questData.completion.modelRotationY || 0,
                 questData.completion.modelZoom || 0);
 
-            this.activeWidget = {
-                widgetId: widgets.questReward,
-                type: 'SCREEN',
-                closeOnWalk: true
-            };
+            this.interfaceState.openWidget(widgets.questReward, {
+                slot: 'screen',
+                multi: false
+            });
 
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.green });
 
@@ -764,19 +702,6 @@ export class Player extends Actor {
         }
     }
 
-    /**
-     * Queues up a widget to be displayed when the active widget is closed.
-     * If there is no active widget, the provided widget will be automatically displayed.
-     * @param widget The widget to queue.
-     */
-    public queueWidget(widget: PlayerWidget): void {
-        if(this.activeWidget === null) {
-            this.activeWidget = widget;
-        } else {
-            this.queuedWidgets.push(widget);
-        }
-    }
-
     public sendLogMessage(message: string, isConsole: boolean): void {
         if(isConsole) {
             this.outgoingPackets.consoleMessage(message);
@@ -805,36 +730,6 @@ export class Player extends Actor {
             }
             this.outgoingPackets.sendConsoleCommand(strCmd, strHelp);
         }
-    }
-
-    /**
-     * Closes the currently active widget or widget pair.
-     * @param notifyClient [optional] Whether or not to notify the game client that widgets should be cleared. Defaults to true.
-     */
-    public closeActiveWidgets(notifyClient: boolean = true): void {
-        if(notifyClient) {
-            if(this.queuedWidgets.length !== 0) {
-                this.activeWidget = this.queuedWidgets.shift();
-            } else {
-                this.activeWidget = null;
-            }
-        } else {
-            this._activeWidget = null;
-
-            if(this.queuedWidgets.length !== 0) {
-                this.activeWidget = this.queuedWidgets.shift();
-            } else {
-                this.actionsCancelled.next('keep-widgets-open');
-            }
-        }
-    }
-
-    /**
-     * Checks to see if the player has the specified widget ID open on their screen or not.
-     * @param widgetId The ID of the widget to look for.
-     */
-    public hasWidgetOpen(widgetId: number): boolean {
-        return this.activeWidget && this.activeWidget.widgetId === widgetId;
     }
 
     public isItemEquipped(item: number | Item | string): boolean {
@@ -933,7 +828,7 @@ export class Player extends Actor {
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
 
-        if(this.hasWidgetOpen(widgets.equipmentStats.widgetId)) {
+        if(this.interfaceState.widgetOpen('screen', widgets.equipmentStats.widgetId)) {
             this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipmentStats, this.equipment);
             updateBonusStrings(this);
         }
@@ -1067,7 +962,7 @@ export class Player extends Actor {
      * Updates the player's quest tab progress.
      */
     private updateQuestTab(): void {
-        this.outgoingPackets.updateClientConfig(interfaceScripts.questPoints, this.getQuestPoints());
+        this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, this.getQuestPoints());
 
         const questMap = pluginActions.quest;
         if(!questMap) {
@@ -1239,39 +1134,6 @@ export class Player extends Actor {
 
     public set appearance(value: Appearance) {
         this._appearance = value;
-    }
-
-    public get activeWidget(): PlayerWidget {
-        return this._activeWidget;
-    }
-
-    public set activeWidget(value: PlayerWidget) {
-        if(value !== null) {
-            value.closed = new Subject<void>();
-
-            if(value.beforeOpened !== undefined) {
-                value.beforeOpened();
-            }
-
-            if(value.type === 'SCREEN') {
-                this.outgoingPackets.showScreenWidget(value.widgetId);
-            } else if(value.type === 'CHAT') {
-                this.outgoingPackets.showChatboxWidget(value.widgetId);
-            } else if(value.type === 'FULLSCREEN') {
-                this.outgoingPackets.showFullscreenWidget(value.widgetId, value.secondaryWidgetId);
-            } else if(value.type === 'SCREEN_AND_TAB') {
-                this.outgoingPackets.showScreenAndTabWidgets(value.widgetId, value.secondaryWidgetId);
-            }
-
-            if(value.afterOpened !== undefined) {
-                value.afterOpened();
-            }
-        } else {
-            this.outgoingPackets.closeActiveWidgets();
-        }
-
-        this.actionsCancelled.next('keep-widgets-open');
-        this._activeWidget = value;
     }
 
     public get equipment(): ItemContainer {

@@ -36,6 +36,15 @@ export const action: buttonAction = (details) => {
         type: 'SCREEN_AND_TAB',
         closeOnWalk: true
     };
+
+    player.interfaceState.openWidget(widgets.equipmentStats.widgetId, {
+        multi: true,
+        slot: 'screen'
+    });
+    player.interfaceState.openWidget(widgets.inventory.widgetId, {
+        multi: true,
+        slot: 'tabarea'
+    });
 };
 
 export default { type: 'button', widgetId: widgets.equipment.widgetId, buttonIds: 24, action };
