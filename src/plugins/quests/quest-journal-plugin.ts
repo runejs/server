@@ -15,7 +15,7 @@ export const action: buttonAction = (details) => {
         (playerQuest) => playerQuest.questId === quest.questTabId
     );
 
-    let playerStage = "NOT_STARTED";
+    let playerStage = 'NOT_STARTED';
     if (playerQuest && playerQuest.stage) {
         playerStage = playerQuest.stage;
     }
