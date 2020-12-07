@@ -1,10 +1,11 @@
 import { Item } from '@server/world/items/item';
-import { writeFileSync, readFileSync, existsSync, exists } from 'fs';
+import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { logger } from '@runejs/core';
 import { Player } from './player';
 import { SkillValue } from '@server/world/actor/skills';
 import { hasValueNotNull } from '@server/util/data';
+import { PlayerQuest } from '@server/config/quest-config';
 
 
 export interface QuestProgress {
@@ -68,7 +69,7 @@ export interface PlayerSave {
     skills: SkillValue[];
     settings: PlayerSettings;
     savedMetadata: { [key: string]: any };
-    quests: QuestProgress[];
+    quests: PlayerQuest[];
     achievements: string[];
     friendsList: string[];
     ignoreList: string[];

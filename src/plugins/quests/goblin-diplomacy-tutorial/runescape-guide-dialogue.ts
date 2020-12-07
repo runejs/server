@@ -1,10 +1,10 @@
 import { defaultPlayerTabWidgets, Player } from '@server/world/actor/player/player';
-import { Npc } from '@server/world/actor/npc/npc';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 import { updateCombatStyleWidget } from '@server/plugins/combat/combat-styles';
+import { QuestDialogueHandler } from '@server/config/quest-config';
 
 
-export const runescapeGuideDialogueHandler: { [key: number]: (player: Player, npc: Npc) => void } = {
+export const runescapeGuideDialogueHandler: QuestDialogueHandler = {
     5: async (player: Player, npc) => {
         await dialogue([ player, { npc, key: 'guide' } ], [
             guide => [ Emote.GENERIC, `Greetings adventurer, welcome to RuneScape.` ],

@@ -11,8 +11,9 @@ import { world } from '@server/game-server';
 import { findNpc } from '@server/config';
 import { Cutscene } from '@server/world/actor/player/cutscenes';
 import { soundIds } from '@server/world/config/sound-ids';
+import { QuestStageHandler } from '@server/config/quest-config';
 
-export const goblinDiplomacyStageHandler: { [key: number]: (player: Player) => void } = {
+export const goblinDiplomacyStageHandler: QuestStageHandler = {
     0: async player => {
         await startTutorial(player);
         player.savedMetadata.tutorialProgress = 5;

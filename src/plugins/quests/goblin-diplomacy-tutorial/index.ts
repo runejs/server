@@ -16,6 +16,7 @@ import { dialogue } from '@server/world/actor/dialogue';
 import { take } from 'rxjs/operators';
 import { equipAction } from '@server/world/action/equip-action';
 import { buttonAction } from '@server/world/action/button-action';
+import { questDialogueActionFactory } from '@server/config/quest-config';
 
 
 export const tutorialTabWidgetOrder = [
@@ -160,26 +161,6 @@ export async function handleTutorial(player: Player): Promise<void> {
     }
 }
 
-function npcActionFactory(npcDialogueHandler: { [key: number]: (player: Player, npc: Npc) => void }): npcAction {
-    return async({ player, npc }) => {
-        if(!serverConfig.tutorialEnabled) {
-            return;
-        }
-
-        const progress = player.savedMetadata.tutorialProgress;
-        const dialogueHandler = npcDialogueHandler[progress];
-        if(dialogueHandler) {
-            try {
-                await dialogueHandler(player, npc);
-            } catch(e) {
-                logger.error(e);
-            }
-
-            await handleTutorial(player);
-        }
-    };
-}
-
 function spawnQuestNpcs(player: Player): void {
     world.spawnNpc('rs:runescape_guide', new Position(3230, 3238), 'SOUTH', 2, player.instance.instanceId);
     world.spawnNpc('rs:melee_combat_tutor', new Position(3219, 3238), 'EAST', 1, player.instance.instanceId);
@@ -226,14 +207,14 @@ export default [
     },
     {
         type: 'npc_action',
-        action: npcActionFactory(runescapeGuideDialogueHandler),
+        action: questDialogueActionFactory(runescapeGuideDialogueHandler),
         npcs: 'rs:runescape_guide',
         options: 'talk-to',
         walkTo: true
     },
     {
         type: 'npc_action',
-        action: npcActionFactory(harlanDialogueHandler),
+        action: questDialogueActionFactory(harlanDialogueHandler),
         npcs: 'rs:melee_combat_tutor',
         options: 'talk-to',
         walkTo: true

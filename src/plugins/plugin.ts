@@ -1,9 +1,11 @@
 import { Player } from '@server/world/actor/player/player';
 import { Action } from '@server/world/action';
+import { basicNumberFilter } from '@server/plugins/plugin-loader';
 
 export interface QuestRequirement {
     questId: string;
-    stage: string;
+    stage?: number;
+    stages?: number[];
 }
 
 export function sort(plugins: Action[]): Action[] {
@@ -19,10 +21,20 @@ export function questFilter(player: Player, plugin: Action): boolean {
     const playerQuest = player.quests.find(quest => quest.questId === questId);
     if(!playerQuest) {
         // @TODO quest requirements
-        return plugin.questRequirement.stage === 'NOT_STARTED';
+        return plugin.questRequirement.stage === 0;
     }
 
-    return playerQuest.stage === plugin.questRequirement.stage;
+    if(plugin.questRequirement.stage !== undefined) {
+        if(!basicNumberFilter(plugin.questRequirement.stage, playerQuest.progress)) {
+            return false;
+        }
+    } else if(plugin.questRequirement.stages !== undefined) {
+        if(!basicNumberFilter(plugin.questRequirement.stages, playerQuest.progress)) {
+            return false;
+        }
+    }
+
+    return playerQuest.progress === plugin.questRequirement.stage;
 }
 
 export class RunePlugin {

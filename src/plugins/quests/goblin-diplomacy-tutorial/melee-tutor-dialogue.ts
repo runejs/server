@@ -1,9 +1,8 @@
-import { Player } from '@server/world/actor/player/player';
-import { Npc } from '@server/world/actor/npc/npc';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
+import { QuestDialogueHandler } from '@server/config/quest-config';
 
 
-export const harlanDialogueHandler: { [key: number]: (player: Player, npc: Npc) => void } = {
+export const harlanDialogueHandler: QuestDialogueHandler = {
     50: async (player, npc) => {
         await dialogue([ player, { npc, key: 'harlan' } ], [
             harlan => [ Emote.GENERIC, `Greetings, adventurer. How can I assist you?` ],

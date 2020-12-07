@@ -45,6 +45,7 @@ import { WorldInstance, TileModifications } from '@server/world/instances';
 import { Cutscene } from '@server/world/actor/player/cutscenes';
 import { InterfaceState } from '@server/world/actor/player/interface-state';
 import { dialogue } from '@server/world/actor/dialogue';
+import { PlayerQuest } from '@server/config/quest-config';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -114,7 +115,7 @@ export class Player extends Actor {
     public trackedNpcs: Npc[];
     public savedMetadata: { [key: string]: any } = {};
     public sessionMetadata: { [key: string]: any } = {};
-    public quests: QuestProgress[] = [];
+    public quests: PlayerQuest[] = [];
     public achievements: string[] = [];
     public friendsList: string[] = [];
     public ignoreList: string[] = [];
@@ -423,7 +424,7 @@ export class Player extends Actor {
         let questPoints = 0;
 
         if(this.quests && this.quests.length !== 0) {
-            this.quests.filter(quest => quest.stage === 'COMPLETE')
+            this.quests.filter(quest => quest.complete)
                 .forEach(quest => questPoints += pluginActions.quest[quest.questId].points);
         }
 
@@ -434,15 +435,10 @@ export class Player extends Actor {
      * Fetches a player's quest progression details.
      * @param questId The ID of the quest to find the player's status on.
      */
-    public getQuest(questId: string): QuestProgress {
+    public getQuest(questId: string): PlayerQuest {
         let playerQuest = this.quests.find(quest => quest.questId === questId);
         if(!playerQuest) {
-            playerQuest = {
-                questId,
-                stage: 'NOT_STARTED',
-                attributes: {}
-            };
-
+            playerQuest = new PlayerQuest(questId);
             this.quests.push(playerQuest);
         }
 
@@ -450,27 +446,22 @@ export class Player extends Actor {
     }
 
     /**
-     * Sets a player's quest stage to the specified value.
-     * @param questId The ID of the quest to set the stage of.
-     * @param stage The stage to set the quest to.
+     * Sets a player's quest progress to the specified value.
+     * @param questId The ID of the quest to set the progress of.
+     * @param progress The progress to set the quest to.
      */
-    public setQuestStage(questId: string, stage: string): void {
+    public setQuestProgress(questId: string, progress: number): void {
         const questData = pluginActions.quest[questId];
 
         let playerQuest = this.quests.find(quest => quest.questId === questId);
         if(!playerQuest) {
-            playerQuest = {
-                questId,
-                stage: 'NOT_STARTED',
-                attributes: {}
-            };
-
+            playerQuest = new PlayerQuest(questId);
             this.quests.push(playerQuest);
         }
 
-        if(playerQuest.stage === 'NOT_STARTED' && stage !== 'COMPLETE') {
+        if(playerQuest.progress === 0 && !playerQuest.complete) {
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
-        } else if(playerQuest.stage !== 'COMPLETE' && stage === 'COMPLETE') {
+        } else if(!playerQuest.complete && progress === -1) {
             this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, questData.points + this.getQuestPoints());
             this.modifyWidget(widgets.questReward, { childId: 2, text: `You have completed ${ questData.name }!` });
             this.modifyWidget(widgets.questReward, {
@@ -507,7 +498,7 @@ export class Player extends Actor {
             questData.completion.onComplete(this);
         }
 
-        playerQuest.stage = stage;
+        playerQuest.progress = progress;
     }
 
     /**
@@ -985,11 +976,9 @@ export class Player extends Actor {
         Object.keys(questMap).forEach(questKey => {
             const questData = questMap[questKey];
             const playerQuest = this.quests.find(quest => quest.questId === questData.id);
-            let stage = 'NOT_STARTED';
             let color = colors.red;
-            if(playerQuest && playerQuest.stage) {
-                stage = playerQuest.stage;
-                color = stage === 'COMPLETE' ? colors.green : colors.yellow;
+            if(playerQuest && playerQuest.progress > 0) {
+                color = playerQuest.complete ? colors.green : colors.yellow;
             }
 
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: color });

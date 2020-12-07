@@ -22,7 +22,7 @@ const action: commandAction = (details) => {
                 hans => [ Emote.WORRIED, 'What has you down?' ],
                 player => [ Emote.SAD, `Well, first it started this morning when my cat woke me up an hour early. After that, the little bastard just kept meowing and meowing at me...` ],
                 execute(() => {
-                    player.setQuestStage('cooks_assistant', 'NOT_STARTED');
+                    player.setQuestProgress('cooks_assistant', 'NOT_STARTED');
                     player.sendMessage('Here ya go!');
                 }),
                 hans => [ Emote.SAD, `Shit that sucks fam, I'm sorry.`  ]

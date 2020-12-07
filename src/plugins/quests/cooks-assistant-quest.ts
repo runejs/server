@@ -1,18 +1,16 @@
 import { npcAction } from '@server/world/action/npc-action';
-import { Quest } from '@server/world/config/quests';
 import { dialogue, DialogueTree, Emote, execute, goto } from '@server/world/actor/dialogue';
-import { Player } from '@server/world/actor/player/player';
-import { Skill } from '@server/world/actor/skills';
 import { itemIds } from '@server/world/config/item-ids';
 import { QuestProgress } from '@server/world/actor/player/player-data';
+import { Quest } from '@server/config/quest-config';
 
 
-const quest: Quest = {
+const quest = new Quest({
     id: 'cooks_assistant',
     questTabId: 27,
     name: `Cook's Assistant`,
     points: 1,
-    stages: {
+    /*stages: {
         NOT_STARTED: `I can start this quest by speaking to the <col=800000>Cook</col> in the ` +
             `<col=800000>Kitchen</col> on the ground floor of <col=800000>Lumbridge Castle</col>.`,
         COLLECTING: (player: Player): string => {
@@ -62,8 +60,8 @@ const quest: Quest = {
         modelZoom: 240,
         modelRotationX: 180,
         modelRotationY: 180
-    }
-};
+    }*/
+});
 
 function dialogueIngredientQuestions(): Function {
     return (options, tag_INGREDIENT_QUESTIONS) => [
@@ -145,7 +143,7 @@ const startQuestAction: npcAction = (details) => {
         options => [
             `I'm always happy to help a cook in distress.`, [
                 execute(() => {
-                    player.setQuestStage('cooks_assistant', 'COLLECTING');
+                    player.setQuestProgress('cooks_assistant', 'COLLECTING');
                 }),
                 player => [ Emote.GENERIC, `Yes, I'll help you.` ],
                 cook => [ Emote.HAPPY, `Oh thank you, thank you. I need milk, an egg and flour. I'd be very grateful ` +
@@ -235,7 +233,7 @@ const handInIngredientsAction: npcAction = (details) => {
             player => [Emote.GENERIC, `Well, maybe one day I'll be important enough to sit on the Duke's table.`],
             cook => [Emote.SKEPTICAL, `Maybe, but I won't be holding my breath.`],
             execute(() => {
-                player.setQuestStage('cooks_assistant', 'COMPLETE');
+                player.setQuestProgress('cooks_assistant', 'COMPLETE');
             })
         ],
         (subtree, tag_NO_INGREDIENTS) => [
@@ -254,21 +252,21 @@ const handInIngredientsAction: npcAction = (details) => {
     dialogue([ player, { npc, key: 'cook' }], dialogueTree);
 };
 
-export default [{
-    type: 'quest',
-    quest
-}, {
-    type: 'npc_action',
-    questRequirement: { questId: 'cooks_assistant', stage: 'NOT_STARTED' },
-    npcs: 'rs:lumbridge_castle_cook',
-    options: 'talk-to',
-    walkTo: true,
-    action: startQuestAction
-}, {
-    type: 'npc_action',
-    questRequirement: { questId: 'cooks_assistant', stage: 'COLLECTING' },
-    npcs: 'rs:lumbridge_castle_cook',
-    options: 'talk-to',
-    walkTo: true,
-    action: handInIngredientsAction
-}];
+export default [
+    quest,
+    {
+        type: 'npc_action',
+        questRequirement: { questId: 'cooks_assistant', stage: 'NOT_STARTED' },
+        npcs: 'rs:lumbridge_castle_cook',
+        options: 'talk-to',
+        walkTo: true,
+        action: startQuestAction
+    }, {
+        type: 'npc_action',
+        questRequirement: { questId: 'cooks_assistant', stage: 'COLLECTING' },
+        npcs: 'rs:lumbridge_castle_cook',
+        options: 'talk-to',
+        walkTo: true,
+        action: handInIngredientsAction
+    }
+];
