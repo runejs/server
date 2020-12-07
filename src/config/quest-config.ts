@@ -33,7 +33,7 @@ export class Quest implements Action {
     public readonly points: number;
     public readonly type = 'quest';
     public readonly journalHandler: QuestJournalHandler;
-    public readonly  completion;
+    public readonly completion;
 
     public constructor(options: {
         id: string;
