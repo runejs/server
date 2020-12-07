@@ -1,8 +1,6 @@
-import { defaultPlayerTabWidgets, Player, playerInitAction, Tabs } from '@server/world/actor/player/player';
+import { defaultPlayerTabWidgets, Player, playerInitAction } from '@server/world/actor/player/player';
 import { serverConfig, world } from '@server/game-server';
-import { npcAction } from '@server/world/action/npc-action';
 import uuidv4 from 'uuid/v4';
-import { Npc } from '@server/world/actor/npc/npc';
 import { logger } from '@runejs/core';
 import { Position } from '@server/world/position';
 import { WorldInstance } from '@server/world/instances';
@@ -17,18 +15,19 @@ import { take } from 'rxjs/operators';
 import { equipAction } from '@server/world/action/equip-action';
 import { buttonAction } from '@server/world/action/button-action';
 import { questDialogueActionFactory } from '@server/config/quest-config';
+import { tabIndex } from '@server/world/actor/player/interface-state';
 
 
 export const tutorialTabWidgetOrder = [
-    [ Tabs.settings, widgets.settingsTab ],
-    [ Tabs.friends, widgets.friendsList ],
-    [ Tabs.ignoreList, widgets.ignoreList ],
-    [ Tabs.emotes, widgets.emotesTab ],
-    [ Tabs.music, widgets.musicPlayerTab ],
-    [ Tabs.inventory, widgets.inventory.widgetId ],
-    [ Tabs.skills, widgets.skillsTab ],
-    [ Tabs.equipment, widgets.equipment.widgetId ],
-    [ Tabs.combatStyle, -1 ],
+    [ tabIndex['settings'], widgets.settingsTab ],
+    [ tabIndex['friends'], widgets.friendsList ],
+    [ tabIndex['ignores'], widgets.ignoreList ],
+    [ tabIndex['emotes'], widgets.emotesTab ],
+    [ tabIndex['music'], widgets.musicPlayerTab ],
+    [ tabIndex['inventory'], widgets.inventory.widgetId ],
+    [ tabIndex['skills'], widgets.skillsTab ],
+    [ tabIndex['equipment'], widgets.equipment.widgetId ],
+    [ tabIndex['combat'], -1 ],
     // @TODO prayer, magic,
 ];
 

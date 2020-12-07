@@ -11,7 +11,7 @@ import {
     Appearance,
     defaultAppearance, defaultSettings,
     loadPlayerSave, playerExists,
-    PlayerSave, PlayerSettings, QuestProgress,
+    PlayerSave, PlayerSettings,
     savePlayerData
 } from './player-data';
 import { PlayerWidget, widgetScripts } from '../../config/widget';
@@ -37,7 +37,7 @@ import {
     ItemDetails,
     OffensiveBonuses, SkillBonuses
 } from '@server/config/item-config';
-import { findItem, npcIdMap, widgets } from '@server/config';
+import { findItem, findQuest, npcIdMap, widgets } from '@server/config';
 import { NpcDetails } from '@server/config/npc-config';
 import { animationIds } from '@server/world/config/animation-ids';
 import { combatStyles } from '@server/world/actor/combat';
@@ -46,6 +46,7 @@ import { Cutscene } from '@server/world/actor/player/cutscenes';
 import { InterfaceState } from '@server/world/actor/player/interface-state';
 import { dialogue } from '@server/world/actor/dialogue';
 import { PlayerQuest } from '@server/config/quest-config';
+
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -66,22 +67,6 @@ export const defaultPlayerTabWidgets = [
     widgets.friendsList, widgets.ignoreList, widgets.logoutTab, widgets.settingsTab, widgets.emotesTab,
     widgets.musicPlayerTab
 ];
-
-export enum Tabs {
-    combatStyle = 0,
-    skills = 1,
-    quests = 2,
-    inventory = 3,
-    equipment = 4,
-    prayers = 5,
-    magic = 6,
-    friends = 8,
-    ignoreList = 9,
-    logout = 10,
-    settings = 11,
-    emotes = 12,
-    music = 13
-}
 
 export enum Rights {
     ADMIN = 2,
@@ -450,8 +435,13 @@ export class Player extends Actor {
      * @param questId The ID of the quest to set the progress of.
      * @param progress The progress to set the quest to.
      */
-    public setQuestProgress(questId: string, progress: number): void {
-        const questData = pluginActions.quest[questId];
+    public setQuestProgress(questId: string, progress: number | 'complete'): void {
+        const questData = findQuest(questId);
+
+        if(!questData) {
+            logger.warn(`Quest data not found for ${questId}`);
+            return;
+        }
 
         let playerQuest = this.quests.find(quest => quest.questId === questId);
         if(!playerQuest) {
@@ -461,7 +451,7 @@ export class Player extends Actor {
 
         if(playerQuest.progress === 0 && !playerQuest.complete) {
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
-        } else if(!playerQuest.complete && progress === -1) {
+        } else if(!playerQuest.complete && progress === 'complete') {
             this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, questData.points + this.getQuestPoints());
             this.modifyWidget(widgets.questReward, { childId: 2, text: `You have completed ${ questData.name }!` });
             this.modifyWidget(widgets.questReward, {
@@ -498,7 +488,7 @@ export class Player extends Actor {
             questData.completion.onComplete(this);
         }
 
-        playerQuest.progress = progress;
+        playerQuest.progress = progress === 'complete' ? -1 : progress;
     }
 
     /**
@@ -1058,8 +1048,8 @@ export class Player extends Actor {
                 this._loginDate = new Date(lastLogin);
             }
 
-            if(playerSave.quests) {
-                this.quests = playerSave.quests;
+            if(playerSave.questList) {
+                this.quests = playerSave.questList;
             }
             if(playerSave.achievements) {
                 this.achievements = playerSave.achievements;

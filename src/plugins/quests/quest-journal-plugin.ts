@@ -4,7 +4,7 @@ import { pluginActions } from '@server/game-server';
 import { widgets } from '@server/config';
 import { Quest } from '@server/config/quest-config';
 
-export const action: buttonAction = ({ player, buttonId }) => {
+export const action: buttonAction = async ({ player, buttonId }) => {
     const [ quest ] = pluginActions.quest.filter((quest: Quest) => quest.questTabId === buttonId) as Quest[];
     if(!quest) {
         return;
@@ -28,7 +28,7 @@ export const action: buttonAction = ({ player, buttonId }) => {
     let text: string;
 
     if(typeof journalHandler === 'function') {
-        text = journalHandler(player);
+        text = await Promise.resolve(journalHandler(player));
     } else if(typeof journalHandler === 'string') {
         text = journalHandler;
     }

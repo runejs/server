@@ -1,66 +1,71 @@
 import { npcAction } from '@server/world/action/npc-action';
 import { dialogue, DialogueTree, Emote, execute, goto } from '@server/world/actor/dialogue';
 import { itemIds } from '@server/world/config/item-ids';
-import { QuestProgress } from '@server/world/actor/player/player-data';
-import { Quest } from '@server/config/quest-config';
+import { PlayerQuest, Quest, QuestJournalHandler } from '@server/config/quest-config';
+import { Player } from '@server/world/actor/player/player';
 
+
+const journalHandler: QuestJournalHandler = {
+
+    0: `I can start this quest by speaking to the <col=800000>Cook</col> in the 
+        <col=800000>Kitchen</col> on the ground floor of <col=800000>Lumbridge Castle</col>.`,
+
+    50: player => {
+        let questLog = `It's the <col=800000>Duke of Lumbridge's</col> birthday and I have to help ` +
+            `his <col=800000>Cook</col> make him a <col=800000>birthday cake.</col> To do this I need to ` +
+            `bring him the following ingredients:\n`;
+        const quest = player.getQuest('cooks_assistant');
+
+        if(player.hasItemInInventory(itemIds.bucketOfMilk) || quest.metadata.givenMilk) {
+            questLog += `I have found a <col=800000>bucket of milk</col> to give to the cook.\n`;
+        } else {
+            questLog += `I need to find a <col=800000>bucket of milk.</col> There's a cattle field east ` +
+                `of Lumbridge, I should make sure I take an empty bucket with me.\n`;
+        }
+
+        if(player.hasItemInInventory(itemIds.potOfFlour) || quest.metadata.givenFlour) {
+            questLog += `I have found a <col=800000>pot of flour</col> to give to the cook.\n`;
+        } else {
+            questLog += `I need to find a <col=800000>pot of flour.</col> There's a mill found north-` +
+                `west of Lumbridge, I should take an empty pot with me.\n`;
+        }
+
+        if(player.hasItemInInventory(itemIds.egg) || quest.metadata.givenEgg) {
+            questLog += `I have found an <col=800000>egg</col> to give to the cook.\n`;
+        } else {
+            questLog += `I need to find an <col=800000>egg.</col> The cook normally gets his eggs from ` +
+                `the Groats' farm, found just to the west of the cattle field.`;
+        }
+
+        return questLog;
+    },
+
+    'complete': `It was the Duke of Lumbridge's birthday, but his cook had ` +
+        `forgotten to buy the ingredients he needed to make him a ` +
+        `cake. I brought the cook an egg, some flour and some milk ` +
+        `and the cook made a delicious looking cake with them.\n\n` +
+        `As a reward he now lets me use his high quality range ` +
+        `which lets me burn things less whenever I wish to cook ` +
+        `there.\n\n` +
+        `<col=ff0000>QUEST COMPLETE!</col>`
+
+};
 
 const quest = new Quest({
     id: 'cooks_assistant',
     questTabId: 27,
     name: `Cook's Assistant`,
     points: 1,
-    /*stages: {
-        NOT_STARTED: `I can start this quest by speaking to the <col=800000>Cook</col> in the ` +
-            `<col=800000>Kitchen</col> on the ground floor of <col=800000>Lumbridge Castle</col>.`,
-        COLLECTING: (player: Player): string => {
-            let questLog = `It's the <col=800000>Duke of Lumbridge's</col> birthday and I have to help ` +
-                `his <col=800000>Cook</col> make him a <col=800000>birthday cake.</col> To do this I need to ` +
-                `bring him the following ingredients:\n`;
-            const quest = player.getQuest('cooks_assistant');
-
-            if(player.hasItemInInventory(itemIds.bucketOfMilk) || quest.attributes.givenMilk) {
-                questLog += `I have found a <col=800000>bucket of milk</col> to give to the cook.\n`;
-            } else {
-                questLog += `I need to find a <col=800000>bucket of milk.</col> There's a cattle field east ` +
-                    `of Lumbridge, I should make sure I take an empty bucket with me.\n`;
-            }
-
-            if(player.hasItemInInventory(itemIds.potOfFlour) || quest.attributes.givenFlour) {
-                questLog += `I have found a <col=800000>pot of flour</col> to give to the cook.\n`;
-            } else {
-                questLog += `I need to find a <col=800000>pot of flour.</col> There's a mill found north-` +
-                    `west of Lumbridge, I should take an empty pot with me.\n`;
-            }
-
-            if(player.hasItemInInventory(itemIds.egg) || quest.attributes.givenEgg) {
-                questLog += `I have found an <col=800000>egg</col> to give to the cook.\n`;
-            } else {
-                questLog += `I need to find an <col=800000>egg.</col> The cook normally gets his eggs from ` +
-                    `the Groats' farm, found just to the west of the cattle field.`;
-            }
-
-            return questLog;
-        },
-        COMPLETE: { color: 0, text: `It was the Duke of Lumbridge's birthday, but his cook had ` +
-                `forgotten to buy the ingredients he needed to make him a ` +
-                `cake. I brought the cook an egg, some flour and some milk ` +
-                `and the cook made a delicious looking cake with them.\n\n` +
-                `As a reward he now lets me use his high quality range ` +
-                `which lets me burn things less whenever I wish to cook ` +
-                `there.\n\n` +
-                `<col=ff0000>QUEST COMPLETE!</col>` }
-    },
+    journalHandler,
     completion: {
         rewards: [ '300 Cooking XP' ],
-        onComplete: (player: Player): void => {
-            player.skills.addExp(Skill.COOKING, 300);
-        },
+        onComplete: (player: Player): void =>
+            player.skills.cooking.addExp(300),
         itemId: 1891,
         modelZoom: 240,
         modelRotationX: 180,
         modelRotationY: 180
-    }*/
+    }
 });
 
 function dialogueIngredientQuestions(): Function {
@@ -143,7 +148,7 @@ const startQuestAction: npcAction = (details) => {
         options => [
             `I'm always happy to help a cook in distress.`, [
                 execute(() => {
-                    player.setQuestProgress('cooks_assistant', 'COLLECTING');
+                    player.setQuestProgress('cooks_assistant', 50);
                 }),
                 player => [ Emote.GENERIC, `Yes, I'll help you.` ],
                 cook => [ Emote.HAPPY, `Oh thank you, thank you. I need milk, an egg and flour. I'd be very grateful ` +
@@ -160,10 +165,10 @@ const startQuestAction: npcAction = (details) => {
     ]);
 };
 
-function youStillNeed(quest: QuestProgress): DialogueTree {
+function youStillNeed(quest: PlayerQuest): DialogueTree {
     return [
         text => `You still need to get\n` +
-            `${!quest.attributes.givenMilk ? `A bucket of milk. ` : ``}${!quest.attributes.givenFlour ? `A pot of flour. ` : ``}${!quest.attributes.givenEgg ? `An egg.` : ``}`,
+            `${!quest.metadata.givenMilk ? `A bucket of milk. ` : ``}${!quest.metadata.givenFlour ? `A pot of flour. ` : ``}${!quest.metadata.givenEgg ? `An egg.` : ``}`,
         options => [
             `I'll get right on it.`, [
                 player => [Emote.GENERIC, `I'll get right on it.`]
@@ -192,8 +197,8 @@ const handInIngredientsAction: npcAction = (details) => {
     ];
 
     for(const ingredient of ingredients) {
-        if(quest.attributes[ingredient.attr]) {
-            quest.attributes.ingredientCount++;
+        if(quest.metadata[ingredient.attr]) {
+            quest.metadata.ingredientCount++;
             continue;
         }
 
@@ -207,7 +212,7 @@ const handInIngredientsAction: npcAction = (details) => {
                 const quest = player.quests.find(quest => quest.questId === 'cooks_assistant');
 
                 if(player.removeFirstItem(ingredient.itemId) !== -1) {
-                    quest.attributes[ingredient.attr] = true;
+                    quest.metadata[ingredient.attr] = true;
                 }
             })
         );
@@ -215,7 +220,7 @@ const handInIngredientsAction: npcAction = (details) => {
 
     dialogueTree.push(
         goto(() => {
-            const count = [ quest.attributes.givenMilk, quest.attributes.givenFlour, quest.attributes.givenEgg ]
+            const count = [ quest.metadata.givenMilk, quest.metadata.givenFlour, quest.metadata.givenEgg ]
                 .filter(value => value === true).length;
 
             if(count === 3) {
@@ -233,7 +238,7 @@ const handInIngredientsAction: npcAction = (details) => {
             player => [Emote.GENERIC, `Well, maybe one day I'll be important enough to sit on the Duke's table.`],
             cook => [Emote.SKEPTICAL, `Maybe, but I won't be holding my breath.`],
             execute(() => {
-                player.setQuestProgress('cooks_assistant', 'COMPLETE');
+                player.setQuestProgress('cooks_assistant', 'complete');
             })
         ],
         (subtree, tag_NO_INGREDIENTS) => [
@@ -256,14 +261,21 @@ export default [
     quest,
     {
         type: 'npc_action',
-        questRequirement: { questId: 'cooks_assistant', stage: 'NOT_STARTED' },
+        questRequirement: {
+            questId: 'cooks_assistant',
+            stage: 0
+        },
         npcs: 'rs:lumbridge_castle_cook',
         options: 'talk-to',
         walkTo: true,
         action: startQuestAction
-    }, {
+    },
+    {
         type: 'npc_action',
-        questRequirement: { questId: 'cooks_assistant', stage: 'COLLECTING' },
+        questRequirement: {
+            questId: 'cooks_assistant',
+            stage: 50
+        },
         npcs: 'rs:lumbridge_castle_cook',
         options: 'talk-to',
         walkTo: true,
