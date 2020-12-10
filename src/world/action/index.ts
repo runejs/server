@@ -149,7 +149,7 @@ class ActionHandler {
 export const actionHandler = new ActionHandler();
 
 export async function loadActions(): Promise<void> {
-    const blacklist = ['index.js'];
+    const blacklist = [];
 
     for await(const path of getFiles(ACTION_DIRECTORY, blacklist)) {
         const location = '.' + path.substring(ACTION_DIRECTORY.length).replace('.js', '');

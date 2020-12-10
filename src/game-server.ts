@@ -10,6 +10,7 @@ import { loadPackets } from '@server/net/inbound-packets';
 import { watchForChanges, watchSource } from '@server/util/files';
 import { openGameServer } from '@server/net/server/game-server';
 import { loadConfigurations } from '@server/config';
+import { Quest } from '@server/config/quest-config';
 
 
 export let serverConfig: ServerConfig;
@@ -23,11 +24,19 @@ export async function loadPlugins(): Promise<void> {
     const plugins = await parsePluginFiles();
 
     plugins.map(plugin => plugin.actions).reduce((a, b) => a.concat(b)).forEach(action => {
-        if(!pluginActions[action.type]) {
-            pluginActions[action.type] = [];
-        }
+        if(!(action instanceof Quest)) {
+            if(!pluginActions[action.type]) {
+                pluginActions[action.type] = [];
+            }
 
-        pluginActions[action.type].push(action);
+            pluginActions[action.type].push(action);
+        } else {
+            if(!pluginActions['quest']) {
+                pluginActions['quest'] = [];
+            }
+
+            pluginActions['quest'].push(action);
+        }
     });
 
     // @TODO implement proper sorting rules

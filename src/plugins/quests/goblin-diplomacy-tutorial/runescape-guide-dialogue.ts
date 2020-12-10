@@ -17,7 +17,7 @@ export const runescapeGuideDialogueHandler: QuestDialogueHandler = {
                     player => [ Emote.GENERIC, `Carry on then.` ],
                     guide => [ Emote.GENERIC, `We'll start with the Options menu. Click on the blinking spanner icon at the bottom right of your game screen.` ],
                     execute(() => {
-                        player.savedMetadata.tutorialProgress = 10;
+                        player.setQuestProgress('tyn:goblin_diplomacy', 10);
                     })
                 ],
                 `I know how the game works already.`, [
@@ -25,7 +25,7 @@ export const runescapeGuideDialogueHandler: QuestDialogueHandler = {
                     guide => [ Emote.HAPPY, `Oh good, I won't tell you what you already know then.` ],
                     execute(() => {
                         player.savedMetadata.tutorialComplete = true;
-                        player.savedMetadata.tutorialProgress = 1000;
+                        player.setQuestProgress('tyn:goblin_diplomacy', 'complete');
                         player.instance = null;
                         defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
                             if(widgetId !== -1) {
@@ -48,7 +48,7 @@ export const runescapeGuideDialogueHandler: QuestDialogueHandler = {
         await dialogue([ player, { npc, key: 'guide' } ], [
             guide => [ Emote.HAPPY, `Next we'll move on to the more social side of things. Click on the blinking icon to learn about the Friends List.` ],
             execute(() => {
-                player.savedMetadata.tutorialProgress = 20;
+                player.setQuestProgress('tyn:goblin_diplomacy', 20);
             })
         ]);
     },
@@ -76,7 +76,7 @@ export const runescapeGuideDialogueHandler: QuestDialogueHandler = {
             player => [ Emote.SAD, `Sorry, go on...` ],
             guide => [ Emote.GENERIC, `Yes... As I was saying... Music can be accessed from the music tab.`],
             execute(() => {
-                player.savedMetadata.tutorialProgress = 40;
+                player.setQuestProgress('tyn:goblin_diplomacy', 40);
             })
         ]);
     },
@@ -90,7 +90,7 @@ export const runescapeGuideDialogueHandler: QuestDialogueHandler = {
             guide => [ Emote.SAD, `That's all you adventurers ever want to do...` ],
             guide => [ Emote.GENERIC, `Oh well. Head on over to Harlan, the melee combat tutor, and I'm sure he'll show you how to kill something.` ],
             execute(() => {
-                player.savedMetadata.tutorialProgress = 50;
+                player.setQuestProgress('tyn:goblin_diplomacy', 50);
             })
         ]);
     },

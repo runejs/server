@@ -2,17 +2,21 @@ import { Player } from '@server/world/actor/player/player';
 import { Npc } from '@server/world/actor/npc/npc';
 import { npcAction } from '@server/world/action/npc-action';
 import { logger } from '@runejs/core';
-import { handleTutorial } from '@server/plugins/quests/goblin-diplomacy-tutorial';
-import { Action } from '@server/world/action';
+import { handleTutorial } from '@server/plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy';
 
-type QuestJournalKey = number | 'complete';
 
-export type QuestStageHandler = { [key: number]: (player: Player) => void };
+type QuestKey = number | 'complete';
 
-export type QuestDialogueHandler = { [key: number]: (player: Player, npc: Npc) => void };
+export type QuestStageHandler = {
+    [key in QuestKey]?: (player: Player) => void | Promise<void>;
+};;
+
+export type QuestDialogueHandler = {
+    [key in QuestKey]?: (player: Player, npc: Npc) => void | Promise<void>;
+};
 
 export type QuestJournalHandler = {
-    [key in QuestJournalKey]: ((player: Player) => Promise<string>) | ((player: Player) => string) | string;
+    [key in QuestKey]?: ((player: Player) => Promise<string>) | ((player: Player) => string) | string;
 };
 
 export interface QuestCompletion {
@@ -25,15 +29,14 @@ export interface QuestCompletion {
     modelZoom?: number;
 }
 
-export class Quest implements Action {
+export class Quest {
 
-    public readonly id: string;
-    public readonly questTabId: number;
-    public readonly name: string;
-    public readonly points: number;
-    public readonly type = 'quest';
-    public readonly journalHandler: QuestJournalHandler;
-    public readonly completion;
+    public id: string;
+    public questTabId: number;
+    public name: string;
+    public points: number;
+    public journalHandler: QuestJournalHandler;
+    public completion;
 
     public constructor(options: {
         id: string;
@@ -66,9 +69,14 @@ export class PlayerQuest {
 
 }
 
-export function questDialogueActionFactory(npcDialogueHandler: QuestDialogueHandler): npcAction {
+export function questDialogueActionFactory(questId: string, npcDialogueHandler: QuestDialogueHandler): npcAction {
     return async({ player, npc }) => {
-        const progress = player.savedMetadata.tutorialProgress;
+        const quest = player.getQuest(questId);
+        if(!quest) {
+            return;
+        }
+
+        const progress = quest.progress;
         const dialogueHandler = npcDialogueHandler[progress];
         if(dialogueHandler) {
             try {

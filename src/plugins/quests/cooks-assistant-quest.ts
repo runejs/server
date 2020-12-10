@@ -14,7 +14,8 @@ const journalHandler: QuestJournalHandler = {
         let questLog = `It's the <col=800000>Duke of Lumbridge's</col> birthday and I have to help ` +
             `his <col=800000>Cook</col> make him a <col=800000>birthday cake.</col> To do this I need to ` +
             `bring him the following ingredients:\n`;
-        const quest = player.getQuest('cooks_assistant');
+
+        const quest = player.getQuest('rs:cooks_assistant');
 
         if(player.hasItemInInventory(itemIds.bucketOfMilk) || quest.metadata.givenMilk) {
             questLog += `I have found a <col=800000>bucket of milk</col> to give to the cook.\n`;
@@ -50,23 +51,6 @@ const journalHandler: QuestJournalHandler = {
         `<col=ff0000>QUEST COMPLETE!</col>`
 
 };
-
-const quest = new Quest({
-    id: 'cooks_assistant',
-    questTabId: 27,
-    name: `Cook's Assistant`,
-    points: 1,
-    journalHandler,
-    completion: {
-        rewards: [ '300 Cooking XP' ],
-        onComplete: (player: Player): void =>
-            player.skills.cooking.addExp(300),
-        itemId: 1891,
-        modelZoom: 240,
-        modelRotationX: 180,
-        modelRotationY: 180
-    }
-});
 
 function dialogueIngredientQuestions(): Function {
     return (options, tag_INGREDIENT_QUESTIONS) => [
@@ -148,7 +132,7 @@ const startQuestAction: npcAction = (details) => {
         options => [
             `I'm always happy to help a cook in distress.`, [
                 execute(() => {
-                    player.setQuestProgress('cooks_assistant', 50);
+                    player.setQuestProgress('rs:cooks_assistant', 50);
                 }),
                 player => [ Emote.GENERIC, `Yes, I'll help you.` ],
                 cook => [ Emote.HAPPY, `Oh thank you, thank you. I need milk, an egg and flour. I'd be very grateful ` +
@@ -188,7 +172,7 @@ const handInIngredientsAction: npcAction = (details) => {
         cook => [Emote.GENERIC, `How are you getting on with finding the ingredients?`]
     ];
 
-    const quest = player.quests.find(quest => quest.questId === 'cooks_assistant');
+    const quest = player.getQuest('rs:cooks_assistant');
 
     const ingredients = [
         { itemId: itemIds.bucketOfMilk, text: `Here's a bucket of milk.`, attr: 'givenMilk' },
@@ -209,7 +193,7 @@ const handInIngredientsAction: npcAction = (details) => {
         dialogueTree.push(
             player => [Emote.GENERIC, ingredient.text],
             execute(() => {
-                const quest = player.quests.find(quest => quest.questId === 'cooks_assistant');
+                const quest = player.getQuest('rs:cooks_assistant');
 
                 if(player.removeFirstItem(ingredient.itemId) !== -1) {
                     quest.metadata[ingredient.attr] = true;
@@ -238,7 +222,7 @@ const handInIngredientsAction: npcAction = (details) => {
             player => [Emote.GENERIC, `Well, maybe one day I'll be important enough to sit on the Duke's table.`],
             cook => [Emote.SKEPTICAL, `Maybe, but I won't be holding my breath.`],
             execute(() => {
-                player.setQuestProgress('cooks_assistant', 'complete');
+                player.setQuestProgress('rs:cooks_assistant', 'complete');
             })
         ],
         (subtree, tag_NO_INGREDIENTS) => [
@@ -258,11 +242,26 @@ const handInIngredientsAction: npcAction = (details) => {
 };
 
 export default [
-    quest,
+    new Quest({
+        id: 'rs:cooks_assistant',
+        questTabId: 27,
+        name: `Cook's Assistant`,
+        points: 1,
+        journalHandler,
+        completion: {
+            rewards: [ '300 Cooking XP' ],
+            onComplete: (player: Player): void =>
+                player.skills.cooking.addExp(300),
+            itemId: 1891,
+            modelZoom: 240,
+            modelRotationX: 180,
+            modelRotationY: 180
+        }
+    }),
     {
         type: 'npc_action',
         questRequirement: {
-            questId: 'cooks_assistant',
+            questId: 'rs:cooks_assistant',
             stage: 0
         },
         npcs: 'rs:lumbridge_castle_cook',
@@ -273,7 +272,7 @@ export default [
     {
         type: 'npc_action',
         questRequirement: {
-            questId: 'cooks_assistant',
+            questId: 'rs:cooks_assistant',
             stage: 50
         },
         npcs: 'rs:lumbridge_castle_cook',

@@ -1,4 +1,5 @@
 import { defaultPlayerTabWidgets, Player, playerInitAction } from '@server/world/actor/player/player';
+import { Quest, questDialogueActionFactory, QuestJournalHandler } from '@server/config/quest-config';
 import { serverConfig, world } from '@server/game-server';
 import uuidv4 from 'uuid/v4';
 import { logger } from '@runejs/core';
@@ -6,16 +7,15 @@ import { Position } from '@server/world/position';
 import { WorldInstance } from '@server/world/instances';
 import { findNpc, widgets } from '@server/config';
 import { updateCombatStyleWidget } from '@server/plugins/combat/combat-styles';
-import { runescapeGuideDialogueHandler } from '@server/plugins/quests/goblin-diplomacy-tutorial/runescape-guide-dialogue';
-import { harlanDialogueHandler } from '@server/plugins/quests/goblin-diplomacy-tutorial/melee-tutor-dialogue';
-import { goblinDiplomacyStageHandler } from '@server/plugins/quests/goblin-diplomacy-tutorial/stage-handler';
 import { Subject } from 'rxjs';
 import { dialogue } from '@server/world/actor/dialogue';
 import { take } from 'rxjs/operators';
 import { equipAction } from '@server/world/action/equip-action';
 import { buttonAction } from '@server/world/action/button-action';
-import { questDialogueActionFactory } from '@server/config/quest-config';
 import { tabIndex } from '@server/world/actor/player/interface-state';
+import { runescapeGuideDialogueHandler } from './runescape-guide-dialogue';
+import { harlanDialogueHandler } from './melee-tutor-dialogue';
+import { goblinDiplomacyStageHandler } from './stage-handler';
 
 
 export const tutorialTabWidgetOrder = [
@@ -47,7 +47,7 @@ export function showTabWidgetHint(player: Player, tabIndex: number, availableTab
     player.outgoingPackets.blinkTabIcon(tabIndex);
 
     player.metadata.tabClickEvent.event.pipe(take(1)).subscribe(async () => {
-        player.savedMetadata.tutorialProgress = finalProgress;
+        player.setQuestProgress('tyn:goblin_diplomacy', finalProgress);
         player.metadata.tabClickEvent.event.complete();
         delete player.metadata.tabClickEvent;
         await handleTutorial(player);
@@ -91,7 +91,7 @@ export function npcHint(player: Player, npcKey: string | number): void {
 }
 
 export const startTutorial = async (player: Player): Promise<void> => {
-    player.savedMetadata.tutorialProgress = 0;
+    player.setQuestProgress('tyn:goblin_diplomacy', 0);
 
     defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
         if(widgetId !== -1) {
@@ -145,7 +145,7 @@ export async function spawnGoblinBoi(player: Player, spawnPoint: 'beginning' | '
 }
 
 export async function handleTutorial(player: Player): Promise<void> {
-    const progress = player.savedMetadata.tutorialProgress;
+    const progress = player.getQuest('tyn:goblin_diplomacy').progress;
     const handler = goblinDiplomacyStageHandler[progress];
 
     defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
@@ -181,7 +181,7 @@ const tutorialInitAction: playerInitAction = async ({ player }) => {
 };
 
 const trainingSwordEquipAction: equipAction = async ({ player, itemDetails }) => {
-    const progress = player.savedMetadata.tutorialProgress || 0;
+    const progress = player.getQuest('tyn:goblin_diplomacy').progress;
 
     if(progress === 85) {
         const swordEquipped = player.isItemEquipped('rs:training_sword');
@@ -189,7 +189,7 @@ const trainingSwordEquipAction: equipAction = async ({ player, itemDetails }) =>
 
         if((itemDetails.key === 'rs:training_sword' && shieldEquipped) ||
             (itemDetails.key === 'rs:training_shield' && swordEquipped)) {
-            player.savedMetadata.tutorialProgress = 90;
+            player.setQuestProgress('tyn:goblin_diplomacy', 90);
             await handleTutorial(player);
         }
     }
@@ -199,21 +199,41 @@ const createCharacterAction: buttonAction = ({ player }): void => {
     player.interfaceState.closeAllSlots();
 };
 
+const journalHandler: QuestJournalHandler = {
+
+    0: `stinkyu hoomsn HAHA\n\n\nf1nglewuRt`
+
+};
+
 export default [
+    new Quest({
+        id: 'tyn:goblin_diplomacy',
+        questTabId: 28,
+        name: `Goblin Diplomacy`,
+        points: 1,
+        journalHandler,
+        completion: {
+            rewards: [ 'A training sword & shield' ],
+            itemId: 9703,
+            modelZoom: 200,
+            modelRotationX: 0,
+            modelRotationY: 180
+        }
+    }),
     {
         type: 'player_init',
         action: tutorialInitAction
     },
     {
         type: 'npc_action',
-        action: questDialogueActionFactory(runescapeGuideDialogueHandler),
+        action: questDialogueActionFactory('tyn:goblin_diplomacy', runescapeGuideDialogueHandler),
         npcs: 'rs:runescape_guide',
         options: 'talk-to',
         walkTo: true
     },
     {
         type: 'npc_action',
-        action: questDialogueActionFactory(harlanDialogueHandler),
+        action: questDialogueActionFactory('tyn:goblin_diplomacy', harlanDialogueHandler),
         npcs: 'rs:melee_combat_tutor',
         options: 'talk-to',
         walkTo: true

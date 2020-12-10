@@ -111,7 +111,7 @@ const itemActionHandler = (player: Player, itemId: number, slot: number, widgetI
     }
 
     if(cancelActions) {
-        player.actionsCancelled.next();
+        player.actionsCancelled.next(null);
     }
 
     for(const plugin of interactionActions) {
