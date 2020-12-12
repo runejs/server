@@ -1,7 +1,8 @@
 import { Player } from '@server/world/actor/player/player';
 import { Action } from '@server/world/action';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
-import { Quest } from '@server/config/quest-config';
+import { Quest } from '@server/world/actor/player/quest';
+
 
 export interface QuestRequirement {
     questId: string;

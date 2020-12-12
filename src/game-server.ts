@@ -10,7 +10,7 @@ import { loadPackets } from '@server/net/inbound-packets';
 import { watchForChanges, watchSource } from '@server/util/files';
 import { openGameServer } from '@server/net/server/game-server';
 import { loadConfigurations } from '@server/config';
-import { Quest } from '@server/config/quest-config';
+import { Quest } from '@server/world/actor/player/quest';
 
 
 export let serverConfig: ServerConfig;

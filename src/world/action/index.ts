@@ -152,6 +152,10 @@ export async function loadActions(): Promise<void> {
     const blacklist = [];
 
     for await(const path of getFiles(ACTION_DIRECTORY, blacklist)) {
+        if(path.indexOf('.map') !== -1) {
+            continue;
+        }
+        
         const location = '.' + path.substring(ACTION_DIRECTORY.length).replace('.js', '');
 
         try {

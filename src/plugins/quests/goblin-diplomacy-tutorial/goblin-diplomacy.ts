@@ -1,5 +1,5 @@
 import { defaultPlayerTabWidgets, Player, playerInitAction } from '@server/world/actor/player/player';
-import { Quest, questDialogueActionFactory, QuestJournalHandler } from '@server/config/quest-config';
+import { questDialogueActionFactory, QuestJournalHandler } from '@server/config/quest-config';
 import { serverConfig, world } from '@server/game-server';
 import uuidv4 from 'uuid/v4';
 import { logger } from '@runejs/core';
@@ -16,6 +16,7 @@ import { tabIndex } from '@server/world/actor/player/interface-state';
 import { runescapeGuideDialogueHandler } from './runescape-guide-dialogue';
 import { harlanDialogueHandler } from './melee-tutor-dialogue';
 import { goblinDiplomacyStageHandler } from './stage-handler';
+import { Quest } from '@server/world/actor/player/quest';
 
 
 export const tutorialTabWidgetOrder = [
