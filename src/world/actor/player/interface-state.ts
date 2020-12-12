@@ -146,7 +146,6 @@ export class InterfaceState {
 
     public openWidget(widgetId: number, options: WidgetOptions): void {
         if(this.widgetOpen(options.slot, widgetId)) {
-            console.log('already open');
             return;
         }
 

@@ -8,7 +8,7 @@ import {
     loadItemConfigurations,
     translateItemConfig
 } from '@server/config/item-config';
-import { cache } from '@server/game-server';
+import { cache, pluginActions } from '@server/game-server';
 import {
     loadNpcConfigurations,
     NpcDetails,
@@ -17,7 +17,7 @@ import {
 } from '@server/config/npc-config';
 import { loadNpcSpawnConfigurations, NpcSpawn } from '@server/config/npc-spawn-config';
 import { loadShopConfigurations, Shop } from '@server/config/shop-config';
-import json5 from 'json5';
+import { Quest } from '@server/world/actor/player/quest';
 require('json5/lib/register');
 
 export async function loadConfigurationFiles(configurationDir: string): Promise<any[]> {
@@ -68,7 +68,7 @@ export async function loadConfigurations(): Promise<void> {
 }
 
 
-export const findItem = (itemKey: number | string): ItemDetails => {
+export const findItem = (itemKey: number | string): ItemDetails | null => {
     if(!itemKey) {
         return null;
     }
@@ -116,7 +116,7 @@ export const findItem = (itemKey: number | string): ItemDetails => {
 };
 
 
-export const findNpc = (npcKey: number | string): NpcDetails => {
+export const findNpc = (npcKey: number | string): NpcDetails | null => {
     if(!npcKey) {
         return null;
     }
@@ -160,10 +160,16 @@ export const findNpc = (npcKey: number | string): NpcDetails => {
 };
 
 
-export const findShop = (shopKey: string): Shop => {
+export const findShop = (shopKey: string): Shop | null => {
     if(!shopKey) {
         return null;
     }
 
     return shopMap[shopKey] || null;
+};
+
+
+export const findQuest = (questId: string): Quest | null => {
+    const quests: Quest[] = pluginActions.quest;
+    return quests.find(quest => quest.id.toLocaleLowerCase() === questId.toLocaleLowerCase()) || null;
 };

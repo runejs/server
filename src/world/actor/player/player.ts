@@ -11,7 +11,7 @@ import {
     Appearance,
     defaultAppearance, defaultSettings,
     loadPlayerSave, playerExists,
-    PlayerSave, PlayerSettings, QuestProgress,
+    PlayerSave, PlayerSettings,
     savePlayerData
 } from './player-data';
 import { PlayerWidget, widgetScripts } from '../../config/widget';
@@ -37,7 +37,7 @@ import {
     ItemDetails,
     OffensiveBonuses, SkillBonuses
 } from '@server/config/item-config';
-import { findItem, npcIdMap, widgets } from '@server/config';
+import { findItem, findQuest, npcIdMap, widgets } from '@server/config';
 import { NpcDetails } from '@server/config/npc-config';
 import { animationIds } from '@server/world/config/animation-ids';
 import { combatStyles } from '@server/world/actor/combat';
@@ -45,6 +45,9 @@ import { WorldInstance, TileModifications } from '@server/world/instances';
 import { Cutscene } from '@server/world/actor/player/cutscenes';
 import { InterfaceState } from '@server/world/actor/player/interface-state';
 import { dialogue } from '@server/world/actor/dialogue';
+import { PlayerQuest, QuestKey } from '@server/config/quest-config';
+import { Quest } from '@server/world/actor/player/quest';
+
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -65,22 +68,6 @@ export const defaultPlayerTabWidgets = [
     widgets.friendsList, widgets.ignoreList, widgets.logoutTab, widgets.settingsTab, widgets.emotesTab,
     widgets.musicPlayerTab
 ];
-
-export enum Tabs {
-    combatStyle = 0,
-    skills = 1,
-    quests = 2,
-    inventory = 3,
-    equipment = 4,
-    prayers = 5,
-    magic = 6,
-    friends = 8,
-    ignoreList = 9,
-    logout = 10,
-    settings = 11,
-    emotes = 12,
-    music = 13
-}
 
 export enum Rights {
     ADMIN = 2,
@@ -114,7 +101,7 @@ export class Player extends Actor {
     public trackedNpcs: Npc[];
     public savedMetadata: { [key: string]: any } = {};
     public sessionMetadata: { [key: string]: any } = {};
-    public quests: QuestProgress[] = [];
+    public quests: PlayerQuest[] = [];
     public achievements: string[] = [];
     public friendsList: string[] = [];
     public ignoreList: string[] = [];
@@ -423,8 +410,8 @@ export class Player extends Actor {
         let questPoints = 0;
 
         if(this.quests && this.quests.length !== 0) {
-            this.quests.filter(quest => quest.stage === 'COMPLETE')
-                .forEach(quest => questPoints += pluginActions.quest[quest.questId].points);
+            this.quests.filter(quest => quest.complete)
+                .forEach(quest => questPoints += pluginActions.quest[quest.questId]?.points || 0);
         }
 
         return questPoints;
@@ -434,15 +421,10 @@ export class Player extends Actor {
      * Fetches a player's quest progression details.
      * @param questId The ID of the quest to find the player's status on.
      */
-    public getQuest(questId: string): QuestProgress {
+    public getQuest(questId: string): PlayerQuest {
         let playerQuest = this.quests.find(quest => quest.questId === questId);
         if(!playerQuest) {
-            playerQuest = {
-                questId,
-                stage: 'NOT_STARTED',
-                attributes: {}
-            };
-
+            playerQuest = new PlayerQuest(questId);
             this.quests.push(playerQuest);
         }
 
@@ -450,27 +432,29 @@ export class Player extends Actor {
     }
 
     /**
-     * Sets a player's quest stage to the specified value.
-     * @param questId The ID of the quest to set the stage of.
-     * @param stage The stage to set the quest to.
+     * Sets a player's quest progress to the specified value.
+     * @param questId The ID of the quest to set the progress of.
+     * @param progress The progress to set the quest to.
      */
-    public setQuestStage(questId: string, stage: string): void {
-        const questData = pluginActions.quest[questId];
+    public setQuestProgress(questId: string, progress: QuestKey): void {
+        const questData: Quest = findQuest(questId);
+
+        if(!questData) {
+            logger.warn(`Quest data not found for ${questId}`);
+            return;
+        }
 
         let playerQuest = this.quests.find(quest => quest.questId === questId);
         if(!playerQuest) {
-            playerQuest = {
-                questId,
-                stage: 'NOT_STARTED',
-                attributes: {}
-            };
-
+            playerQuest = new PlayerQuest(questId);
             this.quests.push(playerQuest);
         }
 
-        if(playerQuest.stage === 'NOT_STARTED' && stage !== 'COMPLETE') {
+        if(playerQuest.progress === 0 && !playerQuest.complete) {
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
-        } else if(playerQuest.stage !== 'COMPLETE' && stage === 'COMPLETE') {
+        } else if(!playerQuest.complete && progress === 'complete') {
+            playerQuest.complete = true;
+            playerQuest.progress = 'complete';
             this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, questData.points + this.getQuestPoints());
             this.modifyWidget(widgets.questReward, { childId: 2, text: `You have completed ${ questData.name }!` });
             this.modifyWidget(widgets.questReward, {
@@ -479,23 +463,25 @@ export class Player extends Actor {
             });
 
             for(let i = 0; i < 5; i++) {
-                if(i >= questData.completion.rewards.length) {
+                if(i >= questData.onComplete.questCompleteWidget.rewardText.length) {
                     this.modifyWidget(widgets.questReward, { childId: 9 + i, text: '' });
                 } else {
-                    this.modifyWidget(widgets.questReward, { childId: 9 + i, text: questData.completion.rewards[i] });
+                    this.modifyWidget(widgets.questReward, { childId: 9 + i,
+                        text: questData.onComplete.questCompleteWidget.rewardText[i] });
                 }
             }
 
-            if(questData.completion.itemId) {
+            if(questData.onComplete.questCompleteWidget.itemId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3,
-                    (cache.itemDefinitions.get(questData.completion.itemId) as ItemDefinition).inventoryModelId);
-            } else if(questData.completion.modelId) {
-                this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.completion.modelId);
+                    (cache.itemDefinitions.get(questData.onComplete.questCompleteWidget.itemId) as ItemDefinition).inventoryModelId);
+            } else if(questData.onComplete.questCompleteWidget.modelId) {
+                this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.onComplete.questCompleteWidget.modelId);
             }
 
             this.outgoingPackets.setWidgetModelRotationAndZoom(widgets.questReward, 3,
-                questData.completion.modelRotationX || 0, questData.completion.modelRotationY || 0,
-                questData.completion.modelZoom || 0);
+                questData.onComplete.questCompleteWidget.modelRotationX || 0,
+                questData.onComplete.questCompleteWidget.modelRotationY || 0,
+                questData.onComplete.questCompleteWidget.modelZoom || 0);
 
             this.interfaceState.openWidget(widgets.questReward, {
                 slot: 'screen',
@@ -504,10 +490,10 @@ export class Player extends Actor {
 
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.green });
 
-            questData.completion.onComplete(this);
+            if(questData.onComplete.giveRewards) {
+                questData.onComplete.giveRewards(this);
+            }
         }
-
-        playerQuest.stage = stage;
     }
 
     /**
@@ -985,11 +971,9 @@ export class Player extends Actor {
         Object.keys(questMap).forEach(questKey => {
             const questData = questMap[questKey];
             const playerQuest = this.quests.find(quest => quest.questId === questData.id);
-            let stage = 'NOT_STARTED';
-            let color = colors.red;
-            if(playerQuest && playerQuest.stage) {
-                stage = playerQuest.stage;
-                color = stage === 'COMPLETE' ? colors.green : colors.yellow;
+            let color = colors.green;
+            if(playerQuest && !playerQuest.complete) {
+                color = playerQuest.progress === 0 ? colors.red : colors.yellow;
             }
 
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: color });
@@ -1069,8 +1053,8 @@ export class Player extends Actor {
                 this._loginDate = new Date(lastLogin);
             }
 
-            if(playerSave.quests) {
-                this.quests = playerSave.quests;
+            if(playerSave.questList) {
+                this.quests = playerSave.questList;
             }
             if(playerSave.achievements) {
                 this.achievements = playerSave.achievements;

@@ -1,9 +1,8 @@
-import { Player } from '@server/world/actor/player/player';
-import { Npc } from '@server/world/actor/npc/npc';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
+import { QuestDialogueHandler } from '@server/config/quest-config';
 
 
-export const harlanDialogueHandler: { [key: number]: (player: Player, npc: Npc) => void } = {
+export const harlanDialogueHandler: QuestDialogueHandler = {
     50: async (player, npc) => {
         await dialogue([ player, { npc, key: 'harlan' } ], [
             harlan => [ Emote.GENERIC, `Greetings, adventurer. How can I assist you?` ],
@@ -13,7 +12,7 @@ export const harlanDialogueHandler: { [key: number]: (player: Player, npc: Npc) 
             harlan => [ Emote.GENERIC, `I'm sure you'll get the chance, what with all the recent goblin attacks on this side of the River Lum.` ],
             harlan => [ Emote.GENERIC, `To that end, let me show you your inventory.` ],
             execute(() => {
-                player.savedMetadata.tutorialProgress = 55;
+                player.setQuestProgress('tyn:goblin_diplomacy', 55);
             })
         ]);
     },
@@ -28,7 +27,7 @@ export const harlanDialogueHandler: { [key: number]: (player: Player, npc: Npc) 
             harlan => [ Emote.GENERIC, `I would say the goblins likely ran through your pockets before the Guard hauled you in.` ],
             harlan => [ Emote.GENERIC, `Lets check out your hitpoints and make sure you're in proper shape after that.` ],
             execute(() => {
-                player.savedMetadata.tutorialProgress = 65;
+                player.setQuestProgress('tyn:goblin_diplomacy', 65);
             })
         ]);
     },
@@ -44,7 +43,7 @@ export const harlanDialogueHandler: { [key: number]: (player: Player, npc: Npc) 
             harlan => [ Emote.GENERIC, `I'll provide you with some starter equipment - but from there, you're on your own.` ],
             harlan => [ Emote.GENERIC, `But before I can do that, you'll need to open your Equipment tab.` ],
             execute(() => {
-                player.savedMetadata.tutorialProgress = 75;
+                player.setQuestProgress('tyn:goblin_diplomacy', 75);
             })
         ]);
     },
@@ -59,7 +58,7 @@ export const harlanDialogueHandler: { [key: number]: (player: Player, npc: Npc) 
             execute(() => {
                 player.inventory.add('rs:training_sword');
                 player.inventory.add('rs:training_shield');
-                player.savedMetadata.tutorialProgress = 85;
+                player.setQuestProgress('tyn:goblin_diplomacy', 85);
             }),
             text => `Harlan hands you a Training sword and shield.`
         ]);

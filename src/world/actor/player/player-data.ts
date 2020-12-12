@@ -1,17 +1,12 @@
 import { Item } from '@server/world/items/item';
-import { writeFileSync, readFileSync, existsSync, exists } from 'fs';
+import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { logger } from '@runejs/core';
 import { Player } from './player';
 import { SkillValue } from '@server/world/actor/skills';
 import { hasValueNotNull } from '@server/util/data';
+import { PlayerQuest } from '@server/config/quest-config';
 
-
-export interface QuestProgress {
-    questId: string;
-    stage: string;
-    attributes: { [key: string]: any };
-}
 
 export interface Appearance {
     gender: number;
@@ -68,7 +63,7 @@ export interface PlayerSave {
     skills: SkillValue[];
     settings: PlayerSettings;
     savedMetadata: { [key: string]: any };
-    quests: QuestProgress[];
+    questList: PlayerQuest[];
     achievements: string[];
     friendsList: string[];
     ignoreList: string[];
@@ -137,7 +132,7 @@ export function savePlayerData(player: Player): boolean {
         skills: player.skills.values,
         settings: player.settings,
         savedMetadata: player.savedMetadata,
-        quests: player.quests,
+        questList: player.quests,
         achievements: player.achievements,
         friendsList: player.friendsList,
         ignoreList: player.ignoreList

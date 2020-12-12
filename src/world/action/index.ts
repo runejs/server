@@ -1,22 +1,9 @@
-import { Player, PlayerInitAction } from '@server/world/actor/player/player';
+import { Player } from '@server/world/actor/player/player';
 import { Position } from '@server/world/position';
 import { Subject, timer } from 'rxjs';
 import { World } from '@server/world';
 import { LocationObject } from '@runejs/cache-parser';
-import { Npc, NpcInitAction } from '@server/world/actor/npc/npc';
-import { NpcAction } from '@server/world/action/npc-action';
-import { ObjectAction } from '@server/world/action/object-action';
-import { ButtonAction } from '@server/world/action/button-action';
-import { ItemOnItemAction } from '@server/world/action/item-on-item-action';
-import { ItemOnObjectAction } from '@server/world/action/item-on-object-action';
-import { ItemOnNpcAction } from '@server/world/action/item-on-npc-action';
-import { PlayerCommandAction } from '@server/world/action/player-command-action';
-import { WidgetAction } from '@server/world/action/widget-action';
-import { ItemAction } from '@server/world/action/item-action';
-import { WorldItemAction } from '@server/world/action/world-item-action';
-import { QuestAction } from '@server/world/config/quests';
-import { PlayerAction } from '@server/world/action/player-action';
-import { EquipAction } from '@server/world/action/equip-action';
+import { Npc } from '@server/world/actor/npc/npc';
 import { QuestRequirement } from '@server/plugins/plugin';
 import { getFiles } from '@server/util/files';
 import { logger } from '@runejs/core';
@@ -162,9 +149,13 @@ class ActionHandler {
 export const actionHandler = new ActionHandler();
 
 export async function loadActions(): Promise<void> {
-    const blacklist = ['index.js'];
+    const blacklist = [];
 
     for await(const path of getFiles(ACTION_DIRECTORY, blacklist)) {
+        if(path.indexOf('.map') !== -1) {
+            continue;
+        }
+
         const location = '.' + path.substring(ACTION_DIRECTORY.length).replace('.js', '');
 
         try {

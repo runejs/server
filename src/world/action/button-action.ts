@@ -6,7 +6,8 @@ import { Action, getActionList } from '@server/world/action/index';
 /**
  * The definition for a button action function.
  */
-export type buttonAction = (buttonActionData: ButtonActionData) => void;
+export type buttonAction = (buttonActionData: ButtonActionData) => void | Promise<void>;
+
 
 /**
  * Details about a button action.

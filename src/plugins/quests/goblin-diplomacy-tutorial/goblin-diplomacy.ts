@@ -1,33 +1,34 @@
-import { defaultPlayerTabWidgets, Player, playerInitAction, Tabs } from '@server/world/actor/player/player';
+import { defaultPlayerTabWidgets, Player, playerInitAction } from '@server/world/actor/player/player';
+import { questDialogueActionFactory, QuestJournalHandler } from '@server/config/quest-config';
 import { serverConfig, world } from '@server/game-server';
-import { npcAction } from '@server/world/action/npc-action';
 import uuidv4 from 'uuid/v4';
-import { Npc } from '@server/world/actor/npc/npc';
 import { logger } from '@runejs/core';
 import { Position } from '@server/world/position';
 import { WorldInstance } from '@server/world/instances';
 import { findNpc, widgets } from '@server/config';
 import { updateCombatStyleWidget } from '@server/plugins/combat/combat-styles';
-import { runescapeGuideDialogueHandler } from '@server/plugins/quests/goblin-diplomacy-tutorial/runescape-guide-dialogue';
-import { harlanDialogueHandler } from '@server/plugins/quests/goblin-diplomacy-tutorial/melee-tutor-dialogue';
-import { goblinDiplomacyStageHandler } from '@server/plugins/quests/goblin-diplomacy-tutorial/stage-handler';
 import { Subject } from 'rxjs';
 import { dialogue } from '@server/world/actor/dialogue';
 import { take } from 'rxjs/operators';
 import { equipAction } from '@server/world/action/equip-action';
 import { buttonAction } from '@server/world/action/button-action';
+import { tabIndex } from '@server/world/actor/player/interface-state';
+import { runescapeGuideDialogueHandler } from './runescape-guide-dialogue';
+import { harlanDialogueHandler } from './melee-tutor-dialogue';
+import { goblinDiplomacyStageHandler } from './stage-handler';
+import { Quest } from '@server/world/actor/player/quest';
 
 
 export const tutorialTabWidgetOrder = [
-    [ Tabs.settings, widgets.settingsTab ],
-    [ Tabs.friends, widgets.friendsList ],
-    [ Tabs.ignoreList, widgets.ignoreList ],
-    [ Tabs.emotes, widgets.emotesTab ],
-    [ Tabs.music, widgets.musicPlayerTab ],
-    [ Tabs.inventory, widgets.inventory.widgetId ],
-    [ Tabs.skills, widgets.skillsTab ],
-    [ Tabs.equipment, widgets.equipment.widgetId ],
-    [ Tabs.combatStyle, -1 ],
+    [ tabIndex['settings'], widgets.settingsTab ],
+    [ tabIndex['friends'], widgets.friendsList ],
+    [ tabIndex['ignores'], widgets.ignoreList ],
+    [ tabIndex['emotes'], widgets.emotesTab ],
+    [ tabIndex['music'], widgets.musicPlayerTab ],
+    [ tabIndex['inventory'], widgets.inventory.widgetId ],
+    [ tabIndex['skills'], widgets.skillsTab ],
+    [ tabIndex['equipment'], widgets.equipment.widgetId ],
+    [ tabIndex['combat'], -1 ],
     // @TODO prayer, magic,
 ];
 
@@ -47,7 +48,7 @@ export function showTabWidgetHint(player: Player, tabIndex: number, availableTab
     player.outgoingPackets.blinkTabIcon(tabIndex);
 
     player.metadata.tabClickEvent.event.pipe(take(1)).subscribe(async () => {
-        player.savedMetadata.tutorialProgress = finalProgress;
+        player.setQuestProgress('tyn:goblin_diplomacy', finalProgress);
         player.metadata.tabClickEvent.event.complete();
         delete player.metadata.tabClickEvent;
         await handleTutorial(player);
@@ -91,7 +92,7 @@ export function npcHint(player: Player, npcKey: string | number): void {
 }
 
 export const startTutorial = async (player: Player): Promise<void> => {
-    player.savedMetadata.tutorialProgress = 0;
+    player.setQuestProgress('tyn:goblin_diplomacy', 0);
 
     defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
         if(widgetId !== -1) {
@@ -145,7 +146,7 @@ export async function spawnGoblinBoi(player: Player, spawnPoint: 'beginning' | '
 }
 
 export async function handleTutorial(player: Player): Promise<void> {
-    const progress = player.savedMetadata.tutorialProgress;
+    const progress = player.getQuest('tyn:goblin_diplomacy').progress;
     const handler = goblinDiplomacyStageHandler[progress];
 
     defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
@@ -158,26 +159,6 @@ export async function handleTutorial(player: Player): Promise<void> {
         player.outgoingPackets.resetNpcHintIcon();
         await handler(player);
     }
-}
-
-function npcActionFactory(npcDialogueHandler: { [key: number]: (player: Player, npc: Npc) => void }): npcAction {
-    return async({ player, npc }) => {
-        if(!serverConfig.tutorialEnabled) {
-            return;
-        }
-
-        const progress = player.savedMetadata.tutorialProgress;
-        const dialogueHandler = npcDialogueHandler[progress];
-        if(dialogueHandler) {
-            try {
-                await dialogueHandler(player, npc);
-            } catch(e) {
-                logger.error(e);
-            }
-
-            await handleTutorial(player);
-        }
-    };
 }
 
 function spawnQuestNpcs(player: Player): void {
@@ -201,7 +182,7 @@ const tutorialInitAction: playerInitAction = async ({ player }) => {
 };
 
 const trainingSwordEquipAction: equipAction = async ({ player, itemDetails }) => {
-    const progress = player.savedMetadata.tutorialProgress || 0;
+    const progress = player.getQuest('tyn:goblin_diplomacy').progress;
 
     if(progress === 85) {
         const swordEquipped = player.isItemEquipped('rs:training_sword');
@@ -209,7 +190,7 @@ const trainingSwordEquipAction: equipAction = async ({ player, itemDetails }) =>
 
         if((itemDetails.key === 'rs:training_sword' && shieldEquipped) ||
             (itemDetails.key === 'rs:training_shield' && swordEquipped)) {
-            player.savedMetadata.tutorialProgress = 90;
+            player.setQuestProgress('tyn:goblin_diplomacy', 90);
             await handleTutorial(player);
         }
     }
@@ -219,21 +200,43 @@ const createCharacterAction: buttonAction = ({ player }): void => {
     player.interfaceState.closeAllSlots();
 };
 
+const journalHandler: QuestJournalHandler = {
+
+    0: `stinkyu hoomsn HAHA\n\n\nf1nglewuRt`
+
+};
+
 export default [
+    new Quest({
+        id: 'tyn:goblin_diplomacy',
+        questTabId: 28,
+        name: `Goblin Diplomacy`,
+        points: 1,
+        journalHandler,
+        onComplete: {
+            questCompleteWidget: {
+                rewardText: [ 'A training sword & shield' ],
+                itemId: 9703,
+                modelZoom: 200,
+                modelRotationX: 0,
+                modelRotationY: 180
+            }
+        }
+    }),
     {
         type: 'player_init',
         action: tutorialInitAction
     },
     {
         type: 'npc_action',
-        action: npcActionFactory(runescapeGuideDialogueHandler),
+        action: questDialogueActionFactory('tyn:goblin_diplomacy', runescapeGuideDialogueHandler),
         npcs: 'rs:runescape_guide',
         options: 'talk-to',
         walkTo: true
     },
     {
         type: 'npc_action',
-        action: npcActionFactory(harlanDialogueHandler),
+        action: questDialogueActionFactory('tyn:goblin_diplomacy', harlanDialogueHandler),
         npcs: 'rs:melee_combat_tutor',
         options: 'talk-to',
         walkTo: true

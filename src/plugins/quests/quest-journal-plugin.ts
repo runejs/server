@@ -2,37 +2,55 @@ import { buttonAction } from '@server/world/action/button-action';
 import { wrapText } from '@server/util/strings';
 import { pluginActions } from '@server/game-server';
 import { widgets } from '@server/config';
+import { Quest } from '@server/world/actor/player/quest';
+import { QuestKey } from '@server/config/quest-config';
 
-export const action: buttonAction = (details) => {
-    const { player, buttonId } = details;
-    const [questData] = pluginActions.quest.filter((quest) => quest.quest.questTabId === buttonId);
-    if(!questData) {
+
+export const action: buttonAction = async ({ player, buttonId }) => {
+    const [ quest ] = pluginActions.quest.filter((quest: Quest) => quest.questTabId === buttonId) as Quest[];
+    if(!quest) {
         return;
     }
-    const quest = questData.quest;
 
-    const [playerQuest] = player.quests.filter(
-        (playerQuest) => playerQuest.questId === quest.questTabId
+    const [ playerQuest ] = player.quests.filter(
+        (playerQuest) => playerQuest.questId === quest.id
     );
 
-    let playerStage = 'NOT_STARTED';
-    if (playerQuest && playerQuest.stage) {
-        playerStage = playerQuest.stage;
+    let playerStage: QuestKey = 0;
+    if(playerQuest && playerQuest.progress !== undefined) {
+        playerStage = playerQuest.progress;
     }
 
-    let stageText = quest.stages[playerStage];
-    let color = 128;
+    const journalHandler = quest.journalHandler[playerStage];
+    if(journalHandler === undefined) {
+        const questJournalStages = Object.keys(quest.journalHandler);
+        let journalEntry;
+        for(const stage of questJournalStages) {
+            const stageNum = parseInt(stage, 10);
+            if(isNaN(stageNum)) {
+                continue;
+            }
 
-    if(typeof stageText === 'function') {
-        stageText = stageText(player);
-    } else if(typeof stageText !== 'string' && typeof stageText === 'object') {
-        color = stageText.color;
-        stageText = stageText.text;
+            if(stageNum <= playerStage) {
+                journalEntry = stage;
+            } else {
+                break;
+            }
+        }
+    }
+
+    const color = 128;
+    let text: string;
+
+    if(typeof journalHandler === 'function') {
+        text = await Promise.resolve(journalHandler(player));
+    } else if(typeof journalHandler === 'string') {
+        text = journalHandler;
     }
 
     let lines;
-    if(stageText) {
-        lines = wrapText(stageText as string, 395);
+    if(text) {
+        lines = wrapText(text as string, 395);
     } else {
         lines = [ 'Invalid Quest Stage' ];
     }

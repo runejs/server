@@ -4,9 +4,8 @@ import { cache } from '@server/game-server';
 import { logger } from '@runejs/core';
 import _ from 'lodash';
 import { wrapText } from '@server/util/strings';
-import { take } from 'rxjs/operators';
 import { findNpc } from '@server/config';
-import { lastValueFrom } from 'rxjs';
+
 
 export enum Emote {
     POMPOUS = 'POMPOUS',
@@ -364,7 +363,7 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
     if(dialogueAction instanceof DialogueFunction && !tag) {
         // Code execution dialogue.
         dialogueAction.execute();
-        return;
+        return tag;
     }
 
     dialogueAction = dialogueAction as DialogueAction;
@@ -378,7 +377,7 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
         } else {
             await runParsedDialogue(player, player.metadata.dialogueTree, goToAction.to, additionalOptions);
         }
-        return;
+        return tag;
     }
 
     let widgetId: number;
@@ -591,7 +590,7 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
         return true;
     } catch(error) {
         player.interfaceState.closeAllSlots();
-        logger.warn(`Dialogue cancelled.`);
+        logger.warn(Object.keys(error.message));
         return false;
     }
 }
