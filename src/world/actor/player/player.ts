@@ -45,7 +45,8 @@ import { WorldInstance, TileModifications } from '@server/world/instances';
 import { Cutscene } from '@server/world/actor/player/cutscenes';
 import { InterfaceState } from '@server/world/actor/player/interface-state';
 import { dialogue } from '@server/world/actor/dialogue';
-import { PlayerQuest } from '@server/config/quest-config';
+import { PlayerQuest, QuestKey } from '@server/config/quest-config';
+import { Quest } from '@server/world/actor/player/quest';
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
@@ -410,7 +411,7 @@ export class Player extends Actor {
 
         if(this.quests && this.quests.length !== 0) {
             this.quests.filter(quest => quest.complete)
-                .forEach(quest => questPoints += pluginActions.quest[quest.questId].points);
+                .forEach(quest => questPoints += pluginActions.quest[quest.questId]?.points || 0);
         }
 
         return questPoints;
@@ -435,8 +436,8 @@ export class Player extends Actor {
      * @param questId The ID of the quest to set the progress of.
      * @param progress The progress to set the quest to.
      */
-    public setQuestProgress(questId: string, progress: number | 'complete'): void {
-        const questData = findQuest(questId);
+    public setQuestProgress(questId: string, progress: QuestKey): void {
+        const questData: Quest = findQuest(questId);
 
         if(!questData) {
             logger.warn(`Quest data not found for ${questId}`);
@@ -452,6 +453,8 @@ export class Player extends Actor {
         if(playerQuest.progress === 0 && !playerQuest.complete) {
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
         } else if(!playerQuest.complete && progress === 'complete') {
+            playerQuest.complete = true;
+            playerQuest.progress = 'complete';
             this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, questData.points + this.getQuestPoints());
             this.modifyWidget(widgets.questReward, { childId: 2, text: `You have completed ${ questData.name }!` });
             this.modifyWidget(widgets.questReward, {
@@ -460,23 +463,25 @@ export class Player extends Actor {
             });
 
             for(let i = 0; i < 5; i++) {
-                if(i >= questData.completion.rewards.length) {
+                if(i >= questData.onComplete.questCompleteWidget.rewardText.length) {
                     this.modifyWidget(widgets.questReward, { childId: 9 + i, text: '' });
                 } else {
-                    this.modifyWidget(widgets.questReward, { childId: 9 + i, text: questData.completion.rewards[i] });
+                    this.modifyWidget(widgets.questReward, { childId: 9 + i,
+                        text: questData.onComplete.questCompleteWidget.rewardText[i] });
                 }
             }
 
-            if(questData.completion.itemId) {
+            if(questData.onComplete.questCompleteWidget.itemId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3,
-                    (cache.itemDefinitions.get(questData.completion.itemId) as ItemDefinition).inventoryModelId);
-            } else if(questData.completion.modelId) {
-                this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.completion.modelId);
+                    (cache.itemDefinitions.get(questData.onComplete.questCompleteWidget.itemId) as ItemDefinition).inventoryModelId);
+            } else if(questData.onComplete.questCompleteWidget.modelId) {
+                this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.onComplete.questCompleteWidget.modelId);
             }
 
             this.outgoingPackets.setWidgetModelRotationAndZoom(widgets.questReward, 3,
-                questData.completion.modelRotationX || 0, questData.completion.modelRotationY || 0,
-                questData.completion.modelZoom || 0);
+                questData.onComplete.questCompleteWidget.modelRotationX || 0,
+                questData.onComplete.questCompleteWidget.modelRotationY || 0,
+                questData.onComplete.questCompleteWidget.modelZoom || 0);
 
             this.interfaceState.openWidget(widgets.questReward, {
                 slot: 'screen',
@@ -485,10 +490,10 @@ export class Player extends Actor {
 
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.green });
 
-            questData.completion.onComplete(this);
+            if(questData.onComplete.giveRewards) {
+                questData.onComplete.giveRewards(this);
+            }
         }
-
-        playerQuest.progress = progress === 'complete' ? -1 : progress;
     }
 
     /**
@@ -966,9 +971,9 @@ export class Player extends Actor {
         Object.keys(questMap).forEach(questKey => {
             const questData = questMap[questKey];
             const playerQuest = this.quests.find(quest => quest.questId === questData.id);
-            let color = colors.red;
-            if(playerQuest && playerQuest.progress > 0) {
-                color = playerQuest.complete ? colors.green : colors.yellow;
+            let color = colors.green;
+            if(playerQuest && !playerQuest.complete) {
+                color = playerQuest.progress === 0 ? colors.red : colors.yellow;
             }
 
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: color });

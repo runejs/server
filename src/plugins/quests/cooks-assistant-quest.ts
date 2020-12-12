@@ -166,7 +166,7 @@ function youStillNeed(quest: PlayerQuest): DialogueTree {
     ];
 }
 
-const handInIngredientsAction: npcAction = (details) => {
+const handInIngredientsAction: npcAction = async (details) => {
     const { player, npc } = details;
 
     const dialogueTree: DialogueTree = [
@@ -203,6 +203,8 @@ const handInIngredientsAction: npcAction = (details) => {
         );
     }
 
+    let questComplete: boolean = false;
+
     dialogueTree.push(
         goto(() => {
             const count = [ quest.metadata.givenMilk, quest.metadata.givenFlour, quest.metadata.givenEgg ]
@@ -223,7 +225,7 @@ const handInIngredientsAction: npcAction = (details) => {
             player => [Emote.GENERIC, `Well, maybe one day I'll be important enough to sit on the Duke's table.`],
             cook => [Emote.SKEPTICAL, `Maybe, but I won't be holding my breath.`],
             execute(() => {
-                player.setQuestProgress('rs:cooks_assistant', 'complete');
+                questComplete = true;
             })
         ],
         (subtree, tag_NO_INGREDIENTS) => [
@@ -239,7 +241,11 @@ const handInIngredientsAction: npcAction = (details) => {
         ]
     );
 
-    dialogue([ player, { npc, key: 'cook' }], dialogueTree);
+    await dialogue([ player, { npc, key: 'cook' }], dialogueTree);
+
+    if(questComplete) {
+        player.setQuestProgress('rs:cooks_assistant', 'complete');
+    }
 };
 
 export default [
@@ -249,14 +255,16 @@ export default [
         name: `Cook's Assistant`,
         points: 1,
         journalHandler,
-        completion: {
-            rewards: [ '300 Cooking XP' ],
-            onComplete: (player: Player): void =>
-                player.skills.cooking.addExp(300),
-            itemId: 1891,
-            modelZoom: 240,
-            modelRotationX: 180,
-            modelRotationY: 180
+        onComplete: {
+            questCompleteWidget: {
+                rewardText: [ '300 Cooking XP' ],
+                itemId: 1891,
+                modelZoom: 240,
+                modelRotationX: 180,
+                modelRotationY: 180
+            },
+            giveRewards: (player: Player): void =>
+                player.skills.cooking.addExp(300)
         }
     }),
     {

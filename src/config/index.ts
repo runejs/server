@@ -17,7 +17,7 @@ import {
 } from '@server/config/npc-config';
 import { loadNpcSpawnConfigurations, NpcSpawn } from '@server/config/npc-spawn-config';
 import { loadShopConfigurations, Shop } from '@server/config/shop-config';
-import { Quest } from '@server/config/quest-config';
+import { Quest } from '@server/world/actor/player/quest';
 require('json5/lib/register');
 
 export async function loadConfigurationFiles(configurationDir: string): Promise<any[]> {

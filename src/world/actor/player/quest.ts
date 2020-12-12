@@ -8,7 +8,7 @@ export class Quest {
     public name: string;
     public points: number;
     public journalHandler: QuestJournalHandler;
-    public completion;
+    public onComplete;
 
     public constructor(options: {
         id: string;
@@ -16,14 +16,14 @@ export class Quest {
         name: string;
         points: number;
         journalHandler: QuestJournalHandler;
-        completion: QuestCompletion;
+        onComplete: QuestCompletion;
     }) {
         this.id = options.id;
         this.questTabId = options.questTabId;
         this.name = options.name;
         this.points = options.points;
         this.journalHandler = options.journalHandler;
-        this.completion = options.completion;
+        this.onComplete = options.onComplete;
     }
 
 }

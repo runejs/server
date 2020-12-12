@@ -3,6 +3,7 @@ import { wrapText } from '@server/util/strings';
 import { pluginActions } from '@server/game-server';
 import { widgets } from '@server/config';
 import { Quest } from '@server/world/actor/player/quest';
+import { QuestKey } from '@server/config/quest-config';
 
 
 export const action: buttonAction = async ({ player, buttonId }) => {
@@ -15,8 +16,8 @@ export const action: buttonAction = async ({ player, buttonId }) => {
         (playerQuest) => playerQuest.questId === quest.id
     );
 
-    let playerStage = 0;
-    if (playerQuest && playerQuest.progress !== undefined) {
+    let playerStage: QuestKey = 0;
+    if(playerQuest && playerQuest.progress !== undefined) {
         playerStage = playerQuest.progress;
     }
 

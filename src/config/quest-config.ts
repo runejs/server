@@ -5,7 +5,7 @@ import { logger } from '@runejs/core';
 import { handleTutorial } from '@server/plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy';
 
 
-type QuestKey = number | 'complete';
+export type QuestKey = number | 'complete';
 
 export type QuestStageHandler = {
     [key in QuestKey]?: (player: Player) => void | Promise<void>;
@@ -20,19 +20,21 @@ export type QuestJournalHandler = {
 };
 
 export interface QuestCompletion {
-    rewards?: string[];
-    onComplete?: ((player?: Player) => void) | ((player?: Player) => Promise<void>);
-    modelId?: number;
-    itemId?: number;
-    modelRotationX?: number;
-    modelRotationY?: number;
-    modelZoom?: number;
+    questCompleteWidget: {
+        rewardText?: string[];
+        modelId?: number;
+        itemId?: number;
+        modelRotationX?: number;
+        modelRotationY?: number;
+        modelZoom?: number;
+    };
+    giveRewards?: ((player?: Player) => void) | ((player?: Player) => Promise<void>);
 }
 
 export class PlayerQuest {
 
     public readonly questId: string;
-    public progress: number = 0;
+    public progress: QuestKey = 0;
     public complete: boolean = false;
     public readonly metadata: { [key: string]: any } = {};
 

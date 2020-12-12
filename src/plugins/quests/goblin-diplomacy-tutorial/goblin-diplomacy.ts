@@ -213,12 +213,14 @@ export default [
         name: `Goblin Diplomacy`,
         points: 1,
         journalHandler,
-        completion: {
-            rewards: [ 'A training sword & shield' ],
-            itemId: 9703,
-            modelZoom: 200,
-            modelRotationX: 0,
-            modelRotationY: 180
+        onComplete: {
+            questCompleteWidget: {
+                rewardText: [ 'A training sword & shield' ],
+                itemId: 9703,
+                modelZoom: 200,
+                modelRotationX: 0,
+                modelRotationY: 180
+            }
         }
     }),
     {
