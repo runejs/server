@@ -20,7 +20,7 @@ export const action: buttonAction = async ({ player, buttonId }) => {
         playerStage = playerQuest.progress;
     }
 
-    let journalHandler = quest.journalHandler[playerStage];
+    const journalHandler = quest.journalHandler[playerStage];
     if(journalHandler === undefined) {
         const questJournalStages = Object.keys(quest.journalHandler);
         let journalEntry;
