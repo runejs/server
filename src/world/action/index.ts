@@ -155,7 +155,7 @@ export async function loadActions(): Promise<void> {
         if(path.indexOf('.map') !== -1) {
             continue;
         }
-        
+
         const location = '.' + path.substring(ACTION_DIRECTORY.length).replace('.js', '');
 
         try {
