@@ -9,7 +9,7 @@ type QuestKey = number | 'complete';
 
 export type QuestStageHandler = {
     [key in QuestKey]?: (player: Player) => void | Promise<void>;
-};;
+};
 
 export type QuestDialogueHandler = {
     [key in QuestKey]?: (player: Player, npc: Npc) => void | Promise<void>;

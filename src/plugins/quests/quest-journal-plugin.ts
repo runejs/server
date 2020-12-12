@@ -2,7 +2,8 @@ import { buttonAction } from '@server/world/action/button-action';
 import { wrapText } from '@server/util/strings';
 import { pluginActions } from '@server/game-server';
 import { widgets } from '@server/config';
-import { Quest } from '@server/config/quest-config';
+import { Quest } from '@server/world/actor/player/quest';
+
 
 export const action: buttonAction = async ({ player, buttonId }) => {
     const [ quest ] = pluginActions.quest.filter((quest: Quest) => quest.questTabId === buttonId) as Quest[];
@@ -21,10 +22,23 @@ export const action: buttonAction = async ({ player, buttonId }) => {
 
     let journalHandler = quest.journalHandler[playerStage];
     if(journalHandler === undefined) {
-        // @TODO find last journal entry and use that
+        const questJournalStages = Object.keys(quest.journalHandler);
+        let journalEntry;
+        for(const stage of questJournalStages) {
+            const stageNum = parseInt(stage, 10);
+            if(isNaN(stageNum)) {
+                continue;
+            }
+
+            if(stageNum <= playerStage) {
+                journalEntry = stage;
+            } else {
+                break;
+            }
+        }
     }
 
-    let color = 128;
+    const color = 128;
     let text: string;
 
     if(typeof journalHandler === 'function') {
