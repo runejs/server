@@ -233,6 +233,10 @@ export class World {
         return this.playerList.find(p => p && p.username.toLowerCase() === username);
     }
 
+    /**
+     * Spawns the list of pre-configured items into either the global instance or a player's personal instance.
+     * @param player [optional] The player to load the instanced items for. Uses the global world instance if not provided.
+     */
     public spawnWorldItems(player?: Player): void {
         const instance = player ? player.personalInstance : this.globalInstance;
 
