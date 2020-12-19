@@ -1,7 +1,7 @@
 import { npcAction } from '@server/world/action/npc-action';
 import { Actor } from '@server/world/actor/actor';
 import { Player } from '@server/world/actor/player/player';
-import { timer } from 'rxjs';
+import { lastValueFrom, timer } from 'rxjs';
 import { World } from '@server/world';
 import { filter, take } from 'rxjs/operators';
 import { animationIds } from '@server/world/config/animation-ids';
@@ -28,8 +28,8 @@ class Combat {
     public cancelCombat(): void {
         this.contactInitiated = false;
         this.combatActive = false;
-        this.assailant.actionsCancelled.next();
-        this.victim.actionsCancelled.next();
+        this.assailant.actionsCancelled.next(null);
+        this.victim.actionsCancelled.next(null);
     }
 
     public async initiateCombat(): Promise<void> {
@@ -59,7 +59,7 @@ class Combat {
         await this.assailant.tail(this.victim);
 
         if(!firstAttack) {
-            await timer(4 * World.TICK_LENGTH).toPromise();
+            await lastValueFrom(timer(4 * World.TICK_LENGTH).pipe(take(1)));
         }
 
         if(!this.combatActive) {
@@ -155,7 +155,8 @@ class Combat {
             instance = victim.instance;
         }
 
-        instance.spawnWorldItem(itemIds.bones, deathPosition, this.assailant instanceof Player ? this.assailant : undefined, 300);
+        instance.spawnWorldItem(itemIds.bones, deathPosition,
+            { owner: this.assailant instanceof Player ? this.assailant : undefined, expires: 300 });
     }
 
     // https://forum.tip.it/topic/199687-runescape-formulas-revealed

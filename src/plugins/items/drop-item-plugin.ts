@@ -22,8 +22,8 @@ export const action: itemAction = ({ player, itemId, itemSlot }) => {
     inventory.remove(itemSlot);
     player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, itemSlot, null);
     player.playSound(soundIds.dropItem, 5);
-    player.instance.spawnWorldItem(item, player.position, player, 300);
-    player.actionsCancelled.next();
+    player.instance.spawnWorldItem(item, player.position, { owner: player, expires: 300 });
+    player.actionsCancelled.next(null);
 };
 
 export default {

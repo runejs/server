@@ -12,7 +12,14 @@ const pickupItemPacket = (player, packet) => {
 
     const worldMods = player.instance.getInstancedChunk(worldItemPosition);
     const worldItems = worldMods?.mods?.get(worldItemPosition.key)?.worldItems || [];
-    const worldItem = worldItems.find(i => i.itemId === itemId) || null;
+
+    let worldItem = worldItems.find(i => i.itemId === itemId) || null;
+
+    if(!worldItem) {
+        const personalMods = player.personalInstance.getInstancedChunk(worldItemPosition);
+        const personalItems = personalMods?.mods?.get(worldItemPosition.key)?.worldItems || [];
+        worldItem = personalItems.find(i => i.itemId === itemId) || null;
+    }
 
     if(worldItem && !worldItem.removed) {
         if(worldItem.owner && !worldItem.owner.equals(player)) {

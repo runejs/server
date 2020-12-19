@@ -5,7 +5,7 @@ import {
     startTutorial,
     unlockAvailableTabs
 } from '@server/plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy';
-import { schedule } from '@server/task/task';
+import { schedule } from '@server/world/task';
 import { world } from '@server/game-server';
 import { findNpc } from '@server/config';
 import { Cutscene } from '@server/world/actor/player/cutscenes';

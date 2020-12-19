@@ -4,5 +4,11 @@
         "examine": "Useful for baking cakes.",
         "tradable": true,
         "weight": 0.1
+    },
+    "rs:egg": {
+        "game_id": 1944,
+        "examine": "A nice fresh egg.",
+        "tradable": true,
+        "weight": 0.02
     }
 }

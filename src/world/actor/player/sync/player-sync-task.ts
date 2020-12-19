@@ -1,5 +1,5 @@
 import { Player } from '../player';
-import { Task } from '@server/task/task';
+import { Task } from '@server/world/task';
 import { UpdateFlags } from '@server/world/actor/update-flags';
 import { Packet, PacketType } from '@server/net/packet';
 import { world } from '@server/game-server';

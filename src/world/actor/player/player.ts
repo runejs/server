@@ -250,6 +250,7 @@ export class Player extends Actor {
             resolve();
         });
 
+        world.spawnWorldItems(this);
         this.chunkChanged(playerChunk);
 
         this.outgoingPackets.flushQueue();
