@@ -7,5 +7,235 @@
         "equipment_data": {
             "equipment_slot": "neck"
         }
+    },
+    "rs:pure_essence": {
+        "game_id": 7936,
+        "tradable": true,
+        "stackable": true,
+        "examine": "An uncharged Rune Stone of extra capability.",
+        "weight": 0.01
+    },
+    "rs:rune_essence": {
+        "game_id": 1436,
+        "tradable": true,
+        "examine": "An uncharged Rune Stone.",
+        "weight": 0.01
+    },
+    "rs:air_rune": {
+        "game_id": 556,
+        "tradable": true,
+        "stackable": true,
+        "examine": "One of the 4 basic elemental Runes.",
+        "weight": 0.01
+    },
+    "rs:mind_rune": {
+        "game_id": 558,
+        "tradable": true,
+        "stackable": true,
+        "exmine": "Used for basic level missile spells.",
+        "weight": 0.01
+    },
+    "rs:water_rune": {
+        "game_id": 555,
+        "tradable": true,
+        "stackable": true,
+        "examine": "One of the 4 basic elemental Runes.",
+        "weight": 0.01
+    },
+    "rs:earth_rune": {
+        "game_id": 557,
+        "tradable": true,
+        "stackable": true,
+        "examine": "One of the 4 basic elemental Runes.",
+        "weight": 0.01
+    },
+    "rs:fire_rune": {
+        "game_id": 554,
+        "tradable": true,
+        "stackable": true,
+        "examine": "One of the 4 basic elemental Runes.",
+        "weight": 0.01
+    },
+    "rs:body_rune": {
+        "game_id": 559,
+        "tradable": true,
+        "stackable": true,
+        "examine": "Used for curse spells.",
+        "weight": 0.01
+    },
+    "rs:cosmic_rune": {
+        "game_id": 564,
+        "tradable": true,
+        "stackable": true,
+        "examine": "Used for enchant spells.",
+        "weight": 0.01
+    },
+    "rs:chaos_rune": {
+        "game_id": 562,
+        "tradable": true,
+        "stackable": true,
+        "examine": "Used for low level missile spells.",
+        "weight": 0.01
+    },
+    "rs:nature_rune": {
+        "game_id": 561,
+        "tradable": true,
+        "stackable": true,
+        "examine": "Used for alchemy spells.",
+        "weight": 0.01
+    },
+    "rs:law_rune": {
+        "game_id": 563,
+        "tradable": true,
+        "stackable": true,
+        "examine": "Used for teleport spells.",
+        "weight": 0.01
+    },
+    "rs:death_rune": {
+        "game_id": 560,
+        "tradable": true,
+        "stackable": true,
+        "examine": "Used for medium level missile spells.",
+        "weight": 0.01
+    },
+    "rs:mist_rune": {
+        "game_id": 4695,
+        "tradable": true,
+        "stackable": true,
+        "examine": "A combined Air and Water Rune.",
+        "weight": 0.01
+    },
+    "rs:dust_rune": {
+        "game_id": 4696,
+        "tradable": true,
+        "stackable": true,
+        "examine": "A combined Air and Earth Rune.",
+        "weight": 0.01
+    },
+    "rs:mud_rune": {
+        "game_id": 4698,
+        "tradable": true,
+        "stackable": true,
+        "examine": "A combined Earth and Water Rune.",
+        "weight": 0.01
+    },
+    "rs:smoke_rune": {
+        "game_id": 4697,
+        "tradable": true,
+        "stackable": true,
+        "examine": "A combined Air and Fire Rune.",
+        "weight": 0.01
+    },
+    "rs:steam_rune": {
+        "game_id": 4694,
+        "tradable": true,
+        "stackable": true,
+        "examine": "A combined Water and Fire Rune.",
+        "weight": 0.01
+    },
+    "rs:lava_rune": {
+        "game_id": 4699,
+        "tradable": true,
+        "stackable": true,
+        "examine": "A combined Earth and Fire Rune.",
+        "weight": 0.01
+    },
+    "rs:air_talisman": {
+        "game_id": 1438,
+        "tradable": true,
+        "stackable": false,
+        "examine": "A mysterious power emanates from the talisman...",
+        "weight": 0.015
+    },
+    "rs:earth_talisman": {
+        "game_id": 1440,
+        "tradable": true,
+        "stackable": false,
+        "examine": "A mysterious power emanates from the talisman...",
+        "weight": 0.015
+    },
+    "rs:fire_talisman": {
+        "game_id": 1442,
+        "tradable": true,
+        "stackable": false,
+        "examine": "A mysterious power emanates from the talisman...",
+        "weight": 0.015
+    },
+    "rs:water_talisman": {
+        "game_id": 1444,
+        "tradable": true,
+        "stackable": false,
+        "examine": "A mysterious power emanates from the talisman...",
+        "weight": 0.015
+    },
+    "rs:body_talisman": {
+        "game_id": 1446,
+        "tradable": true,
+        "stackable": false,
+        "examine": "A mysterious power emanates from the talisman...",
+        "weight": 0.015
+    },
+    "rs:mind_talisman": {
+        "game_id": 1448,
+        "tradable": true,
+        "stackable": false,
+        "examine": "A mysterious power emanates from the talisman...",
+        "weight": 0.015
+    },
+    "rs:blood_talisman": {
+        "game_id": 1450,
+        "tradable": true,
+        "stackable": false,
+        "examine": "A mysterious power emanates from the talisman...",
+        "weight": 0.015
+    },
+    "rs:chaos_talisman": {
+        "game_id": 1452,
+        "tradable": true,
+        "stackable": false,
+        "examine": "A mysterious power emanates from the talisman...",
+        "weight": 0.015
+    },
+    "rs:cosmic_talisman": {
+        "game_id": 1454,
+        "tradable": true,
+        "stackable": false,
+        "examine": "A mysterious power emanates from the talisman...",
+        "weight": 0.015
+    },
+    "rs:death_talisman": {
+        "game_id": 1456,
+        "tradable": true,
+        "stackable": false,
+        "examine": "A mysterious power emanates from the talisman...",
+        "weight": 0.015
+    },
+    "rs:law_talisman": {
+        "game_id": 1458,
+        "tradable": true,
+        "stackable": false,
+        "examine": "A mysterious power emanates from the talisman...",
+        "weight": 0.015
+    },
+    "rs:soul_talisman": {
+        "game_id": 1460,
+        "tradable": true,
+        "stackable": false,
+        "examine": "A mysterious power emanates from the talisman...",
+        "weight": 0.015
+    },
+    "rs:nature_talisman": {
+        "game_id": 1462,
+        "tradable": true,
+        "stackable": false,
+        "examine": "A mysterious power emanates from the talisman...",
+        "weight": 0.015
+    },
+    "rs:elemental_talisman": {
+        "game_id": 5516,
+        "tradable": true,
+        "stackable": false,
+        "examine": "A mysterious power emanates from the talisman...",
+        "weight": 0.015
     }
 }
