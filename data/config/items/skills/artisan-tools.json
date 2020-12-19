@@ -1,0 +1,38 @@
+{
+    "rs:shears": {
+        "game_id": 5603,
+        "examine": "For shearing sheep.",
+        "tradable": true,
+        "weight": 0.113
+    },
+    "rs:chisel": {
+        "game_id": 1755,
+        "examine": "Good for detailed Crafting.",
+        "tradable": true,
+        "weight": 0.453
+    },
+    "rs:spade": {
+        "game_id": 952,
+        "examine": "A slightly muddy spade.",
+        "tradable": true,
+        "weight": 1.814
+    },
+    "rs:hammer": {
+        "game_id": 2347,
+        "examine": "Good for hitting things!",
+        "tradable": true,
+        "weight": 0.907
+    },
+    "rs:needle": {
+        "game_id": 1733,
+        "examine": "Used with a thread to make clothes.",
+        "tradable": true,
+        "weight": 0
+    },
+    "rs:thread": {
+        "game_id": 1734,
+        "examine": "Used with a needle to make clothes.",
+        "tradable": true,
+        "weight": 0
+    }
+}

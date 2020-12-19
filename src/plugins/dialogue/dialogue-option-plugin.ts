@@ -1,5 +1,4 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { widgetAction } from '@server/world/actor/player/action/widget-action';
+import { widgetAction } from '@server/world/action/widget-action';
 
 const dialogueIds = [
     64, 65, 66, 67, 241,
@@ -12,8 +11,8 @@ const dialogueIds = [
  * Handles a basic NPC/Player/Option/Text dialogue choice/action.
  */
 export const action: widgetAction = (details) => {
-    const { player, childId } = details;
-    player.dialogueInteractionEvent.next(childId);
+    const { player, widgetId, childId } = details;
+    player.interfaceState.closeWidget(widgetId, childId);
 };
 
-export default new RunePlugin({ type: ActionType.WIDGET_ACTION, widgetIds: dialogueIds, action, cancelActions: true });
+export default { type: 'widget_action', widgetIds: dialogueIds, action, cancelActions: true };

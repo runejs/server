@@ -1,11 +1,10 @@
-import { buttonAction } from '@server/world/actor/player/action/button-action';
-import { logger } from '@runejs/logger';
+import { buttonAction } from '@server/world/action/button-action';
+import { logger } from '@runejs/core';
 import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 import { readFileSync } from 'fs';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { Player } from '@server/world/actor/player/player';
-import { widgetAction } from '@server/world/actor/player/action/widget-action';
-import { widgets } from '@server/world/config/widget';
+import { widgetAction } from '@server/world/action/widget-action';
+import { widgets } from '@server/config';
 
 // @TODO fix me!
 
@@ -94,11 +93,10 @@ function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refr
         }
     }
 
-    player.activeWidget = {
-        widgetId: widgets.skillGuide,
-        type: 'SCREEN',
-        closeOnWalk: true
-    };
+    player.interfaceState.openWidget(widgets.skillGuide, {
+        slot: 'screen',
+        multi: false
+    });
     player.metadata['activeSkillGuide'] = guideId;
 }
 
@@ -126,7 +124,7 @@ export const openSubGuideAction: widgetAction = (details) => {
     loadGuide(player, guide.id, subGuideId, false);
 };
 
-export default new RunePlugin([
-    { type: ActionType.BUTTON, widgetId: widgets.skillsTab, buttonIds, action: openGuideAction },
-    { type: ActionType.WIDGET_ACTION, widgetIds: widgets.skillGuide, childIds: sidebarTextIds, optionId: 0, action: openSubGuideAction }
-]);
+export default [
+    { type: 'button', widgetId: widgets.skillsTab, buttonIds, action: openGuideAction },
+    { type: 'widget_action', widgetIds: widgets.skillGuide, childIds: sidebarTextIds, optionId: 0, action: openSubGuideAction }
+];

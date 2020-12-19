@@ -1,17 +1,12 @@
 import { Item } from '@server/world/items/item';
 import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 import { Player } from './player';
 import { SkillValue } from '@server/world/actor/skills';
 import { hasValueNotNull } from '@server/util/data';
+import { PlayerQuest } from '@server/config/quest-config';
 
-
-export interface QuestProgress {
-    questId: string;
-    stage: string;
-    attributes: { [key: string]: any };
-}
 
 export interface Appearance {
     gender: number;
@@ -43,6 +38,9 @@ export class PlayerSettings {
     attackStyle: number = 0;
     bankInsertMode: number = 0;
     bankWithdrawNoteMode: number = 0;
+    publicChatMode: number = 0;
+    privateChatMode: number = 0;
+    tradeMode: number = 0;
 }
 
 export interface PlayerSave {
@@ -65,8 +63,10 @@ export interface PlayerSave {
     skills: SkillValue[];
     settings: PlayerSettings;
     savedMetadata: { [key: string]: any };
-    quests: QuestProgress[];
+    questList: PlayerQuest[];
     achievements: string[];
+    friendsList: string[];
+    ignoreList: string[];
 }
 
 export const defaultAppearance = (): Appearance => {
@@ -132,8 +132,10 @@ export function savePlayerData(player: Player): boolean {
         skills: player.skills.values,
         settings: player.settings,
         savedMetadata: player.savedMetadata,
-        quests: player.quests,
-        achievements: player.achievements
+        questList: player.quests,
+        achievements: player.achievements,
+        friendsList: player.friendsList,
+        ignoreList: player.ignoreList
     };
 
     try {
@@ -143,6 +145,12 @@ export function savePlayerData(player: Player): boolean {
         logger.error(`Error saving player data for ${player.username}.`);
         return false;
     }
+}
+
+export function playerExists(username: string): boolean {
+    const fileName = username.toLowerCase() + '.json';
+    const filePath = join('data/saves', fileName);
+    return existsSync(filePath);
 }
 
 export function loadPlayerSave(username: string): PlayerSave {

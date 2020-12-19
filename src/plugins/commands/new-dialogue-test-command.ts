@@ -1,5 +1,4 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { commandAction } from '@server/world/actor/player/action/input-command-action';
+import { commandAction } from '@server/world/action/player-command-action';
 import { world } from '@server/game-server';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 
@@ -23,7 +22,7 @@ const action: commandAction = (details) => {
                 hans => [ Emote.WORRIED, 'What has you down?' ],
                 player => [ Emote.SAD, `Well, first it started this morning when my cat woke me up an hour early. After that, the little bastard just kept meowing and meowing at me...` ],
                 execute(() => {
-                    player.setQuestStage('cooksAssistant', 'NOT_STARTED');
+                    player.setQuestProgress('cooks_assistant', 'NOT_STARTED');
                     player.sendMessage('Here ya go!');
                 }),
                 hans => [ Emote.SAD, `Shit that sucks fam, I'm sorry.`  ]
@@ -35,4 +34,6 @@ const action: commandAction = (details) => {
     });
 };
 
-export default new RunePlugin({ type: ActionType.COMMAND, commands: 'd', action });
+export default {
+    type: 'player_command', commands: 'd', action
+};

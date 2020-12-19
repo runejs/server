@@ -1,0 +1,127 @@
+{
+    "presets": {
+        "rs:woodcutting_axe": {
+            "tradable": true,
+            "equippable": true,
+            "equipment_data": {
+                "equipment_slot": "main_hand",
+                "equipment_type": "one_handed",
+                "offensive_bonuses": {
+                    "speed": 5,
+                    "stab": -2
+                },
+                "defensive_bonuses": {
+                    "slash": 1
+                },
+                "weapon_info": {
+                    "style": "axe"
+                }
+            }
+        }
+    },
+
+    "rs:bronze_axe": {
+        "extends": "rs:woodcutting_axe",
+        "game_id": 1351,
+        "weight": 1.35,
+        "equipment_data": {
+            "offensive_bonuses": {
+                "slash": 4,
+                "crush": 2
+            },
+            "skill_bonuses": {
+                "strength": 5
+            }
+        }
+    },
+    "rs:iron_axe": {
+        "extends": "rs:woodcutting_axe",
+        "game_id": 1349,
+        "weight": 1.36,
+        "equipment_data": {
+            "offensive_bonuses": {
+                "slash": 5,
+                "crush": 3
+            },
+            "skill_bonuses": {
+                "strength": 7
+            }
+        }
+    },
+    "rs:steel_axe": {
+        "extends": "rs:woodcutting_axe",
+        "game_id": 1353,
+        "weight": 1.36,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 5
+                }
+            },
+            "offensive_bonuses": {
+                "slash": 8,
+                "crush": 6
+            },
+            "skill_bonuses": {
+                "strength": 9
+            }
+        }
+    },
+    "rs:mithril_axe": {
+        "extends": "rs:woodcutting_axe",
+        "game_id": 1355,
+        "weight": 1.133,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 20
+                }
+            },
+            "offensive_bonuses": {
+                "slash": 12,
+                "crush": 10
+            },
+            "skill_bonuses": {
+                "strength": 13
+            }
+        }
+    },
+    "rs:adamant_axe": {
+        "extends": "rs:woodcutting_axe",
+        "game_id": 1357,
+        "weight": 1.587,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 30
+                }
+            },
+            "offensive_bonuses": {
+                "slash": 17,
+                "crush": 15
+            },
+            "skill_bonuses": {
+                "strength": 19
+            }
+        }
+    },
+    "rs:rune_axe": {
+        "extends": "rs:woodcutting_axe",
+        "game_id": 1359,
+        "weight": 1,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 40
+                }
+            },
+            "offensive_bonuses": {
+                "slash": 26,
+                "crush": 24
+            },
+            "skill_bonuses": {
+                "strength": 29
+            }
+        }
+    }
+}

@@ -1,0 +1,57 @@
+{
+    "presets": {
+        "rs:mithril_armour_base": {
+            "tradable": true,
+            "equippable": true,
+            "equipment_data": {
+                "requirements": {
+                    "skills": {
+                        "defence": 20
+                    }
+                }
+            }
+        }
+    },
+
+    "rs:mithril_platelegs": {
+        "extends": "rs:mithril_armour_base",
+        "game_id": 1071,
+        "examine": "These look pretty heavy.",
+        "weight": 7.711,
+        "equipment_data": {
+            "equipment_slot": "legs",
+            "offensive_bonuses": {
+                "magic": -21,
+                "ranged": -7
+            },
+            "defensive_bonuses": {
+                "stab": 24,
+                "slash": 22,
+                "crush": 20,
+                "magic": -4,
+                "ranged": 22
+            }
+        }
+    },
+
+    "rs:mithril_plateskirt": {
+        "extends": "rs:mithril_armour_base",
+        "game_id": 1085,
+        "examine": "Designer leg protection.",
+        "weight": 7.257,
+        "equipment_data": {
+            "equipment_slot": "legs",
+            "offensive_bonuses": {
+                "magic": -21,
+                "ranged": -7
+            },
+            "defensive_bonuses": {
+                "stab": 24,
+                "slash": 22,
+                "crush": 20,
+                "magic": -4,
+                "ranged": 22
+            }
+        }
+    }
+}

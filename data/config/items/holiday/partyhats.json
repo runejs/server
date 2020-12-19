@@ -1,0 +1,38 @@
+{
+    "presets": {
+        "rs:partyhat": {
+            "tradable": true,
+            "weight": 0.056,
+            "equippable": true,
+            "equipment_data": {
+                "equipment_slot": "head",
+                "equipment_type": "hat"
+            }
+        }
+    },
+
+    "rs:red_partyhat": {
+        "extends": "rs:partyhat",
+        "game_id": 1038
+    },
+    "rs:yellow_partyhat": {
+        "extends": "rs:partyhat",
+        "game_id": 1040
+    },
+    "rs:blue_partyhat": {
+        "extends": "rs:partyhat",
+        "game_id": 1042
+    },
+    "rs:green_partyhat": {
+        "extends": "rs:partyhat",
+        "game_id": 1034
+    },
+    "rs:purple_partyhat": {
+        "extends": "rs:partyhat",
+        "game_id": 1046
+    },
+    "rs:white_partyhat": {
+        "extends": "rs:partyhat",
+        "game_id": 1048
+    }
+}

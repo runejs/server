@@ -1,11 +1,10 @@
-import { getItemFromContainer, itemAction } from '@server/world/actor/player/action/item-action';
-import { widgets } from '@server/world/config/widget';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { Shop, shopItemContainer } from '@server/world/config/shops';
-import { world } from '@server/game-server';
+import { itemAction } from '@server/world/action/item-action';
 import { Item } from '@server/world/items/item';
-import { ItemContainer } from '@server/world/items/item-container';
+import { getItemFromContainer, ItemContainer } from '@server/world/items/item-container';
 import { itemIds } from '@server/world/config/item-ids';
+import { findItem, widgets } from '@server/config';
+import { Shop } from '@server/config/shop-config';
+
 
 function removeCoins(inventory: ItemContainer, coinsIndex: number, cost: number): void {
     const coins = inventory.items[coinsIndex];
@@ -14,9 +13,9 @@ function removeCoins(inventory: ItemContainer, coinsIndex: number, cost: number)
 }
 
 export const action: itemAction = (details) => {
-    const { player, itemId, itemSlot, widgetId, containerId, option } = details;
+    const { player, itemId, itemSlot, widgetId, option } = details;
 
-    if(!player.activeWidget || player.activeWidget.widgetId !== widgetId) {
+    if(!player.interfaceState.findWidget(widgetId)) {
         return;
     }
 
@@ -25,7 +24,7 @@ export const action: itemAction = (details) => {
         return;
     }
 
-    const shopContainer = shopItemContainer(openedShop);
+    const shopContainer = openedShop.container;
     const shopItem = getItemFromContainer(itemId, itemSlot, shopContainer);
 
     if(!shopItem) {
@@ -48,7 +47,7 @@ export const action: itemAction = (details) => {
         buyAmount = shopItem.amount;
     }
 
-    const buyItem = world.itemData.get(itemId);
+    const buyItem = findItem(itemId);
     const buyItemValue = buyItem.value || 0;
     let buyCost = buyAmount * buyItemValue;
     const coinsIndex = player.hasCoins(buyCost);
@@ -76,7 +75,6 @@ export const action: itemAction = (details) => {
             }
 
             shopContainer.set(itemSlot, { itemId, amount: shopItem.amount - buyAmount });
-            openedShop.items[itemSlot].amountInStock -= buyAmount;
             removeCoins(inventory, coinsIndex, buyCost);
 
             const item: Item = {
@@ -101,7 +99,6 @@ export const action: itemAction = (details) => {
         }
 
         shopContainer.set(itemSlot, { itemId, amount: shopItem.amount - bought });
-        openedShop.items[itemSlot].amountInStock -= bought;
         buyCost = bought * buyItemValue;
         removeCoins(inventory, coinsIndex, buyCost);
     }
@@ -111,10 +108,10 @@ export const action: itemAction = (details) => {
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, inventory);
 };
 
-export default new RunePlugin({
-    type: ActionType.ITEM_ACTION,
+export default {
+    type: 'item_action',
     widgets: widgets.shop,
     options: [ 'buy-1', 'buy-5', 'buy-10' ],
     action,
     cancelOtherActions: false
-});
+};

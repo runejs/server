@@ -1,0 +1,32 @@
+[
+    {
+        "npc": "rs:barbarian_woman",
+        "spawn_x": 3224,
+        "spawn_y": 3402,
+        "movement_radius": 1
+    },
+    {
+        "npc": "rs:blue_moon_inn_bartender",
+        "spawn_x": 3226,
+        "spawn_y": 3399,
+        "movement_radius": 2
+    },
+    {
+        "npc": "rs:blue_moon_inn_charlie",
+        "spawn_x": 3230,
+        "spawn_y": 3402,
+        "movement_radius": 1
+    },
+    {
+        "npc": "rs:jonny_the_beard",
+        "spawn_x": 3225,
+        "spawn_y": 3395,
+        "movement_radius": 5
+    },
+    {
+        "npc": "rs:dr_harlow",
+        "spawn_x": 3222,
+        "spawn_y": 3397,
+        "movement_radius": 3
+    }
+]

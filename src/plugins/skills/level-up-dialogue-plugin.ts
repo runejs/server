@@ -1,5 +1,6 @@
-import { widgetAction } from '@server/world/actor/player/action/widget-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { widgetAction } from '@server/world/action/widget-action';
+import { RunePlugin } from '@server/plugins/plugin';
+import { ActionType } from '@server/world/action';
 
 const widgetIds = [
     158, 161, 175,
@@ -16,7 +17,7 @@ const widgetIds = [
  */
 export const action: widgetAction = (details) => {
     const { player } = details;
-    player.closeActiveWidgets();
+    player.interfaceState.closeChatOverlayWidget();
 };
 
-export default new RunePlugin({ type: ActionType.WIDGET_ACTION, widgetIds, action, cancelActions: false });
+export default { type: 'widget_action', widgetIds, action, cancelActions: false };

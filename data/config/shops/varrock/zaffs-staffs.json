@@ -1,0 +1,16 @@
+{
+    "rs:zaffs_superior_staffs": {
+        "name": "Zaff's Superior Staffs",
+        "shop_buy_rate": 0.55,
+        "rate_modifier": 0.02,
+        "stock": [
+            [ "rs:battlestaff", 5 ],
+            [ "rs:staff", 5 ],
+            [ "rs:magic_staff", 5 ],
+            [ "rs:staff_of_air", 2 ],
+            [ "rs:staff_of_water", 2 ],
+            [ "rs:staff_of_earth", 2 ],
+            [ "rs:staff_of_fire", 2 ]
+        ]
+    }
+}

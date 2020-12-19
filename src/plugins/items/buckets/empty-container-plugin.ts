@@ -1,8 +1,8 @@
-import { getItemFromContainer, itemAction } from '@server/world/actor/player/action/item-action';
-import { widgets } from '@server/world/config/widget';
+import { itemAction } from '@server/world/action/item-action';
 import { soundIds } from '@server/world/config/sound-ids';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { itemIds } from '@server/world/config/item-ids';
+import { getItemFromContainer } from '@server/world/items/item-container';
+import { widgets } from '@server/config';
 
 export const action: itemAction = (details) => {
     const { player, itemId, itemSlot } = details;
@@ -20,21 +20,21 @@ export const action: itemAction = (details) => {
     switch (itemId) {
         case itemIds.jugOfWater:
             player.giveItem(itemIds.jug);
-        break;
+            break;
         default:
             player.giveItem(itemIds.bucket);
-        break;
+            break;
     }
 
     // @TODO only update necessary slots
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, inventory);
 };
 
-export default new RunePlugin({
-    type: ActionType.ITEM_ACTION,
+export default {
+    type: 'item_action',
     widgets: widgets.inventory,
     options: 'empty',
     itemIds: [itemIds.bucketOfMilk, itemIds.bucketOfWater, itemIds.jugOfWater],
     action,
     cancelOtherActions: false
-});
+};

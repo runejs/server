@@ -1,15 +1,13 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { npcIds } from '@server/world/config/npc-ids';
-import { npcAction } from '@server/world/actor/player/action/npc-action';
+import { npcAction } from '@server/world/action/npc-action';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 import { itemIds } from '@server/world/config/item-ids';
-import { widgets } from '@server/world/config/widget';
+import { widgets } from '@server/config';
 
 
 const talkToBartender : npcAction = (details) => {
     const { player, npc } = details;
 
-    dialogue([player, { npc, key: 'bartender'}], [
+    dialogue([player, { npc, key: 'bartender' }], [
         bartender => [Emote.HAPPY, 'What can I do yer for?'],
         options => [
             `A glass of your finest ale please.`, [
@@ -20,7 +18,7 @@ const talkToBartender : npcAction = (details) => {
                     const hasCoins = player.inventory.has(itemIds.coins);
 
                     if (!hasCoins) {
-                        dialogue([player, {npc, key: 'bartender'}], [
+                        dialogue([player, { npc, key: 'bartender' }], [
                             player => [Emote.VERY_SAD, `Oh dear. I don't seem to have enough money.`],
                         ]);
                     }
@@ -80,7 +78,7 @@ const talkToBartender : npcAction = (details) => {
 const talkToCook : npcAction = (details) => {
     const { npc, player } = details;
 
-    dialogue([player, {npc, key: 'cook'}], [
+    dialogue([player, { npc, key: 'cook' }], [
         cook => [Emote.ANGRY, `What do you want? I'm busy!`],
         options => [
             `Can you sell me any food?`, [
@@ -93,7 +91,7 @@ const talkToCook : npcAction = (details) => {
 
                     // The player doesn't have any coins.
                     if (!hasCoins) {
-                        dialogue([player, {npc, key: 'cook'}], [
+                        dialogue([player, { npc, key: 'cook' }], [
                             player => [Emote.VERY_SAD, `Oh, I haven't got any money.`],
                             cook => [Emote.ANGRY, `Why are you asking me to sell you food if you haven't got any money? Go away!`]
                         ]);
@@ -102,7 +100,7 @@ const talkToCook : npcAction = (details) => {
                     // The player has enough coins
                     if (hasCoins && (player.inventory.amountInStack(index) >= 2)) {
                         const amount = player.inventory.amountInStack(index);
-                        dialogue([player, {npc, key: 'cook'}], [
+                        dialogue([player, { npc, key: 'cook' }], [
                             options => [
                                 `Alright I'll buy a cabbage.`, [
                                     player => [Emote.HAPPY, `Alright I'll buy a cabbage.`],
@@ -157,12 +155,12 @@ const talkToCook : npcAction = (details) => {
     ]);
 };
 
-export default new RunePlugin([{
-    type: ActionType.NPC_ACTION,
-    npcIds: npcIds.varrockBartender,
+export default [{
+    type: 'npc_action',
+    npcs: 'rs:blue_moon_innk_bartender',
     action: talkToBartender,
 }, {
-    type: ActionType.NPC_ACTION,
-    npcIds: npcIds.varrockCharlieTheCook,
+    type: 'npc_action',
+    npcs: 'rs:blue_moon_inn_cook',
     action: talkToCook
-}]);
+}];

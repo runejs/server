@@ -127,7 +127,7 @@ export class WalkingQueue {
     }
 
     public process(): void {
-        if(!world.ready || this.actor.busy || this.queue.length === 0 || !this.valid) {
+        if(this.actor.busy || this.queue.length === 0 || !this.valid) {
             this.resetDirections();
             return;
         }
@@ -136,20 +136,11 @@ export class WalkingQueue {
 
         if(this.actor instanceof Player) {
             this.actor.actionsCancelled.next('pathing-movement');
-
-            const activeWidget = this.actor.activeWidget;
-            if(activeWidget && (!walkPosition.metadata || !walkPosition.metadata.ignoreWidgets)) {
-                if(activeWidget.disablePlayerMovement) {
-                    this.resetDirections();
-                    return;
-                } else if(activeWidget.closeOnWalk) {
-                    if(activeWidget.forceClosed !== undefined) {
-                        activeWidget.forceClosed();
-                    }
-
-                    this.actor.activeWidget = null;
-                }
-            }
+            // if(activeWidget.disablePlayerMovement) {
+            //     this.resetDirections();
+            //     return;
+            // }
+            //this.actor.interfaceState.closeAllSlots();
         }
 
         if(this.actor.metadata['faceActorClearedByWalking'] === undefined || this.actor.metadata['faceActorClearedByWalking']) {

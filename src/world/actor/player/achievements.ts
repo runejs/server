@@ -31,6 +31,13 @@ export const Achievements: { [key: string]: Achievement } = {
         description: 'Talk to Hans.',
         longDescription: `Speak with Hans in the Lumbridge Castle's courtyard.`,
         series: AchievementSeries.LUMBRIDGE
+    },
+    BURY_BONES: {
+        id: 'bury-bones',
+        name: 'Grave Digger',
+        description: 'Bury the bones of the dead.',
+        longDescription: `Bury the remains of a deceased enemy.`,
+        series: AchievementSeries.LUMBRIDGE
     }
 };
 
@@ -40,7 +47,7 @@ export function giveAchievement(achievement: Achievement, player: Player): boole
     }
 
     if(hasAchievement(achievement, player)) {
-        // return false;
+        return false;
     }
 
     player.achievements.push(achievement.id);

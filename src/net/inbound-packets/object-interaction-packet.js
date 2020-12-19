@@ -1,7 +1,7 @@
 import { Position } from '../../world/position';
 import { cache, world } from '../../game-server';
-import { objectAction } from '../../world/actor/player/action/object-action';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
+import { actionHandler } from '../../world/action';
 
 const option1 = packet => {
     const { buffer } = packet;
@@ -40,22 +40,10 @@ const objectInteractionPacket = (player, packet) => {
 
     const { objectId, x, y } = options[packetId].packetDef(packet);
     const level = player.position.level;
-
     const objectPosition = new Position(x, y, level);
-    const objectChunk = world.chunkManager.getChunkForWorldPosition(objectPosition);
-    let cacheOriginal = true;
 
-    let locationObject = objectChunk.getCacheObject(objectId, objectPosition);
+    const { object: locationObject, cacheOriginal } = world.findObjectAtLocation(player, objectId, objectPosition);
     if(!locationObject) {
-        locationObject = objectChunk.getAddedObject(objectId, objectPosition);
-        cacheOriginal = false;
-
-        if(!locationObject) {
-            return;
-        }
-    }
-
-    if(objectChunk.getRemovedObject(objectId, objectPosition)) {
         return;
     }
 
@@ -77,7 +65,7 @@ const objectInteractionPacket = (player, packet) => {
         return;
     }
 
-    objectAction(player, locationObject, locationObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
+    actionHandler.call('object_action', player, locationObject, locationObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
 };
 
 export default [{

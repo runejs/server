@@ -1,42 +1,69 @@
 import { Chunk } from './chunk';
-import { world } from '../../game-server';
-import { Position } from '../position';
+import { cache, world } from '../../game-server';
+import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
+import { WorldInstance } from '@server/world/instances';
 
 /**
  * A map of collision masks for a chunk within the game world.
  */
 export class CollisionMap {
 
+    private heightLevel: number;
+    private x: number;
+    private y: number;
     private sizeX: number;
     private sizeY: number;
     private _insetX: number;
     private _insetY: number;
     private _adjacency: number[][];
     private chunk: Chunk;
+    private instance: WorldInstance;
     
-    public constructor(sizeX: number, sizeY: number, insetX: number, insetY: number, chunk: Chunk) {
-        this.sizeX = sizeX;
-        this.sizeY = sizeY;
-        this._insetX = insetX;
-        this._insetY = insetY;
-        this.chunk = chunk;
+    public constructor(x: number, y: number, heightLevel: number, options?: { chunk?: Chunk, instance?: WorldInstance }) {
+        this.heightLevel = heightLevel;
+        this.x = x;
+        this.y = y;
+        this.sizeX = 8;
+        this.sizeY = 8;
+        this._insetX = (x + 6) * 8;
+        this._insetY = (y + 6) * 8;
+        this.chunk = options?.chunk;
+        this.instance = options?.instance;
         this._adjacency = new Array(this.sizeX);
         for(let i = 0; i < this.sizeX; i++) {
             this._adjacency[i] = new Array(this.sizeY);
         }
         this.reset();
     }
+
+    public markGameObject(locationObject: LocationObject, mark: boolean): void {
+        const x: number = locationObject.x;
+        const y: number = locationObject.y;
+        const objectType = locationObject.type;
+        const objectOrientation = locationObject.orientation;
+        const objectDetails: LocationObjectDefinition = cache.locationObjectDefinitions.get(locationObject.objectId);
+
+        if(objectDetails.solid) {
+            if(objectType === 22) {
+                if(objectDetails.hasOptions) {
+                    this.markBlocked(x, y, mark);
+                }
+            } else if(objectType >= 9) {
+                this.markSolidOccupant(x, y, objectDetails.sizeX, objectDetails.sizeY, objectOrientation, objectDetails.nonWalkable, mark);
+            } else if(objectType >= 0 && objectType <= 3) {
+                if(mark) {
+                    this.markWall(x, y, objectType, objectOrientation, objectDetails.nonWalkable);
+                } else {
+                    this.unmarkWall(x, y, objectType, objectOrientation, objectDetails.nonWalkable);
+                }
+            }
+        }
+    }
     
     public reset(): void {
         for(let x = 0; x < this.sizeX; x++) {
             for(let y = 0; y < this.sizeY; y++) {
-                if(x == 0 || y == 0 || x == this.sizeX - 1 || y == this.sizeY - 1) {
-                    this._adjacency[x][y] = //0xffffff;
-                        0;
-                } else {
-                    this._adjacency[x][y] = //0x1000000;
-                        0;
-                }
+                this._adjacency[x][y] = this.chunk ? 0 : null;
             }
         }
     }
@@ -318,6 +345,10 @@ export class CollisionMap {
         x -= this._insetX;
         y -= this._insetY;
 
+        if(this._adjacency[x][y] === null) {
+            this._adjacency[x][y] = 0;
+        }
+
         if(mark) {
             this._adjacency[x][y] |= 0x200000;
         } else {
@@ -348,44 +379,60 @@ export class CollisionMap {
         }
 
         if(offsetX != 0 || offsetY != 0) {
-            const offsetChunk: Chunk = world.chunkManager.getChunk({ x: this.chunk.position.x + offsetX, y: this.chunk.position.y + offsetY, level: this.chunk.position.level });
-            offsetChunk.collisionMap.set(x, y, flag);
+            this.getSiblingCollisionMap(offsetX, offsetY)?.set(x, y, flag);
             outOfBounds = true;
         }
 
         if(!outOfBounds) {
+            if(this._adjacency[x][y] === null) {
+                this._adjacency[x][y] = 0;
+            }
             this._adjacency[x][y] |= flag;
         }
     }
     
-    // @TODO refactor
     public unset(x: number, y: number, flag: number): void {
         let outOfBounds = false;
-        const currentPosition: Position = this.chunk.position;
 
         if(x < 0) {
-            const previousXChunk: Chunk = world.chunkManager.getChunk({ x: currentPosition.x - 1, y: currentPosition.y, level: currentPosition.level });
-            previousXChunk.collisionMap.unset(7, y, flag);
+            this.getSiblingCollisionMap(-1, 0)?.unset(7, y, flag);
             outOfBounds = true;
         } else if(x > 7) {
-            const nextXChunk: Chunk = world.chunkManager.getChunk({ x: currentPosition.x + 1, y: currentPosition.y, level: currentPosition.level });
-            nextXChunk.collisionMap.unset(0, y, flag);
+            this.getSiblingCollisionMap(1, 0)?.unset(0, y, flag);
             outOfBounds = true;
         }
 
         if(y < 0) {
-            const previousZChunk: Chunk = world.chunkManager.getChunk({ x: currentPosition.x, y: currentPosition.y - 1, level: currentPosition.level });
-            previousZChunk.collisionMap.unset(x, 7, flag);
+            this.getSiblingCollisionMap(0, -1)?.unset(x, 7, flag);
             outOfBounds = true;
         } else if(y > 7) {
-            const nextZChunk: Chunk = world.chunkManager.getChunk({ x: currentPosition.x, y: currentPosition.y + 1, level: currentPosition.level });
-            nextZChunk.collisionMap.unset(x, 0, flag);
+            this.getSiblingCollisionMap(0, 1)?.unset(x, 0, flag);
             outOfBounds = true;
         }
 
         if(!outOfBounds) {
+            if(this._adjacency[x][y] === null) {
+                this._adjacency[x][y] = 0;
+            }
             this._adjacency[x][y] &= 0xffffff - flag;
         }
+    }
+
+    public getSiblingCollisionMap(offsetX: number, offsetY: number): CollisionMap {
+        if(this.chunk) {
+            const offsetChunk: Chunk = world.chunkManager.getChunk({
+                x: this.chunk.position.x + offsetX,
+                y: this.chunk.position.y + offsetY,
+                level: this.heightLevel
+            });
+            return offsetChunk.collisionMap;
+        } else if(this.instance) {
+            const instanceChunk = this.instance.getInstancedChunk(this.x + offsetX,
+                this.y + offsetY, this.heightLevel);
+            return instanceChunk.collisionMap;
+        }
+
+        return null;
     }
 
     public get insetX(): number {

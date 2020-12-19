@@ -1,0 +1,15 @@
+{
+    "rs:ranaels_skirt_store": {
+        "name": "Ranael's Super Skirt Store",
+        "shop_buy_rate": 0.65,
+        "rate_modifier": 0.01,
+        "stock": [
+            [ "rs:bronze_plateskirt", 5 ],
+            [ "rs:iron_plateskirt", 3 ],
+            [ "rs:steel_plateskirt", 2 ],
+            [ "rs:black_plateskirt", 1 ],
+            [ "rs:mithril_plateskirt", 1 ],
+            [ "rs:adamant_plateskirt", 1 ]
+        ]
+    }
+}

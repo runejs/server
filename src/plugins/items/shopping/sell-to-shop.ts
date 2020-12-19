@@ -1,14 +1,14 @@
-import { getItemFromContainer, itemAction } from '@server/world/actor/player/action/item-action';
-import { widgets } from '@server/world/config/widget';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { Shop, shopItemContainer } from '@server/world/config/shops';
-import { world } from '@server/game-server';
+import { itemAction } from '@server/world/action/item-action';
 import { itemIds } from '@server/world/config/item-ids';
+import { getItemFromContainer } from '@server/world/items/item-container';
+import { Shop } from '@server/config/shop-config';
+import { widgets } from '@server/config';
+
 
 export const action: itemAction = (details) => {
-    const { player, itemId, itemSlot, widgetId, containerId, option } = details;
+    const { player, itemId, itemSlot, option, itemDetails } = details;
 
-    if(!player.activeWidget || player.activeWidget.widgetId !== widgets.shop.widgetId) {
+    if(!player.interfaceState.findWidget(widgets.shop.widgetId)) {
         return;
     }
 
@@ -31,8 +31,7 @@ export const action: itemAction = (details) => {
         'sell-10': 10
     };
     let sellAmount = sellAmounts[option];
-    const itemDetails = world.itemData.get(itemId);
-    const shopContainer = shopItemContainer(openedShop);
+    const shopContainer = openedShop.container;
     const shopSpaces = shopContainer.items.filter(item => item === null);
 
     const shopItemIndex = shopContainer.items.findIndex(item => item !== null && item.itemId === itemId);
@@ -61,23 +60,21 @@ export const action: itemAction = (details) => {
         }
     }
 
-    const itemValue = itemDetails.value || 0;
+    const itemValue = openedShop.getBuyPrice(itemDetails); // @TODO scale price per item, not per sale
 
     if(!shopItem) {
         shopContainer.set(shopContainer.getFirstOpenSlot(), { itemId, amount: sellAmount });
-        openedShop.items.push({ amountInStock: sellAmount, id: itemId, name: itemDetails.name, price: itemValue });
     } else {
         shopItem.amount += sellAmount;
-        openedShop.items[shopItemIndex].amountInStock += sellAmount;
     }
 
-    const sellPrice = sellAmount * itemValue; // @TODO player inventory item devaluation/saturation
+    const sellPrice = sellAmount * itemValue; // @TODO scale price per item, not per sale
     if(sellPrice > 0) {
         let coinsIndex = player.hasCoins(1);
 
         if(coinsIndex === -1) {
             coinsIndex = inventory.getFirstOpenSlot();
-            inventory.set(coinsIndex, {itemId: itemIds.coins, amount: sellPrice});
+            inventory.set(coinsIndex, { itemId: itemIds.coins, amount: sellPrice });
         } else {
             inventory.items[coinsIndex].amount += sellPrice;
         }
@@ -88,10 +85,10 @@ export const action: itemAction = (details) => {
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, inventory);
 };
 
-export default new RunePlugin({
-    type: ActionType.ITEM_ACTION,
+export default {
+    type: 'item_action',
     widgets: widgets.shopPlayerInventory,
     options: [ 'sell-1', 'sell-5', 'sell-10' ],
     action,
     cancelOtherActions: false
-});
+};

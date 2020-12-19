@@ -1,38 +1,37 @@
-import { itemAction } from '@server/world/actor/player/action/item-action';
-import { widgets } from '@server/world/config/widget';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { world } from '@server/game-server';
+import { itemAction } from '@server/world/action/item-action';
+import { Shop } from '@server/config/shop-config';
+import { widgets } from '@server/config';
 
-export const shopSellValueAction: itemAction = (details) => {
-    const { player, itemId } = details;
+export const shopSellValueAction: itemAction = ({ player, itemDetails }) => {
+    const itemValue = itemDetails.value || 1;
+    player.sendMessage(`${itemDetails.name}: currently costs ${itemValue} coins.`);
+};
 
-    const item = world.itemData.get(itemId);
-
-    if(!item) {
+export const shopPurchaseValueAction: itemAction = ({ player, itemDetails }) => {
+    const openedShop: Shop = player.metadata['lastOpenedShop'];
+    if(!openedShop) {
         return;
     }
 
-    const itemValue = item.value || 1;
+    const shopBuyPrice = openedShop.getBuyPrice(itemDetails);
 
-    player.sendMessage(`${item.name}: currently costs ${itemValue} coins.`);
+    if(shopBuyPrice === -1) {
+        player.sendMessage(`You can't sell this item to this shop.`);
+    } else {
+        player.sendMessage(`${ itemDetails.name }: shop will buy for ${ shopBuyPrice } coins.`);
+    }
 };
 
-export const shopPurchaseValueAction: itemAction = (details) => {
-    const { player } = details;
-
-    player.sendMessage(`Shop purchase value is TBD`);
-};
-
-export default new RunePlugin([{
-    type: ActionType.ITEM_ACTION,
+export default [{
+    type: 'item_action',
     widgets: widgets.shop,
     options: 'value',
     action: shopSellValueAction,
     cancelOtherActions: false
 }, {
-    type: ActionType.ITEM_ACTION,
+    type: 'item_action',
     widgets: widgets.shopPlayerInventory,
     options: 'value',
     action: shopPurchaseValueAction,
     cancelOtherActions: false
-}]);
+}];

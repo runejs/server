@@ -1,6 +1,5 @@
-import { buttonAction } from '@server/world/actor/player/action/button-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { widgets } from '@server/world/config/widget';
+import { buttonAction } from '@server/world/action/button-action';
+import { widgets } from '@server/config';
 
 const buttonIds: number[] = [
     0, // walk/run
@@ -20,4 +19,4 @@ export const action: buttonAction = (details) => {
     player.settingChanged(buttonId);
 };
 
-export default new RunePlugin({ type: ActionType.BUTTON, widgetId: widgets.settingsTab, buttonIds: buttonIds, action });
+export default { type: 'button', widgetId: widgets.settingsTab, buttonIds: buttonIds, action };

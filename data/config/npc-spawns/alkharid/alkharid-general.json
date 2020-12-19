@@ -1,0 +1,32 @@
+[
+    {
+        "npc": "rs:alkharid_gem_trader",
+        "spawn_x": 3288,
+        "spawn_y": 3212,
+        "movement_radius": 1
+    },
+    {
+        "npc": "rs:alkharid_dommik",
+        "spawn_x": 3320,
+        "spawn_y": 3194,
+        "movement_radius": 3
+    },
+    {
+        "npc": "rs:alkharid_louie",
+        "spawn_x": 3317,
+        "spawn_y": 3174,
+        "movement_radius": 3
+    },
+    {
+        "npc": "rs:alkharid_ranael",
+        "spawn_x": 3315,
+        "spawn_y": 3161,
+        "movement_radius": 3
+    },
+    {
+        "npc": "rs:alkharid_karim",
+        "spawn_x": 3272,
+        "spawn_y": 3182,
+        "movement_radius": 2
+    }
+]

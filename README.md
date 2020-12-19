@@ -17,7 +17,7 @@ The server runs on the 435 revision of the game, which was a game update made on
 
 * RSA + ISAAC ciphering :heavy_check_mark:
 * Game Update Server :heavy_check_mark:
-* Authentication  :heavy_check_mark:
+* Authentication Server :heavy_check_mark:
 * Server side cache loading :heavy_check_mark:
     * Client pathing validation via cache mapdata :heavy_check_mark:
     * Item/object/npc definitions :heavy_check_mark:
@@ -25,6 +25,8 @@ The server runs on the 435 revision of the game, which was a game update made on
 
 ### Game World
 
+* Private & group Player Instances :heavy_check_mark:
+* Personal player instance objects and world items :heavy_check_mark:
 * Bank :yellow_square: 
     * Withdraw/Deposit 1,5,10,All :heavy_check_mark:
     * As note  :heavy_check_mark: 
@@ -39,44 +41,22 @@ The server runs on the 435 revision of the game, which was a game update made on
     * Sounds :yellow_square:
         * Playing sounds :heavy_check_mark:
         * Sound effects for actions :yellow_square:
-* Climbing ladders :yellow_square:
-* Climbing stairs :yellow_square:
-* Lumbridge mill :yellow_square:
-    * Replacing objects for local player only :x:
-    * Grain in hopper :heavy_check_mark:
-    * Operating levers :heavy_check_mark:
-    * Removing flour if and only if grain has been processed :heavy_check_mark:
-* Cow milking :heavy_check_mark:
-* Container filling :heavy_check_mark:
-    * Buckets, Jugs, Wells, Sinks, Fountains :heavy_check_mark:
-    * Emptying Containers :heavy_check_mark:
 * Home Teleport :heavy_check_mark:
-    * Animation :heavy_check_mark:
-* Emotes :yellow_square:
-    * Skillcape emotes :yellow_square:
+* Emotes :heavy_check_mark:
+    * Skillcape emotes :heavy_check_mark:
     * Unlockable emotes w/ requirements :heavy_check_mark:
-* Shops :yellow_square: 
-    * Shop logic :heavy_check_mark:
-    * World Shops :yellow_square:
-        * Al Kahrid gem trader :heavy_check_mark:
-        * Louie Armoured legs :heavy_check_mark:
-        * Dommik crafting shop :heavy_check_mark:
-        * Raneal Super skirt :heavy_check_mark:
-        * Bob's axes :heavy_check_mark:
-* Inventory :yellow_square: 
+* Shop support :heavy_check_mark:
+* Inventory support :heavy_check_mark:
     * Swapping items :heavy_check_mark:
     * Dropping items :heavy_check_mark:
     * Picking up ground items :heavy_check_mark:
-    * Equipping items :yellow_square: 
-        * Complete equiment stats and slot info :yellow_square: 
-        * Wielding logic (Weight, Stats, Equipping) :heavy_check_mark:
-* Pickables :heavy_check_mark:
-    * Wheat, Flax, Potato, Onion, Cabbage :heavy_check_mark:
+    * Equipping items :heavy_check_mark:
 * Doors/gates :yellow_square: 
     * NSEW doors :heavy_check_mark:
     * Diagonal doors :yellow_square:
     * Double doors :heavy_check_mark: 
     * Wooden gates :heavy_check_mark: 
+* Climbing ladders & stairs :yellow_square:
 * Clue Scrolls :x:
 
 ### Skills
@@ -127,11 +107,10 @@ The server runs on the 435 revision of the game, which was a game update made on
 
 ### Technical Features
 
-* Asynchronous server infrastructure w/ Promises & RxJS
+* Asynchronous server infrastructure w/ Promises & RxJS Observables
 * A diverse TypeScript plugin system for easily writing new content based off of in-game actions
 * A simplified JavaScript plugin system for quickly and easily bootstrapping game content
 * Flexible quest and dialogue systems for more advanced content development
-* A basic REST service for polling logged in users and game items
 * Code compilation via Babel, offering more seamless compilation and redeployment of plugins
 
 ## Setup
@@ -139,41 +118,13 @@ The server runs on the 435 revision of the game, which was a game update made on
 1. Download and install NodeJS **version 13 or higher**: https://nodejs.org/en/
 2. Clone the Github Repo: https://github.com/rune-js/server
 3. Install dependencies by navigating to the project in your Terminal or command prompt and running the command npm install
-4. Copy the `data/config/server-config-default.yaml` and paste it into the same folder using the name `server-config.yaml`
+4. Copy the `data/config/server-config.example.yaml` and paste it into the same folder using the name `server-config.yaml`
 5. Go into your new `server-config.yaml` file and modify your RSA modulus and exponent with the ones matching your game client
   - You may also modify the server's port and host address from this configuration file
 6. Run the game server and REST service by inputting the command `npm start`
 
-The game server will spin up and be accessible via port 43594. The REST service can be accessed via port 8888.
+The game server will spin up and be accessible via port 43594.
 
-## Cache Parsing
+## Game Client
 
-A separate package was created that RuneJS uses to parse the 435 game cache. This package decodes item definitions, npc definitions, location object definitions, widgets, sprites, and map data (tiles and location objects) for any implementing app to make use of.
-
-The RuneJS `cache-parser` package can be found here:
-
-- [Github: rune-js/cache-parser](https://github.com/rune-js/cache-parser)
-- [NPM: @runejs/cache-parser](https://www.npmjs.com/package/@runejs/cache-parser)
-
-## REST API
-
-Online players can be polled via the REST protocol for web applications.
-
-##### API Endpoints:
-
-- `GET /players` : Returns a list of players currently logged into the game server
-- `GET /items?page=x&limit=y` : Returns a list of item metadata loaded by the game server
-- `GET /items/{itemId}` : Returns details about a specific item by id
-- `PUT /items/{itemId}` : Updates an item's configurable server data
-
-## Aditional Information
-
-#### Supported 435 Clients
-
-RuneJS supports the 435 RuneScape game client being renamed by [Promises](https://github.com/Promises) and [TheBlackParade](https://github.com/TheBlackParade):
-
-- [refactored-client-435](https://github.com/Promises/refactored-client-435)
-
-#### Update Server
-
-RuneJS provides a fully working update server for the 435 client to use. The update server runs alongside the regular game server using the same port, so no additional configuration is required. Simply start the server and then your game client.
+The [RuneScape Java Client #435](https://github.com/rune-js/refactored-client-435) must be used to log into a RuneJS game server.

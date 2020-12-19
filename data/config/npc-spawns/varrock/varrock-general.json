@@ -1,0 +1,56 @@
+[
+    {
+        "npc": "rs:varrock_zaff",
+        "spawn_x": 3203,
+        "spawn_y": 3432,
+        "movement_radius": 2
+    },
+    {
+        "npc": "rs:varrock_horvic",
+        "spawn_x": 3229,
+        "spawn_y": 3437,
+        "movement_radius": 2
+    },
+    {
+        "npc": "rs:varrock_wilough",
+        "spawn_x": 3221,
+        "spawn_y": 3437,
+        "movement_radius": 2
+    },
+    {
+        "npc": "rs:varrock_shilop",
+        "spawn_x": 3220,
+        "spawn_y": 3432,
+        "movement_radius": 2
+    },
+    {
+        "npc": "rs:varrock_baraek",
+        "spawn_x": 3220,
+        "spawn_y": 3433,
+        "movement_radius": 1
+    },
+    {
+        "npc": "rs:romeo",
+        "spawn_x": 3211,
+        "spawn_y": 3424,
+        "movement_radius": 4
+    },
+    {
+        "npc": "rs:varrock_shop_keeper",
+        "spawn_x": 3214,
+        "spawn_y": 3417,
+        "movement_radius": 2
+    },
+    {
+        "npc": "rs:varrock_shop_assistant",
+        "spawn_x": 3214,
+        "spawn_y": 3417,
+        "movement_radius": 2
+    },
+    {
+        "npc": "rs:master_smithing_tutor",
+        "spawn_x": 3187,
+        "spawn_y": 3423,
+        "movement_radius": 3
+    }
+]

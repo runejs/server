@@ -7,23 +7,75 @@ import { Position } from '@server/world/position';
 import { LocationObject } from '@runejs/cache-parser';
 import { Chunk, ChunkUpdateItem } from '@server/world/map/chunk';
 import { WorldItem } from '@server/world/items/world-item';
-import { ByteBuffer } from '@runejs/byte-buffer';
+import { ByteBuffer } from '@runejs/core';
+import { Npc } from '@server/world/actor/npc/npc';
+import { stringToLong } from '@server/util/strings';
 
 /**
  * A helper class for sending various network packets back to the game client.
  */
 export class OutboundPackets {
 
-    private updatingQueue: Buffer[];
-    private packetQueue: Buffer[];
+    private static privateMessageCounter: number = Math.floor(Math.random() * 100000000);
+
     private readonly player: Player;
     private readonly socket: Socket;
+    private updatingQueue: Buffer[];
+    private packetQueue: Buffer[];
 
     public constructor(player: Player) {
         this.updatingQueue = [];
         this.packetQueue = [];
         this.player = player;
         this.socket = player.socket;
+    }
+
+    public resetCamera(): void {
+        this.queue(new Packet(7));
+    }
+
+    public snapCameraTo(position: Position, height: number, speed: number, acceleration: number): void {
+        const packet = new Packet(253);
+        this.putCameraPosition(packet, position, height, speed, acceleration);
+        this.queue(packet);
+    }
+
+    public turnCameraTowards(position: Position, height: number, speed: number, acceleration: number): void {
+        const packet = new Packet(234);
+        this.putCameraPosition(packet, position, height, speed, acceleration);
+        this.queue(packet);
+    }
+
+    public updateSocialSettings(): void {
+        const packet = new Packet(196);
+        packet.put(this.player.settings.publicChatMode || 0);
+        packet.put(this.player.settings.privateChatMode || 0);
+        packet.put(this.player.settings.tradeMode || 0);
+        this.queue(packet);
+    }
+
+    public sendPrivateMessage(chatId: number, sender: Player, message: number[]): void {
+        const packet = new Packet(51, PacketType.DYNAMIC_SMALL);
+        packet.put(stringToLong(sender.username.toLowerCase()), 'LONG');
+        packet.put(32767, 'SHORT');
+        packet.put(OutboundPackets.privateMessageCounter++, 'INT24');
+        packet.put(sender.rights);
+        packet.putBytes(Buffer.from(message));
+        this.queue(packet);
+    }
+
+    public updateFriendStatus(friendName: string, worldId: number): void {
+        const packet = new Packet(156);
+        packet.put(stringToLong(friendName.toLowerCase()), 'LONG');
+        packet.put(worldId, 'SHORT');
+        this.queue(packet);
+    }
+
+    public sendFriendServerStatus(status: 0 | 1 | 2): void {
+        // 0 = loading, 1 = connecting to friend server, 2 = friend list
+        const packet = new Packet(70);
+        packet.put(status);
+        this.queue(packet);
     }
 
     public playSong(songId: number): void {
@@ -59,21 +111,6 @@ export class OutboundPackets {
         packet.put(delay, 'BYTE');
 
         this.queue(packet);
-    }
-
-    private getChunkPositionOffset(x: number, y: number, chunk: Chunk): number {
-        const offsetX = x - ((chunk.position.x + 6) * 8);
-        const offsetY = y - ((chunk.position.y + 6) * 8);
-        return (offsetX * 16 + offsetY);
-    }
-
-    private getChunkOffset(chunk: Chunk): { offsetX: number, offsetY: number } {
-        let offsetX = (chunk.position.x + 6) * 8;
-        let offsetY = (chunk.position.y + 6) * 8;
-        offsetX -= (this.player.lastMapRegionUpdatePosition.chunkX * 8);
-        offsetY -= (this.player.lastMapRegionUpdatePosition.chunkY * 8);
-
-        return { offsetX, offsetY };
     }
 
     public updateChunk(chunk: Chunk, chunkUpdates: ChunkUpdateItem[]): void {
@@ -275,10 +312,15 @@ export class OutboundPackets {
         this.queue(new Packet(180));
     }
 
-    public showScreenWidget(widgetId: number): void {
+    public showScreenOverlayWidget(widgetId: number): void {
+        const packet = new Packet(56);
+        packet.put(widgetId, 'SHORT');
+        this.queue(packet);
+    }
+
+    public showStandaloneScreenWidget(widgetId: number): void {
         const packet = new Packet(118);
         packet.put(widgetId, 'SHORT');
-
         this.queue(packet);
     }
 
@@ -331,41 +373,6 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    private strip(packet: Packet): Buffer {
-        const size = packet.writerIndex;
-        const buffer = new ByteBuffer(size);
-        packet.copy(buffer, 0, 0, size);
-        return Buffer.from(buffer);
-    }
-
-    private segment(container: ItemContainer, start: number): { bitset: number, buffer: Buffer } {
-        const bound = 7 * 8;
-        const payload = new Packet(-1, PacketType.FIXED, bound);
-
-        let bitset: number = 0;
-
-        for (let offset = 0; offset < 8; offset++) {
-            const item = container.items[start + offset];
-
-            if (!item) {
-                continue;
-            }
-
-            bitset |= 1 << offset;
-
-            const large = item.amount >= 255;
-
-            if (large) {
-                payload.put(255, 'BYTE');
-            }
-
-            payload.put(item.amount, large ? 'INT' : 'BYTE');
-            payload.put(item.itemId + 1, 'SHORT');
-        }
-
-        return { bitset, buffer: this.strip(payload) };
-    }
-
     public sendUpdateAllWidgetItems(widget: { widgetId: number, containerId: number }, container: ItemContainer): void {
         const packet = new Packet(12, PacketType.DYNAMIC_LARGE);
         this.update(packet, widget, container);
@@ -373,7 +380,7 @@ export class OutboundPackets {
 
     public sendUpdateAllWidgetItemsById(widget: { widgetId: number, containerId: number }, itemIds: number[]): void {
         const container = new ItemContainer(itemIds.length);
-        const items = itemIds.map(id => (!id ? null : {itemId: id, amount: 1}));
+        const items = itemIds.map(id => (!id ? null : { itemId: id, amount: 1 }));
         container.setAll(items, false);
 
         this.sendUpdateAllWidgetItems(widget, container);
@@ -405,11 +412,27 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    public sendTabWidget(tabIndex: number, widgetId: number): void {
-        const packet = new Packet(140);
+    public showTabWidget(widgetId: number): void {
+        const packet = new Packet(237);
         packet.put(widgetId, 'SHORT');
+        this.queue(packet);
+    }
+
+    public sendTabWidget(tabIndex: number, widgetId: number | null): void {
+        if(widgetId < 0) {
+            return;
+        }
+
+        const packet = new Packet(140);
+        packet.put(widgetId === null || widgetId === -1 ? 65535 : widgetId, 'SHORT');
         packet.put(tabIndex);
 
+        this.queue(packet);
+    }
+
+    public blinkTabIcon(tabIndex: number): void {
+        const packet = new Packet(88);
+        packet.put(tabIndex);
         this.queue(packet);
     }
 
@@ -431,6 +454,12 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
+    public showChatDialogue(widgetId: number): void {
+        const packet = new Packet(185);
+        packet.put(widgetId, 'SHORT');
+        this.queue(packet);
+    }
+
     public updateCarryWeight(weight: number): void {
         const packet = new Packet(171);
         packet.put(weight, 'SHORT');
@@ -439,7 +468,7 @@ export class OutboundPackets {
     }
 
     public showHintIcon(iconType: 2 | 3 | 4 | 5 | 6, position: Position, offset: number = 0): void {
-        const packet = new Packet(199);
+        const packet = new Packet(186);
         packet.put(iconType, 'BYTE');
         packet.put(position.x, 'SHORT');
         packet.put(position.y, 'SHORT');
@@ -449,9 +478,35 @@ export class OutboundPackets {
     }
 
     public showPlayerHintIcon(player: Player): void {
-        const packet = new Packet(199);
+        const packet = new Packet(186);
         packet.put(10, 'BYTE');
         packet.put(player.worldIndex, 'SHORT');
+
+        // Packet requires a length of 6, so send some extra junk
+        packet.put(0);
+        packet.put(0);
+        packet.put(0);
+
+        this.queue(packet);
+    }
+
+    public showNpcHintIcon(npc: Npc): void {
+        const packet = new Packet(186);
+        packet.put(1, 'BYTE');
+        packet.put(npc.worldIndex, 'SHORT');
+
+        // Packet requires a length of 6, so send some extra junk
+        packet.put(0);
+        packet.put(0);
+        packet.put(0);
+
+        this.queue(packet);
+    }
+
+    public resetNpcHintIcon(): void {
+        const packet = new Packet(186);
+        packet.put(1, 'BYTE');
+        packet.put(-1, 'SHORT');
 
         // Packet requires a length of 6, so send some extra junk
         packet.put(0);
@@ -549,6 +604,64 @@ export class OutboundPackets {
 
         const packetBuffer = packet.toBuffer(this.player.outCipher);
         queue.push(packetBuffer);
+    }
+
+    private putCameraPosition(packet: Packet, position: Position, height: number, speed: number, acceleration: number): void {
+        packet.put(position.calculateChunkLocalX(this.player.lastMapRegionUpdatePosition));
+        packet.put(position.calculateChunkLocalY(this.player.lastMapRegionUpdatePosition));
+        packet.put(height, 'SHORT');
+        packet.put(speed);
+        packet.put(acceleration);
+    }
+
+    private getChunkPositionOffset(x: number, y: number, chunk: Chunk): number {
+        const offsetX = x - ((chunk.position.x + 6) * 8);
+        const offsetY = y - ((chunk.position.y + 6) * 8);
+        return (offsetX * 16 + offsetY);
+    }
+
+    private getChunkOffset(chunk: Chunk): { offsetX: number, offsetY: number } {
+        let offsetX = (chunk.position.x + 6) * 8;
+        let offsetY = (chunk.position.y + 6) * 8;
+        offsetX -= (this.player.lastMapRegionUpdatePosition.chunkX * 8);
+        offsetY -= (this.player.lastMapRegionUpdatePosition.chunkY * 8);
+
+        return { offsetX, offsetY };
+    }
+
+    private strip(packet: Packet): Buffer {
+        const size = packet.writerIndex;
+        const buffer = new ByteBuffer(size);
+        packet.copy(buffer, 0, 0, size);
+        return Buffer.from(buffer);
+    }
+
+    private segment(container: ItemContainer, start: number): { bitset: number, buffer: Buffer } {
+        const bound = 7 * 8;
+        const payload = new Packet(-1, PacketType.FIXED, bound);
+
+        let bitset: number = 0;
+
+        for (let offset = 0; offset < 8; offset++) {
+            const item = container.items[start + offset];
+
+            if (!item) {
+                continue;
+            }
+
+            bitset |= 1 << offset;
+
+            const large = item.amount >= 255;
+
+            if (large) {
+                payload.put(255, 'BYTE');
+            }
+
+            payload.put(item.amount, large ? 'INT' : 'BYTE');
+            payload.put(item.itemId + 1, 'SHORT');
+        }
+
+        return { bitset, buffer: this.strip(payload) };
     }
 
 }

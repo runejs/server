@@ -1,8 +1,8 @@
-import { widgets } from '../../world/config/widget';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 import { Position } from '../../world/position';
 import { cache, world } from '../../game-server';
-import { itemOnObjectAction } from '../../world/actor/player/action/item-on-object-action';
+import { actionHandler } from '../../world/action';
+import { widgets } from '../../config';
 
 const itemOnObjectPacket = (player, packet) => {
     const { buffer } = packet;
@@ -31,30 +31,18 @@ const itemOnObjectPacket = (player, packet) => {
     } else {
         logger.warn(`Unhandled item on object case using widget ${itemWidgetId}:${itemContainerId}`);
     }
+
     const level = player.position.level;
-
     const objectPosition = new Position(objectX, objectY, level);
-    const objectChunk = world.chunkManager.getChunkForWorldPosition(objectPosition);
-    let cacheOriginal = true;
 
-    let locationObject = objectChunk.getCacheObject(objectId, objectPosition);
-    if (!locationObject) {
-        locationObject = objectChunk.getAddedObject(objectId, objectPosition);
-        cacheOriginal = false;
-
-        if (!locationObject) {
-            return;
-        }
-    }
-
-    if (objectChunk.getRemovedObject(objectId, objectPosition)) {
+    const { object: locationObject, cacheOriginal } = world.findObjectAtLocation(player, objectId, objectPosition);
+    if(!locationObject) {
         return;
     }
 
     const locationObjectDefinition = cache.locationObjectDefinitions.get(objectId);
 
-
-    itemOnObjectAction(player, locationObject, locationObjectDefinition, objectPosition, usedItem, itemWidgetId, itemContainerId, cacheOriginal);
+    actionHandler.call('item_on_object', player, locationObject, locationObjectDefinition, objectPosition, usedItem, itemWidgetId, itemContainerId, cacheOriginal);
 };
 
 export default {

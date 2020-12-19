@@ -1,12 +1,14 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { commandAction } from '@server/world/actor/player/action/input-command-action';
-import { injectPlugins } from '@server/game-server';
+import { commandAction } from '@server/world/action/player-command-action';
+import { loadPlugins } from '@server/game-server';
 import { loadPackets } from '@server/net/inbound-packets';
+import { loadConfigurations } from '@server/config';
+import { logger } from '@runejs/core';
 
-const action: commandAction = (details) => {
+const action: commandAction = async (details) => {
     const { player } = details;
 
-    player.sendLogMessage('Reloading content...', details.isConsole);
+    player.sendLogMessage(' ', details.isConsole);
+    player.sendLogMessage('Deleting content cache...', details.isConsole);
 
     // Delete node cache for all the old JS plugins
     for(const path in require.cache) {
@@ -45,12 +47,34 @@ const action: commandAction = (details) => {
         delete require.cache[path];
     }
 
-    injectPlugins()
-        .then(() => player.sendLogMessage('Content reloaded.', details.isConsole))
-        .catch(() => player.sendLogMessage('Error reloading content.', details.isConsole));
-    loadPackets();
+    try {
+        player.sendLogMessage('Reloading plugins...', details.isConsole);
+        await loadPlugins();
+    } catch(error) {
+        player.sendLogMessage('Error reloading content.', details.isConsole);
+        logger.error(error);
+    }
+
+    try {
+        player.sendLogMessage('Reloading configurations...', details.isConsole);
+        await loadConfigurations();
+    } catch(error) {
+        player.sendLogMessage('Error reloading configurations.', details.isConsole);
+        logger.error(error);
+    }
+
+    try {
+        player.sendLogMessage('Reloading packets...', details.isConsole);
+        await loadPackets();
+    } catch(error) {
+        player.sendLogMessage('Error reloading packets.', details.isConsole);
+        logger.error(error);
+    }
+
+    player.sendLogMessage('Reload completed.', details.isConsole);
 };
 
-export default new RunePlugin({ type: ActionType.COMMAND, commands: [
-    'plugins', 'reload', 'content', 'hotload', 'refresh', 'restart', 'clear', 'r'
-], action });
+export default {
+    type: 'player_command', commands: [
+        'plugins', 'reload', 'content', 'hotload', 'refresh', 'restart', 'r'
+    ], action };

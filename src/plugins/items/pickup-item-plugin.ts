@@ -1,19 +1,14 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { worldItemAction } from '@server/world/actor/player/action/world-item-action';
-import { world } from '../../game-server';
+import { worldItemAction } from '@server/world/action/world-item-action';
 import { Item } from '../../world/items/item';
-import { widgets } from '../../world/config/widget';
 import { soundIds } from '@server/world/config/sound-ids';
+import { widgets } from '@server/config';
 
-export const action: worldItemAction = (details) => {
-    const { player, worldItem } = details;
-
+export const action: worldItemAction = ({ player, worldItem, itemDetails }) => {
     const inventory = player.inventory;
     let slot = -1;
-    const itemData = world.itemData.get(worldItem.itemId);
     let amount = worldItem.amount;
 
-    if(itemData.stackable) {
+    if(itemDetails.stackable) {
         const existingItemIndex = inventory.findIndex(worldItem.itemId);
         if(existingItemIndex !== -1) {
             const existingItem = inventory.items[existingItemIndex];
@@ -34,7 +29,7 @@ export const action: worldItemAction = (details) => {
         return;
     }
 
-    world.removeWorldItem(worldItem);
+    player.instance.despawnWorldItem(worldItem);
 
     const item: Item = {
         itemId: worldItem.itemId,
@@ -47,9 +42,9 @@ export const action: worldItemAction = (details) => {
     player.actionsCancelled.next();
 };
 
-export default new RunePlugin({
-    type: ActionType.WORLD_ITEM_ACTION,
+export default {
+    type: 'world_item_action',
     options: 'pick-up',
     action,
     walkTo: true
-});
+};

@@ -1,6 +1,5 @@
-import { world } from '@server/game-server';
-import { Position } from '@server/world/position';
-import { worldItemAction } from '@server/world/actor/player/action/world-item-action';
+import { Position } from '../../world/position';
+import { actionHandler } from '../../world/action';
 
 const pickupItemPacket = (player, packet) => {
     const { buffer } = packet;
@@ -10,18 +9,18 @@ const pickupItemPacket = (player, packet) => {
 
     const level = player.position.level;
     const worldItemPosition = new Position(x, y, level);
-    const chunk = world.chunkManager.getChunkForWorldPosition(worldItemPosition);
-    const worldItem = chunk.getWorldItem(itemId, worldItemPosition);
 
-    if(!worldItem || worldItem.removed) {
-        return;
+    const worldMods = player.instance.getInstancedChunk(worldItemPosition);
+    const worldItems = worldMods?.mods?.get(worldItemPosition.key)?.worldItems || [];
+    const worldItem = worldItems.find(i => i.itemId === itemId) || null;
+
+    if(worldItem && !worldItem.removed) {
+        if(worldItem.owner && !worldItem.owner.equals(player)) {
+            return;
+        }
+
+        actionHandler.call('world_item_action', player, worldItem, 'pick-up');
     }
-
-    if(worldItem.initiallyVisibleTo && !worldItem.initiallyVisibleTo.equals(player)) {
-        return;
-    }
-
-    worldItemAction(player, worldItem, 'pick-up');
 };
 
 export default {

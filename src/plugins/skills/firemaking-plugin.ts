@@ -1,12 +1,10 @@
-import { itemOnItemAction } from '@server/world/actor/player/action/item-on-item-action';
-import { world } from '@server/game-server';
-import { loopingAction } from '@server/world/actor/player/action/action';
+import { itemOnItemAction } from '@server/world/action/item-on-item-action';
+import { loopingAction } from '@server/world/action';
 import { LocationObject } from '@runejs/cache-parser';
 import { Player } from '@server/world/actor/player/player';
 import { WorldItem } from '@server/world/items/world-item';
 import { Position } from '@server/world/position';
 import { randomBetween } from '@server/util/num';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { objectIds } from '@server/world/config/object-ids';
 import { itemIds } from '@server/world/config/item-ids';
 import { soundIds } from '@server/world/config/sound-ids';
@@ -39,7 +37,7 @@ const fireDuration = (): number => {
 };
 
 const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, burnExp: number): void => {
-    world.removeWorldItem(worldItemLog);
+    player.instance.despawnWorldItem(worldItemLog);
     const fireObject: LocationObject = {
         objectId: objectIds.fire,
         x: position.x,
@@ -60,8 +58,9 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
             }
         }
     }
-    world.addTemporaryLocationObject(fireObject, position, fireDuration()).then(() => {
-        world.spawnWorldItem({ itemId: itemIds.ashes, amount: 1 }, position, null, 300);
+
+    player.instance.spawnTemporaryGameObject(fireObject, position, fireDuration()).then(() => {
+        player.instance.spawnWorldItem({ itemId: itemIds.ashes, amount: 1 }, position, null, 300);
     });
 
     player.face(position, false);
@@ -90,7 +89,7 @@ const action: itemOnItemAction = (details) => {
     // @TODO check firemaking level
 
     player.removeItem(removeFromSlot);
-    const worldItemLog = world.spawnWorldItem(log, player.position, player, 300);
+    const worldItemLog = player.instance.spawnWorldItem(log, player.position, player, 300);
 
     if(player.metadata['lastFire'] && Date.now() - player.metadata['lastFire'] < 1200 &&
         canChain(skillInfo.requiredLevel, player.skills.firemaking.level)) {
@@ -134,8 +133,8 @@ const action: itemOnItemAction = (details) => {
     }
 };
 
-export default new RunePlugin({
-    type: ActionType.ITEM_ON_ITEM_ACTION,
+export default {
+    type: 'item_on_item',
     items: logs.map(log => ({ item1: itemIds.tinderbox, item2: log.logId })),
     action
-});
+};

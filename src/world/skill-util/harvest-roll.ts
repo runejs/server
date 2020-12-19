@@ -19,7 +19,7 @@ export function rollBirdsNestType(): Item {
     } else {
         itemId = 5073; // Seeds
     }
-    return {itemId: itemId, amount: 1};
+    return { itemId: itemId, amount: 1 };
 }
 
 export function rollGemType(): Item {
@@ -34,7 +34,7 @@ export function rollGemType(): Item {
     } else {
         itemId = 1623; // uncut sapphire
     }
-    return {itemId: itemId, amount: 1};
+    return { itemId: itemId, amount: 1 };
 }
 
 export function rollGemRockResult(): Item  {
@@ -55,5 +55,5 @@ export function rollGemRockResult(): Item  {
     } else {
         itemId = 1617; // uncut diamond
     }
-    return {itemId: itemId, amount: 1};
+    return { itemId: itemId, amount: 1 };
 }

@@ -1,4 +1,3 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { playerInitAction } from '@server/world/actor/player/player';
 import { validateSettings } from '@server/world/actor/player/player-data';
 import { widgetScripts } from '@server/world/config/widget';
@@ -22,6 +21,7 @@ export const action: playerInitAction = (details) => {
     player.outgoingPackets.updateClientConfig(widgetScripts.attackStyle, settings.attackStyle);
     player.outgoingPackets.updateClientConfig(widgetScripts.bankInsertMode, settings.bankInsertMode);
     player.outgoingPackets.updateClientConfig(widgetScripts.bankWithdrawNoteMode, settings.bankWithdrawNoteMode);
+    player.outgoingPackets.updateSocialSettings();
 };
 
-export default new RunePlugin({ type: ActionType.PLAYER_INIT, action });
+export default { type: 'player_init', action };

@@ -1,0 +1,8 @@
+{
+    "rs:cake_tin": {
+        "game_id": 1887,
+        "examine": "Useful for baking cakes.",
+        "tradable": true,
+        "weight": 0.1
+    }
+}

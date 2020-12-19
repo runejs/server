@@ -1,0 +1,16 @@
+{
+    "rs:lumbridge_bobs_axes": {
+        "name": "Bob's Brilliant Axes.",
+        "shop_buy_rate": 0.60,
+        "rate_modifier": 0.02,
+        "stock": [
+            [ "rs:bronze_pickaxe", 5 ],
+            [ "rs:bronze_axe", 10 ],
+            [ "rs:iron_axe", 5 ],
+            [ "rs:steel_axe", 3 ],
+            [ "rs:iron_battleaxe", 5 ],
+            [ "rs:steel_battleaxe", 2 ],
+            [ "rs:mithril_battleaxe", 1 ]
+        ]
+    }
+}

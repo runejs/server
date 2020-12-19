@@ -1,0 +1,48 @@
+{
+    "presets": {
+        "rs:uncut_gem_base": {
+            "examine": "This would be worth more cut.",
+            "weight": 0.003,
+            "tradable": true
+        },
+        "rs:precious_gem_base": {
+            "examine": "This looks valuable.",
+            "weight": 0.002,
+            "tradable": true
+        }
+    },
+
+    "rs:uncut_sapphire": {
+        "extends": "rs:uncut_gem_base",
+        "game_id": 1623
+    },
+    "rs:uncut_emerald": {
+        "extends": "rs:uncut_gem_base",
+        "game_id": 1621
+    },
+    "rs:uncut_ruby": {
+        "extends": "rs:uncut_gem_base",
+        "game_id": 1619
+    },
+    "rs:uncut_diamond": {
+        "extends": "rs:uncut_gem_base",
+        "game_id": 1617
+    },
+
+    "rs:sapphire": {
+        "extends": "rs:precious_gem_base",
+        "game_id": 1607
+    },
+    "rs:emerald": {
+        "extends": "rs:precious_gem_base",
+        "game_id": 1605
+    },
+    "rs:ruby": {
+        "extends": "rs:precious_gem_base",
+        "game_id": 1603
+    },
+    "rs:diamond": {
+        "extends": "rs:precious_gem_base",
+        "game_id": 1601
+    }
+}

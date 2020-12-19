@@ -1,15 +1,11 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { commandAction } from '@server/world/actor/player/action/input-command-action';
-import { world } from '@server/game-server';
+import { commandAction } from '@server/world/action/player-command-action';
 import { LocationObject } from '@runejs/cache-parser';
-import { Position } from '@server/world/position';
 import { objectIds } from '@server/world/config/object-ids';
 import { safeDump } from 'js-yaml';
 import { writeFileSync } from 'fs';
+import { logger } from '@runejs/core';
 
-const spawnSceneryAction: commandAction = (details) => {
-    const { player, args } = details;
-
+const spawnSceneryAction: commandAction = ({ player, args }) => {
     const locationObjectSearch: string = (args.locationObjectSearch as string).trim();
     let locationObjectId: number;
 
@@ -46,7 +42,7 @@ const spawnSceneryAction: commandAction = (details) => {
 
     player.metadata.spawnedScenery.push(locationObject);
 
-    world.addLocationObject(locationObject, position);
+    player.instance.spawnGameObject(locationObject);
 };
 
 const undoSceneryAction: commandAction = (details) => {
@@ -58,7 +54,7 @@ const undoSceneryAction: commandAction = (details) => {
         return;
     }
 
-    world.removeLocationObject(o, new Position(o.x, o.y, o.level));
+    player.instance.despawnGameObject(o);
     delete player.metadata.lastSpawnedScenery;
 
     if(player.metadata.spawnedScenery) {
@@ -71,12 +67,12 @@ const dumpSceneryAction: commandAction = (details) => {
 
     const path = `data/dump/scene-${ new Date().getTime() }.yml`;
     writeFileSync(path, safeDump(player.metadata.spawnedScenery));
-    console.log(path);
+    logger.info(path);
     player.metadata.spawnedScenery = [];
 };
 
-export default new RunePlugin([{
-    type: ActionType.COMMAND,
+export default [{
+    type: 'player_command',
     commands: [ 'scene', 'sc' ],
     args: [
         {
@@ -96,11 +92,11 @@ export default new RunePlugin([{
     ],
     action: spawnSceneryAction
 }, {
-    type: ActionType.COMMAND,
+    type: 'player_command',
     commands: [ 'undoscene', 'undosc' ],
     action: undoSceneryAction
 }, {
-    type: ActionType.COMMAND,
+    type: 'player_command',
     commands: [ 'dumpscene', 'dumpsc' ],
     action: dumpSceneryAction
-}]);
+}];

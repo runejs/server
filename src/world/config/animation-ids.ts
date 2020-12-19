@@ -12,4 +12,13 @@ export const animationIds = {
     cry: 860,
     climbLadder: 828,
     smelting: 833,
+    death: 2304,
+    buryBones: 827,
+    combat: {
+        punch: 422,
+        kick: 423,
+        stab: 412,
+        slash: 451,
+        armBlock: 424
+    }
 };

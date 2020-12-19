@@ -1,0 +1,132 @@
+{
+    "rs:air_tiara": {
+        "game_id": 5527,
+        "tradable": true,
+        "weight": 1,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "hat"
+        }
+    },
+    "rs:mind_tiara": {
+        "game_id": 5529,
+        "tradable": true,
+        "weight": 1,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "hat"
+        }
+    },
+    "rs:water_tiara": {
+        "game_id": 5531,
+        "tradable": true,
+        "weight": 1,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "hat"
+        }
+    },
+    "rs:body_tiara": {
+        "game_id": 5533,
+        "tradable": true,
+        "weight": 1,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "hat"
+        }
+    },
+    "rs:earth_tiara": {
+        "game_id": 5535,
+        "tradable": true,
+        "weight": 1,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "hat"
+        }
+    },
+    "rs:fire_tiara": {
+        "game_id": 5537,
+        "tradable": true,
+        "weight": 1,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "hat"
+        }
+    },
+    "rs:cosmic_tiara": {
+        "game_id": 5539,
+        "tradable": true,
+        "weight": 1,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "hat"
+        }
+    },
+    "rs:nature_tiara": {
+        "game_id": 5541,
+        "tradable": true,
+        "weight": 1,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "hat"
+        }
+    },
+    "rs:chaos_tiara": {
+        "game_id": 5543,
+        "tradable": true,
+        "weight": 1,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "hat"
+        }
+    },
+    "rs:law_tiara": {
+        "game_id": 5545,
+        "tradable": true,
+        "weight": 1,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "hat"
+        }
+    },
+    "rs:death_tiara": {
+        "game_id": 5547,
+        "tradable": true,
+        "weight": 1,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "hat"
+        }
+    },
+    "rs:blood_tiara": {
+        "game_id": 5549,
+        "tradable": true,
+        "weight": 1,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "hat"
+        }
+    },
+    "rs:soul_tiara": {
+        "game_id": 5551,
+        "tradable": true,
+        "weight": 1,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "equipment_type": "hat"
+        }
+    }
+}

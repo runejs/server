@@ -1,8 +1,8 @@
-import { widgets } from '../../world/config/widget';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 import { world } from '../../game-server';
-import { World } from '../../world/world';
-import { itemOnNpcAction } from '../../world/actor/player/action/item-on-npc-action';
+import { World } from '../../world';
+import { actionHandler } from '../../world/action';
+import { widgets } from '../../config';
 
 const itemOnNpcPacket = (player, packet) => {
     const { buffer } = packet;
@@ -48,7 +48,7 @@ const itemOnNpcPacket = (player, packet) => {
         return;
     }
 
-    itemOnNpcAction(player, npc, position, usedItem, itemWidgetId, itemContainerId);
+    actionHandler.call('item_on_npc', player, npc, position, usedItem, itemWidgetId, itemContainerId)
 };
 
 export default {

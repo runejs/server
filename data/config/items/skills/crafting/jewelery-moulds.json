@@ -1,0 +1,40 @@
+{
+    "presets": {
+        "rs:mould_base": {
+            "weight": 0.453,
+            "tradable": true
+        }
+    },
+
+    "rs:ring_mould": {
+        "extends": "rs:mould_base",
+        "game_id": 1592,
+        "examine": "Used to make gold rings."
+    },
+    "rs:necklace_mould": {
+        "extends": "rs:mould_base",
+        "game_id": 1597,
+        "examine": "Used to make gold necklaces."
+    },
+    "rs:amulet_mould": {
+        "extends": "rs:mould_base",
+        "game_id": 1595,
+        "examine": "Used to make gold amulets."
+    },
+    "rs:holy_mould": {
+        "extends": "rs:mould_base",
+        "game_id": 1599,
+        "examine": "Used to make holy symbols of Saradomin."
+    },
+    "rs:sickle_mould": {
+        "extends": "rs:mould_base",
+        "game_id": 2976,
+        "examine": "Used to make sickles."
+    },
+    "rs:tiara_mould": {
+        "game_id": 5523,
+        "examine": "A mould for tiaras.",
+        "weight": 1,
+        "tradable": true
+    }
+}

@@ -1,10 +1,11 @@
 import { Position } from '@server/world/position';
 import { WNES } from '@server/world/direction';
-import { logger } from '@runejs/logger';
+import { logger } from '@runejs/core';
 import { world } from '@server/game-server';
 import { action as doorAction } from '@server/plugins/objects/doors/door-plugin';
-import { objectAction } from '@server/world/actor/player/action/object-action';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { objectAction } from '@server/world/action/object-action';
+import { RunePlugin } from '@server/plugins/plugin';
+import { ActionType } from '@server/world/action';
 
 const doubleDoors = [
     {
@@ -74,19 +75,9 @@ const action: objectAction = (details) => {
     }
 
     const otherDoorPosition = new Position(door.x + deltaX, door.y + deltaY, door.level);
-    const otherDoorChunk = world.chunkManager.getChunkForWorldPosition(otherDoorPosition);
 
-    let otherDoor = otherDoorChunk.getCacheObject(otherDoorId, otherDoorPosition);
+    const { object: otherDoor } = world.findObjectAtLocation(player, otherDoorId, otherDoorPosition);
     if(!otherDoor) {
-        otherDoor = otherDoorChunk.getAddedObject(otherDoorId, otherDoorPosition);
-
-        if(!otherDoor) {
-            logger.error('Could not find other door ' + otherDoorId + ' at ' + (door.x + deltaX) + ',' + (door.y + deltaY) + ',' + door.level);
-            return;
-        }
-    }
-
-    if(otherDoorChunk.getRemovedObject(otherDoorId, otherDoorPosition)) {
         return;
     }
 
@@ -107,5 +98,5 @@ const action: objectAction = (details) => {
     });
 };
 
-export default new RunePlugin({ type: ActionType.OBJECT_ACTION, objectIds: [1519, 1516, 1517, 1520],
-    options: [ 'open', 'close' ], walkTo: true, action });
+export default { type: 'object_action', objectIds: [1519, 1516, 1517, 1520],
+    options: [ 'open', 'close' ], walkTo: true, action };

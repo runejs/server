@@ -1,0 +1,128 @@
+{
+    "presets": {
+        "rs:pickaxe_base": {
+            "examine": "Used for mining.",
+            "tradable": true,
+            "equippable": true,
+            "equipment_data": {
+                "equipment_slot": "main_hand",
+                "equipment_type": "one_handed",
+                "offensive_bonuses": {
+                    "speed": 5,
+                    "slash": -2
+                },
+                "defensive_bonuses": {
+                    "slash": 1
+                },
+                "weapon_info": {
+                    "style": "pickaxe"
+                }
+            }
+        }
+    },
+
+    "rs:bronze_pickaxe": {
+        "extends": "rs:pickaxe_base",
+        "game_id": 1265,
+        "weight": 2.267,
+        "equipment_data": {
+            "offensive_bonuses": {
+                "stab": 4,
+                "crush": 2
+            },
+            "skill_bonuses": {
+                "strength": 5
+            }
+        }
+    },
+    "rs:iron_pickaxe": {
+        "extends": "rs:pickaxe_base",
+        "game_id": 1267,
+        "weight": 2.267,
+        "equipment_data": {
+            "offensive_bonuses": {
+                "stab": 5,
+                "crush": 3
+            },
+            "skill_bonuses": {
+                "strength": 7
+            }
+        }
+    },
+    "rs:steel_pickaxe": {
+        "extends": "rs:pickaxe_base",
+        "game_id": 1269,
+        "weight": 2.267,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 5
+                }
+            },
+            "offensive_bonuses": {
+                "stab": 8,
+                "crush": 6
+            },
+            "skill_bonuses": {
+                "strength": 9
+            }
+        }
+    },
+    "rs:mithril_pickaxe": {
+        "extends": "rs:pickaxe_base",
+        "game_id": 1273,
+        "weight": 1.814,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 20
+                }
+            },
+            "offensive_bonuses": {
+                "stab": 12,
+                "crush": 10
+            },
+            "skill_bonuses": {
+                "strength": 13
+            }
+        }
+    },
+    "rs:adamant_pickaxe": {
+        "extends": "rs:pickaxe_base",
+        "game_id": 1271,
+        "weight": 2.721,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 30
+                }
+            },
+            "offensive_bonuses": {
+                "stab": 17,
+                "crush": 15
+            },
+            "skill_bonuses": {
+                "strength": 19
+            }
+        }
+    },
+    "rs:rune_pickaxe": {
+        "extends": "rs:pickaxe_base",
+        "game_id": 1275,
+        "weight": 2.267,
+        "equipment_data": {
+            "requirements": {
+                "skills": {
+                    "attack": 40
+                }
+            },
+            "offensive_bonuses": {
+                "stab": 26,
+                "crush": 24
+            },
+            "skill_bonuses": {
+                "strength": 29
+            }
+        }
+    }
+}

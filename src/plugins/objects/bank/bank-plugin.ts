@@ -1,13 +1,13 @@
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
 import { objectIds } from '@server/world/config/object-ids';
-import { widgets, widgetScripts } from '@server/world/config/widget';
-import { objectAction } from '@server/world/actor/player/action/object-action';
+import { widgetScripts } from '@server/world/config/widget';
+import { objectAction } from '@server/world/action/object-action';
 import { ItemContainer } from '@server/world/items/item-container';
-import { itemAction } from '@server/world/actor/player/action/item-action';
+import { itemAction } from '@server/world/action/item-action';
 import { fromNote, Item, toNote } from '@server/world/items/item';
-import { buttonAction } from '@server/world/actor/player/action/button-action';
+import { buttonAction } from '@server/world/action/button-action';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
-import { npcIds } from '@server/world/config/npc-ids';
+import { widgets } from '@server/config';
+
 
 const buttonIds: number[] = [
     92, // as note
@@ -16,33 +16,31 @@ const buttonIds: number[] = [
     99, // insert
 ];
 
-export const openBankInterface: objectAction = (details) => {
-    details.player.activeWidget = {
-        widgetId: widgets.bank.screenWidget.widgetId,
-        secondaryWidgetId: widgets.bank.tabWidget.widgetId,
-        type: 'SCREEN_AND_TAB',
-        closeOnWalk: true
-    };
+export const openBankInterface: objectAction = ({ player }) => {
+    player.interfaceState.openWidget(widgets.bank.screenWidget.widgetId, {
+        slot: 'screen',
+        multi: true
+    });
+    player.interfaceState.openWidget(widgets.bank.tabWidget.widgetId, {
+        slot: 'tabarea',
+        multi: true
+    });
 
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, details.player.inventory);
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, details.player.bank);
-    details.player.outgoingPackets.updateClientConfig(widgetScripts.bankInsertMode, details.player.settings.bankInsertMode);
-    details.player.outgoingPackets.updateClientConfig(widgetScripts.bankWithdrawNoteMode, details.player.settings.bankWithdrawNoteMode);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, player.inventory);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, player.bank);
+    player.outgoingPackets.updateClientConfig(widgetScripts.bankInsertMode, player.settings.bankInsertMode);
+    player.outgoingPackets.updateClientConfig(widgetScripts.bankWithdrawNoteMode, player.settings.bankWithdrawNoteMode);
 };
 
-export const openPinSettings: objectAction = (details) => {
-    details.player.activeWidget = {
-        widgetId: widgets.bank.pinSettingsWidget.widgetId,
-        type: 'SCREEN',
-        closeOnWalk: true
-    };
+export const openPinSettings: objectAction = ({ player }) => {
+    player.interfaceState.openWidget(widgets.bank.pinSettingsWidget.widgetId, {
+        slot: 'screen'
+    });
 };
 
 export const depositItem: itemAction = (details) => {
     // Check if player might be spawning widget clientside
-    if (!details.player.activeWidget ||
-        !(details.player.activeWidget.widgetId === widgets.bank.screenWidget.widgetId) ||
-        !(details.player.activeWidget.secondaryWidgetId === widgets.bank.tabWidget.widgetId)) {
+    if (!details.player.interfaceState.findWidget(widgets.bank.screenWidget.widgetId)) {
         return;
     }
 
@@ -76,13 +74,13 @@ export const depositItem: itemAction = (details) => {
         countToRemove = itemAmount;
     }
 
-    if (!playerBank.canFit({itemId: itemIdToAdd, amount: countToRemove}, true)) {
+    if (!playerBank.canFit({ itemId: itemIdToAdd, amount: countToRemove }, true)) {
         details.player.sendMessage('Your bank is full.');
         return;
     }
 
 
-    const itemToAdd: Item = {itemId: itemIdToAdd, amount: 0};
+    const itemToAdd: Item = { itemId: itemIdToAdd, amount: 0 };
     while (countToRemove > 0 && playerInventory.has(details.itemId)) {
         const invIndex = playerInventory.findIndex(details.itemId);
         const invItem = playerInventory.items[invIndex];
@@ -108,9 +106,7 @@ export const depositItem: itemAction = (details) => {
 
 export const withdrawItem: itemAction = (details) => {
     // Check if player might be spawning widget clientside
-    if (!details.player.activeWidget ||
-        !(details.player.activeWidget.widgetId === widgets.bank.screenWidget.widgetId) ||
-        !(details.player.activeWidget.secondaryWidgetId === widgets.bank.tabWidget.widgetId)) {
+    if (!details.player.interfaceState.findWidget(widgets.bank.screenWidget.widgetId)) {
         return;
     }
     // Check if the player has the item
@@ -150,13 +146,13 @@ export const withdrawItem: itemAction = (details) => {
             countToRemove = slots;
         }
     }
-    if (!playerInventory.canFit({itemId: itemIdToAdd, amount: countToRemove}) || countToRemove === 0) {
+    if (!playerInventory.canFit({ itemId: itemIdToAdd, amount: countToRemove }) || countToRemove === 0) {
         details.player.sendMessage('Your inventory is full.');
         return;
     }
 
 
-    const itemToAdd: Item = {itemId: itemIdToAdd, amount: 0};
+    const itemToAdd: Item = { itemId: itemIdToAdd, amount: 0 };
     while (countToRemove > 0 && playerBank.has(details.itemId)) {
         const invIndex = playerBank.findIndex(details.itemId);
         const invItem = playerBank.items[invIndex];
@@ -171,7 +167,7 @@ export const withdrawItem: itemAction = (details) => {
         }
     }
     for (let i = 0; i < itemToAdd.amount; i++) {
-        playerInventory.add({itemId: itemIdToAdd, amount: 1});
+        playerInventory.add({ itemId: itemIdToAdd, amount: 1 });
     }
 
 
@@ -181,16 +177,16 @@ export const withdrawItem: itemAction = (details) => {
 };
 
 export const btnAction: buttonAction = (details) => {
-    const {player, buttonId} = details;
+    const { player, buttonId } = details;
     player.settingChanged(buttonId);
 
     const settingsMappings = {
-        92: {setting: 'bankWithdrawNoteMode', value: 1},
-        93: {setting: 'bankWithdrawNoteMode', value: 0},
-        98: {setting: 'bankInsertMode', value: 0},
-        99: {setting: 'bankInsertMode', value: 1},
+        92: { setting: 'bankWithdrawNoteMode', value: 1 },
+        93: { setting: 'bankWithdrawNoteMode', value: 0 },
+        98: { setting: 'bankInsertMode', value: 0 },
+        99: { setting: 'bankInsertMode', value: 1 },
     };
-    if (!settingsMappings.hasOwnProperty(buttonId)) {
+    if (!settingsMappings[buttonId]) {
         return;
     }
 
@@ -201,7 +197,7 @@ export const btnAction: buttonAction = (details) => {
 const useBankBoothAction : objectAction = (details) => {
     const { player } = details;
 
-    dialogue([player, {npc: npcIds.banker1, key: 'banker'}], [
+    dialogue([player, { npc: 'rs:generic_banker', key: 'banker' }], [
         banker => [Emote.HAPPY, `Good day, how can I help you?`],
         options => [
             `I'd Like to access my bank account, please.`, [
@@ -225,26 +221,31 @@ const useBankBoothAction : objectAction = (details) => {
     ]);
 };
 
-export default new RunePlugin([{
-    type: ActionType.OBJECT_ACTION,
+export default [{
+    type: 'object_action',
     objectIds: objectIds.bankBooth,
     options: ['use'],
     walkTo: true,
     action: useBankBoothAction
 }, {
-    type: ActionType.OBJECT_ACTION,
+    type: 'object_action',
     objectIds: objectIds.bankBooth,
     options: ['use-quickly'],
     walkTo: true,
     action: openBankInterface
 }, {
-    type: ActionType.ITEM_ACTION,
+    type: 'item_action',
     widgets: widgets.bank.tabWidget,
     options: ['deposit-1', 'deposit-5', 'deposit-10', 'deposit-all'],
     action: depositItem,
 }, {
-    type: ActionType.ITEM_ACTION,
+    type: 'item_action',
     widgets: widgets.bank.screenWidget,
     options: ['withdraw-1', 'withdraw-5', 'withdraw-10', 'withdraw-all'],
     action: withdrawItem,
-}, {type: ActionType.BUTTON, widgetId: widgets.bank.screenWidget.widgetId, buttonIds: buttonIds, action: btnAction}]);
+}, {
+    type: 'button',
+    widgetId: widgets.bank.screenWidget.widgetId,
+    buttonIds: buttonIds,
+    action: btnAction
+}];

@@ -1,11 +1,11 @@
-import { npcAction } from '@server/world/actor/player/action/npc-action';
+import { npcAction } from '@server/world/action/npc-action';
 import { dialogue, Emote } from '@server/world/actor/dialogue';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { npcIds } from '@server/world/config/npc-ids';
+import { findNpc } from '@server/config';
+
 
 const talkTo : npcAction = (details) => {
     const { player, npc } = details;
-    dialogue([player, {npc, key: 'wilough'}, {npc: npcIds.shilop, key: 'shilop'}], [
+    dialogue([player, { npc, key: 'wilough' }, { npc: findNpc('rs:varrock_shilop').gameId, key: 'shilop' }], [
         player => [Emote.GENERIC, `Hello again.`],
         wilough => [Emote.GENERIC, `You think you're tough do you?`],
         player => [Emote.GENERIC, `Pardon?`],
@@ -15,10 +15,10 @@ const talkTo : npcAction = (details) => {
     ]);
 };
 
-export default new RunePlugin({
-    npcIds: [npcIds.wilough],
-    type: ActionType.NPC_ACTION,
+export default {
+    npcs: 'rs:varrock_wilough',
+    type: 'npc_action',
     options: ['talk-to'],
     walkTo: true,
     action: talkTo
-});
+};

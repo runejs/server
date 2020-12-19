@@ -1,7 +1,6 @@
-import { World } from '@server/world/world';
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
+import { World } from '@server/world';
 import { itemIds } from '@server/world/config/item-ids';
-import { itemOnObjectAction } from '@server/world/actor/player/action/item-on-object-action';
+import { itemOnObjectAction } from '@server/world/action/item-on-object-action';
 
 
 export const action: itemOnObjectAction = (details) => {
@@ -23,10 +22,10 @@ export const action: itemOnObjectAction = (details) => {
 
 };
 
-export default new RunePlugin({
-    type: ActionType.ITEM_ON_OBJECT_ACTION,
+export default {
+    type: 'item_on_object',
     objectIds: [2714],
     itemIds: [itemIds.grain],
     walkTo: true,
     action
-});
+};

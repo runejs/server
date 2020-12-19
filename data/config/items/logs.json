@@ -1,0 +1,33 @@
+{
+    "presets": {
+        "rs:log": {
+            "tradable": true,
+            "weight": 2
+        }
+    },
+
+    "rs:logs": {
+        "extends": "rs:log",
+        "game_id": 1511
+    },
+    "rs:oak_logs": {
+        "extends": "rs:log",
+        "game_id": 1521
+    },
+    "rs:willow_logs": {
+        "extends": "rs:log",
+        "game_id": 1519
+    },
+    "rs:maple_logs": {
+        "extends": "rs:log",
+        "game_id": 1517
+    },
+    "rs:yew_logs": {
+        "extends": "rs:log",
+        "game_id": 1515
+    },
+    "rs:magic_logs": {
+        "extends": "rs:log",
+        "game_id": 1513
+    }
+}

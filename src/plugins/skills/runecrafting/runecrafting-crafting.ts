@@ -2,27 +2,24 @@
  * @Author NickNick
  */
 
-import { ActionType, RunePlugin } from '@server/plugins/plugin';
-import { objectAction, ObjectActionDetails } from '@server/world/actor/player/action/object-action';
+import { objectAction, ObjectActionData } from '@server/world/action/object-action';
 import { Skill } from '@server/world/actor/skills';
-import { widgets } from '@server/world/config/widget';
 import {
-    altars,
-    combinationRunes,
+    altars, combinationRunes,
     getEntityByAttr,
-    getEntityIds,
-    runeMultiplier,
-    runes, talismans,
+    getEntityIds, runeMultiplier,
+    runes,
 } from '@server/plugins/skills/runecrafting/runecrafting-constants';
-import { itemOnObjectAction, ItemOnObjectActionDetails } from '@server/world/actor/player/action/item-on-object-action';
+import { itemOnObjectAction, ItemOnObjectActionData } from '@server/world/action/item-on-object-action';
 import { RunecraftingCombinationRune } from '@server/plugins/skills/runecrafting/runecrafting-types';
 import { randomBetween } from '@server/util/num';
 import { itemIds } from '@server/world/config/item-ids';
 import { cache } from '@server/game-server';
+import { widgets } from '@server/config';
 
 
-const craftRune: objectAction = (details: ObjectActionDetails) => {
-    const {player, object} = details;
+const craftRune: objectAction = (details: ObjectActionData) => {
+    const { player, object } = details;
     const rune = getEntityByAttr(runes, 'altar.craftingId', object.objectId);
     const runeDetails = cache.itemDefinitions.get(rune.id);
 
@@ -44,7 +41,7 @@ const craftRune: objectAction = (details: ObjectActionDetails) => {
             });
         });
         // Add crafted runes to inventory.
-        player.inventory.add({itemId: rune.id, amount: (runeMultiplier(rune.id, level) * essenceAvailable)});
+        player.inventory.add({ itemId: rune.id, amount: (runeMultiplier(rune.id, level) * essenceAvailable) });
         // Add experience
         player.skills.addExp(Skill.RUNECRAFTING, (rune.xp * essenceAvailable));
         // Update widget items.
@@ -67,8 +64,8 @@ function getCombinationRuneByAltar(itemId: number, objectId: number): Runecrafti
     return rune;
 }
 
-const craftCombinationRune: itemOnObjectAction = (details: ItemOnObjectActionDetails) => {
-    const {player, object, item} = details;
+const craftCombinationRune: itemOnObjectAction = (details: ItemOnObjectActionData) => {
+    const { player, object, item } = details;
     const rune = getCombinationRuneByAltar(item.itemId, object.objectId);
     if (!rune) {
         player.sendMessage('Nothing interesting happens.');
@@ -109,7 +106,7 @@ const craftCombinationRune: itemOnObjectAction = (details: ItemOnObjectActionDet
             player.inventory.removeFirst(itemIds.essence.pure);
         }
         // Add crafted runes to inventory.
-        player.inventory.add({itemId: rune.id, amount: amountToCraft});
+        player.inventory.add({ itemId: rune.id, amount: amountToCraft });
         // Add experience
         player.skills.addExp(Skill.RUNECRAFTING, (rune.xp[altarIndex] * essenceAvailable));
         if (shouldBreakTalisman) {
@@ -124,42 +121,18 @@ const craftCombinationRune: itemOnObjectAction = (details: ItemOnObjectActionDet
     player.sendMessage(`You do not have any pure essence to bind.`);
 };
 
-const craftTiara: itemOnObjectAction = (details: ItemOnObjectActionDetails) => {
-    const { player, object, item } = details;
 
-    // Handle tiara on altar.
-    if (item.itemId === itemIds.tiaras.blank) {
-        player.sendMessage(`Tiara on Altar detected!`, true);
-    }
-
-    // Handle talisman on altar.
-    if (item.itemId !== itemIds.tiaras.blank) {
-        player.sendMessage(`Talisman on Altar detected!`, true);
-    }
-
-    console.log('OBJECT: ', object);
-    console.log('ITEM: ', item);
-};
-
-export default new RunePlugin([
+export default [
     {
-        type: ActionType.ITEM_ON_OBJECT_ACTION,
-        itemIds: [itemIds.tiaras.blank, ...getEntityIds(talismans, 'id')],
-        objectIds: getEntityIds(altars, 'craftingId'),
-        walkTo: true,
-        action: craftTiara
-    },
-    {
-        type: ActionType.OBJECT_ACTION,
+        type: 'object_action',
         objectIds: getEntityIds(altars, 'craftingId'),
         walkTo: true,
         action: craftRune
     },
     {
-        type: ActionType.ITEM_ON_OBJECT_ACTION,
-        itemIds: [...getEntityIds(runes, 'id'), ...getEntityIds(combinationRunes, 'id')],
+        type: 'item_on_object',
         objectIds: getEntityIds(altars, 'craftingId'),
         walkTo: true,
         action: craftCombinationRune
     }
-]);
+];

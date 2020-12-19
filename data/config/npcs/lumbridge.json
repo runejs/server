@@ -1,0 +1,30 @@
+{
+    "rs:hans": {
+        "game_id": 0,
+        "skills": {
+            "hitpoints": 10,
+            "herblore": 99
+        }
+    },
+    "rs:runescape_guide": {
+        "game_id": 945
+    },
+    "rs:melee_combat_tutor": {
+        "game_id": 705
+    },
+    "rs:lumbridge_shop_keeper": {
+        "game_id": 520
+    },
+    "rs:lumbridge_bob": {
+        "game_id": 519
+    },
+    "rs:gillie_groats": {
+        "game_id": 3807
+    },
+    "rs:millie_miller": {
+        "game_id": 3806
+    },
+    "rs:lumbridge_castle_cook": {
+        "game_id": 278
+    }
+}

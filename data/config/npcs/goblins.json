@@ -1,0 +1,92 @@
+{
+    "presets": {
+        "rs:goblin_base_l2": {
+            "killable": true,
+            "respawn_time": 3,
+            "skills": {
+                "hitpoints": 5
+            },
+            "offensive_stats": {
+                "speed": 4,
+                "attack": -21,
+                "strength": -15,
+                "magic": 0,
+                "magic_strength": 0,
+                "ranged": 0,
+                "ranged_strength": 0
+            },
+            "defensive_stats": {
+                "stab": -15,
+                "slash": -15,
+                "crush": -15,
+                "magic": -15,
+                "ranged": -15
+            },
+            "animations": {
+                "attack": [ 310, 309 ],
+                "defend": 312,
+                "death": 313
+            },
+            "drop_table": [
+                [ "rs:bones", "always", 1 ]
+            ]
+        }
+    },
+
+    "rs:goblin": {
+        "extends": "rs:goblin_base_l2",
+        "game_id": 100,
+        "metadata": {
+            "level": 2
+        }
+    },
+    "rs:goblin_with_spear": {
+        "extends": "rs:goblin_base_l2",
+        "game_id": 101,
+        "metadata": {
+            "level": 5
+        }
+    },
+    "rs:goblin_with_helmet": {
+        "extends": "rs:goblin_base_l2",
+        "game_id": 102,
+        "metadata": {
+            "level": 13
+        }
+    },
+    "rs:goblin_green_with_sprear": {
+        "extends": "rs:goblin_base_l2",
+        "game_id": 298,
+        "metadata": {
+            "level": 5
+        }
+    },
+    "rs:goblin_red_with_sprear": {
+        "extends": "rs:goblin_base_l2",
+        "game_id": 299,
+        "metadata": {
+            "level": 5
+        }
+    },
+    "rs:goblin_red_with_shield": {
+        "extends": "rs:goblin_base_l2",
+        "game_id": 444,
+        "metadata": {
+            "level": 5
+        }
+    },
+    "rs:goblin_green_with_shield": {
+        "extends": "rs:goblin_base_l2",
+        "game_id": 445,
+        "metadata": {
+            "level": 5
+        }
+    },
+    "rs:goblin_guard": {
+        "extends": "rs:goblin_base_l2",
+        "game_id": 489,
+        "metadata": {
+            "level": 42
+        }
+    }
+}

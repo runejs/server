@@ -1,0 +1,18 @@
+{
+    "rs:lumbridge_general_store": {
+        "name": "Lumbridge General Store",
+        "general_store": true,
+        "shop_sell_rate": 1.3,
+        "stock": [
+            [ "rs:pot", 5 ],
+            [ "rs:jug", 2 ],
+            [ "rs:shears", 2 ],
+            [ "rs:bucket", 3 ],
+            [ "rs:cake_tin", 2 ],
+            [ "rs:tinderbox", 2 ],
+            [ "rs:chisel", 2 ],
+            [ "rs:spade", 5 ],
+            [ "rs:hammer", 5 ]
+        ]
+    }
+}
