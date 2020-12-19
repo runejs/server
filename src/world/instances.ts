@@ -5,9 +5,30 @@ import { WorldItem } from '@server/world/items/world-item';
 import { Item } from '@server/world/items/item';
 import { Player } from '@server/world/actor/player/player';
 import { World } from '@server/world/index';
-import { schedule } from '@server/task/task';
+import { schedule } from '@server/world/task';
 import { CollisionMap } from '@server/world/map/collision-map';
 
+
+/**
+ * Additional configuration info for an item being spawned in an instance.
+ */
+interface ItemSpawnConfig {
+
+    /**
+     * optional] The original owner of the spawned item.
+     */
+    owner?: Player;
+
+    /**
+     * optional] When the spawned item should expire and de-spawn.
+     */
+    expires?: number;
+
+    /**
+     * [optional] When the item should re-spawn after being picked up.
+     */
+    respawns?: number;
+}
 
 /**
  * A game world chunk that is tied to a specific instance.
@@ -82,11 +103,12 @@ export class WorldInstance {
      * Spawns a new world item in this instance.
      * @param item The item to spawn into the game world.
      * @param position The position to spawn the item at.
-     * @param owner [optional] The original owner of the item, if there is one.
-     * @param expires [optional] When the world object should expire and de-spawn.
+     * @param config Additional item spawn config.
      * If not provided, the item will stay within the instance indefinitely.
      */
-    public spawnWorldItem(item: Item | number, position: Position, owner?: Player, expires?: number): WorldItem {
+    public spawnWorldItem(item: Item | number, position: Position, config?: ItemSpawnConfig): WorldItem {
+        const { owner, respawns, expires } = config || {};
+
         if(typeof item === 'number') {
             item = { itemId: item, amount: 1 };
         }
@@ -96,7 +118,8 @@ export class WorldInstance {
             position,
             owner,
             expires,
-            instanceId: this.instanceId
+            respawns,
+            instance: this
         };
 
         const { chunk: instancedChunk, mods } = this.getTileModifications(position);
@@ -162,6 +185,27 @@ export class WorldInstance {
 
         worldItem.removed = true;
         this.worldItemRemoved(worldItem);
+
+        if(worldItem.respawns !== undefined) {
+            this.respawnItem(worldItem);
+        }
+    }
+
+    /**
+     * Re-spawns a previously de-spawned world item after a specified amount of time.
+     * @param worldItem The item to re-spawn.
+     */
+    public async respawnItem(worldItem: WorldItem): Promise<void> {
+        await schedule(worldItem.respawns);
+
+        this.spawnWorldItem({
+            itemId: worldItem.itemId,
+            amount: worldItem.amount
+        }, worldItem.position, {
+            respawns: worldItem.respawns,
+            owner: worldItem.owner,
+            expires: worldItem.expires
+        });
     }
 
     /**
@@ -190,9 +234,8 @@ export class WorldInstance {
     public worldItemRemoved(worldItem: WorldItem): void {
         const nearbyPlayers = world.findNearbyPlayers(worldItem.position, 16, this.instanceId) || [];
 
-        nearbyPlayers.forEach(player => {
-            player.outgoingPackets.removeWorldItem(worldItem, worldItem.position);
-        });
+        nearbyPlayers.forEach(player =>
+            player.outgoingPackets.removeWorldItem(worldItem, worldItem.position));
     }
 
 

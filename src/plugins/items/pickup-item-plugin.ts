@@ -3,18 +3,20 @@ import { Item } from '../../world/items/item';
 import { soundIds } from '@server/world/config/sound-ids';
 import { widgets } from '@server/config';
 
+
 export const action: worldItemAction = ({ player, worldItem, itemDetails }) => {
     const inventory = player.inventory;
-    let slot = -1;
-    let amount = worldItem.amount;
+    const amount = worldItem.amount;
+    let slot = -1
 
     if(itemDetails.stackable) {
         const existingItemIndex = inventory.findIndex(worldItem.itemId);
         if(existingItemIndex !== -1) {
             const existingItem = inventory.items[existingItemIndex];
-            if(existingItem.amount + worldItem.amount < 2147483647) {
-                existingItem.amount += worldItem.amount;
-                amount += existingItem.amount;
+            if(existingItem.amount + worldItem.amount >= 2147483647) {
+                // @TODO create new item stack
+                return;
+            } else {
                 slot = existingItemIndex;
             }
         }
@@ -29,17 +31,17 @@ export const action: worldItemAction = ({ player, worldItem, itemDetails }) => {
         return;
     }
 
-    player.instance.despawnWorldItem(worldItem);
+    worldItem.instance.despawnWorldItem(worldItem);
 
     const item: Item = {
         itemId: worldItem.itemId,
         amount
     };
 
-    inventory.add(item);
-    player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, slot, item);
+    const addedItem = inventory.add(item);
+    player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, addedItem.slot, addedItem.item);
     player.playSound(soundIds.pickupItem, 3);
-    player.actionsCancelled.next();
+    player.actionsCancelled.next(null);
 };
 
 export default {

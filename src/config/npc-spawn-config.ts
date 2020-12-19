@@ -14,10 +14,10 @@ export interface NpcSpawnConfiguration {
 
 export class NpcSpawn {
 
-    readonly npcKey: string;
-    readonly spawnPosition: Position;
-    readonly movementRadius: number;
-    readonly faceDirection: Direction;
+    public npcKey: string;
+    public spawnPosition: Position;
+    public movementRadius: number;
+    public faceDirection: Direction;
 
     public constructor(npcKey: string, spawnPosition: Position, movementRadius: number = 0,
         faceDirection: Direction = 'WEST') {

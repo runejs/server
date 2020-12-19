@@ -60,7 +60,7 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
     }
 
     player.instance.spawnTemporaryGameObject(fireObject, position, fireDuration()).then(() => {
-        player.instance.spawnWorldItem({ itemId: itemIds.ashes, amount: 1 }, position, null, 300);
+        player.instance.spawnWorldItem({ itemId: itemIds.ashes, amount: 1 }, position, { expires: 300 });
     });
 
     player.face(position, false);
@@ -89,7 +89,7 @@ const action: itemOnItemAction = (details) => {
     // @TODO check firemaking level
 
     player.removeItem(removeFromSlot);
-    const worldItemLog = player.instance.spawnWorldItem(log, player.position, player, 300);
+    const worldItemLog = player.instance.spawnWorldItem(log, player.position, { owner: player, expires: 300 });
 
     if(player.metadata['lastFire'] && Date.now() - player.metadata['lastFire'] < 1200 &&
         canChain(skillInfo.requiredLevel, player.skills.firemaking.level)) {

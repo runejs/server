@@ -139,7 +139,8 @@ export function handleHarvesting(details: ObjectActionData, tool: HarvestTool, t
                             if (roll === 1) {
                                 randomLoot = true;
                                 details.player.sendMessage(colorText('A bird\'s nest falls out of the tree.', colors.red));
-                                world.globalInstance.spawnWorldItem(rollBirdsNestType(), details.player.position, details.player, 300);
+                                world.globalInstance.spawnWorldItem(rollBirdsNestType(), details.player.position,
+                                    { owner: details.player, expires: 300 });
                             }
                             break;
                     }

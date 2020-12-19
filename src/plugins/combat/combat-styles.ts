@@ -12,8 +12,10 @@ export function updateCombatStyle(player: Player, weaponStyle: WeaponStyle, styl
     player.savedMetadata.combatStyle = [ weaponStyle, styleIndex ];
     player.settings.attackStyle = styleIndex;
 
-    const buttonId = combatStyles[weaponStyle][styleIndex].button_id;
-    player.outgoingPackets.updateClientConfig(widgetScripts.attackStyle, buttonId);
+    const buttonId = combatStyles[weaponStyle][styleIndex]?.button_id;
+    if(buttonId !== undefined) {
+        player.outgoingPackets.updateClientConfig(widgetScripts.attackStyle, buttonId);
+    }
 }
 
 export function showUnarmed(player: Player): void {
