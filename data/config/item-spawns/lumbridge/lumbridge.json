@@ -1,0 +1,34 @@
+[
+    {
+        "item": "rs:coins",
+        "amount": 25,
+        "spawn_x": 3211,
+        "spawn_y": 3240,
+        "instance": "global",
+        "respawn": 25,
+        "metadata": {
+            "hello": "world"
+        }
+    },
+    {
+        "item": "rs:egg",
+        "spawn_x": 3191,
+        "spawn_y": 3276
+    },
+    {
+        "item": "rs:egg",
+        "spawn_x": 3226,
+        "spawn_y": 3300
+    },
+    {
+        "item": "rs:egg",
+        "spawn_x": 3228,
+        "spawn_y": 3299
+    },
+    {
+        "item": "rs:egg",
+        "spawn_x": 3231,
+        "spawn_y": 3301,
+        "instance": "player"
+    }
+]

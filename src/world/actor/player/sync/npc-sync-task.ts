@@ -1,4 +1,4 @@
-import { Task } from '@server/task/task';
+import { Task } from '@server/world/task';
 import { Player } from '../player';
 import { Packet, PacketType } from '@server/net/packet';
 import { Npc } from '@server/world/actor/npc/npc';

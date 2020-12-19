@@ -9,14 +9,15 @@ import { Position } from './position';
 import { Npc } from './actor/npc/npc';
 import TravelLocations from '@server/world/config/travel-locations';
 import { Actor } from '@server/world/actor/actor';
-import { schedule } from '@server/task/task';
+import { schedule } from '@server/world/task';
 import { parseScenerySpawns } from '@server/world/config/scenery-spawns';
 import { loadActions } from '@server/world/action';
-import { findNpc, npcSpawns } from '@server/config';
+import { findItem, findNpc, itemSpawns, npcSpawns } from '@server/config';
 import { NpcDetails } from '@server/config/npc-config';
 import { WorldInstance } from '@server/world/instances';
 import { Direction } from '@server/world/direction';
 import { NpcSpawn } from '@server/config/npc-spawn-config';
+import { ItemSpawn } from '@server/config/item-spawn-config';
 
 
 export interface QuadtreeKey {
@@ -64,6 +65,7 @@ export class World {
         await loadPlugins();
         await loadActions();
         this.spawnGlobalNpcs();
+        this.spawnWorldItems();
         this.spawnScenery();
     }
 
@@ -218,7 +220,8 @@ export class World {
             height: distance
         })
             .map(quadree => quadree.actor as Player)
-            .filter(player => player.instance.instanceId === instanceId);
+            .filter(player => player.personalInstance.instanceId === instanceId ||
+                player.instance.instanceId === instanceId);
     }
 
     /**
@@ -228,6 +231,22 @@ export class World {
     public findActivePlayerByUsername(username: string): Player {
         username = username.toLowerCase();
         return this.playerList.find(p => p && p.username.toLowerCase() === username);
+    }
+
+    public spawnWorldItems(player?: Player): void {
+        const instance = player ? player.personalInstance : this.globalInstance;
+
+        itemSpawns.filter(spawn => player ? spawn.instance === 'player' : spawn.instance === 'global')
+            .forEach(itemSpawn => {
+            const itemDetails = findItem(itemSpawn.itemKey);
+            if(itemDetails && itemDetails.gameId !== undefined) {
+                instance.spawnWorldItem(
+                    { itemId: itemDetails.gameId, amount: itemSpawn.amount },
+                    itemSpawn.spawnPosition, { respawns: itemSpawn.respawn, owner: player || undefined });
+            } else {
+                logger.error(`Item ${itemSpawn.itemKey} can not be spawned; it has not yet been registered on the server.`);
+            }
+        });
     }
 
     public spawnGlobalNpcs(): void {

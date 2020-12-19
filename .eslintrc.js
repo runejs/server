@@ -40,7 +40,7 @@ module.exports = {
         "object-curly-spacing": [ "error", "always" ],
         "no-var": "error",
         "prefer-const": "error",
-        "indent": [ "error", 4, {
+        "indent": [ "warn", 4, {
             "SwitchCase": 1
         } ],
         "@typescript-eslint/no-inferrable-types": 0,
