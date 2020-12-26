@@ -1,0 +1,442 @@
+{
+  "id": 129,
+  "name": "Cooking",
+  "members": false,
+  "sub_guides": [
+    {
+      "name": "Meats",
+      "lines": [
+        {
+          "item_id": 2142,
+          "text": "Meat",
+          "level": 1
+        },
+        {
+          "item_id": 315,
+          "text": "Shrimp",
+          "level": 1
+        },
+        {
+          "item_id": 2140,
+          "text": "Chicken",
+          "level": 1
+        },
+        {
+          "item_id": 319,
+          "text": "Anchovies",
+          "level": 1
+        },
+        {
+          "item_id": 325,
+          "text": "Sardine",
+          "level": 1
+        },
+        {
+          "item_id": 3142,
+          "text": "Members: Karambwan",
+          "level": 1
+        },
+        {
+          "item_id": 1883,
+          "text": "Ugthanki kebab",
+          "level": 1
+        },
+        {
+          "item_id": 345,
+          "text": "Herring",
+          "level": 5
+        },
+        {
+          "item_id": 353,
+          "text": "Mackerel",
+          "level": 10
+        },
+        {
+          "item_id": 3369,
+          "text": "Members: Thin snail",
+          "level": 12
+        },
+        {
+          "item_id": 335,
+          "text": "Trout",
+          "level": 15
+        },
+        {
+          "item_id": 3371,
+          "text": "Members: Lean snail",
+          "level": 17
+        },
+        {
+          "item_id": 339,
+          "text": "Members: Cod",
+          "level": 18
+        },
+        {
+          "item_id": 351,
+          "text": "Pike",
+          "level": 20
+        },
+        {
+          "item_id": 329,
+          "text": "Salmon",
+          "level": 25
+        },
+        {
+          "item_id": 361,
+          "text": "Tuna",
+          "level": 30
+        },
+        {
+          "item_id": 7228,
+          "text": "Members: Roasted chompy",
+          "level": 30
+        },
+        {
+          "item_id": 7530,
+          "text": "Members: Fishcakes",
+          "level": 31
+        },
+        {
+          "item_id": 5003,
+          "text": "Members: Cave eel",
+          "level": 38
+        },
+        {
+          "item_id": 379,
+          "text": "Lobster",
+          "level": 40
+        },
+        {
+          "item_id": 397,
+          "text": "Members: Jubbly",
+          "level": 41
+        },
+        {
+          "item_id": 365,
+          "text": "Members: Bass",
+          "level": 43
+        },
+        {
+          "item_id": 373,
+          "text": "Swordfish",
+          "level": 45
+        },
+        {
+          "item_id": 2149,
+          "text": "Members: Lava eel",
+          "level": 53
+        },
+        {
+          "item_id": 385,
+          "text": "Members: Shark",
+          "level": 80
+        },
+        {
+          "item_id": 397,
+          "text": "Members: Sea turtle",
+          "level": 82
+        },
+        {
+          "item_id": 391,
+          "text": "Members: Manta ray",
+          "level": 90
+        }
+      ]
+    },
+    {
+      "name": "Bread",
+      "lines": [
+        {
+          "item_id": 2309,
+          "text": "Bread",
+          "level": 1
+        },
+        {
+          "item_id": 1865,
+          "text": "Members: Pitta bread",
+          "level": 58
+        }
+      ]
+    },
+    {
+      "name": "Pies",
+      "lines": [
+        {
+          "item_id": 2325,
+          "text": "Redberry pie",
+          "level": 10
+        },
+        {
+          "item_id": 2327,
+          "text": "Meat pie",
+          "level": 20
+        },
+        {
+          "item_id": 7170,
+          "text": "Members: Mud pie",
+          "level": 29
+        },
+        {
+          "item_id": 2323,
+          "text": "Apple pie",
+          "level": 30
+        },
+        {
+          "item_id": 7178,
+          "text": "Members: Garden pie",
+          "level": 34
+        },
+        {
+          "item_id": 7188,
+          "text": "Members: Fish pie",
+          "level": 47
+        },
+        {
+          "item_id": 7198,
+          "text": "Members: Admiral pie",
+          "level": 70
+        },
+        {
+          "item_id": 7208,
+          "text": "Members: Wild pie",
+          "level": 85
+        },
+        {
+          "item_id": 7218,
+          "text": "Members: Summer pie",
+          "level": 95
+        }
+      ]
+    },
+    {
+      "name": "Stews",
+      "lines": [
+        {
+          "item_id": 2003,
+          "text": "Stew",
+          "level": 25
+        },
+        {
+          "item_id": 4016,
+          "text": "Banana stew",
+          "level": 25
+        },
+        {
+          "item_id": 7479,
+          "text": "Spicy stew",
+          "level": 25
+        }
+      ]
+    },
+    {
+      "name": "Pizzas",
+      "lines": [
+        {
+          "item_id": 2289,
+          "text": "Plain pizza",
+          "level": 35
+        },
+        {
+          "item_id": 2293,
+          "text": "Meat pizza",
+          "level": 45
+        },
+        {
+          "item_id": 2297,
+          "text": "Anchovy pizza",
+          "level": 55
+        },
+        {
+          "item_id": 2301,
+          "text": "Members: Pineapple pizza",
+          "level": 65
+        }
+      ]
+    },
+    {
+      "name": "Cakes",
+      "lines": [
+        {
+          "item_id": 1891,
+          "text": "Cake",
+          "level": 40
+        },
+        {
+          "item_id": 1897,
+          "text": "Chocolate cake",
+          "level": 50
+        }
+      ]
+    },
+    {
+      "name": "Wine",
+      "lines": [
+        {
+          "item_id": 1993,
+          "text": "Wine",
+          "level": 35
+        },
+        {
+          "item_id": 245,
+          "text": "Members: Wine of Zamorak",
+          "level": 65
+        }
+      ]
+    },
+    {
+      "name": "Hot drinks",
+      "lines": [
+        {
+          "item_id": 4239,
+          "text": "Nettle tea",
+          "level": 20
+        }
+      ]
+    },
+    {
+      "name": "Brewing",
+      "lines": [
+        {
+          "item_id": 5763,
+          "text": "Cider (4 Apple mush)",
+          "level": 14
+        },
+        {
+          "item_id": 1913,
+          "text": "Dwarven Stout (4 Hammerstone hops)",
+          "level": 19
+        },
+        {
+          "item_id": 1905,
+          "text": "Asgarnian Ale (4 Asgarnian hops)",
+          "level": 24
+        },
+        {
+          "item_id": 7746,
+          "text": "Greenman's Ale (4 Harralander leaves)",
+          "level": 29
+        },
+        {
+          "item_id": 1907,
+          "text": "Wizard's Mind Bomb (4 Yinillian hops)",
+          "level": 34
+        },
+        {
+          "item_id": 1911,
+          "text": "Dragon Bitter (4 Krandorian hops)",
+          "level": 39
+        },
+        {
+          "item_id": 2955,
+          "text": "Moonlight Mead (4 Bittercap mushrooms)",
+          "level": 44
+        },
+        {
+          "item_id": 5751,
+          "text": "Axeman's Folly (1 Oak root)",
+          "level": 49
+        },
+        {
+          "item_id": 5755,
+          "text": "Chef's Delight (4 Portions of chocolate dust)",
+          "level": 54
+        },
+        {
+          "item_id": 5759,
+          "text": "Slayer's Respite (4 Wildblood hops)",
+          "level": 54
+        }
+      ]
+    },
+    {
+      "name": "Vegetable",
+      "lines": [
+        {
+          "item_id": 6701,
+          "text": "Baked potato",
+          "level": 7
+        },
+        {
+          "item_id": 7072,
+          "text": "Spicy sauce (topping ingredient)",
+          "level": 9
+        },
+        {
+          "item_id": 7078,
+          "text": "Scrambled egg (topping ingredient)",
+          "level": 13
+        },
+        {
+          "item_id": 7064,
+          "text": "Scrambled egg and tomato (topping)",
+          "level": 23
+        },
+        {
+          "item_id": 7088,
+          "text": "Sweetcorn",
+          "level": 28
+        },
+        {
+          "item_id": 6703,
+          "text": "Baked potato with butter",
+          "level": 39
+        },
+        {
+          "item_id": 7084,
+          "text": "Fried onion (topping ingredient)",
+          "level": 42
+        },
+        {
+          "item_id": 7082,
+          "text": "Fried mushroom (topping ingredient)",
+          "level": 46
+        },
+        {
+          "item_id": 6705,
+          "text": "Baked potato with butter and cheese",
+          "level": 47
+        },
+        {
+          "item_id": 7056,
+          "text": "Baked potato with egg and tomato",
+          "level": 51
+        },
+        {
+          "item_id": 7066,
+          "text": "Fried mushroom and onion (topping)",
+          "level": 57
+        },
+        {
+          "item_id": 7058,
+          "text": "Baked potato with mushroom and onion",
+          "level": 64
+        },
+        {
+          "item_id": 7068,
+          "text": "Tuna and sweetcorn (topping)",
+          "level": 67
+        },
+        {
+          "item_id": 7060,
+          "text": "Baked potato with tuna and sweetcorn",
+          "level": 68
+        }
+      ]
+    },
+    {
+      "name": "Diary",
+      "lines": [
+        {
+          "item_id": 6697,
+          "text": "Butter",
+          "level": 38
+        },
+        {
+          "item_id": 1985,
+          "text": "Cheese",
+          "level": 48
+        }
+      ]
+    }
+  ]
+}

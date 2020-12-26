@@ -1,0 +1,267 @@
+{
+  "id": 122,
+  "name": "Agility",
+  "members": true,
+  "sub_guides": [
+    {
+      "name": "Courses",
+      "lines": [
+        {
+          "item_id": 2150,
+          "text": "Gnome Stronghold Agility Course",
+          "level": 1
+        },
+        {
+          "item_id": 751,
+          "text": "Gnomeball Game",
+          "level": 1
+        },
+        {
+          "item_id": 1061,
+          "text": "Werewolf Skullball game",
+          "level": 25
+        },
+        {
+          "item_id": 6970,
+          "text": "Agility Pyramid",
+          "level": 30
+        },
+        {
+          "item_id": 1365,
+          "text": "Barbarian Outpost Agility Course",
+          "level": 35
+        },
+        {
+          "item_id": 4024,
+          "text": "Ape Atoll Agility Course",
+          "level": 48
+        },
+        {
+          "item_id": 553,
+          "text": "Wilderness Course",
+          "level": 52
+        },
+        {
+          "item_id": 1379,
+          "text": "Werewolf Agility Course",
+          "level": 60
+        }
+      ]
+    },
+    {
+      "name": "Areas",
+      "lines": [
+        {
+          "item_id": 6518,
+          "text": "Rope-swing to Moss Giant Island",
+          "level": 10
+        },
+        {
+          "item_id": 6518,
+          "text": "Stepping stones in Karamja Dungeon",
+          "level": 12
+        },
+        {
+          "item_id": 6518,
+          "text": "Monkey bars under Edgeville",
+          "level": 15
+        },
+        {
+          "item_id": 6520,
+          "text": "Pipe contortion in Karamja Dungeon",
+          "level": 22
+        },
+        {
+          "item_id": 6518,
+          "text": "Stepping stones in south-eastern Karamja",
+          "level": 30
+        },
+        {
+          "item_id": 6520,
+          "text": "Pipe contortion in Karamja Dungeon",
+          "level": 34
+        },
+        {
+          "item_id": 6519,
+          "text": "Elf area log balance",
+          "level": 45
+        },
+        {
+          "item_id": 6520,
+          "text": "Contortion in Yanille Dungeon small room",
+          "level": 49
+        },
+        {
+          "item_id": 6520,
+          "text": "Access the God Wars Dungeon area via the \\nAgility route",
+          "level": 60
+        },
+        {
+          "item_id": 6521,
+          "text": "Yanille Dungeon's rubble climb",
+          "level": 67
+        },
+        {
+          "item_id": 6521,
+          "text": "Enter the Saradomins area of the \\nGod Wars Dungeon",
+          "level": 70
+        }
+      ]
+    },
+    {
+      "name": "Shortcuts",
+      "lines": [
+        {
+          "item_id": 6517,
+          "text": "Falador Agility shortcut",
+          "level": 5
+        },
+        {
+          "item_id": 6514,
+          "text": "Jump fence south of Varrock",
+          "level": 13
+        },
+        {
+          "item_id": 6516,
+          "text": "Yanille Agility shortcut",
+          "level": 16
+        },
+        {
+          "item_id": 6515,
+          "text": "Coal Truck log balance",
+          "level": 20
+        },
+        {
+          "item_id": 6516,
+          "text": "Falador Agility shortcut",
+          "level": 26
+        },
+        {
+          "item_id": 6515,
+          "text": "Draynor Manor stones to Champions' Guild",
+          "level": 31
+        },
+        {
+          "item_id": 6515,
+          "text": "Ardougne log balance shortcut",
+          "level": 33
+        },
+        {
+          "item_id": 6517,
+          "text": "Gnome Stronghold shortcut",
+          "level": 37
+        },
+        {
+          "item_id": 6517,
+          "text": "Al Kahrid Mining pit cliffside scramble",
+          "level": 38
+        },
+        {
+          "item_id": 6517,
+          "text": "Trollheim easy cliffside scramble",
+          "level": 41
+        },
+        {
+          "item_id": 6516,
+          "text": "Dwarven Mine narrow crevice",
+          "level": 42
+        },
+        {
+          "item_id": 6517,
+          "text": "Trollheim medium cliffside scramble",
+          "level": 43
+        },
+        {
+          "item_id": 6517,
+          "text": "Trollheim advanced cliffside scramble",
+          "level": 44
+        },
+        {
+          "item_id": 6516,
+          "text": "Cosmic Temple - narrow walkway",
+          "level": 46
+        },
+        {
+          "item_id": 6516,
+          "text": "Deep Wilderness - narrow tunnel",
+          "level": 46
+        },
+        {
+          "item_id": 6517,
+          "text": "Trollheim hard cliffside scramble",
+          "level": 47
+        },
+        {
+          "item_id": 6516,
+          "text": "Pipe from Edgeville dungeon to Varrock Sewers",
+          "level": 51
+        },
+        {
+          "item_id": 6517,
+          "text": "Port Phasmatys ectopool shortcut",
+          "level": 58
+        },
+        {
+          "item_id": 6514,
+          "text": "Elven overpass easy cliffside scamble",
+          "level": 59
+        },
+        {
+          "item_id": 6517,
+          "text": "Slayer Tower medium spiked chain climb",
+          "level": 61
+        },
+        {
+          "item_id": 6517,
+          "text": "Taverley dungeon lesser demon fence shortcut",
+          "level": 63
+        },
+        {
+          "item_id": 6517,
+          "text": "Trollheim Wilderness route",
+          "level": 64
+        },
+        {
+          "item_id": 6517,
+          "text": "Temple on the Salve to Morytania shortcut",
+          "level": 65
+        },
+        {
+          "item_id": 6517,
+          "text": "Elven overpass medium cliffside scramble",
+          "level": 68
+        },
+        {
+          "item_id": 6516,
+          "text": "Taverley Dungeon short-cuts to blue dragons",
+          "level": 70
+        },
+        {
+          "item_id": 6517,
+          "text": "Slayer Tower advanced spiked chain",
+          "level": 71
+        },
+        {
+          "item_id": 6514,
+          "text": "Taverley Dungeon spiked blades jump",
+          "level": 80
+        },
+        {
+          "item_id": 6514,
+          "text": "Fremennik Slayer Dungeon spiked blades jump",
+          "level": 81
+        },
+        {
+          "item_id": 6514,
+          "text": "Brimhaven Dungeon eastern stepping stones",
+          "level": 83
+        },
+        {
+          "item_id": 6516,
+          "text": "Iorwerth southern shortcut",
+          "level": 84
+        }
+      ]
+    }
+  ]
+}

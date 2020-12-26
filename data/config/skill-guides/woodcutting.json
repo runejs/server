@@ -1,0 +1,112 @@
+{
+  "id": 139,
+  "name": "Woodcutting",
+  "members": false,
+  "sub_guides": [
+    {
+      "name": "Trees",
+      "lines": [
+        {
+          "item_id": 1511,
+          "text": "Normal trees",
+          "level": 1
+        },
+        {
+          "item_id": 2862,
+          "text": "Achey trees",
+          "level": 1
+        },
+        {
+          "item_id": 1521,
+          "text": "Oak trees",
+          "level": 15
+        },
+        {
+          "item_id": 1519,
+          "text": "Willow trees",
+          "level": 30
+        },
+        {
+          "item_id": 6333,
+          "text": "Teak trees",
+          "level": 35
+        },
+        {
+          "item_id": 1517,
+          "text": "Maple trees",
+          "level": 45
+        },
+        {
+          "item_id": 6332,
+          "text": "Mahogany trees",
+          "level": 50
+        },
+        {
+          "item_id": 1515,
+          "text": "Yew trees",
+          "level": 60
+        },
+        {
+          "item_id": 1513,
+          "text": "Magic trees",
+          "level": 75
+        }
+      ]
+    },
+    {
+      "name": "Axes",
+      "lines": [
+        {
+          "item_id": 1351,
+          "text": "Bronze axe",
+          "level": 1
+        },
+        {
+          "item_id": 1349,
+          "text": "Iron axe",
+          "level": 1
+        },
+        {
+          "item_id": 1353,
+          "text": "Steel axe",
+          "level": 6
+        },
+        {
+          "item_id": 1361,
+          "text": "Black axe",
+          "level": 11
+        },
+        {
+          "item_id": 1355,
+          "text": "Mithril axe",
+          "level": 21
+        },
+        {
+          "item_id": 1357,
+          "text": "Adamant axe",
+          "level": 31
+        },
+        {
+          "item_id": 1359,
+          "text": "Rune axe",
+          "level": 41
+        },
+        {
+          "item_id": 6739,
+          "text": "Dragon axe",
+          "level": 61
+        }
+      ]
+    },
+    {
+      "name": "Other",
+      "lines": [
+        {
+          "item_id": 0,
+          "text": "Missing content",
+          "level": 1
+        }
+      ]
+    }
+  ]
+}

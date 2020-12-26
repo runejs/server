@@ -1,49 +1,13 @@
 import { buttonAction } from '@server/world/action/button-action';
 import { logger } from '@runejs/core';
-import { JSON_SCHEMA, safeLoad } from 'js-yaml';
-import { readFileSync } from 'fs';
 import { Player } from '@server/world/actor/player/player';
 import { widgetAction } from '@server/world/action/widget-action';
-import { widgets } from '@server/config';
+import { skillGuides, widgets } from '@server/config';
+import { SkillGuide, SkillSubGuide } from '@server/config/skill-guide-config';
 
 // @TODO fix me!
 
-interface SkillSubGuide {
-    name: string;
-    lines: {
-        itemId: number;
-        text: string;
-        level: number;
-    }[];
-}
-
-interface SkillGuide {
-    id: number;
-    name: string;
-    members: boolean;
-    subGuides: SkillSubGuide[];
-}
-
-function parseSkillGuides(): SkillGuide[] {
-    try {
-        logger.info('Parsing skill guides...');
-
-        const skillGuides = safeLoad(readFileSync('data/config/skill-guides.yaml', 'utf8'), { schema: JSON_SCHEMA }) as SkillGuide[];
-
-        if(!skillGuides || skillGuides.length === 0) {
-            throw new Error('Unable to read skill guides.');
-        }
-
-        logger.info(`${skillGuides.length} skill guides found.`);
-
-        return skillGuides;
-    } catch(error) {
-        logger.error('Error parsing skill guides: ' + error);
-        return null;
-    }
-}
-
-const guides = parseSkillGuides();
+const guides = skillGuides;
 
 const sidebarTextIds = [131, 108, 109, 112, 122, 125, 128, 143, 146, 149, 159, 162, 165];
 const sidebarIds = [129, 98, -1, 110, 113, 123, 126, 134, 144, 147, 150, 160, 163];
@@ -59,11 +23,11 @@ function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refr
             const sidebarId = sidebarIds[i];
             let hidden: boolean = true;
 
-            if(i >= guide.subGuides.length) {
+            if(i >= guide.sub_guides.length) {
                 player.modifyWidget(widgets.skillGuide, { childId: sidebarTextIds[i], text: '' });
                 hidden = true;
             } else {
-                player.modifyWidget(widgets.skillGuide, { childId: sidebarTextIds[i], text: guide.subGuides[i].name });
+                player.modifyWidget(widgets.skillGuide, { childId: sidebarTextIds[i], text: guide.sub_guides[i].name });
                 hidden = false;
             }
 
@@ -76,11 +40,11 @@ function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refr
         }
     }
 
-    const subGuide: SkillSubGuide = guide.subGuides[subGuideId];
+    const subGuide: SkillSubGuide = guide.sub_guides[subGuideId];
 
     player.modifyWidget(widgets.skillGuide, { childId: 1, text: (guide.name + ' - ' + subGuide.name) });
 
-    const itemIds: number[] = subGuide.lines.map(g => g.itemId).concat(new Array(30 - subGuide.lines.length).fill(null));
+    const itemIds: number[] = subGuide.lines.map(g => g.item?.gameId).concat(new Array(30 - subGuide.lines.length).fill(null));
     player.outgoingPackets.sendUpdateAllWidgetItemsById({ widgetId: widgets.skillGuide, containerId: 132 }, itemIds);
 
     for(let i = 0; i < 30; i++) {
@@ -117,7 +81,7 @@ export const openSubGuideAction: widgetAction = (details) => {
     const guide = guides.find(g => g.id === activeSkillGuide);
     const subGuideId = sidebarTextIds.indexOf(childId);
 
-    if(subGuideId >= guide.subGuides.length) {
+    if(subGuideId >= guide.sub_guides?.length) {
         return;
     }
 

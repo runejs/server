@@ -1,0 +1,97 @@
+{
+  "id": 118,
+  "name": "Attack",
+  "members": false,
+  "sub_guides": [
+    {
+      "name": "Weapons",
+      "lines": [
+        {
+          "item": "rs:bronze_dagger",
+          "text": "Bronze",
+          "level": 1
+        },
+        {
+          "item": "rs:iron_dagger",
+          "text": "Iron",
+          "level": 1
+        },
+        {
+          "item": "rs:steel_dagger",
+          "text": "Steel",
+          "level": 5
+        },
+        {
+          "item": "rs:black_dagger",
+          "text": "Black",
+          "level": 10
+        },
+        {
+          "item": "rs:white_dagger",
+          "text": "Members: White",
+          "level": 10
+        },
+        {
+          "item": "rs:mithril_dagger",
+          "text": "Mithril",
+          "level": 20
+        },
+        {
+          "item": "rs:adamant_dagger",
+          "text": "Adamant",
+          "level": 30
+        },
+        {
+          "item": "rs:battlestaff",
+          "text": "Members: Battlestaves (with 30 Magic)",
+          "level": 30
+        },
+        {
+          "item": "rs:rune_dagger",
+          "text": "Rune",
+          "level": 40
+        },
+        {
+          "item": "rs:granite_maul",
+          "text": "Members: Granite Maul",
+          "level": 50
+        },
+        {
+          "item": "rs:dragon_dagger",
+          "text": "Members: Dragon",
+          "level": 60
+        },
+        {
+          "item": "rs:toktz_xil_ak",
+          "text": "Members: Obsidian weapons",
+          "level": 60
+        },
+        {
+          "item": "rs:abyssal_whip",
+          "text": "Members: Abyssal Whip",
+          "level": 70
+        },
+        {
+          "item_id": 4718,
+          "text": "Members: Dharok's greataxe",
+          "level": 70
+        },
+        {
+          "item_id": 4747,
+          "text": "Members: Torag's hammers",
+          "level": 70
+        },
+        {
+          "item_id": 4755,
+          "text": "Members: Verac's flail",
+          "level": 70
+        },
+        {
+          "item_id": 4726,
+          "text": "Members: Guthan's warspear",
+          "level": 70
+        }
+      ]
+    }
+  ]
+}
