@@ -244,90 +244,142 @@
         "tradable": true,
         "stackable": false,
         "examine": "A tiara infused with the properties of air.",
-        "weight": 1.000
+        "weight": 1.000,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head"
+        }
     },
     "rs:body_tiara": {
         "game_id": 5533,
         "tradable": true,
         "stackable": false,
         "examine": "A tiara infused with the properties of the body.",
-        "weight": 1.000
+        "weight": 1.000,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head"
+        }
     },
     "rs:chaos_tiara": {
         "game_id": 5543,
         "tradable": true,
         "stackable": false,
         "examine": "A tiara infused with the properties of chaos.",
-        "weight": 1.000
+        "weight": 1.000,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head"
+        }
     },
     "rs:cosmic_tiara": {
         "game_id": 5539,
         "tradable": true,
         "stackable": false,
         "examine": "A tiara infused with the properties of the cosmos.",
-        "weight": 1.000
+        "weight": 1.000,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head"
+        }
     },
     "rs:death_tiara": {
         "game_id": 5547,
         "tradable": true,
         "stackable": false,
         "examine": "A tiara infused with the properties of death.",
-        "weight": 1.000
+        "weight": 1.000,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head"
+        }
     },
     "rs:earth_tiara": {
         "game_id": 5535,
         "tradable": true,
         "stackable": false,
         "examine": "A tiara infused with the properties of the earth.",
-        "weight": 1.000
+        "weight": 1.000,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head"
+        }
     },
     "rs:fire_tiara": {
         "game_id": 5537,
         "tradable": true,
         "stackable": false,
         "examine": "A tiara infused with the properties of fire.",
-        "weight": 1.000
+        "weight": 1.000,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head"
+        }
     },
     "rs:law_tiara": {
         "game_id": 5545,
         "tradable": true,
         "stackable": false,
         "examine": "A tiara infused with the properties of law.",
-        "weight": 1.000
+        "weight": 1.000,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head"
+        }
     },
     "rs:mind_tiara": {
         "game_id": 5529,
         "tradable": true,
         "stackable": false,
         "examine": "A tiara infused with the properties of the mind.",
-        "weight": 1.000
+        "weight": 1.000,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head"
+        }
     },
     "rs:nature_tiara": {
         "game_id": 5541,
         "tradable": true,
         "stackable": false,
         "examine": "A tiara infused with the properties of nature.",
-        "weight": 1.000
+        "weight": 1.000,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head"
+        }
     },
     "rs:water_tiara": {
         "game_id": 5531,
         "tradable": true,
         "stackable": false,
         "examine": "A tiara infused with the properties of water.",
-        "weight": 1.000
+        "weight": 1.000,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head"
+        }
     },
     "rs:blood_tiara": {
         "game_id": 5549,
         "tradable": true,
         "stackable": false,
         "examine": "A tiara infused with the properties of blood.",
-        "weight": 1.000
+        "weight": 1.000,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head"
+        }
     },
     "rs:soul_tiara": {
         "game_id": 5551,
         "tradable": true,
         "stackable": false,
         "examine": "A tiara infused with the properties of the soul.",
-        "weight": 1.000
+        "weight": 1.000,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head"
+        }
     }
 }
