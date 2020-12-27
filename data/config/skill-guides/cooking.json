@@ -7,92 +7,92 @@
       "name": "Meats",
       "lines": [
         {
-          "item_id": 2142,
+          "item": "rs:meat",
           "text": "Meat",
           "level": 1
         },
         {
-          "item_id": 315,
+          "item": "rs:shrimps",
           "text": "Shrimp",
           "level": 1
         },
         {
-          "item_id": 2140,
+          "item": "rs:chicken",
           "text": "Chicken",
           "level": 1
         },
         {
-          "item_id": 319,
+          "item": "rs:anchovies",
           "text": "Anchovies",
           "level": 1
         },
         {
-          "item_id": 325,
+          "item": "rs:sardine",
           "text": "Sardine",
           "level": 1
         },
         {
-          "item_id": 3142,
+          "item": "rs:karambwan",
           "text": "Members: Karambwan",
           "level": 1
         },
         {
-          "item_id": 1883,
+          "item": "rs:ugthanki_kebab",
           "text": "Ugthanki kebab",
           "level": 1
         },
         {
-          "item_id": 345,
+          "item": "rs:herring",
           "text": "Herring",
           "level": 5
         },
         {
-          "item_id": 353,
+          "item": "rs:mackerel",
           "text": "Mackerel",
           "level": 10
         },
         {
-          "item_id": 3369,
+          "item": "rs:thin_snail_meat",
           "text": "Members: Thin snail",
           "level": 12
         },
         {
-          "item_id": 335,
+          "item": "rs:trout",
           "text": "Trout",
           "level": 15
         },
         {
-          "item_id": 3371,
+          "item": "rs:lean_snail_meat",
           "text": "Members: Lean snail",
           "level": 17
         },
         {
-          "item_id": 339,
+          "item": "rs:cod",
           "text": "Members: Cod",
           "level": 18
         },
         {
-          "item_id": 351,
+          "item": "rs:pike",
           "text": "Pike",
           "level": 20
         },
         {
-          "item_id": 329,
+          "item": "rs:salmon",
           "text": "Salmon",
           "level": 25
         },
         {
-          "item_id": 361,
+          "item": "rs:tuna",
           "text": "Tuna",
           "level": 30
         },
         {
-          "item_id": 7228,
-          "text": "Members: Roasted chompy",
+          "item": "rs:cooked_chompy",
+          "text": "Members: Cooked chompy",
           "level": 30
         },
         {
-          "item_id": 7530,
+          "item": "rs:fish_cake",
           "text": "Members: Fishcakes",
           "level": 31
         },

@@ -25,5 +25,13 @@
         "style": "dagger"
       }
     }
+  },
+  "rs:veracs_flail": {
+    "game_id": 4755,
+    "examine": "Verac the Defiled's flail.",
+    "tradable": true,
+    "stackable": false,
+    "notable": false,
+    "equippable": true
   }
 }

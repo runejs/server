@@ -44,7 +44,7 @@ function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refr
 
     player.modifyWidget(widgets.skillGuide, { childId: 1, text: (guide.name + ' - ' + subGuide.name) });
 
-    const itemIds: number[] = subGuide.lines.map(g => g.item?.gameId).concat(new Array(30 - subGuide.lines.length).fill(null));
+    const itemIds: number[] = subGuide.lines.map(g => (g.item?.gameId || 0)).concat(new Array(30 - subGuide.lines.length).fill(null));
     player.outgoingPackets.sendUpdateAllWidgetItemsById({ widgetId: widgets.skillGuide, containerId: 132 }, itemIds);
 
     for(let i = 0; i < 30; i++) {
@@ -81,7 +81,7 @@ export const openSubGuideAction: widgetAction = (details) => {
     const guide = guides.find(g => g.id === activeSkillGuide);
     const subGuideId = sidebarTextIds.indexOf(childId);
 
-    if(subGuideId >= guide.sub_guides?.length) {
+    if(subGuideId >= guide.sub_guides.length) {
         return;
     }
 

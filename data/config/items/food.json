@@ -1,0 +1,56 @@
+{
+  "rs:meat": {
+    "game_id": 2142
+  },
+  "rs:shrimps": {
+    "game_id": 315
+  },
+  "rs:chicken": {
+    "game_id": 2140
+  },
+  "rs:anchovies": {
+    "game_id": 319
+  },
+  "rs:sardine": {
+    "game_id": 325
+  },
+  "rs:karambwan": {
+    "game_id": 3142
+  },
+  "rs:ugthanki_kebab": {
+    "game_id": 1883
+  },
+  "rs:herring": {
+    "game_id": 345
+  },
+  "rs:mackerel": {
+    "game_id": 355
+  },
+  "rs:thin_snail_meat": {
+    "game_id": 3369
+  },
+  "rs:trout": {
+    "game_id": 335
+  },
+  "rs:lean_snail_meat": {
+    "game_id": 3371
+  },
+  "rs:cod": {
+    "game_id": 339
+  },
+  "rs:pike": {
+    "game_id": 351
+  },
+  "rs:salmon": {
+    "game_id": 329
+  },
+  "rs:tuna": {
+    "game_id": 361
+  },
+  "rs:cooked_chompy": {
+    "game_id": 7228
+  },
+  "rs:fish_cake": {
+    "game_id": 7530
+  }
+}

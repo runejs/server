@@ -1,0 +1,9 @@
+{
+  "rs:guthans_warspear": {
+    "game_id": 4726,
+    "tradable": true,
+    "notable": true,
+    "stackable": false,
+    "equippable": true
+  }
+}

@@ -72,22 +72,22 @@
           "level": 70
         },
         {
-          "item_id": 4718,
+          "item": "rs:dharoks_greataxe",
           "text": "Members: Dharok's greataxe",
           "level": 70
         },
         {
-          "item_id": 4747,
+          "item": "rs:torags_hammers",
           "text": "Members: Torag's hammers",
           "level": 70
         },
         {
-          "item_id": 4755,
+          "item": "rs:veracs_flail",
           "text": "Members: Verac's flail",
           "level": 70
         },
         {
-          "item_id": 4726,
+          "item": "rs:guthans_warspear",
           "text": "Members: Guthan's warspear",
           "level": 70
         }
