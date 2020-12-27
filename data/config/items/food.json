@@ -52,5 +52,38 @@
   },
   "rs:fish_cake": {
     "game_id": 7530
+  },
+  "rs:cave_eel": {
+    "game_id": 5003
+  },
+  "rs:lobster": {
+    "game_id": 379
+  },
+  "rs:jubbly": {
+    "game_id": 7568
+  },
+  "rs:bass": {
+    "game_id": 365
+  },
+  "rs:swordfish": {
+    "game_id": 373
+  },
+  "rs:lava_eel": {
+    "game_id": 2149
+  },
+  "rs:shark": {
+    "game_id": 385
+  },
+  "rs:sea_turtle": {
+    "game_id": 397
+  },
+  "rs:manta_ray": {
+    "game_id": 391
+  },
+  "rs:bread": {
+    "game_id": 2309
+  },
+  "rs:pitta_bread": {
+    "game_id": 1865
   }
 }

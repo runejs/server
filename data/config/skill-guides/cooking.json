@@ -97,47 +97,47 @@
           "level": 31
         },
         {
-          "item_id": 5003,
+          "item": "rs:cave_eel",
           "text": "Members: Cave eel",
           "level": 38
         },
         {
-          "item_id": 379,
+          "item": "rs:lobster",
           "text": "Lobster",
           "level": 40
         },
         {
-          "item_id": 397,
+          "item": "rs:jubbly",
           "text": "Members: Jubbly",
           "level": 41
         },
         {
-          "item_id": 365,
+          "item": "rs:bass",
           "text": "Members: Bass",
           "level": 43
         },
         {
-          "item_id": 373,
+          "item": "rs:swordfish",
           "text": "Swordfish",
           "level": 45
         },
         {
-          "item_id": 2149,
+          "item_id": "rs:lava_eel",
           "text": "Members: Lava eel",
           "level": 53
         },
         {
-          "item_id": 385,
+          "item": "rs:shark",
           "text": "Members: Shark",
           "level": 80
         },
         {
-          "item_id": 397,
+          "item": "rs:sea_turtle",
           "text": "Members: Sea turtle",
           "level": 82
         },
         {
-          "item_id": 391,
+          "item": "rs:manta_ray",
           "text": "Members: Manta ray",
           "level": 90
         }
@@ -147,12 +147,12 @@
       "name": "Bread",
       "lines": [
         {
-          "item_id": 2309,
+          "item": "rs:bread",
           "text": "Bread",
           "level": 1
         },
         {
-          "item_id": 1865,
+          "item": "rs:pitta_bread",
           "text": "Members: Pitta bread",
           "level": 58
         }
