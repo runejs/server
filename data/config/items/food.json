@@ -85,5 +85,146 @@
   },
   "rs:pitta_bread": {
     "game_id": 1865
+  },
+  "rs:redberry_pie": {
+    "game_id": 2325
+  },
+  "rs:meat_pie": {
+    "game_id": 2327
+  },
+  "rs:mud_pie": {
+    "game_id": 7170
+  },
+  "rs:apple_pie": {
+    "game_id": 2323
+  },
+  "rs:garden_pie": {
+    "game_id": 7178
+  },
+  "rs:fish_pie": {
+    "game_id": 7188
+  },
+  "rs:admiral_pie": {
+    "game_id": 7198
+  },
+  "rs:wild_pie": {
+    "game_id": 7208
+  },
+  "rs:summer_pie": {
+    "game_id": 7218
+  },
+  "rs:stew": {
+    "game_id": 2003
+  },
+  "rs:banana_stew": {
+    "game_id": 4016
+  },
+  "rs:spicy_stew": {
+    "game_id": 7479
+  },
+  "rs:plain_pizza": {
+    "game_id": 2289
+  },
+  "rs:meat_pizza": {
+    "game_id": 2293
+  },
+  "rs:anchovy_pizza": {
+    "game_id": 2297
+  },
+  "rs:pineapple_pizza": {
+    "game_id": 2301
+  },
+  "rs:cake": {
+    "game_id": 1891
+  },
+  "rs:chocolate_cake": {
+    "game_id": 1897
+  },
+  "rs:wine": {
+    "game_id": 1993
+  },
+  "rs:wine_of_zamorak": {
+    "game_id": 245
+  },
+  "rs:nettle_tea": {
+    "game_id": 4239
+  },
+  "rs:cider": {
+    "game_id": 5763
+  },
+  "rs:dwarven_stout": {
+    "game_id": 1913
+  },
+  "rs:asgarnian_ale": {
+    "game_id": 1905
+  },
+  "rs:greenmans_ale": {
+    "game_id": 7746
+  },
+  "rs:wizards_mind_bomb": {
+    "game_id": 1907
+  },
+  "rs:dragon_bitter": {
+    "game_id": 1911
+  },
+  "rs:moonlight_mead": {
+    "game_id": 2955
+  },
+  "rs:axemans_folly": {
+    "game_id": 5751
+  },
+  "rs:chefs_delight": {
+    "game_id": 5755
+  },
+  "rs:slayers_respite": {
+    "game_id": 5759
+  },
+  "rs:baked_potato": {
+    "game_id": 6701
+  },
+  "rs:spicy_sauce": {
+    "game_id": 7072
+  },
+  "rs:scrambled_egg": {
+    "game_id": 7078
+  },
+  "rs:scrambled_egg_and_tomato": {
+    "game_id": 7064
+  },
+  "rs:sweetcorn": {
+    "game_id": 7088
+  },
+  "rs:baked_potato_with_butter": {
+    "game_id": 6703
+  },
+  "rs:fried_onion": {
+    "game_id": 7084
+  },
+  "rs:fried_mushroom": {
+    "game_id": 7082
+  },
+  "rs:baked_potato_with_butter_and_cheese": {
+    "game_id": 6705
+  },
+  "rs:baked_potato_with_egg_and_tomato": {
+    "game_id": 7056
+  },
+  "rs:fried_mushroom_and_onion": {
+    "game_id": 7066
+  },
+  "rs:baked_potato_with_mushroom_and_onion": {
+    "game_id": 7058
+  },
+  "rs:tuna_and_sweetcorn": {
+    "game_id": 7068
+  },
+  "rs:baked_potato_with_tuna_and_sweetcorn": {
+    "game_id": 7060
+  },
+  "rs:butter": {
+    "game_id": 6697
+  },
+  "rs:cheese": {
+    "game_id": 1985
   }
 }

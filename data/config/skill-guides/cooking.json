@@ -122,7 +122,7 @@
           "level": 45
         },
         {
-          "item_id": "rs:lava_eel",
+          "item": "rs:lava_eel",
           "text": "Members: Lava eel",
           "level": 53
         },
@@ -162,47 +162,47 @@
       "name": "Pies",
       "lines": [
         {
-          "item_id": 2325,
+          "item": "rs:redberry_pie",
           "text": "Redberry pie",
           "level": 10
         },
         {
-          "item_id": 2327,
+          "item": "rs:meat_pie",
           "text": "Meat pie",
           "level": 20
         },
         {
-          "item_id": 7170,
+          "item": "rs:mud_pie",
           "text": "Members: Mud pie",
           "level": 29
         },
         {
-          "item_id": 2323,
+          "item": "rs:apple_pie",
           "text": "Apple pie",
           "level": 30
         },
         {
-          "item_id": 7178,
+          "item": "rs:garden_pie",
           "text": "Members: Garden pie",
           "level": 34
         },
         {
-          "item_id": 7188,
+          "item": "rs:fish_pie",
           "text": "Members: Fish pie",
           "level": 47
         },
         {
-          "item_id": 7198,
+          "item": "rs:admiral_pie",
           "text": "Members: Admiral pie",
           "level": 70
         },
         {
-          "item_id": 7208,
+          "item": "rs:wild_pie",
           "text": "Members: Wild pie",
           "level": 85
         },
         {
-          "item_id": 7218,
+          "item": "rs:summer_pie",
           "text": "Members: Summer pie",
           "level": 95
         }
@@ -212,17 +212,17 @@
       "name": "Stews",
       "lines": [
         {
-          "item_id": 2003,
+          "item": "rs:stew",
           "text": "Stew",
           "level": 25
         },
         {
-          "item_id": 4016,
+          "item": "rs:banana_stew",
           "text": "Banana stew",
           "level": 25
         },
         {
-          "item_id": 7479,
+          "item": "rs:spicy_stew",
           "text": "Spicy stew",
           "level": 25
         }
@@ -232,22 +232,22 @@
       "name": "Pizzas",
       "lines": [
         {
-          "item_id": 2289,
+          "item": "rs:plain_pizza",
           "text": "Plain pizza",
           "level": 35
         },
         {
-          "item_id": 2293,
+          "item": "rs:meat_pizza",
           "text": "Meat pizza",
           "level": 45
         },
         {
-          "item_id": 2297,
+          "item": "rs:anchovy_pizza",
           "text": "Anchovy pizza",
           "level": 55
         },
         {
-          "item_id": 2301,
+          "item": "rs:pineapple_pizza",
           "text": "Members: Pineapple pizza",
           "level": 65
         }
@@ -257,12 +257,12 @@
       "name": "Cakes",
       "lines": [
         {
-          "item_id": 1891,
+          "item": "rs:cake",
           "text": "Cake",
           "level": 40
         },
         {
-          "item_id": 1897,
+          "item": "rs:chocolate_cake",
           "text": "Chocolate cake",
           "level": 50
         }
@@ -272,12 +272,12 @@
       "name": "Wine",
       "lines": [
         {
-          "item_id": 1993,
+          "item": "rs:wine",
           "text": "Wine",
           "level": 35
         },
         {
-          "item_id": 245,
+          "item": "rs:wine_of_zamorak",
           "text": "Members: Wine of Zamorak",
           "level": 65
         }
@@ -287,7 +287,7 @@
       "name": "Hot drinks",
       "lines": [
         {
-          "item_id": 4239,
+          "item": "rs:nettle_tea",
           "text": "Nettle tea",
           "level": 20
         }
@@ -297,52 +297,52 @@
       "name": "Brewing",
       "lines": [
         {
-          "item_id": 5763,
+          "item": "rs:cider",
           "text": "Cider (4 Apple mush)",
           "level": 14
         },
         {
-          "item_id": 1913,
+          "item": "rs:dwarven_stout",
           "text": "Dwarven Stout (4 Hammerstone hops)",
           "level": 19
         },
         {
-          "item_id": 1905,
+          "item": "rs:asgarnian_ale",
           "text": "Asgarnian Ale (4 Asgarnian hops)",
           "level": 24
         },
         {
-          "item_id": 7746,
+          "item": "rs:greenmans_ale",
           "text": "Greenman's Ale (4 Harralander leaves)",
           "level": 29
         },
         {
-          "item_id": 1907,
+          "item": "rs:wizards_mind_bomb",
           "text": "Wizard's Mind Bomb (4 Yinillian hops)",
           "level": 34
         },
         {
-          "item_id": 1911,
+          "item": "rs:dragon_bitter",
           "text": "Dragon Bitter (4 Krandorian hops)",
           "level": 39
         },
         {
-          "item_id": 2955,
+          "item": "rs:moonlight_mead",
           "text": "Moonlight Mead (4 Bittercap mushrooms)",
           "level": 44
         },
         {
-          "item_id": 5751,
+          "item": "rs:axemans_folly",
           "text": "Axeman's Folly (1 Oak root)",
           "level": 49
         },
         {
-          "item_id": 5755,
+          "item": "rs:chefs_delight",
           "text": "Chef's Delight (4 Portions of chocolate dust)",
           "level": 54
         },
         {
-          "item_id": 5759,
+          "item": "rs:slayers_respite",
           "text": "Slayer's Respite (4 Wildblood hops)",
           "level": 54
         }
@@ -352,72 +352,72 @@
       "name": "Vegetable",
       "lines": [
         {
-          "item_id": 6701,
+          "item": "rs:baked_potato",
           "text": "Baked potato",
           "level": 7
         },
         {
-          "item_id": 7072,
+          "item": "rs:spicy_sauce",
           "text": "Spicy sauce (topping ingredient)",
           "level": 9
         },
         {
-          "item_id": 7078,
+          "item": "rs:scrambled_egg",
           "text": "Scrambled egg (topping ingredient)",
           "level": 13
         },
         {
-          "item_id": 7064,
+          "item": "rs:scrambled_egg_and_tomato",
           "text": "Scrambled egg and tomato (topping)",
           "level": 23
         },
         {
-          "item_id": 7088,
+          "item": "rs:sweetcorn",
           "text": "Sweetcorn",
           "level": 28
         },
         {
-          "item_id": 6703,
+          "item": "rs:baked_potato_with_butter",
           "text": "Baked potato with butter",
           "level": 39
         },
         {
-          "item_id": 7084,
+          "item": "rs:fried_onion",
           "text": "Fried onion (topping ingredient)",
           "level": 42
         },
         {
-          "item_id": 7082,
+          "item": "rs:fried_mushroom",
           "text": "Fried mushroom (topping ingredient)",
           "level": 46
         },
         {
-          "item_id": 6705,
+          "item": "rs:baked_potato_with_butter_and_cheese",
           "text": "Baked potato with butter and cheese",
           "level": 47
         },
         {
-          "item_id": 7056,
+          "item": "rs:baked_potato_with_egg_and_tomato",
           "text": "Baked potato with egg and tomato",
           "level": 51
         },
         {
-          "item_id": 7066,
+          "item": "rs:fried_mushroom_and_onion",
           "text": "Fried mushroom and onion (topping)",
           "level": 57
         },
         {
-          "item_id": 7058,
+          "item": "rs:baked_potato_with_mushroom_and_onion",
           "text": "Baked potato with mushroom and onion",
           "level": 64
         },
         {
-          "item_id": 7068,
+          "item": "rs:tuna_and_sweetcorn",
           "text": "Tuna and sweetcorn (topping)",
           "level": 67
         },
         {
-          "item_id": 7060,
+          "item": "rs:baked_potato_with_tuna_and_sweetcorn",
           "text": "Baked potato with tuna and sweetcorn",
           "level": 68
         }
@@ -427,12 +427,12 @@
       "name": "Diary",
       "lines": [
         {
-          "item_id": 6697,
+          "item": "rs:butter",
           "text": "Butter",
           "level": 38
         },
         {
-          "item_id": 1985,
+          "item": "rs:cheese",
           "text": "Cheese",
           "level": 48
         }
