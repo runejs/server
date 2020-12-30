@@ -1,230 +1,316 @@
 {
-  "rs:meat": {
-    "game_id": 2142
-  },
-  "rs:shrimps": {
-    "game_id": 315
-  },
-  "rs:chicken": {
-    "game_id": 2140
-  },
-  "rs:anchovies": {
-    "game_id": 319
-  },
-  "rs:sardine": {
-    "game_id": 325
-  },
-  "rs:karambwan": {
-    "game_id": 3142
-  },
-  "rs:ugthanki_kebab": {
-    "game_id": 1883
-  },
-  "rs:herring": {
-    "game_id": 345
-  },
-  "rs:mackerel": {
-    "game_id": 355
-  },
-  "rs:thin_snail_meat": {
-    "game_id": 3369
-  },
-  "rs:trout": {
-    "game_id": 335
-  },
-  "rs:lean_snail_meat": {
-    "game_id": 3371
-  },
-  "rs:cod": {
-    "game_id": 339
-  },
-  "rs:pike": {
-    "game_id": 351
-  },
-  "rs:salmon": {
-    "game_id": 329
-  },
-  "rs:tuna": {
-    "game_id": 361
-  },
-  "rs:cooked_chompy": {
-    "game_id": 7228
-  },
-  "rs:fish_cake": {
-    "game_id": 7530
-  },
-  "rs:cave_eel": {
-    "game_id": 5003
-  },
-  "rs:lobster": {
-    "game_id": 379
-  },
-  "rs:jubbly": {
-    "game_id": 7568
-  },
-  "rs:bass": {
-    "game_id": 365
-  },
-  "rs:swordfish": {
-    "game_id": 373
-  },
-  "rs:lava_eel": {
-    "game_id": 2149
-  },
-  "rs:shark": {
-    "game_id": 385
-  },
-  "rs:sea_turtle": {
-    "game_id": 397
-  },
-  "rs:manta_ray": {
-    "game_id": 391
-  },
-  "rs:bread": {
-    "game_id": 2309
-  },
-  "rs:pitta_bread": {
-    "game_id": 1865
-  },
-  "rs:redberry_pie": {
-    "game_id": 2325
-  },
-  "rs:meat_pie": {
-    "game_id": 2327
-  },
-  "rs:mud_pie": {
-    "game_id": 7170
-  },
-  "rs:apple_pie": {
-    "game_id": 2323
-  },
-  "rs:garden_pie": {
-    "game_id": 7178
-  },
-  "rs:fish_pie": {
-    "game_id": 7188
-  },
-  "rs:admiral_pie": {
-    "game_id": 7198
-  },
-  "rs:wild_pie": {
-    "game_id": 7208
-  },
-  "rs:summer_pie": {
-    "game_id": 7218
-  },
-  "rs:stew": {
-    "game_id": 2003
-  },
-  "rs:banana_stew": {
-    "game_id": 4016
-  },
-  "rs:spicy_stew": {
-    "game_id": 7479
-  },
-  "rs:plain_pizza": {
-    "game_id": 2289
-  },
-  "rs:meat_pizza": {
-    "game_id": 2293
-  },
-  "rs:anchovy_pizza": {
-    "game_id": 2297
-  },
-  "rs:pineapple_pizza": {
-    "game_id": 2301
-  },
-  "rs:cake": {
-    "game_id": 1891
-  },
-  "rs:chocolate_cake": {
-    "game_id": 1897
-  },
-  "rs:wine": {
-    "game_id": 1993
-  },
-  "rs:wine_of_zamorak": {
-    "game_id": 245
-  },
-  "rs:nettle_tea": {
-    "game_id": 4239
-  },
-  "rs:cider": {
-    "game_id": 5763
-  },
-  "rs:dwarven_stout": {
-    "game_id": 1913
-  },
-  "rs:asgarnian_ale": {
-    "game_id": 1905
-  },
-  "rs:greenmans_ale": {
-    "game_id": 7746
-  },
-  "rs:wizards_mind_bomb": {
-    "game_id": 1907
-  },
-  "rs:dragon_bitter": {
-    "game_id": 1911
-  },
-  "rs:moonlight_mead": {
-    "game_id": 2955
-  },
-  "rs:axemans_folly": {
-    "game_id": 5751
-  },
-  "rs:chefs_delight": {
-    "game_id": 5755
-  },
-  "rs:slayers_respite": {
-    "game_id": 5759
-  },
-  "rs:baked_potato": {
-    "game_id": 6701
-  },
-  "rs:spicy_sauce": {
-    "game_id": 7072
-  },
-  "rs:scrambled_egg": {
-    "game_id": 7078
-  },
-  "rs:scrambled_egg_and_tomato": {
-    "game_id": 7064
-  },
-  "rs:sweetcorn": {
-    "game_id": 7088
-  },
-  "rs:baked_potato_with_butter": {
-    "game_id": 6703
-  },
-  "rs:fried_onion": {
-    "game_id": 7084
-  },
-  "rs:fried_mushroom": {
-    "game_id": 7082
-  },
-  "rs:baked_potato_with_butter_and_cheese": {
-    "game_id": 6705
-  },
-  "rs:baked_potato_with_egg_and_tomato": {
-    "game_id": 7056
-  },
-  "rs:fried_mushroom_and_onion": {
-    "game_id": 7066
-  },
-  "rs:baked_potato_with_mushroom_and_onion": {
-    "game_id": 7058
-  },
-  "rs:tuna_and_sweetcorn": {
-    "game_id": 7068
-  },
-  "rs:baked_potato_with_tuna_and_sweetcorn": {
-    "game_id": 7060
-  },
-  "rs:butter": {
-    "game_id": 6697
-  },
-  "rs:cheese": {
-    "game_id": 1985
-  }
+    "presets": {
+        "rs:food": {
+            "tradable": true,
+            "consumable": true
+        },
+        "rs:beverage": {
+            "tradable": true,
+            "consumable": true
+        }
+    },
+    "rs:meat": {
+        "extends": "rs:food",
+        "game_id": 2142
+    },
+    "rs:shrimps": {
+        "extends": "rs:food",
+        "game_id": 315
+    },
+    "rs:chicken": {
+        "extends": "rs:food",
+        "game_id": 2140
+    },
+    "rs:anchovies": {
+        "extends": "rs:food",
+        "game_id": 319
+    },
+    "rs:sardine": {
+        "extends": "rs:food",
+        "game_id": 325
+    },
+    "rs:karambwan": {
+        "extends": "rs:food",
+        "game_id": 3142
+    },
+    "rs:ugthanki_kebab": {
+        "extends": "rs:food",
+        "game_id": 1883
+    },
+    "rs:herring": {
+        "extends": "rs:food",
+        "game_id": 345
+    },
+    "rs:mackerel": {
+        "extends": "rs:food",
+        "game_id": 355
+    },
+    "rs:thin_snail_meat": {
+        "extends": "rs:food",
+        "game_id": 3369
+    },
+    "rs:trout": {
+        "extends": "rs:food",
+        "game_id": 335
+    },
+    "rs:lean_snail_meat": {
+        "extends": "rs:food",
+        "game_id": 3371
+    },
+    "rs:cod": {
+        "extends": "rs:food",
+        "game_id": 339
+    },
+    "rs:pike": {
+        "extends": "rs:food",
+        "game_id": 351
+    },
+    "rs:salmon": {
+        "extends": "rs:food",
+        "game_id": 329
+    },
+    "rs:tuna": {
+        "extends": "rs:food",
+        "game_id": 361
+    },
+    "rs:cooked_chompy": {
+        "extends": "rs:food",
+        "game_id": 7228
+    },
+    "rs:fish_cake": {
+        "extends": "rs:food",
+        "game_id": 7530
+    },
+    "rs:cave_eel": {
+        "extends": "rs:food",
+        "game_id": 5003
+    },
+    "rs:lobster": {
+        "extends": "rs:food",
+        "game_id": 379
+    },
+    "rs:jubbly": {
+        "extends": "rs:food",
+        "game_id": 7568
+    },
+    "rs:bass": {
+        "extends": "rs:food",
+        "game_id": 365
+    },
+    "rs:swordfish": {
+        "extends": "rs:food",
+        "game_id": 373
+    },
+    "rs:lava_eel": {
+        "extends": "rs:food",
+        "game_id": 2149
+    },
+    "rs:shark": {
+        "extends": "rs:food",
+        "game_id": 385
+    },
+    "rs:sea_turtle": {
+        "extends": "rs:food",
+        "game_id": 397
+    },
+    "rs:manta_ray": {
+        "extends": "rs:food",
+        "game_id": 391
+    },
+    "rs:bread": {
+        "extends": "rs:food",
+        "game_id": 2309
+    },
+    "rs:pitta_bread": {
+        "extends": "rs:food",
+        "game_id": 1865
+    },
+    "rs:redberry_pie": {
+        "extends": "rs:food",
+        "game_id": 2325
+    },
+    "rs:meat_pie": {
+        "extends": "rs:food",
+        "game_id": 2327
+    },
+    "rs:mud_pie": {
+        "extends": "rs:food",
+        "game_id": 7170
+    },
+    "rs:apple_pie": {
+        "extends": "rs:food",
+        "game_id": 2323
+    },
+    "rs:garden_pie": {
+        "extends": "rs:food",
+        "game_id": 7178
+    },
+    "rs:fish_pie": {
+        "extends": "rs:food",
+        "game_id": 7188
+    },
+    "rs:admiral_pie": {
+        "extends": "rs:food",
+        "game_id": 7198
+    },
+    "rs:wild_pie": {
+        "extends": "rs:food",
+        "game_id": 7208
+    },
+    "rs:summer_pie": {
+        "extends": "rs:food",
+        "game_id": 7218
+    },
+    "rs:stew": {
+        "extends": "rs:food",
+        "game_id": 2003
+    },
+    "rs:banana_stew": {
+        "extends": "rs:food",
+        "game_id": 4016
+    },
+    "rs:spicy_stew": {
+        "extends": "rs:food",
+        "game_id": 7479
+    },
+    "rs:plain_pizza": {
+        "extends": "rs:food",
+        "game_id": 2289
+    },
+    "rs:meat_pizza": {
+        "extends": "rs:food",
+        "game_id": 2293
+    },
+    "rs:anchovy_pizza": {
+        "extends": "rs:food",
+        "game_id": 2297
+    },
+    "rs:pineapple_pizza": {
+        "extends": "rs:food",
+        "game_id": 2301
+    },
+    "rs:cake": {
+        "extends": "rs:food",
+        "game_id": 1891
+    },
+    "rs:chocolate_cake": {
+        "extends": "rs:food",
+        "game_id": 1897
+    },
+    "rs:wine": {
+        "extends": "rs:beverage",
+        "game_id": 1993
+    },
+    "rs:wine_of_zamorak": {
+        "extends": "rs:beverage",
+        "game_id": 245
+    },
+    "rs:nettle_tea": {
+        "extends": "rs:beverage",
+        "game_id": 4239
+    },
+    "rs:cider": {
+        "extends": "rs:beverage",
+        "game_id": 5763
+    },
+    "rs:dwarven_stout": {
+        "extends": "rs:beverage",
+        "game_id": 1913
+    },
+    "rs:asgarnian_ale": {
+        "extends": "rs:beverage",
+        "game_id": 1905
+    },
+    "rs:greenmans_ale": {
+        "extends": "rs:beverage",
+        "game_id": 7746
+    },
+    "rs:wizards_mind_bomb": {
+        "extends": "rs:beverage",
+        "game_id": 1907
+    },
+    "rs:dragon_bitter": {
+        "extends": "rs:beverage",
+        "game_id": 1911
+    },
+    "rs:moonlight_mead": {
+        "extends": "rs:beverage",
+        "game_id": 2955
+    },
+    "rs:axemans_folly": {
+        "extends": "rs:beverage",
+        "game_id": 5751
+    },
+    "rs:chefs_delight": {
+        "extends": "rs:beverage",
+        "game_id": 5755
+    },
+    "rs:slayers_respite": {
+        "extends": "rs:beverage",
+        "game_id": 5759
+    },
+    "rs:baked_potato": {
+        "extends": "rs:food",
+        "game_id": 6701
+    },
+    "rs:spicy_sauce": {
+        "extends": "rs:food",
+        "game_id": 7072
+    },
+    "rs:scrambled_egg": {
+        "extends": "rs:food",
+        "game_id": 7078
+    },
+    "rs:scrambled_egg_and_tomato": {
+        "extends": "rs:food",
+        "game_id": 7064
+    },
+    "rs:sweetcorn": {
+        "extends": "rs:food",
+        "game_id": 7088
+    },
+    "rs:baked_potato_with_butter": {
+        "extends": "rs:food",
+        "game_id": 6703
+    },
+    "rs:fried_onion": {
+        "extends": "rs:food",
+        "game_id": 7084
+    },
+    "rs:fried_mushroom": {
+        "extends": "rs:food",
+        "game_id": 7082
+    },
+    "rs:baked_potato_with_butter_and_cheese": {
+        "extends": "rs:food",
+        "game_id": 6705
+    },
+    "rs:baked_potato_with_egg_and_tomato": {
+        "extends": "rs:food",
+        "game_id": 7056
+    },
+    "rs:fried_mushroom_and_onion": {
+        "extends": "rs:food",
+        "game_id": 7066
+    },
+    "rs:baked_potato_with_mushroom_and_onion": {
+        "extends": "rs:food",
+        "game_id": 7058
+    },
+    "rs:tuna_and_sweetcorn": {
+        "extends": "rs:food",
+        "game_id": 7068
+    },
+    "rs:baked_potato_with_tuna_and_sweetcorn": {
+        "extends": "rs:food",
+        "game_id": 7060
+    },
+    "rs:butter": {
+        "extends": "rs:food",
+        "game_id": 6697
+    },
+    "rs:cheese": {
+        "extends": "rs:food",
+        "game_id": 1985
+    }
 }
