@@ -1,0 +1,302 @@
+{
+    "id": 138,
+    "name": "Fletching",
+    "members": true,
+    "sub_guides": [
+        {
+            "name": "Arrows",
+            "lines": [
+                {
+                    "item": "rs:arrow_shaft",
+                    "text": "15 Arrow shafts (logs)",
+                    "level": 1
+                },
+                {
+                    "item": "rs:bronze_arrow",
+                    "text": "Bronze arrows",
+                    "level": 1
+                },
+                {
+                    "item": "rs:arrow_shaft",
+                    "text": "30 Arrow shafts (Oak logs)",
+                    "level": 15
+                },
+                {
+                    "item": "rs:iron_arrow",
+                    "text": "Iron arrows",
+                    "level": 15
+                },
+                {
+                    "item": "rs:arrow_shaft",
+                    "text": "45 Arrow shafts (Willow logs)",
+                    "level": 30
+                },
+                {
+                    "item": "rs:steel_arrow",
+                    "text": "Steel arrows",
+                    "level": 30
+                },
+                {
+                    "item": "rs:arrow_shaft",
+                    "text": "60 Arrow shafts (Maple logs)",
+                    "level": 45
+                },
+                {
+                    "item": "rs:mithril_arrow",
+                    "text": "Mithril Arrows",
+                    "level": 45
+                },
+                {
+                    "item": "rs:broad_arrow",
+                    "text": "Broad arrows",
+                    "level": 52
+                },
+                {
+                    "item": "rs:arrow_shaft",
+                    "text": "75 Arrow shafts (Yew logs)",
+                    "level": 52
+                },
+                {
+                    "item": "rs:adamant_arrow",
+                    "text": "Adamant arrows",
+                    "level": 60
+                },
+                {
+                    "item": "rs:arrow_shaft",
+                    "text": "90 Arrow shafts (Magic logs)",
+                    "level": 75
+                },
+                {
+                    "item": "rs:rune_arrow",
+                    "text": "Rune arrows",
+                    "level": 75
+                }
+            ]
+        },
+        {
+            "name": "Bows",
+            "lines": [
+                {
+                    "item": "rs:shortbow",
+                    "text": "Shortbows",
+                    "level": 5
+                },
+                {
+                    "item": "rs:longbow",
+                    "text": "Longbows",
+                    "level": 10
+                },
+                {
+                    "item": "rs:oak_shortbow",
+                    "text": "Oak shortbows",
+                    "level": 20
+                },
+                {
+                    "item": "rs:oak_longbow",
+                    "text": "Oak longbows",
+                    "level": 25
+                },
+                {
+                    "item": "rs:willow_shortbow",
+                    "text": "Willow shortbows",
+                    "level": 35
+                },
+                {
+                    "item": "rs:willow_longbow",
+                    "text": "Willow longbows",
+                    "level": 40
+                },
+                {
+                    "item": "rs:maple_shortbow",
+                    "text": "Maple shortbows",
+                    "level": 50
+                },
+                {
+                    "item": "rs:maple_longbow",
+                    "text": "Maple longbows",
+                    "level": 55
+                },
+                {
+                    "item": "rs:yew_shortbow",
+                    "text": "Yew shortbows",
+                    "level": 65
+                },
+                {
+                    "item": "rs:yew_longbow",
+                    "text": "Yew longbows",
+                    "level": 70
+                },
+                {
+                    "item": "rs:magic_shortbow",
+                    "text": "Magic shortbows",
+                    "level": 80
+                },
+                {
+                    "item": "rs:magic_longbow",
+                    "text": "Magic longbows",
+                    "level": 85
+                }
+            ]
+        },
+        {
+            "name": "Bolts",
+            "lines": [
+                {
+                    "item": "rs:bronze_bolt",
+                    "text": "Bronze bolts",
+                    "level": 9
+                },
+                {
+                    "item": "rs:opal_bolt",
+                    "text": "Opal-tipped bronze bolts",
+                    "level": 11
+                },
+                {
+                    "item": "rs:blurite_bolts",
+                    "text": "Blurite bolts (After Knight´s Sword quest)",
+                    "level": 24
+                },
+                {
+                    "item": "rs:jade_bolt",
+                    "text": "Jade-tipped blurite bolts",
+                    "level": 26
+                },
+                {
+                    "item": "rs:iron_bolt",
+                    "text": "Iron bolts",
+                    "level": 39
+                },
+                {
+                    "item": "rs:silver_bolt",
+                    "text": "Silver bolts",
+                    "level": 43
+                },
+                {
+                    "item": "rs:steel_bolt",
+                    "text": "Steel bolts",
+                    "level": 46
+                },
+                {
+                    "item": "rs:mithril_bolt",
+                    "text": "Mithril bolts",
+                    "level": 54
+                },
+                {
+                    "item": "rs:broad_bolt",
+                    "text": "Broad bolts",
+                    "level": 55
+                },
+                {
+                    "item": "rs:sapphire_bolt",
+                    "text": "Sapphire-tipped mithril bolts",
+                    "level": 56
+                },
+                {
+                    "item": "rs:emerald_bolt",
+                    "text": "Emerald-tipped mithril bolts",
+                    "level": 56
+                },
+                {
+                    "item": "rs:adamantite_bolt",
+                    "text": "Adamantite bolts",
+                    "level": 61
+                },
+                {
+                    "item": "rs:diamond_bolt",
+                    "text": "Diamond-tipped adamantite bolts",
+                    "level": 65
+                },
+                {
+                    "item": "rs:runite_bolt",
+                    "text": "Runite bolts",
+                    "level": 69
+                },
+                {
+                    "item": "rs:onyx_bolt",
+                    "text": "Onyx-tipped runite bolts",
+                    "level": 73
+                }
+            ]
+        },
+        {
+            "name": "Darts",
+            "lines": [
+                {
+                    "item": "rs:bronze_dart",
+                    "text": "Bronze darts",
+                    "level": 10
+                },
+                {
+                    "item": "rs:iron_dart",
+                    "text": "Iron darts",
+                    "level": 22
+                },
+                {
+                    "item": "rs:steel_dart",
+                    "text": "Steel darts",
+                    "level": 37
+                },
+                {
+                    "item": "rs:mithril_dart",
+                    "text": "Mithril darts",
+                    "level": 52
+                },
+                {
+                    "item": "rs:adamant_dart",
+                    "text": "Adamant darts",
+                    "level": 67
+                },
+                {
+                    "item": "rs:rune_dart",
+                    "text": "Rune darts",
+                    "level": 81
+                }
+            ]
+        },
+        {
+            "name": "Javelins",
+            "lines": [
+                {
+                    "item": "rs:bronze_javelin",
+                    "text": "Bronze javelins",
+                    "level": 3
+                },
+                {
+                    "item": "rs:iron_javelin",
+                    "text": "Iron javelins",
+                    "level": 17
+                },
+                {
+                    "item": "rs:steel_javelin",
+                    "text": "Steel javelins",
+                    "level": 32
+                },
+                {
+                    "item": "rs:mithril_javelin",
+                    "text": "Mithril javelins",
+                    "level": 47
+                },
+                {
+                    "item": "rs:adamant_javelin",
+                    "text": "Adamant javelins",
+                    "level": 62
+                },
+                {
+                    "item": "rs:rune_javelin",
+                    "text": "Rune javelins",
+                    "level": 77
+                }
+            ]
+        },
+        {
+            "name": "Other",
+            "lines": [
+                {
+                    "item": "rs:battlestaff",
+                    "text": "Battlestaves",
+                    "level": 40
+                }
+            ]
+        }
+    ]
+}
