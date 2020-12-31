@@ -1,0 +1,49 @@
+{
+    "rs:gnome_stronghold_agility_course": {
+        "game_id": 2150
+    },
+    "rs:gnomeball_game": {
+        "game_id": 751
+    },
+    "rs:werewolf_skullball_game": {
+        "game_id": 1061
+    },
+    "rs:agility_pyramid": {
+        "game_id": 6970
+    },
+    "rs:barbarian_outpost_agility_course": {
+        "game_id": 1365
+    },
+    "rs:ape_atoll_agility_course": {
+        "game_id": 4024
+    },
+    "rs:wilderness_course": {
+        "game_id": 553
+    },
+    "rs:werewolf_agility_course": {
+        "game_id": 1379
+    },
+
+
+    "rs:agility_jump_green": {
+        "game_id": 6518
+    },
+    "rs:agility_contortion_green": {
+        "game_id": 6520
+    },
+    "rs:agility_balance_green": {
+        "game_id": 6519
+    },
+    "rs:agility_climb": {
+        "game_id": 6517
+    },
+    "rs:agility_jump_yellow": {
+        "game_id": 6514
+    },
+    "rs:agility_contortion_yellow": {
+        "game_id": 6516
+    },
+    "rs:agility_balance_yellow": {
+        "game_id": 6515
+    }
+}

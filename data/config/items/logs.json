@@ -10,23 +10,67 @@
         "extends": "rs:log",
         "game_id": 1511
     },
+    "rs:achey_logs": {
+        "extends": "rs:log",
+        "game_id": 2862
+    },
+    "rs:pyre_logs": {
+        "extends": "rs:log",
+        "game_id": 3438
+    },
     "rs:oak_logs": {
         "extends": "rs:log",
         "game_id": 1521
+    },
+    "rs:oak_pyre_logs": {
+        "extends": "rs:log",
+        "game_id": 3440
     },
     "rs:willow_logs": {
         "extends": "rs:log",
         "game_id": 1519
     },
+    "rs:teak_logs": {
+        "extends": "rs:log",
+        "game_id": 6333
+    },
+    "rs:willow_pyre_logs": {
+        "extends": "rs:log",
+        "game_id": 3442
+    },
+    "rs:teak_pyre_logs": {
+        "extends": "rs:log",
+        "game_id": 6211
+    },
     "rs:maple_logs": {
         "extends": "rs:log",
         "game_id": 1517
+    },
+    "rs:mahogany_logs": {
+        "extends": "rs:log",
+        "game_id": 6332
+    },
+    "rs:maple_pyre_logs": {
+        "extends": "rs:log",
+        "game_id": 3444
+    },
+    "rs:mahogany_pyre_logs": {
+        "extends": "rs:log",
+        "game_id": 6213
     },
     "rs:yew_logs": {
         "extends": "rs:log",
         "game_id": 1515
     },
+    "rs:yew_pyre_logs": {
+        "extends": "rs:log",
+        "game_id": 3446
+    },
     "rs:magic_logs": {
+        "extends": "rs:log",
+        "game_id": 1513
+    },
+    "rs:magic_pyre_logs": {
         "extends": "rs:log",
         "game_id": 1513
     }

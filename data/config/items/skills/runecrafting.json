@@ -140,6 +140,21 @@
         "examine": "A combined Earth and Fire Rune.",
         "weight": 0.01
     },
+    "rs:astral_rune": {
+        "game_id": 9075,
+        "examine": "Used for Lunar spells.",
+        "weight": 0.01
+    },
+    "rs:blood_rune": {
+        "game_id": 565,
+        "examine": "Used for high level missile spells.",
+        "weight": 0.01
+    },
+    "rs:soul_rune": {
+        "game_id": 566,
+        "examine": "Used for high level curse spells.",
+        "weight": 0.01
+    },
     "rs:air_talisman": {
         "game_id": 1438,
         "tradable": true,
@@ -381,5 +396,17 @@
         "equipment_data": {
             "equipment_slot": "head"
         }
+    },
+    "rs:small_pouch": {
+        "game_id": 5509
+    },
+    "rs:medium_pouch": {
+        "game_id": 5510
+    },
+    "rs:large_pouch": {
+        "game_id": 5512
+    },
+    "rs:giant_pouch": {
+        "game_id": 5514
     }
 }

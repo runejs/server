@@ -48,6 +48,34 @@
             }
         }
     },
+    "rs:black_axe": {
+        "extends": "rs:woodcutting_axe",
+        "game_id": 1361,
+        "weight": 1.36,
+        "equipment_data": {
+            "offensive_bonuses": {
+                "slash": 5,
+                "crush": 3
+            },
+            "skill_bonuses": {
+                "strength": 7
+            }
+        }
+    },
+    "rs:dragon_axe": {
+        "extends": "rs:woodcutting_axe",
+        "game_id": 6739,
+        "weight": 1.36,
+        "equipment_data": {
+            "offensive_bonuses": {
+                "slash": 5,
+                "crush": 3
+            },
+            "skill_bonuses": {
+                "strength": 7
+            }
+        }
+    },
     "rs:steel_axe": {
         "extends": "rs:woodcutting_axe",
         "game_id": 1353,
