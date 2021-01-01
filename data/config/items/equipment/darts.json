@@ -1,0 +1,20 @@
+{
+    "rs:bronze_dart": {
+        "game_id": 806
+    },
+    "rs:iron_dart": {
+        "game_id": 807
+    },
+    "rs:steel_dart": {
+        "game_id": 808
+    },
+    "rs:mithril_dart": {
+        "game_id": 809
+    },
+    "rs:adamant_dart": {
+        "game_id": 810
+    },
+    "rs:rune_dart": {
+        "game_id": 811
+    }
+}

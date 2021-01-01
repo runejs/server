@@ -1,0 +1,38 @@
+{
+    "rs:shortbow": {
+        "game_id": 50
+    },
+    "rs:longbow": {
+        "game_id": 48
+    },
+    "rs:oak_shortbow": {
+        "game_id": 54
+    },
+    "rs:oak_longbow": {
+        "game_id": 56
+    },
+    "rs:willow_shortbow": {
+        "game_id": 60
+    },
+    "rs:willow_longbow": {
+        "game_id": 58
+    },
+    "rs:maple_shortbow": {
+        "game_id": 64
+    },
+    "rs:maple_longbow": {
+        "game_id": 62
+    },
+    "rs:yew_shortbow": {
+        "game_id": 68
+    },
+    "rs:yew_longbow": {
+        "game_id": 66
+    },
+    "rs:magic_shortbow": {
+        "game_id": 72
+    },
+    "rs:magic_longbow": {
+        "game_id": 70
+    }
+}

@@ -152,7 +152,7 @@
                     "level": 11
                 },
                 {
-                    "item": "rs:blurite_bolts",
+                    "item": "rs:blurite_bolt",
                     "text": "Blurite bolts (After Knight´s Sword quest)",
                     "level": 24
                 },
@@ -182,11 +182,6 @@
                     "level": 54
                 },
                 {
-                    "item": "rs:broad_bolt",
-                    "text": "Broad bolts",
-                    "level": 55
-                },
-                {
                     "item": "rs:sapphire_bolt",
                     "text": "Sapphire-tipped mithril bolts",
                     "level": 56
@@ -197,14 +192,9 @@
                     "level": 56
                 },
                 {
-                    "item": "rs:adamantite_bolt",
-                    "text": "Adamantite bolts",
+                    "item": "rs:adamant_bolt",
+                    "text": "Adamant bolts",
                     "level": 61
-                },
-                {
-                    "item": "rs:diamond_bolt",
-                    "text": "Diamond-tipped adamantite bolts",
-                    "level": 65
                 },
                 {
                     "item": "rs:runite_bolt",
@@ -213,8 +203,8 @@
                 },
                 {
                     "item": "rs:onyx_bolt",
-                    "text": "Onyx-tipped runite bolts",
-                    "level": 73
+                    "text": "Onyx bolts",
+                    "level": 69
                 }
             ]
         },

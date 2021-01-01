@@ -1,0 +1,20 @@
+{
+    "rs:bronze_javelin": {
+        "game_id": 52
+    },
+    "rs:iron_javelin": {
+        "game_id": 52
+    },
+    "rs:steel_javelin": {
+        "game_id": 52
+    },
+    "rs:mithril_javelin": {
+        "game_id": 52
+    },
+    "rs:adamant_javelin": {
+        "game_id": 52
+    },
+    "rs:rune_javelin": {
+        "game_id": 52
+    }
+}
