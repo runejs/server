@@ -1,10 +1,10 @@
 {
-  "rs:torags_hammers": {
-    "game_id": 4747,
-    "examine": "Torag the Corrupted's twin hammers.",
-    "tradable": true,
-    "notable": true,
-    "stackable": false,
-    "equippable": true
-  }
+    "rs:torags_hammers": {
+        "game_id": 4747,
+        "examine": "Torag the Corrupted's twin hammers.",
+        "tradable": true,
+        "notable": true,
+        "stackable": false,
+        "equippable": true
+    }
 }

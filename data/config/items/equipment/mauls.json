@@ -1,29 +1,29 @@
 {
-  "rs:granite_maul": {
-    "game_id": 4153,
-    "examine": "Simplicity is the best weapon.",
-    "tradable": true,
-    "weight": 4.535,
-    "equippable": true,
-    "equipment_data": {
-      "equipment_slot": "main_hand",
-      "equipment_type": "two_handed",
-      "offensive_bonuses": {
-        "speed": 7,
-        "stab": 0,
-        "slash": 0,
-        "crush": 81,
-        "magic": 1
-      },
-      "defensive_bonuses": {
-        "magic": 1
-      },
-      "skill_bonuses": {
-        "strength": 79
-      },
-      "weapon_info": {
-        "style": "mace"
-      }
+    "rs:granite_maul": {
+        "game_id": 4153,
+        "examine": "Simplicity is the best weapon.",
+        "tradable": true,
+        "weight": 4.535,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "two_handed",
+            "offensive_bonuses": {
+                "speed": 7,
+                "stab": 0,
+                "slash": 0,
+                "crush": 81,
+                "magic": 1
+            },
+            "defensive_bonuses": {
+                "magic": 1
+            },
+            "skill_bonuses": {
+                "strength": 79
+            },
+            "weapon_info": {
+                "style": "mace"
+            }
+        }
     }
-  }
 }

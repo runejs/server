@@ -1,138 +1,138 @@
 {
-  "rs:iron_dagger": {
-    "game_id": 1203,
-    "examine": "Short but pointy.",
-    "tradable": true,
-    "weight": 0.453,
-    "equippable": true
-  },
-  "rs:steel_dagger": {
-    "game_id": 1207,
-    "examine": "Short but pointy.",
-    "tradable": true,
-    "weight": 0.453,
-    "equippable": true
-  },
-  "rs:black_dagger": {
-    "game_id": 1217,
-    "examine": "Short but pointy.",
-    "tradable": true,
-    "weight": 0.453,
-    "equippable": true
-  },
-  "rs:white_dagger": {
-    "game_id": 6591,
-    "examine": "A vicious white dagger.",
-    "tradable": true,
-    "weight": 0.453,
-    "equippable": true,
-    "equipment_data": {
-      "equipment_slot": "main_hand",
-      "equipment_type": "one_handed",
-      "offensive_bonuses": {
-        "speed": 4,
-        "stab": 10,
-        "slash": 5,
-        "crush": -4,
-        "magic": 1
-      },
-      "defensive_bonuses": {
-        "magic": 1
-      },
-      "skill_bonuses": {
-        "strength": 3
-      },
-      "weapon_info": {
-        "style": "dagger"
-      }
+    "rs:iron_dagger": {
+        "game_id": 1203,
+        "examine": "Short but pointy.",
+        "tradable": true,
+        "weight": 0.453,
+        "equippable": true
+    },
+    "rs:steel_dagger": {
+        "game_id": 1207,
+        "examine": "Short but pointy.",
+        "tradable": true,
+        "weight": 0.453,
+        "equippable": true
+    },
+    "rs:black_dagger": {
+        "game_id": 1217,
+        "examine": "Short but pointy.",
+        "tradable": true,
+        "weight": 0.453,
+        "equippable": true
+    },
+    "rs:white_dagger": {
+        "game_id": 6591,
+        "examine": "A vicious white dagger.",
+        "tradable": true,
+        "weight": 0.453,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "one_handed",
+            "offensive_bonuses": {
+                "speed": 4,
+                "stab": 10,
+                "slash": 5,
+                "crush": -4,
+                "magic": 1
+            },
+            "defensive_bonuses": {
+                "magic": 1
+            },
+            "skill_bonuses": {
+                "strength": 3
+            },
+            "weapon_info": {
+                "style": "dagger"
+            }
+        }
+    },
+    "rs:mithril_dagger": {
+        "game_id": 1209,
+        "examine": "A dangerous dagger.",
+        "tradable": true,
+        "weight": 0.396,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "one_handed",
+            "offensive_bonuses": {
+                "speed": 4,
+                "stab": 11,
+                "slash": 5,
+                "crush": -4,
+                "magic": 1
+            },
+            "defensive_bonuses": {
+                "magic": 1
+            },
+            "skill_bonuses": {
+                "strength": 10
+            },
+            "weapon_info": {
+                "style": "dagger"
+            }
+        }
+    },
+    "rs:adamant_dagger": {
+        "game_id": 1211,
+        "examine": "Short and deadly.",
+        "tradable": true,
+        "weight": 0.51,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "one_handed",
+            "offensive_bonuses": {
+                "speed": 4,
+                "stab": 15,
+                "slash": 8,
+                "crush": -4,
+                "magic": 1
+            },
+            "defensive_bonuses": {
+                "magic": 1
+            },
+            "skill_bonuses": {
+                "strength": 14
+            },
+            "weapon_info": {
+                "style": "dagger"
+            }
+        }
+    },
+    "rs:rune_dagger": {
+        "game_id": 1213,
+        "examine": "Short and deadly.",
+        "tradable": true,
+        "weight": 0.51,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "one_handed",
+            "offensive_bonuses": {
+                "speed": 4,
+                "stab": 25,
+                "slash": 12,
+                "crush": -4,
+                "magic": 1
+            },
+            "defensive_bonuses": {
+                "magic": 1
+            },
+            "skill_bonuses": {
+                "strength": 24
+            },
+            "weapon_info": {
+                "style": "dagger"
+            }
+        }
+    },
+    "rs:dragon_dagger": {
+        "game_id": 1215,
+        "examine": "A powerful dagger.",
+        "tradable": true,
+        "weight": 0.453,
+        "equippable": true
     }
-  },
-  "rs:mithril_dagger": {
-    "game_id": 1209,
-    "examine": "A dangerous dagger.",
-    "tradable": true,
-    "weight": 0.396,
-    "equippable": true,
-    "equipment_data": {
-      "equipment_slot": "main_hand",
-      "equipment_type": "one_handed",
-      "offensive_bonuses": {
-        "speed": 4,
-        "stab": 11,
-        "slash": 5,
-        "crush": -4,
-        "magic": 1
-      },
-      "defensive_bonuses": {
-        "magic": 1
-      },
-      "skill_bonuses": {
-        "strength": 10
-      },
-      "weapon_info": {
-        "style": "dagger"
-      }
-    }
-  },
-  "rs:adamant_dagger": {
-    "game_id": 1211,
-    "examine": "Short and deadly.",
-    "tradable": true,
-    "weight": 0.51,
-    "equippable": true,
-    "equipment_data": {
-      "equipment_slot": "main_hand",
-      "equipment_type": "one_handed",
-      "offensive_bonuses": {
-        "speed": 4,
-        "stab": 15,
-        "slash": 8,
-        "crush": -4,
-        "magic": 1
-      },
-      "defensive_bonuses": {
-        "magic": 1
-      },
-      "skill_bonuses": {
-        "strength": 14
-      },
-      "weapon_info": {
-        "style": "dagger"
-      }
-    }
-  },
-  "rs:rune_dagger": {
-    "game_id": 1213,
-    "examine": "Short and deadly.",
-    "tradable": true,
-    "weight": 0.51,
-    "equippable": true,
-    "equipment_data": {
-      "equipment_slot": "main_hand",
-      "equipment_type": "one_handed",
-      "offensive_bonuses": {
-        "speed": 4,
-        "stab": 25,
-        "slash": 12,
-        "crush": -4,
-        "magic": 1
-      },
-      "defensive_bonuses": {
-        "magic": 1
-      },
-      "skill_bonuses": {
-        "strength": 24
-      },
-      "weapon_info": {
-        "style": "dagger"
-      }
-    }
-  },
-  "rs:dragon_dagger": {
-    "game_id": 1215,
-    "examine": "A powerful dagger.",
-    "tradable": true,
-    "weight": 0.453,
-    "equippable": true
-  }
 }
