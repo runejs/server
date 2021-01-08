@@ -19,6 +19,7 @@ import { loadNpcSpawnConfigurations, NpcSpawn } from '@server/config/npc-spawn-c
 import { loadShopConfigurations, Shop } from '@server/config/shop-config';
 import { Quest } from '@server/world/actor/player/quest';
 import { ItemSpawn, loadItemSpawnConfigurations } from '@server/config/item-spawn-config';
+import { loadSkillGuideConfigurations, SkillGuide } from '@server/config/skill-guide-config';
 require('json5/lib/register');
 
 export async function loadConfigurationFiles(configurationDir: string): Promise<any[]> {
@@ -50,6 +51,7 @@ export let npcPresetMap: NpcPresetConfiguration;
 export let npcSpawns: NpcSpawn[] = [];
 export let itemSpawns: ItemSpawn[] = [];
 export let shopMap: { [key: string]: Shop };
+export let skillGuides: SkillGuide[] = [];
 
 export const widgets: { [key: string]: any } = require('../../data/config/widgets.json5');
 
@@ -71,9 +73,10 @@ export async function loadConfigurations(): Promise<void> {
     itemSpawns = await loadItemSpawnConfigurations('data/config/item-spawns');
 
     shopMap = await loadShopConfigurations('data/config/shops');
+    skillGuides = await loadSkillGuideConfigurations('data/config/skill-guides');
 
     logger.info(`Loaded ${Object.keys(itemMap).length} items, ${itemSpawns.length} item spawns, ` +
-        `${Object.keys(npcMap).length} npcs, ${npcSpawns.length} npc spawns, and ${Object.keys(shopMap).length} shops.`);
+        `${Object.keys(npcMap).length} npcs, ${npcSpawns.length} npc spawns, ${Object.keys(shopMap).length} shops and ${skillGuides.length} skill guides.`);
 }
 
 

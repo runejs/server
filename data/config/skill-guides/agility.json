@@ -1,0 +1,267 @@
+{
+    "id": 122,
+    "name": "Agility",
+    "members": true,
+    "sub_guides": [
+        {
+            "name": "Courses",
+            "lines": [
+                {
+                    "item": "rs:gnome_stronghold_agility_course",
+                    "text": "Gnome Stronghold Agility Course",
+                    "level": 1
+                },
+                {
+                    "item": "rs:gnomeball_game",
+                    "text": "Gnomeball Game",
+                    "level": 1
+                },
+                {
+                    "item": "rs:werewolf_skullball_game",
+                    "text": "Werewolf Skullball game",
+                    "level": 25
+                },
+                {
+                    "item": "rs:agility_pyramid",
+                    "text": "Agility Pyramid",
+                    "level": 30
+                },
+                {
+                    "item": "rs:barbarian_outpost_agility_course",
+                    "text": "Barbarian Outpost Agility Course",
+                    "level": 35
+                },
+                {
+                    "item": "rs:ape_atoll_agility_course",
+                    "text": "Ape Atoll Agility Course",
+                    "level": 48
+                },
+                {
+                    "item": "rs:wilderness_course",
+                    "text": "Wilderness Course",
+                    "level": 52
+                },
+                {
+                    "item": "rs:werewolf_agility_course",
+                    "text": "Werewolf Agility Course",
+                    "level": 60
+                }
+            ]
+        },
+        {
+            "name": "Areas",
+            "lines": [
+                {
+                    "item": "rs:agility_jump_green",
+                    "text": "Rope-swing to Moss Giant Island",
+                    "level": 10
+                },
+                {
+                    "item": "rs:agility_jump_green",
+                    "text": "Stepping stones in Karamja Dungeon",
+                    "level": 12
+                },
+                {
+                    "item": "rs:agility_jump_green",
+                    "text": "Monkey bars under Edgeville",
+                    "level": 15
+                },
+                {
+                    "item": "rs:agility_contortion_green",
+                    "text": "Pipe contortion in Karamja Dungeon",
+                    "level": 22
+                },
+                {
+                    "item": "rs:agility_jump_green",
+                    "text": "Stepping stones in south-eastern Karamja",
+                    "level": 30
+                },
+                {
+                    "item": "rs:agility_contortion_green",
+                    "text": "Pipe contortion in Karamja Dungeon",
+                    "level": 34
+                },
+                {
+                    "item": "rs:agility_balance_green",
+                    "text": "Elf area log balance",
+                    "level": 45
+                },
+                {
+                    "item": "rs:agility_contortion_green",
+                    "text": "Contortion in Yanille Dungeon small room",
+                    "level": 49
+                },
+                {
+                    "item": "rs:agility_contortion_green",
+                    "text": "Access the God Wars Dungeon area via the \\nAgility route",
+                    "level": 60
+                },
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Yanille Dungeon's rubble climb",
+                    "level": 67
+                },
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Enter the Saradomins area of the \\nGod Wars Dungeon",
+                    "level": 70
+                }
+            ]
+        },
+        {
+            "name": "Shortcuts",
+            "lines": [
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Falador Agility shortcut",
+                    "level": 5
+                },
+                {
+                    "item": "rs:agility_jump_yellow",
+                    "text": "Jump fence south of Varrock",
+                    "level": 13
+                },
+                {
+                    "item": "rs:agility_contortion_yellow",
+                    "text": "Yanille Agility shortcut",
+                    "level": 16
+                },
+                {
+                    "item": "rs:agility_balance_yellow",
+                    "text": "Coal Truck log balance",
+                    "level": 20
+                },
+                {
+                    "item": "rs:agility_contortion_yellow",
+                    "text": "Falador Agility shortcut",
+                    "level": 26
+                },
+                {
+                    "item": "rs:agility_balance_yellow",
+                    "text": "Draynor Manor stones to Champions' Guild",
+                    "level": 31
+                },
+                {
+                    "item": "rs:agility_balance_yellow",
+                    "text": "Ardougne log balance shortcut",
+                    "level": 33
+                },
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Gnome Stronghold shortcut",
+                    "level": 37
+                },
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Al Kahrid Mining pit cliffside scramble",
+                    "level": 38
+                },
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Trollheim easy cliffside scramble",
+                    "level": 41
+                },
+                {
+                    "item": "rs:agility_contortion_yellow",
+                    "text": "Dwarven Mine narrow crevice",
+                    "level": 42
+                },
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Trollheim medium cliffside scramble",
+                    "level": 43
+                },
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Trollheim advanced cliffside scramble",
+                    "level": 44
+                },
+                {
+                    "item": "rs:agility_contortion_yellow",
+                    "text": "Cosmic Temple - narrow walkway",
+                    "level": 46
+                },
+                {
+                    "item": "rs:agility_contortion_yellow",
+                    "text": "Deep Wilderness - narrow tunnel",
+                    "level": 46
+                },
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Trollheim hard cliffside scramble",
+                    "level": 47
+                },
+                {
+                    "item": "rs:agility_contortion_yellow",
+                    "text": "Pipe from Edgeville dungeon to Varrock Sewers",
+                    "level": 51
+                },
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Port Phasmatys ectopool shortcut",
+                    "level": 58
+                },
+                {
+                    "item": "rs:agility_jump_yellow",
+                    "text": "Elven overpass easy cliffside scamble",
+                    "level": 59
+                },
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Slayer Tower medium spiked chain climb",
+                    "level": 61
+                },
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Taverley dungeon lesser demon fence shortcut",
+                    "level": 63
+                },
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Trollheim Wilderness route",
+                    "level": 64
+                },
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Temple on the Salve to Morytania shortcut",
+                    "level": 65
+                },
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Elven overpass medium cliffside scramble",
+                    "level": 68
+                },
+                {
+                    "item": "rs:agility_contortion_yellow",
+                    "text": "Taverley Dungeon short-cuts to blue dragons",
+                    "level": 70
+                },
+                {
+                    "item": "rs:agility_climb",
+                    "text": "Slayer Tower advanced spiked chain",
+                    "level": 71
+                },
+                {
+                    "item": "rs:agility_jump_yellow",
+                    "text": "Taverley Dungeon spiked blades jump",
+                    "level": 80
+                },
+                {
+                    "item": "rs:agility_jump_yellow",
+                    "text": "Fremennik Slayer Dungeon spiked blades jump",
+                    "level": 81
+                },
+                {
+                    "item": "rs:agility_jump_yellow",
+                    "text": "Brimhaven Dungeon eastern stepping stones",
+                    "level": 83
+                },
+                {
+                    "item": "rs:agility_contortion_yellow",
+                    "text": "Iorwerth southern shortcut",
+                    "level": 84
+                }
+            ]
+        }
+    ]
+}

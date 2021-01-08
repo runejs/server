@@ -1,0 +1,47 @@
+{
+    "rs:rune_essence": {
+        "game_id": 1436
+    },
+    "rs:clay": {
+        "game_id": 434
+    },
+    "rs:copper_ore": {
+        "game_id": 436
+    },
+    "rs:tin_ore": {
+        "game_id": 438
+    },
+    "rs:blurite_ore": {
+        "game_id": 668
+    },
+    "rs:limestone": {
+        "game_id": 3211
+    },
+    "rs:iron_ore": {
+        "game_id": 440
+    },
+    "rs:silver_ore": {
+        "game_id": 442
+    },
+    "rs:coal": {
+        "game_id": 453
+    },
+    "rs:gold_ore": {
+        "game_id": 444
+    },
+    "rs:granite": {
+        "game_id": 6983
+    },
+    "rs:mithril_ore": {
+        "game_id": 447
+    },
+    "rs:adamantite_ore": {
+        "game_id": 1761
+    },
+    "rs:soft_clay": {
+        "game_id": 1761
+    },
+    "rs:runite_ore": {
+        "game_id": 451
+    }
+}

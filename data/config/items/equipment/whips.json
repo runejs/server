@@ -1,0 +1,37 @@
+{
+  "rs:abyssal_whip": {
+    "game_id": 4151,
+    "examine": "A weapon from the abyss.",
+    "tradable": true,
+    "weight": 0.453,
+    "equippable": true,
+    "equipment_data": {
+      "equipment_slot": "main_hand",
+      "equipment_type": "one_handed",
+      "offensive_bonuses": {
+        "speed": 4,
+        "stab": 0,
+        "slash": 82,
+        "crush": 0,
+        "magic": 0
+      },
+      "defensive_bonuses": {
+        "magic": 0
+      },
+      "skill_bonuses": {
+        "strength": 82
+      },
+      "weapon_info": {
+        "style": "dagger"
+      }
+    }
+  },
+  "rs:veracs_flail": {
+    "game_id": 4755,
+    "examine": "Verac the Defiled's flail.",
+    "tradable": true,
+    "stackable": false,
+    "notable": false,
+    "equippable": true
+  }
+}

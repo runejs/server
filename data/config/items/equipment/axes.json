@@ -1,0 +1,29 @@
+{
+    "rs:dharoks_greataxe": {
+        "game_id": 4718,
+        "examine": "Dharok the Wretched's greataxe.",
+        "tradable": true,
+        "weight": 3.175,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "one_handed",
+            "offensive_bonuses": {
+                "speed": 7,
+                "stab": -4,
+                "slash": 103,
+                "crush": 95,
+                "magic": -4
+            },
+            "defensive_bonuses": {
+                "ranged": -1
+            },
+            "skill_bonuses": {
+                "strength": 105
+            },
+            "weapon_info": {
+                "style": "axe"
+            }
+        }
+    }
+}

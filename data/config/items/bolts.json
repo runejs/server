@@ -1,0 +1,41 @@
+{
+    "rs:bronze_bolt": {
+        "game_id": 877
+    },
+    "rs:opal_bolt": {
+        "game_id": 879
+    },
+    "rs:blurite_bolt": {
+        "game_id": 9139
+    },
+    "rs:jade_bolt": {
+        "game_id": 9237
+    },
+    "rs:iron_bolt": {
+        "game_id": 9140
+    },
+    "rs:silver_bolt": {
+        "game_id": 9145
+    },
+    "rs:steel_bolt": {
+        "game_id": 9141
+    },
+    "rs:mithril_bolt": {
+        "game_id": 9142
+    },
+    "rs:sapphire_bolt": {
+        "game_id": 9337
+    },
+    "rs:emerald_bolt": {
+        "game_id": 9338
+    },
+    "rs:adamant_bolt": {
+        "game_id": 9143
+    },
+    "rs:runite_bolt": {
+        "game_id": 9144
+    },
+    "rs:onyx_bolt": {
+        "game_id": 9342
+    }
+}

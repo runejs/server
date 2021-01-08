@@ -1,0 +1,442 @@
+{
+  "id": 129,
+  "name": "Cooking",
+  "members": false,
+  "sub_guides": [
+    {
+      "name": "Meats",
+      "lines": [
+        {
+          "item": "rs:meat",
+          "text": "Meat",
+          "level": 1
+        },
+        {
+          "item": "rs:shrimps",
+          "text": "Shrimp",
+          "level": 1
+        },
+        {
+          "item": "rs:chicken",
+          "text": "Chicken",
+          "level": 1
+        },
+        {
+          "item": "rs:anchovies",
+          "text": "Anchovies",
+          "level": 1
+        },
+        {
+          "item": "rs:sardine",
+          "text": "Sardine",
+          "level": 1
+        },
+        {
+          "item": "rs:karambwan",
+          "text": "Members: Karambwan",
+          "level": 1
+        },
+        {
+          "item": "rs:ugthanki_kebab",
+          "text": "Ugthanki kebab",
+          "level": 1
+        },
+        {
+          "item": "rs:herring",
+          "text": "Herring",
+          "level": 5
+        },
+        {
+          "item": "rs:mackerel",
+          "text": "Mackerel",
+          "level": 10
+        },
+        {
+          "item": "rs:thin_snail_meat",
+          "text": "Members: Thin snail",
+          "level": 12
+        },
+        {
+          "item": "rs:trout",
+          "text": "Trout",
+          "level": 15
+        },
+        {
+          "item": "rs:lean_snail_meat",
+          "text": "Members: Lean snail",
+          "level": 17
+        },
+        {
+          "item": "rs:cod",
+          "text": "Members: Cod",
+          "level": 18
+        },
+        {
+          "item": "rs:pike",
+          "text": "Pike",
+          "level": 20
+        },
+        {
+          "item": "rs:salmon",
+          "text": "Salmon",
+          "level": 25
+        },
+        {
+          "item": "rs:tuna",
+          "text": "Tuna",
+          "level": 30
+        },
+        {
+          "item": "rs:cooked_chompy",
+          "text": "Members: Cooked chompy",
+          "level": 30
+        },
+        {
+          "item": "rs:fish_cake",
+          "text": "Members: Fishcakes",
+          "level": 31
+        },
+        {
+          "item": "rs:cave_eel",
+          "text": "Members: Cave eel",
+          "level": 38
+        },
+        {
+          "item": "rs:lobster",
+          "text": "Lobster",
+          "level": 40
+        },
+        {
+          "item": "rs:jubbly",
+          "text": "Members: Jubbly",
+          "level": 41
+        },
+        {
+          "item": "rs:bass",
+          "text": "Members: Bass",
+          "level": 43
+        },
+        {
+          "item": "rs:swordfish",
+          "text": "Swordfish",
+          "level": 45
+        },
+        {
+          "item": "rs:lava_eel",
+          "text": "Members: Lava eel",
+          "level": 53
+        },
+        {
+          "item": "rs:shark",
+          "text": "Members: Shark",
+          "level": 80
+        },
+        {
+          "item": "rs:sea_turtle",
+          "text": "Members: Sea turtle",
+          "level": 82
+        },
+        {
+          "item": "rs:manta_ray",
+          "text": "Members: Manta ray",
+          "level": 90
+        }
+      ]
+    },
+    {
+      "name": "Bread",
+      "lines": [
+        {
+          "item": "rs:bread",
+          "text": "Bread",
+          "level": 1
+        },
+        {
+          "item": "rs:pitta_bread",
+          "text": "Members: Pitta bread",
+          "level": 58
+        }
+      ]
+    },
+    {
+      "name": "Pies",
+      "lines": [
+        {
+          "item": "rs:redberry_pie",
+          "text": "Redberry pie",
+          "level": 10
+        },
+        {
+          "item": "rs:meat_pie",
+          "text": "Meat pie",
+          "level": 20
+        },
+        {
+          "item": "rs:mud_pie",
+          "text": "Members: Mud pie",
+          "level": 29
+        },
+        {
+          "item": "rs:apple_pie",
+          "text": "Apple pie",
+          "level": 30
+        },
+        {
+          "item": "rs:garden_pie",
+          "text": "Members: Garden pie",
+          "level": 34
+        },
+        {
+          "item": "rs:fish_pie",
+          "text": "Members: Fish pie",
+          "level": 47
+        },
+        {
+          "item": "rs:admiral_pie",
+          "text": "Members: Admiral pie",
+          "level": 70
+        },
+        {
+          "item": "rs:wild_pie",
+          "text": "Members: Wild pie",
+          "level": 85
+        },
+        {
+          "item": "rs:summer_pie",
+          "text": "Members: Summer pie",
+          "level": 95
+        }
+      ]
+    },
+    {
+      "name": "Stews",
+      "lines": [
+        {
+          "item": "rs:stew",
+          "text": "Stew",
+          "level": 25
+        },
+        {
+          "item": "rs:banana_stew",
+          "text": "Banana stew",
+          "level": 25
+        },
+        {
+          "item": "rs:spicy_stew",
+          "text": "Spicy stew",
+          "level": 25
+        }
+      ]
+    },
+    {
+      "name": "Pizzas",
+      "lines": [
+        {
+          "item": "rs:plain_pizza",
+          "text": "Plain pizza",
+          "level": 35
+        },
+        {
+          "item": "rs:meat_pizza",
+          "text": "Meat pizza",
+          "level": 45
+        },
+        {
+          "item": "rs:anchovy_pizza",
+          "text": "Anchovy pizza",
+          "level": 55
+        },
+        {
+          "item": "rs:pineapple_pizza",
+          "text": "Members: Pineapple pizza",
+          "level": 65
+        }
+      ]
+    },
+    {
+      "name": "Cakes",
+      "lines": [
+        {
+          "item": "rs:cake",
+          "text": "Cake",
+          "level": 40
+        },
+        {
+          "item": "rs:chocolate_cake",
+          "text": "Chocolate cake",
+          "level": 50
+        }
+      ]
+    },
+    {
+      "name": "Wine",
+      "lines": [
+        {
+          "item": "rs:wine",
+          "text": "Wine",
+          "level": 35
+        },
+        {
+          "item": "rs:wine_of_zamorak",
+          "text": "Members: Wine of Zamorak",
+          "level": 65
+        }
+      ]
+    },
+    {
+      "name": "Hot drinks",
+      "lines": [
+        {
+          "item": "rs:nettle_tea",
+          "text": "Nettle tea",
+          "level": 20
+        }
+      ]
+    },
+    {
+      "name": "Brewing",
+      "lines": [
+        {
+          "item": "rs:cider",
+          "text": "Cider (4 Apple mush)",
+          "level": 14
+        },
+        {
+          "item": "rs:dwarven_stout",
+          "text": "Dwarven Stout (4 Hammerstone hops)",
+          "level": 19
+        },
+        {
+          "item": "rs:asgarnian_ale",
+          "text": "Asgarnian Ale (4 Asgarnian hops)",
+          "level": 24
+        },
+        {
+          "item": "rs:greenmans_ale",
+          "text": "Greenman's Ale (4 Harralander leaves)",
+          "level": 29
+        },
+        {
+          "item": "rs:wizards_mind_bomb",
+          "text": "Wizard's Mind Bomb (4 Yinillian hops)",
+          "level": 34
+        },
+        {
+          "item": "rs:dragon_bitter",
+          "text": "Dragon Bitter (4 Krandorian hops)",
+          "level": 39
+        },
+        {
+          "item": "rs:moonlight_mead",
+          "text": "Moonlight Mead (4 Bittercap mushrooms)",
+          "level": 44
+        },
+        {
+          "item": "rs:axemans_folly",
+          "text": "Axeman's Folly (1 Oak root)",
+          "level": 49
+        },
+        {
+          "item": "rs:chefs_delight",
+          "text": "Chef's Delight (4 Portions of chocolate dust)",
+          "level": 54
+        },
+        {
+          "item": "rs:slayers_respite",
+          "text": "Slayer's Respite (4 Wildblood hops)",
+          "level": 54
+        }
+      ]
+    },
+    {
+      "name": "Vegetable",
+      "lines": [
+        {
+          "item": "rs:baked_potato",
+          "text": "Baked potato",
+          "level": 7
+        },
+        {
+          "item": "rs:spicy_sauce",
+          "text": "Spicy sauce (topping ingredient)",
+          "level": 9
+        },
+        {
+          "item": "rs:scrambled_egg",
+          "text": "Scrambled egg (topping ingredient)",
+          "level": 13
+        },
+        {
+          "item": "rs:scrambled_egg_and_tomato",
+          "text": "Scrambled egg and tomato (topping)",
+          "level": 23
+        },
+        {
+          "item": "rs:sweetcorn",
+          "text": "Sweetcorn",
+          "level": 28
+        },
+        {
+          "item": "rs:baked_potato_with_butter",
+          "text": "Baked potato with butter",
+          "level": 39
+        },
+        {
+          "item": "rs:fried_onion",
+          "text": "Fried onion (topping ingredient)",
+          "level": 42
+        },
+        {
+          "item": "rs:fried_mushroom",
+          "text": "Fried mushroom (topping ingredient)",
+          "level": 46
+        },
+        {
+          "item": "rs:baked_potato_with_butter_and_cheese",
+          "text": "Baked potato with butter and cheese",
+          "level": 47
+        },
+        {
+          "item": "rs:baked_potato_with_egg_and_tomato",
+          "text": "Baked potato with egg and tomato",
+          "level": 51
+        },
+        {
+          "item": "rs:fried_mushroom_and_onion",
+          "text": "Fried mushroom and onion (topping)",
+          "level": 57
+        },
+        {
+          "item": "rs:baked_potato_with_mushroom_and_onion",
+          "text": "Baked potato with mushroom and onion",
+          "level": 64
+        },
+        {
+          "item": "rs:tuna_and_sweetcorn",
+          "text": "Tuna and sweetcorn (topping)",
+          "level": 67
+        },
+        {
+          "item": "rs:baked_potato_with_tuna_and_sweetcorn",
+          "text": "Baked potato with tuna and sweetcorn",
+          "level": 68
+        }
+      ]
+    },
+    {
+      "name": "Diary",
+      "lines": [
+        {
+          "item": "rs:butter",
+          "text": "Butter",
+          "level": 38
+        },
+        {
+          "item": "rs:cheese",
+          "text": "Cheese",
+          "level": 48
+        }
+      ]
+    }
+  ]
+}

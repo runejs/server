@@ -3,5 +3,53 @@
         "game_id": 590,
         "tradable": true,
         "weight": 0.035
+    },
+    "rs:normal_pyre_ships": {
+        "game_id": 3438
+    },
+    "rs:oak_pyre_ships": {
+        "game_id": 3440
+    },
+    "rs:willow_pyre_ships": {
+        "game_id": 3442
+    },
+    "rs:teak_pyre_ships": {
+        "game_id": 6211
+    },
+    "rs:maple_pyre_ships": {
+        "game_id": 3444
+    },
+    "rs:mahogany_pyre_ships": {
+        "game_id": 6213
+    },
+    "rs:yew_pyre_ships": {
+        "game_id": 3446
+    },
+    "rs:magic_pyre_ships": {
+        "game_id": 3446
+    },
+    "rs:candle": {
+        "game_id": 36
+    },
+    "rs:candle_lanterns": {
+        "game_id": 4527
+    },
+    "rs:oil_lamps": {
+        "game_id": 4522
+    },
+    "rs:iron_spits": {
+        "game_id": 7225
+    },
+    "rs:oil_lanterns": {
+        "game_id": 4535
+    },
+    "rs:harpie_bug_lanterns": {
+        "game_id": 7051
+    },
+    "rs:bullseye_lanterns": {
+        "game_id": 4544
+    },
+    "rs:sapphire_lanterns": {
+        "game_id": 4700
     }
 }

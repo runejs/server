@@ -1,0 +1,132 @@
+{
+  "id": 120,
+  "name": "Mining",
+  "members": false,
+  "sub_guides": [
+    {
+      "name": "Rocks",
+      "lines": [
+        {
+          "item": "rs:rune_essence",
+          "text": "Rune essence (after RuneMysteries quest)",
+          "level": 1
+        },
+        {
+          "item": "rs:clay",
+          "text": "Clay",
+          "level": 1
+        },
+        {
+          "item": "rs:copper_ore",
+          "text": "Copper ore",
+          "level": 1
+        },
+        {
+          "item": "rs:tin_ore",
+          "text": "Tin ore",
+          "level": 1
+        },
+        {
+          "item": "rs:blurite_ore",
+          "text": "Blurite ore",
+          "level": 10
+        },
+        {
+          "item": "rs:limestone",
+          "text": "Members: Limestone",
+          "level": 10
+        },
+        {
+          "item": "rs:iron_ore",
+          "text": "Iron ore",
+          "level": 15
+        },
+        {
+          "item": "rs:silver_ore",
+          "text": "Silver ore",
+          "level": 20
+        },
+        {
+          "item": "rs:coal",
+          "text": "Coal",
+          "level": 30
+        },
+        {
+          "item": "rs:gold_ore",
+          "text": "Gold",
+          "level": 40
+        },
+        {
+          "item": "rs:granite",
+          "text": "Members: Granite",
+          "level": 45
+        },
+        {
+          "item": "rs:mithril_ore",
+          "text": "Mithril ore",
+          "level": 55
+        },
+        {
+          "item": "rs:adamantite_ore",
+          "text": "Adamantite ore",
+          "level": 70
+        },
+        {
+          "item": "rs:soft_clay",
+          "text": "Members: Soft clay",
+          "level": 70
+        },
+        {
+          "item": "rs:runite_ore",
+          "text": "Runite ore",
+          "level": 85
+        }
+      ]
+    },
+    {
+      "name": "Equipment",
+      "lines": [
+        {
+          "item": "rs:bronze_pickaxe",
+          "text": "Bronze pickaxe",
+          "level": 1
+        },
+        {
+          "item": "rs:iron_pickaxe",
+          "text": "Iron pickaxe",
+          "level": 1
+        },
+        {
+          "item": "rs:steel_pickaxe",
+          "text": "Steel pickaxe",
+          "level": 6
+        },
+        {
+          "item": "rs:mithril_pickaxe",
+          "text": "Mithril pickaxe",
+          "level": 21
+        },
+        {
+          "item": "rs:adamant_pickaxe",
+          "text": "Adamant pickaxe",
+          "level": 31
+        },
+        {
+          "item": "rs:rune_pickaxe",
+          "text": "Rune pickaxe",
+          "level": 41
+        }
+      ]
+    },
+    {
+      "name": "Areas",
+      "lines": [
+        {
+          "item": "rs:mithril_ore",
+          "text": "Mining guild",
+          "level": 60
+        }
+      ]
+    }
+  ]
+}

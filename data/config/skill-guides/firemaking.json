@@ -1,0 +1,232 @@
+{
+  "id": 132,
+  "name": "Firemaking",
+  "members": false,
+  "sub_guides": [
+    {
+      "name": "Burning",
+      "lines": [
+        {
+          "item": "rs:logs",
+          "text": "Normal logs",
+          "level": 1
+        },
+        {
+          "item": "rs:achey_logs",
+          "text": "Members: Achey logs",
+          "level": 1
+        },
+        {
+          "item": "rs:pyre_logs",
+          "text": "Members: Pyre logs",
+          "level": 5
+        },
+        {
+          "item": "rs:oak_logs",
+          "text": "Oak logs",
+          "level": 15
+        },
+        {
+          "item": "rs:oak_pyre_logs",
+          "text": "Members: Oak pyre logs",
+          "level": 20
+        },
+        {
+          "item": "rs:willow_logs",
+          "text": "Willow logs",
+          "level": 30
+        },
+        {
+          "item": "rs:teak_logs",
+          "text": "Members: Teak logs",
+          "level": 35
+        },
+        {
+          "item": "rs:willow_pyre_logs",
+          "text": "Members: Willow pyre logs",
+          "level": 35
+        },
+        {
+          "item": "rs:teak_pyre_logs",
+          "text": "Members: Teak pyre logs",
+          "level": 40
+        },
+        {
+          "item": "rs:maple_logs",
+          "text": "Maple logs",
+          "level": 45
+        },
+        {
+          "item": "rs:mahogany_logs",
+          "text": "Members: Mahogany logs",
+          "level": 50
+        },
+        {
+          "item": "rs:maple_pyre_logs",
+          "text": "Members: Maple pyre logs",
+          "level": 50
+        },
+        {
+          "item": "rs:mahogany_pyre_logs",
+          "text": "Members: Mahogany pyre logs",
+          "level": 55
+        },
+        {
+          "item": "rs:yew_logs",
+          "text": "Yew logs",
+          "level": 60
+        },
+        {
+          "item": "rs:yew_pyre_logs",
+          "text": "Members: Yew pyre logs",
+          "level": 65
+        },
+        {
+          "item": "rs:magic_logs",
+          "text": "Members: Magic logs",
+          "level": 75
+        },
+        {
+          "item": "rs:magic_pyre_logs",
+          "text": "Members: Magic pyre logs",
+          "level": 80
+        }
+      ]
+    },
+    {
+      "name": "Barbarian",
+      "lines": [
+        {
+          "item": "rs:normal_pyre_ships",
+          "text": "Normal Pyre Ships (with 11 Crafting)",
+          "level": 11
+        },
+        {
+          "item": "rs:normal_logs",
+          "text": "Normal Logs",
+          "level": 21
+        },
+        {
+          "item": "rs:achey_logs",
+          "text": "Achey Logs",
+          "level": 21
+        },
+        {
+          "item": "rs:oak_pyre_ships",
+          "text": "Oak Pyre Ships (with 25 Crafting)",
+          "level": 25
+        },
+        {
+          "item": "rs:oak_logs",
+          "text": "Oak Logs",
+          "level": 35
+        },
+        {
+          "item": "rs:willow_pyre_ships",
+          "text": "Willow Pyre Ships (with 40 Crafting)",
+          "level": 40
+        },
+        {
+          "item": "rs:teak_pyre_ships",
+          "text": "Teak Pyre Ships (with 45 Crafting)",
+          "level": 45
+        },
+        {
+          "item": "rs:willow_logs",
+          "text": "Willow Logs",
+          "level": 50
+        },
+        {
+          "item": "rs:teak_logs",
+          "text": "Teak Logs",
+          "level": 55
+        },
+        {
+          "item": "rs:maple_pyre_ships",
+          "text": "Maple Pyre Ships (with 55 Crafting)",
+          "level": 55
+        },
+        {
+          "item": "rs:mahogany_pyre_ships",
+          "text": "Mahogany Pyre Ships (with 60 Crafting)",
+          "level": 60
+        },
+        {
+          "item": "rs:maple_logs",
+          "text": "Maple Logs",
+          "level": 65
+        },
+        {
+          "item": "rs:yew_pyre_ships",
+          "text": "Yew Pyre Ships (with 70 Crafting)",
+          "level": 70
+        },
+        {
+          "item": "rs:mahogany_logs",
+          "text": "Mahogany Logs",
+          "level": 70
+        },
+        {
+          "item": "rs:yew_logs",
+          "text": "Yew Logs",
+          "level": 80
+        },
+        {
+          "item": "rs:magic_pyre_ships",
+          "text": "Magic Pyre Ships",
+          "level": 85
+        },
+        {
+          "item": "rs:magic_logs",
+          "text": "Magic Logs",
+          "level": 95
+        }
+      ]
+    },
+    {
+      "name": "Equipment",
+      "lines": [
+        {
+          "item": "rs:candle",
+          "text": "Candle",
+          "level": 1
+        },
+        {
+          "item": "rs:candle_lanterns",
+          "text": "Candle lanterns",
+          "level": 4
+        },
+        {
+          "item": "rs:oil_lamps",
+          "text": "Oil lamps",
+          "level": 12
+        },
+        {
+          "item": "rs:iron_spits",
+          "text": "Members: Iron spits",
+          "level": 20
+        },
+        {
+          "item": "rs:oil_lanterns",
+          "text": "Oil lanterns",
+          "level": 26
+        },
+        {
+          "item": "rs:harpie_bug_lanterns",
+          "text": "Harpie bug lanterns (not a light source)",
+          "level": 33
+        },
+        {
+          "item": "rs:bullseye_lanterns",
+          "text": "Bullseye lanterns",
+          "level": 49
+        },
+        {
+          "item": "rs:sapphire_lanterns",
+          "text": "Sapphire lanterns",
+          "level": 49
+        }
+      ]
+    }
+  ]
+}

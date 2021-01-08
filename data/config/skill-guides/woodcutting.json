@@ -1,0 +1,112 @@
+{
+  "id": 139,
+  "name": "Woodcutting",
+  "members": false,
+  "sub_guides": [
+    {
+      "name": "Trees",
+      "lines": [
+        {
+          "item": "rs:logs",
+          "text": "Normal trees",
+          "level": 1
+        },
+        {
+          "item": "rs:achey_logs",
+          "text": "Achey trees",
+          "level": 1
+        },
+        {
+          "item": "rs:oak_logs",
+          "text": "Oak trees",
+          "level": 15
+        },
+        {
+          "item": "rs:willow_logs",
+          "text": "Willow trees",
+          "level": 30
+        },
+        {
+          "item": "rs:teak_logs",
+          "text": "Teak trees",
+          "level": 35
+        },
+        {
+          "item": "rs:maple_logs",
+          "text": "Maple trees",
+          "level": 45
+        },
+        {
+          "item": "rs:mahogany_logs",
+          "text": "Mahogany trees",
+          "level": 50
+        },
+        {
+          "item": "rs:yew_logs",
+          "text": "Yew trees",
+          "level": 60
+        },
+        {
+          "item": "rs:magic_logs",
+          "text": "Magic trees",
+          "level": 75
+        }
+      ]
+    },
+    {
+      "name": "Axes",
+      "lines": [
+        {
+          "item": "rs:bronze_axe",
+          "text": "Bronze axe",
+          "level": 1
+        },
+        {
+          "item": "rs:iron_axe",
+          "text": "Iron axe",
+          "level": 1
+        },
+        {
+          "item": "rs:steel_axe",
+          "text": "Steel axe",
+          "level": 6
+        },
+        {
+          "item": "rs:black_axe",
+          "text": "Black axe",
+          "level": 11
+        },
+        {
+          "item": "rs:mithril_axe",
+          "text": "Mithril axe",
+          "level": 21
+        },
+        {
+          "item": "rs:adamant_axe",
+          "text": "Adamant axe",
+          "level": 31
+        },
+        {
+          "item": "rs:rune_axe",
+          "text": "Rune axe",
+          "level": 41
+        },
+        {
+          "item": "rs:dragon_axe",
+          "text": "Dragon axe",
+          "level": 61
+        }
+      ]
+    },
+    {
+      "name": "Other",
+      "lines": [
+        {
+          "item": "rs:dwarf_remains",
+          "text": "Missing content",
+          "level": 1
+        }
+      ]
+    }
+  ]
+}

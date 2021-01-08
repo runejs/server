@@ -1,0 +1,26 @@
+{
+    "rs:arrow_shaft": {
+        "game_id": 52
+    },
+    "rs:bronze_arrow": {
+        "game_id": 882
+    },
+    "rs:iron_arrow": {
+        "game_id": 884
+    },
+    "rs:steel_arrow": {
+        "game_id": 886
+    },
+    "rs:mithril_arrow": {
+        "game_id": 888
+    },
+    "rs:broad_arrow": {
+        "game_id": 4150
+    },
+    "rs:adamant_arrow": {
+        "game_id": 890
+    },
+    "rs:rune_arrow": {
+        "game_id": 892
+    }
+}

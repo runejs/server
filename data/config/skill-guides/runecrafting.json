@@ -1,0 +1,312 @@
+{
+  "id": 140,
+  "name": "Runecrafting",
+  "members": false,
+  "sub_guides": [
+    {
+      "name": "Runes",
+      "lines": [
+        {
+          "item": "rs:air_rune",
+          "text": "Air runes",
+          "level": 1
+        },
+        {
+          "item": "rs:mind_rune",
+          "text": "Mind runes",
+          "level": 2
+        },
+        {
+          "item": "rs:water_rune",
+          "text": "Water runes",
+          "level": 5
+        },
+        {
+          "item": "rs:mist_rune",
+          "text": "Members: Mist runes",
+          "level": 6
+        },
+        {
+          "item": "rs:earth_rune",
+          "text": "Earth runes",
+          "level": 9
+        },
+        {
+          "item": "rs:dust_rune",
+          "text": "Members: Dust runes",
+          "level": 10
+        },
+        {
+          "item": "rs:mud_rune",
+          "text": "Members: Mud runes",
+          "level": 13
+        },
+        {
+          "item": "rs:fire_rune",
+          "text": "Fire runes",
+          "level": 14
+        },
+        {
+          "item": "rs:smoke_rune",
+          "text": "Members: Smoke runes",
+          "level": 15
+        },
+        {
+          "item": "rs:steam_rune",
+          "text": "Members: Steam runes",
+          "level": 19
+        },
+        {
+          "item": "rs:body_rune",
+          "text": "Body runes",
+          "level": 20
+        },
+        {
+          "item": "rs:lava_rune",
+          "text": "Members: Lava runes",
+          "level": 23
+        },
+        {
+          "item": "rs:cosmic_rune",
+          "text": "Members: Cosmic runes",
+          "level": 27
+        },
+        {
+          "item": "rs:chaos_rune",
+          "text": "Members: Chaos runes",
+          "level": 35
+        },
+        {
+          "item": "rs:astral_rune",
+          "text": "Members: Astral runes",
+          "level": 40
+        },
+        {
+          "item": "rs:nature_rune",
+          "text": "Members: Nature runes",
+          "level": 44
+        },
+        {
+          "item": "rs:law_rune",
+          "text": "Members: Law runes",
+          "level": 54
+        },
+        {
+          "item": "rs:death_rune",
+          "text": "Members: Death runes",
+          "level": 65
+        },
+        {
+          "item": "rs:blood_rune",
+          "text": "Members: Blood runes",
+          "level": 77
+        },
+        {
+          "item": "rs:soul_rune",
+          "text": "Members: Soul runes",
+          "level": 90
+        }
+      ]
+    },
+    {
+      "name": "Multiple",
+      "lines": [
+        {
+          "item": "rs:air_rune",
+          "text": "2 Air runes per essence",
+          "level": 11
+        },
+        {
+          "item": "rs:mind_rune",
+          "text": "2 Mind runes per essence",
+          "level": 14
+        },
+        {
+          "item": "rs:water_rune",
+          "text": "2 Water runes per essence",
+          "level": 19
+        },
+        {
+          "item": "rs:air_rune",
+          "text": "3 Air runes per essence",
+          "level": 22
+        },
+        {
+          "item": "rs:earth_rune",
+          "text": "2 Earth runes per essence",
+          "level": 26
+        },
+        {
+          "item": "rs:mind_rune",
+          "text": "3 Mind runes per essence",
+          "level": 28
+        },
+        {
+          "item": "rs:air_rune",
+          "text": "4 Air runes per essence",
+          "level": 33
+        },
+        {
+          "item": "rs:fire_rune",
+          "text": "2 Fire runes per essence",
+          "level": 35
+        },
+        {
+          "item": "rs:water_rune",
+          "text": "3 Water runes per essence",
+          "level": 38
+        },
+        {
+          "item": "rs:mind_rune",
+          "text": "4 Mind runes per essence",
+          "level": 42
+        },
+        {
+          "item": "rs:air_rune",
+          "text": "5 Air runes per essence",
+          "level": 44
+        },
+        {
+          "item": "rs:body_rune",
+          "text": "2 Body runes per essence",
+          "level": 46
+        },
+        {
+          "item": "rs:earth_rune",
+          "text": "3 Earth runes per essence",
+          "level": 52
+        },
+        {
+          "item": "rs:air_rune",
+          "text": "6 Air runes per essence",
+          "level": 55
+        },
+        {
+          "item": "rs:mind_rune",
+          "text": "5 Mind runes per essence",
+          "level": 56
+        },
+        {
+          "item": "rs:water_rune",
+          "text": "4 Water runes per essence",
+          "level": 57
+        },
+        {
+          "item": "rs:cosmic_rune",
+          "text": "Members: 2 Cosmic runes per essence",
+          "level": 59
+        },
+        {
+          "item": "rs:air_rune",
+          "text": "7 Air runes per essence",
+          "level": 66
+        },
+        {
+          "item": "rs:mind_rune",
+          "text": "6 Mind runes per essence",
+          "level": 70
+        },
+        {
+          "item": "rs:fire_rune",
+          "text": "3 Fire runes per essence",
+          "level": 70
+        },
+        {
+          "item": "rs:chaos_rune",
+          "text": "Members: 2 Chaos runes per essence",
+          "level": 74
+        },
+        {
+          "item": "rs:water_rune",
+          "text": "5 Water runes per essence",
+          "level": 76
+        },
+        {
+          "item": "rs:air_rune",
+          "text": "8 Air runes per essence",
+          "level": 77
+        },
+        {
+          "item": "rs:earth_rune",
+          "text": "4 Earth runes per essence",
+          "level": 78
+        },
+        {
+          "item": "rs:astral_rune",
+          "text": "Members: 2 Astral runes per essence",
+          "level": 82
+        },
+        {
+          "item": "rs:mind_rune",
+          "text": "7 Mind runes per essence",
+          "level": 84
+        },
+        {
+          "item": "rs:air_rune",
+          "text": "9 Air runes per essence",
+          "level": 88
+        },
+        {
+          "item": "rs:nature_rune",
+          "text": "Members: 2 Nature runes per essence",
+          "level": 91
+        },
+        {
+          "item": "rs:body_rune",
+          "text": "3 Body runes per essence",
+          "level": 92
+        },
+        {
+          "item_id": "rs:water_rune",
+          "text": "6 Water runes per essence",
+          "level": 95
+        },
+        {
+          "item": "rs:law_rune",
+          "text": "Members: 2 Law runes per essence",
+          "level": 95
+        },
+        {
+          "item": "rs:mind_rune",
+          "text": "8 Mind runes per essence",
+          "level": 98
+        },
+        {
+          "item": "rs:air_rune",
+          "text": "10 Air runes per essence",
+          "level": 99
+        },
+        {
+          "item": "rs:death_rune",
+          "text": "Members: 2 Death runes per essence",
+          "level": 99
+        }
+      ]
+    },
+    {
+      "name": "Pouches",
+      "lines": [
+        {
+          "item": "rs:small_pouch",
+          "text": "Small pouch: Holds 3 extra essence",
+          "level": 1
+        },
+        {
+          "item": "rs:medium_pouch",
+          "text": "Medium pouch: Holds 6 extra essence",
+          "level": 25
+        },
+        {
+          "item": "rs:large_pouch",
+          "text": "Large pouch: Holds 9 extra essence",
+          "level": 50
+        },
+        {
+          "item": "rs:giant_pouch",
+          "text": "Giant pouch: Holds 12 extra essence",
+          "level": 75
+        }
+      ]
+    }
+  ]
+}
