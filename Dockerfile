@@ -1,8 +1,14 @@
 FROM node:14
-WORKDIR /app
-COPY package.json package-lock.json* ./
+WORKDIR /usr/src/app
+COPY package.json ./
+COPY package-lock.json ./
+
 RUN npm install
-COPY . .
+
+COPY src ./src
+COPY tsconfig.json ./
+
+RUN npm build
 
 EXPOSE 43594
 CMD [ "npm", "start" ]

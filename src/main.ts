@@ -7,7 +7,7 @@ import { logger } from '@runejs/core';
 let killed: boolean = false;
 
 const shutdown = (signal, cb) => {
-    if(killed) {
+    if (killed) {
         return;
     }
 
