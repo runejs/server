@@ -1,21 +1,16 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  nodejs:
-    build: ./
-    image: runejs
-    container_name: runejs
-    deploy:
-      resources:
-        limits:
-          cpus: '4'
-          memory: 4096m
-        reservations:
-          cpus: '4'
-          memory: 4096m
-    restart: always
+  rune-js-server:
+    image: node:14
+    container_name: server
     ports:
       - "43594:43594"
     volumes:
-      - .:/app
-      - /app/node_modules/bcrypt/
+      - .:/usr/src/service
+    working_dir: /usr/src/service
+    command: npm run start
+
+networks:
+  default:
+    name: rune_js_network
