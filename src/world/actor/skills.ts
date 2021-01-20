@@ -207,7 +207,7 @@ export class Skills extends SkillShortcuts {
     }
 
     public getExpForLevel(level: number): number {
-        const index = Skills.confine(level, Skills.MINIMUM_LEVEL, Skills.MAXIMUM_LEVEL);
+        const index = Skills.confine(level - 1, Skills.MINIMUM_LEVEL, Skills.MAXIMUM_LEVEL);
         return Skills.EXPERIENCE_LOOKUP_TABLE[index];
     }
 
