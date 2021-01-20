@@ -143,6 +143,10 @@ export class Skills extends SkillShortcuts {
         7944614,8771558,9684577,10692629,11805606,13034431
     ];
 
+    private static MAXIMUM_EXPERIENCE: number = 200_000_000;
+    private static MINIMUM_LEVEL: number = 0;
+    private static MAXIMUM_LEVEL: number = 99;
+
     private _values: SkillValue[];
 
     public constructor(private actor: Actor, values?: SkillValue[]) {
@@ -159,6 +163,10 @@ export class Skills extends SkillShortcuts {
         } else {
             this._values = this.defaultValues();
         }
+    }
+
+    private static confine(value: number, min: number, max: number): number {
+        return Math.max(min, Math.min(value, max));
     }
 
     public setHitpoints(hitpoints: number): void {
@@ -187,25 +195,28 @@ export class Skills extends SkillShortcuts {
         return this.getLevel(skill, ignoreLevelModifications) >= level;
     }
 
-    public getLevelForExp(exp: number): number {
-        for (let level = 98; level >= 0; level--) {
-            if (Skills.EXPERIENCE_LOOKUP_TABLE[level] <= exp) {
+    public getLevelForExp(exp: number, index: number | undefined = undefined): number {
+        const start = Skills.confine((index || Skills.EXPERIENCE_LOOKUP_TABLE.length - 1), Skills.MINIMUM_LEVEL, Skills.MAXIMUM_LEVEL);
+        for (let level = start; level >= 1; level--) {
+            const requirement = Skills.EXPERIENCE_LOOKUP_TABLE[level];
+            if (exp > requirement) {
                 return level + 1;
             }
         }
-        return 0;
+        return 1;
     }
 
     public getExpForLevel(level: number): number {
-        return Skills.EXPERIENCE_LOOKUP_TABLE[level];
+        const index = Skills.confine(level, Skills.MINIMUM_LEVEL, Skills.MAXIMUM_LEVEL);
+        return Skills.EXPERIENCE_LOOKUP_TABLE[index];
     }
 
     public addExp(skill: number | SkillName, exp: number): void {
         const currentExp = this.get(skill).exp;
         const currentLevel = this.getLevelForExp(currentExp);
         let finalExp = currentExp + (exp * serverConfig.expRate);
-        if(finalExp > 200000000) {
-            finalExp = 200000000;
+        if (finalExp > Skills.MAXIMUM_EXPERIENCE) {
+            finalExp = Skills.MAXIMUM_EXPERIENCE;
         }
 
         const finalLevel = this.getLevelForExp(finalExp);
