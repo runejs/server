@@ -146,6 +146,7 @@ export class Skills extends SkillShortcuts {
     private static MAXIMUM_EXPERIENCE: number = 200_000_000;
     private static MINIMUM_LEVEL: number = 0;
     private static MAXIMUM_LEVEL: number = 99;
+    private static MAXIMUM_INDEX: number = Skills.EXPERIENCE_LOOKUP_TABLE.length - 1;
 
     private _values: SkillValue[];
 
@@ -196,7 +197,7 @@ export class Skills extends SkillShortcuts {
     }
 
     public getLevelForExp(exp: number, index: number | undefined = undefined): number {
-        const start = Skills.confine((index || Skills.EXPERIENCE_LOOKUP_TABLE.length - 1), Skills.MINIMUM_LEVEL, Skills.MAXIMUM_LEVEL);
+        const start = Skills.confine((index || Skills.MAXIMUM_INDEX), Skills.MINIMUM_LEVEL, Skills.MAXIMUM_INDEX);
         for (let level = start; level >= 1; level--) {
             const requirement = Skills.EXPERIENCE_LOOKUP_TABLE[level];
             if (exp > requirement) {
@@ -207,7 +208,7 @@ export class Skills extends SkillShortcuts {
     }
 
     public getExpForLevel(level: number): number {
-        const index = Skills.confine(level - 1, Skills.MINIMUM_LEVEL, Skills.MAXIMUM_LEVEL);
+        const index = Skills.confine(level - 1, Skills.MINIMUM_LEVEL, Skills.MAXIMUM_INDEX);
         return Skills.EXPERIENCE_LOOKUP_TABLE[index];
     }
 
