@@ -143,7 +143,7 @@ export class Skills extends SkillShortcuts {
         7944614,8771558,9684577,10692629,11805606,13034431
     ];
 
-    private static MAXIMUM_EXPERIENCE: number = 200_000_000;
+    private static MAXIMUM_EXPERIENCE: number = 200000000;
     private static MINIMUM_LEVEL: number = 0;
     private static MAXIMUM_LEVEL: number = 99;
     private static MAXIMUM_INDEX: number = Skills.EXPERIENCE_LOOKUP_TABLE.length - 1;
