@@ -14,6 +14,9 @@
             slot8: { modelId: 12, titleId: 48 }
         }
     },
+    anvil: {
+        widgetId: 312,
+    },
     inventory: {
         widgetId: 149,
         containerId: 0
