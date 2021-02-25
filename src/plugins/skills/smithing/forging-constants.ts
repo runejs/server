@@ -5,15 +5,17 @@ export const anvilIds: number[] = [
     2782, 2783, 4306, 6150
 ];
 
-export const barIds : number[] = [
-    itemIds.bars.bronze,
-    itemIds.bars.blurite,
-    itemIds.bars.iron,
-    itemIds.bars.steel,
-    itemIds.bars.mithril,
-    itemIds.bars.adamantite,
-    itemIds.bars.runite
-];
+/**
+ * Map bars and levels.
+ */
+export const bars : Map<number, number> = new Map<number, number>([
+    [itemIds.bars.bronze, 1],
+    [itemIds.bars.iron, 15],
+    [itemIds.bars.steel, 30],
+    [itemIds.bars.mithril, 50],
+    [itemIds.bars.adamantite, 70],
+    [itemIds.bars.runite, 85]
+]);
 
 export const smithables : Map<string, Map<string, Smithable>> = new Map<string, Map<string, Smithable>>([
     ['dagger', new Map<string, Smithable>([
