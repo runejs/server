@@ -85,7 +85,7 @@ export const openSubGuideAction: widgetAction = (details) => {
         return;
     }
 
-    loadGuide(player, guide.id, subGuideId, false);
+    loadGuide(player, guide.id, subGuideId, true);
 };
 
 export default [

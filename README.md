@@ -27,12 +27,12 @@ The server runs on the 435 revision of the game, which was a game update made on
 
 * Private & group Player Instances :heavy_check_mark:
 * Personal player instance objects and world items :heavy_check_mark:
-* Bank :yellow_square: 
+* Bank :heavy_check_mark: 
     * Withdraw/Deposit 1,5,10,All :heavy_check_mark:
     * As note  :heavy_check_mark: 
     * Swap slot :heavy_check_mark:
     * Insert mode: :heavy_check_mark:
-    * Deposit box :yellow_square: 
+    * Deposit box :heavy_check_mark: 
 * Audio :yellow_square:
     * Music :yellow_square:
         * Playing music :heavy_check_mark:
