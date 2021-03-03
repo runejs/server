@@ -1,7 +1,7 @@
 import { equipAction, EquipActionData } from '@server/world/action/equip-action';
 import { ItemDetails, WeaponStyle, weaponWidgetIds } from '@server/config/item-config';
 import { widgetScripts } from '@server/world/config/widget';
-import { Player, playerInitAction } from '@server/world/actor/player/player';
+import { Player, playerInitAction, SidebarTab } from '@server/world/actor/player/player';
 import { findItem, widgets } from '@server/config';
 import { buttonAction } from '@server/world/action/button-action';
 import { combatStyles } from '@server/world/actor/combat';
@@ -20,7 +20,7 @@ export function updateCombatStyle(player: Player, weaponStyle: WeaponStyle, styl
 
 export function showUnarmed(player: Player): void {
     player.modifyWidget(widgets.defaultCombatStyle, { childId: 0, text: 'Unarmed' });
-    player.setSidebarWidget(0, widgets.defaultCombatStyle);
+    player.setSidebarWidget(SidebarTab.COMBAT, widgets.defaultCombatStyle);
     let style = 0;
     if(player.savedMetadata.combatStyle) {
         style = player.savedMetadata.combatStyle[1] || null;
@@ -33,7 +33,7 @@ export function showUnarmed(player: Player): void {
 
 export function setWeaponWidget(player: Player, weaponStyle: WeaponStyle, itemDetails: ItemDetails): void {
     player.modifyWidget(weaponWidgetIds[weaponStyle], { childId: 0, text: itemDetails.name || 'Unknown' });
-    player.setSidebarWidget(0, weaponWidgetIds[weaponStyle]);
+    player.setSidebarWidget(SidebarTab.COMBAT, weaponWidgetIds[weaponStyle]);
     if(player.savedMetadata.combatStyle) {
         updateCombatStyle(player, weaponStyle, player.savedMetadata.combatStyle[1] || 0);
     }
