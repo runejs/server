@@ -76,7 +76,7 @@ export const goblinDiplomacyStageHandler: QuestStageHandler = {
     40: player => {
         showTabWidgetHint(player, tabIndex['music'], 5, 45,
             `Music`,
-            `Check out the music tab to view and play all of your favorite old-school RuneScape tracks!\n` +
+            `Check out the music tab to view and play all of your favorite RuneScape tracks!\n` +
                 `Once you've unlocked them, of course.`);
     },
     45: player => {
