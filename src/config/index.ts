@@ -20,6 +20,7 @@ import { loadShopConfigurations, Shop } from '@server/config/shop-config';
 import { Quest } from '@server/world/actor/player/quest';
 import { ItemSpawn, loadItemSpawnConfigurations } from '@server/config/item-spawn-config';
 import { loadSkillGuideConfigurations, SkillGuide } from '@server/config/skill-guide-config';
+import {loadMusicRegionConfigurations, MusicRegions} from "@server/config/music-regions-config";
 require('json5/lib/register');
 
 export async function loadConfigurationFiles(configurationDir: string): Promise<any[]> {
@@ -49,6 +50,8 @@ export let npcMap: { [key: string]: NpcDetails };
 export let npcIdMap: { [key: number]: string };
 export let npcPresetMap: NpcPresetConfiguration;
 export let npcSpawns: NpcSpawn[] = [];
+export let musicRegions: MusicRegions[] = [];
+export let musicRegionMap = new Map();
 export let itemSpawns: ItemSpawn[] = [];
 export let shopMap: { [key: string]: Shop };
 export let skillGuides: SkillGuide[] = [];
@@ -70,12 +73,14 @@ export async function loadConfigurations(): Promise<void> {
     npcPresetMap = npcPresets;
 
     npcSpawns = await loadNpcSpawnConfigurations('data/config/npc-spawns');
+    musicRegions = await loadMusicRegionConfigurations();
+    musicRegions.forEach(song => song.regionIds.forEach(region => musicRegionMap.set(region, song.songId)));
     itemSpawns = await loadItemSpawnConfigurations('data/config/item-spawns');
 
     shopMap = await loadShopConfigurations('data/config/shops');
     skillGuides = await loadSkillGuideConfigurations('data/config/skill-guides');
 
-    logger.info(`Loaded ${Object.keys(itemMap).length} items, ${itemSpawns.length} item spawns, ` +
+    logger.info(`Loaded ${Object.keys(musicRegionMap).length} music regions, ${Object.keys(itemMap).length} items, ${itemSpawns.length} item spawns, ` +
         `${Object.keys(npcMap).length} npcs, ${npcSpawns.length} npc spawns, ${Object.keys(shopMap).length} shops and ${skillGuides.length} skill guides.`);
 }
 

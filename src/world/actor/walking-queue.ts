@@ -3,6 +3,7 @@ import { Position } from '../position';
 import { Player } from './player/player';
 import { world } from '@server/game-server';
 import { Npc } from './npc/npc';
+import {playSongForRegion} from "@server/plugins/music/music-regions-plugin";
 
 /**
  * Controls an actor's movement.
@@ -212,7 +213,11 @@ export class WalkingQueue {
 
             if(!oldChunk.equals(newChunk)) {
                 if(this.actor instanceof Player) {
-                    this.actor.metadata['updateChunk'] = { newChunk, oldChunk };
+                  const regionChanged = world.chunkManager.getMapRegionChanged(currentPosition, this.actor.position);
+                  if(regionChanged) {
+                    playSongForRegion(this.actor)
+                  }
+                  this.actor.metadata['updateChunk'] = { newChunk, oldChunk };
                 } else if(this.actor instanceof Npc) {
                     oldChunk.removeNpc(this.actor);
                     newChunk.addNpc(this.actor);
