@@ -17,8 +17,8 @@ export function playSongForRegion(player: Player): void {
 }
 
 function getByValue(map, searchValue) {
-  for (const [key, value] of map.entries()) {
-    if (value === searchValue)
-      return key;
-  }
+    for (const [key, value] of map.entries()) {
+        if (value === searchValue)
+            return key;
+    }
 }

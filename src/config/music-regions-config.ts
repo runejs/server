@@ -18,21 +18,21 @@ export class MusicRegions {
   public regionIds: number[];
 
   public constructor(songId: number, songName: string, musicTabButtonId: number, musicTabInterfaceId: number, regionIds: number[]) {
-    this.songId = songId;
-    this.songName = songName;
-    this.musicTabButtonId = musicTabButtonId;
-    this.musicTabInterfaceId = musicTabInterfaceId;
-    this.regionIds = regionIds;
+      this.songId = songId;
+      this.songName = songName;
+      this.musicTabButtonId = musicTabButtonId;
+      this.musicTabInterfaceId = musicTabInterfaceId;
+      this.regionIds = regionIds;
   }
 }
 
 export function translateMusicRegionsConfig(config: MusicRegionsConfiguration): MusicRegions {
-  return new MusicRegions(config.songId, config.songName, config.musicTabButtonId, config.musicTabInterfaceId, config.regionIds);
+    return new MusicRegions(config.songId, config.songName, config.musicTabButtonId, config.musicTabInterfaceId, config.regionIds);
 }
 
 export async function loadMusicRegionConfigurations(): Promise<MusicRegions[]> {
-  const regions = [];
+    const regions = [];
 
-  musicRegionsFile.musicRegions.forEach(musicRegion => regions.push(translateMusicRegionsConfig(musicRegion)));
-  return regions;
+    await musicRegionsFile.musicRegions.forEach(musicRegion => regions.push(translateMusicRegionsConfig(musicRegion)));
+    return regions;
 }
