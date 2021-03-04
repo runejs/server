@@ -244,9 +244,8 @@ export class World {
             .forEach(itemSpawn => {
             const itemDetails = findItem(itemSpawn.itemKey);
             if(itemDetails && itemDetails.gameId !== undefined) {
-                instance.spawnWorldItem(
-                    { itemId: itemDetails.gameId, amount: itemSpawn.amount },
-                    itemSpawn.spawnPosition, { respawns: itemSpawn.respawn, owner: player || undefined });
+                instance.spawnWorldItem({ itemId: itemDetails.gameId, amount: itemSpawn.amount },
+                  itemSpawn.spawnPosition, { respawns: itemSpawn.respawn, owner: player || undefined });
             } else {
                 logger.error(`Item ${itemSpawn.itemKey} can not be spawned; it has not yet been registered on the server.`);
             }

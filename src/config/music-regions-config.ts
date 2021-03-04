@@ -1,4 +1,4 @@
-import * as musicRegionsFile from "../../data/config/music/musicRegions.json";
+import * as musicRegionsFile from '../../data/config/music/musicRegions.json';
 
 export interface MusicRegionsConfiguration {
   songId: number;

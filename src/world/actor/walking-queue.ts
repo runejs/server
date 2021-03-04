@@ -3,7 +3,7 @@ import { Position } from '../position';
 import { Player } from './player/player';
 import { world } from '@server/game-server';
 import { Npc } from './npc/npc';
-import {playSongForRegion} from "@server/plugins/music/music-regions-plugin";
+import { playSongForRegion } from '@server/plugins/music/music-regions-plugin';
 
 /**
  * Controls an actor's movement.

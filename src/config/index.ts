@@ -20,7 +20,7 @@ import { loadShopConfigurations, Shop } from '@server/config/shop-config';
 import { Quest } from '@server/world/actor/player/quest';
 import { ItemSpawn, loadItemSpawnConfigurations } from '@server/config/item-spawn-config';
 import { loadSkillGuideConfigurations, SkillGuide } from '@server/config/skill-guide-config';
-import {loadMusicRegionConfigurations, MusicRegions} from "@server/config/music-regions-config";
+import { loadMusicRegionConfigurations, MusicRegions } from '@server/config/music-regions-config';
 require('json5/lib/register');
 
 export async function loadConfigurationFiles(configurationDir: string): Promise<any[]> {
@@ -51,11 +51,11 @@ export let npcIdMap: { [key: number]: string };
 export let npcPresetMap: NpcPresetConfiguration;
 export let npcSpawns: NpcSpawn[] = [];
 export let musicRegions: MusicRegions[] = [];
-export let musicRegionMap = new Map();
 export let itemSpawns: ItemSpawn[] = [];
 export let shopMap: { [key: string]: Shop };
 export let skillGuides: SkillGuide[] = [];
 
+export const musicRegionMap = new Map<number, number>();
 export const widgets: { [key: string]: any } = require('../../data/config/widgets.json5');
 
 
