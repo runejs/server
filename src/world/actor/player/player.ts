@@ -69,6 +69,22 @@ export const defaultPlayerTabWidgets = [
     widgets.musicPlayerTab
 ];
 
+export enum SidebarTab {
+    COMBAT,
+    SKILL,
+    QUEST,
+    INVENTORY,
+    EQUIMENT,
+    PRAYER,
+    MAGIC,
+    FRIENDS,
+    IGNORE,
+    LOGOUT,
+    SETTINGS,
+    EMOTES,
+    MUSIC
+}
+
 export enum Rights {
     ADMIN = 2,
     MOD = 1,
@@ -524,7 +540,7 @@ export class Player extends Actor {
      * @param sidebarId The sidebar to change.
      * @param widgetId The widget to insert into the sidebar.
      */
-    public setSidebarWidget(sidebarId: number, widgetId: number): void {
+    public setSidebarWidget(sidebarId: SidebarTab, widgetId: number | null): void {
         this.outgoingPackets.sendTabWidget(sidebarId, widgetId || null);
     }
 
