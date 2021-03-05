@@ -22,7 +22,7 @@ export const songs = new Map<string, number>([
     ['lullaby', 20],
     ['monarch waltz', 21],
     ['gnome king', 22],
-    ['fe fi fo fum', 23],
+    ['gnome', 23],
     ['attack1', 24],
     ['attack2', 25],
     ['attack3', 26],
@@ -144,7 +144,7 @@ export const songs = new Map<string, number>([
     ['silence', 147],
     ['emotion', 148],
     ['principality', 149],
-    ['mouse trap', 150],
+    ['gnome theme', 150],
     ['start', 151],
     ['ballad of enchantment', 152],
     ['expedition', 153],
@@ -414,6 +414,7 @@ export const songs = new Map<string, number>([
     ['chickened out', 575],
     ['davy jones locker', 576],
     ['mastermindless', 577],
+    ['too many cooks', 582],
     ['chef surprize', 583],
     ['everlasting fire', 586],
     ['null and void', 587],
@@ -447,5 +448,5 @@ export const songs = new Map<string, number>([
     ['ham fisted', 638],
     ['sigmunds showdown', 640],
     ['the last shanty', 643],
-    ['night of the vampiyre', 646]
+    ['night of the vampyre', 646]
 ]);

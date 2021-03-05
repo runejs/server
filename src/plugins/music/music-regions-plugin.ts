@@ -10,9 +10,9 @@ export function playSongForRegion(player: Player): void {
     const songId: number = musicRegionMap.get(regionId);
     logger.info('Song ID for this region: ' + songId);
     logger.info('Size: ' + regionId);
-    player.sendMessage('Song playing: ' + getByValue(songs, songId + 1));
+    player.sendMessage('Song playing: ' + getByValue(songs, songId));
 
-    player.playSong(songId + 1);
+    player.playSong(songId);
     player.metadata['updateMusic'] = false;
 }
 
