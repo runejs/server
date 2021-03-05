@@ -8,11 +8,9 @@ musicRegions.forEach(song => song.regionIds.forEach(region => musicRegionMap.set
 export function playSongForRegion(player: Player): void {
     const regionId = ((player.position.x >> 6) * 256) + (player.position.y >> 6);
     const songId: number = musicRegionMap.get(regionId);
-    logger.info('Song ID for this region: ' + songId);
-    logger.info('Size: ' + regionId);
-    player.sendMessage('Song playing: ' + getByValue(songs, songId + 1));
+    logger.info('Playing: ' + getByValue(songs, songId) + ' (Song ID: ' + songId + ' Region ID: ' + regionId + ')');
 
-    player.playSong(songId + 1);
+    player.playSong(songId);
     player.metadata['updateMusic'] = false;
 }
 

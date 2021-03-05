@@ -80,7 +80,7 @@ export async function loadConfigurations(): Promise<void> {
     shopMap = await loadShopConfigurations('data/config/shops');
     skillGuides = await loadSkillGuideConfigurations('data/config/skill-guides');
 
-    logger.info(`Loaded ${Object.keys(musicRegionMap).length} music regions, ${Object.keys(itemMap).length} items, ${itemSpawns.length} item spawns, ` +
+    logger.info(`Loaded ${musicRegions.length} music regions, ${Object.keys(itemMap).length} items, ${itemSpawns.length} item spawns, ` +
         `${Object.keys(npcMap).length} npcs, ${npcSpawns.length} npc spawns, ${Object.keys(shopMap).length} shops and ${skillGuides.length} skill guides.`);
 }
 
