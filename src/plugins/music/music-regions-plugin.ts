@@ -1,18 +1,10 @@
-import { logger } from '@runejs/core';
-import { Player } from '@server/world/actor/player/player';
 import { musicRegionMap, musicRegions } from '@server/config';
 import { songs } from '@server/world/config/songs';
+import { playerRegionChangedHook } from '@server/world/action/player-region-changed';
+import { playerInitAction } from '@server/world/actor/player/player';
+
 
 musicRegions.forEach(song => song.regionIds.forEach(region => musicRegionMap.set(region, song.songId)));
-
-export function playSongForRegion(player: Player): void {
-    const regionId = ((player.position.x >> 6) * 256) + (player.position.y >> 6);
-    const songId: number = musicRegionMap.get(regionId);
-    logger.info('Playing: ' + getByValue(songs, songId) + ' (Song ID: ' + songId + ' Region ID: ' + regionId + ')');
-
-    player.playSong(songId);
-    player.metadata['updateMusic'] = false;
-}
 
 function getByValue(map, searchValue) {
     for (const [key, value] of map.entries()) {
@@ -20,3 +12,25 @@ function getByValue(map, searchValue) {
             return key;
     }
 }
+
+const regionChangedHandler = ({ player, currentMapRegionId }): void => {
+    const songId: number = musicRegionMap.get(currentMapRegionId);
+    player.sendMessage(`Playing ${songId}:${getByValue(songs, songId)} at region ${currentMapRegionId}`);
+    player.playSong(songId);
+    player.metadata['updateMusic'] = false;
+};
+
+const playerInitHandler: playerInitAction = ({ player }): void => {
+    // Plays the appropriate location's song on player init
+    regionChangedHandler({ player,
+        currentMapRegionId: ((player.position.x >> 6) << 8) + (player.position.y >> 6) });
+};
+
+export default [{
+    type: 'player_region_changed',
+    regionType: 'map',
+    handler: regionChangedHandler
+}, {
+    type: 'player_init',
+    action: playerInitHandler
+}];

@@ -23,7 +23,7 @@ export interface PlayerActionData {
 }
 
 /**
- * Defines a player interaction plugin.
+ * Defines a player interaction action.
  * The option selected, the action to be performed, and whether or not the player must first walk to the other player.
  */
 export interface PlayerAction extends Action {
@@ -42,7 +42,8 @@ const playerActionHandler = (player: Player, otherPlayer: Player, position: Posi
     }
 
     // Find all player action plugins that reference this option
-    let interactionActions = getActionList('player_action').filter(plugin => questFilter(player, plugin) && basicStringFilter(plugin.options, option));
+    let interactionActions = getActionList('player_action')
+        .filter(plugin => questFilter(player, plugin) && basicStringFilter(plugin.options, option));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
@@ -54,7 +55,7 @@ const playerActionHandler = (player: Player, otherPlayer: Player, position: Posi
         return;
     }
 
-    player.actionsCancelled.next();
+    player.actionsCancelled.next(null);
 
     // Separate out walk-to actions from immediate actions
     const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);

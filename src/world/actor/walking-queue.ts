@@ -3,237 +3,238 @@ import { Position } from '../position';
 import { Player } from './player/player';
 import { world } from '@server/game-server';
 import { Npc } from './npc/npc';
-import { playSongForRegion } from '@server/plugins/music/music-regions-plugin';
+import { regionChangedDataFactory } from '@server/world/action/player-region-changed';
+import { actionHandler } from '@server/world/action';
+
 
 /**
  * Controls an actor's movement.
  */
 export class WalkingQueue {
 
-  private queue: Position[];
-  private _valid: boolean;
+    private queue: Position[];
+    private _valid: boolean;
 
-  public constructor(private readonly actor: Actor) {
-      this.queue = [];
-      this._valid = false;
-  }
+    public constructor(private readonly actor: Actor) {
+        this.queue = [];
+        this._valid = false;
+    }
 
-  public moving(): boolean {
-      return this.queue.length !== 0;
-  }
+    public moving(): boolean {
+        return this.queue.length !== 0;
+    }
 
-  public clear(): void {
-      this.queue = [];
-  }
+    public clear(): void {
+        this.queue = [];
+    }
 
-  public getLastPosition(): Position {
-      if (this.queue.length === 0) {
-          return this.actor.position;
-      } else {
-          return this.queue[this.queue.length - 1];
-      }
-  }
+    public getLastPosition(): Position {
+        if(this.queue.length === 0) {
+            return this.actor.position;
+        } else {
+            return this.queue[this.queue.length - 1];
+        }
+    }
 
-  public add(x: number, y: number, positionMetadata?: { [key: string]: any }): void {
-      let lastPosition = this.getLastPosition();
+    public add(x: number, y: number, positionMetadata?: { [key: string]: any }): void {
+        let lastPosition = this.getLastPosition();
 
-      let lastX = lastPosition.x;
-      let lastY = lastPosition.y;
-      let diffX = x - lastX;
-      let diffY = y - lastY;
+        let lastX = lastPosition.x;
+        let lastY = lastPosition.y;
+        let diffX = x - lastX;
+        let diffY = y - lastY;
 
-      const stepsBetween = Math.max(Math.abs(diffX), Math.abs(diffY));
+        const stepsBetween = Math.max(Math.abs(diffX), Math.abs(diffY));
 
-      for (let i = 0; i < stepsBetween; i++) {
-          if (diffX !== 0) {
-              diffX += diffX < 0 ? 1 : -1;
-          }
+        for(let i = 0; i < stepsBetween; i++) {
+            if(diffX !== 0) {
+                diffX += diffX < 0 ? 1 : -1;
+            }
 
-          if (diffY !== 0) {
-              diffY += diffY < 0 ? 1 : -1;
-          }
+            if(diffY !== 0) {
+                diffY += diffY < 0 ? 1 : -1;
+            }
 
-          lastX = x - diffX;
-          lastY = y - diffY;
+            lastX = x - diffX;
+            lastY = y - diffY;
 
-          const newPosition = new Position(lastX, lastY, this.actor.position.level);
+            const newPosition = new Position(lastX, lastY, this.actor.position.level);
 
-          if (this.actor.pathfinding.canMoveTo(lastPosition, newPosition)) {
-              lastPosition = newPosition;
-              newPosition.metadata = positionMetadata;
-              this.queue.push(newPosition);
-          } else {
-              this.valid = false;
-              break;
-          }
-      }
+            if(this.actor.pathfinding.canMoveTo(lastPosition, newPosition)) {
+                lastPosition = newPosition;
+                newPosition.metadata = positionMetadata;
+                this.queue.push(newPosition);
+            } else {
+                this.valid = false;
+                break;
+            }
+        }
 
-      if (lastX !== x || lastY !== y && this.valid) {
-          const newPosition = new Position(x, y, this.actor.position.level);
+        if(lastX !== x || lastY !== y && this.valid) {
+            const newPosition = new Position(x, y, this.actor.position.level);
 
-          if (this.actor.pathfinding.canMoveTo(lastPosition, newPosition)) {
-              newPosition.metadata = positionMetadata;
-              this.queue.push(newPosition);
-          } else {
-              this.valid = false;
-          }
-      }
-  }
+            if(this.actor.pathfinding.canMoveTo(lastPosition, newPosition)) {
+                newPosition.metadata = positionMetadata;
+                this.queue.push(newPosition);
+            } else {
+                this.valid = false;
+            }
+        }
+    }
 
-  public moveIfAble(xDiff: number, yDiff: number): boolean {
-      const position = this.actor.position;
-      const newPosition = new Position(position.x + xDiff, position.y + yDiff, position.level);
+    public moveIfAble(xDiff: number, yDiff: number): boolean {
+        const position = this.actor.position;
+        const newPosition = new Position(position.x + xDiff, position.y + yDiff, position.level);
 
-      if (this.actor.pathfinding.canMoveTo(position, newPosition)) {
-          this.clear();
-          this.valid = true;
-          this.add(newPosition.x, newPosition.y, { ignoreWidgets: true });
-          return true;
-      }
+        if(this.actor.pathfinding.canMoveTo(position, newPosition)) {
+            this.clear();
+            this.valid = true;
+            this.add(newPosition.x, newPosition.y, { ignoreWidgets: true });
+            return true;
+        }
 
-      return false;
-  }
+        return false;
+    }
 
-  public resetDirections(): void {
-      this.actor.walkDirection = -1;
-      this.actor.runDirection = -1;
-  }
+    public resetDirections(): void {
+        this.actor.walkDirection = -1;
+        this.actor.runDirection = -1;
+    }
 
-  public calculateDirection(diffX: number, diffY: number): number {
-      if (diffX < 0) {
-          if (diffY < 0) {
-              return 5;
-          } else if (diffY > 0) {
-              return 0;
-          } else {
-              return 3;
-          }
-      } else if (diffX > 0) {
-          if (diffY < 0) {
-              return 7;
-          } else if (diffY > 0) {
-              return 2;
-          } else {
-              return 4;
-          }
-      } else {
-          if (diffY < 0) {
-              return 6;
-          } else if (diffY > 0) {
-              return 1;
-          } else {
-              return -1;
-          }
-      }
-  }
+    public calculateDirection(diffX: number, diffY: number): number {
+        if(diffX < 0) {
+            if(diffY < 0) {
+                return 5;
+            } else if(diffY > 0) {
+                return 0;
+            } else {
+                return 3;
+            }
+        } else if(diffX > 0) {
+            if(diffY < 0) {
+                return 7;
+            } else if(diffY > 0) {
+                return 2;
+            } else {
+                return 4;
+            }
+        } else {
+            if(diffY < 0) {
+                return 6;
+            } else if(diffY > 0) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+    }
 
-  public process(): void {
-      if (this.actor.busy || this.queue.length === 0 || !this.valid) {
-          this.resetDirections();
-          return;
-      }
+    public process(): void {
+        if(this.actor.busy || this.queue.length === 0 || !this.valid) {
+            this.resetDirections();
+            return;
+        }
 
-      const walkPosition = this.queue.shift();
+        const walkPosition = this.queue.shift();
 
-      if (this.actor instanceof Player) {
-          this.actor.actionsCancelled.next('pathing-movement');
-      // if(activeWidget.disablePlayerMovement) {
-      //     this.resetDirections();
-      //     return;
-      // }
-      //this.actor.interfaceState.closeAllSlots();
-      }
+        if(this.actor instanceof Player) {
+            this.actor.actionsCancelled.next('pathing-movement');
+            // if(activeWidget.disablePlayerMovement) {
+            //     this.resetDirections();
+            //     return;
+            // }
+            //this.actor.interfaceState.closeAllSlots();
+        }
 
-      if (this.actor.metadata['faceActorClearedByWalking'] === undefined || this.actor.metadata['faceActorClearedByWalking']) {
-          this.actor.clearFaceActor();
-      }
+        if(this.actor.metadata['faceActorClearedByWalking'] === undefined || this.actor.metadata['faceActorClearedByWalking']) {
+            this.actor.clearFaceActor();
+        }
 
-      const currentPosition = this.actor.position;
+        const originalPosition = this.actor.position;
 
-      if (this.actor.pathfinding.canMoveTo(currentPosition, walkPosition)) {
-          const oldChunk = world.chunkManager.getChunkForWorldPosition(currentPosition);
-          const lastMapRegionUpdatePosition = this.actor.lastMapRegionUpdatePosition;
+        if(this.actor.pathfinding.canMoveTo(originalPosition, walkPosition)) {
+            const oldChunk = world.chunkManager.getChunkForWorldPosition(originalPosition);
+            const lastMapRegionUpdatePosition = this.actor.lastMapRegionUpdatePosition;
 
-          const walkDiffX = walkPosition.x - currentPosition.x;
-          const walkDiffY = walkPosition.y - currentPosition.y;
-          const walkDir = this.calculateDirection(walkDiffX, walkDiffY);
+            const walkDiffX = walkPosition.x - originalPosition.x;
+            const walkDiffY = walkPosition.y - originalPosition.y;
+            const walkDir = this.calculateDirection(walkDiffX, walkDiffY);
 
-          if (walkDir === -1) {
-              this.resetDirections();
-              return;
-          }
+            if(walkDir === -1) {
+                this.resetDirections();
+                return;
+            }
 
-          this.actor.lastMovementPosition = this.actor.position;
-          this.actor.position = walkPosition;
+            this.actor.lastMovementPosition = this.actor.position;
+            this.actor.position = walkPosition;
 
-          let runDir = -1;
+            let runDir = -1;
 
-          // @TODO npc running
-          if (this.actor instanceof Player) {
-              if (this.actor.settings.runEnabled && this.queue.length !== 0) {
-                  const runPosition = this.queue.shift();
+            // @TODO npc running
+            if(this.actor instanceof Player) {
+                if(this.actor.settings.runEnabled && this.queue.length !== 0) {
+                    const runPosition = this.queue.shift();
 
-                  if (this.actor.pathfinding.canMoveTo(walkPosition, runPosition)) {
-                      const runDiffX = runPosition.x - walkPosition.x;
-                      const runDiffY = runPosition.y - walkPosition.y;
-                      runDir = this.calculateDirection(runDiffX, runDiffY);
+                    if(this.actor.pathfinding.canMoveTo(walkPosition, runPosition)) {
+                        const runDiffX = runPosition.x - walkPosition.x;
+                        const runDiffY = runPosition.y - walkPosition.y;
+                        runDir = this.calculateDirection(runDiffX, runDiffY);
 
-                      if (runDir != -1) {
-                          this.actor.lastMovementPosition = this.actor.position;
-                          this.actor.position = runPosition;
-                      }
-                  } else {
-                      this.resetDirections();
-                      this.clear();
-                  }
-              }
-          }
+                        if(runDir != -1) {
+                            this.actor.lastMovementPosition = this.actor.position;
+                            this.actor.position = runPosition;
+                        }
+                    } else {
+                        this.resetDirections();
+                        this.clear();
+                    }
+                }
+            }
 
-          this.actor.walkDirection = walkDir;
-          this.actor.runDirection = runDir;
+            this.actor.walkDirection = walkDir;
+            this.actor.runDirection = runDir;
 
-          if (runDir !== -1) {
-              this.actor.faceDirection = runDir;
-          } else {
-              this.actor.faceDirection = walkDir;
-          }
+            if(runDir !== -1) {
+                this.actor.faceDirection = runDir;
+            } else {
+                this.actor.faceDirection = walkDir;
+            }
 
-          const newChunk = world.chunkManager.getChunkForWorldPosition(this.actor.position);
+            const newChunk = world.chunkManager.getChunkForWorldPosition(this.actor.position);
 
-          this.actor.movementEvent.next(this.actor.position);
+            this.actor.movementEvent.next(this.actor.position);
 
-          if (this.actor instanceof Player) {
-              const mapDiffX = this.actor.position.x - (lastMapRegionUpdatePosition.chunkX * 8);
-              const mapDiffY = this.actor.position.y - (lastMapRegionUpdatePosition.chunkY * 8);
-              if (mapDiffX < 16 || mapDiffX > 87 || mapDiffY < 16 || mapDiffY > 87) {
-                  this.actor.updateFlags.mapRegionUpdateRequired = true;
-                  this.actor.lastMapRegionUpdatePosition = this.actor.position;
-              }
-          }
+            if(this.actor instanceof Player) {
+                const mapDiffX = this.actor.position.x - (lastMapRegionUpdatePosition.chunkX * 8);
+                const mapDiffY = this.actor.position.y - (lastMapRegionUpdatePosition.chunkY * 8);
+                if(mapDiffX < 16 || mapDiffX > 87 || mapDiffY < 16 || mapDiffY > 87) {
+                    this.actor.updateFlags.mapRegionUpdateRequired = true;
+                    this.actor.lastMapRegionUpdatePosition = this.actor.position;
+                }
+            }
 
-          if (!oldChunk.equals(newChunk)) {
-              if (this.actor instanceof Player) {
-                  const regionChanged = world.chunkManager.getMapRegionChanged(currentPosition, this.actor.position);
-                  if (regionChanged) {
-                      playSongForRegion(this.actor)
-                  }
-                  this.actor.metadata['updateChunk'] = { newChunk, oldChunk };
-              } else if (this.actor instanceof Npc) {
-                  oldChunk.removeNpc(this.actor);
-                  newChunk.addNpc(this.actor);
-              }
-          }
-      } else {
-          this.resetDirections();
-          this.clear();
-      }
-  }
+            if(!oldChunk.equals(newChunk)) {
+                if(this.actor instanceof Player) {
+                    this.actor.metadata['updateChunk'] = { newChunk, oldChunk };
 
-  get valid(): boolean {
-      return this._valid;
-  }
+                    actionHandler.call('player_region_changed', regionChangedDataFactory(
+                        this.actor, originalPosition, this.actor.position));
+                } else if(this.actor instanceof Npc) {
+                    oldChunk.removeNpc(this.actor);
+                    newChunk.addNpc(this.actor);
+                }
+            }
+        } else {
+            this.resetDirections();
+            this.clear();
+        }
+    }
 
-  set valid(value: boolean) {
-      this._valid = value;
-  }
+    get valid(): boolean {
+        return this._valid;
+    }
+
+    set valid(value: boolean) {
+        this._valid = value;
+    }
 }

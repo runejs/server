@@ -184,18 +184,24 @@ export interface Action {
 export type ActionType =
     'button'
     | 'widget_action'
+
+    | 'npc_init'
+    | 'npc_action'
+
+    | 'object_action'
+
+    | 'item_on_object'
+    | 'item_on_npc'
+    | 'swap_items'
+    | 'move_item'
+    | 'world_item_action'
     | 'item_on_item'
     | 'item_action'
     | 'equip_action'
-    | 'world_item_action'
-    | 'npc_action'
-    | 'object_action'
-    | 'item_on_object'
-    | 'item_on_npc'
-    | 'player_command'
-    | 'player_init'
-    | 'npc_init'
+
     | 'quest'
+
+    | 'player_init'
+    | 'player_command'
     | 'player_action'
-    | 'swap_items'
-    | 'move_item';
+    | 'player_region_changed';
