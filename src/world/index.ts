@@ -17,7 +17,6 @@ import { NpcDetails } from '@server/config/npc-config';
 import { WorldInstance } from '@server/world/instances';
 import { Direction } from '@server/world/direction';
 import { NpcSpawn } from '@server/config/npc-spawn-config';
-import { ItemSpawn } from '@server/config/item-spawn-config';
 
 
 export interface QuadtreeKey {

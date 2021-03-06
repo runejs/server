@@ -6,6 +6,19 @@ const directionDeltaX = [-1, 0, 1, -1, 1, -1, 0, 1];
 const directionDeltaY = [1, 1, 1, 0, 0, -1, -1, -1];
 
 /**
+ * A simplified x/y/level coordinate class.
+ */
+export class Coords {
+    x: number;
+    y: number;
+    level: number;
+
+    static equals(a: Coords, b: Coords): boolean {
+        return a.x === b.x && a.y === b.y && a.level === b.level;
+    }
+}
+
+/**
  * Represents a single position, or coordinate, within the game world.
  */
 export class Position {
@@ -15,8 +28,15 @@ export class Position {
     private _y: number;
     private _level: number;
 
-    public constructor(x: number, y: number, level?: number) {
-        this.move(x, y, level);
+    public constructor(position: Position);
+    public constructor(coords: Coords);
+    public constructor(x: number, y: number, level?: number);
+    public constructor(arg0: number | Coords | Position, y?: number, level?: number) {
+        if(typeof arg0 === 'number') {
+            this.move(arg0, y, level);
+        } else {
+            this.move(arg0.x, arg0.y, arg0.level);
+        }
     }
 
     public clone(): Position {
@@ -122,6 +142,17 @@ export class Position {
 
     public calculateChunkLocalY(position: Position): number {
         return this._y - 8 * position.chunkY;
+    }
+
+    /**
+     * Converts this Position into a simple Coords object.
+     */
+    public get coords(): Coords {
+        return {
+            x: this._x,
+            y: this._y,
+            level: this._level
+        };
     }
 
     public get chunkX(): number {
