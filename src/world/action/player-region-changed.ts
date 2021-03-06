@@ -149,9 +149,9 @@ const playerRegionChangedHandler = (actionData: PlayerRegionChangedData): void =
         return;
     }
 
-    actionList.forEach(actionHook =>
-        new Promise<void>(async resolve => {
-            await actionHook.handler(actionData);
+    actionList.forEach(async actionHook =>
+        new Promise<void>(resolve => {
+            actionHook.handler(actionData);
             resolve();
         }));
 };
