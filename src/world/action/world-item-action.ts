@@ -2,7 +2,7 @@ import { Player } from '@server/world/actor/player/player';
 import { ActionHook, getActionHooks} from '@server/world/action/index';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { questFilter } from '@server/plugins/plugin';
+import { questHookFilter } from '@server/plugins/plugin';
 import { WorldItem } from '@server/world/items/world-item';
 import { ItemDetails } from '@server/config/item-config';
 import { findItem } from '@server/config';
@@ -47,7 +47,7 @@ const worldItemActionHandler = (player: Player, worldItem: WorldItem, option: st
 
     // Find all world item action plugins that reference this world item
     let interactionActions = getActionHooks('world_item_action').filter(plugin => {
-        if(!questFilter(player, plugin)) {
+        if(!questHookFilter(player, plugin)) {
             return false;
         }
 

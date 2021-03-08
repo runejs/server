@@ -1,11 +1,11 @@
-import { QuestRequirement } from '@server/plugins/plugin';
 import { getFiles } from '@server/util/files';
 import { logger } from '@runejs/core';
 import { actionPipeline, pluginActionHooks } from '@server/game-server';
+import { QuestKey } from '@server/config/quest-config';
 
 
 /**
- * Game content action types.
+ * Content action type definitions.
  */
 export type ActionType =
     'button_action'
@@ -16,6 +16,7 @@ export type ActionType =
 
     | 'object_action'
 
+    | 'item_action'
     | 'item_on_object_action'
     | 'item_on_npc_action'
     | 'swap_items_action'
@@ -32,6 +33,16 @@ export type ActionType =
 
 
 /**
+ * Defines a quest requirement for an action hook.
+ */
+export interface QuestRequirement {
+    questId: string;
+    stage?: QuestKey;
+    stages?: number[];
+}
+
+
+/**
  * Defines a generic extensible game content action hook.
  */
 export interface ActionHook {
@@ -39,7 +50,7 @@ export interface ActionHook {
     type: ActionType;
     // The action's priority over other actions.
     priority?: number;
-    // [optional] Details regarding what quest this action is for.
+    // [optional] Quest requirements that must be completed in order to run this hook.
     questRequirement?: QuestRequirement;
 }
 
@@ -52,9 +63,17 @@ export type ActionCancelType = 'manual-movement' | 'pathing-movement' | 'generic
 
 /**
  * Fetches the list of all discovered action hooks of the specified type.
- * @param key The Action Type to find the hook for.
+ * @param actionType The Action Type to find the hook for.
+ * @param filter [optional] Filter criteria to apply to the returned list.
  */
-export const getActionHooks = (key: ActionType): any[] => pluginActionHooks[key];
+export const getActionHooks = <T>(actionType: ActionType, filter?: (actionHook: T) => boolean): T[] => {
+    const hooks = pluginActionHooks[actionType] as T[];
+    if(!hooks || hooks.length === 0) {
+        return [];
+    }
+
+    return filter ? hooks.filter(filter) : hooks;
+}
 
 
 /**

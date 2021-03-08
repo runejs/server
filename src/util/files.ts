@@ -3,24 +3,38 @@ import fs from 'fs';
 import { watch } from 'chokidar';
 import { Observable, Subject } from 'rxjs';
 
+
 const readdir = util.promisify(fs.readdir);
 const stat = util.promisify(fs.stat);
 
-export async function* getFiles(directory: string, blacklist: string[] = []): AsyncGenerator<string> {
+
+export async function getFiles(directory: string, blacklist: string[]);
+export async function getFiles(directory: string, whitelist: string[], useWhitelist: boolean);
+export async function* getFiles(directory: string, list: string[] = [], useWhitelist?: boolean): AsyncGenerator<string> {
     const files = await readdir(directory);
 
     for(const file of files) {
-        const invalid = blacklist.some(component => file === component || file.endsWith('.map'));
+        if(!useWhitelist) {
+            // blacklist
+            const invalid = list.some(item => file === item);
 
-        if(invalid) {
-            continue;
+            if(invalid) {
+                continue;
+            }
+        } else {
+            // whitelist
+            const valid = list.some(item => file === item || file.endsWith(item));
+
+            if(!valid) {
+                continue;
+            }
         }
 
         const path = directory + '/' + file;
         const statistics = await stat(path);
 
         if(statistics.isDirectory()) {
-            for await (const child of getFiles(path, blacklist)) {
+            for await (const child of getFiles(path, list)) {
                 yield child;
             }
         } else {
@@ -28,6 +42,7 @@ export async function* getFiles(directory: string, blacklist: string[] = []): As
         }
     }
 }
+
 
 export function watchSource(dir: string): Observable<void> {
     const subject = new Subject<void>();
@@ -40,6 +55,7 @@ export function watchSource(dir: string): Observable<void> {
 
     return subject.asObservable();
 }
+
 
 export function watchForChanges(dir: string, regex: RegExp): void {
     const watcher = watch(dir);

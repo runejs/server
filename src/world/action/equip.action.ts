@@ -1,7 +1,7 @@
 import { Player } from '@server/world/actor/player/player';
-import { questFilter } from '@server/plugins/plugin';
+import { questHookFilter } from '@server/plugins/plugin';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
-import { ActionHook, ActionPipe, getActionHooks } from '@server/world/action/index';
+import { ActionHook, getActionHooks } from '@server/world/action/index';
 import { findItem } from '@server/config';
 import { EquipmentSlot, ItemDetails } from '@server/config/item-config';
 
@@ -15,15 +15,21 @@ export interface EquipActionHook extends ActionHook {
     // A single option name or a list of option names that this action applies to.
     equipType?: EquipType | EquipType[];
     // The action function to be performed.
-    action: equipHandler;
+    handler: equipActionHandler;
 }
+
 
 /**
  * The definition for an equip action function.
  */
-export type equipHandler = (equipAction: EquipAction) => void;
+export type equipActionHandler = (equipAction: EquipAction) => void;
 
+
+/**
+ * Equipment action types.
+ */
 export type EquipType = 'EQUIP' | 'UNEQUIP';
+
 
 /**
  * Details about an item being equipped/unequipped.
@@ -42,21 +48,28 @@ export interface EquipAction {
 }
 
 
+/**
+ * The specific pipe that the game engine feeds equipment actions down to.
+ * @param player
+ * @param itemId
+ * @param equipType
+ * @param slot
+ */
 const equipActionPipe = (player: Player, itemId: number, equipType: EquipType, slot: EquipmentSlot): void => {
-    let filteredActions = getActionHooks('equip_action').filter(plugin => {
-        if(!questFilter(player, plugin)) {
+    let filteredActions = getActionHooks<EquipActionHook>('equip_action', equipActionHook => {
+        if(!questHookFilter(player, equipActionHook)) {
             return false;
         }
 
-        if(plugin.itemIds !== undefined) {
-            if(!basicNumberFilter(plugin.itemIds, itemId)) {
+        if(equipActionHook.itemIds !== undefined) {
+            if(!basicNumberFilter(equipActionHook.itemIds, itemId)) {
                 return false;
             }
         }
 
 
-        if(plugin.equipType !== undefined) {
-            if(!basicStringFilter(plugin.equipType, equipType)) {
+        if(equipActionHook.equipType !== undefined) {
+            if(!basicStringFilter(equipActionHook.equipType, equipType)) {
                 return false;
             }
         }
@@ -69,9 +82,8 @@ const equipActionPipe = (player: Player, itemId: number, equipType: EquipType, s
         filteredActions = questActions;
     }
 
-
     for(const plugin of filteredActions) {
-        plugin.action({
+        plugin.handler({
             player,
             itemId,
             itemDetails: findItem(itemId),
@@ -85,4 +97,7 @@ const equipActionPipe = (player: Player, itemId: number, equipType: EquipType, s
 /**
  * Button action pipe definition.
  */
-export default [ 'equip_action', equipActionPipe ];
+export default [
+    'equip_action',
+    equipActionPipe
+];

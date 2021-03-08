@@ -2,7 +2,7 @@ import { objectIds } from '@server/world/config/object-ids';
 import { widgetScripts } from '@server/world/config/widget';
 import { objectAction } from '@server/world/action/object-action';
 import { ItemContainer } from '@server/world/items/item-container';
-import { itemAction } from '@server/world/action/item-action';
+import { itemAction } from '@server/world/action/item.action';
 import { fromNote, Item, toNote } from '@server/world/items/item';
 import { buttonActionHandler } from '@server/world/action/button.action';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';

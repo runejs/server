@@ -3,13 +3,13 @@ import { getFiles } from '@server/util/files';
 import { logger } from '@runejs/core';
 
 
-export const basicStringFilter = (pluginValues: string | string[], searchValue: string): boolean => {
-    if(Array.isArray(pluginValues)) {
-        if(pluginValues.indexOf(searchValue) === -1) {
+export const basicStringFilter = (expected: string | string[], input: string): boolean => {
+    if(Array.isArray(expected)) {
+        if(expected.indexOf(input) === -1) {
             return false;
         }
     } else {
-        if(pluginValues !== searchValue) {
+        if(expected !== input) {
             return false;
         }
     }
@@ -17,13 +17,14 @@ export const basicStringFilter = (pluginValues: string | string[], searchValue: 
     return true;
 };
 
-export const basicNumberFilter = (pluginValues: number | number[], searchValue: number): boolean => {
-    if(Array.isArray(pluginValues)) {
-        if(pluginValues.indexOf(searchValue) === -1) {
+
+export const basicNumberFilter = (expected: number | number[], input: number): boolean => {
+    if(Array.isArray(expected)) {
+        if(expected.indexOf(input) === -1) {
             return false;
         }
     } else {
-        if(pluginValues !== searchValue) {
+        if(expected !== input) {
             return false;
         }
     }
@@ -31,38 +32,40 @@ export const basicNumberFilter = (pluginValues: number | number[], searchValue: 
     return true;
 };
 
-export const pluginFilter = (pluginIds: number | number[], searchId: number, pluginOptions?: string | string[], searchOption?: string): boolean => {
-    if(pluginIds !== undefined) {
-        if(Array.isArray(pluginIds)) {
-            if(pluginIds.indexOf(searchId) === -1) {
+
+export const advancedNumberFilter = (expected: number | number[], input: number, options?: string | string[],
+                                     searchOption?: string): boolean => {
+    if(expected !== undefined) {
+        if(Array.isArray(expected)) {
+            if(expected.indexOf(input) === -1) {
                 return false;
             }
         } else {
-            if(pluginIds !== searchId) {
+            if(expected !== input) {
                 return false;
             }
         }
     }
 
-    if(pluginOptions !== undefined && searchOption !== undefined) {
-        if(Array.isArray(pluginOptions)) {
-            return pluginOptions.indexOf(searchOption) !== -1;
+    if(options !== undefined && searchOption !== undefined) {
+        if(Array.isArray(options)) {
+            return options.indexOf(searchOption) !== -1;
         } else {
-            return pluginOptions === searchOption;
+            return options === searchOption;
         }
     } else {
         return true;
     }
 };
 
-const blacklist = ['plugin-loader.js', 'plugin.js', 'rune.js'];
 
-export const PLUGIN_DIRECTORY = './dist/plugins';
 
-export async function parsePluginFiles(): Promise<RunePlugin[]> {
+export async function loadPluginFiles(): Promise<RunePlugin[]> {
+    const WHITELIST = ['.plugin.js'];
+    const PLUGIN_DIRECTORY = './dist/plugins';
     const plugins: RunePlugin[] = [];
 
-    for await(const path of getFiles(PLUGIN_DIRECTORY, blacklist)) {
+    for await(const path of getFiles(PLUGIN_DIRECTORY, WHITELIST, true)) {
         const location = '.' + path.substring(PLUGIN_DIRECTORY.length).replace('.js', '');
 
         try {
@@ -70,10 +73,10 @@ export async function parsePluginFiles(): Promise<RunePlugin[]> {
             if(plugin) {
                 if(plugin.default) {
                     // TS plugin
-                    plugins.push(new RunePlugin(plugin.default));
+                    plugins.push(new RunePlugin({ ...plugin.default }));
                 } else {
                     // JS plugin
-                    plugins.push(new RunePlugin(plugin));
+                    plugins.push(new RunePlugin({ ...plugin }));
                 }
             }
         } catch(error) {

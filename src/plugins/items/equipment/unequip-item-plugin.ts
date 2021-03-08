@@ -1,4 +1,4 @@
-import { itemAction } from '@server/world/action/item-action';
+import { itemAction } from '@server/world/action/item.action';
 import { getItemFromContainer } from '@server/world/items/item-container';
 import { widgets } from '@server/config';
 

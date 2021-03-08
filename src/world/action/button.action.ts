@@ -1,6 +1,6 @@
 import { Player } from '@server/world/actor/player/player';
-import { pluginFilter } from '@server/plugins/plugin-loader';
-import { questFilter } from '@server/plugins/plugin';
+import { advancedNumberFilter } from '@server/plugins/plugin-loader';
+import { questHookFilter } from '@server/plugins/plugin';
 import { ActionHook, ActionPipe, getActionHooks } from '@server/world/action/index';
 
 
@@ -40,15 +40,21 @@ export interface ButtonAction {
 }
 
 
+/**
+ * The specific pipe that the game engine feeds button actions down to.
+ * @param player
+ * @param widgetId
+ * @param buttonId
+ */
 const buttonActionPipe = (player: Player, widgetId: number, buttonId: number) => {
-    let interactionActions = getActionHooks('button_action')
+    let interactionActions = getActionHooks<ButtonActionHook>('button_action')
         .filter(plugin =>
-            questFilter(player, plugin) && (
+            questHookFilter(player, plugin) && (
                 (plugin.widgetId && plugin.widgetId === widgetId) ||
-                (plugin.widgetIds && pluginFilter(plugin.widgetIds, widgetId)
+                (plugin.widgetIds && advancedNumberFilter(plugin.widgetIds, widgetId)
             ))
         && (plugin.buttonIds === undefined ||
-            pluginFilter(plugin.buttonIds, buttonId))
+            advancedNumberFilter(plugin.buttonIds, buttonId))
         );
 
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
@@ -74,7 +80,7 @@ const buttonActionPipe = (player: Player, widgetId: number, buttonId: number) =>
             player.actionsCancelled.next('button');
         }
 
-        plugin.action({ player, widgetId, buttonId });
+        plugin.handler({ player, widgetId, buttonId });
     }
 };
 
@@ -82,4 +88,7 @@ const buttonActionPipe = (player: Player, widgetId: number, buttonId: number) =>
 /**
  * Button action pipe definition.
  */
-export default [ 'button_action', buttonActionPipe ] as ActionPipe;
+export default [
+    'button_action',
+    buttonActionPipe
+] as ActionPipe;

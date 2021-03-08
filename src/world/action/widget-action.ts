@@ -1,6 +1,6 @@
 import { Player } from '@server/world/actor/player/player';
-import { pluginFilter } from '@server/plugins/plugin-loader';
-import { questFilter } from '@server/plugins/plugin';
+import { advancedNumberFilter } from '@server/plugins/plugin-loader';
+import { questHookFilter } from '@server/plugins/plugin';
 import { ActionHook, getActionHooks } from '@server/world/action/index';
 
 /**
@@ -48,11 +48,11 @@ export interface WidgetAction extends ActionHook {
 const widgetActionHandler = (player: Player, widgetId: number, childId: number, optionId: number): void => {
     // Find all item on item action plugins that match this action
     let interactionActions = getActionHooks('widget_action').filter(plugin => {
-        if(!questFilter(player, plugin)) {
+        if(!questHookFilter(player, plugin)) {
             return false;
         }
 
-        if(!pluginFilter(plugin.widgetIds, widgetId)) {
+        if(!advancedNumberFilter(plugin.widgetIds, widgetId)) {
             return false;
         }
 
@@ -61,7 +61,7 @@ const widgetActionHandler = (player: Player, widgetId: number, childId: number, 
         }
 
         if(plugin.childIds !== undefined) {
-            return pluginFilter(plugin.childIds, childId);
+            return advancedNumberFilter(plugin.childIds, childId);
         }
 
         return true;

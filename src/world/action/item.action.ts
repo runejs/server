@@ -1,10 +1,10 @@
 import { Player } from '@server/world/actor/player/player';
-import { questFilter } from '@server/plugins/plugin';
+import { questHookFilter } from '@server/plugins/plugin';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
-import { world } from '@server/game-server';
 import { ActionHook, getActionHooks } from '@server/world/action/index';
 import { ItemDetails } from '@server/config/item-config';
 import { findItem } from '@server/config';
+
 
 /**
  * The definition for an item action function.
@@ -56,8 +56,8 @@ const itemActionHandler = (player: Player, itemId: number, slot: number, widgetI
     let cancelActions = false;
 
     // Find all object action plugins that reference this location object
-    let interactionActions = getActionHooks('item_action').filter(plugin => {
-        if(!questFilter(player, plugin)) {
+    let interactionActions = getActionHooks<ItemAction>('item_action', (plugin => {
+        if(!questHookFilter(player, plugin)) {
             return false;
         }
 
@@ -128,7 +128,7 @@ const itemActionHandler = (player: Player, itemId: number, slot: number, widgetI
 
 };
 
-export default {
-    action: 'item_action',
-    handler: itemActionHandler
-};
+export default [
+    'item_action',
+    itemActionHandler
+];

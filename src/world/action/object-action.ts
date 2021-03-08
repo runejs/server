@@ -2,9 +2,9 @@ import { Player } from '@server/world/actor/player/player';
 import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
 import { ActionHook, getActionHooks} from '@server/world/action/index';
-import { pluginFilter } from '@server/plugins/plugin-loader';
+import { advancedNumberFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { questFilter } from '@server/plugins/plugin';
+import { questHookFilter } from '@server/plugins/plugin';
 import { playerWalkTo } from '@server/game-server';
 
 /**
@@ -54,7 +54,7 @@ const objectActionHandler = (player: Player, locationObject: LocationObject, loc
     }
 
     // Find all object action plugins that reference this location object
-    let interactionActions = getActionHooks('object_action').filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, locationObject.objectId, plugin.options, option));
+    let interactionActions = getActionHooks('object_action').filter(plugin => questHookFilter(player, plugin) && advancedNumberFilter(plugin.objectIds, locationObject.objectId, plugin.options, option));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {

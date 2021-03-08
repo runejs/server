@@ -1,4 +1,4 @@
-import { itemAction } from '@server/world/action/item-action';
+import { itemAction } from '@server/world/action/item.action';
 import { soundIds } from '@server/world/config/sound-ids';
 import { RunePlugin } from '@server/plugins/plugin';
 import { itemIds } from '@server/world/config/item-ids';

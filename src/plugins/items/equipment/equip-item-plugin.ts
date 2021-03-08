@@ -1,4 +1,4 @@
-import { itemAction } from '@server/world/action/item-action';
+import { itemAction } from '@server/world/action/item.action';
 import { widgets } from '@server/config';
 
 export const action: itemAction = (details) => {

@@ -3,8 +3,8 @@ import { logger, parseServerConfig } from '@runejs/core';
 import { Cache, LocationObject } from '@runejs/cache-parser';
 import { ServerConfig } from '@server/config/server-config';
 
-import { parsePluginFiles } from '@server/plugins/plugin-loader';
-import { sort } from '@server/plugins/plugin';
+import { loadPluginFiles } from '@server/plugins/plugin-loader';
+import { sortActionHooks } from '@server/plugins/plugin';
 
 import { loadPackets } from '@server/net/inbound-packets';
 import { watchForChanges, watchSource } from '@server/util/files';
@@ -15,7 +15,7 @@ import { Npc } from '@server/world/actor/npc/npc';
 import { Player } from '@server/world/actor/player/player';
 import { Subject, timer } from 'rxjs';
 import { Position } from '@server/world/position';
-import { ActionPipeline } from '@server/world/action';
+import { ActionPipeline, ActionType } from '@server/world/action';
 
 
 /**
@@ -36,10 +36,14 @@ export let cache: Cache;
 export let world: World;
 
 
+type PluginActionHook = {
+    [key in ActionType]?: any;
+};
+
 /**
  * A list of action hooks imported from content plugins.
  */
-export let pluginActionHooks: { [key: string]: any } = {};
+export let pluginActionHooks: PluginActionHook = {};
 
 
 /**
@@ -53,9 +57,9 @@ export const actionPipeline = new ActionPipeline();
  */
 export async function loadPlugins(): Promise<void> {
     pluginActionHooks = {};
-    const plugins = await parsePluginFiles();
+    const plugins = await loadPluginFiles();
 
-    plugins.map(plugin => plugin.actions).reduce((a, b) => a.concat(b)).forEach(action => {
+    plugins.map(plugin => plugin.actionHooks).reduce((a, b) => a.concat(b)).forEach(action => {
         if(!(action instanceof Quest)) {
             if(!pluginActionHooks[action.type]) {
                 pluginActionHooks[action.type] = [];
@@ -72,7 +76,7 @@ export async function loadPlugins(): Promise<void> {
     });
 
     // @TODO implement proper sorting rules
-    Object.keys(pluginActionHooks).forEach(key => pluginActionHooks[key] = sort(pluginActionHooks[key]));
+    Object.keys(pluginActionHooks).forEach(key => pluginActionHooks[key] = sortActionHooks(pluginActionHooks[key]));
 }
 
 

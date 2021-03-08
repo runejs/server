@@ -1,7 +1,7 @@
 import { objectIds } from '@server/world/config/object-ids';
 import { objectAction } from '@server/world/action/object-action';
 import { ItemContainer } from '@server/world/items/item-container';
-import { itemAction } from '@server/world/action/item-action';
+import { itemAction } from '@server/world/action/item.action';
 import { fromNote, Item } from '@server/world/items/item';
 import { widgets } from '@server/config';
 

@@ -1,4 +1,4 @@
-import { equipHandler, EquipAction } from '@server/world/action/equip-action';
+import { equipActionHandler, EquipAction } from '@server/world/action/equip.action';
 import { ItemDetails, WeaponStyle, weaponWidgetIds } from '@server/config/item-config';
 import { widgetScripts } from '@server/world/config/widget';
 import { Player, playerInitAction, SidebarTab } from '@server/world/actor/player/player';
@@ -55,7 +55,7 @@ export function updateCombatStyleWidget(player: Player): void {
     }
 }
 
-const equip: equipHandler = ({ player, itemDetails, equipmentSlot }) => {
+const equip: equipActionHandler = ({ player, itemDetails, equipmentSlot }) => {
     if(equipmentSlot === 'main_hand') {
         const weaponStyle = itemDetails?.equipmentData?.weaponInfo?.style || null;
 

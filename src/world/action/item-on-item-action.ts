@@ -1,6 +1,6 @@
 import { Player } from '@server/world/actor/player/player';
 import { Item } from '@server/world/items/item';
-import { questFilter } from '@server/plugins/plugin';
+import { questHookFilter } from '@server/plugins/plugin';
 import { ActionHook, getActionHooks } from '@server/world/action/index';
 
 /**
@@ -46,7 +46,7 @@ const itemOnItemActionHandler = (player: Player, usedItem: Item, usedSlot: numbe
 
     // Find all item on item action plugins that match this action
     let interactionActions = getActionHooks('item_on_item').filter(plugin =>
-        questFilter(player, plugin) &&
+        questHookFilter(player, plugin) &&
         (plugin.items.findIndex(i => i.item1 === usedItem.itemId && i.item2 === usedWithItem.itemId) !== -1 ||
         plugin.items.findIndex(i => i.item2 === usedItem.itemId && i.item1 === usedWithItem.itemId) !== -1));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);

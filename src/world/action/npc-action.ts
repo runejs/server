@@ -4,7 +4,7 @@ import { Position } from '@server/world/position';
 import { ActionHook, getActionHooks} from '@server/world/action/index';
 import { basicStringFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
-import { questFilter } from '@server/plugins/plugin';
+import { questHookFilter } from '@server/plugins/plugin';
 import { playerWalkTo } from '@server/game-server';
 
 /**
@@ -48,7 +48,7 @@ const npcActionHandler = (player: Player, npc: Npc, position: Position, option: 
 
     // Find all NPC action plugins that reference this NPC
     let interactionActions = getActionHooks('npc_action')
-        .filter(plugin => questFilter(player, plugin) &&
+        .filter(plugin => questHookFilter(player, plugin) &&
             (!plugin.npcs || basicStringFilter(plugin.npcs, npc.key)) &&
             (!plugin.options || basicStringFilter(plugin.options, option)));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
