@@ -1,4 +1,4 @@
-import { buttonAction } from '@server/world/action/button-action';
+import { buttonActionHandler } from '@server/world/action/button.action';
 import { widgets } from '@server/config';
 
 const buttonIds: number[] = [
@@ -14,7 +14,7 @@ const buttonIds: number[] = [
     5, // house options
 ];
 
-export const action: buttonAction = (details) => {
+export const action: buttonActionHandler = (details) => {
     const { player, buttonId } = details;
     player.settingChanged(buttonId);
 };

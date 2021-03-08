@@ -1,11 +1,12 @@
 import { Player } from '@server/world/actor/player/player';
 import { Position } from '@server/world/position';
-import { Action, getActionList, walkToAction } from '@server/world/action/index';
+import { ActionHook, getActionHooks} from '@server/world/action/index';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
 import { questFilter } from '@server/plugins/plugin';
 import { Item } from '@server/world/items/item';
 import { Npc } from '@server/world/actor/npc/npc';
+import { playerWalkTo } from '@server/game-server';
 
 /**
  * The definition for an item on npc action function.
@@ -35,7 +36,7 @@ export interface ItemOnNpcActionData {
  * A list of npc ids that apply to the plugin, the items that can be performed on,
  * and whether or not the player must first walk to the npc.
  */
-export interface ItemOnNpcAction extends Action {
+export interface ItemOnNpcAction extends ActionHook {
     // A single NPC ID or a list of NPC IDs that this action applies to.
     npcsIds: number | number[];
     // A single game item ID or a list of item IDs that this action applies to.
@@ -54,7 +55,7 @@ const itemOnNpcActionHandler = (player: Player, npc: Npc, position: Position, it
     }
 
     // Find all item on npc action plugins that reference this npc and item
-    let interactionActions = getActionList('item_on_npc').filter(plugin =>
+    let interactionActions = getActionHooks('item_on_npc').filter(plugin =>
         questFilter(player, plugin) &&
         pluginFilter(plugin.npcsIds, npc.id) && pluginFilter(plugin.itemIds, item.itemId));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
@@ -77,7 +78,7 @@ const itemOnNpcActionHandler = (player: Player, npc: Npc, position: Position, it
 
     // Make sure we walk to the npc before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
-        walkToAction(player, position)
+        playerWalkTo(player, position)
             .then(() => {
                 player.face(position);
 

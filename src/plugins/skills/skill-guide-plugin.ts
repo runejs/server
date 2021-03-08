@@ -1,4 +1,4 @@
-import { buttonAction } from '@server/world/action/button-action';
+import { buttonActionHandler } from '@server/world/action/button.action';
 import { logger } from '@runejs/core';
 import { Player } from '@server/world/actor/player/player';
 import { widgetAction } from '@server/world/action/widget-action';
@@ -64,7 +64,7 @@ function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refr
     player.metadata['activeSkillGuide'] = guideId;
 }
 
-export const openGuideAction: buttonAction = (details) => {
+export const openGuideAction: buttonActionHandler = (details) => {
     const { player, buttonId } = details;
     loadGuide(player, buttonId);
 };

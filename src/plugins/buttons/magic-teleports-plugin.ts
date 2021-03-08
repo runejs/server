@@ -1,10 +1,10 @@
-import { buttonAction } from '@server/world/action/button-action';
+import { buttonActionHandler } from '@server/world/action/button.action';
 import { Player } from '@server/world/actor/player/player';
-import { loopingAction } from '@server/world/action';
 import { Position } from '@server/world/position';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { gfxIds } from '@server/world/config/gfx-ids';
+import { loopingEvent } from '@server/game-server';
 
 enum Teleports {
     Home = 591,
@@ -25,7 +25,7 @@ const buttonIds: number[] = [
 function HomeTeleport(player: Player): void {
     let elapsedTicks = 0;
 
-    const loop = loopingAction({ player });
+    const loop = loopingEvent({ player });
     loop.event.subscribe(() => {
         if (elapsedTicks === 0) {
             player.playAnimation(animationIds.homeTeleportDraw);
@@ -60,7 +60,7 @@ function HomeTeleport(player: Player): void {
     });
 }
 
-export const action: buttonAction = (details) => {
+export const action: buttonActionHandler = (details) => {
     const { player, buttonId } = details;
 
     switch (buttonId) {

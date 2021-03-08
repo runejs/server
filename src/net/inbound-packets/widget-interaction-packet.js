@@ -1,4 +1,4 @@
-import { actionHandler } from '../../world/action';
+import { actionPipeline } from '../../game-server';
 
 const widgetInteractionPacket = (player, packet) => {
     const { buffer } = packet;
@@ -6,7 +6,7 @@ const widgetInteractionPacket = (player, packet) => {
     const widgetId = buffer.get('SHORT');
     const optionId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
 
-    actionHandler.call('widget_action', player, widgetId, childId, optionId);
+    actionPipeline.send('widget_action', player, widgetId, childId, optionId);
 };
 
 export default {

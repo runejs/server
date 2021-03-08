@@ -1,5 +1,5 @@
 import { Player } from '@server/world/actor/player/player';
-import { Action, getActionList } from '@server/world/action/index';
+import { ActionHook, getActionHooks } from '@server/world/action/index';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
 
@@ -27,14 +27,14 @@ export interface MoveItemActionData {
 /**
  * Defines a Move Item action.
  */
-export interface MoveItemAction extends Action {
+export interface MoveItemAction extends ActionHook {
     widgetId?: number;
     widgetIds?: number[];
     action: moveItemAction;
 }
 
 const moveItemActionHandler = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }): Promise<void> => {
-    const moveItemActions = getActionList('move_item')
+    const moveItemActions = getActionHooks('move_item')
         .filter(plugin => basicNumberFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 
     if(!moveItemActions || moveItemActions.length === 0) {

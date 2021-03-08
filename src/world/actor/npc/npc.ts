@@ -1,11 +1,11 @@
 import { Actor } from '@server/world/actor/actor';
 import uuidv4 from 'uuid/v4';
 import { Position } from '@server/world/position';
-import { cache, pluginActions, world } from '@server/game-server';
+import { cache, pluginActionHooks, world } from '@server/game-server';
 import { directionData } from '@server/world/direction';
 import { QuadtreeKey } from '@server/world';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
-import { Action } from '@server/world/action';
+import { ActionHook } from '@server/world/action';
 import { findNpc } from '@server/config';
 import { animationIds } from '@server/world/config/animation-ids';
 import { NpcAnimations, NpcDetails } from '@server/config/npc-config';
@@ -14,7 +14,7 @@ import { NpcSpawn } from '@server/config/npc-spawn-config';
 
 export type npcInitAction = (data: { npc: Npc }) => void;
 
-export interface NpcInitAction extends Action {
+export interface NpcInitAction extends ActionHook {
     // The action function to be performed.
     action: npcInitAction;
     // A single NPC ID or a list of NPC IDs that this action applies to.
@@ -101,7 +101,7 @@ export class Npc extends Actor {
         }
 
         await new Promise(resolve => {
-            pluginActions.npc_init
+            pluginActionHooks.npc_init
                 .filter(plugin => basicNumberFilter(plugin.npcIds, this.id))
                 .forEach(plugin => plugin.action({ npc: this }));
             resolve();

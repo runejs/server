@@ -1,9 +1,9 @@
-import { equipAction, EquipActionData } from '@server/world/action/equip-action';
+import { equipHandler, EquipAction } from '@server/world/action/equip-action';
 import { ItemDetails, WeaponStyle, weaponWidgetIds } from '@server/config/item-config';
 import { widgetScripts } from '@server/world/config/widget';
 import { Player, playerInitAction, SidebarTab } from '@server/world/actor/player/player';
 import { findItem, widgets } from '@server/config';
-import { buttonAction } from '@server/world/action/button-action';
+import { buttonActionHandler } from '@server/world/action/button.action';
 import { combatStyles } from '@server/world/actor/combat';
 import { serverConfig } from '@server/game-server';
 
@@ -55,7 +55,7 @@ export function updateCombatStyleWidget(player: Player): void {
     }
 }
 
-const equip: equipAction = ({ player, itemDetails, equipmentSlot }) => {
+const equip: equipHandler = ({ player, itemDetails, equipmentSlot }) => {
     if(equipmentSlot === 'main_hand') {
         const weaponStyle = itemDetails?.equipmentData?.weaponInfo?.style || null;
 
@@ -74,7 +74,7 @@ const initAction: playerInitAction = ({ player }) => {
     }
 };
 
-const combatStyleSelection: buttonAction = ({ player, buttonId }) => {
+const combatStyleSelection: buttonActionHandler = ({ player, buttonId }) => {
     const equippedItem = player.getEquippedItem('main_hand');
     let weaponStyle = 'unarmed';
 
@@ -98,7 +98,7 @@ export default [{
 }, {
     type: 'equip_action',
     equipType: 'UNEQUIP',
-    action: (details: EquipActionData): void => {
+    action: (details: EquipAction): void => {
         if(details.equipmentSlot === 'main_hand') {
             showUnarmed(details.player);
         }

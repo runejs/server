@@ -1,5 +1,4 @@
 import { itemOnItemAction } from '@server/world/action/item-on-item-action';
-import { loopingAction } from '@server/world/action';
 import { LocationObject } from '@runejs/cache-parser';
 import { Player } from '@server/world/actor/player/player';
 import { WorldItem } from '@server/world/items/world-item';
@@ -9,6 +8,7 @@ import { objectIds } from '@server/world/config/object-ids';
 import { itemIds } from '@server/world/config/item-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { animationIds } from '@server/world/config/animation-ids';
+import { loopingEvent } from '@server/game-server';
 
 const logs = [
     {
@@ -99,7 +99,7 @@ const action: itemOnItemAction = (details) => {
 
         let canLightFire = false;
         let elapsedTicks = 0;
-        const loop = loopingAction({ player });
+        const loop = loopingEvent({ player });
         loop.event.subscribe(() => {
             if(worldItemLog.removed) {
                 loop.cancel();

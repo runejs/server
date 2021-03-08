@@ -1,4 +1,4 @@
-import { actionHandler } from '../../world/action';
+import { actionPipeline } from '../../game-server';
 
 const itemSwapPacket = (player, packet) => {
     const { buffer } = packet;
@@ -13,9 +13,9 @@ const itemSwapPacket = (player, packet) => {
     }
 
     if(swapType === 0) {
-        actionHandler.call('swap_items', player, fromSlot, toSlot, { widgetId, containerId })
+        actionPipeline.send('swap_items', player, fromSlot, toSlot, { widgetId, containerId })
     } else if(swapType === 1) {
-        actionHandler.call('move_item', player, fromSlot, toSlot, { widgetId, containerId })
+        actionPipeline.send('move_item', player, fromSlot, toSlot, { widgetId, containerId })
     }
 };
 

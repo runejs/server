@@ -1,7 +1,7 @@
 import { Player } from '@server/world/actor/player/player';
 import { Item } from '@server/world/items/item';
 import { questFilter } from '@server/plugins/plugin';
-import { Action, getActionList } from '@server/world/action/index';
+import { ActionHook, getActionHooks } from '@server/world/action/index';
 
 /**
  * The definition for an item on item action function.
@@ -31,7 +31,7 @@ export interface ItemOnItemActionData {
 /**
  * Defines an item on item interaction plugin.
  */
-export interface ItemOnItemAction extends Action {
+export interface ItemOnItemAction extends ActionHook {
     // The item pairs being used. Each item can be used on the other, so item order does not matter.
     items: { item1: number, item2: number }[];
     // The action function to be performed.
@@ -45,7 +45,7 @@ const itemOnItemActionHandler = (player: Player, usedItem: Item, usedSlot: numbe
     }
 
     // Find all item on item action plugins that match this action
-    let interactionActions = getActionList('item_on_item').filter(plugin =>
+    let interactionActions = getActionHooks('item_on_item').filter(plugin =>
         questFilter(player, plugin) &&
         (plugin.items.findIndex(i => i.item1 === usedItem.itemId && i.item2 === usedWithItem.itemId) !== -1 ||
         plugin.items.findIndex(i => i.item2 === usedItem.itemId && i.item1 === usedWithItem.itemId) !== -1));

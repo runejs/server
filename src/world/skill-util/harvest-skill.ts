@@ -2,9 +2,8 @@ import { Player } from '@server/world/actor/player/player';
 import { IHarvestable } from '@server/world/config/harvestable-object';
 import { soundIds } from '@server/world/config/sound-ids';
 import { Skill } from '@server/world/actor/skills';
-import { cache, world } from '@server/game-server';
+import { cache, loopingEvent, world } from '@server/game-server';
 import { getBestAxe, getBestPickaxe, HarvestTool } from '@server/world/config/harvest-tool';
-import { loopingAction } from '@server/world/action';
 import { randomBetween } from '@server/util/num';
 import { ObjectActionData } from '@server/world/action/object-action';
 import { colors } from '@server/util/colors';
@@ -108,7 +107,7 @@ export function handleHarvesting(details: ObjectActionData, tool: HarvestTool, t
     details.player.playAnimation(tool.animation);
 
     // Create a looping action to handle the tick related actions in harvesting
-    const loop = loopingAction({ player: details.player });
+    const loop = loopingEvent({ player: details.player });
     let elapsedTicks = 0;
 
     loop.event.subscribe(() => {

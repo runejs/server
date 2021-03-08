@@ -1,5 +1,5 @@
 import { Player } from '../actor/player/player';
-import { Action, getActionList } from '@server/world/action/index';
+import { ActionHook, getActionHooks } from '@server/world/action/index';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
 
@@ -28,14 +28,14 @@ export interface SwapItemsActionData {
 /**
  * Defines a Swap Items action.
  */
-export interface SwapItemsAction extends Action {
+export interface SwapItemsAction extends ActionHook {
     widgetId?: number;
     widgetIds?: number[];
     action: swapItemsAction;
 }
 
 const swapItemsActionHandler = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }): Promise<void> => {
-    const swapItemsActions = getActionList('swap_items')
+    const swapItemsActions = getActionHooks('swap_items')
         .filter(plugin => basicNumberFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 
     if(!swapItemsActions || swapItemsActions.length === 0) {

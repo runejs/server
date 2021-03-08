@@ -10,8 +10,8 @@ import { updateCombatStyleWidget } from '@server/plugins/combat/combat-styles';
 import { Subject } from 'rxjs';
 import { dialogue } from '@server/world/actor/dialogue';
 import { take } from 'rxjs/operators';
-import { equipAction } from '@server/world/action/equip-action';
-import { buttonAction } from '@server/world/action/button-action';
+import { equipHandler } from '@server/world/action/equip-action';
+import { buttonActionHandler } from '@server/world/action/button.action';
 import { tabIndex } from '@server/world/actor/player/interface-state';
 import { runescapeGuideDialogueHandler } from './runescape-guide-dialogue';
 import { harlanDialogueHandler } from './melee-tutor-dialogue';
@@ -181,7 +181,7 @@ const tutorialInitAction: playerInitAction = async ({ player }) => {
     }
 };
 
-const trainingSwordEquipAction: equipAction = async ({ player, itemDetails }) => {
+const trainingSwordEquipAction: equipHandler = async ({ player, itemDetails }) => {
     const progress = player.getQuest('tyn:goblin_diplomacy').progress;
 
     if(progress === 85) {
@@ -196,7 +196,7 @@ const trainingSwordEquipAction: equipAction = async ({ player, itemDetails }) =>
     }
 };
 
-const createCharacterAction: buttonAction = ({ player }): void => {
+const createCharacterAction: buttonActionHandler = ({ player }): void => {
     player.interfaceState.closeAllSlots();
 };
 

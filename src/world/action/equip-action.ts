@@ -1,22 +1,34 @@
 import { Player } from '@server/world/actor/player/player';
 import { questFilter } from '@server/plugins/plugin';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
-import { world } from '@server/game-server';
-import { Action, getActionList } from '@server/world/action/index';
+import { ActionHook, ActionPipe, getActionHooks } from '@server/world/action/index';
 import { findItem } from '@server/config';
 import { EquipmentSlot, ItemDetails } from '@server/config/item-config';
+
+
+/**
+ * Defines an equipment change action hook.
+ */
+export interface EquipActionHook extends ActionHook {
+    // A single game item ID or a list of item IDs that this action applies to.
+    itemIds?: number | number[];
+    // A single option name or a list of option names that this action applies to.
+    equipType?: EquipType | EquipType[];
+    // The action function to be performed.
+    action: equipHandler;
+}
 
 /**
  * The definition for an equip action function.
  */
-export type equipAction = (equipActionData: EquipActionData) => void;
+export type equipHandler = (equipAction: EquipAction) => void;
 
 export type EquipType = 'EQUIP' | 'UNEQUIP';
 
 /**
  * Details about an item being equipped/unequipped.
  */
-export interface EquipActionData {
+export interface EquipAction {
     // The player performing the action.
     player: Player;
     // The ID of the item being equipped/unequipped.
@@ -29,20 +41,9 @@ export interface EquipActionData {
     equipmentSlot: EquipmentSlot;
 }
 
-/**
- * Defines an equipment change plugin.
- */
-export interface EquipAction extends Action {
-    // A single game item ID or a list of item IDs that this action applies to.
-    itemIds?: number | number[];
-    // A single option name or a list of option names that this action applies to.
-    equipType?: EquipType | EquipType[];
-    // The action function to be performed.
-    action: equipAction;
-}
 
-const equipActionHandler = (player: Player, itemId: number, equipType: EquipType, slot: EquipmentSlot): void => {
-    let filteredActions = getActionList('equip_action').filter(plugin => {
+const equipActionPipe = (player: Player, itemId: number, equipType: EquipType, slot: EquipmentSlot): void => {
+    let filteredActions = getActionHooks('equip_action').filter(plugin => {
         if(!questFilter(player, plugin)) {
             return false;
         }
@@ -80,7 +81,8 @@ const equipActionHandler = (player: Player, itemId: number, equipType: EquipType
     }
 };
 
-export default {
-    action: 'equip_action',
-    handler: equipActionHandler
-};
+
+/**
+ * Button action pipe definition.
+ */
+export default [ 'equip_action', equipActionPipe ];

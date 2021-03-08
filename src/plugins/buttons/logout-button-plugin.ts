@@ -1,8 +1,8 @@
-import { buttonAction } from '@server/world/action/button-action';
+import { buttonActionHandler } from '@server/world/action/button.action';
 import { world } from '@server/game-server';
 import { widgets } from '@server/config';
 
-export const action: buttonAction = (details) => {
+export const action: buttonActionHandler = (details) => {
     const { player } = details;
     const playerName = player.username.toLowerCase();
     player.logout();

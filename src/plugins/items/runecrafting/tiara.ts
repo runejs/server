@@ -1,10 +1,10 @@
-import { equipAction } from '@server/world/action/equip-action';
+import { equipHandler } from '@server/world/action/equip-action';
 
-export const equip: equipAction = (details) => {
+export const equip: equipHandler = (details) => {
     const { player } = details;
     player.outgoingPackets.updateClientConfig(491, 1);
 };
-export const unequip: equipAction = (details) => {
+export const unequip: equipHandler = (details) => {
     const { player } = details;
     player.outgoingPackets.updateClientConfig(491, 0);
 };

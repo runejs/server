@@ -4,7 +4,7 @@ import { Isaac } from '@server/net/isaac';
 import { PlayerSyncTask } from './sync/player-sync-task';
 import { Actor } from '../actor';
 import { Position } from '@server/world/position';
-import { cache, pluginActions, serverConfig, world } from '@server/game-server';
+import { actionPipeline, cache, pluginActionHooks, serverConfig, world } from '@server/game-server';
 import { logger } from '@runejs/core';
 import uuidv4 from 'uuid/v4';
 import {
@@ -29,7 +29,7 @@ import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 import { ItemDefinition } from '@runejs/cache-parser';
 import { PlayerCommandAction } from '@server/world/action/player-command-action';
 import { updateBonusStrings } from '@server/plugins/items/equipment/equipment-stats-plugin';
-import { Action, actionHandler } from '@server/world/action';
+import { ActionHook} from '@server/world/action';
 import {
     DefensiveBonuses,
     equipmentIndex,
@@ -94,7 +94,7 @@ export enum Rights {
 
 export type playerInitAction = (data: { player: Player }) => void;
 
-export interface PlayerInitAction extends Action {
+export interface PlayerInitAction extends ActionHook {
     // The action function to be performed.
     action: playerInitAction;
 }
@@ -190,7 +190,7 @@ export class Player extends Actor {
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
         for(const item of this.equipment.items) {
             if(item) {
-                actionHandler.call('equip_action', this, item.itemId, 'EQUIP');
+                actionPipeline.send('equip_action', this, item.itemId, 'EQUIP');
             }
         }
 
@@ -258,11 +258,11 @@ export class Player extends Actor {
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
 
         if(this.rights === Rights.ADMIN) {
-            this.sendCommandList(pluginActions.player_command);
+            this.sendCommandList(pluginActionHooks.player_command);
         }
 
         await new Promise(resolve => {
-            pluginActions.player_init.forEach(plugin => plugin.action({ player: this }));
+            pluginActionHooks.player_init.forEach(plugin => plugin.action({ player: this }));
             resolve();
         });
 
@@ -428,7 +428,7 @@ export class Player extends Actor {
 
         if(this.quests && this.quests.length !== 0) {
             this.quests.filter(quest => quest.complete)
-                .forEach(quest => questPoints += pluginActions.quest[quest.questId]?.points || 0);
+                .forEach(quest => questPoints += pluginActionHooks.quest[quest.questId]?.points || 0);
         }
 
         return questPoints;
@@ -606,7 +606,7 @@ export class Player extends Actor {
         if(!oldChunk.equals(newChunk)) {
             this.metadata['updateChunk'] = { newChunk, oldChunk };
 
-            actionHandler.call('player_region_changed', regionChangedDataFactory(
+            actionPipeline.send('player_region_changed', regionChangedDataFactory(
                 this, originalPosition, newPosition, true));
         }
     }
@@ -816,7 +816,7 @@ export class Player extends Actor {
                 return false;
             }
 
-            actionHandler.call('equip_action', this, itemToUnequip.itemId, 'UNEQUIP', slot);
+            actionPipeline.send('equip_action', this, itemToUnequip.itemId, 'UNEQUIP', slot);
 
             this.equipment.remove(slotIndex, false);
             this.inventory.remove(itemSlot, false);
@@ -837,7 +837,7 @@ export class Player extends Actor {
             }
         }
 
-        actionHandler.call('equip_action', this, itemId, 'EQUIP', slot);
+        actionPipeline.send('equip_action', this, itemId, 'EQUIP', slot);
         this.equipmentChanged();
         return true;
     }
@@ -878,7 +878,7 @@ export class Player extends Actor {
             return true;
         }
 
-        actionHandler.call('equip_action', this, itemInSlot.itemId, 'UNEQUIP', slot);
+        actionPipeline.send('equip_action', this, itemInSlot.itemId, 'UNEQUIP', slot);
 
         this.equipment.remove(slotIndex);
         this.inventory.set(inventorySlot, itemInSlot);
@@ -985,7 +985,7 @@ export class Player extends Actor {
     private updateQuestTab(): void {
         this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, this.getQuestPoints());
 
-        const questMap = pluginActions.quest;
+        const questMap = pluginActionHooks.quest;
         if(!questMap) {
             return;
         }

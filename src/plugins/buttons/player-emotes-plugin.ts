@@ -1,4 +1,4 @@
-import { buttonAction } from '@server/world/action/button-action';
+import { buttonActionHandler } from '@server/world/action/button.action';
 import { Player } from '@server/world/actor/player/player';
 import { itemIds } from '@server/world/config/item-ids';
 import { widgets } from '@server/config';
@@ -148,7 +148,7 @@ export function unlockEmotes(player: Player): void {
 
 const buttonIds = Object.keys(emotes).map(v => parseInt(v));
 
-export const action: buttonAction = (details) => {
+export const action: buttonActionHandler = (details) => {
     const { player, buttonId } = details;
 
     const emote = emotes[buttonId];

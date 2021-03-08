@@ -2,7 +2,7 @@ import { Player } from '@server/world/actor/player/player';
 import { questFilter } from '@server/plugins/plugin';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
 import { world } from '@server/game-server';
-import { Action, getActionList } from '@server/world/action/index';
+import { ActionHook, getActionHooks } from '@server/world/action/index';
 import { ItemDetails } from '@server/config/item-config';
 import { findItem } from '@server/config';
 
@@ -34,7 +34,7 @@ export interface ItemActionData {
 /**
  * Defines an item interaction plugin.
  */
-export interface ItemAction extends Action {
+export interface ItemAction extends ActionHook {
     // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
     // A single UI widget ID or a list of widget IDs that this action applies to.
@@ -56,7 +56,7 @@ const itemActionHandler = (player: Player, itemId: number, slot: number, widgetI
     let cancelActions = false;
 
     // Find all object action plugins that reference this location object
-    let interactionActions = getActionList('item_action').filter(plugin => {
+    let interactionActions = getActionHooks('item_action').filter(plugin => {
         if(!questFilter(player, plugin)) {
             return false;
         }

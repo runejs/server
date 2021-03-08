@@ -1,10 +1,11 @@
 import { Player } from '@server/world/actor/player/player';
 import { Npc } from '@server/world/actor/npc/npc';
 import { Position } from '@server/world/position';
-import { Action, getActionList, walkToAction } from '@server/world/action/index';
+import { ActionHook, getActionHooks} from '@server/world/action/index';
 import { basicStringFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
 import { questFilter } from '@server/plugins/plugin';
+import { playerWalkTo } from '@server/game-server';
 
 /**
  * The definition for an NPC action function.
@@ -28,7 +29,7 @@ export interface NpcActionData {
  * A list of NPC ids that apply to the plugin, the option selected, the action to be performed,
  * and whether or not the player must first walk to the NPC.
  */
-export interface NpcAction extends Action {
+export interface NpcAction extends ActionHook {
     // A single NPC key or a list of NPC keys that this action applies to.
     npcs?: string | string[];
     // A single option name or a list of option names that this action applies to.
@@ -46,7 +47,7 @@ const npcActionHandler = (player: Player, npc: Npc, position: Position, option: 
     }
 
     // Find all NPC action plugins that reference this NPC
-    let interactionActions = getActionList('npc_action')
+    let interactionActions = getActionHooks('npc_action')
         .filter(plugin => questFilter(player, plugin) &&
             (!plugin.npcs || basicStringFilter(plugin.npcs, npc.key)) &&
             (!plugin.options || basicStringFilter(plugin.options, option)));
@@ -70,7 +71,7 @@ const npcActionHandler = (player: Player, npc: Npc, position: Position, option: 
 
     // Make sure we walk to the NPC before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
-        walkToAction(player, position)
+        playerWalkTo(player, position)
             .then(() => {
                 player.face(npc);
                 npc.face(player);

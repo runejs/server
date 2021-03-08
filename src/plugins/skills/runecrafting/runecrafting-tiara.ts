@@ -3,15 +3,15 @@
  */
 
 import { getEntityByAttr, getEntityIds, tiaras } from '@server/plugins/skills/runecrafting/runecrafting-constants';
-import { equipAction } from '@server/world/action/equip-action';
+import { equipHandler } from '@server/world/action/equip-action';
 
 
-const unequipTiara : equipAction = (details) => {
+const unequipTiara : equipHandler = (details) => {
     const { player } = details;
     player.outgoingPackets.updateClientConfig(491, 0);
 };
 
-const equipTiara : equipAction = (details) => {
+const equipTiara : equipHandler = (details) => {
     const { player, itemId } = details;
     const tiara = getEntityByAttr(tiaras, 'id', itemId);
     player.outgoingPackets.updateClientConfig(491, tiara.config);

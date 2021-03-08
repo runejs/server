@@ -1,6 +1,6 @@
 import { Player } from '../actor/player/player';
 import { logger } from '@runejs/core';
-import { Action, getActionList } from '@server/world/action/index';
+import { ActionHook, getActionHooks } from '@server/world/action/index';
 
 /**
  * The definition for a command action function.
@@ -24,7 +24,7 @@ export interface PlayerCommandActionData {
 /**
  * Defines a command interaction plugin.
  */
-export interface PlayerCommandAction extends Action {
+export interface PlayerCommandAction extends ActionHook {
     // The single command or list of commands that this action applies to.
     commands: string | string[];
     // The potential arguments for this command action.
@@ -40,7 +40,7 @@ export interface PlayerCommandAction extends Action {
 const playerCommandActionHandler = (player: Player, command: string, isConsole: boolean, inputArgs: string[]): void => {
     command = command.toLowerCase();
 
-    const plugins = getActionList('player_command').filter(plugin => {
+    const plugins = getActionHooks('player_command').filter(plugin => {
         if(Array.isArray(plugin.commands)) {
             return plugin.commands.indexOf(command) !== -1;
         } else {

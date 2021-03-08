@@ -1,6 +1,6 @@
 import { Player } from '@server/world/actor/player/player';
 import { Coords, Position } from '@server/world/position';
-import { Action, getActionList } from '@server/world/action/index';
+import { ActionHook, getActionHooks } from '@server/world/action/index';
 import { RegionType } from '@server/world/map/region';
 
 
@@ -40,7 +40,7 @@ export interface PlayerRegionChangedData {
 /**
  * Defines a player region changed action.
  */
-export interface PlayerRegionChangedAction extends Action {
+export interface PlayerRegionChangedAction extends ActionHook {
     // The action function to be performed.
     handler: playerRegionChangedHook;
     // Optional single region type for the action hook to apply to.
@@ -122,7 +122,7 @@ const playerRegionChangedHandler = (actionData: PlayerRegionChangedData): void =
     }
 
     // Find all action hooks that match the provided input
-    const actionList = getActionList('player_region_changed')?.filter((actionHook: PlayerRegionChangedAction) => {
+    const actionList = getActionHooks('player_region_changed')?.filter((actionHook: PlayerRegionChangedAction) => {
         if(actionHook.teleporting && !actionData.teleporting) {
             return false;
         }

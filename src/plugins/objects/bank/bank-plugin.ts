@@ -4,7 +4,7 @@ import { objectAction } from '@server/world/action/object-action';
 import { ItemContainer } from '@server/world/items/item-container';
 import { itemAction } from '@server/world/action/item-action';
 import { fromNote, Item, toNote } from '@server/world/items/item';
-import { buttonAction } from '@server/world/action/button-action';
+import { buttonActionHandler } from '@server/world/action/button.action';
 import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 import { widgets } from '@server/config';
 
@@ -176,7 +176,7 @@ export const withdrawItem: itemAction = (details) => {
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, details.player.bank);
 };
 
-export const btnAction: buttonAction = (details) => {
+export const btnAction: buttonActionHandler = (details) => {
     const { player, buttonId } = details;
     player.settingChanged(buttonId);
 

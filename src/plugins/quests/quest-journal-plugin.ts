@@ -1,13 +1,13 @@
-import { buttonAction } from '@server/world/action/button-action';
+import { buttonActionHandler } from '@server/world/action/button.action';
 import { wrapText } from '@server/util/strings';
-import { pluginActions } from '@server/game-server';
+import { pluginActionHooks } from '@server/game-server';
 import { widgets } from '@server/config';
 import { Quest } from '@server/world/actor/player/quest';
 import { QuestKey } from '@server/config/quest-config';
 
 
-export const action: buttonAction = async ({ player, buttonId }) => {
-    const [ quest ] = pluginActions.quest.filter((quest: Quest) => quest.questTabId === buttonId) as Quest[];
+export const action: buttonActionHandler = async ({ player, buttonId }) => {
+    const [ quest ] = pluginActionHooks.quest.filter((quest: Quest) => quest.questTabId === buttonId) as Quest[];
     if(!quest) {
         return;
     }

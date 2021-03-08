@@ -1,6 +1,6 @@
 import { World } from './world';
 import { logger, parseServerConfig } from '@runejs/core';
-import { Cache } from '@runejs/cache-parser';
+import { Cache, LocationObject } from '@runejs/cache-parser';
 import { ServerConfig } from '@server/config/server-config';
 
 import { parsePluginFiles } from '@server/plugins/plugin-loader';
@@ -11,38 +11,76 @@ import { watchForChanges, watchSource } from '@server/util/files';
 import { openGameServer } from '@server/net/server/game-server';
 import { loadConfigurations } from '@server/config';
 import { Quest } from '@server/world/actor/player/quest';
+import { Npc } from '@server/world/actor/npc/npc';
+import { Player } from '@server/world/actor/player/player';
+import { Subject, timer } from 'rxjs';
+import { Position } from '@server/world/position';
+import { ActionPipeline } from '@server/world/action';
 
 
+/**
+ * The singleton instance containing the server's active configuration settings.
+ */
 export let serverConfig: ServerConfig;
+
+
+/**
+ * The singleton instance referencing the game's asset filestore.
+ */
 export let cache: Cache;
+
+
+/**
+ * The singleton instance of this game world.
+ */
 export let world: World;
 
-export let pluginActions: { [key: string]: any } = {};
 
+/**
+ * A list of action hooks imported from content plugins.
+ */
+export let pluginActionHooks: { [key: string]: any } = {};
+
+
+/**
+ * The pipeline through which game engine sends content actions for plugin hooks to consume.
+ */
+export const actionPipeline = new ActionPipeline();
+
+
+/**
+ * Searches for and loads all plugin files and their associated action hooks.
+ */
 export async function loadPlugins(): Promise<void> {
-    pluginActions = {};
+    pluginActionHooks = {};
     const plugins = await parsePluginFiles();
 
     plugins.map(plugin => plugin.actions).reduce((a, b) => a.concat(b)).forEach(action => {
         if(!(action instanceof Quest)) {
-            if(!pluginActions[action.type]) {
-                pluginActions[action.type] = [];
+            if(!pluginActionHooks[action.type]) {
+                pluginActionHooks[action.type] = [];
             }
 
-            pluginActions[action.type].push(action);
+            pluginActionHooks[action.type].push(action);
         } else {
-            if(!pluginActions['quest']) {
-                pluginActions['quest'] = [];
+            if(!pluginActionHooks['quest']) {
+                pluginActionHooks['quest'] = [];
             }
 
-            pluginActions['quest'].push(action);
+            pluginActionHooks['quest'].push(action);
         }
     });
 
     // @TODO implement proper sorting rules
-    Object.keys(pluginActions).forEach(key => pluginActions[key] = sort(pluginActions[key]));
+    Object.keys(pluginActionHooks).forEach(key => pluginActionHooks[key] = sort(pluginActionHooks[key]));
 }
 
+
+/**
+ * Configures the game server, parses the asset filestore,
+ * awakens the game world, and finally initializes the
+ * game socket server.
+ */
 export async function runGameServer(): Promise<void> {
     serverConfig = parseServerConfig<ServerConfig>();
 
@@ -74,3 +112,109 @@ export async function runGameServer(): Promise<void> {
     watchForChanges('dist/plugins/', /[/\\]plugins[/\\]/);
     watchForChanges('dist/net/inbound-packets/', /[/\\]inbound-packets[/\\]/);
 }
+
+
+
+/**
+ * A type of action that loops until either one of three things happens:
+ * 1. A player is specified within `options` who's `actionsCancelled` event has been fired during the loop.
+ * 2. An npc is specified within `options` who no longer exists at some point during the loop.
+ * 3. The `cancel()` function is manually called, presumably when the purpose of the loop has been completed.
+ * @param options Options to provide to the looping action, which include:
+ * `ticks` the number of game ticks between loop cycles. Defaults to 1 game tick between loops.
+ * `delayTicks` the number of game ticks to wait before starting the first loop. Defaults to 0 game ticks.
+ * `player` the player that the loop belongs to. Providing this field will cause the loop to cancel if this
+ *          player's `actionsCancelled` is fired during the loop.
+ * `npc` the npc that the loop belongs to. This will Providing this field will cause the loop to cancel if
+ *       this npc is flagged to no longer exist during the loop.
+ * @deprecated To be replaced with a simplified method within the Actor (Player & NPC) API.
+ */
+export const loopingEvent = (options?: { ticks?: number, delayTicks?: number, npc?: Npc, player?: Player }):
+    { event: Subject<void>, cancel: () => void } => {
+    if(!options) {
+        options = {};
+    }
+
+    const { ticks, delayTicks, npc, player } = options;
+    const event: Subject<void> = new Subject<void>();
+
+    const subscription = timer(delayTicks === undefined ? 0 : (delayTicks * World.TICK_LENGTH),
+        ticks === undefined ? World.TICK_LENGTH : (ticks * World.TICK_LENGTH)).subscribe(() => {
+        if(npc && !npc.exists) {
+            event.complete();
+            subscription.unsubscribe();
+            return;
+        }
+
+        event.next();
+    });
+
+    let actionCancelled;
+
+    if(player) {
+        actionCancelled = player.actionsCancelled.subscribe(() => {
+            subscription.unsubscribe();
+            actionCancelled.unsubscribe();
+            event.complete();
+        });
+    }
+
+    return {
+        event, cancel: () => {
+            subscription.unsubscribe();
+
+            if(actionCancelled) {
+                actionCancelled.unsubscribe();
+            }
+
+            event.complete();
+        }
+    };
+};
+
+
+/**
+ * A walk-to type of action that requires the specified player to walk to a specific destination before proceeding.
+ * Note that this does not force the player to walk, it simply checks to see if the player is walking where specified.
+ * @param player The player that must walk to a specific position.
+ * @param position The position that the player needs to end up at.
+ * @param interactingAction [optional] The information about the interaction that the player is making. Not required.
+ * @deprecated To be replaced with a simplified method within the Actor (Player & NPC) API.
+ */
+export const playerWalkTo = async (player: Player, position: Position, interactingAction?: {
+    interactingObject?: LocationObject;
+}): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+        player.walkingTo = position;
+
+        const inter = setInterval(() => {
+            if(!player.walkingTo || !player.walkingTo.equals(position)) {
+                reject();
+                clearInterval(inter);
+                return;
+            }
+
+            if(!player.walkingQueue.moving()) {
+                if(!interactingAction) {
+                    if(player.position.distanceBetween(position) > 1) {
+                        reject();
+                    } else {
+                        resolve();
+                    }
+                } else {
+                    if(interactingAction.interactingObject) {
+                        const locationObject = interactingAction.interactingObject;
+                        if(player.position.withinInteractionDistance(locationObject)) {
+                            resolve();
+                        } else {
+                            reject();
+                        }
+                    }
+                }
+
+                clearInterval(inter);
+                player.walkingTo = null;
+            }
+        }, 100);
+    });
+};

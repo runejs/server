@@ -11,7 +11,7 @@ import TravelLocations from '@server/world/config/travel-locations';
 import { Actor } from '@server/world/actor/actor';
 import { schedule } from '@server/world/task';
 import { parseScenerySpawns } from '@server/world/config/scenery-spawns';
-import { loadActions } from '@server/world/action';
+import { loadActionFiles } from '@server/world/action';
 import { findItem, findNpc, itemSpawns, npcSpawns } from '@server/config';
 import { NpcDetails } from '@server/config/npc-config';
 import { WorldInstance } from '@server/world/instances';
@@ -62,7 +62,7 @@ export class World {
 
   public async init(): Promise<void> {
       await loadPlugins();
-      await loadActions();
+      await loadActionFiles();
       this.spawnGlobalNpcs();
       this.spawnWorldItems();
       this.spawnScenery();

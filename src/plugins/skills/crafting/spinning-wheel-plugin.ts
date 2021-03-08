@@ -1,11 +1,10 @@
 import { objectAction } from '@server/world/action/object-action';
-import { buttonAction, ButtonActionData } from '@server/world/action/button-action';
+import { buttonActionHandler, ButtonAction } from '@server/world/action/button.action';
 import { soundIds } from '@server/world/config/sound-ids';
 import { Subscription } from 'rxjs';
 import { itemIds } from '@server/world/config/item-ids';
-import { loopingAction } from '@server/world/action';
 import { Skill } from '@server/world/actor/skills';
-import { cache } from '@server/game-server';
+import { cache, loopingEvent } from '@server/game-server';
 import { animationIds } from '@server/world/config/animation-ids';
 import { objectIds } from '@server/world/config/object-ids';
 import { widgets } from '@server/config';
@@ -77,7 +76,7 @@ export const openSpinningInterface: objectAction = (details) => {
     });
 };
 
-const spinProduct: any = (details: ButtonActionData, spinnable: Spinnable, count: number) => {
+const spinProduct: any = (details: ButtonAction, spinnable: Spinnable, count: number) => {
     let elapsedTicks = 0;
 
     let created = 0;
@@ -93,7 +92,7 @@ const spinProduct: any = (details: ButtonActionData, spinnable: Spinnable, count
         currentItem = spinnable.input;
     }
     // Create a new tick loop
-    const loop = loopingAction({ player: details.player });
+    const loop = loopingEvent({ player: details.player });
     loop.event.subscribe(() => {
         if (created === count) {
             loop.cancel();
@@ -135,7 +134,7 @@ const spinProduct: any = (details: ButtonActionData, spinnable: Spinnable, count
     });
 };
 
-export const buttonClicked: buttonAction = (details) => {
+export const buttonClicked: buttonActionHandler = (details) => {
     // Check if player might be spawning widget clientside
     if (!details.player.interfaceState.findWidget(459)) {
         return;

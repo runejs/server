@@ -1,11 +1,12 @@
 import { Player } from '@server/world/actor/player/player';
 import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@server/world/position';
-import { Action, getActionList, walkToAction } from '@server/world/action/index';
+import { ActionHook, getActionHooks} from '@server/world/action/index';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
 import { questFilter } from '@server/plugins/plugin';
 import { Item } from '@server/world/items/item';
+import { playerWalkTo } from '@server/game-server';
 
 /**
  * The definition for an item on object action function.
@@ -39,7 +40,7 @@ export interface ItemOnObjectActionData {
  * A list of object ids that apply to the plugin, the options for the object, the items that can be performed on,
  * and whether or not the player must first walk to the object.
  */
-export interface ItemOnObjectAction extends Action {
+export interface ItemOnObjectAction extends ActionHook {
     // A single game object ID or a list of object IDs that this action applies to.
     objectIds: number | number[];
     // A single game item ID or a list of item IDs that this action applies to.
@@ -60,7 +61,7 @@ const itemOnObjectActionHandler = (player: Player, locationObject: LocationObjec
     }
 
     // Find all item on object action plugins that reference this location object
-    let interactionActions = getActionList('item_on_object').filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, locationObject.objectId));
+    let interactionActions = getActionHooks('item_on_object').filter(plugin => questFilter(player, plugin) && pluginFilter(plugin.objectIds, locationObject.objectId));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
@@ -86,7 +87,7 @@ const itemOnObjectActionHandler = (player: Player, locationObject: LocationObjec
 
     // Make sure we walk to the object before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
-        walkToAction(player, position, { interactingObject: locationObject })
+        playerWalkTo(player, position, { interactingObject: locationObject })
             .then(() => {
                 player.face(position);
 

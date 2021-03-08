@@ -1,5 +1,5 @@
 import { Player } from '@server/world/actor/player/player';
-import { Action } from '@server/world/action';
+import { ActionHook } from '@server/world/action';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
 import { Quest } from '@server/world/actor/player/quest';
 import { QuestKey } from '@server/config/quest-config';
@@ -11,11 +11,11 @@ export interface QuestRequirement {
     stages?: number[];
 }
 
-export function sort(plugins: Action[]): Action[] {
+export function sort(plugins: ActionHook[]): ActionHook[] {
     return plugins.sort(plugin => plugin.questRequirement !== undefined ? -1 : 1);
 }
 
-export function questFilter(player: Player, plugin: Action): boolean {
+export function questFilter(player: Player, plugin: ActionHook): boolean {
     if(!plugin.questRequirement) {
         return true;
     }
@@ -48,12 +48,12 @@ export function questFilter(player: Player, plugin: Action): boolean {
 
 export class RunePlugin {
 
-    public actions: (Action | Quest)[];
+    public actions: (ActionHook | Quest)[];
 
-    public constructor(actions: Action | (Action | Quest)[] | Quest, questRequirement?: QuestRequirement) {
+    public constructor(actions: ActionHook | (ActionHook | Quest)[] | Quest, questRequirement?: QuestRequirement) {
         if(!Array.isArray(actions)) {
             if(!(actions instanceof Quest)) {
-                actions = actions as Action;
+                actions = actions as ActionHook;
                 if(questRequirement !== undefined && !actions.questRequirement) {
                     actions.questRequirement = questRequirement;
                 }

@@ -2,10 +2,9 @@ import { Item } from '@server/world/items/item';
 import { ItemContainer } from '@server/world/items/item-container';
 import { objectIds } from '@server/world/config/object-ids';
 import { objectAction, ObjectActionData } from '@server/world/action/object-action';
-import { buttonAction, ButtonActionData } from '@server/world/action/button-action';
+import { buttonActionHandler, ButtonAction } from '@server/world/action/button.action';
 import { Skill } from '@server/world/actor/skills';
-import { cache } from '@server/game-server';
-import { loopingAction } from '@server/world/action';
+import { cache, loopingEvent } from '@server/game-server';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
 import { colors } from '@server/util/colors';
@@ -43,7 +42,7 @@ const loadSmeltingInterface = (details: ObjectActionData) => {
 /**
  * Check whether the player has the needed ingredients.
  */
-const hasIngredients = (details: ButtonActionData, ingredients: Item[], inventory: ItemContainer, loop) => {
+const hasIngredients = (details: ButtonAction, ingredients: Item[], inventory: ItemContainer, loop) => {
     ingredients.forEach((item: Item) => {
         const itemIndex = inventory.findIndex(item);
         if (itemIndex === -1 || inventory.amountInStack(itemIndex) < item.amount) {
@@ -54,11 +53,11 @@ const hasIngredients = (details: ButtonActionData, ingredients: Item[], inventor
     });
 };
 
-const canSmelt = (details: ButtonActionData, bar: Bar): boolean =>  {
+const canSmelt = (details: ButtonAction, bar: Bar): boolean =>  {
     return details.player.skills.hasLevel(Skill.SMITHING, bar.requiredLevel);
 };
 
-const smeltProduct = (details: ButtonActionData, bar: Bar, count: number) => {
+const smeltProduct = (details: ButtonAction, bar: Bar, count: number) => {
 
     const theKnightsSwordQuest : PlayerQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
     if (bar.quest !== undefined && (theKnightsSwordQuest == undefined || theKnightsSwordQuest.complete)) {
@@ -74,7 +73,7 @@ const smeltProduct = (details: ButtonActionData, bar: Bar, count: number) => {
 
     let elapsedTicks = 0;
     let smelted = 0;
-    const loop = loopingAction({ player: details.player });
+    const loop = loopingEvent({ player: details.player });
 
     // Check if the player is missing some or all ingredients.
     hasIngredients(details, bar.ingredients, details.player.inventory, loop);
@@ -108,7 +107,7 @@ const smeltProduct = (details: ButtonActionData, bar: Bar, count: number) => {
     });
 };
 
-export const buttonClicked : buttonAction = (details) => {
+export const buttonClicked : buttonActionHandler = (details) => {
 
     // Check if player might be spawning widget clientside
     if (!details.player.interfaceState.findWidget(widgets.furnace.widgetId)) {

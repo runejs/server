@@ -1,4 +1,4 @@
-import { buttonAction } from '@server/world/action/button-action';
+import { buttonActionHandler } from '@server/world/action/button.action';
 import { Player } from '@server/world/actor/player/player';
 import { widgets } from '@server/config';
 
@@ -20,7 +20,7 @@ export function updateBonusStrings(player: Player): void {
         text: `${bonus.text}: ${bonus.value > 0 ? `+${bonus.value}` : bonus.value}` }));
 }
 
-export const action: buttonAction = (details) => {
+export const action: buttonActionHandler = (details) => {
     const { player } = details;
 
     player.updateBonuses();

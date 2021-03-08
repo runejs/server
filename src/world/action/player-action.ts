@@ -1,9 +1,10 @@
 import { Player } from '@server/world/actor/player/player';
 import { Position } from '@server/world/position';
-import { Action, getActionList, walkToAction } from '@server/world/action/index';
+import { ActionHook, getActionHooks} from '@server/world/action/index';
 import { basicStringFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
 import { questFilter } from '@server/plugins/plugin';
+import { playerWalkTo } from '@server/game-server';
 
 /**
  * The definition for a player action function.
@@ -26,7 +27,7 @@ export interface PlayerActionData {
  * Defines a player interaction action.
  * The option selected, the action to be performed, and whether or not the player must first walk to the other player.
  */
-export interface PlayerAction extends Action {
+export interface PlayerAction extends ActionHook {
     // A single option name or a list of option names that this action applies to.
     options: string | string[];
     // Whether or not the player needs to walk to the other player before performing the action.
@@ -42,7 +43,7 @@ const playerActionHandler = (player: Player, otherPlayer: Player, position: Posi
     }
 
     // Find all player action plugins that reference this option
-    let interactionActions = getActionList('player_action')
+    let interactionActions = getActionHooks('player_action')
         .filter(plugin => questFilter(player, plugin) && basicStringFilter(plugin.options, option));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
@@ -63,7 +64,7 @@ const playerActionHandler = (player: Player, otherPlayer: Player, position: Posi
 
     // Make sure we walk to the other player before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
-        walkToAction(player, position)
+        playerWalkTo(player, position)
             .then(() => {
                 player.face(otherPlayer);
                 walkToPlugins.forEach(plugin => plugin.action({ player, otherPlayer, position }));

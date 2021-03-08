@@ -1,7 +1,7 @@
 import { Player } from '@server/world/actor/player/player';
 import { pluginFilter } from '@server/plugins/plugin-loader';
 import { questFilter } from '@server/plugins/plugin';
-import { Action, getActionList } from '@server/world/action/index';
+import { ActionHook, getActionHooks } from '@server/world/action/index';
 
 /**
  * The definition for a widget action function.
@@ -25,7 +25,7 @@ export interface WidgetActionData {
 /**
  * Defines a widget interaction plugin.
  */
-export interface WidgetAction extends Action {
+export interface WidgetAction extends ActionHook {
     // A single UI widget ID or a list of widget IDs that this action applies to.
     widgetIds: number | number[];
     // A single UI widget child ID or a list of child IDs that this action applies to.
@@ -47,7 +47,7 @@ export interface WidgetAction extends Action {
  */
 const widgetActionHandler = (player: Player, widgetId: number, childId: number, optionId: number): void => {
     // Find all item on item action plugins that match this action
-    let interactionActions = getActionList('widget_action').filter(plugin => {
+    let interactionActions = getActionHooks('widget_action').filter(plugin => {
         if(!questFilter(player, plugin)) {
             return false;
         }

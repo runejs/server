@@ -8,7 +8,7 @@ import {
     loadItemConfigurations,
     translateItemConfig
 } from '@server/config/item-config';
-import { cache, pluginActions } from '@server/game-server';
+import { cache, pluginActionHooks } from '@server/game-server';
 import {
     loadNpcConfigurations,
     NpcDetails,
@@ -187,6 +187,6 @@ export const findShop = (shopKey: string): Shop | null => {
 
 
 export const findQuest = (questId: string): Quest | null => {
-    const quests: Quest[] = pluginActions.quest;
+    const quests: Quest[] = pluginActionHooks.quest;
     return quests.find(quest => quest.id.toLocaleLowerCase() === questId.toLocaleLowerCase()) || null;
 };

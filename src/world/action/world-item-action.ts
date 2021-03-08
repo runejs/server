@@ -1,11 +1,12 @@
 import { Player } from '@server/world/actor/player/player';
-import { Action, getActionList, walkToAction } from '@server/world/action/index';
+import { ActionHook, getActionHooks} from '@server/world/action/index';
 import { basicNumberFilter, basicStringFilter } from '@server/plugins/plugin-loader';
 import { logger } from '@runejs/core';
 import { questFilter } from '@server/plugins/plugin';
 import { WorldItem } from '@server/world/items/world-item';
 import { ItemDetails } from '@server/config/item-config';
 import { findItem } from '@server/config';
+import { playerWalkTo } from '@server/game-server';
 
 /**
  * The definition for a world item action function.
@@ -27,7 +28,7 @@ export interface WorldItemActionData {
 /**
  * Defines an world item interaction plugin.
  */
-export interface WorldItemAction extends Action {
+export interface WorldItemAction extends ActionHook {
     // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
     // A single option name or a list of option names that this action applies to.
@@ -45,7 +46,7 @@ const worldItemActionHandler = (player: Player, worldItem: WorldItem, option: st
     }
 
     // Find all world item action plugins that reference this world item
-    let interactionActions = getActionList('world_item_action').filter(plugin => {
+    let interactionActions = getActionHooks('world_item_action').filter(plugin => {
         if(!questFilter(player, plugin)) {
             return false;
         }
@@ -83,7 +84,7 @@ const worldItemActionHandler = (player: Player, worldItem: WorldItem, option: st
 
     // Make sure we walk to the NPC before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
-        walkToAction(player, worldItem.position)
+        playerWalkTo(player, worldItem.position)
             .then(() => walkToPlugins.forEach(plugin => plugin.action({
                 player, worldItem, itemDetails
             })))
