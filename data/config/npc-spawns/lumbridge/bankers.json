@@ -1,15 +1,9 @@
 [
     {
         "npc": "rs:banker",
-        "spawn_x": 3208,
-        "spawn_y": 3222,
-        "movement_radius": 0,
-        "face": "SOUTH"
-    },
-    {
-        "npc": "rs:banker",
         "spawn_x": 3209,
         "spawn_y": 3222,
+        "spawn_level": 2,
         "movement_radius": 0,
         "face": "SOUTH"
     },
@@ -17,6 +11,7 @@
         "npc": "rs:banker",
         "spawn_x": 3210,
         "spawn_y": 3222,
+        "spawn_level": 2,
         "movement_radius": 0,
         "face": "SOUTH"
     }
