@@ -195,5 +195,5 @@ export const itemIds = {
         nature: 561,
         law: 563,
         death: 560,
-    }
+    },
 };
