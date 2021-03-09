@@ -30,8 +30,7 @@ const talkTo : npcAction = (details) => {
                 tutor => [Emote.GENERIC, `If the number of bars is in orange, this means that you do not have enough bars to smith the item.`],
                 tutor => [Emote.GENERIC, `If it is in green, this means you have enough bars for the item.`],
                 player => [Emote.GENERIC, `Thanks for the advice.`],
-                tutor => [Emote.WONDERING, `Is there anything else you would like to know?`],
-                options => [
+                (options) => [
                     `What kinds of things can I smith?`, [
                         goto('tag_what_kinds')
                     ],
@@ -49,9 +48,9 @@ const talkTo : npcAction = (details) => {
                 tutor => [Emote.GENERIC, `This is due to the complex nature of the weapon.`],
                 tutor => [Emote.GENERIC, `You might find other items don't require conventional bars you would gather.`],
                 tutor => [Emote.GENERIC, `Some may require you to piece back together or even infuse a crystal into a piece of armour.`],
-                tutor => [Emote.GENERIC, `Is therew anything else you want to know?`],
+                tutor => [Emote.GENERIC, `Is there anything else you want to know?`],
                 options => [
-                    `how can i train my smithing?`, [
+                    `How can i train my smithing?`, [
                         goto('tag_how_to_train')
                     ],
                     `No, thank you.`, [
