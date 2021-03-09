@@ -41,7 +41,7 @@ export interface ButtonAction {
 
 
 /**
- * The specific pipe that the game engine feeds button actions down to.
+ * The pipe that the game engine hands button actions off to.
  * @param player
  * @param widgetId
  * @param buttonId

@@ -41,20 +41,11 @@ export function questHookFilter(player: Player, actionHook: ActionHook): boolean
 }
 
 
-export interface PluginDefinition {
-    hooks?: ActionHook[];
-    quests?: Quest[];
-}
-
 
 export class RunePlugin {
 
-    public actionHooks?: ActionHook[];
+    public pluginId: string;
+    public hooks?: ActionHook[];
     public quests?: Quest[];
-
-    public constructor(definition: PluginDefinition) {
-        this.actionHooks = definition.hooks;
-        this.quests = definition.quests;
-    }
 
 }

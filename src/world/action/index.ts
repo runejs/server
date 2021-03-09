@@ -117,7 +117,7 @@ export class ActionPipeline {
 
 
 /**
- * Finds and loads all available action pipe files (`*.pipe.ts`).
+ * Finds and loads all available action pipe files (`*.action.ts`).
  */
 export async function loadActionFiles(): Promise<void> {
     const ACTION_DIRECTORY = './dist/world/action';

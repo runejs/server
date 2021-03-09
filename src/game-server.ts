@@ -59,7 +59,7 @@ export async function loadPlugins(): Promise<void> {
     pluginActionHooks = {};
     const plugins = await loadPluginFiles();
 
-    plugins.map(plugin => plugin.actionHooks).reduce((a, b) => a.concat(b)).forEach(action => {
+    plugins.map(plugin => plugin.hooks).reduce((a, b) => a.concat(b)).forEach(action => {
         if(!(action instanceof Quest)) {
             if(!pluginActionHooks[action.type]) {
                 pluginActionHooks[action.type] = [];

@@ -49,7 +49,7 @@ export interface EquipAction {
 
 
 /**
- * The specific pipe that the game engine feeds equipment actions down to.
+ * The pipe that the game engine hands equipment actions off to.
  * @param player
  * @param itemId
  * @param equipType

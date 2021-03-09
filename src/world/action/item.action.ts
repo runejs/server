@@ -47,7 +47,15 @@ export interface ItemAction extends ActionHook {
     cancelOtherActions?: boolean;
 }
 
-// @TODO priority and cancelling other (lower priority) actions
+/**
+ * The pipe that the game engine hands item actions off to.
+ * @param player
+ * @param itemId
+ * @param slot
+ * @param widgetId
+ * @param containerId
+ * @param option
+ */
 const itemActionHandler = (player: Player, itemId: number, slot: number, widgetId: number, containerId: number, option: string): void => {
     if(player.busy) {
         return;
@@ -56,7 +64,7 @@ const itemActionHandler = (player: Player, itemId: number, slot: number, widgetI
     let cancelActions = false;
 
     // Find all object action plugins that reference this location object
-    let interactionActions = getActionHooks<ItemAction>('item_action', (plugin => {
+    let interactionActions = getActionHooks<ItemAction>('item_action', plugin => {
         if(!questHookFilter(player, plugin)) {
             return false;
         }
@@ -106,7 +114,8 @@ const itemActionHandler = (player: Player, itemId: number, slot: number, widgetI
     }
 
     if(interactionActions.length === 0) {
-        player.outgoingPackets.chatboxMessage(`Unhandled item option: ${option} ${itemId} in slot ${slot} within widget ${widgetId}:${containerId}`);
+        player.outgoingPackets.chatboxMessage(
+            `Unhandled item option: ${option} ${itemId} in slot ${slot} within widget ${widgetId}:${containerId}`);
         return;
     }
 

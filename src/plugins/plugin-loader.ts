@@ -69,16 +69,22 @@ export async function loadPluginFiles(): Promise<RunePlugin[]> {
         const location = '.' + path.substring(PLUGIN_DIRECTORY.length).replace('.js', '');
 
         try {
-            const plugin = require(location);
-            if(plugin) {
-                if(plugin.default) {
-                    // TS plugin
-                    plugins.push(new RunePlugin({ ...plugin.default }));
-                } else {
-                    // JS plugin
-                    plugins.push(new RunePlugin({ ...plugin }));
-                }
+            let pluginFile = require(location);
+            if(!pluginFile) {
+                continue;
             }
+
+            if(pluginFile.default) {
+                pluginFile = pluginFile.default;
+            }
+
+            const plugin = pluginFile as RunePlugin;
+            if(!plugin.pluginId) {
+                logger.error(`Plugin ID not provided for file at ${path}`);
+                continue;
+            }
+
+            plugins.push(plugin);
         } catch(error) {
             logger.error(`Error loading plugin file at ${location}:`);
             logger.error(error);
