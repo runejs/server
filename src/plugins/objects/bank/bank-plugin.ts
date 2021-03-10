@@ -2,7 +2,7 @@ import { objectIds } from '@engine/world/config/object-ids';
 import { widgetScripts } from '@engine/world/config/widget';
 import { objectAction } from '@engine/world/action/object-action';
 import { ItemContainer } from '@engine/world/items/item-container';
-import { itemAction } from '@engine/world/action/item.action';
+import { itemActionHandler } from '@engine/world/action/item.action';
 import { fromNote, Item, toNote } from '@engine/world/items/item';
 import { buttonActionHandler } from '@engine/world/action/button.action';
 import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
@@ -38,7 +38,7 @@ export const openPinSettings: objectAction = ({ player }) => {
     });
 };
 
-export const depositItem: itemAction = (details) => {
+export const depositItem: itemActionHandler = (details) => {
     // Check if player might be spawning widget clientside
     if (!details.player.interfaceState.findWidget(widgets.bank.screenWidget.widgetId)) {
         return;
@@ -104,7 +104,7 @@ export const depositItem: itemAction = (details) => {
 };
 
 
-export const withdrawItem: itemAction = (details) => {
+export const withdrawItem: itemActionHandler = (details) => {
     // Check if player might be spawning widget clientside
     if (!details.player.interfaceState.findWidget(widgets.bank.screenWidget.widgetId)) {
         return;

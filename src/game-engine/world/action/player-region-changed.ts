@@ -122,7 +122,7 @@ const playerRegionChangedHandler = (actionData: PlayerRegionChangedData): void =
     }
 
     // Find all action hooks that match the provided input
-    const actionList = getActionHooks('player_region_changed')?.filter((actionHook: PlayerRegionChangedAction) => {
+    const actionList = getActionHooks<PlayerRegionChangedAction>('region_change_action')?.filter(actionHook => {
         if(actionHook.teleporting && !actionData.teleporting) {
             return false;
         }

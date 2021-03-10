@@ -94,7 +94,7 @@ const equipActionPipe = (player: Player, itemId: number, equipType: EquipType, s
 
 
 /**
- * Button action pipe definition.
+ * Equip action pipe definition.
  */
 export default [
     'equip_action',

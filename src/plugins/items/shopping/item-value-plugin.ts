@@ -1,13 +1,13 @@
-import { itemAction } from '@engine/world/action/item.action';
+import { itemActionHandler } from '@engine/world/action/item.action';
 import { Shop } from '@engine/config/shop-config';
 import { widgets } from '@engine/config';
 
-export const shopSellValueAction: itemAction = ({ player, itemDetails }) => {
+export const shopSellValueAction: itemActionHandler = ({ player, itemDetails }) => {
     const itemValue = itemDetails.value || 1;
     player.sendMessage(`${itemDetails.name}: currently costs ${itemValue} coins.`);
 };
 
-export const shopPurchaseValueAction: itemAction = ({ player, itemDetails }) => {
+export const shopPurchaseValueAction: itemActionHandler = ({ player, itemDetails }) => {
     const openedShop: Shop = player.metadata['lastOpenedShop'];
     if(!openedShop) {
         return;

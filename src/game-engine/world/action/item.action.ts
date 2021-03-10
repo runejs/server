@@ -6,14 +6,32 @@ import { basicNumberFilter, basicStringFilter, questHookFilter } from '@engine/w
 
 
 /**
- * The definition for an item action function.
+ * Defines an item action hook.
  */
-export type itemAction = (itemActionData: ItemActionData) => void;
+export interface ItemActionHook extends ActionHook {
+    // A single game item ID or a list of item IDs that this action applies to.
+    itemIds?: number | number[];
+    // A single UI widget ID or a list of widget IDs that this action applies to.
+    widgets?: { widgetId: number, containerId: number } | { widgetId: number, containerId: number }[];
+    // A single option name or a list of option names that this action applies to.
+    options?: string | string[];
+    // The action function to be performed.
+    action: itemActionHandler;
+    // Whether or not this item action should cancel other running or queued actions.
+    cancelOtherActions?: boolean;
+}
+
 
 /**
- * Details about an item being interacted with.
+ * The item action hook handler function to be called when the hook's conditions are met.
  */
-export interface ItemActionData {
+export type itemActionHandler = (itemAction: ItemAction) => void;
+
+
+/**
+ * Details about an item action being performed.
+ */
+export interface ItemAction {
     // The player performing the action.
     player: Player;
     // The ID of the item being interacted with.
@@ -30,21 +48,6 @@ export interface ItemActionData {
     option: string;
 }
 
-/**
- * Defines an item interaction plugin.
- */
-export interface ItemAction extends ActionHook {
-    // A single game item ID or a list of item IDs that this action applies to.
-    itemIds?: number | number[];
-    // A single UI widget ID or a list of widget IDs that this action applies to.
-    widgets?: { widgetId: number, containerId: number } | { widgetId: number, containerId: number }[];
-    // A single option name or a list of option names that this action applies to.
-    options?: string | string[];
-    // The action function to be performed.
-    action: itemAction;
-    // Whether or not this item action should cancel other running or queued actions.
-    cancelOtherActions?: boolean;
-}
 
 /**
  * The pipe that the game engine hands item actions off to.
@@ -55,7 +58,7 @@ export interface ItemAction extends ActionHook {
  * @param containerId
  * @param option
  */
-const itemActionHandler = (player: Player, itemId: number, slot: number, widgetId: number, containerId: number, option: string): void => {
+const itemActionPipe = (player: Player, itemId: number, slot: number, widgetId: number, containerId: number, option: string): void => {
     if(player.busy) {
         return;
     }
@@ -63,7 +66,7 @@ const itemActionHandler = (player: Player, itemId: number, slot: number, widgetI
     let cancelActions = false;
 
     // Find all object action plugins that reference this location object
-    let interactionActions = getActionHooks<ItemAction>('item_action', plugin => {
+    let interactionActions = getActionHooks<ItemActionHook>('item_action', plugin => {
         if(!questHookFilter(player, plugin)) {
             return false;
         }
@@ -136,7 +139,11 @@ const itemActionHandler = (player: Player, itemId: number, slot: number, widgetI
 
 };
 
+
+/**
+ * Item action pipe definition.
+ */
 export default [
     'item_action',
-    itemActionHandler
+    itemActionPipe
 ];
