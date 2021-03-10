@@ -113,7 +113,6 @@ export async function runGameServer(): Promise<void> {
 
     watchSource('src/').subscribe(() => world.saveOnlinePlayers());
     watchForChanges('dist/plugins/', /[/\\]plugins[/\\]/);
-    watchForChanges('dist/net/inbound-packets/', /[/\\]inbound-packets[/\\]/);
 }
 
 

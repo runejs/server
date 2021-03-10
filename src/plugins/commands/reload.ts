@@ -12,13 +12,16 @@ const action: commandAction = async (details) => {
 
     // Delete node cache for all the old JS plugins
     for(const path in require.cache) {
+        if(!require.cache.hasOwnProperty(path)) {
+            continue;
+        }
+
         if(!path.endsWith('.js')) {
             continue;
         }
 
         const mustContain = [
-            '/plugins/',
-            '/inbound-packets/'
+            '/plugins/'
         ];
 
         if(path.indexOf('node_modules') !== -1) {
@@ -34,13 +37,6 @@ const action: commandAction = async (details) => {
         }
 
         if(!found) {
-            continue;
-        }
-
-        const blacklist = [ 'plugin-loader.js', 'plugin.js', 'rune.js' ];
-        const invalid = blacklist.some(component => path.endsWith(component) || path.endsWith('.map'));
-
-        if(invalid) {
             continue;
         }
 

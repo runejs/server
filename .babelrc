@@ -4,7 +4,7 @@
         "@babel/preset-typescript",
         [ "@babel/preset-env", {
             "targets": {
-                "node": "13"
+                "node": "14"
             },
             "modules": "commonjs"
         } ]
@@ -14,7 +14,8 @@
         [ "babel-plugin-module-resolver", {
             "root": [ "./src" ],
             "alias": {
-                "@server": "./dist"
+                "@engine": "./dist/game-engine",
+                "@plugins": "./dist/plugins"
             }
         } ]
     ]
