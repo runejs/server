@@ -1,15 +1,15 @@
-import { npcAction } from '@server/world/action/npc-action';
-import { Actor } from '@server/world/actor/actor';
-import { Player } from '@server/world/actor/player/player';
+import { npcAction } from '@engine/world/action/npc-action';
+import { Actor } from '@engine/world/actor/actor';
+import { Player } from '@engine/world/actor/player/player';
 import { lastValueFrom, timer } from 'rxjs';
-import { World } from '@server/world';
+import { World } from '@engine/world';
 import { filter, take } from 'rxjs/operators';
-import { animationIds } from '@server/world/config/animation-ids';
-import { Npc } from '@server/world/actor/npc/npc';
-import { world } from '@server/game-server';
-import { itemIds } from '@server/world/config/item-ids';
-import { soundIds } from '@server/world/config/sound-ids';
-import { findNpc } from '@server/config';
+import { animationIds } from '@engine/world/config/animation-ids';
+import { Npc } from '@engine/world/actor/npc/npc';
+import { world } from '@engine/game-server';
+import { itemIds } from '@engine/world/config/item-ids';
+import { soundIds } from '@engine/world/config/sound-ids';
+import { findNpc } from '@engine/config';
 
 
 class Combat {

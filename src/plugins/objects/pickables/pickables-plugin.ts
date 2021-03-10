@@ -1,7 +1,7 @@
-import { objectAction } from '@server/world/action/object-action';
-import { cache } from '@server/game-server';
-import { World } from '@server/world';
-import { itemIds } from '@server/world/config/item-ids';
+import { objectAction } from '@engine/world/action/object-action';
+import { cache } from '@engine/game-server';
+import { World } from '@engine/world';
+import { itemIds } from '@engine/world/config/item-ids';
 
 
 export const action: objectAction = (details) => {

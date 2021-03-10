@@ -1,9 +1,9 @@
-import { objectIds } from '@server/world/config/object-ids';
-import { objectAction } from '@server/world/action/object-action';
-import { ItemContainer } from '@server/world/items/item-container';
-import { itemAction } from '@server/world/action/item.action';
-import { fromNote, Item } from '@server/world/items/item';
-import { widgets } from '@server/config';
+import { objectIds } from '@engine/world/config/object-ids';
+import { objectAction } from '@engine/world/action/object-action';
+import { ItemContainer } from '@engine/world/items/item-container';
+import { itemAction } from '@engine/world/action/item.action';
+import { fromNote, Item } from '@engine/world/items/item';
+import { widgets } from '@engine/config';
 
 export const openDepositBoxInterface: objectAction = ({ player }) => {
 

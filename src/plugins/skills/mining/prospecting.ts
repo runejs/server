@@ -1,8 +1,8 @@
-import { objectAction } from '@server/world/action/object-action';
-import { soundIds } from '@server/world/config/sound-ids';
-import { World } from '@server/world';
-import { cache } from '@server/game-server';
-import { getAllOreIds, getOreFromRock } from '@server/world/config/harvestable-object';
+import { objectAction } from '@engine/world/action/object-action';
+import { soundIds } from '@engine/world/config/sound-ids';
+import { World } from '@engine/world';
+import { cache } from '@engine/game-server';
+import { getAllOreIds, getOreFromRock } from '@engine/world/config/harvestable-object';
 
 const action: objectAction = (details) => {
     details.player.sendMessage('You examine the rock for ores.');

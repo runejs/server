@@ -1,6 +1,4 @@
-import { widgetAction } from '@server/world/action/widget-action';
-import { RunePlugin } from '@server/plugins/plugin';
-import { ActionType } from '@server/world/action';
+import { widgetAction } from '@engine/world/action/widget-action';
 
 const widgetIds = [
     158, 161, 175,

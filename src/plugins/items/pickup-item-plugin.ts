@@ -1,7 +1,7 @@
-import { worldItemAction } from '@server/world/action/world-item-action';
-import { Item } from '../../world/items/item';
-import { soundIds } from '@server/world/config/sound-ids';
-import { widgets } from '@server/config';
+import { worldItemAction } from '@engine/world/action/world-item-action';
+import { Item } from '../../game-engine/world/items/item';
+import { soundIds } from '@engine/world/config/sound-ids';
+import { widgets } from '@engine/config';
 
 
 export const action: worldItemAction = ({ player, worldItem, itemDetails }) => {

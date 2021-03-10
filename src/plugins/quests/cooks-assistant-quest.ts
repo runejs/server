@@ -1,9 +1,9 @@
-import { npcAction } from '@server/world/action/npc-action';
-import { dialogue, DialogueTree, Emote, execute, goto } from '@server/world/actor/dialogue';
-import { itemIds } from '@server/world/config/item-ids';
-import { PlayerQuest, QuestJournalHandler } from '@server/config/quest-config';
-import { Player } from '@server/world/actor/player/player';
-import { Quest } from '@server/world/actor/player/quest';
+import { npcAction } from '@engine/world/action/npc-action';
+import { dialogue, DialogueTree, Emote, execute, goto } from '@engine/world/actor/dialogue';
+import { itemIds } from '@engine/world/config/item-ids';
+import { PlayerQuest, QuestJournalHandler } from '@engine/config/quest-config';
+import { Player } from '@engine/world/actor/player/player';
+import { Quest } from '@engine/world/actor/player/quest';
 
 
 const journalHandler: QuestJournalHandler = {

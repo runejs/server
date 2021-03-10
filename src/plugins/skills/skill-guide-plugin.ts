@@ -1,9 +1,9 @@
-import { buttonActionHandler } from '@server/world/action/button.action';
+import { buttonActionHandler } from '@engine/world/action/button.action';
 import { logger } from '@runejs/core';
-import { Player } from '@server/world/actor/player/player';
-import { widgetAction } from '@server/world/action/widget-action';
-import { skillGuides, widgets } from '@server/config';
-import { SkillGuide, SkillSubGuide } from '@server/config/skill-guide-config';
+import { Player } from '@engine/world/actor/player/player';
+import { widgetAction } from '@engine/world/action/widget-action';
+import { skillGuides, widgets } from '@engine/config';
+import { SkillGuide, SkillSubGuide } from '@engine/config/skill-guide-config';
 
 // @TODO fix me!
 

@@ -1,6 +1,6 @@
-import { commandAction } from '@server/world/action/player-command-action';
-import { world } from '@server/game-server';
-import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
+import { commandAction } from '@engine/world/action/player-command-action';
+import { world } from '@engine/game-server';
+import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
 
 const action: commandAction = (details) => {
     const { player } = details;

@@ -1,6 +1,6 @@
-import { npcAction } from '@server/world/action/npc-action';
-import { dialogue, Emote } from '@server/world/actor/dialogue';
-import { findNpc } from '@server/config';
+import { npcAction } from '@engine/world/action/npc-action';
+import { dialogue, Emote } from '@engine/world/actor/dialogue';
+import { findNpc } from '@engine/config';
 
 
 const talkTo : npcAction = (details) => {

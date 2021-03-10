@@ -1,5 +1,5 @@
-import { objectAction } from '@server/world/action/object-action';
-import { World } from '@server/world';
+import { objectAction } from '@engine/world/action/object-action';
+import { World } from '@engine/world';
 import { LocationObject } from '@runejs/cache-parser';
 
 

@@ -1,9 +1,9 @@
-import { itemIds } from '../../world/config/item-ids';
-import { soundIds } from '../../world/config/sound-ids';
-import { animationIds } from '../../world/config/animation-ids';
-import { Achievements, giveAchievement } from '../../world/actor/player/achievements';
-import { Skill } from '../../world/actor/skills';
-import { widgets } from '../../config';
+import { itemIds } from '../../game-engine/world/config/item-ids';
+import { soundIds } from '../../game-engine/world/config/sound-ids';
+import { animationIds } from '../../game-engine/world/config/animation-ids';
+import { Achievements, giveAchievement } from '../../game-engine/world/actor/player/achievements';
+import { Skill } from '../../game-engine/world/actor/skills';
+import { widgets } from '../../game-engine/config';
 
 const action = async details => {
     const { player, itemSlot } = details;

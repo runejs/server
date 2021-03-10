@@ -1,6 +1,6 @@
-import { directionData, WNES } from '@server/world/direction';
-import { objectAction } from '@server/world/action/object-action';
-import { soundIds } from '@server/world/config/sound-ids';
+import { directionData, WNES } from '@engine/world/direction';
+import { objectAction } from '@engine/world/action/object-action';
+import { soundIds } from '@engine/world/config/sound-ids';
 import { LocationObject } from '@runejs/cache-parser';
 
 // @TODO move to yaml config

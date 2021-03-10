@@ -1,6 +1,6 @@
-import { playerInitAction } from '@server/world/actor/player/player';
-import { validateSettings } from '@server/world/actor/player/player-data';
-import { widgetScripts } from '@server/world/config/widget';
+import { playerInitAction } from '@engine/world/actor/player/player';
+import { validateSettings } from '@engine/world/actor/player/player-data';
+import { widgetScripts } from '@engine/world/config/widget';
 
 export const action: playerInitAction = (details) => {
     const { player } = details;

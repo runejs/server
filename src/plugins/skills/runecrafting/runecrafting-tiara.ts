@@ -2,8 +2,8 @@
  * @Author NickNick
  */
 
-import { getEntityByAttr, getEntityIds, tiaras } from '@server/plugins/skills/runecrafting/runecrafting-constants';
-import { equipActionHandler } from '@server/world/action/equip.action';
+import { getEntityByAttr, getEntityIds, tiaras } from '@plugins/skills/runecrafting/runecrafting-constants';
+import { equipActionHandler } from '@engine/world/action/equip.action';
 
 
 const unequipTiara : equipActionHandler = (details) => {

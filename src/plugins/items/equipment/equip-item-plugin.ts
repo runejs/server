@@ -1,5 +1,5 @@
-import { itemAction } from '@server/world/action/item.action';
-import { widgets } from '@server/config';
+import { itemAction } from '@engine/world/action/item.action';
+import { widgets } from '@engine/config';
 
 export const action: itemAction = (details) => {
     const { player, itemId, itemSlot, itemDetails } = details;

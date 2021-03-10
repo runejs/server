@@ -1,5 +1,5 @@
-import { npcAction } from '@server/world/action/npc-action';
-import { dialogue, Emote, goto } from '@server/world/actor/dialogue';
+import { npcAction } from '@engine/world/action/npc-action';
+import { dialogue, Emote, goto } from '@engine/world/actor/dialogue';
 
 const millieDialogue: npcAction = async (details) =>
     dialogue([ details.player, { npc: details.npc, key: 'millie' }], [

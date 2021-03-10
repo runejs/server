@@ -1,10 +1,9 @@
-import { itemOnObjectAction } from '@server/world/action/item-on-object-action';
-import { cache } from '@server/game-server';
-import { itemIds } from '@server/world/config/item-ids';
-import { animationIds } from '@server/world/config/animation-ids';
-import { soundIds } from '@server/world/config/sound-ids';
-import { RunePlugin } from '@server/plugins/plugin';
-import { ActionType } from '@server/world/action';
+import { itemOnObjectAction } from '@engine/world/action/item-on-object-action';
+import { cache } from '@engine/game-server';
+import { itemIds } from '@engine/world/config/item-ids';
+import { animationIds } from '@engine/world/config/animation-ids';
+import { soundIds } from '@engine/world/config/sound-ids';
+
 
 const FountainIds: number[] = [879];
 const SinkIds: number[] = [14878, 873];

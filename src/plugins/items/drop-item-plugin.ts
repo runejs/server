@@ -1,9 +1,9 @@
-import { itemAction } from '@server/world/action/item.action';
-import { soundIds } from '@server/world/config/sound-ids';
-import { getItemFromContainer } from '@server/world/items/item-container';
-import { serverConfig } from '@server/game-server';
-import { Rights } from '@server/world/actor/player/player';
-import { widgets } from '@server/config';
+import { itemAction } from '@engine/world/action/item.action';
+import { soundIds } from '@engine/world/config/sound-ids';
+import { getItemFromContainer } from '@engine/world/items/item-container';
+import { serverConfig } from '@engine/game-server';
+import { Rights } from '@engine/world/actor/player/player';
+import { widgets } from '@engine/config';
 
 export const action: itemAction = ({ player, itemId, itemSlot }) => {
     const inventory = player.inventory;

@@ -1,5 +1,5 @@
-import { commandAction } from '@server/world/action/player-command-action';
-import { openBankInterface } from '@server/plugins/objects/bank/bank-plugin';
+import { commandAction } from '@engine/world/action/player-command-action';
+import { openBankInterface } from '@plugins/objects/bank/bank-plugin';
 
 const action: commandAction = (details) => {
     openBankInterface(details as any);

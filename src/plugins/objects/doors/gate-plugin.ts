@@ -1,10 +1,10 @@
-import { Position } from '@server/world/position';
-import { directionData, WNES } from '@server/world/direction';
+import { Position } from '@engine/world/position';
+import { directionData, WNES } from '@engine/world/direction';
 import { logger } from '@runejs/core';
-import { world } from '@server/game-server';
-import { ModifiedLocationObject } from '@server/world/map/location-object';
-import { objectAction } from '@server/world/action/object-action';
-import { soundIds } from '@server/world/config/sound-ids';
+import { world } from '@engine/game-server';
+import { ModifiedLocationObject } from '@engine/world/map/location-object';
+import { objectAction } from '@engine/world/action/object-action';
+import { soundIds } from '@engine/world/config/sound-ids';
 
 const gates = [
     {

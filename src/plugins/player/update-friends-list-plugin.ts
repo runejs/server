@@ -1,5 +1,5 @@
-import { playerInitAction } from '@server/world/actor/player/player';
-import { PrivateMessaging } from '@server/world/actor/player/private-messaging';
+import { playerInitAction } from '@engine/world/actor/player/player';
+import { PrivateMessaging } from '@engine/world/actor/player/private-messaging';
 
 export const action: playerInitAction = (details) => {
     const { player } = details;

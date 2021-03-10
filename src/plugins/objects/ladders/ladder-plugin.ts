@@ -1,7 +1,7 @@
-import { objectAction } from '@server/world/action/object-action';
-import { dialogueAction } from '@server/world/actor/player/dialogue-action';
-import { World } from '@server/world';
-import { Position } from '@server/world/position';
+import { objectAction } from '@engine/world/action/object-action';
+import { dialogueAction } from '@engine/world/actor/player/dialogue-action';
+import { World } from '@engine/world';
+import { Position } from '@engine/world/position';
 
 const planes = { min: 0, max: 3 };
 const validate: (level: number) => boolean = (level) => {

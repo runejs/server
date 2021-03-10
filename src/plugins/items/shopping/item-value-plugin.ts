@@ -1,6 +1,6 @@
-import { itemAction } from '@server/world/action/item.action';
-import { Shop } from '@server/config/shop-config';
-import { widgets } from '@server/config';
+import { itemAction } from '@engine/world/action/item.action';
+import { Shop } from '@engine/config/shop-config';
+import { widgets } from '@engine/config';
 
 export const shopSellValueAction: itemAction = ({ player, itemDetails }) => {
     const itemValue = itemDetails.value || 1;

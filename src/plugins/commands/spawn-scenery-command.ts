@@ -1,6 +1,6 @@
-import { commandAction } from '@server/world/action/player-command-action';
+import { commandAction } from '@engine/world/action/player-command-action';
 import { LocationObject } from '@runejs/cache-parser';
-import { objectIds } from '@server/world/config/object-ids';
+import { objectIds } from '@engine/world/config/object-ids';
 import { safeDump } from 'js-yaml';
 import { writeFileSync } from 'fs';
 import { logger } from '@runejs/core';

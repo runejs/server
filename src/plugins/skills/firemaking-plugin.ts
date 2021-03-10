@@ -1,14 +1,14 @@
-import { itemOnItemAction } from '@server/world/action/item-on-item-action';
+import { itemOnItemAction } from '@engine/world/action/item-on-item-action';
 import { LocationObject } from '@runejs/cache-parser';
-import { Player } from '@server/world/actor/player/player';
-import { WorldItem } from '@server/world/items/world-item';
-import { Position } from '@server/world/position';
-import { randomBetween } from '@server/util/num';
-import { objectIds } from '@server/world/config/object-ids';
-import { itemIds } from '@server/world/config/item-ids';
-import { soundIds } from '@server/world/config/sound-ids';
-import { animationIds } from '@server/world/config/animation-ids';
-import { loopingEvent } from '@server/game-server';
+import { Player } from '@engine/world/actor/player/player';
+import { WorldItem } from '@engine/world/items/world-item';
+import { Position } from '@engine/world/position';
+import { randomBetween } from '@engine/util/num';
+import { objectIds } from '@engine/world/config/object-ids';
+import { itemIds } from '@engine/world/config/item-ids';
+import { soundIds } from '@engine/world/config/sound-ids';
+import { animationIds } from '@engine/world/config/animation-ids';
+import { loopingEvent } from '@engine/game-server';
 
 const logs = [
     {

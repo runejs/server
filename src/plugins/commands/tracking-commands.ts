@@ -1,5 +1,5 @@
-import { commandAction } from '@server/world/action/player-command-action';
-import { world } from '@server/game-server';
+import { commandAction } from '@engine/world/action/player-command-action';
+import { world } from '@engine/game-server';
 import { logger } from '@runejs/core';
 
 const quadtreeAction: commandAction = (details) => {

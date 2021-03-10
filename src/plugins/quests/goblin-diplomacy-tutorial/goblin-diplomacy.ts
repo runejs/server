@@ -1,22 +1,22 @@
-import { defaultPlayerTabWidgets, Player, playerInitAction } from '@server/world/actor/player/player';
-import { questDialogueActionFactory, QuestJournalHandler } from '@server/config/quest-config';
-import { serverConfig, world } from '@server/game-server';
+import { defaultPlayerTabWidgets, Player, playerInitAction } from '@engine/world/actor/player/player';
+import { questDialogueActionFactory, QuestJournalHandler } from '@engine/config/quest-config';
+import { serverConfig, world } from '@engine/game-server';
 import uuidv4 from 'uuid/v4';
 import { logger } from '@runejs/core';
-import { Position } from '@server/world/position';
-import { WorldInstance } from '@server/world/instances';
-import { findNpc, widgets } from '@server/config';
-import { updateCombatStyleWidget } from '@server/plugins/combat/combat-styles';
+import { Position } from '@engine/world/position';
+import { WorldInstance } from '@engine/world/instances';
+import { findNpc, widgets } from '@engine/config';
+import { updateCombatStyleWidget } from '@plugins/combat/combat-styles';
 import { Subject } from 'rxjs';
-import { dialogue } from '@server/world/actor/dialogue';
+import { dialogue } from '@engine/world/actor/dialogue';
 import { take } from 'rxjs/operators';
-import { equipActionHandler } from '@server/world/action/equip.action';
-import { buttonActionHandler } from '@server/world/action/button.action';
-import { tabIndex } from '@server/world/actor/player/interface-state';
+import { equipActionHandler } from '@engine/world/action/equip.action';
+import { buttonActionHandler } from '@engine/world/action/button.action';
+import { tabIndex } from '@engine/world/actor/player/interface-state';
 import { runescapeGuideDialogueHandler } from './runescape-guide-dialogue';
 import { harlanDialogueHandler } from './melee-tutor-dialogue';
 import { goblinDiplomacyStageHandler } from './stage-handler';
-import { Quest } from '@server/world/actor/player/quest';
+import { Quest } from '@engine/world/actor/player/quest';
 
 
 export const tutorialTabWidgetOrder = [

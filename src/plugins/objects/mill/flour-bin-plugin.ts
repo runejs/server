@@ -1,9 +1,9 @@
-import { itemIds } from '@server/world/config/item-ids';
-import { objectAction } from '@server/world/action/object-action';
-import { soundIds } from '@server/world/config/sound-ids';
-import { itemOnObjectAction } from '@server/world/action/item-on-object-action';
+import { itemIds } from '@engine/world/config/item-ids';
+import { objectAction } from '@engine/world/action/object-action';
+import { soundIds } from '@engine/world/config/sound-ids';
+import { itemOnObjectAction } from '@engine/world/action/item-on-object-action';
 import { LocationObjectDefinition } from '@runejs/cache-parser';
-import { Player } from '@server/world/actor/player/player';
+import { Player } from '@engine/world/actor/player/player';
 
 
 function flourBin(details: { objectDefinition: LocationObjectDefinition, player: Player }): void {

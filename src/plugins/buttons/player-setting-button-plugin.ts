@@ -1,5 +1,5 @@
-import { buttonActionHandler } from '@server/world/action/button.action';
-import { widgets } from '@server/config';
+import { buttonActionHandler } from '@engine/world/action/button.action';
+import { widgets } from '@engine/config';
 
 const buttonIds: number[] = [
     0, // walk/run

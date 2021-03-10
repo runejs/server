@@ -1,12 +1,12 @@
-import { objectIds } from '@server/world/config/object-ids';
-import { widgetScripts } from '@server/world/config/widget';
-import { objectAction } from '@server/world/action/object-action';
-import { ItemContainer } from '@server/world/items/item-container';
-import { itemAction } from '@server/world/action/item.action';
-import { fromNote, Item, toNote } from '@server/world/items/item';
-import { buttonActionHandler } from '@server/world/action/button.action';
-import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
-import { widgets } from '@server/config';
+import { objectIds } from '@engine/world/config/object-ids';
+import { widgetScripts } from '@engine/world/config/widget';
+import { objectAction } from '@engine/world/action/object-action';
+import { ItemContainer } from '@engine/world/items/item-container';
+import { itemAction } from '@engine/world/action/item.action';
+import { fromNote, Item, toNote } from '@engine/world/items/item';
+import { buttonActionHandler } from '@engine/world/action/button.action';
+import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
+import { widgets } from '@engine/config';
 
 
 const buttonIds: number[] = [

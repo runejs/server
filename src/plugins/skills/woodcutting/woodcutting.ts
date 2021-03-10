@@ -1,7 +1,7 @@
-import { objectAction } from '@server/world/action/object-action';
-import { Skill } from '@server/world/actor/skills';
-import { canInitiateHarvest, handleHarvesting } from '@server/world/skill-util/harvest-skill';
-import { getTreeFromHealthy, getTreeIds } from '@server/world/config/harvestable-object';
+import { objectAction } from '@engine/world/action/object-action';
+import { Skill } from '@engine/world/actor/skills';
+import { canInitiateHarvest, handleHarvesting } from '@engine/world/skill-util/harvest-skill';
+import { getTreeFromHealthy, getTreeIds } from '@engine/world/config/harvestable-object';
 
 const action: objectAction = (details) => {
     const tree = getTreeFromHealthy(details.object.objectId);

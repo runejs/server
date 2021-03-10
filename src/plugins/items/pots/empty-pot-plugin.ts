@@ -1,10 +1,8 @@
-import { itemAction } from '@server/world/action/item.action';
-import { soundIds } from '@server/world/config/sound-ids';
-import { RunePlugin } from '@server/plugins/plugin';
-import { itemIds } from '@server/world/config/item-ids';
-import { getItemFromContainer } from '@server/world/items/item-container';
-import { ActionType } from '@server/world/action';
-import { widgets } from '@server/config';
+import { itemAction } from '@engine/world/action/item.action';
+import { soundIds } from '@engine/world/config/sound-ids';
+import { itemIds } from '@engine/world/config/item-ids';
+import { getItemFromContainer } from '@engine/world/items/item-container';
+import { widgets } from '@engine/config';
 
 export const action: itemAction = (details) => {
     const { player, itemId, itemSlot } = details;

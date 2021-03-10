@@ -1,9 +1,9 @@
-import { buttonActionHandler } from '@server/world/action/button.action';
-import { wrapText } from '@server/util/strings';
-import { pluginActionHooks } from '@server/game-server';
-import { widgets } from '@server/config';
-import { Quest } from '@server/world/actor/player/quest';
-import { QuestKey } from '@server/config/quest-config';
+import { buttonActionHandler } from '@engine/world/action/button.action';
+import { wrapText } from '@engine/util/strings';
+import { pluginActionHooks } from '@engine/game-server';
+import { widgets } from '@engine/config';
+import { Quest } from '@engine/world/actor/player/quest';
+import { QuestKey } from '@engine/config/quest-config';
 
 
 export const action: buttonActionHandler = async ({ player, buttonId }) => {

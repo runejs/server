@@ -1,6 +1,6 @@
-import { buttonActionHandler } from '@server/world/action/button.action';
-import { Player } from '@server/world/actor/player/player';
-import { widgets } from '@server/config';
+import { buttonActionHandler } from '@engine/world/action/button.action';
+import { Player } from '@engine/world/actor/player/player';
+import { widgets } from '@engine/config';
 
 export function updateBonusStrings(player: Player): void {
     [

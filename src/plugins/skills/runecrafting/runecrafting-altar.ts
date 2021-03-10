@@ -7,14 +7,14 @@ import {
     getEntityIds,
     runes,
     talismans,
-} from '@server/plugins/skills/runecrafting/runecrafting-constants';
-import { itemOnObjectAction, ItemOnObjectActionData } from '@server/world/action/item-on-object-action';
-import { cache } from '@server/game-server';
-import { objectAction, ObjectActionData } from '@server/world/action/object-action';
-import { RunecraftingAltar, RunecraftingRune } from '@server/plugins/skills/runecrafting/runecrafting-types';
-import { itemIds } from '@server/world/config/item-ids';
-import { Player } from '@server/world/actor/player/player';
-import { Item } from '@server/world/items/item';
+} from '@plugins/skills/runecrafting/runecrafting-constants';
+import { itemOnObjectAction, ItemOnObjectActionData } from '@engine/world/action/item-on-object-action';
+import { cache } from '@engine/game-server';
+import { objectAction, ObjectActionData } from '@engine/world/action/object-action';
+import { RunecraftingAltar, RunecraftingRune } from '@plugins/skills/runecrafting/runecrafting-types';
+import { itemIds } from '@engine/world/config/item-ids';
+import { Player } from '@engine/world/actor/player/player';
+import { Item } from '@engine/world/items/item';
 
 
 const enterAltar: itemOnObjectAction = (details: ItemOnObjectActionData) => {

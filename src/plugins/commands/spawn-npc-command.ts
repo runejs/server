@@ -1,9 +1,9 @@
-import { commandAction } from '@server/world/action/player-command-action';
-import { world } from '@server/game-server';
-import { Npc } from '@server/world/actor/npc/npc';
-import { findNpc } from '@server/config';
-import { NpcDetails } from '@server/config/npc-config';
-import { NpcSpawn } from '@server/config/npc-spawn-config';
+import { commandAction } from '@engine/world/action/player-command-action';
+import { world } from '@engine/game-server';
+import { Npc } from '@engine/world/actor/npc/npc';
+import { findNpc } from '@engine/config';
+import { NpcDetails } from '@engine/config/npc-config';
+import { NpcSpawn } from '@engine/config/npc-spawn-config';
 
 const action: commandAction = ({ player, args }) => {
     let npcKey: string | number = args.npcKey;

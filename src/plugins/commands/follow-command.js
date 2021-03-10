@@ -1,4 +1,4 @@
-import { world } from '../../game-server';
+import { world } from '../../game-engine/game-server';
 
 module.exports = {
     type: 'player_command',

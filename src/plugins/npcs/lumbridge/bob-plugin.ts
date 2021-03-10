@@ -1,5 +1,5 @@
-import { npcAction } from '@server/world/action/npc-action';
-import { findShop } from '@server/config';
+import { npcAction } from '@engine/world/action/npc-action';
+import { findShop } from '@engine/config';
 
 
 const action: npcAction = ({ player }) =>

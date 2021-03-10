@@ -2,20 +2,20 @@
  * @Author NickNick
  */
 
-import { objectAction, ObjectActionData } from '@server/world/action/object-action';
-import { Skill } from '@server/world/actor/skills';
+import { objectAction, ObjectActionData } from '@engine/world/action/object-action';
+import { Skill } from '@engine/world/actor/skills';
 import {
     altars, combinationRunes,
     getEntityByAttr,
     getEntityIds, runeMultiplier,
     runes,
-} from '@server/plugins/skills/runecrafting/runecrafting-constants';
-import { itemOnObjectAction, ItemOnObjectActionData } from '@server/world/action/item-on-object-action';
-import { RunecraftingCombinationRune } from '@server/plugins/skills/runecrafting/runecrafting-types';
-import { randomBetween } from '@server/util/num';
-import { itemIds } from '@server/world/config/item-ids';
-import { cache } from '@server/game-server';
-import { widgets } from '@server/config';
+} from '@plugins/skills/runecrafting/runecrafting-constants';
+import { itemOnObjectAction, ItemOnObjectActionData } from '@engine/world/action/item-on-object-action';
+import { RunecraftingCombinationRune } from '@plugins/skills/runecrafting/runecrafting-types';
+import { randomBetween } from '@engine/util/num';
+import { itemIds } from '@engine/world/config/item-ids';
+import { cache } from '@engine/game-server';
+import { widgets } from '@engine/config';
 
 
 const craftRune: objectAction = (details: ObjectActionData) => {

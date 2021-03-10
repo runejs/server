@@ -1,7 +1,7 @@
-import { commandAction } from '@server/world/action/player-command-action';
-import { cache } from '@server/game-server';
-import { itemIds } from '@server/world/config/item-ids';
-import { findItem, itemIdMap } from '@server/config';
+import { commandAction } from '@engine/world/action/player-command-action';
+import { cache } from '@engine/game-server';
+import { itemIds } from '@engine/world/config/item-ids';
+import { findItem, itemIdMap } from '@engine/config';
 
 const action: commandAction = (details) => {
     const { player, args } = details;

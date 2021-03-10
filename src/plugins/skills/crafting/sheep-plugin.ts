@@ -1,9 +1,9 @@
-import { npcInitAction } from '@server/world/actor/npc/npc';
-import { World } from '@server/world';
-import { itemOnNpcAction } from '@server/world/action/item-on-npc-action';
-import { itemIds } from '@server/world/config/item-ids';
-import { soundIds } from '@server/world/config/sound-ids';
-import { animationIds } from '@server/world/config/animation-ids';
+import { npcInitAction } from '@engine/world/actor/npc/npc';
+import { World } from '@engine/world';
+import { itemOnNpcAction } from '@engine/world/action/item-on-npc-action';
+import { itemIds } from '@engine/world/config/item-ids';
+import { soundIds } from '@engine/world/config/sound-ids';
+import { animationIds } from '@engine/world/config/animation-ids';
 
 
 const initAction: npcInitAction = ({ npc }) => {

@@ -1,17 +1,17 @@
-import { Item } from '@server/world/items/item';
-import { ItemContainer } from '@server/world/items/item-container';
-import { objectIds } from '@server/world/config/object-ids';
-import { objectAction, ObjectActionData } from '@server/world/action/object-action';
-import { buttonActionHandler, ButtonAction } from '@server/world/action/button.action';
-import { Skill } from '@server/world/actor/skills';
-import { cache, loopingEvent } from '@server/game-server';
-import { animationIds } from '@server/world/config/animation-ids';
-import { soundIds } from '@server/world/config/sound-ids';
-import { colors } from '@server/util/colors';
-import { widgets } from '@server/config';
-import { PlayerQuest } from '@server/config/quest-config';
-import { widgetButtonIds, widgetItems } from '@server/plugins/skills/smithing/smelting-constants';
-import { Bar } from '@server/plugins/skills/smithing/smelting-types';
+import { Item } from '@engine/world/items/item';
+import { ItemContainer } from '@engine/world/items/item-container';
+import { objectIds } from '@engine/world/config/object-ids';
+import { objectAction, ObjectActionData } from '@engine/world/action/object-action';
+import { buttonActionHandler, ButtonAction } from '@engine/world/action/button.action';
+import { Skill } from '@engine/world/actor/skills';
+import { cache, loopingEvent } from '@engine/game-server';
+import { animationIds } from '@engine/world/config/animation-ids';
+import { soundIds } from '@engine/world/config/sound-ids';
+import { colors } from '@engine/util/colors';
+import { widgets } from '@engine/config';
+import { PlayerQuest } from '@engine/config/quest-config';
+import { widgetButtonIds, widgetItems } from '@plugins/skills/smithing/smelting-constants';
+import { Bar } from '@plugins/skills/smithing/smelting-types';
 
 
 export const openSmeltingInterface: objectAction = (details) => {

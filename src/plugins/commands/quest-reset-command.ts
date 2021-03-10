@@ -1,5 +1,5 @@
-import { commandAction } from '@server/world/action/player-command-action';
-import { widgetScripts } from '@server/world/config/widget';
+import { commandAction } from '@engine/world/action/player-command-action';
+import { widgetScripts } from '@engine/world/config/widget';
 
 const action: commandAction = (details) => {
     const { player } = details;

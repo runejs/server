@@ -1,6 +1,6 @@
-import { widgets } from '@server/config';
-import { itemIds } from '@server/world/config/item-ids';
-import { Bar, Smeltable } from '@server/plugins/skills/smithing/smelting-types';
+import { widgets } from '@engine/config';
+import { itemIds } from '@engine/world/config/item-ids';
+import { Bar, Smeltable } from '@plugins/skills/smithing/smelting-types';
 
 const BRONZE : Bar = {
     barId: itemIds.bronzeBar,

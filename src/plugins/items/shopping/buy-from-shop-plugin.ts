@@ -1,9 +1,9 @@
-import { itemAction } from '@server/world/action/item.action';
-import { Item } from '@server/world/items/item';
-import { getItemFromContainer, ItemContainer } from '@server/world/items/item-container';
-import { itemIds } from '@server/world/config/item-ids';
-import { findItem, widgets } from '@server/config';
-import { Shop } from '@server/config/shop-config';
+import { itemAction } from '@engine/world/action/item.action';
+import { Item } from '@engine/world/items/item';
+import { getItemFromContainer, ItemContainer } from '@engine/world/items/item-container';
+import { itemIds } from '@engine/world/config/item-ids';
+import { findItem, widgets } from '@engine/config';
+import { Shop } from '@engine/config/shop-config';
 
 
 function removeCoins(inventory: ItemContainer, coinsIndex: number, cost: number): void {

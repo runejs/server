@@ -1,7 +1,7 @@
-import { musicRegionMap, musicRegions } from '@server/config';
-import { songs } from '@server/world/config/songs';
-import { playerRegionChangedHook } from '@server/world/action/player-region-changed';
-import { playerInitAction } from '@server/world/actor/player/player';
+import { musicRegionMap, musicRegions } from '@engine/config';
+import { songs } from '@engine/world/config/songs';
+import { playerRegionChangedHook } from '@engine/world/action/player-region-changed';
+import { playerInitAction } from '@engine/world/actor/player/player';
 
 
 musicRegions.forEach(song => song.regionIds.forEach(region => musicRegionMap.set(region, song.songId)));

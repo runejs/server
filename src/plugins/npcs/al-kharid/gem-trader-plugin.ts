@@ -1,6 +1,6 @@
-import { npcAction } from '@server/world/action/npc-action';
-import { dialogueAction, DialogueEmote } from '@server/world/actor/player/dialogue-action';
-import { findShop } from '@server/config';
+import { npcAction } from '@engine/world/action/npc-action';
+import { dialogueAction, DialogueEmote } from '@engine/world/actor/player/dialogue-action';
+import { findShop } from '@engine/config';
 
 
 const tradeAction: npcAction = ({ player }) =>

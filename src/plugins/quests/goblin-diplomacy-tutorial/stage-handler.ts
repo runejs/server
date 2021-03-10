@@ -1,17 +1,17 @@
-import { dialogue } from '@server/world/actor/dialogue';
+import { dialogue } from '@engine/world/actor/dialogue';
 import {
     handleTutorial,
     npcHint, showTabWidgetHint, spawnGoblinBoi,
     startTutorial,
     unlockAvailableTabs
-} from '@server/plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy';
-import { schedule } from '@server/world/task';
-import { world } from '@server/game-server';
-import { findNpc } from '@server/config';
-import { Cutscene } from '@server/world/actor/player/cutscenes';
-import { soundIds } from '@server/world/config/sound-ids';
-import { QuestStageHandler } from '@server/config/quest-config';
-import { tabIndex } from '@server/world/actor/player/interface-state';
+} from '@plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy';
+import { schedule } from '@engine/world/task';
+import { world } from '@engine/game-server';
+import { findNpc } from '@engine/config';
+import { Cutscene } from '@engine/world/actor/player/cutscenes';
+import { soundIds } from '@engine/world/config/sound-ids';
+import { QuestStageHandler } from '@engine/config/quest-config';
+import { tabIndex } from '@engine/world/actor/player/interface-state';
 
 export const goblinDiplomacyStageHandler: QuestStageHandler = {
     0: async player => {
