@@ -1,12 +1,12 @@
-import { npcActionHandler } from '@engine/world/action/npc-interaction.action';
+import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { dialogueAction, DialogueEmote } from '@engine/world/actor/player/dialogue-action';
 import { findShop } from '@engine/config';
 
 
-const tradeAction: npcActionHandler = ({ player }) =>
+const tradeAction: npcInteractionActionHandler = ({ player }) =>
     findShop('rs:dommiks_crafting_store')?.open(player);
 
-const talkToAction : npcActionHandler = (details) => {
+const talkToAction : npcInteractionActionHandler = (details) => {
     const { player, npc } = details;
     dialogueAction(player)
         .then(async d => d.npc(npc, DialogueEmote.CALM_TALK_1, ['Would you like to buy some crafting equipment?']))

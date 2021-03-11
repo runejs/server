@@ -1,7 +1,7 @@
 import { Item } from '@engine/world/items/item';
 import { ItemContainer } from '@engine/world/items/item-container';
 import { objectIds } from '@engine/world/config/object-ids';
-import { objectActionHandler, ObjectAction } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler, ObjectInteractionAction } from '@engine/world/action/object-interaction.action';
 import { buttonActionHandler, ButtonAction } from '@engine/world/action/button.action';
 import { Skill } from '@engine/world/actor/skills';
 import { cache, loopingEvent } from '@engine/game-server';
@@ -14,7 +14,7 @@ import { widgetButtonIds, widgetItems } from '@plugins/skills/smithing/smelting-
 import { Bar } from '@plugins/skills/smithing/smelting-types';
 
 
-export const openSmeltingInterface: objectActionHandler = (details) => {
+export const openSmeltingInterface: objectInteractionActionHandler = (details) => {
     details.player.interfaceState.openWidget(widgets.furnace.widgetId, {
         slot: 'chatbox'
     })
@@ -22,7 +22,7 @@ export const openSmeltingInterface: objectActionHandler = (details) => {
 };
 
 // We need to tell the widget what the bars actually look like.
-const loadSmeltingInterface = (details: ObjectAction) => {
+const loadSmeltingInterface = (details: ObjectInteractionAction) => {
     const theKnightsSwordQuest : PlayerQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
     // Send the items to the widget.
     widgetItems.forEach((item) => {

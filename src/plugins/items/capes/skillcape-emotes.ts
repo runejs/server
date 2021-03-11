@@ -1,17 +1,17 @@
 import { lockEmote, unlockEmote } from '@plugins/buttons/player-emotes-plugin';
-import { equipActionHandler } from '@engine/world/action/equipment-change.action';
+import { equipmentChangeActionHandler } from '@engine/world/action/equipment-change.action';
 import { itemIds } from '@engine/world/config/item-ids';
 
 export const skillcapeIds: Array<number> = Object.keys(
     itemIds.skillCapes).flatMap(skill => [itemIds.skillCapes[skill].untrimmed, itemIds.skillCapes[skill].trimmed]
 );
 
-export const equip: equipActionHandler = (details) => {
+export const equip: equipmentChangeActionHandler = (details) => {
     const { player } = details;
     unlockEmote(player, 'SKILLCAPE');
 };
 
-export const unequip: equipActionHandler = (details) => {
+export const unequip: equipmentChangeActionHandler = (details) => {
     const { player } = details;
     lockEmote(player, 'SKILLCAPE');
     player.stopAnimation();

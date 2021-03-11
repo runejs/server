@@ -1,4 +1,4 @@
-import { objectActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
 import { cache } from '@engine/game-server';
 import { dialogueAction, DialogueEmote } from '@engine/world/actor/player/dialogue-action';
 import { animationIds } from '@engine/world/config/animation-ids';
@@ -38,7 +38,7 @@ function milkCow(details: { objectDefinition: LocationObjectDefinition, player: 
 
 export const actionItem: itemOnObjectActionHandler = (details) => milkCow(details);
 
-export const actionInteract: objectActionHandler = (details) => milkCow(details);
+export const actionInteract: objectInteractionActionHandler = (details) => milkCow(details);
 
 export default
 [

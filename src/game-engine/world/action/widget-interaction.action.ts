@@ -1,12 +1,13 @@
 import { Player } from '@engine/world/actor/player/player';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
+import { ActionPipe } from '@engine/world/action/index';
 
 
 /**
  * Defines a widget action hook.
  */
-export interface WidgetActionHook extends ActionHook<widgetActionHandler> {
+export interface WidgetInteractionActionHook extends ActionHook<widgetInteractionActionHandler> {
     // A single UI widget ID or a list of widget IDs that this action applies to.
     widgetIds: number | number[];
     // A single UI widget child ID or a list of child IDs that this action applies to.
@@ -21,13 +22,13 @@ export interface WidgetActionHook extends ActionHook<widgetActionHandler> {
 /**
  * The widget action hook handler function to be called when the hook's conditions are met.
  */
-export type widgetActionHandler = (widgetAction: WidgetAction) => void;
+export type widgetInteractionActionHandler = (widgetInteractionAction: WidgetInteractionAction) => void;
 
 
 /**
  * Details about a widget action being performed.
  */
-export interface WidgetAction {
+export interface WidgetInteractionAction {
     // The player performing the action.
     player: Player;
     // The ID of the UI widget that the button is on.
@@ -48,7 +49,7 @@ export interface WidgetAction {
  */
 const widgetActionPipe = (player: Player, widgetId: number, childId: number, optionId: number): void => {
     // Find all item on item action plugins that match this action
-    let interactionActions = getActionHooks<WidgetActionHook>('widget_action').filter(plugin => {
+    let interactionActions = getActionHooks<WidgetInteractionActionHook>('widget_interaction').filter(plugin => {
         if(!questHookFilter(player, plugin)) {
             return false;
         }
@@ -92,4 +93,4 @@ const widgetActionPipe = (player: Player, widgetId: number, childId: number, opt
 /**
  * Widget action pipe definition.
  */
-export default [ 'widget_action', widgetActionPipe ];
+export default [ 'widget_interaction', widgetActionPipe ] as ActionPipe;

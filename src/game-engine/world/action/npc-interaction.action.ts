@@ -11,7 +11,7 @@ import { ActionPipe } from '@engine/world/action/index';
 /**
  * Defines an npc action hook.
  */
-export interface NpcActionHook extends ActionHook<npcActionHandler> {
+export interface NpcInteractionActionHook extends ActionHook<npcInteractionActionHandler> {
     // A single NPC key or a list of NPC keys that this action applies to.
     npcs?: string | string[];
     // A single option name or a list of option names that this action applies to.
@@ -24,13 +24,13 @@ export interface NpcActionHook extends ActionHook<npcActionHandler> {
 /**
  * The npc action hook handler function to be called when the hook's conditions are met.
  */
-export type npcActionHandler = (npcAction: NpcAction) => void;
+export type npcInteractionActionHandler = (npcInteractionAction: NpcInteractionAction) => void;
 
 
 /**
  * Details about an npc action being performed.
  */
-export interface NpcAction {
+export interface NpcInteractionAction {
     // The player performing the action.
     player: Player;
     // The NPC the action is being performed on.
@@ -47,13 +47,13 @@ export interface NpcAction {
  * @param position
  * @param option
  */
-const npcActionPipe = (player: Player, npc: Npc, position: Position, option: string): void => {
+const npcInteractionActionPipe = (player: Player, npc: Npc, position: Position, option: string): void => {
     if(player.busy) {
         return;
     }
 
     // Find all NPC action plugins that reference this NPC
-    let interactionActions = getActionHooks<NpcActionHook>('npc_action')
+    let interactionActions = getActionHooks<NpcInteractionActionHook>('npc_interaction')
         .filter(plugin => questHookFilter(player, plugin) &&
             (!plugin.npcs || stringHookFilter(plugin.npcs, npc.key)) &&
             (!plugin.options || stringHookFilter(plugin.options, option)));
@@ -96,6 +96,4 @@ const npcActionPipe = (player: Player, npc: Npc, position: Position, option: str
 /**
  * Npc action pipe definition.
  */
-export default [
-    'npc_action', npcActionPipe
-] as ActionPipe;
+export default [ 'npc_interaction', npcInteractionActionPipe ] as ActionPipe;

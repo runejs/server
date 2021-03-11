@@ -9,7 +9,7 @@ import { stringHookFilter, questHookFilter } from '@engine/world/action/hooks/ho
 /**
  * Defines a player action hook.
  */
-export interface PlayerActionHook extends ActionHook<playerActionHandler> {
+export interface PlayerInteractionActionHook extends ActionHook<playerInteractionActionHandler> {
     // A single option name or a list of option names that this action applies to.
     options: string | string[];
     // Whether or not the player needs to walk to the other player before performing the action.
@@ -20,13 +20,13 @@ export interface PlayerActionHook extends ActionHook<playerActionHandler> {
 /**
  * The player action hook handler function to be called when the hook's conditions are met.
  */
-export type playerActionHandler = (playerAction: PlayerAction) => void;
+export type playerInteractionActionHandler = (playerInteractionAction: PlayerInteractionAction) => void;
 
 
 /**
  * Details about a player action being performed.
  */
-export interface PlayerAction {
+export interface PlayerInteractionAction {
     // The player performing the action.
     player: Player;
     // The player that the action is being performed on.
@@ -43,13 +43,13 @@ export interface PlayerAction {
  * @param position
  * @param option
  */
-const playerActionPipe = (player: Player, otherPlayer: Player, position: Position, option: string): void => {
+const playerInteractionActionPipe = (player: Player, otherPlayer: Player, position: Position, option: string): void => {
     if(player.busy) {
         return;
     }
 
     // Find all player action plugins that reference this option
-    let interactionActions = getActionHooks<PlayerActionHook>('player_action')
+    let interactionActions = getActionHooks<PlayerInteractionActionHook>('player_interaction')
         .filter(plugin => questHookFilter(player, plugin) && stringHookFilter(plugin.options, option));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
@@ -88,4 +88,4 @@ const playerActionPipe = (player: Player, otherPlayer: Player, position: Positio
 /**
  * Player action pipe definition.
  */
-export default [ 'player_action', playerActionPipe ];
+export default [ 'player_interaction', playerInteractionActionPipe ];

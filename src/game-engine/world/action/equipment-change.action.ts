@@ -9,38 +9,38 @@ import { ActionPipe } from '@engine/world/action/index';
 /**
  * Defines an equipment change action hook.
  */
-export interface EquipActionHook extends ActionHook<equipActionHandler> {
+export interface EquipmentChangeActionHook extends ActionHook<equipmentChangeActionHandler> {
     // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
     // A single option name or a list of option names that this action applies to.
-    equipType?: EquipType | EquipType[];
+    equipType?: EquipmentChangeType | EquipmentChangeType[];
 }
 
 
 /**
  * The definition for an equip action function.
  */
-export type equipActionHandler = (equipAction: EquipAction) => void;
+export type equipmentChangeActionHandler = (equipmentChangeAction: EquipmentChangeAction) => void;
 
 
 /**
  * Equipment action types.
  */
-export type EquipType = 'EQUIP' | 'UNEQUIP';
+export type EquipmentChangeType = 'equip' | 'unequip';
 
 
 /**
  * Details about an item being equipped/unequipped.
  */
-export interface EquipAction {
+export interface EquipmentChangeAction {
     // The player performing the action.
     player: Player;
     // The ID of the item being equipped/unequipped.
     itemId: number;
     // Additional details about the item.
     itemDetails: ItemDetails;
-    // If the item was equipped or unequiped.
-    equipType: EquipType;
+    // If the item was equipped or unequipped.
+    eventType: EquipmentChangeType;
     // The equipment slot.
     equipmentSlot: EquipmentSlot;
 }
@@ -50,11 +50,11 @@ export interface EquipAction {
  * The pipe that the game engine hands equipment actions off to.
  * @param player
  * @param itemId
- * @param equipType
+ * @param eventType
  * @param slot
  */
-const equipActionPipe = (player: Player, itemId: number, equipType: EquipType, slot: EquipmentSlot): void => {
-    let filteredActions = getActionHooks<EquipActionHook>('equip_action', equipActionHook => {
+const equipmentChangeActionPipe = (player: Player, itemId: number, eventType: EquipmentChangeType, slot: EquipmentSlot): void => {
+    let filteredActions = getActionHooks<EquipmentChangeActionHook>('equipment_change', equipActionHook => {
         if(!questHookFilter(player, equipActionHook)) {
             return false;
         }
@@ -67,7 +67,7 @@ const equipActionPipe = (player: Player, itemId: number, equipType: EquipType, s
 
 
         if(equipActionHook.equipType !== undefined) {
-            if(!stringHookFilter(equipActionHook.equipType, equipType)) {
+            if(!stringHookFilter(equipActionHook.equipType, eventType)) {
                 return false;
             }
         }
@@ -85,7 +85,7 @@ const equipActionPipe = (player: Player, itemId: number, equipType: EquipType, s
             player,
             itemId,
             itemDetails: findItem(itemId),
-            equipType,
+            eventType,
             equipmentSlot: slot
         });
     }
@@ -95,7 +95,4 @@ const equipActionPipe = (player: Player, itemId: number, equipType: EquipType, s
 /**
  * Equip action pipe definition.
  */
-export default [
-    'equip_action',
-    equipActionPipe
-] as ActionPipe;
+export default [ 'equipment_change', equipmentChangeActionPipe ] as ActionPipe;

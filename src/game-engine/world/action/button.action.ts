@@ -45,7 +45,7 @@ export interface ButtonAction {
  * @param buttonId
  */
 const buttonActionPipe = (player: Player, widgetId: number, buttonId: number) => {
-    let interactionActions = getActionHooks<ButtonActionHook>('button_action')
+    let interactionActions = getActionHooks<ButtonActionHook>('button')
         .filter(plugin =>
             questHookFilter(player, plugin) && (
                 (plugin.widgetId && plugin.widgetId === widgetId) ||
@@ -86,7 +86,4 @@ const buttonActionPipe = (player: Player, widgetId: number, buttonId: number) =>
 /**
  * Button action pipe definition.
  */
-export default [
-    'button_action',
-    buttonActionPipe
-] as ActionPipe;
+export default [ 'button', buttonActionPipe ] as ActionPipe;

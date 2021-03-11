@@ -1,7 +1,7 @@
-import { itemActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
 import { widgets } from '@engine/config';
 
-export const action: itemActionHandler = (details) => {
+export const action: itemInteractionActionHandler = (details) => {
     const { player, itemId, itemSlot, itemDetails } = details;
 
     if(!itemDetails) {

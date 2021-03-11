@@ -1,11 +1,11 @@
 import { objectIds } from '@engine/world/config/object-ids';
-import { objectActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
 import { ItemContainer } from '@engine/world/items/item-container';
-import { itemActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
 import { fromNote, Item } from '@engine/world/items/item';
 import { widgets } from '@engine/config';
 
-export const openDepositBoxInterface: objectActionHandler = ({ player }) => {
+export const openDepositBoxInterface: objectInteractionActionHandler = ({ player }) => {
 
     player.interfaceState.openWidget(widgets.bank.depositBoxWidget.widgetId, {
         slot: 'screen',
@@ -22,7 +22,7 @@ export const openDepositBoxInterface: objectActionHandler = ({ player }) => {
 
 
 
-export const depositItem: itemActionHandler = (details) => {
+export const depositItem: itemInteractionActionHandler = (details) => {
     // Check if player might be spawning widget clientside
     if (!details.player.interfaceState.findWidget(widgets.bank.depositBoxWidget.widgetId)) {
         return;

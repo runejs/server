@@ -2,7 +2,7 @@
  * @Author NickNick
  */
 
-import { objectActionHandler, ObjectAction } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler, ObjectInteractionAction } from '@engine/world/action/object-interaction.action';
 import { Skill } from '@engine/world/actor/skills';
 import {
     altars, combinationRunes,
@@ -18,7 +18,7 @@ import { cache } from '@engine/game-server';
 import { widgets } from '@engine/config';
 
 
-const craftRune: objectActionHandler = (details: ObjectAction) => {
+const craftRune: objectInteractionActionHandler = (details: ObjectInteractionAction) => {
     const { player, object } = details;
     const rune = getEntityByAttr(runes, 'altar.craftingId', object.objectId);
     const runeDetails = cache.itemDefinitions.get(rune.id);

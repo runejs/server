@@ -2,6 +2,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { Coords, Position } from '@engine/world/position';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { RegionType } from '@engine/world/map/region';
+import { ActionPipe } from '@engine/world/action/index';
 
 
 /**
@@ -128,7 +129,7 @@ const regionChangeActionPipe = (actionData: RegionChangeAction): void => {
     }
 
     // Find all action hooks that match the provided input
-    const actionList = getActionHooks<RegionChangeActionHook>('region_change_action')?.filter(actionHook => {
+    const actionList = getActionHooks<RegionChangeActionHook>('region_change')?.filter(actionHook => {
         if(actionHook.teleporting && !actionData.teleporting) {
             return false;
         }
@@ -166,4 +167,4 @@ const regionChangeActionPipe = (actionData: RegionChangeAction): void => {
 /**
  * Player region change action pipe definition.
  */
-export default [ 'region_change_action', regionChangeActionPipe ];
+export default [ 'region_change', regionChangeActionPipe ] as ActionPipe;

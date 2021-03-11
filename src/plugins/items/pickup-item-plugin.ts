@@ -1,10 +1,10 @@
-import { worldItemAction } from '@engine/world/action/spawned-item-interaction.action';
+import { spawnedItemInteractionHandler } from '@engine/world/action/spawned-item-interaction.action';
 import { Item } from '../../game-engine/world/items/item';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { widgets } from '@engine/config';
 
 
-export const action: worldItemAction = ({ player, worldItem, itemDetails }) => {
+export const action: spawnedItemInteractionHandler = ({ player, worldItem, itemDetails }) => {
     const inventory = player.inventory;
     const amount = worldItem.amount;
     let slot = -1

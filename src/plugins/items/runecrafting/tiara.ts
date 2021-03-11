@@ -1,10 +1,10 @@
-import { equipActionHandler } from '@engine/world/action/equipment-change.action';
+import { equipmentChangeActionHandler } from '@engine/world/action/equipment-change.action';
 
-export const equip: equipActionHandler = (details) => {
+export const equip: equipmentChangeActionHandler = (details) => {
     const { player } = details;
     player.outgoingPackets.updateClientConfig(491, 1);
 };
-export const unequip: equipActionHandler = (details) => {
+export const unequip: equipmentChangeActionHandler = (details) => {
     const { player } = details;
     player.outgoingPackets.updateClientConfig(491, 0);
 };

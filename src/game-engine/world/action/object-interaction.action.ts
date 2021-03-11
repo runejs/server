@@ -5,12 +5,13 @@ import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
 import { playerWalkTo } from '@engine/game-server';
 import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
+import { ActionPipe } from '@engine/world/action/index';
 
 
 /**
  * Defines an object action hook.
  */
-export interface ObjectActionHook extends ActionHook<objectActionHandler> {
+export interface ObjectInteractionActionHook extends ActionHook<objectInteractionActionHandler> {
     // A single game object ID or a list of object IDs that this action applies to.
     objectIds: number | number[];
     // A single option name or a list of option names that this action applies to.
@@ -23,13 +24,13 @@ export interface ObjectActionHook extends ActionHook<objectActionHandler> {
 /**
  * The object action hook handler function to be called when the hook's conditions are met.
  */
-export type objectActionHandler = (objectAction: ObjectAction) => void;
+export type objectInteractionActionHandler = (objectInteractionAction: ObjectInteractionAction) => void;
 
 
 /**
  * Details about an npc action being performed.
  */
-export interface ObjectAction {
+export interface ObjectInteractionAction {
     // The player performing the action.
     player: Player;
     // The object the action is being performed on.
@@ -54,14 +55,14 @@ export interface ObjectAction {
  * @param option
  * @param cacheOriginal
  */
-const objectActionPipe = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
+const objectInteractionActionPipe = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
     position: Position, option: string, cacheOriginal: boolean): void => {
     if(player.busy || player.metadata.blockObjectInteractions) {
         return;
     }
 
     // Find all object action plugins that reference this location object
-    let interactionActions = getActionHooks<ObjectActionHook>('object_action')
+    let interactionActions = getActionHooks<ObjectInteractionActionHook>('object_interaction')
         .filter(plugin => questHookFilter(player, plugin) && advancedNumberHookFilter(plugin.objectIds, locationObject.objectId, plugin.options, option));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
@@ -118,6 +119,4 @@ const objectActionPipe = (player: Player, locationObject: LocationObject, locati
 /**
  * Object action pipe definition.
  */
-export default [
-    'object_action', objectActionPipe
-];
+export default [ 'object_interaction', objectInteractionActionPipe ] as ActionPipe;

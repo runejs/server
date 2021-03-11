@@ -10,7 +10,7 @@ import {
 } from '@plugins/skills/runecrafting/runecrafting-constants';
 import { itemOnObjectActionHandler, ItemOnObjectAction } from '@engine/world/action/item-on-object.action';
 import { cache } from '@engine/game-server';
-import { objectActionHandler, ObjectAction } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler, ObjectInteractionAction } from '@engine/world/action/object-interaction.action';
 import { RunecraftingAltar, RunecraftingRune } from '@plugins/skills/runecrafting/runecrafting-types';
 import { itemIds } from '@engine/world/config/item-ids';
 import { Player } from '@engine/world/actor/player/player';
@@ -53,7 +53,7 @@ function finishEnterAltar(player: Player, item: Item, altar: RunecraftingAltar):
 }
 
 
-const exitAltar: objectActionHandler = (details: ObjectAction) => {
+const exitAltar: objectInteractionActionHandler = (details: ObjectInteractionAction) => {
     const { player, object } = details;
     const altar = getEntityByAttr(altars, 'portalId', object.objectId);
     player.teleport(altar.exit);

@@ -1,5 +1,5 @@
 import { directionData, WNES } from '@engine/world/direction';
-import { objectActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { LocationObject } from '@runejs/cache-parser';
 
@@ -50,7 +50,7 @@ const rightHingeDir: { [key: string]: string } = {
     'EAST': 'SOUTH'
 };
 
-export const action: objectActionHandler = ({ player, object: door, position, cacheOriginal }): void => {
+export const action: objectInteractionActionHandler = ({ player, object: door, position, cacheOriginal }): void => {
     let opening = true;
     let doorConfig = doors.find(d => d.closed === door.objectId);
     let hingeConfig;

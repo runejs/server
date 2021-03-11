@@ -10,7 +10,7 @@ import { updateCombatStyleWidget } from '@plugins/combat/combat-styles';
 import { Subject } from 'rxjs';
 import { dialogue } from '@engine/world/actor/dialogue';
 import { take } from 'rxjs/operators';
-import { equipActionHandler } from '@engine/world/action/equipment-change.action';
+import { equipmentChangeActionHandler } from '@engine/world/action/equipment-change.action';
 import { buttonActionHandler } from '@engine/world/action/button.action';
 import { tabIndex } from '@engine/world/actor/player/interface-state';
 import { runescapeGuideDialogueHandler } from './runescape-guide-dialogue';
@@ -181,7 +181,7 @@ const tutorialInitAction: playerInitAction = async ({ player }) => {
     }
 };
 
-const trainingSwordEquipAction: equipActionHandler = async ({ player, itemDetails }) => {
+const trainingSwordEquipAction: equipmentChangeActionHandler = async ({ player, itemDetails }) => {
     const progress = player.getQuest('tyn:goblin_diplomacy').progress;
 
     if(progress === 85) {

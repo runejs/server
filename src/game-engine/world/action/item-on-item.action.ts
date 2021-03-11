@@ -58,7 +58,7 @@ const itemOnItemActionPipe = (player: Player, usedItem: Item, usedSlot: number, 
     }
 
     // Find all item on item action plugins that match this action
-    let interactionActions = getActionHooks<ItemOnItemActionHook>('item_on_item_action').filter(plugin =>
+    let interactionActions = getActionHooks<ItemOnItemActionHook>('item_on_item').filter(plugin =>
         questHookFilter(player, plugin) &&
         (plugin.items.findIndex(i => i.item1 === usedItem.itemId && i.item2 === usedWithItem.itemId) !== -1 ||
         plugin.items.findIndex(i => i.item2 === usedItem.itemId && i.item1 === usedWithItem.itemId) !== -1));
@@ -88,7 +88,4 @@ const itemOnItemActionPipe = (player: Player, usedItem: Item, usedSlot: number, 
 /**
  * Item-on-item action pipe definition.
  */
-export default [
-    'item_on_item_action',
-    itemOnItemActionPipe
-] as ActionPipe;
+export default [ 'item_on_item', itemOnItemActionPipe ] as ActionPipe;

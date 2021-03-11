@@ -5,7 +5,7 @@ import { Skill } from '@engine/world/actor/skills';
 import { cache, loopingEvent, world } from '@engine/game-server';
 import { getBestAxe, getBestPickaxe, HarvestTool } from '@engine/world/config/harvest-tool';
 import { randomBetween } from '@engine/util/num';
-import { ObjectAction } from '@engine/world/action/object-interaction.action';
+import { ObjectInteractionAction } from '@engine/world/action/object-interaction.action';
 import { colors } from '@engine/util/colors';
 import { checkForGemBoost } from '@engine/world/skill-util/glory-boost';
 import { colorText } from '@engine/util/strings';
@@ -79,7 +79,7 @@ export function canInitiateHarvest(player: Player, target: IHarvestable, skill: 
 
 }
 
-export function handleHarvesting(details: ObjectAction, tool: HarvestTool, target: IHarvestable, skill: Skill): void {
+export function handleHarvesting(details: ObjectInteractionAction, tool: HarvestTool, target: IHarvestable, skill: Skill): void {
     let itemToAdd = target.itemId;
     if (itemToAdd === 1436 && details.player.skills.hasLevel(Skill.MINING, 30)) {
         itemToAdd = 7936;

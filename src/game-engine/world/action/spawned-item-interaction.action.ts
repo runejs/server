@@ -6,12 +6,13 @@ import { ItemDetails } from '@engine/config/item-config';
 import { findItem } from '@engine/config';
 import { playerWalkTo } from '@engine/game-server';
 import { numberHookFilter, stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
+import { ActionPipe } from '@engine/world/action/index';
 
 
 /**
  * Defines a world item action hook.
  */
-export interface WorldItemActionHook extends ActionHook<worldItemAction> {
+export interface SpawnedItemInteractionHook extends ActionHook<spawnedItemInteractionHandler> {
     // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
     // A single option name or a list of option names that this action applies to.
@@ -24,13 +25,13 @@ export interface WorldItemActionHook extends ActionHook<worldItemAction> {
 /**
  * The world item action hook handler function to be called when the hook's conditions are met.
  */
-export type worldItemAction = (worldItemActionData: WorldItemActionData) => void;
+export type spawnedItemInteractionHandler = (spawnedItemInteractionAction: SpawnedItemInteractionAction) => void;
 
 
 /**
  * Details about a world item action being performed.
  */
-export interface WorldItemActionData {
+export interface SpawnedItemInteractionAction {
     // The player performing the action.
     player: Player;
     // The world item that the player is interacting with.
@@ -46,13 +47,13 @@ export interface WorldItemActionData {
  * @param worldItem
  * @param option
  */
-const worldItemActionPipe = (player: Player, worldItem: WorldItem, option: string): void => {
+const spawnedItemInteractionPipe = (player: Player, worldItem: WorldItem, option: string): void => {
     if(player.busy) {
         return;
     }
 
     // Find all world item action plugins that reference this world item
-    let interactionActions = getActionHooks<WorldItemActionHook>('world_item_action').filter(plugin => {
+    let interactionActions = getActionHooks<SpawnedItemInteractionHook>('spawned_item_interaction').filter(plugin => {
         if(!questHookFilter(player, plugin)) {
             return false;
         }
@@ -109,4 +110,4 @@ const worldItemActionPipe = (player: Player, worldItem: WorldItem, option: strin
 /**
  * World item action pipe definition.
  */
-export default [ 'world_item_action', worldItemActionPipe ];
+export default [ 'spawned_item_interaction', spawnedItemInteractionPipe ] as ActionPipe;

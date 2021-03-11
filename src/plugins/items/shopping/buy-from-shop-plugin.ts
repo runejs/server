@@ -1,4 +1,4 @@
-import { itemActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
 import { Item } from '@engine/world/items/item';
 import { getItemFromContainer, ItemContainer } from '@engine/world/items/item-container';
 import { itemIds } from '@engine/world/config/item-ids';
@@ -12,7 +12,7 @@ function removeCoins(inventory: ItemContainer, coinsIndex: number, cost: number)
     inventory.set(coinsIndex, { itemId: itemIds.coins, amount: amountAfterPurchase });
 }
 
-export const action: itemActionHandler = (details) => {
+export const action: itemInteractionActionHandler = (details) => {
     const { player, itemId, itemSlot, widgetId, option } = details;
 
     if(!player.interfaceState.findWidget(widgetId)) {

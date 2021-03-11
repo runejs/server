@@ -45,7 +45,7 @@ export interface MoveItemAction {
  * @param widget
  */
 const moveItemActionPipe = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }): Promise<void> => {
-    const moveItemActions = getActionHooks<MoveItemActionHook>('move_item_action')
+    const moveItemActions = getActionHooks<MoveItemActionHook>('move_item')
         .filter(plugin => numberHookFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 
     if(!moveItemActions || moveItemActions.length === 0) {
@@ -71,6 +71,4 @@ const moveItemActionPipe = async (player: Player, fromSlot: number, toSlot: numb
 /**
  * Move item action pipe definition.
  */
-export default [
-    'move_item_action', moveItemActionPipe
-] as ActionPipe;
+export default [ 'move_item', moveItemActionPipe ] as ActionPipe;

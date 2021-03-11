@@ -63,7 +63,7 @@ const itemOnNpcActionPipe = (player: Player, npc: Npc, position: Position, item:
     }
 
     // Find all item on npc action plugins that reference this npc and item
-    let interactionActions = getActionHooks<ItemOnNpcActionHook>('item_on_npc_action').filter(plugin =>
+    let interactionActions = getActionHooks<ItemOnNpcActionHook>('item_on_npc').filter(plugin =>
         questHookFilter(player, plugin) &&
         advancedNumberHookFilter(plugin.npcsIds, npc.id) && advancedNumberHookFilter(plugin.itemIds, item.itemId));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
@@ -120,7 +120,4 @@ const itemOnNpcActionPipe = (player: Player, npc: Npc, position: Position, item:
 /**
  * Item-on-npc action pipe definition.
  */
-export default [
-    'item_on_npc_action',
-    itemOnNpcActionPipe
-] as ActionPipe;
+export default [ 'item_on_npc', itemOnNpcActionPipe ] as ActionPipe;

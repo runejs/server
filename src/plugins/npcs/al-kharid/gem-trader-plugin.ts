@@ -1,12 +1,12 @@
-import { npcActionHandler } from '@engine/world/action/npc-interaction.action';
+import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { dialogueAction, DialogueEmote } from '@engine/world/actor/player/dialogue-action';
 import { findShop } from '@engine/config';
 
 
-const tradeAction: npcActionHandler = ({ player }) =>
+const tradeAction: npcInteractionActionHandler = ({ player }) =>
     findShop('rs:alkharid_gem_trader')?.open(player);
 
-const talkToAction : npcActionHandler = (details) => {
+const talkToAction : npcInteractionActionHandler = (details) => {
     const { player, npc } = details;
     dialogueAction(player)
         .then(async d => d.npc(npc, DialogueEmote.CALM_TALK_1, [ 'Good day to you, traveller.', 'Would you be interested in buying some gems?']))

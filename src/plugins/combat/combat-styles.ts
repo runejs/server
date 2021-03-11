@@ -1,4 +1,4 @@
-import { equipActionHandler, EquipAction } from '@engine/world/action/equipment-change.action';
+import { equipmentChangeActionHandler, EquipmentChangeAction } from '@engine/world/action/equipment-change.action';
 import { ItemDetails, WeaponStyle, weaponWidgetIds } from '@engine/config/item-config';
 import { widgetScripts } from '@engine/world/config/widget';
 import { Player, playerInitAction, SidebarTab } from '@engine/world/actor/player/player';
@@ -55,7 +55,7 @@ export function updateCombatStyleWidget(player: Player): void {
     }
 }
 
-const equip: equipActionHandler = ({ player, itemDetails, equipmentSlot }) => {
+const equip: equipmentChangeActionHandler = ({ player, itemDetails, equipmentSlot }) => {
     if(equipmentSlot === 'main_hand') {
         const weaponStyle = itemDetails?.equipmentData?.weaponInfo?.style || null;
 
@@ -98,7 +98,7 @@ export default [{
 }, {
     type: 'equip_action',
     equipType: 'UNEQUIP',
-    action: (details: EquipAction): void => {
+    action: (details: EquipmentChangeAction): void => {
         if(details.equipmentSlot === 'main_hand') {
             showUnarmed(details.player);
         }

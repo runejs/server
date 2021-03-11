@@ -1,4 +1,4 @@
-import { npcActionHandler } from '@engine/world/action/npc-interaction.action';
+import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { Actor } from '@engine/world/actor/actor';
 import { Player } from '@engine/world/actor/player/player';
 import { lastValueFrom, timer } from 'rxjs';
@@ -171,7 +171,7 @@ class Combat {
 
 }
 
-const attackNpcAction: npcActionHandler = async details => {
+const attackNpcAction: npcInteractionActionHandler = async details => {
     const { player, npc } = details;
 
     const combatInstance = new Combat(player, npc);

@@ -1,12 +1,12 @@
-import { npcActionHandler } from '@engine/world/action/npc-interaction.action';
+import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
 import { findShop } from '@engine/config';
 
 
-const tradeAction: npcActionHandler = ({ player }) =>
+const tradeAction: npcInteractionActionHandler = ({ player }) =>
     findShop('rs:zaffs_staffs')?.open(player);
 
-const talkToAction : npcActionHandler = (details) => {
+const talkToAction : npcInteractionActionHandler = (details) => {
     const { player, npc } = details;
 
     dialogue([player, { npc, key: 'zaff' }], [

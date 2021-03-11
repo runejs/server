@@ -1,10 +1,10 @@
-import { itemActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { itemIds } from '@engine/world/config/item-ids';
 import { getItemFromContainer } from '@engine/world/items/item-container';
 import { widgets } from '@engine/config';
 
-export const action: itemActionHandler = (details) => {
+export const action: itemInteractionActionHandler = (details) => {
     const { player, itemId, itemSlot } = details;
 
     const inventory = player.inventory;

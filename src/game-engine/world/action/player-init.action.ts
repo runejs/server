@@ -30,7 +30,7 @@ export interface PlayerInitAction {
  * @param npc
  */
 const playerInitActionPipe = ({ player }: PlayerInitAction): void => {
-    const actionHooks = getActionHooks<PlayerInitActionHook>('player_init_action');
+    const actionHooks = getActionHooks<PlayerInitActionHook>('player_init');
     actionHooks.forEach(actionHook => actionHook.handler({ player }));
 };
 
@@ -38,4 +38,4 @@ const playerInitActionPipe = ({ player }: PlayerInitAction): void => {
 /**
  * Player init action pipe definition.
  */
-export default [ 'player_init_action', playerInitActionPipe ] as ActionPipe;
+export default [ 'player_init', playerInitActionPipe ] as ActionPipe;

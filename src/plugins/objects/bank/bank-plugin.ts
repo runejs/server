@@ -1,8 +1,8 @@
 import { objectIds } from '@engine/world/config/object-ids';
 import { widgetScripts } from '@engine/world/config/widget';
-import { objectActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
 import { ItemContainer } from '@engine/world/items/item-container';
-import { itemActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
 import { fromNote, Item, toNote } from '@engine/world/items/item';
 import { buttonActionHandler } from '@engine/world/action/button.action';
 import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
@@ -16,7 +16,7 @@ const buttonIds: number[] = [
     99, // insert
 ];
 
-export const openBankInterface: objectActionHandler = ({ player }) => {
+export const openBankInterface: objectInteractionActionHandler = ({ player }) => {
     player.interfaceState.openWidget(widgets.bank.screenWidget.widgetId, {
         slot: 'screen',
         multi: true
@@ -32,13 +32,13 @@ export const openBankInterface: objectActionHandler = ({ player }) => {
     player.outgoingPackets.updateClientConfig(widgetScripts.bankWithdrawNoteMode, player.settings.bankWithdrawNoteMode);
 };
 
-export const openPinSettings: objectActionHandler = ({ player }) => {
+export const openPinSettings: objectInteractionActionHandler = ({ player }) => {
     player.interfaceState.openWidget(widgets.bank.pinSettingsWidget.widgetId, {
         slot: 'screen'
     });
 };
 
-export const depositItem: itemActionHandler = (details) => {
+export const depositItem: itemInteractionActionHandler = (details) => {
     // Check if player might be spawning widget clientside
     if (!details.player.interfaceState.findWidget(widgets.bank.screenWidget.widgetId)) {
         return;
@@ -104,7 +104,7 @@ export const depositItem: itemActionHandler = (details) => {
 };
 
 
-export const withdrawItem: itemActionHandler = (details) => {
+export const withdrawItem: itemInteractionActionHandler = (details) => {
     // Check if player might be spawning widget clientside
     if (!details.player.interfaceState.findWidget(widgets.bank.screenWidget.widgetId)) {
         return;
@@ -194,7 +194,7 @@ export const btnAction: buttonActionHandler = (details) => {
     player.settings[config.setting] = config.value;
 };
 
-const useBankBoothAction : objectActionHandler = (details) => {
+const useBankBoothAction : objectInteractionActionHandler = (details) => {
     const { player } = details;
 
     dialogue([player, { npc: 'rs:generic_banker', key: 'banker' }], [

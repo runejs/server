@@ -3,7 +3,7 @@ import { WNES } from '@engine/world/direction';
 import { logger } from '@runejs/core';
 import { world } from '@engine/game-server';
 import { action as doorAction } from '@plugins/objects/doors/door-plugin';
-import { objectActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
 
 const doubleDoors = [
     {
@@ -34,7 +34,7 @@ const openingDelta = {
     }
 };
 
-const action: objectActionHandler = (details) => {
+const action: objectInteractionActionHandler = (details) => {
     const { player, object: door, position, cacheOriginal } = details;
     let doorConfig = doubleDoors.find(d => d.closed.indexOf(door.objectId) !== -1);
     let doorIds: number[];

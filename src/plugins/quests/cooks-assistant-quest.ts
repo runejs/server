@@ -1,4 +1,4 @@
-import { npcActionHandler } from '@engine/world/action/npc-interaction.action';
+import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { dialogue, DialogueTree, Emote, execute, goto } from '@engine/world/actor/dialogue';
 import { itemIds } from '@engine/world/config/item-ids';
 import { PlayerQuest, QuestJournalHandler } from '@engine/config/quest-config';
@@ -83,7 +83,7 @@ function dialogueIngredientQuestions(): Function {
     ];
 }
 
-const startQuestAction: npcActionHandler = (details) => {
+const startQuestAction: npcInteractionActionHandler = (details) => {
     const { player, npc } = details;
 
     dialogue([ player, { npc, key: 'cook' }], [
@@ -166,7 +166,7 @@ function youStillNeed(quest: PlayerQuest): DialogueTree {
     ];
 }
 
-const handInIngredientsAction: npcActionHandler = async (details) => {
+const handInIngredientsAction: npcInteractionActionHandler = async (details) => {
     const { player, npc } = details;
 
     const dialogueTree: DialogueTree = [

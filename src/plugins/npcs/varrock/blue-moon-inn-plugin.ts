@@ -1,10 +1,10 @@
-import { npcActionHandler } from '@engine/world/action/npc-interaction.action';
+import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
 import { itemIds } from '@engine/world/config/item-ids';
 import { widgets } from '@engine/config';
 
 
-const talkToBartender : npcActionHandler = (details) => {
+const talkToBartender : npcInteractionActionHandler = (details) => {
     const { player, npc } = details;
 
     dialogue([player, { npc, key: 'bartender' }], [
@@ -75,7 +75,7 @@ const talkToBartender : npcActionHandler = (details) => {
     ]);
 };
 
-const talkToCook : npcActionHandler = (details) => {
+const talkToCook : npcInteractionActionHandler = (details) => {
     const { npc, player } = details;
 
     dialogue([player, { npc, key: 'cook' }], [

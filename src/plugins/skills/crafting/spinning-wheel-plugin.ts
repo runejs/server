@@ -1,4 +1,4 @@
-import { objectActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
 import { buttonActionHandler, ButtonAction } from '@engine/world/action/button.action';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { itemIds } from '@engine/world/config/item-ids';
@@ -69,7 +69,7 @@ const widgetButtonIds: Map<number, SpinnableButton> = new Map<number, SpinnableB
     [111, { shouldTakeInput: true, count: 0, spinnable: sinewCbowString }],
 ]);
 
-export const openSpinningInterface: objectActionHandler = (details) => {
+export const openSpinningInterface: objectInteractionActionHandler = (details) => {
     details.player.interfaceState.openWidget(widgets.whatWouldYouLikeToSpin, {
         slot: 'screen'
     });

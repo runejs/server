@@ -1,4 +1,4 @@
-import { objectActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
 import { dialogueAction } from '@engine/world/actor/player/dialogue-action';
 import { World } from '@engine/world';
 import { Position } from '@engine/world/position';
@@ -8,7 +8,7 @@ const validate: (level: number) => boolean = (level) => {
     return planes.min <= level && level <= planes.max;
 }; //TODO: prevent no-clipping.
 
-export const action: objectActionHandler = (details) => {
+export const action: objectInteractionActionHandler = (details) => {
     const { player, option } = details;
 
     if (option === 'climb') {

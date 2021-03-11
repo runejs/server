@@ -71,7 +71,7 @@ const itemOnObjectActionPipe = (player: Player, locationObject: LocationObject,
     }
 
     // Find all item on object action plugins that reference this location object
-    let interactionActions = getActionHooks<ItemOnObjectActionHook>('item_on_object_action')
+    let interactionActions = getActionHooks<ItemOnObjectActionHook>('item_on_object')
         .filter(plugin => questHookFilter(player, plugin) && advancedNumberHookFilter(plugin.objectIds, locationObject.objectId));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
@@ -137,7 +137,4 @@ const itemOnObjectActionPipe = (player: Player, locationObject: LocationObject,
 /**
  * Item-on-object action pipe definition.
  */
-export default [
-    'item_on_object_action',
-    itemOnObjectActionPipe
-] as ActionPipe;
+export default [ 'item_on_object', itemOnObjectActionPipe ] as ActionPipe;

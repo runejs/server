@@ -9,7 +9,7 @@ import { ActionPipe } from '@engine/world/action/index';
 /**
  * Defines an item action hook.
  */
-export interface ItemActionHook extends ActionHook<itemActionHandler> {
+export interface ItemInteractionActionHook extends ActionHook<itemInteractionActionHandler> {
     // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
     // A single UI widget ID or a list of widget IDs that this action applies to.
@@ -24,13 +24,13 @@ export interface ItemActionHook extends ActionHook<itemActionHandler> {
 /**
  * The item action hook handler function to be called when the hook's conditions are met.
  */
-export type itemActionHandler = (itemAction: ItemAction) => void;
+export type itemInteractionActionHandler = (itemInteractionAction: ItemInteractionAction) => void;
 
 
 /**
  * Details about an item action being performed.
  */
-export interface ItemAction {
+export interface ItemInteractionAction {
     // The player performing the action.
     player: Player;
     // The ID of the item being interacted with.
@@ -57,7 +57,7 @@ export interface ItemAction {
  * @param containerId
  * @param option
  */
-const itemActionPipe = (player: Player, itemId: number, slot: number, widgetId: number, containerId: number, option: string): void => {
+const itemInteractionActionPipe = (player: Player, itemId: number, slot: number, widgetId: number, containerId: number, option: string): void => {
     if(player.busy) {
         return;
     }
@@ -65,7 +65,7 @@ const itemActionPipe = (player: Player, itemId: number, slot: number, widgetId: 
     let cancelActions = false;
 
     // Find all object action plugins that reference this location object
-    let interactionActions = getActionHooks<ItemActionHook>('item_action', plugin => {
+    let interactionActions = getActionHooks<ItemInteractionActionHook>('item_interaction', plugin => {
         if(!questHookFilter(player, plugin)) {
             return false;
         }
@@ -142,7 +142,4 @@ const itemActionPipe = (player: Player, itemId: number, slot: number, widgetId: 
 /**
  * Item action pipe definition.
  */
-export default [
-    'item_action',
-    itemActionPipe
-] as ActionPipe;
+export default [ 'item_interaction', itemInteractionActionPipe ] as ActionPipe;

@@ -2,12 +2,13 @@ import { Player } from '../actor/player/player';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
 import { numberHookFilter } from '@engine/world/action/hooks/hook-filters';
+import { ActionPipe } from '@engine/world/action/index';
 
 
 /**
  * Defines a swap items action hook.
  */
-export interface SwapItemsActionHook extends ActionHook<swapItemsActionHandler> {
+export interface ItemSwapActionHook extends ActionHook<itemSwapActionHandler> {
     widgetId?: number;
     widgetIds?: number[];
 }
@@ -16,13 +17,13 @@ export interface SwapItemsActionHook extends ActionHook<swapItemsActionHandler> 
 /**
  * The swap items action hook handler function to be called when the hook's conditions are met.
  */
-export type swapItemsActionHandler = (swapItemsAction: SwapItemsAction) => void;
+export type itemSwapActionHandler = (itemSwapAction: ItemSwapAction) => void;
 
 
 /**
  * Details about a swap items action being performed.
  */
-export interface SwapItemsAction {
+export interface ItemSwapAction {
     // The player performing the action.
     player: Player;
     // The widget id for the container.
@@ -43,8 +44,8 @@ export interface SwapItemsAction {
  * @param toSlot
  * @param widget
  */
-const swapItemsActionPipe = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }): Promise<void> => {
-    const swapItemsActions = getActionHooks<SwapItemsActionHook>('swap_items_action')
+const itemSwapActionPipe = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }): Promise<void> => {
+    const swapItemsActions = getActionHooks<ItemSwapActionHook>('item_swap')
         .filter(plugin => numberHookFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 
     if(!swapItemsActions || swapItemsActions.length === 0) {
@@ -70,4 +71,4 @@ const swapItemsActionPipe = async (player: Player, fromSlot: number, toSlot: num
 /**
  * Swap items action pipe definition.
  */
-export default [ 'swap_items_action', swapItemsActionPipe ];
+export default [ 'item_swap', itemSwapActionPipe ] as ActionPipe;

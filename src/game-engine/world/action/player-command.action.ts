@@ -1,6 +1,7 @@
 import { Player } from '../actor/player/player';
 import { logger } from '@runejs/core';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
+import { ActionPipe } from '@engine/world/action/index';
 
 
 /**
@@ -48,7 +49,7 @@ export interface PlayerCommandAction {
 const playerCommandActionPipe = (player: Player, command: string, isConsole: boolean, inputArgs: string[]): void => {
     command = command.toLowerCase();
 
-    const plugins = getActionHooks<PlayerCommandActionHook>('player_command_action').filter(plugin => {
+    const plugins = getActionHooks<PlayerCommandActionHook>('player_command').filter(plugin => {
         if(Array.isArray(plugin.commands)) {
             return plugin.commands.indexOf(command) !== -1;
         } else {
@@ -123,4 +124,4 @@ const playerCommandActionPipe = (player: Player, command: string, isConsole: boo
 /**
  * Player command action pipe definition.
  */
-export default [ 'player_command_action',  playerCommandActionPipe ];
+export default [ 'player_command',  playerCommandActionPipe ] as ActionPipe;
