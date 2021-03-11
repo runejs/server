@@ -26,7 +26,7 @@ const pickupItemPacket = (player, packet) => {
             return;
         }
 
-        actionPipeline.send('world_item_action', player, worldItem, 'pick-up');
+        actionPipeline.call('world_item_action', player, worldItem, 'pick-up');
     }
 };
 

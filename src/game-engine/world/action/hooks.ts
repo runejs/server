@@ -1,7 +1,8 @@
 import { getFiles } from '@engine/util/files';
 import { logger } from '@runejs/core';
-import { actionPipeline, pluginActionHooks } from '@engine/game-server';
+import { actionPipeline, actionHookMap } from '@engine/game-server';
 import { QuestKey } from '@engine/config/quest-config';
+import { gameEngineDist } from '@engine/util/directories';
 
 
 /**
@@ -45,7 +46,7 @@ export interface QuestRequirement {
 /**
  * Defines a generic extensible game content action hook.
  */
-export interface ActionHook<T> {
+export interface ActionHook<T = any> {
     // The type of action to perform.
     type: ActionType;
     // The action's priority over other actions.
@@ -68,8 +69,8 @@ export type ActionCancelType = 'manual-movement' | 'pathing-movement' | 'generic
  * @param actionType The Action Type to find the hook for.
  * @param filter [optional] Filter criteria to apply to the returned list.
  */
-export const getActionHooks = <T>(actionType: ActionType, filter?: (actionHook: T) => boolean): T[] => {
-    const hooks = pluginActionHooks[actionType] as T[];
+export const getActionHooks = <T extends ActionHook>(actionType: ActionType, filter?: (actionHook: T) => boolean): T[] => {
+    const hooks = actionHookMap[actionType] as T[];
     if(!hooks || hooks.length === 0) {
         return [];
     }
@@ -96,7 +97,7 @@ export class ActionPipeline {
         this.actionPipes.get(action.toString());
     }
 
-    public async send(action: ActionType, ...args: any[]): Promise<void> {
+    public async call(action: ActionType, ...args: any[]): Promise<void> {
         const actionHandler = this.actionPipes.get(action.toString());
         if(actionHandler) {
             try {
@@ -122,7 +123,7 @@ export class ActionPipeline {
  * Finds and loads all available action pipe files (`*.action.ts`).
  */
 export async function loadActionFiles(): Promise<void> {
-    const ACTION_DIRECTORY = './dist/world/action';
+    const ACTION_DIRECTORY = `${gameEngineDist}/world/action`;
     const blacklist = [];
 
     for await(const path of getFiles(ACTION_DIRECTORY, blacklist)) {
@@ -130,9 +131,9 @@ export async function loadActionFiles(): Promise<void> {
             continue;
         }
 
-        logger.info(`Loading action file ${path}`);
-
         const location = '.' + path.substring(ACTION_DIRECTORY.length).replace('.js', '');
+
+        logger.info(`Loading ${path.substring(path.indexOf('action') + 7).replace('.js', '')} file.`);
 
         try {
             const importedAction = (require(location)?.default || null) as ActionPipe | null;
@@ -155,5 +156,5 @@ export async function loadActionFiles(): Promise<void> {
  * @param actionHooks The list of hooks to sort.
  */
 export function sortActionHooks<T = any>(actionHooks: ActionHook<T>[]): ActionHook<T>[] {
-    return actionHooks.sort(plugin => plugin.questRequirement !== undefined ? -1 : 1);
+    return actionHooks.sort(actionHook => actionHook.questRequirement !== undefined ? -1 : 1);
 }

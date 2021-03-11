@@ -14,7 +14,7 @@ import { Npc } from '@engine/world/actor/npc/npc';
 import { Player } from '@engine/world/actor/player/player';
 import { Subject, timer } from 'rxjs';
 import { Position } from '@engine/world/position';
-import { ActionPipeline, ActionType, sortActionHooks } from '@engine/world/action/hooks';
+import { ActionHook, ActionPipeline, ActionType, sortActionHooks } from '@engine/world/action/hooks';
 
 
 /**
@@ -35,14 +35,14 @@ export let cache: Cache;
 export let world: World;
 
 
-type PluginActionHook = {
-    [key in ActionType]?: any;
+type PluginActionHookMap = {
+    [key in ActionType]?: ActionHook[];
 };
 
 /**
  * A list of action hooks imported from content plugins.
  */
-export let pluginActionHooks: PluginActionHook = {};
+export let actionHookMap: PluginActionHookMap = {};
 
 
 /**
@@ -55,27 +55,36 @@ export const actionPipeline = new ActionPipeline();
  * Searches for and loads all plugin files and their associated action hooks.
  */
 export async function loadPlugins(): Promise<void> {
-    pluginActionHooks = {};
+    actionHookMap = {};
     const plugins = await loadPluginFiles();
 
-    plugins.map(plugin => plugin.hooks).reduce((a, b) => a.concat(b)).forEach(action => {
-        if(!(action instanceof Quest)) {
-            if(!pluginActionHooks[action.type]) {
-                pluginActionHooks[action.type] = [];
-            }
+    const pluginActionHookList = plugins?.filter(plugin => !!plugin?.hooks)?.map(plugin => plugin.hooks);
 
-            pluginActionHooks[action.type].push(action);
-        } else {
-            if(!pluginActionHooks['quest']) {
-                pluginActionHooks['quest'] = [];
-            }
+    if(pluginActionHookList && pluginActionHookList.length !== 0) {
+        pluginActionHookList.reduce(
+            (a, b) => a.concat(b))?.forEach(action => {
+            if(!(action instanceof Quest)) {
+                if(!actionHookMap[action.type]) {
+                    actionHookMap[action.type] = [];
+                }
 
-            pluginActionHooks['quest'].push(action);
-        }
-    });
+                actionHookMap[action.type].push(action);
+            } else {
+                if(!actionHookMap['quest']) {
+                    actionHookMap['quest'] = [];
+                }
+
+                actionHookMap['quest'].push(action);
+            }
+        });
+    } else {
+        logger.warn(`No action hooks detected - update plugins.`);
+    }
 
     // @TODO implement proper sorting rules
-    Object.keys(pluginActionHooks).forEach(key => pluginActionHooks[key] = sortActionHooks(pluginActionHooks[key]));
+    Object.keys(actionHookMap)
+        .forEach(key => actionHookMap[key] =
+            sortActionHooks(actionHookMap[key]));
 }
 
 

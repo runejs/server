@@ -47,7 +47,7 @@ const itemOnNpcPacket = (player, packet) => {
         return;
     }
 
-    actionPipeline.send('item_on_npc', player, npc, position, usedItem, itemWidgetId, itemContainerId)
+    actionPipeline.call('item_on_npc', player, npc, position, usedItem, itemWidgetId, itemContainerId)
 };
 
 export default {

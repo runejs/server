@@ -1,10 +1,9 @@
 import { Actor } from '@engine/world/actor/actor';
 import uuidv4 from 'uuid/v4';
 import { Position } from '@engine/world/position';
-import { cache, pluginActionHooks, world } from '@engine/game-server';
+import { cache, actionHookMap, world, actionPipeline } from '@engine/game-server';
 import { directionData } from '@engine/world/direction';
 import { QuadtreeKey } from '@engine/world';
-import { ActionHook } from '@engine/world/action/hooks';
 import { findNpc } from '@engine/config';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { NpcAnimations, NpcDetails } from '@engine/config/npc-config';
@@ -12,14 +11,6 @@ import { SkillName } from '@engine/world/actor/skills';
 import { NpcSpawn } from '@engine/config/npc-spawn-config';
 import { basicNumberFilter } from '@engine/world/action/hook-filters';
 
-export type npcInitAction = (data: { npc: Npc }) => void;
-
-export interface NpcInitAction extends ActionHook {
-    // The action function to be performed.
-    action: npcInitAction;
-    // A single NPC ID or a list of NPC IDs that this action applies to.
-    npcIds: number | number[];
-}
 
 /**
  * Represents a non-player character within the game world.
@@ -100,12 +91,7 @@ export class Npc extends Actor {
             this.initiateRandomMovement();
         }
 
-        await new Promise(resolve => {
-            pluginActionHooks.npc_init_action
-                .filter(plugin => basicNumberFilter(plugin.npcIds, this.id))
-                .forEach(plugin => plugin.action({ npc: this }));
-            resolve();
-        });
+        await actionPipeline.call('npc_init_action', { npc: this });
 
         this._initialized = true;
     }

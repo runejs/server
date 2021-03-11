@@ -5,7 +5,7 @@ const buttonClickPacket = (player, packet) => {
     const widgetId = buffer.get('SHORT');
     const buttonId = buffer.get('SHORT');
 
-    actionPipeline.send('button', player, widgetId, buttonId);
+    actionPipeline.call('button', player, widgetId, buttonId);
 };
 
 export default {

@@ -56,7 +56,7 @@ const npcInteractionPacket = (player, packet) => {
         return;
     }
 
-    actionPipeline.send('npc_action', player, npc, position, optionName.toLowerCase());
+    actionPipeline.call('npc_action', player, npc, position, optionName.toLowerCase());
 };
 
 export default [{

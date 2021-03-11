@@ -4,7 +4,7 @@ import { Isaac } from '@engine/net/isaac';
 import { PlayerSyncTask } from './sync/player-sync-task';
 import { Actor } from '../actor';
 import { Position } from '@engine/world/position';
-import { actionPipeline, cache, pluginActionHooks, serverConfig, world } from '@engine/game-server';
+import { actionPipeline, cache, actionHookMap, serverConfig, world } from '@engine/game-server';
 import { logger } from '@runejs/core';
 import uuidv4 from 'uuid/v4';
 import {
@@ -96,12 +96,6 @@ export enum Rights {
     USER = 0
 }
 
-export type playerInitAction = (data: { player: Player }) => void;
-
-export interface PlayerInitAction extends ActionHook {
-    // The action function to be performed.
-    action: playerInitAction;
-}
 
 /**
  * A player character within the game world.
@@ -194,7 +188,7 @@ export class Player extends Actor {
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
         for(const item of this.equipment.items) {
             if(item) {
-                actionPipeline.send('equip_action', this, item.itemId, 'EQUIP');
+                actionPipeline.call('equip_action', this, item.itemId, 'EQUIP');
             }
         }
 
@@ -262,13 +256,10 @@ export class Player extends Actor {
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
 
         if(this.rights === Rights.ADMIN) {
-            this.sendCommandList(pluginActionHooks.player_command_action);
+            this.sendCommandList(actionHookMap.player_command_action as PlayerCommandActionHook[]);
         }
 
-        await new Promise(resolve => {
-            pluginActionHooks.player_init_action.forEach(plugin => plugin.action({ player: this }));
-            resolve();
-        });
+        await actionPipeline.call('player_init_action', { player: this });
 
         world.spawnWorldItems(this);
         this.chunkChanged(playerChunk);
@@ -611,7 +602,7 @@ export class Player extends Actor {
         if(!oldChunk.equals(newChunk)) {
             this.metadata['updateChunk'] = { newChunk, oldChunk };
 
-            actionPipeline.send('region_change_action', regionChangeActionFactory(
+            actionPipeline.call('region_change_action', regionChangeActionFactory(
                 this, originalPosition, newPosition, true));
         }
     }
@@ -821,7 +812,7 @@ export class Player extends Actor {
                 return false;
             }
 
-            actionPipeline.send('equip_action', this, itemToUnequip.itemId, 'UNEQUIP', slot);
+            actionPipeline.call('equip_action', this, itemToUnequip.itemId, 'UNEQUIP', slot);
 
             this.equipment.remove(slotIndex, false);
             this.inventory.remove(itemSlot, false);
@@ -842,7 +833,7 @@ export class Player extends Actor {
             }
         }
 
-        actionPipeline.send('equip_action', this, itemId, 'EQUIP', slot);
+        actionPipeline.call('equip_action', this, itemId, 'EQUIP', slot);
         this.equipmentChanged();
         return true;
     }
@@ -883,7 +874,7 @@ export class Player extends Actor {
             return true;
         }
 
-        actionPipeline.send('equip_action', this, itemInSlot.itemId, 'UNEQUIP', slot);
+        actionPipeline.call('equip_action', this, itemInSlot.itemId, 'UNEQUIP', slot);
 
         this.equipment.remove(slotIndex);
         this.inventory.set(inventorySlot, itemInSlot);

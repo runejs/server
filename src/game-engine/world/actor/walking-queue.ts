@@ -216,7 +216,7 @@ export class WalkingQueue {
                 if(this.actor instanceof Player) {
                     this.actor.metadata['updateChunk'] = { newChunk, oldChunk };
 
-                    actionPipeline.send('player_region_changed', regionChangeActionFactory(
+                    actionPipeline.call('player_region_changed', regionChangeActionFactory(
                         this.actor, originalPosition, this.actor.position));
                 } else if(this.actor instanceof Npc) {
                     oldChunk.removeNpc(this.actor);

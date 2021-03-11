@@ -64,7 +64,7 @@ const objectInteractionPacket = (player, packet) => {
         return;
     }
 
-    actionPipeline.send('object_action', player, locationObject, locationObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
+    actionPipeline.call('object_action', player, locationObject, locationObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
 };
 
 export default [{

@@ -40,7 +40,7 @@ const playerInteractionPacket = (player, packet) => {
         return;
     }
 
-    actionPipeline.send('player_action', player, otherPlayer, position, playerOption.option.toLowerCase());
+    actionPipeline.call('player_action', player, otherPlayer, position, playerOption.option.toLowerCase());
 };
 
 export default [{

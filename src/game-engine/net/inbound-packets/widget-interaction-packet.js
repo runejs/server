@@ -6,7 +6,7 @@ const widgetInteractionPacket = (player, packet) => {
     const widgetId = buffer.get('SHORT');
     const optionId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
 
-    actionPipeline.send('widget_action', player, widgetId, childId, optionId);
+    actionPipeline.call('widget_action', player, widgetId, childId, optionId);
 };
 
 export default {
