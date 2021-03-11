@@ -1,8 +1,9 @@
 import { Player } from '@engine/world/actor/player/player';
-import { ActionHook, ActionPipe, getActionHooks } from '@engine/world/action/hooks';
+import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { ItemDetails } from '@engine/config/item-config';
 import { findItem } from '@engine/config';
-import { basicNumberFilter, basicStringFilter, questHookFilter } from '@engine/world/action/hook-filters';
+import { numberHookFilter, stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
+import { ActionPipe } from '@engine/world/action/index';
 
 
 /**
@@ -70,7 +71,7 @@ const itemActionPipe = (player: Player, itemId: number, slot: number, widgetId: 
         }
 
         if(plugin.itemIds !== undefined) {
-            if(!basicNumberFilter(plugin.itemIds, itemId)) {
+            if(!numberHookFilter(plugin.itemIds, itemId)) {
                 return false;
             }
         }
@@ -96,7 +97,7 @@ const itemActionPipe = (player: Player, itemId: number, slot: number, widgetId: 
         }
 
         if(plugin.options !== undefined) {
-            if(!basicStringFilter(plugin.options, option)) {
+            if(!stringHookFilter(plugin.options, option)) {
                 return false;
             }
         }

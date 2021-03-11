@@ -1,8 +1,8 @@
 import { Player } from '@engine/world/actor/player/player';
-import { ActionHook } from '@engine/world/action/hooks';
+import { ActionHook } from '@engine/world/action/hooks/index';
 
 
-export const basicStringFilter = (expected: string | string[], input: string): boolean => {
+export const stringHookFilter = (expected: string | string[], input: string): boolean => {
     if(Array.isArray(expected)) {
         if(expected.indexOf(input) === -1) {
             return false;
@@ -17,7 +17,7 @@ export const basicStringFilter = (expected: string | string[], input: string): b
 };
 
 
-export const basicNumberFilter = (expected: number | number[], input: number): boolean => {
+export const numberHookFilter = (expected: number | number[], input: number): boolean => {
     if(Array.isArray(expected)) {
         if(expected.indexOf(input) === -1) {
             return false;
@@ -32,8 +32,8 @@ export const basicNumberFilter = (expected: number | number[], input: number): b
 };
 
 
-export const advancedNumberFilter = (expected: number | number[], input: number, options?: string | string[],
-                                     searchOption?: string): boolean => {
+export const advancedNumberHookFilter = (expected: number | number[], input: number, options?: string | string[],
+                                         searchOption?: string): boolean => {
     if(expected !== undefined) {
         if(Array.isArray(expected)) {
             if(expected.indexOf(input) === -1) {
@@ -81,11 +81,11 @@ export function questHookFilter(player: Player, actionHook: ActionHook): boolean
 
     if(typeof playerQuest.progress === 'number') {
         if(actionHook.questRequirement.stage !== undefined) {
-            if(!basicNumberFilter(actionHook.questRequirement.stage, playerQuest.progress)) {
+            if(!numberHookFilter(actionHook.questRequirement.stage, playerQuest.progress)) {
                 return false;
             }
         } else if(actionHook.questRequirement.stages !== undefined) {
-            if(!basicNumberFilter(actionHook.questRequirement.stages, playerQuest.progress)) {
+            if(!numberHookFilter(actionHook.questRequirement.stages, playerQuest.progress)) {
                 return false;
             }
         }

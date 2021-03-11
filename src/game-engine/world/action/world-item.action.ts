@@ -5,7 +5,7 @@ import { WorldItem } from '@engine/world/items/world-item';
 import { ItemDetails } from '@engine/config/item-config';
 import { findItem } from '@engine/config';
 import { playerWalkTo } from '@engine/game-server';
-import { basicNumberFilter, basicStringFilter, questHookFilter } from '@engine/world/action/hook-filters';
+import { numberHookFilter, stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
 
 
 /**
@@ -58,12 +58,12 @@ const worldItemActionPipe = (player: Player, worldItem: WorldItem, option: strin
         }
 
         if(plugin.itemIds !== undefined) {
-            if(!basicNumberFilter(plugin.itemIds, worldItem.itemId)) {
+            if(!numberHookFilter(plugin.itemIds, worldItem.itemId)) {
                 return false;
             }
         }
 
-        if(!basicStringFilter(plugin.options, option)) {
+        if(!stringHookFilter(plugin.options, option)) {
             return false;
         }
 

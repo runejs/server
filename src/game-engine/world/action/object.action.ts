@@ -4,7 +4,7 @@ import { Position } from '@engine/world/position';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
 import { playerWalkTo } from '@engine/game-server';
-import { advancedNumberFilter, questHookFilter } from '@engine/world/action/hook-filters';
+import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
 
 
 /**
@@ -62,7 +62,7 @@ const objectActionPipe = (player: Player, locationObject: LocationObject, locati
 
     // Find all object action plugins that reference this location object
     let interactionActions = getActionHooks<ObjectActionHook>('object_action')
-        .filter(plugin => questHookFilter(player, plugin) && advancedNumberFilter(plugin.objectIds, locationObject.objectId, plugin.options, option));
+        .filter(plugin => questHookFilter(player, plugin) && advancedNumberHookFilter(plugin.objectIds, locationObject.objectId, plugin.options, option));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {

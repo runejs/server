@@ -11,12 +11,12 @@ import TravelLocations from '@engine/world/config/travel-locations';
 import { Actor } from '@engine/world/actor/actor';
 import { schedule } from '@engine/world/task';
 import { parseScenerySpawns } from '@engine/world/config/scenery-spawns';
-import { loadActionFiles } from '@engine/world/action/hooks';
 import { findItem, findNpc, itemSpawns, npcSpawns } from '@engine/config';
 import { NpcDetails } from '@engine/config/npc-config';
 import { WorldInstance } from '@engine/world/instances';
 import { Direction } from '@engine/world/direction';
 import { NpcSpawn } from '@engine/config/npc-spawn-config';
+import { loadActionFiles } from '@engine/world/action';
 
 
 export interface QuadtreeKey {

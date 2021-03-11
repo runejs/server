@@ -8,11 +8,11 @@ import { Position } from '@engine/world/position';
 import { DirectionData, directionFromIndex } from '@engine/world/direction';
 import { Pathfinding } from '@engine/world/actor/pathfinding';
 import { Subject } from 'rxjs';
-import { ActionCancelType } from '@engine/world/action/hooks';
 import { filter, take } from 'rxjs/operators';
 import { world } from '@engine/game-server';
 import { WorldInstance } from '@engine/world/instances';
 import { Player } from '@engine/world/actor/player/player';
+import { ActionCancelType } from '@engine/world/action';
 
 /**
  * Handles an actor within the game world.

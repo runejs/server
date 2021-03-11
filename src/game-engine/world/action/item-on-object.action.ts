@@ -1,11 +1,12 @@
 import { Player } from '@engine/world/actor/player/player';
 import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@engine/world/position';
-import { ActionHook, ActionPipe, getActionHooks } from '@engine/world/action/hooks';
+import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
 import { Item } from '@engine/world/items/item';
 import { playerWalkTo } from '@engine/game-server';
-import { advancedNumberFilter, questHookFilter } from '@engine/world/action/hook-filters';
+import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
+import { ActionPipe } from '@engine/world/action/index';
 
 
 /**
@@ -71,7 +72,7 @@ const itemOnObjectActionPipe = (player: Player, locationObject: LocationObject,
 
     // Find all item on object action plugins that reference this location object
     let interactionActions = getActionHooks<ItemOnObjectActionHook>('item_on_object_action')
-        .filter(plugin => questHookFilter(player, plugin) && advancedNumberFilter(plugin.objectIds, locationObject.objectId));
+        .filter(plugin => questHookFilter(player, plugin) && advancedNumberHookFilter(plugin.objectIds, locationObject.objectId));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
@@ -80,7 +81,7 @@ const itemOnObjectActionPipe = (player: Player, locationObject: LocationObject,
 
     // Find all item on object action plugins that reference this item
     if(interactionActions.length !== 0) {
-        interactionActions = interactionActions.filter(plugin => advancedNumberFilter(plugin.itemIds, item.itemId));
+        interactionActions = interactionActions.filter(plugin => advancedNumberHookFilter(plugin.itemIds, item.itemId));
     }
 
     if(interactionActions.length === 0) {

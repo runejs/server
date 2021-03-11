@@ -1,8 +1,9 @@
 import { Player } from '@engine/world/actor/player/player';
-import { ActionHook, ActionPipe, getActionHooks } from '@engine/world/action/hooks';
+import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { findItem } from '@engine/config';
 import { EquipmentSlot, ItemDetails } from '@engine/config/item-config';
-import { basicNumberFilter, basicStringFilter, questHookFilter } from '@engine/world/action/hook-filters';
+import { numberHookFilter, stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
+import { ActionPipe } from '@engine/world/action/index';
 
 
 /**
@@ -59,14 +60,14 @@ const equipActionPipe = (player: Player, itemId: number, equipType: EquipType, s
         }
 
         if(equipActionHook.itemIds !== undefined) {
-            if(!basicNumberFilter(equipActionHook.itemIds, itemId)) {
+            if(!numberHookFilter(equipActionHook.itemIds, itemId)) {
                 return false;
             }
         }
 
 
         if(equipActionHook.equipType !== undefined) {
-            if(!basicStringFilter(equipActionHook.equipType, equipType)) {
+            if(!stringHookFilter(equipActionHook.equipType, equipType)) {
                 return false;
             }
         }

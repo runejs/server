@@ -1,7 +1,8 @@
 import { Player } from '@engine/world/actor/player/player';
-import { ActionHook, ActionPipe, getActionHooks } from '@engine/world/action/hooks';
+import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
-import { basicNumberFilter } from '@engine/world/action/hook-filters';
+import { numberHookFilter } from '@engine/world/action/hooks/hook-filters';
+import { ActionPipe } from '@engine/world/action/index';
 
 
 /**
@@ -45,7 +46,7 @@ export interface MoveItemAction {
  */
 const moveItemActionPipe = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }): Promise<void> => {
     const moveItemActions = getActionHooks<MoveItemActionHook>('move_item_action')
-        .filter(plugin => basicNumberFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
+        .filter(plugin => numberHookFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 
     if(!moveItemActions || moveItemActions.length === 0) {
         await player.sendMessage(`Unhandled Move Item action: widget[${widget.widgetId}] container[${widget.containerId}] fromSlot[${fromSlot} toSlot${toSlot}`);

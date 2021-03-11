@@ -1,6 +1,7 @@
 import { Player } from '@engine/world/actor/player/player';
-import { ActionHook, ActionPipe, getActionHooks } from '@engine/world/action/hooks';
-import { advancedNumberFilter, questHookFilter } from '@engine/world/action/hook-filters';
+import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
+import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
+import { ActionPipe } from '@engine/world/action/index';
 
 
 /**
@@ -48,10 +49,10 @@ const buttonActionPipe = (player: Player, widgetId: number, buttonId: number) =>
         .filter(plugin =>
             questHookFilter(player, plugin) && (
                 (plugin.widgetId && plugin.widgetId === widgetId) ||
-                (plugin.widgetIds && advancedNumberFilter(plugin.widgetIds, widgetId)
+                (plugin.widgetIds && advancedNumberHookFilter(plugin.widgetIds, widgetId)
             ))
         && (plugin.buttonIds === undefined ||
-            advancedNumberFilter(plugin.buttonIds, buttonId))
+            advancedNumberHookFilter(plugin.buttonIds, buttonId))
         );
 
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);

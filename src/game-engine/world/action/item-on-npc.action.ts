@@ -1,11 +1,12 @@
 import { Player } from '@engine/world/actor/player/player';
 import { Position } from '@engine/world/position';
-import { ActionHook, ActionPipe, getActionHooks } from '@engine/world/action/hooks';
+import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
 import { Item } from '@engine/world/items/item';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { playerWalkTo } from '@engine/game-server';
-import { advancedNumberFilter, questHookFilter } from '@engine/world/action/hook-filters';
+import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
+import { ActionPipe } from '@engine/world/action/index';
 
 
 /**
@@ -64,7 +65,7 @@ const itemOnNpcActionPipe = (player: Player, npc: Npc, position: Position, item:
     // Find all item on npc action plugins that reference this npc and item
     let interactionActions = getActionHooks<ItemOnNpcActionHook>('item_on_npc_action').filter(plugin =>
         questHookFilter(player, plugin) &&
-        advancedNumberFilter(plugin.npcsIds, npc.id) && advancedNumberFilter(plugin.itemIds, item.itemId));
+        advancedNumberHookFilter(plugin.npcsIds, npc.id) && advancedNumberHookFilter(plugin.itemIds, item.itemId));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {

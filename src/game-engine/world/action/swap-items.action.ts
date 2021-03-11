@@ -1,7 +1,7 @@
 import { Player } from '../actor/player/player';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
-import { basicNumberFilter } from '@engine/world/action/hook-filters';
+import { numberHookFilter } from '@engine/world/action/hooks/hook-filters';
 
 
 /**
@@ -45,7 +45,7 @@ export interface SwapItemsAction {
  */
 const swapItemsActionPipe = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }): Promise<void> => {
     const swapItemsActions = getActionHooks<SwapItemsActionHook>('swap_items_action')
-        .filter(plugin => basicNumberFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
+        .filter(plugin => numberHookFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 
     if(!swapItemsActions || swapItemsActions.length === 0) {
         await player.sendMessage(`Unhandled Swap Items action: widget[${widget.widgetId}] container[${widget.containerId}] fromSlot[${fromSlot} toSlot${toSlot}`);

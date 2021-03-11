@@ -1,6 +1,7 @@
 import { Npc } from '@engine/world/actor/npc/npc';
-import { ActionHook, ActionPipe, getActionHooks } from '@engine/world/action/hooks';
-import { basicStringFilter } from '@engine/world/action/hook-filters';
+import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
+import { stringHookFilter } from '@engine/world/action/hooks/hook-filters';
+import { ActionPipe } from '@engine/world/action/index';
 
 
 /**
@@ -33,7 +34,7 @@ export interface NpcInitAction {
  */
 const npcInitActionPipe = ({ npc }: NpcInitAction): void => {
     const actionHooks = getActionHooks<NpcInitActionHook>('npc_init_action')
-        .filter(plugin => (!plugin.npcs || basicStringFilter(plugin.npcs, npc.key)));
+        .filter(plugin => (!plugin.npcs || stringHookFilter(plugin.npcs, npc.key)));
     actionHooks.forEach(actionHook => actionHook.handler({ npc }));
 };
 

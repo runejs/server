@@ -3,7 +3,7 @@ import { Position } from '@engine/world/position';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
 import { playerWalkTo } from '@engine/game-server';
-import { basicStringFilter, questHookFilter } from '@engine/world/action/hook-filters';
+import { stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
 
 
 /**
@@ -50,7 +50,7 @@ const playerActionPipe = (player: Player, otherPlayer: Player, position: Positio
 
     // Find all player action plugins that reference this option
     let interactionActions = getActionHooks<PlayerActionHook>('player_action')
-        .filter(plugin => questHookFilter(player, plugin) && basicStringFilter(plugin.options, option));
+        .filter(plugin => questHookFilter(player, plugin) && stringHookFilter(plugin.options, option));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {

@@ -9,7 +9,7 @@ import { animationIds } from '@engine/world/config/animation-ids';
 import { NpcAnimations, NpcDetails } from '@engine/config/npc-config';
 import { SkillName } from '@engine/world/actor/skills';
 import { NpcSpawn } from '@engine/config/npc-spawn-config';
-import { basicNumberFilter } from '@engine/world/action/hook-filters';
+import { numberHookFilter } from '@engine/world/action/hooks/hook-filters';
 
 
 /**

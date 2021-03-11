@@ -1,6 +1,6 @@
 import { Player } from '@engine/world/actor/player/player';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
-import { advancedNumberFilter, questHookFilter } from '@engine/world/action/hook-filters';
+import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
 
 
 /**
@@ -53,7 +53,7 @@ const widgetActionPipe = (player: Player, widgetId: number, childId: number, opt
             return false;
         }
 
-        if(!advancedNumberFilter(plugin.widgetIds, widgetId)) {
+        if(!advancedNumberHookFilter(plugin.widgetIds, widgetId)) {
             return false;
         }
 
@@ -62,7 +62,7 @@ const widgetActionPipe = (player: Player, widgetId: number, childId: number, opt
         }
 
         if(plugin.childIds !== undefined) {
-            return advancedNumberFilter(plugin.childIds, childId);
+            return advancedNumberHookFilter(plugin.childIds, childId);
         }
 
         return true;
