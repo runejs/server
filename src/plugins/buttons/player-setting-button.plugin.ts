@@ -14,9 +14,14 @@ const buttonIds: number[] = [
     5, // house options
 ];
 
-export const action: buttonActionHandler = (details) => {
+export const handler: buttonActionHandler = (details) => {
     const { player, buttonId } = details;
     player.settingChanged(buttonId);
 };
 
-export default { type: 'button', widgetId: widgets.settingsTab, buttonIds: buttonIds, action };
+export default {
+    pluginId: 'rs:player_setting_button',
+    hooks: [
+        { type: 'button', widgetId: widgets.settingsTab, buttonIds: buttonIds, handler }
+    ]
+};

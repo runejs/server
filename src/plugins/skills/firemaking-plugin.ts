@@ -136,5 +136,5 @@ const action: itemOnItemActionHandler = (details) => {
 export default {
     type: 'item_on_item',
     items: logs.map(log => ({ item1: itemIds.tinderbox, item2: log.logId })),
-    action
+    handler: action
 };

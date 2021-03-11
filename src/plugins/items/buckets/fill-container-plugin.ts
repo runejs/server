@@ -39,5 +39,5 @@ export default {
     objectIds: [...FountainIds, ...WellIds, ...SinkIds],
     itemIds: [itemIds.bucket, itemIds.jug],
     walkTo: true,
-    action
+    handler: action
 };

@@ -179,8 +179,13 @@ const attackNpcAction: npcInteractionActionHandler = async details => {
 };
 
 export default {
-    type: 'npc_action',
-    options: 'attack',
-    walkTo: true,
-    action: attackNpcAction
+    pluginId: 'rs:combat',
+    hooks: [
+        {
+            type: 'npc_action',
+            options: 'attack',
+            walkTo: true,
+            handler: attackNpcAction
+        }
+    ]
 };

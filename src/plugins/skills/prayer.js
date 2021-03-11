@@ -21,6 +21,6 @@ module.exports = {
     widgets: widgets.inventory,
     options: 'bury',
     itemIds: itemIds.bones,
-    action,
+    handler: action,
     cancelOtherActions: true
 };

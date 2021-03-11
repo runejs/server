@@ -10,5 +10,5 @@ export default {
     npcs: 'rs:alkharid_ranael',
     walkTo: true,
     options: 'trade',
-    action: tradeAction,
+    handler: tradeAction,
 };

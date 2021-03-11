@@ -1,5 +1,5 @@
 import { commandActionHandler } from '@engine/world/action/player-command.action';
-import { lockEmote, unlockEmote, unlockEmotes } from '@plugins/buttons/player-emotes-plugin';
+import { lockEmote, unlockEmote, unlockEmotes } from '@plugins/buttons/player-emotes.plugin';
 
 const action: commandActionHandler = (details) => {
     const { player, args } = details;
@@ -28,9 +28,9 @@ export default [{
         name: 'emoteName',
         type: 'string'
     }],
-    action
+    handler: action
 }, {
     type: 'player_command',
     commands: 'emotereset',
-    action: resetAction
+    handler: resetAction
 }];

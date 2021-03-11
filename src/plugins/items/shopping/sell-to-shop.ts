@@ -89,6 +89,6 @@ export default {
     type: 'item_action',
     widgets: widgets.shopPlayerInventory,
     options: [ 'sell-1', 'sell-5', 'sell-10' ],
-    action,
+    handler: action,
     cancelOtherActions: false
 };

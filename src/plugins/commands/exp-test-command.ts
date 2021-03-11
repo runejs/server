@@ -10,5 +10,5 @@ const action: commandActionHandler = (details) => {
 export default {
     type: 'player_command',
     commands: 'exptest',
-    action
+    handler: action
 };

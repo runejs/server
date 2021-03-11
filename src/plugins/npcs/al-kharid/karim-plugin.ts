@@ -48,5 +48,5 @@ const talkToAction : npcInteractionActionHandler = (details) => {
 };
 
 export default [
-    { type: 'npc_action', npcs: 'rs:alkharid_karim', options: 'talk-to', walkTo: true, action: talkToAction }
+    { type: 'npc_action', npcs: 'rs:alkharid_karim', options: 'talk-to', walkTo: true, handler: talkToAction }
 ];

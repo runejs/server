@@ -40,4 +40,4 @@ export const action: buttonActionHandler = (details) => {
     });
 };
 
-export default { type: 'button', widgetId: widgets.equipment.widgetId, buttonIds: 24, action };
+export default { type: 'button', widgetId: widgets.equipment.widgetId, buttonIds: 24, handler: action };

@@ -226,26 +226,26 @@ export default [{
     objectIds: objectIds.bankBooth,
     options: ['use'],
     walkTo: true,
-    action: useBankBoothAction
+    handler: useBankBoothAction
 }, {
     type: 'object_action',
     objectIds: objectIds.bankBooth,
     options: ['use-quickly'],
     walkTo: true,
-    action: openBankInterface
+    handler: openBankInterface
 }, {
     type: 'item_action',
     widgets: widgets.bank.tabWidget,
     options: ['deposit-1', 'deposit-5', 'deposit-10', 'deposit-all'],
-    action: depositItem,
+    handler: depositItem,
 }, {
     type: 'item_action',
     widgets: widgets.bank.screenWidget,
     options: ['withdraw-1', 'withdraw-5', 'withdraw-10', 'withdraw-all'],
-    action: withdrawItem,
+    handler: withdrawItem,
 }, {
     type: 'button',
     widgetId: widgets.bank.screenWidget.widgetId,
     buttonIds: buttonIds,
-    action: btnAction
+    handler: btnAction
 }];

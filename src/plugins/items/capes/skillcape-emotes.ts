@@ -1,4 +1,4 @@
-import { lockEmote, unlockEmote } from '@plugins/buttons/player-emotes-plugin';
+import { lockEmote, unlockEmote } from '@plugins/buttons/player-emotes.plugin';
 import { equipmentChangeActionHandler } from '@engine/world/action/equipment-change.action';
 import { itemIds } from '@engine/world/config/item-ids';
 
@@ -21,11 +21,11 @@ export const unequip: equipmentChangeActionHandler = (details) => {
 export default [{
     type: 'equip_action',
     equipType: 'EQUIP',
-    action: equip,
+    handler: equip,
     itemIds: skillcapeIds
 }, {
     type: 'equip_action',
     equipType: 'UNEQUIP',
-    action: unequip,
+    handler: unequip,
     itemIds: skillcapeIds
 }];

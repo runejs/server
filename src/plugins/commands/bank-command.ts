@@ -8,5 +8,5 @@ const action: commandActionHandler = (details) => {
 export default {
     type: 'player_command',
     commands: [ 'bank' ],
-    action
+    handler: action
 };

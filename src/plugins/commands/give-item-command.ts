@@ -79,5 +79,5 @@ export default {
             defaultValue: 1
         }
     ],
-    action
+    handler: action
 };

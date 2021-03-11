@@ -89,6 +89,6 @@ export const openSubGuideAction: widgetInteractionActionHandler = (details) => {
 };
 
 export default [
-    { type: 'button', widgetId: widgets.skillsTab, buttonIds, action: openGuideAction },
-    { type: 'widget_action', widgetIds: widgets.skillGuide, childIds: sidebarTextIds, optionId: 0, action: openSubGuideAction }
+    { type: 'button', widgetId: widgets.skillsTab, buttonIds, handler: openGuideAction },
+    { type: 'widget_action', widgetIds: widgets.skillGuide, childIds: sidebarTextIds, optionId: 0, handler: openSubGuideAction }
 ];

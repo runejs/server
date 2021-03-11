@@ -30,13 +30,13 @@ const trackedNpcsAction: commandActionHandler = (details) => {
 export default [{
     type: 'player_command',
     commands: 'quadtree',
-    action: quadtreeAction
+    handler: quadtreeAction
 }, {
     type: 'player_command',
     commands: 'trackedplayers',
-    action: trackedPlayersAction
+    handler: trackedPlayersAction
 }, {
     type: 'player_command',
     commands: 'trackednpcs',
-    action: trackedNpcsAction
+    handler: trackedNpcsAction
 }];

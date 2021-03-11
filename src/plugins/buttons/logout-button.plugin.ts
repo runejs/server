@@ -2,7 +2,8 @@ import { buttonActionHandler } from '@engine/world/action/button.action';
 import { world } from '@engine/game-server';
 import { widgets } from '@engine/config';
 
-export const action: buttonActionHandler = (details) => {
+
+export const handler: buttonActionHandler = (details) => {
     const { player } = details;
     const playerName = player.username.toLowerCase();
     player.logout();
@@ -14,4 +15,10 @@ export const action: buttonActionHandler = (details) => {
     }
 };
 
-export default { type: 'button', widgetId: widgets.logoutTab, buttonIds: 6, action };
+
+export default {
+    pluginId: 'rs:logout_button',
+    hooks: [
+        { type: 'button', widgetId: widgets.logoutTab, buttonIds: 6, handler }
+    ]
+};

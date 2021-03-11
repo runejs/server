@@ -26,12 +26,12 @@ export default [{
     type: 'item_action',
     widgets: widgets.shop,
     options: 'value',
-    action: shopSellValueAction,
+    handler: shopSellValueAction,
     cancelOtherActions: false
 }, {
     type: 'item_action',
     widgets: widgets.shopPlayerInventory,
     options: 'value',
-    action: shopPurchaseValueAction,
+    handler: shopPurchaseValueAction,
     cancelOtherActions: false
 }];

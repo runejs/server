@@ -6,7 +6,7 @@ import { logger } from '@runejs/core';
 import { Position } from '@engine/world/position';
 import { WorldInstance } from '@engine/world/instances';
 import { findNpc, widgets } from '@engine/config';
-import { updateCombatStyleWidget } from '@plugins/combat/combat-styles';
+import { updateCombatStyleWidget } from '@plugins/combat/combat-styles.plugin';
 import { Subject } from 'rxjs';
 import { dialogue } from '@engine/world/actor/dialogue';
 import { take } from 'rxjs/operators';
@@ -225,18 +225,18 @@ export default [
     }),
     {
         type: 'player_init',
-        action: tutorialInitAction
+        handler: tutorialInitAction
     },
     {
         type: 'npc_action',
-        action: questDialogueActionFactory('tyn:goblin_diplomacy', runescapeGuideDialogueHandler),
+        handler: questDialogueActionFactory('tyn:goblin_diplomacy', runescapeGuideDialogueHandler),
         npcs: 'rs:runescape_guide',
         options: 'talk-to',
         walkTo: true
     },
     {
         type: 'npc_action',
-        action: questDialogueActionFactory('tyn:goblin_diplomacy', harlanDialogueHandler),
+        handler: questDialogueActionFactory('tyn:goblin_diplomacy', harlanDialogueHandler),
         npcs: 'rs:melee_combat_tutor',
         options: 'talk-to',
         walkTo: true
@@ -244,12 +244,12 @@ export default [
     {
         type: 'equip_action',
         equipType: 'EQUIP',
-        action: trainingSwordEquipAction,
+        handler: trainingSwordEquipAction,
         itemIds: [ 9703, 9704 ]
     },
     {
         type: 'button',
         widgetId: widgets.characterDesign,
-        action: createCharacterAction
+        handler: createCharacterAction
     }
 ];

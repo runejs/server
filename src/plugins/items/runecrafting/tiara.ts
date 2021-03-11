@@ -12,11 +12,11 @@ export const unequip: equipmentChangeActionHandler = (details) => {
 export default [{
     type: 'equip_action',
     equipType: 'EQUIP',
-    action: equip,
+    handler: equip,
     itemIds: 5527
 }, {
     type: 'equip_action',
     equipType: 'UNEQUIP',
-    action: unequip,
+    handler: unequip,
     itemIds: 5527
 }];

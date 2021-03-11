@@ -24,7 +24,7 @@ export default [{
             type: 'number'
         }
     ],
-    action: songAction
+    handler: songAction
 }, {
     type: 'player_command',
     commands: [ 'sound', 'so' ],
@@ -39,7 +39,7 @@ export default [{
             defaultValue: 10
         }
     ],
-    action: soundAction
+    handler: soundAction
 }, {
     type: 'player_command',
     commands: 'quicksong',
@@ -53,5 +53,5 @@ export default [{
             type: 'number'
         }
     ],
-    action: quickSongAction
+    handler: quickSongAction
 }];

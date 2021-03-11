@@ -29,13 +29,13 @@ export default [
         objectIds: objectIds.ladders.taverlyDungeonOverworld,
         options: ['climb-down'],
         walkTo: true,
-        action: enterDungeon
+        handler: enterDungeon
     },
     {
         type: 'object_action',
         objectIds: objectIds.ladders.taverlyDungeonUnderground,
         options: ['climb-up'],
         walkTo: true,
-        action: exitDungeon
+        handler: exitDungeon
     }
 ];

@@ -32,5 +32,5 @@ export default [{
     handler: regionChangedHandler
 }, {
     type: 'player_init',
-    action: playerInitHandler
+    handler: playerInitHandler
 }];

@@ -20,5 +20,5 @@ export default {
     type: 'npc_action',
     options: ['talk-to'],
     walkTo: true,
-    action: talkTo
+    handler: talkTo
 };

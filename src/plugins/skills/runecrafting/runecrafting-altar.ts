@@ -66,11 +66,11 @@ export default [
         itemIds: getEntityIds(talismans, 'id'),
         objectIds: getEntityIds(altars, 'entranceId'),
         walkTo: true,
-        action: enterAltar
+        handler: enterAltar
     }, {
         type: 'object_action',
         objectIds: getEntityIds(altars, 'portalId'),
         walkTo: true,
-        action: exitAltar
+        handler: exitAltar
     }
 ];

@@ -178,12 +178,12 @@ export default [
         objectIds: objectIds.spinningWheel,
         options: ['spin'],
         walkTo: true,
-        action: openSpinningInterface
+        handler: openSpinningInterface
     },
     {
         type: 'button',
         widgetId: widgets.whatWouldYouLikeToSpin,
         buttonIds: Array.from(widgetButtonIds.keys()),
-        action: buttonClicked
+        handler: buttonClicked
     }
 ];

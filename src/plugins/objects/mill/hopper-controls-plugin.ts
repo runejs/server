@@ -32,5 +32,5 @@ export default {
     objectIds: [2718],
     options: ['operate'],
     walkTo: true,
-    action
+    handler: action
 };

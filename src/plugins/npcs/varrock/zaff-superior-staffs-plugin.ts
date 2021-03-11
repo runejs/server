@@ -41,11 +41,11 @@ export default [{
     npcs: 'rs:varrock_zaff',
     options: 'trade',
     walkTo: true,
-    action: tradeAction
+    handler: tradeAction
 }, {
     type: 'npc_action',
     npcs: 'rs:varrock_zaff',
     options: 'talk-to',
     walkTo: true,
-    action: talkToAction
+    handler: talkToAction
 }];

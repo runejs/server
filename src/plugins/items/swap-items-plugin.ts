@@ -33,5 +33,5 @@ export const action: itemSwapActionHandler = (details) => {
 export default {
     type: 'swap_items',
     widgetIds: swappableWidgets.map(widgetDetails => widgetDetails[0]),
-    action
+    handler: action
 };

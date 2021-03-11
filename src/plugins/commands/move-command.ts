@@ -29,5 +29,5 @@ export default {
             defaultValue: 0
         }
     ],
-    action
+    handler: action
 };

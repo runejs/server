@@ -35,5 +35,5 @@ const action: commandActionHandler = (details) => {
 };
 
 export default {
-    type: 'player_command', commands: 'd', action
+    type: 'player_command', commands: 'd', handler: action
 };

@@ -112,6 +112,6 @@ export default {
     type: 'item_action',
     widgets: widgets.shop,
     options: [ 'buy-1', 'buy-5', 'buy-10' ],
-    action,
+    handler: action,
     cancelOtherActions: false
 };

@@ -27,5 +27,5 @@ export default {
     objectIds: [2714],
     itemIds: [itemIds.grain],
     walkTo: true,
-    action
+    handler: action
 };

@@ -10,5 +10,5 @@ export default {
     npcs: 'rs:lumbridge_bob',
     options: 'trade',
     walkTo: true,
-    action
+    handler: action
 };

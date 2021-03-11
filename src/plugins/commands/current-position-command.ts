@@ -8,5 +8,5 @@ const action: commandActionHandler = (details) => {
 export default {
     type: 'player_command',
     commands: [ 'pos', 'loc', 'position', 'location', 'coords', 'coordinates', 'mypos', 'myloc' ],
-    action
+    handler: action
 };

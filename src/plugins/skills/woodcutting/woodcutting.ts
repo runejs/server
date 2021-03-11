@@ -20,5 +20,5 @@ export default {
     options: ['chop down', 'chop'],
     objectIds: getTreeIds(),
     walkTo: true,
-    action
+    handler: action
 };

@@ -26,6 +26,6 @@ const action: commandActionHandler = async (details) => {
 export default {
     type: 'player_command',
     commands: 'itemselection',
-    action,
+    handler: action,
     cancelOtherActions: false
 };

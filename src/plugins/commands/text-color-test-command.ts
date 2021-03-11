@@ -6,5 +6,5 @@ const action: commandActionHandler = (details) => {
 };
 
 export default {
-    type: 'player_command', commands: 'textcolortest', action
+    type: 'player_command', commands: 'textcolortest', handler: action
 };

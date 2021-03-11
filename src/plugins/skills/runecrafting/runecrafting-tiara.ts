@@ -25,11 +25,11 @@ export default [
         type: 'equip_action',
         equipType: 'EQUIP',
         itemIds: getEntityIds(tiaras, 'id'),
-        action: equipTiara
+        handler: equipTiara
     }, {
         type: 'equip_action',
         equipType: 'UNEQUIP',
         itemIds: getEntityIds(tiaras, 'id'),
-        action: unequipTiara
+        handler: unequipTiara
     }
 ];

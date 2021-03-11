@@ -17,6 +17,6 @@ export default {
     type: 'item_action',
     widgets: widgets.inventory,
     options: 'equip',
-    action,
+    handler: action,
     cancelOtherActions: false
 };

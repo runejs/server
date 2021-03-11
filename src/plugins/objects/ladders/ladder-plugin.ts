@@ -21,10 +21,10 @@ export const action: objectInteractionActionHandler = (details) => {
                 ]))
             .then(d => {
                 d.close();
-                switch (d.action) {
+                switch (d.handler) {
                     case 1:
                     case 2:
-                        action({ ...details, option: `climb-${(d.action === 1 ? 'up' : 'down')}` });
+                        action({ ...details, option: `climb-${(d.handler === 1 ? 'up' : 'down')}` });
                         return;
                 }
             });
@@ -51,5 +51,5 @@ export default {
     objectIds: [1738, 1739, 1740, 1746, 1747, 1748, 12964, 12965, 12966],
     options: ['climb', 'climb-up', 'climb-down'],
     walkTo: true,
-    action
+    handler: action
 };

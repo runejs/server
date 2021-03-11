@@ -18,4 +18,4 @@ export const action: widgetInteractionActionHandler = (details) => {
     player.interfaceState.closeChatOverlayWidget();
 };
 
-export default { type: 'widget_action', widgetIds, action, cancelActions: false };
+export default { type: 'widget_action', widgetIds, handler: action, cancelActions: false };

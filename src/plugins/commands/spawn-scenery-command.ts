@@ -90,13 +90,13 @@ export default [{
             defaultValue: 10
         }
     ],
-    action: spawnSceneryAction
+    handler: spawnSceneryAction
 }, {
     type: 'player_command',
     commands: [ 'undoscene', 'undosc' ],
-    action: undoSceneryAction
+    handler: undoSceneryAction
 }, {
     type: 'player_command',
     commands: [ 'dumpscene', 'dumpsc' ],
-    action: dumpSceneryAction
+    handler: dumpSceneryAction
 }];

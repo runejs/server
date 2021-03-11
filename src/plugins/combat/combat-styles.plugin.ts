@@ -1,11 +1,12 @@
 import { equipmentChangeActionHandler, EquipmentChangeAction } from '@engine/world/action/equipment-change.action';
 import { ItemDetails, WeaponStyle, weaponWidgetIds } from '@engine/config/item-config';
 import { widgetScripts } from '@engine/world/config/widget';
-import { Player, playerInitAction, SidebarTab } from '@engine/world/actor/player/player';
+import { Player, SidebarTab } from '@engine/world/actor/player/player';
 import { findItem, widgets } from '@engine/config';
 import { buttonActionHandler } from '@engine/world/action/button.action';
 import { combatStyles } from '@engine/world/actor/combat';
 import { serverConfig } from '@engine/game-server';
+import { playerInitActionHandler } from '@engine/world/action/player-init.action';
 
 
 export function updateCombatStyle(player: Player, weaponStyle: WeaponStyle, styleIndex: number): void {
@@ -68,7 +69,7 @@ const equip: equipmentChangeActionHandler = ({ player, itemDetails, equipmentSlo
     }
 };
 
-const initAction: playerInitAction = ({ player }) => {
+const initAction: playerInitActionHandler = ({ player }) => {
     if(!serverConfig.tutorialEnabled || player.savedMetadata.tutorialComplete) {
         updateCombatStyleWidget(player);
     }
@@ -91,23 +92,26 @@ const combatStyleSelection: buttonActionHandler = ({ player, buttonId }) => {
     }
 };
 
-export default [{
-    type: 'equip_action',
-    equipType: 'EQUIP',
-    action: equip
-}, {
-    type: 'equip_action',
-    equipType: 'UNEQUIP',
-    action: (details: EquipmentChangeAction): void => {
-        if(details.equipmentSlot === 'main_hand') {
-            showUnarmed(details.player);
+export default {
+    pluginId: 'rs:combat_styles',
+    hooks: [{
+        type: 'equip_action',
+        equipType: 'EQUIP',
+        handler: equip
+    }, {
+        type: 'equip_action',
+        equipType: 'UNEQUIP',
+        handler: (details: EquipmentChangeAction): void => {
+            if(details.equipmentSlot === 'main_hand') {
+                showUnarmed(details.player);
+            }
         }
-    }
-}, {
-    type: 'player_init',
-    action: initAction
-}, {
-    type: 'button',
-    widgetIds: Object.values(weaponWidgetIds),
-    action: combatStyleSelection
-}];
+    }, {
+        type: 'player_init',
+        handler: initAction
+    }, {
+        type: 'button',
+        widgetIds: Object.values(weaponWidgetIds),
+        handler: combatStyleSelection
+    }]
+};

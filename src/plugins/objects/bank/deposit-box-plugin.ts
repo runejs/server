@@ -92,10 +92,10 @@ export default [{
     objectIds: objectIds.depositBox,
     options: ['deposit'],
     walkTo: true,
-    action: openDepositBoxInterface
+    handler: openDepositBoxInterface
 }, {
     type: 'item_action',
     widgets: widgets.bank.depositBoxWidget,
     options: ['deposit-1', 'deposit-5', 'deposit-10', 'deposit-all'],
-    action: depositItem,
+    handler: depositItem,
 }];

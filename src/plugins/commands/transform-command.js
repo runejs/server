@@ -6,5 +6,5 @@ module.exports = {
         type: 'either',
         defaultValue: null
     }],
-    action: details => details.player.transformInto(details && details.args ? details.args['npcKey'] : null)
+    handler: details => details.player.transformInto(details && details.args ? details.args['npcKey'] : null)
 };

@@ -42,4 +42,4 @@ export const action: objectInteractionActionHandler = (details) => {
 };
 
 export default { type: 'object_action', objectIds: [313, 5583, 5584, 5585, 1161, 3366,
-    312, 2646], options: ['pick'], walkTo: true, action };
+    312, 2646], options: ['pick'], walkTo: true, handler: action };

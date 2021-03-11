@@ -8,4 +8,4 @@ export const action: widgetInteractionActionHandler = (details) => {
     player.interfaceState.closeWidget(widgetId, childId);
 };
 
-export default { type: 'widget_action', widgetIds: [ 303, 304, 305, 306, 307, 309 ], action, cancelActions: false };
+export default { type: 'widget_action', widgetIds: [ 303, 304, 305, 306, 307, 309 ], handler: action, cancelActions: false };

@@ -47,6 +47,6 @@ export const action: spawnedItemInteractionHandler = ({ player, worldItem, itemD
 export default {
     type: 'world_item_action',
     options: 'pick-up',
-    action,
+    handler: action,
     walkTo: true
 };

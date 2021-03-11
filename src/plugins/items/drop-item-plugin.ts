@@ -30,6 +30,6 @@ export default {
     type: 'item_action',
     widgets: widgets.inventory,
     options: 'drop',
-    action,
+    handler: action,
     cancelOtherActions: false
 };

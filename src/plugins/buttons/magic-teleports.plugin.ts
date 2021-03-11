@@ -22,7 +22,7 @@ const buttonIds: number[] = [
     591, // Home Teleport
 ];
 
-function HomeTeleport(player: Player): void {
+function homeTeleport(player: Player): void {
     let elapsedTicks = 0;
 
     const loop = loopingEvent({ player });
@@ -60,14 +60,19 @@ function HomeTeleport(player: Player): void {
     });
 }
 
-export const action: buttonActionHandler = (details) => {
+export const handler: buttonActionHandler = (details) => {
     const { player, buttonId } = details;
 
     switch (buttonId) {
         case Teleports.Home:
-            HomeTeleport(player);
+            homeTeleport(player);
             break;
     }
 };
 
-export default { type: 'button', widgetId: 192, buttonIds: buttonIds, action };
+export default {
+    pluginId: 'rs:magic_teleports',
+    hooks: [
+        { type: 'button', widgetId: 192, buttonIds: buttonIds, handler }
+    ]
+};

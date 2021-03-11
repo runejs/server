@@ -24,4 +24,4 @@ export const action: playerInitAction = (details) => {
     player.outgoingPackets.updateSocialSettings();
 };
 
-export default { type: 'player_init', action };
+export default { type: 'player_init', handler: action };

@@ -44,13 +44,13 @@ export default [
     {
         type: 'npc_init',
         npcs: 'rs:sheep',
-        action: initAction
+        handler: initAction
     },
     {
         type: 'item_on_npc',
         npcs: 'rs:sheep',
         itemIds: [ itemIds.shears, itemIds.recruitmentDrive.shears ],
         walkTo: true,
-        action: shearAction
+        handler: shearAction
     }
 ];

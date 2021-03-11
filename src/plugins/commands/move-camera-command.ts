@@ -43,7 +43,7 @@ const lookTestAction: commandActionHandler = ({ player }) => {
 export default [{
     type: 'player_command',
     commands: [ 'looktest', 'lt' ],
-    action: lookTestAction
+    handler: lookTestAction
 },{
     type: 'player_command',
     commands: [ 'cameralook' ],
@@ -83,7 +83,7 @@ export default [{
             defaultValue: 100
         }
     ],
-    action: lookCameraAction
+    handler: lookCameraAction
 }, {
     type: 'player_command',
     commands: [ 'mcam', 'movecamera', 'move_camera', 'setcam', 'setcamera', 'set_camera' ],
@@ -111,7 +111,7 @@ export default [{
             defaultValue: 100
         }
     ],
-    action: moveCameraAction
+    handler: moveCameraAction
 }, {
     type: 'player_command',
     commands: [ 'tcam', 'turncamera', 'turn_camera' ],
@@ -139,9 +139,9 @@ export default [{
             defaultValue: 100
         }
     ],
-    action: turnCameraAction
+    handler: turnCameraAction
 }, {
     type: 'player_command',
     commands: [ 'region' ],
-    action: getRegionAction
+    handler: getRegionAction
 }];

@@ -22,5 +22,5 @@ export default {
             type: 'number'
         }
     ],
-    action
+    handler: action
 };

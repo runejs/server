@@ -35,5 +35,5 @@ export default [{
             type: 'number'
         }
     ],
-    action: setLevelAction
+    handler: setLevelAction
 }];

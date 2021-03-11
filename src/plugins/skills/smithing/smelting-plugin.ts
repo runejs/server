@@ -142,12 +142,12 @@ export default [
         objectIds: [objectIds.furnace, 11666],
         options: ['smelt'],
         walkTo: true,
-        action: openSmeltingInterface
+        handler: openSmeltingInterface
     },
     {
         type: 'button',
         widgetId: widgets.furnace.widgetId,
         buttonIds: Array.from(widgetButtonIds.keys()),
-        action: buttonClicked
+        handler: buttonClicked
     }
 ];

@@ -52,5 +52,5 @@ export const action: itemSwapActionHandler = (details) => {
 export default {
     type: 'move_item',
     widgetIds: movableWidgets.map(widgetDetails => widgetDetails[0]),
-    action
+    handler: action
 };

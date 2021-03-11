@@ -25,6 +25,6 @@ export default {
     widgets: widgets.inventory,
     options: 'empty',
     itemIds: [itemIds.potOfFlour],
-    action,
+    handler: action,
     cancelOtherActions: false
 };

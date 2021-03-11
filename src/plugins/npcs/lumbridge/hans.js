@@ -55,5 +55,5 @@ module.exports = {
     npcs: 'rs:hans',
     options: 'talk-to',
     walkTo: true,
-    action
+    handler: action
 };

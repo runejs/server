@@ -21,5 +21,5 @@ export default {
     options: ['mine'],
     objectIds: getAllOreIds(),
     walkTo: true,
-    action
+    handler: action
 };

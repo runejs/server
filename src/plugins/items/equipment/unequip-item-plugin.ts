@@ -29,6 +29,6 @@ export default {
         widgets.equipmentStats
     ],
     options: 'remove',
-    action,
+    handler: action,
     cancelOtherActions: false
 };

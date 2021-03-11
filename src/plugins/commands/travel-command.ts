@@ -25,5 +25,5 @@ export default {
             type: 'string'
         }
     ],
-    action
+    handler: action
 };

@@ -26,5 +26,5 @@ export default {
     options: ['prospect'],
     objectIds: getAllOreIds(),
     walkTo: true,
-    action
+    handler: action
 };

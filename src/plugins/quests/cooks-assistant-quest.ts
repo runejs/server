@@ -276,7 +276,7 @@ export default [
         npcs: 'rs:lumbridge_castle_cook',
         options: 'talk-to',
         walkTo: true,
-        action: startQuestAction
+        handler: startQuestAction
     },
     {
         type: 'npc_action',
@@ -287,6 +287,6 @@ export default [
         npcs: 'rs:lumbridge_castle_cook',
         options: 'talk-to',
         walkTo: true,
-        action: handInIngredientsAction
+        handler: handInIngredientsAction
     }
 ];

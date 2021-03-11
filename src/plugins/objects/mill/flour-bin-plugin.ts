@@ -38,13 +38,13 @@ export default [
         objectIds: [1782],
         itemIds: [itemIds.pot],
         walkTo: true,
-        action: actionItem
+        handler: actionItem
     },
     {
         type: 'object_action',
         objectIds: [1782],
         options: ['empty'],
         walkTo: true,
-        action: actionInteract
+        handler: actionInteract
     }
 ];

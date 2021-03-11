@@ -73,4 +73,4 @@ const action: commandActionHandler = async (details) => {
 export default {
     type: 'player_command', commands: [
         'plugins', 'reload', 'content', 'hotload', 'refresh', 'restart', 'r'
-    ], action };
+    ], handler: action };

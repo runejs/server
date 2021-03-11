@@ -47,13 +47,13 @@ export default
         objectIds: objectIds.milkableCow,
         options: 'milk',
         walkTo: true,
-        action: actionInteract
+        handler: actionInteract
     },
     {
         type: 'item_on_object',
         objectIds: objectIds.milkableCow,
         itemIds: itemIds.bucket,
         walkTo: true,
-        action: actionItem
+        handler: actionItem
     }
 ];

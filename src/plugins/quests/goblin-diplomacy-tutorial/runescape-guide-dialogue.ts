@@ -1,6 +1,6 @@
 import { defaultPlayerTabWidgets, Player } from '@engine/world/actor/player/player';
 import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
-import { updateCombatStyleWidget } from '@plugins/combat/combat-styles';
+import { updateCombatStyleWidget } from '@plugins/combat/combat-styles.plugin';
 import { QuestDialogueHandler } from '@engine/config/quest-config';
 
 

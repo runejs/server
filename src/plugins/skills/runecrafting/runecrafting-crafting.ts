@@ -127,12 +127,12 @@ export default [
         type: 'object_action',
         objectIds: getEntityIds(altars, 'craftingId'),
         walkTo: true,
-        action: craftRune
+        handler: craftRune
     },
     {
         type: 'item_on_object',
         objectIds: getEntityIds(altars, 'craftingId'),
         walkTo: true,
-        action: craftCombinationRune
+        handler: craftCombinationRune
     }
 ];

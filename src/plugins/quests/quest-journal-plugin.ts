@@ -76,4 +76,4 @@ export const action: buttonActionHandler = async ({ player, buttonId }) => {
     });
 };
 
-export default { type: 'button', widgetId: widgets.questTab, action };
+export default { type: 'button', widgetId: widgets.questTab, handler: action };

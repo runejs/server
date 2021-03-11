@@ -71,5 +71,5 @@ export default {
     npcs: 'rs:master_smithing_tutor',
     options: ['talk-to'],
     walkTo: true,
-    action: talkTo
+    handler: talkTo
 };

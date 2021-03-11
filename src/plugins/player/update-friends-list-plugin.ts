@@ -8,4 +8,4 @@ export const action: playerInitAction = (details) => {
     player.outgoingPackets.sendFriendServerStatus(2);
 };
 
-export default { type: 'player_init', action };
+export default { type: 'player_init', handler: action };

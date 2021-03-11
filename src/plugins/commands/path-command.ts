@@ -29,5 +29,5 @@ export default {
             defaultValue: 64
         }
     ],
-    action
+    handler: action
 };

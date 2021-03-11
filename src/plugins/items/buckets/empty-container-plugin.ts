@@ -35,6 +35,6 @@ export default {
     widgets: widgets.inventory,
     options: 'empty',
     itemIds: [itemIds.bucketOfMilk, itemIds.bucketOfWater, itemIds.jugOfWater],
-    action,
+    handler: action,
     cancelOtherActions: false
 };

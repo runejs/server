@@ -82,11 +82,11 @@ export default [{
     npcs: 'rs:gillie_groats',
     options: 'talk-to',
     walkTo: true,
-    action: gillieDialogue
+    handler: gillieDialogue
 }, {
     type: 'npc_action',
     npcs: 'rs:millie_miller',
     options: 'talk-to',
     walkTo: true,
-    action: millieDialogue
+    handler: millieDialogue
 }];

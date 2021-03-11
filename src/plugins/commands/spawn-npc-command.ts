@@ -40,5 +40,5 @@ export default {
             type: 'either'
         }
     ],
-    action
+    handler: action
 };

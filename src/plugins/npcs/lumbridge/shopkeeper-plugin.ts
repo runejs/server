@@ -10,5 +10,5 @@ export default {
     npcs: 'rs:lumbridge_shop_keeper',
     options: 'trade',
     walkTo: true,
-    action
+    handler: action
 };

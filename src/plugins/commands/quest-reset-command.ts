@@ -9,5 +9,5 @@ const action: commandActionHandler = (details) => {
 };
 
 export default {
-    type: 'player_command', commands: 'resetquests', action
+    type: 'player_command', commands: 'resetquests', handler: action
 };

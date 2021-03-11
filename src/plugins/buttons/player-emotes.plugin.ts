@@ -148,7 +148,8 @@ export function unlockEmotes(player: Player): void {
 
 const buttonIds = Object.keys(emotes).map(v => parseInt(v));
 
-export const action: buttonActionHandler = (details) => {
+
+export const handler: buttonActionHandler = (details) => {
     const { player, buttonId } = details;
 
     const emote = emotes[buttonId];
@@ -181,4 +182,10 @@ export const action: buttonActionHandler = (details) => {
     }
 };
 
-export default { type: 'button', widgetId: widgets.emotesTab, buttonIds, action };
+
+export default {
+    pluginId: 'rs:player_emotes',
+    hooks: [
+        { type: 'button', widgetId: widgets.emotesTab, buttonIds, handler }
+    ]
+};
