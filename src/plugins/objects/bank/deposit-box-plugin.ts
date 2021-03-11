@@ -1,11 +1,11 @@
 import { objectIds } from '@engine/world/config/object-ids';
-import { objectAction } from '@engine/world/action/object-action';
+import { objectActionHandler } from '@engine/world/action/object.action';
 import { ItemContainer } from '@engine/world/items/item-container';
 import { itemActionHandler } from '@engine/world/action/item.action';
 import { fromNote, Item } from '@engine/world/items/item';
 import { widgets } from '@engine/config';
 
-export const openDepositBoxInterface: objectAction = ({ player }) => {
+export const openDepositBoxInterface: objectActionHandler = ({ player }) => {
 
     player.interfaceState.openWidget(widgets.bank.depositBoxWidget.widgetId, {
         slot: 'screen',

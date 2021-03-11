@@ -1,4 +1,4 @@
-import { commandAction } from '@engine/world/action/player-command-action';
+import { commandAction } from '@engine/world/action/player-command.action';
 import { openBankInterface } from '@plugins/objects/bank/bank-plugin';
 
 const action: commandAction = (details) => {

@@ -1,17 +1,15 @@
 import { Player } from '@engine/world/actor/player/player';
 import { Item } from '@engine/world/items/item';
-import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
+import { ActionHook, ActionPipe, getActionHooks } from '@engine/world/action/hooks';
 import { questHookFilter } from '@engine/world/action/hook-filters';
 
 
 /**
  * Defines an item-on-item action hook.
  */
-export interface ItemOnItemActionHook extends ActionHook {
+export interface ItemOnItemActionHook extends ActionHook<itemOnItemActionHandler> {
     // The item pairs being used. Each item can be used on the other, so item order does not matter.
     items: { item1: number, item2: number }[];
-    // The action function to be performed.
-    action: itemOnItemActionHandler;
 }
 
 
@@ -80,7 +78,7 @@ const itemOnItemActionPipe = (player: Player, usedItem: Item, usedSlot: number, 
 
     // Immediately run the plugins
     for(const plugin of interactionActions) {
-        plugin.action({ player, usedItem, usedWithItem, usedSlot, usedWithSlot,
+        plugin.handler({ player, usedItem, usedWithItem, usedSlot, usedWithSlot,
             usedWidgetId: usedWidgetId, usedWithWidgetId: usedWithWidgetId });
     }
 };
@@ -92,4 +90,4 @@ const itemOnItemActionPipe = (player: Player, usedItem: Item, usedSlot: number, 
 export default [
     'item_on_item_action',
     itemOnItemActionPipe
-];
+] as ActionPipe;

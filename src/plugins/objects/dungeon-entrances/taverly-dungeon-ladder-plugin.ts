@@ -1,9 +1,9 @@
-import { objectAction } from '@engine/world/action/object-action';
+import { objectActionHandler } from '@engine/world/action/object.action';
 import { objectIds } from '@engine/world/config/object-ids';
 import { World } from '@engine/world';
 import { animationIds } from '@engine/world/config/animation-ids';
 
-export const enterDungeon: objectAction = (details) => {
+export const enterDungeon: objectActionHandler = (details) => {
     const loc = details.player.position.clone();
     loc.y += 6400;
     details.player.playAnimation(animationIds.climbLadder);
@@ -13,7 +13,7 @@ export const enterDungeon: objectAction = (details) => {
 };
 
 
-export const exitDungeon: objectAction = (details) => {
+export const exitDungeon: objectActionHandler = (details) => {
     const loc = details.player.position.clone();
     loc.y -= 6400;
     details.player.playAnimation(animationIds.climbLadder);

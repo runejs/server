@@ -1,5 +1,5 @@
 import { Player } from '@engine/world/actor/player/player';
-import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
+import { ActionHook, ActionPipe, getActionHooks } from '@engine/world/action/hooks';
 import { findItem } from '@engine/config';
 import { EquipmentSlot, ItemDetails } from '@engine/config/item-config';
 import { basicNumberFilter, basicStringFilter, questHookFilter } from '@engine/world/action/hook-filters';
@@ -8,13 +8,11 @@ import { basicNumberFilter, basicStringFilter, questHookFilter } from '@engine/w
 /**
  * Defines an equipment change action hook.
  */
-export interface EquipActionHook extends ActionHook {
+export interface EquipActionHook extends ActionHook<equipActionHandler> {
     // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
     // A single option name or a list of option names that this action applies to.
     equipType?: EquipType | EquipType[];
-    // The action function to be performed.
-    handler: equipActionHandler;
 }
 
 
@@ -99,4 +97,4 @@ const equipActionPipe = (player: Player, itemId: number, equipType: EquipType, s
 export default [
     'equip_action',
     equipActionPipe
-];
+] as ActionPipe;

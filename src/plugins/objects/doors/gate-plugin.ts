@@ -3,7 +3,7 @@ import { directionData, WNES } from '@engine/world/direction';
 import { logger } from '@runejs/core';
 import { world } from '@engine/game-server';
 import { ModifiedLocationObject } from '@engine/world/map/location-object';
-import { objectAction } from '@engine/world/action/object-action';
+import { objectActionHandler } from '@engine/world/action/object.action';
 import { soundIds } from '@engine/world/config/sound-ids';
 
 const gates = [
@@ -24,7 +24,7 @@ const gates = [
 ];
 
 // @TODO clean up this disgusting code
-const action: objectAction = (details) => {
+const action: objectActionHandler = (details) => {
     const { player, cacheOriginal } = details;
     let { object: gate, position } = details;
 

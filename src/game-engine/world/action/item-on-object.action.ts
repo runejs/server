@@ -1,21 +1,36 @@
 import { Player } from '@engine/world/actor/player/player';
 import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@engine/world/position';
-import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
+import { ActionHook, ActionPipe, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
 import { Item } from '@engine/world/items/item';
 import { playerWalkTo } from '@engine/game-server';
 import { advancedNumberFilter, questHookFilter } from '@engine/world/action/hook-filters';
 
-/**
- * The definition for an item on object action function.
- */
-export type itemOnObjectAction = (itemOnObjectActionData: ItemOnObjectActionData) => void;
 
 /**
- * Details about an object being interacted with. and the item being used.
+ * Defines an item-on-object action hook.
  */
-export interface ItemOnObjectActionData {
+export interface ItemOnObjectActionHook extends ActionHook<itemOnObjectActionHandler> {
+    // A single game object ID or a list of object IDs that this action applies to.
+    objectIds: number | number[];
+    // A single game item ID or a list of item IDs that this action applies to.
+    itemIds: number | number[];
+    // Whether or not the player needs to walk to this object before performing the action.
+    walkTo: boolean;
+}
+
+
+/**
+ * The item-on-object action hook handler function to be called when the hook's conditions are met.
+ */
+export type itemOnObjectActionHandler = (itemOnObjectAction: ItemOnObjectAction) => void;
+
+
+/**
+ * Details about an item-on-object action being performed.
+ */
+export interface ItemOnObjectAction {
     // The player performing the action.
     player: Player;
     // The object the action is being performed on.
@@ -34,24 +49,19 @@ export interface ItemOnObjectActionData {
     cacheOriginal: boolean;
 }
 
-/**
- * Defines an item on object interaction plugin.
- * A list of object ids that apply to the plugin, the options for the object, the items that can be performed on,
- * and whether or not the player must first walk to the object.
- */
-export interface ItemOnObjectAction extends ActionHook {
-    // A single game object ID or a list of object IDs that this action applies to.
-    objectIds: number | number[];
-    // A single game item ID or a list of item IDs that this action applies to.
-    itemIds: number | number[];
-    // Whether or not the player needs to walk to this object before performing the action.
-    walkTo: boolean;
-    // The action function to be performed.
-    action: itemOnObjectAction;
-}
 
-// @TODO priority and cancelling other (lower priority) actions
-const itemOnObjectActionHandler = (player: Player, locationObject: LocationObject,
+/**
+ * The pipe that the game engine hands item-on-object actions off to.
+ * @param player
+ * @param locationObject
+ * @param locationObjectDefinition
+ * @param position
+ * @param item
+ * @param itemWidgetId
+ * @param itemContainerId
+ * @param cacheOriginal
+ */
+const itemOnObjectActionPipe = (player: Player, locationObject: LocationObject,
     locationObjectDefinition: LocationObjectDefinition, position: Position,
     item: Item, itemWidgetId: number, itemContainerId: number,
     cacheOriginal: boolean): void => {
@@ -60,7 +70,8 @@ const itemOnObjectActionHandler = (player: Player, locationObject: LocationObjec
     }
 
     // Find all item on object action plugins that reference this location object
-    let interactionActions = getActionHooks('item_on_object').filter(plugin => questHookFilter(player, plugin) && advancedNumberFilter(plugin.objectIds, locationObject.objectId));
+    let interactionActions = getActionHooks<ItemOnObjectActionHook>('item_on_object_action')
+        .filter(plugin => questHookFilter(player, plugin) && advancedNumberFilter(plugin.objectIds, locationObject.objectId));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
@@ -78,7 +89,7 @@ const itemOnObjectActionHandler = (player: Player, locationObject: LocationObjec
         return;
     }
 
-    player.actionsCancelled.next();
+    player.actionsCancelled.next(null);
 
     // Separate out walk-to actions from immediate actions
     const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);
@@ -91,7 +102,7 @@ const itemOnObjectActionHandler = (player: Player, locationObject: LocationObjec
                 player.face(position);
 
                 walkToPlugins.forEach(plugin =>
-                    plugin.action({
+                    plugin.handler({
                         player,
                         object: locationObject,
                         objectDefinition: locationObjectDefinition,
@@ -108,7 +119,7 @@ const itemOnObjectActionHandler = (player: Player, locationObject: LocationObjec
     // Immediately run any non-walk-to plugins
     if(immediatePlugins.length !== 0) {
         immediatePlugins.forEach(plugin =>
-            plugin.action({
+            plugin.handler({
                 player,
                 object: locationObject,
                 objectDefinition: locationObjectDefinition,
@@ -121,7 +132,11 @@ const itemOnObjectActionHandler = (player: Player, locationObject: LocationObjec
     }
 };
 
-export default {
-    action: 'item_on_object',
-    handler: itemOnObjectActionHandler
-};
+
+/**
+ * Item-on-object action pipe definition.
+ */
+export default [
+    'item_on_object_action',
+    itemOnObjectActionPipe
+] as ActionPipe;

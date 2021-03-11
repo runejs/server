@@ -1,5 +1,5 @@
 import { Player } from '@engine/world/actor/player/player';
-import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
+import { ActionHook, ActionPipe, getActionHooks } from '@engine/world/action/hooks';
 import { ItemDetails } from '@engine/config/item-config';
 import { findItem } from '@engine/config';
 import { basicNumberFilter, basicStringFilter, questHookFilter } from '@engine/world/action/hook-filters';
@@ -8,15 +8,13 @@ import { basicNumberFilter, basicStringFilter, questHookFilter } from '@engine/w
 /**
  * Defines an item action hook.
  */
-export interface ItemActionHook extends ActionHook {
+export interface ItemActionHook extends ActionHook<itemActionHandler> {
     // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
     // A single UI widget ID or a list of widget IDs that this action applies to.
     widgets?: { widgetId: number, containerId: number } | { widgetId: number, containerId: number }[];
     // A single option name or a list of option names that this action applies to.
     options?: string | string[];
-    // The action function to be performed.
-    action: itemActionHandler;
     // Whether or not this item action should cancel other running or queued actions.
     cancelOtherActions?: boolean;
 }
@@ -126,7 +124,7 @@ const itemActionPipe = (player: Player, itemId: number, slot: number, widgetId: 
     }
 
     for(const plugin of interactionActions) {
-        plugin.action({
+        plugin.handler({
             player,
             itemId,
             itemSlot: slot,
@@ -146,4 +144,4 @@ const itemActionPipe = (player: Player, itemId: number, slot: number, widgetId: 
 export default [
     'item_action',
     itemActionPipe
-];
+] as ActionPipe;

@@ -1,10 +1,10 @@
-import { npcAction } from '@engine/world/action/npc-action';
+import { npcActionHandler } from '@engine/world/action/npc.action';
 import { dialogue, Emote, execute, goto } from '@engine/world/actor/dialogue';
 import { itemIds } from '@engine/world/config/item-ids';
 import { widgets } from '@engine/config';
 
 
-const talkTo : npcAction = (details) => {
+const talkTo : npcActionHandler = (details) => {
     const { player, npc } = details;
     dialogue([player, { npc, key: 'tutor' }], [
         player => [Emote.GENERIC, `Hello.`],

@@ -1,11 +1,11 @@
-import { objectAction } from '@engine/world/action/object-action';
+import { objectActionHandler } from '@engine/world/action/object.action';
 import { cache } from '@engine/game-server';
 import { dialogueAction, DialogueEmote } from '@engine/world/actor/player/dialogue-action';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { itemIds } from '@engine/world/config/item-ids';
 import { objectIds } from '@engine/world/config/object-ids';
-import { itemOnObjectAction } from '@engine/world/action/item-on-object-action';
+import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
 import { LocationObjectDefinition } from '@runejs/cache-parser';
 import { Player } from '@engine/world/actor/player/player';
 import { findNpc } from '@engine/config';
@@ -36,9 +36,9 @@ function milkCow(details: { objectDefinition: LocationObjectDefinition, player: 
     }
 }
 
-export const actionItem: itemOnObjectAction = (details) => milkCow(details);
+export const actionItem: itemOnObjectActionHandler = (details) => milkCow(details);
 
-export const actionInteract: objectAction = (details) => milkCow(details);
+export const actionInteract: objectActionHandler = (details) => milkCow(details);
 
 export default
 [

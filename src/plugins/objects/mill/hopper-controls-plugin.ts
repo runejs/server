@@ -1,9 +1,9 @@
-import { objectAction } from '@engine/world/action/object-action';
+import { objectActionHandler } from '@engine/world/action/object.action';
 import { World } from '@engine/world';
 import { LocationObject } from '@runejs/cache-parser';
 
 
-export const action: objectAction = (details) => {
+export const action: objectActionHandler = (details) => {
     details.player.busy = true;
     details.player.playAnimation(3571);
     details.player.playSound(2400, 5);

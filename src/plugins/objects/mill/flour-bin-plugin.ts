@@ -1,7 +1,7 @@
 import { itemIds } from '@engine/world/config/item-ids';
-import { objectAction } from '@engine/world/action/object-action';
+import { objectActionHandler } from '@engine/world/action/object.action';
 import { soundIds } from '@engine/world/config/sound-ids';
-import { itemOnObjectAction } from '@engine/world/action/item-on-object-action';
+import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
 import { LocationObjectDefinition } from '@runejs/cache-parser';
 import { Player } from '@engine/world/actor/player/player';
 
@@ -24,11 +24,11 @@ function flourBin(details: { objectDefinition: LocationObjectDefinition, player:
     }
 }
 
-const actionInteract: objectAction = (details) => {
+const actionInteract: objectActionHandler = (details) => {
     flourBin(details);
 };
 
-const actionItem: itemOnObjectAction = (details) => {
+const actionItem: itemOnObjectActionHandler = (details) => {
     flourBin(details);
 };
 

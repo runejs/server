@@ -1,6 +1,6 @@
 import { Player } from '@engine/world/actor/player/player';
 import { Npc } from '@engine/world/actor/npc/npc';
-import { npcAction } from '@engine/world/action/npc-action';
+import { npcActionHandler } from '@engine/world/action/npc.action';
 import { logger } from '@runejs/core';
 import { handleTutorial } from '@plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy';
 
@@ -44,7 +44,7 @@ export class PlayerQuest {
 
 }
 
-export function questDialogueActionFactory(questId: string, npcDialogueHandler: QuestDialogueHandler): npcAction {
+export function questDialogueActionFactory(questId: string, npcDialogueHandler: QuestDialogueHandler): npcActionHandler {
     return async({ player, npc }) => {
         const quest = player.getQuest(questId);
         if(!quest) {

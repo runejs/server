@@ -1,8 +1,8 @@
-import { npcAction } from '@engine/world/action/npc-action';
+import { npcActionHandler } from '@engine/world/action/npc.action';
 import { findShop } from '@engine/config';
 
 
-const tradeAction: npcAction = ({ player }) =>
+const tradeAction: npcActionHandler = ({ player }) =>
     findShop('rs:ranaels_skirt_store')?.open(player);
 
 export default {

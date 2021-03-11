@@ -1,7 +1,7 @@
-import { npcAction } from '@engine/world/action/npc-action';
+import { npcActionHandler } from '@engine/world/action/npc.action';
 import { dialogue, Emote, goto } from '@engine/world/actor/dialogue';
 
-const millieDialogue: npcAction = async (details) =>
+const millieDialogue: npcActionHandler = async (details) =>
     dialogue([ details.player, { npc: details.npc, key: 'millie' }], [
         millie => [ Emote.GENERIC, `Hello Adventurer. Welcome to Mill Lane Mill. Can I help you?` ],
         options => [
@@ -48,7 +48,7 @@ const millieDialogue: npcAction = async (details) =>
         ]
     ]);
 
-const gillieDialogue: npcAction = async (details) =>
+const gillieDialogue: npcActionHandler = async (details) =>
     dialogue([ details.player, { npc: details.npc, key: 'gillie' }], [
         gillie => [ Emote.HAPPY, `Hello, I'm Gillie the Milkmaid. What can I do for you?` ],
         options => [

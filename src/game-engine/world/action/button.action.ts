@@ -6,15 +6,13 @@ import { advancedNumberFilter, questHookFilter } from '@engine/world/action/hook
 /**
  * Defines a button action hook.
  */
-export interface ButtonActionHook extends ActionHook {
+export interface ButtonActionHook extends ActionHook<buttonActionHandler> {
     // The ID of the UI widget that the button is on.
     widgetId?: number;
     // The IDs of the UI widgets that the buttons are on.
     widgetIds?: number[];
     // The child ID or list of child IDs of the button(s) within the UI widget.
     buttonIds?: number | number[];
-    // The function to be performed.
-    handler: buttonActionHandler;
     // Whether or not this item action should cancel other running or queued actions.
     cancelActions?: boolean;
 }

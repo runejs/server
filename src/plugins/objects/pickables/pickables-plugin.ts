@@ -1,10 +1,10 @@
-import { objectAction } from '@engine/world/action/object-action';
+import { objectActionHandler } from '@engine/world/action/object.action';
 import { cache } from '@engine/game-server';
 import { World } from '@engine/world';
 import { itemIds } from '@engine/world/config/item-ids';
 
 
-export const action: objectAction = (details) => {
+export const action: objectActionHandler = (details) => {
     details.player.busy = true;
     details.player.playAnimation(827);
     let itemId: number;

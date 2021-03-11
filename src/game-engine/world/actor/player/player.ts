@@ -29,7 +29,7 @@ import { daysSinceLastLogin } from '@engine/util/time';
 import { itemIds } from '@engine/world/config/item-ids';
 import { colors, hexToRgb, rgbTo16Bit } from '@engine/util/colors';
 import { ItemDefinition } from '@runejs/cache-parser';
-import { PlayerCommandAction } from '@engine/world/action/player-command-action';
+import { PlayerCommandAction } from '@engine/world/action/player-command.action';
 import { updateBonusStrings } from '@plugins/items/equipment/equipment-stats-plugin';
 import { ActionHook } from '@engine/world/action/hooks';
 import {
@@ -51,7 +51,7 @@ import { InterfaceState } from '@engine/world/actor/player/interface-state';
 import { dialogue } from '@engine/world/actor/dialogue';
 import { PlayerQuest, QuestKey } from '@engine/config/quest-config';
 import { Quest } from '@engine/world/actor/player/quest';
-import { regionChangedDataFactory } from '@engine/world/action/player-region-changed';
+import { regionChangedDataFactory } from '@engine/world/action/player-region-change.action';
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [

@@ -6,15 +6,30 @@ import { logger } from '@runejs/core';
 import { playerWalkTo } from '@engine/game-server';
 import { advancedNumberFilter, questHookFilter } from '@engine/world/action/hook-filters';
 
-/**
- * The definition for an object action function.
- */
-export type objectAction = (objectActionData: ObjectActionData) => void;
 
 /**
- * Details about an object being interacted with.
+ * Defines an object action hook.
  */
-export interface ObjectActionData {
+export interface ObjectActionHook extends ActionHook<objectActionHandler> {
+    // A single game object ID or a list of object IDs that this action applies to.
+    objectIds: number | number[];
+    // A single option name or a list of option names that this action applies to.
+    options: string | string[];
+    // Whether or not the player needs to walk to this object before performing the action.
+    walkTo: boolean;
+}
+
+
+/**
+ * The object action hook handler function to be called when the hook's conditions are met.
+ */
+export type objectActionHandler = (objectAction: ObjectAction) => void;
+
+
+/**
+ * Details about an npc action being performed.
+ */
+export interface ObjectAction {
     // The player performing the action.
     player: Player;
     // The object the action is being performed on.
@@ -29,31 +44,25 @@ export interface ObjectActionData {
     option: string;
 }
 
-/**
- * Defines an object interaction plugin.
- * A list of object ids that apply to the plugin, the options for the object, the action to be performed,
- * and whether or not the player must first walk to the object.
- */
-export interface ObjectAction extends ActionHook {
-    // A single game object ID or a list of object IDs that this action applies to.
-    objectIds: number | number[];
-    // A single option name or a list of option names that this action applies to.
-    options: string | string[];
-    // Whether or not the player needs to walk to this object before performing the action.
-    walkTo: boolean;
-    // The action function to be performed.
-    action: objectAction;
-}
 
-// @TODO priority and cancelling other (lower priority) actions
-const objectActionHandler = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
+/**
+ * The pipe that the game engine hands object actions off to.
+ * @param player
+ * @param locationObject
+ * @param locationObjectDefinition
+ * @param position
+ * @param option
+ * @param cacheOriginal
+ */
+const objectActionPipe = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
     position: Position, option: string, cacheOriginal: boolean): void => {
     if(player.busy || player.metadata.blockObjectInteractions) {
         return;
     }
 
     // Find all object action plugins that reference this location object
-    let interactionActions = getActionHooks('object_action').filter(plugin => questHookFilter(player, plugin) && advancedNumberFilter(plugin.objectIds, locationObject.objectId, plugin.options, option));
+    let interactionActions = getActionHooks<ObjectActionHook>('object_action')
+        .filter(plugin => questHookFilter(player, plugin) && advancedNumberFilter(plugin.objectIds, locationObject.objectId, plugin.options, option));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
@@ -66,7 +75,7 @@ const objectActionHandler = (player: Player, locationObject: LocationObject, loc
         return;
     }
 
-    player.actionsCancelled.next();
+    player.actionsCancelled.next(null);
 
     // Separate out walk-to actions from immediate actions
     const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);
@@ -79,7 +88,7 @@ const objectActionHandler = (player: Player, locationObject: LocationObject, loc
                 player.face(position);
 
                 walkToPlugins.forEach(plugin =>
-                    plugin.action({
+                    plugin.handler({
                         player,
                         object: locationObject,
                         objectDefinition: locationObjectDefinition,
@@ -94,7 +103,7 @@ const objectActionHandler = (player: Player, locationObject: LocationObject, loc
     // Immediately run any non-walk-to plugins
     if(immediatePlugins.length !== 0) {
         immediatePlugins.forEach(plugin =>
-            plugin.action({
+            plugin.handler({
                 player,
                 object: locationObject,
                 objectDefinition: locationObjectDefinition,
@@ -105,7 +114,10 @@ const objectActionHandler = (player: Player, locationObject: LocationObject, loc
     }
 };
 
-export default {
-    action: 'object_action',
-    handler: objectActionHandler
-};
+
+/**
+ * Object action pipe definition.
+ */
+export default [
+    'object_action', objectActionPipe
+];

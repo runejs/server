@@ -1,4 +1,4 @@
-import { commandAction } from '@engine/world/action/player-command-action';
+import { commandAction } from '@engine/world/action/player-command.action';
 import { loadPlugins } from '@engine/game-server';
 import { loadPackets } from '@engine/net/inbound-packets';
 import { loadConfigurations } from '@engine/config';

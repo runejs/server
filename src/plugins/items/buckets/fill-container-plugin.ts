@@ -1,4 +1,4 @@
-import { itemOnObjectAction } from '@engine/world/action/item-on-object-action';
+import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
 import { cache } from '@engine/game-server';
 import { itemIds } from '@engine/world/config/item-ids';
 import { animationIds } from '@engine/world/config/animation-ids';
@@ -8,7 +8,7 @@ import { soundIds } from '@engine/world/config/sound-ids';
 const FountainIds: number[] = [879];
 const SinkIds: number[] = [14878, 873];
 const WellIds: number[] = [878];
-export const action: itemOnObjectAction = (details) => {
+export const action: itemOnObjectActionHandler = (details) => {
     const { player, objectDefinition, item } = details;
     const itemDef = cache.itemDefinitions.get(item.itemId);
     if (item.itemId !== itemIds.bucket && WellIds.indexOf(objectDefinition.id) > -1) {

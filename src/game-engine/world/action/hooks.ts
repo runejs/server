@@ -45,13 +45,15 @@ export interface QuestRequirement {
 /**
  * Defines a generic extensible game content action hook.
  */
-export interface ActionHook {
+export interface ActionHook<T> {
     // The type of action to perform.
     type: ActionType;
     // The action's priority over other actions.
     priority?: number;
     // [optional] Quest requirements that must be completed in order to run this hook.
     questRequirement?: QuestRequirement;
+    // The action function to be performed.
+    handler: T;
 }
 
 
@@ -152,6 +154,6 @@ export async function loadActionFiles(): Promise<void> {
  * Action hooks will be sorted by those with quest requirements firstly, and the rest thereafter.
  * @param actionHooks The list of hooks to sort.
  */
-export function sortActionHooks(actionHooks: ActionHook[]): ActionHook[] {
+export function sortActionHooks<T = any>(actionHooks: ActionHook<T>[]): ActionHook<T>[] {
     return actionHooks.sort(plugin => plugin.questRequirement !== undefined ? -1 : 1);
 }

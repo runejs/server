@@ -1,4 +1,4 @@
-import { commandAction } from '@engine/world/action/player-command-action';
+import { commandAction } from '@engine/world/action/player-command.action';
 import { widgetScripts } from '@engine/world/config/widget';
 
 const action: commandAction = (details) => {

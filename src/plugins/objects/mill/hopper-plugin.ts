@@ -1,9 +1,9 @@
 import { World } from '@engine/world';
 import { itemIds } from '@engine/world/config/item-ids';
-import { itemOnObjectAction } from '@engine/world/action/item-on-object-action';
+import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
 
 
-export const action: itemOnObjectAction = (details) => {
+export const action: itemOnObjectActionHandler = (details) => {
     if ((details.player.metadata['grain'] && details.player.metadata['grain'] === 1)) {
         details.player.sendMessage(`There is already grain in the hopper.`);
         return;

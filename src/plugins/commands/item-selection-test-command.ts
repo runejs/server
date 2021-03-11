@@ -1,4 +1,4 @@
-import { commandAction } from '@engine/world/action/player-command-action';
+import { commandAction } from '@engine/world/action/player-command.action';
 import { itemSelectionDialogue } from '@engine/world/actor/dialogue';
 import { logger } from '@runejs/core';
 

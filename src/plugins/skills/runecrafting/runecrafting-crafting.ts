@@ -2,7 +2,7 @@
  * @Author NickNick
  */
 
-import { objectAction, ObjectActionData } from '@engine/world/action/object-action';
+import { objectActionHandler, ObjectAction } from '@engine/world/action/object.action';
 import { Skill } from '@engine/world/actor/skills';
 import {
     altars, combinationRunes,
@@ -10,7 +10,7 @@ import {
     getEntityIds, runeMultiplier,
     runes,
 } from '@plugins/skills/runecrafting/runecrafting-constants';
-import { itemOnObjectAction, ItemOnObjectActionData } from '@engine/world/action/item-on-object-action';
+import { itemOnObjectActionHandler, ItemOnObjectAction } from '@engine/world/action/item-on-object.action';
 import { RunecraftingCombinationRune } from '@plugins/skills/runecrafting/runecrafting-types';
 import { randomBetween } from '@engine/util/num';
 import { itemIds } from '@engine/world/config/item-ids';
@@ -18,7 +18,7 @@ import { cache } from '@engine/game-server';
 import { widgets } from '@engine/config';
 
 
-const craftRune: objectAction = (details: ObjectActionData) => {
+const craftRune: objectActionHandler = (details: ObjectAction) => {
     const { player, object } = details;
     const rune = getEntityByAttr(runes, 'altar.craftingId', object.objectId);
     const runeDetails = cache.itemDefinitions.get(rune.id);
@@ -64,7 +64,7 @@ function getCombinationRuneByAltar(itemId: number, objectId: number): Runecrafti
     return rune;
 }
 
-const craftCombinationRune: itemOnObjectAction = (details: ItemOnObjectActionData) => {
+const craftCombinationRune: itemOnObjectActionHandler = (details: ItemOnObjectAction) => {
     const { player, object, item } = details;
     const rune = getCombinationRuneByAltar(item.itemId, object.objectId);
     if (!rune) {

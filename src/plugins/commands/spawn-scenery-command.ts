@@ -1,4 +1,4 @@
-import { commandAction } from '@engine/world/action/player-command-action';
+import { commandAction } from '@engine/world/action/player-command.action';
 import { LocationObject } from '@runejs/cache-parser';
 import { objectIds } from '@engine/world/config/object-ids';
 import { safeDump } from 'js-yaml';

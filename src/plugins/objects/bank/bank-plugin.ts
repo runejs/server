@@ -1,6 +1,6 @@
 import { objectIds } from '@engine/world/config/object-ids';
 import { widgetScripts } from '@engine/world/config/widget';
-import { objectAction } from '@engine/world/action/object-action';
+import { objectActionHandler } from '@engine/world/action/object.action';
 import { ItemContainer } from '@engine/world/items/item-container';
 import { itemActionHandler } from '@engine/world/action/item.action';
 import { fromNote, Item, toNote } from '@engine/world/items/item';
@@ -16,7 +16,7 @@ const buttonIds: number[] = [
     99, // insert
 ];
 
-export const openBankInterface: objectAction = ({ player }) => {
+export const openBankInterface: objectActionHandler = ({ player }) => {
     player.interfaceState.openWidget(widgets.bank.screenWidget.widgetId, {
         slot: 'screen',
         multi: true
@@ -32,7 +32,7 @@ export const openBankInterface: objectAction = ({ player }) => {
     player.outgoingPackets.updateClientConfig(widgetScripts.bankWithdrawNoteMode, player.settings.bankWithdrawNoteMode);
 };
 
-export const openPinSettings: objectAction = ({ player }) => {
+export const openPinSettings: objectActionHandler = ({ player }) => {
     player.interfaceState.openWidget(widgets.bank.pinSettingsWidget.widgetId, {
         slot: 'screen'
     });
@@ -194,7 +194,7 @@ export const btnAction: buttonActionHandler = (details) => {
     player.settings[config.setting] = config.value;
 };
 
-const useBankBoothAction : objectAction = (details) => {
+const useBankBoothAction : objectActionHandler = (details) => {
     const { player } = details;
 
     dialogue([player, { npc: 'rs:generic_banker', key: 'banker' }], [

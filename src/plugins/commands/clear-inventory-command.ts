@@ -1,4 +1,4 @@
-import { PlayerCommandActionData } from '@engine/world/action/player-command-action';
+import { PlayerCommandActionData } from '@engine/world/action/player-command.action';
 
 export default {
     type: 'player_command',

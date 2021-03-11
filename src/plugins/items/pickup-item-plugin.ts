@@ -1,4 +1,4 @@
-import { worldItemAction } from '@engine/world/action/world-item-action';
+import { worldItemAction } from '@engine/world/action/world-item.action';
 import { Item } from '../../game-engine/world/items/item';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { widgets } from '@engine/config';

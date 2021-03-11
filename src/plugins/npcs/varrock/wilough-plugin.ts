@@ -1,9 +1,9 @@
-import { npcAction } from '@engine/world/action/npc-action';
+import { npcActionHandler } from '@engine/world/action/npc.action';
 import { dialogue, Emote } from '@engine/world/actor/dialogue';
 import { findNpc } from '@engine/config';
 
 
-const talkTo : npcAction = (details) => {
+const talkTo : npcActionHandler = (details) => {
     const { player, npc } = details;
     dialogue([player, { npc, key: 'wilough' }, { npc: findNpc('rs:varrock_shilop').gameId, key: 'shilop' }], [
         player => [Emote.GENERIC, `Hello again.`],

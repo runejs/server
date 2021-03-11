@@ -8,16 +8,16 @@ import {
     runes,
     talismans,
 } from '@plugins/skills/runecrafting/runecrafting-constants';
-import { itemOnObjectAction, ItemOnObjectActionData } from '@engine/world/action/item-on-object-action';
+import { itemOnObjectActionHandler, ItemOnObjectAction } from '@engine/world/action/item-on-object.action';
 import { cache } from '@engine/game-server';
-import { objectAction, ObjectActionData } from '@engine/world/action/object-action';
+import { objectActionHandler, ObjectAction } from '@engine/world/action/object.action';
 import { RunecraftingAltar, RunecraftingRune } from '@plugins/skills/runecrafting/runecrafting-types';
 import { itemIds } from '@engine/world/config/item-ids';
 import { Player } from '@engine/world/actor/player/player';
 import { Item } from '@engine/world/items/item';
 
 
-const enterAltar: itemOnObjectAction = (details: ItemOnObjectActionData) => {
+const enterAltar: itemOnObjectActionHandler = (details: ItemOnObjectAction) => {
     const { player, object, item } = details;
     const altar: RunecraftingAltar = getEntityByAttr(altars, 'entranceId', object.objectId);
     const rune: RunecraftingRune = getEntityByAttr(runes, 'altar.entranceId', object.objectId);
@@ -53,7 +53,7 @@ function finishEnterAltar(player: Player, item: Item, altar: RunecraftingAltar):
 }
 
 
-const exitAltar: objectAction = (details: ObjectActionData) => {
+const exitAltar: objectActionHandler = (details: ObjectAction) => {
     const { player, object } = details;
     const altar = getEntityByAttr(altars, 'portalId', object.objectId);
     player.teleport(altar.exit);

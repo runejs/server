@@ -1,4 +1,4 @@
-import { commandAction } from '@engine/world/action/player-command-action';
+import { commandAction } from '@engine/world/action/player-command.action';
 import { cache } from '@engine/game-server';
 import { itemIds } from '@engine/world/config/item-ids';
 import { findItem, itemIdMap } from '@engine/config';

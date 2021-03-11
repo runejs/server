@@ -1,20 +1,35 @@
 import { Player } from '@engine/world/actor/player/player';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { Position } from '@engine/world/position';
-import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
+import { ActionHook, ActionPipe, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
 import { playerWalkTo } from '@engine/game-server';
 import { basicStringFilter, questHookFilter } from '@engine/world/action/hook-filters';
 
-/**
- * The definition for an NPC action function.
- */
-export type npcAction = (npcActionData: NpcActionData) => void;
 
 /**
- * Details about an NPC being interacted with.
+ * Defines an npc action hook.
  */
-export interface NpcActionData {
+export interface NpcActionHook extends ActionHook<npcActionHandler> {
+    // A single NPC key or a list of NPC keys that this action applies to.
+    npcs?: string | string[];
+    // A single option name or a list of option names that this action applies to.
+    options?: string | string[];
+    // Whether or not the player needs to walk to this NPC before performing the action.
+    walkTo: boolean;
+}
+
+
+/**
+ * The npc action hook handler function to be called when the hook's conditions are met.
+ */
+export type npcActionHandler = (npcAction: NpcAction) => void;
+
+
+/**
+ * Details about an npc action being performed.
+ */
+export interface NpcAction {
     // The player performing the action.
     player: Player;
     // The NPC the action is being performed on.
@@ -23,30 +38,21 @@ export interface NpcActionData {
     position: Position;
 }
 
-/**
- * Defines an NPC interaction plugin.
- * A list of NPC ids that apply to the plugin, the option selected, the action to be performed,
- * and whether or not the player must first walk to the NPC.
- */
-export interface NpcAction extends ActionHook {
-    // A single NPC key or a list of NPC keys that this action applies to.
-    npcs?: string | string[];
-    // A single option name or a list of option names that this action applies to.
-    options?: string | string[];
-    // Whether or not the player needs to walk to this NPC before performing the action.
-    walkTo: boolean;
-    // The action function to be performed.
-    action: npcAction;
-}
 
-// @TODO priority and cancelling other (lower priority) actions
-const npcActionHandler = (player: Player, npc: Npc, position: Position, option: string): void => {
+/**
+ * The pipe that the game engine hands npc actions off to.
+ * @param player
+ * @param npc
+ * @param position
+ * @param option
+ */
+const npcActionPipe = (player: Player, npc: Npc, position: Position, option: string): void => {
     if(player.busy) {
         return;
     }
 
     // Find all NPC action plugins that reference this NPC
-    let interactionActions = getActionHooks('npc_action')
+    let interactionActions = getActionHooks<NpcActionHook>('npc_action')
         .filter(plugin => questHookFilter(player, plugin) &&
             (!plugin.npcs || basicStringFilter(plugin.npcs, npc.key)) &&
             (!plugin.options || basicStringFilter(plugin.options, option)));
@@ -62,7 +68,7 @@ const npcActionHandler = (player: Player, npc: Npc, position: Position, option: 
         return;
     }
 
-    player.actionsCancelled.next();
+    player.actionsCancelled.next(null);
 
     // Separate out walk-to actions from immediate actions
     const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);
@@ -74,18 +80,21 @@ const npcActionHandler = (player: Player, npc: Npc, position: Position, option: 
             .then(() => {
                 player.face(npc);
                 npc.face(player);
-                walkToPlugins.forEach(plugin => plugin.action({ player, npc, position }));
+                walkToPlugins.forEach(plugin => plugin.handler({ player, npc, position }));
             })
             .catch(() => logger.warn(`Unable to complete walk-to action.`));
     }
 
     // Immediately run any non-walk-to plugins
     if(immediatePlugins.length !== 0) {
-        immediatePlugins.forEach(plugin => plugin.action({ player, npc, position }));
+        immediatePlugins.forEach(plugin => plugin.handler({ player, npc, position }));
     }
 };
 
-export default {
-    action: 'npc_action',
-    handler: npcActionHandler
-};
+
+/**
+ * Npc action pipe definition.
+ */
+export default [
+    'npc_action', npcActionPipe
+] as ActionPipe;
