@@ -5,14 +5,24 @@ import { basicNumberFilter } from '@engine/world/action/hook-filters';
 
 
 /**
- * The definition for a Swap Items action function.
+ * Defines a swap items action hook.
  */
-export type swapItemsAction = (swapItemsActionData: SwapItemsActionData) => void;
+export interface SwapItemsActionHook extends ActionHook<swapItemsActionHandler> {
+    widgetId?: number;
+    widgetIds?: number[];
+}
+
 
 /**
- * Details about a pair of items being swapped.
+ * The swap items action hook handler function to be called when the hook's conditions are met.
  */
-export interface SwapItemsActionData {
+export type swapItemsActionHandler = (swapItemsAction: SwapItemsAction) => void;
+
+
+/**
+ * Details about a swap items action being performed.
+ */
+export interface SwapItemsAction {
     // The player performing the action.
     player: Player;
     // The widget id for the container.
@@ -25,17 +35,16 @@ export interface SwapItemsActionData {
     toSlot: number;
 }
 
-/**
- * Defines a Swap Items action.
- */
-export interface SwapItemsAction extends ActionHook {
-    widgetId?: number;
-    widgetIds?: number[];
-    action: swapItemsAction;
-}
 
-const swapItemsActionHandler = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }): Promise<void> => {
-    const swapItemsActions = getActionHooks('swap_items')
+/**
+ * The pipe that the game engine hands swap items actions off to.
+ * @param player
+ * @param fromSlot
+ * @param toSlot
+ * @param widget
+ */
+const swapItemsActionPipe = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }): Promise<void> => {
+    const swapItemsActions = getActionHooks<SwapItemsActionHook>('swap_items_action')
         .filter(plugin => basicNumberFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 
     if(!swapItemsActions || swapItemsActions.length === 0) {
@@ -43,7 +52,7 @@ const swapItemsActionHandler = async (player: Player, fromSlot: number, toSlot: 
     } else {
         try {
             swapItemsActions.forEach(plugin =>
-                plugin.action({
+                plugin.handler({
                     player,
                     widgetId: widget.widgetId,
                     containerId: widget.containerId,
@@ -57,7 +66,8 @@ const swapItemsActionHandler = async (player: Player, fromSlot: number, toSlot: 
     }
 };
 
-export default {
-    action: 'swap_items',
-    handler: swapItemsActionHandler
-};
+
+/**
+ * Swap items action pipe definition.
+ */
+export default [ 'swap_items_action', swapItemsActionPipe ];

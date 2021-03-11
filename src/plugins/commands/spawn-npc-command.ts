@@ -1,11 +1,11 @@
-import { commandAction } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/world/action/player-command.action';
 import { world } from '@engine/game-server';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { findNpc } from '@engine/config';
 import { NpcDetails } from '@engine/config/npc-config';
 import { NpcSpawn } from '@engine/config/npc-spawn-config';
 
-const action: commandAction = ({ player, args }) => {
+const action: commandActionHandler = ({ player, args }) => {
     let npcKey: string | number = args.npcKey;
     let npcDetails: NpcDetails;
 

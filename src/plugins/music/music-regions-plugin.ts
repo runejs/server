@@ -1,6 +1,6 @@
 import { musicRegionMap, musicRegions } from '@engine/config';
 import { songs } from '@engine/world/config/songs';
-import { playerRegionChangedHook } from '@engine/world/action/player-region-change.action';
+import { regionChangeActionHandler } from '@engine/world/action/region-change.action';
 import { playerInitAction } from '@engine/world/actor/player/player';
 
 

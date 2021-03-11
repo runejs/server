@@ -1,4 +1,4 @@
-import { widgetAction } from '@engine/world/action/widget.action';
+import { widgetActionHandler } from '@engine/world/action/widget.action';
 
 const dialogueIds = [
     64, 65, 66, 67, 241,
@@ -10,7 +10,7 @@ const dialogueIds = [
 /**
  * Handles a basic NPC/Player/Option/Text dialogue choice/action.
  */
-export const action: widgetAction = (details) => {
+export const action: widgetActionHandler = (details) => {
     const { player, widgetId, childId } = details;
     player.interfaceState.closeWidget(widgetId, childId);
 };

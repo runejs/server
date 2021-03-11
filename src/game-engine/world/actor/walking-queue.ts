@@ -3,7 +3,7 @@ import { Position } from '../position';
 import { Player } from './player/player';
 import { actionPipeline, world } from '@engine/game-server';
 import { Npc } from './npc/npc';
-import { regionChangedDataFactory } from '@engine/world/action/player-region-change.action';
+import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
 
 
 /**
@@ -216,7 +216,7 @@ export class WalkingQueue {
                 if(this.actor instanceof Player) {
                     this.actor.metadata['updateChunk'] = { newChunk, oldChunk };
 
-                    actionPipeline.send('player_region_changed', regionChangedDataFactory(
+                    actionPipeline.send('player_region_changed', regionChangeActionFactory(
                         this.actor, originalPosition, this.actor.position));
                 } else if(this.actor instanceof Npc) {
                     oldChunk.removeNpc(this.actor);

@@ -29,7 +29,7 @@ import { daysSinceLastLogin } from '@engine/util/time';
 import { itemIds } from '@engine/world/config/item-ids';
 import { colors, hexToRgb, rgbTo16Bit } from '@engine/util/colors';
 import { ItemDefinition } from '@runejs/cache-parser';
-import { PlayerCommandAction } from '@engine/world/action/player-command.action';
+import { PlayerCommandActionHook } from '@engine/world/action/player-command.action';
 import { updateBonusStrings } from '@plugins/items/equipment/equipment-stats-plugin';
 import { ActionHook } from '@engine/world/action/hooks';
 import {
@@ -51,7 +51,7 @@ import { InterfaceState } from '@engine/world/actor/player/interface-state';
 import { dialogue } from '@engine/world/actor/dialogue';
 import { PlayerQuest, QuestKey } from '@engine/config/quest-config';
 import { Quest } from '@engine/world/actor/player/quest';
-import { regionChangedDataFactory } from '@engine/world/action/player-region-change.action';
+import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
@@ -611,7 +611,7 @@ export class Player extends Actor {
         if(!oldChunk.equals(newChunk)) {
             this.metadata['updateChunk'] = { newChunk, oldChunk };
 
-            actionPipeline.send('region_change_action', regionChangedDataFactory(
+            actionPipeline.send('region_change_action', regionChangeActionFactory(
                 this, originalPosition, newPosition, true));
         }
     }
@@ -736,7 +736,7 @@ export class Player extends Actor {
         }
     }
 
-    public sendCommandList(commands: PlayerCommandAction[]): void {
+    public sendCommandList(commands: PlayerCommandActionHook[]): void {
         for(const command of commands) {
             let strCmd: string;
             if(Array.isArray(command.commands)) {

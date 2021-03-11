@@ -1,4 +1,4 @@
-import { widgetAction } from '@engine/world/action/widget.action';
+import { widgetActionHandler } from '@engine/world/action/widget.action';
 
 const widgetIds = [
     158, 161, 175,
@@ -13,7 +13,7 @@ const widgetIds = [
 /**
  * Handles a level-up dialogue action.
  */
-export const action: widgetAction = (details) => {
+export const action: widgetActionHandler = (details) => {
     const { player } = details;
     player.interfaceState.closeChatOverlayWidget();
 };

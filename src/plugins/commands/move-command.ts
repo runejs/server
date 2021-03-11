@@ -1,7 +1,7 @@
-import { commandAction } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/world/action/player-command.action';
 import { Position } from '@engine/world/position';
 
-const action: commandAction = (details) => {
+const action: commandActionHandler = (details) => {
     const { player, args } = details;
 
     const x: number = args.x as number;

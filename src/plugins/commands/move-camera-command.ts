@@ -1,20 +1,20 @@
-import { commandAction } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/world/action/player-command.action';
 import { Position } from '@engine/world/position';
 
 
-const moveCameraAction: commandAction = ({ player, args }) => {
+const moveCameraAction: commandActionHandler = ({ player, args }) => {
     const { x, y, height, speed, acceleration } = args;
     player.outgoingPackets.snapCameraTo(new Position(x as number, y as number, player.position.level),
         height as number, speed as number, acceleration as number);
 };
 
-const turnCameraAction: commandAction = ({ player, args }) => {
+const turnCameraAction: commandActionHandler = ({ player, args }) => {
     const { x, y, height, speed, acceleration } = args;
     player.outgoingPackets.turnCameraTowards(new Position(x as number, y as number, player.position.level),
         height as number, speed as number, acceleration as number);
 };
 
-const lookCameraAction: commandAction = ({ player, args }) => {
+const lookCameraAction: commandActionHandler = ({ player, args }) => {
     const { cameraX, cameraY, cameraHeight, lookX, lookY, lookHeight, speed, acceleration } = args;
     player.outgoingPackets.snapCameraTo(new Position(cameraX as number, cameraY as number, player.position.level),
         cameraHeight as number, speed as number, acceleration as number);
@@ -22,11 +22,11 @@ const lookCameraAction: commandAction = ({ player, args }) => {
         lookHeight as number, speed as number, acceleration as number);
 };
 
-const getRegionAction: commandAction = ({ player }) => {
+const getRegionAction: commandActionHandler = ({ player }) => {
     player.sendMessage(`${player.position.chunkLocalX},${player.position.chunkLocalY}`);
 };
 
-const lookTestAction: commandAction = ({ player }) => {
+const lookTestAction: commandActionHandler = ({ player }) => {
     const cameraX = 3219;
     const cameraY = 3238;
     const cameraHeight = 500;

@@ -1,7 +1,7 @@
 import { buttonActionHandler } from '@engine/world/action/button.action';
 import { logger } from '@runejs/core';
 import { Player } from '@engine/world/actor/player/player';
-import { widgetAction } from '@engine/world/action/widget.action';
+import { widgetActionHandler } from '@engine/world/action/widget.action';
 import { skillGuides, widgets } from '@engine/config';
 import { SkillGuide, SkillSubGuide } from '@engine/config/skill-guide-config';
 
@@ -69,7 +69,7 @@ export const openGuideAction: buttonActionHandler = (details) => {
     loadGuide(player, buttonId);
 };
 
-export const openSubGuideAction: widgetAction = (details) => {
+export const openSubGuideAction: widgetActionHandler = (details) => {
     const { player, childId } = details;
 
     const activeSkillGuide = player.metadata['activeSkillGuide'];

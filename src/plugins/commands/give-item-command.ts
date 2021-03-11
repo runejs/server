@@ -1,9 +1,9 @@
-import { commandAction } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/world/action/player-command.action';
 import { cache } from '@engine/game-server';
 import { itemIds } from '@engine/world/config/item-ids';
 import { findItem, itemIdMap } from '@engine/config';
 
-const action: commandAction = (details) => {
+const action: commandActionHandler = (details) => {
     const { player, args } = details;
 
     const inventorySlot = player.inventory.getFirstOpenSlot();

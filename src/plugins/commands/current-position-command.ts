@@ -1,6 +1,6 @@
-import { commandAction } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/world/action/player-command.action';
 
-const action: commandAction = (details) => {
+const action: commandActionHandler = (details) => {
     const { player } = details;
     player.sendLogMessage(`@[ ${player.position.x}, ${player.position.y}, ${player.position.level} ]`, details.isConsole);
 };

@@ -1,9 +1,9 @@
-import { widgetAction } from '@engine/world/action/widget.action';
+import { widgetActionHandler } from '@engine/world/action/widget.action';
 
 /**
  * Handles an item selection dialogue choice.
  */
-export const action: widgetAction = (details) => {
+export const action: widgetActionHandler = (details) => {
     const { player, widgetId, childId } = details;
     player.interfaceState.closeWidget(widgetId, childId);
 };

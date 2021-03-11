@@ -2,15 +2,31 @@ import { Player } from '../actor/player/player';
 import { logger } from '@runejs/core';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 
-/**
- * The definition for a command action function.
- */
-export type commandAction = (playerCommandActionData: PlayerCommandActionData) => void;
 
 /**
- * Details about a command action.
+ * Defines a player command action hook.
  */
-export interface PlayerCommandActionData {
+export interface PlayerCommandActionHook extends ActionHook<commandActionHandler> {
+    // The single command or list of commands that this action applies to.
+    commands: string | string[];
+    // The potential arguments for this command action.
+    args?: {
+        name: string;
+        type: 'number' | 'string' | 'either';
+        defaultValue?: number | string;
+    }[];
+}
+
+/**
+ * The player command action hook handler function to be called when the hook's conditions are met.
+ */
+export type commandActionHandler = (playerCommandAction: PlayerCommandAction) => void;
+
+
+/**
+ * Details about a player command action being performed.
+ */
+export interface PlayerCommandAction {
     // The player performing the action.
     player: Player;
     // The command that the player entered.
@@ -21,26 +37,18 @@ export interface PlayerCommandActionData {
     args: { [key: string]: number | string };
 }
 
-/**
- * Defines a command interaction plugin.
- */
-export interface PlayerCommandAction extends ActionHook {
-    // The single command or list of commands that this action applies to.
-    commands: string | string[];
-    // The potential arguments for this command action.
-    args?: {
-        name: string;
-        type: 'number' | 'string' | 'either';
-        defaultValue?: number | string;
-    }[];
-    // The action function to be performed.
-    action: commandAction;
-}
 
-const playerCommandActionHandler = (player: Player, command: string, isConsole: boolean, inputArgs: string[]): void => {
+/**
+ * The pipe that the game engine hands player command actions off to.
+ * @param player
+ * @param command
+ * @param isConsole
+ * @param inputArgs
+ */
+const playerCommandActionPipe = (player: Player, command: string, isConsole: boolean, inputArgs: string[]): void => {
     command = command.toLowerCase();
 
-    const plugins = getActionHooks('player_command').filter(plugin => {
+    const plugins = getActionHooks<PlayerCommandActionHook>('player_command_action').filter(plugin => {
         if(Array.isArray(plugin.commands)) {
             return plugin.commands.indexOf(command) !== -1;
         } else {
@@ -100,9 +108,9 @@ const playerCommandActionHandler = (player: Player, command: string, isConsole: 
                     actionArgs[pluginArg.name] = argValue;
                 }
 
-                plugin.action({ player, command, isConsole, args: actionArgs });
+                plugin.handler({ player, command, isConsole, args: actionArgs });
             } else {
-                plugin.action({ player, command, isConsole, args: {} });
+                plugin.handler({ player, command, isConsole, args: {} });
             }
         } catch(commandError) {
             player.sendLogMessage(`Command error: ${ commandError }`, isConsole);
@@ -111,7 +119,8 @@ const playerCommandActionHandler = (player: Player, command: string, isConsole: 
     });
 };
 
-export default {
-    action: 'player_command',
-    handler: playerCommandActionHandler
-};
+
+/**
+ * Player command action pipe definition.
+ */
+export default [ 'player_command_action',  playerCommandActionPipe ];

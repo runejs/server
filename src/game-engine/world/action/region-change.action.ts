@@ -5,14 +5,28 @@ import { RegionType } from '@engine/world/map/region';
 
 
 /**
- * The definition for a player action function.
+ * Defines a player region change action hook.
  */
-export type playerRegionChangedHook = (playerActionData: PlayerRegionChangedData) => void;
+export interface RegionChangeActionHook extends ActionHook<regionChangeActionHandler> {
+    // Optional single region type for the action hook to apply to.
+    regionType?: RegionType;
+    // Optional multiple region types for the action hook to apply to.
+    regionTypes?: RegionType[];
+    // Optional teleporting requirement
+    teleporting?: boolean;
+}
+
 
 /**
- * Details about a player being interacted with.
+ * The player region change action hook handler function to be called when the hook's conditions are met.
  */
-export interface PlayerRegionChangedData {
+export type regionChangeActionHandler = (regionChangeAction: RegionChangeAction) => void;
+
+
+/**
+ * Details about a player region change action being performed.
+ */
+export interface RegionChangeAction {
     // The player performing the action.
     player: Player;
     // Whether or not the player is teleporting to their new location
@@ -37,30 +51,17 @@ export interface PlayerRegionChangedData {
     regionTypes: RegionType[];
 }
 
-/**
- * Defines a player region changed action.
- */
-export interface PlayerRegionChangedAction extends ActionHook {
-    // The action function to be performed.
-    handler: playerRegionChangedHook;
-    // Optional single region type for the action hook to apply to.
-    regionType?: RegionType;
-    // Optional multiple region types for the action hook to apply to.
-    regionTypes?: RegionType[];
-    // Optional teleporting requirement
-    teleporting?: boolean;
-}
 
 /**
- * Creates a PlayerRegionChangedData object from the given inputs.
+ * Creates a RegionChangeAction object from the given inputs.
  * @param player The player.
  * @param originalPosition The player's original position.
  * @param currentPosition The player's current position.
  * @param teleporting Whether or not the player is teleporting; defaults to false.
  */
-export const regionChangedDataFactory = (player: Player,
-                                         originalPosition: Position, currentPosition: Position,
-                                         teleporting: boolean = false): PlayerRegionChangedData => {
+export const regionChangeActionFactory = (player: Player,
+                                          originalPosition: Position, currentPosition: Position,
+                                          teleporting: boolean = false): RegionChangeAction => {
     const regionTypes: RegionType[] = [];
     const originalMapRegionId: number = ((originalPosition.x >> 6) << 8) + (originalPosition.y >> 6);
     const currentMapRegionId: number = ((currentPosition.x >> 6) << 8) + (currentPosition.y >> 6);
@@ -110,7 +111,12 @@ export const regionChangedDataFactory = (player: Player,
     };
 };
 
-const playerRegionChangedHandler = (actionData: PlayerRegionChangedData): void => {
+
+/**
+ * The pipe that the game engine hands player region change actions off to.
+ * @param actionData
+ */
+const regionChangeActionPipe = (actionData: RegionChangeAction): void => {
     if(!actionData) {
         return;
     }
@@ -122,7 +128,7 @@ const playerRegionChangedHandler = (actionData: PlayerRegionChangedData): void =
     }
 
     // Find all action hooks that match the provided input
-    const actionList = getActionHooks<PlayerRegionChangedAction>('region_change_action')?.filter(actionHook => {
+    const actionList = getActionHooks<RegionChangeActionHook>('region_change_action')?.filter(actionHook => {
         if(actionHook.teleporting && !actionData.teleporting) {
             return false;
         }
@@ -156,7 +162,8 @@ const playerRegionChangedHandler = (actionData: PlayerRegionChangedData): void =
         }));
 };
 
-export default {
-    action: 'player_region_changed',
-    handler: playerRegionChangedHandler
-};
+
+/**
+ * Player region change action pipe definition.
+ */
+export default [ 'region_change_action', regionChangeActionPipe ];

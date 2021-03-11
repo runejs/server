@@ -5,15 +5,28 @@ import { logger } from '@runejs/core';
 import { playerWalkTo } from '@engine/game-server';
 import { basicStringFilter, questHookFilter } from '@engine/world/action/hook-filters';
 
-/**
- * The definition for a player action function.
- */
-export type playerAction = (playerActionData: PlayerActionData) => void;
 
 /**
- * Details about a player being interacted with.
+ * Defines a player action hook.
  */
-export interface PlayerActionData {
+export interface PlayerActionHook extends ActionHook<playerActionHandler> {
+    // A single option name or a list of option names that this action applies to.
+    options: string | string[];
+    // Whether or not the player needs to walk to the other player before performing the action.
+    walkTo: boolean;
+}
+
+
+/**
+ * The player action hook handler function to be called when the hook's conditions are met.
+ */
+export type playerActionHandler = (playerAction: PlayerAction) => void;
+
+
+/**
+ * Details about a player action being performed.
+ */
+export interface PlayerAction {
     // The player performing the action.
     player: Player;
     // The player that the action is being performed on.
@@ -22,27 +35,21 @@ export interface PlayerActionData {
     position: Position;
 }
 
-/**
- * Defines a player interaction action.
- * The option selected, the action to be performed, and whether or not the player must first walk to the other player.
- */
-export interface PlayerAction extends ActionHook {
-    // A single option name or a list of option names that this action applies to.
-    options: string | string[];
-    // Whether or not the player needs to walk to the other player before performing the action.
-    walkTo: boolean;
-    // The action function to be performed.
-    action: playerAction;
-}
 
-// @TODO priority and cancelling other (lower priority) actions
-const playerActionHandler = (player: Player, otherPlayer: Player, position: Position, option: string): void => {
+/**
+ * The pipe that the game engine hands player actions off to.
+ * @param player
+ * @param otherPlayer
+ * @param position
+ * @param option
+ */
+const playerActionPipe = (player: Player, otherPlayer: Player, position: Position, option: string): void => {
     if(player.busy) {
         return;
     }
 
     // Find all player action plugins that reference this option
-    let interactionActions = getActionHooks('player_action')
+    let interactionActions = getActionHooks<PlayerActionHook>('player_action')
         .filter(plugin => questHookFilter(player, plugin) && basicStringFilter(plugin.options, option));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
@@ -66,18 +73,19 @@ const playerActionHandler = (player: Player, otherPlayer: Player, position: Posi
         playerWalkTo(player, position)
             .then(() => {
                 player.face(otherPlayer);
-                walkToPlugins.forEach(plugin => plugin.action({ player, otherPlayer, position }));
+                walkToPlugins.forEach(plugin => plugin.handler({ player, otherPlayer, position }));
             })
             .catch(() => logger.warn(`Unable to complete walk-to action.`));
     }
 
     // Immediately run any non-walk-to plugins
     if(immediatePlugins.length !== 0) {
-        immediatePlugins.forEach(plugin => plugin.action({ player, otherPlayer, position }));
+        immediatePlugins.forEach(plugin => plugin.handler({ player, otherPlayer, position }));
     }
 };
 
-export default {
-    action: 'player_action',
-    handler: playerActionHandler
-};
+
+/**
+ * Player action pipe definition.
+ */
+export default [ 'player_action', playerActionPipe ];

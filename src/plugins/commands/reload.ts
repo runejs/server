@@ -1,10 +1,10 @@
-import { commandAction } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/world/action/player-command.action';
 import { loadPlugins } from '@engine/game-server';
 import { loadPackets } from '@engine/net/inbound-packets';
 import { loadConfigurations } from '@engine/config';
 import { logger } from '@runejs/core';
 
-const action: commandAction = async (details) => {
+const action: commandActionHandler = async (details) => {
     const { player } = details;
 
     player.sendLogMessage(' ', details.isConsole);

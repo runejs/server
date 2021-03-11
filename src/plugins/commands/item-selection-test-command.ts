@@ -1,8 +1,8 @@
-import { commandAction } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/world/action/player-command.action';
 import { itemSelectionDialogue } from '@engine/world/actor/dialogue';
 import { logger } from '@runejs/core';
 
-const action: commandAction = async (details) => {
+const action: commandActionHandler = async (details) => {
     const { player } = details;
 
     try {

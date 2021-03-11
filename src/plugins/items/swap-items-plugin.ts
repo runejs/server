@@ -1,4 +1,4 @@
-import { swapItemsAction } from '@engine/world/action/swap-items.action';
+import { swapItemsActionHandler } from '@engine/world/action/swap-items.action';
 import { ItemContainer } from '@engine/world/items/item-container';
 import { Player } from '@engine/world/actor/player/player';
 import { widgets } from '@engine/config';
@@ -20,7 +20,7 @@ function swapItems(container: ItemContainer, fromSlot: number, toSlot: number): 
     container.swap(fromSlot, toSlot);
 }
 
-export const action: swapItemsAction = (details) => {
+export const action: swapItemsActionHandler = (details) => {
     const { player, widgetId, containerId, fromSlot, toSlot } = details;
 
     const widgetDetails = swappableWidgets.filter(widgetDetail => widgetDetail[0] === widgetId && widgetDetail[1] === containerId);

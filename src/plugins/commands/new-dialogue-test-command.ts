@@ -1,8 +1,8 @@
-import { commandAction } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/world/action/player-command.action';
 import { world } from '@engine/game-server';
 import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
 
-const action: commandAction = (details) => {
+const action: commandActionHandler = (details) => {
     const { player } = details;
     const npc = world.npcList[0];
 

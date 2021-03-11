@@ -1,7 +1,7 @@
-import { commandAction } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/world/action/player-command.action';
 import { lockEmote, unlockEmote, unlockEmotes } from '@plugins/buttons/player-emotes-plugin';
 
-const action: commandAction = (details) => {
+const action: commandActionHandler = (details) => {
     const { player, args } = details;
     const emoteName = (args.emoteName as string).toUpperCase().replace(/_/g, ' ');
 
@@ -15,7 +15,7 @@ const action: commandAction = (details) => {
     }
 };
 
-const resetAction: commandAction = (details) => {
+const resetAction: commandActionHandler = (details) => {
     const { player } = details;
     player.savedMetadata.unlockedEmotes = [];
     unlockEmotes(player);

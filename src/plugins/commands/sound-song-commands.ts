@@ -1,16 +1,16 @@
-import { commandAction } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/world/action/player-command.action';
 
-const songAction: commandAction = (details) => {
+const songAction: commandActionHandler = (details) => {
     const { player, args } = details;
     player.outgoingPackets.playSong(args.songId as number);
 };
 
-const soundAction: commandAction = (details) => {
+const soundAction: commandActionHandler = (details) => {
     const { player, args } = details;
     player.playSound(args.soundId as number, args.volume as number);
 };
 
-const quickSongAction: commandAction = (details) => {
+const quickSongAction: commandActionHandler = (details) => {
     const { player, args } = details;
     player.outgoingPackets.playQuickSong(args.songId as number, args.prevSongId as number);
 };

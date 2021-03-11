@@ -1,11 +1,11 @@
-import { commandAction } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/world/action/player-command.action';
 import { LocationObject } from '@runejs/cache-parser';
 import { objectIds } from '@engine/world/config/object-ids';
 import { safeDump } from 'js-yaml';
 import { writeFileSync } from 'fs';
 import { logger } from '@runejs/core';
 
-const spawnSceneryAction: commandAction = ({ player, args }) => {
+const spawnSceneryAction: commandActionHandler = ({ player, args }) => {
     const locationObjectSearch: string = (args.locationObjectSearch as string).trim();
     let locationObjectId: number;
 
@@ -45,7 +45,7 @@ const spawnSceneryAction: commandAction = ({ player, args }) => {
     player.instance.spawnGameObject(locationObject);
 };
 
-const undoSceneryAction: commandAction = (details) => {
+const undoSceneryAction: commandActionHandler = (details) => {
     const { player } = details;
 
     const o: LocationObject = player.metadata.lastSpawnedScenery;
@@ -62,7 +62,7 @@ const undoSceneryAction: commandAction = (details) => {
     }
 };
 
-const dumpSceneryAction: commandAction = (details) => {
+const dumpSceneryAction: commandActionHandler = (details) => {
     const { player } = details;
 
     const path = `data/dump/scene-${ new Date().getTime() }.yml`;

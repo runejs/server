@@ -1,8 +1,8 @@
-import { commandAction } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/world/action/player-command.action';
 import { world } from '@engine/game-server';
 import { logger } from '@runejs/core';
 
-const quadtreeAction: commandAction = (details) => {
+const quadtreeAction: commandActionHandler = (details) => {
     const { player } = details;
 
     const values = world.playerTree.colliding({
@@ -15,13 +15,13 @@ const quadtreeAction: commandAction = (details) => {
     logger.info(values);
 };
 
-const trackedPlayersAction: commandAction = (details) => {
+const trackedPlayersAction: commandActionHandler = (details) => {
     const { player } = details;
     player.sendLogMessage(`Tracked players: ${player.trackedPlayers.length}`, details.isConsole);
 
 };
 
-const trackedNpcsAction: commandAction = (details) => {
+const trackedNpcsAction: commandActionHandler = (details) => {
     const { player } = details;
     player.sendLogMessage(`Tracked npcs: ${player.trackedNpcs.length}`, details.isConsole);
 

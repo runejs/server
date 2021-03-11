@@ -1,8 +1,8 @@
-import { commandAction } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/world/action/player-command.action';
 import { world } from '@engine/game-server';
 import { TravelLocation } from '@engine/world/config/travel-locations';
 
-const action: commandAction = (details) => {
+const action: commandActionHandler = (details) => {
     const { player, args } = details;
 
     const search: string = args.search as string;

@@ -7,13 +7,28 @@ import { findItem } from '@engine/config';
 import { playerWalkTo } from '@engine/game-server';
 import { basicNumberFilter, basicStringFilter, questHookFilter } from '@engine/world/action/hook-filters';
 
+
 /**
- * The definition for a world item action function.
+ * Defines a world item action hook.
+ */
+export interface WorldItemActionHook extends ActionHook<worldItemAction> {
+    // A single game item ID or a list of item IDs that this action applies to.
+    itemIds?: number | number[];
+    // A single option name or a list of option names that this action applies to.
+    options: string | string[];
+    // Whether or not the player needs to walk to this world item before performing the action.
+    walkTo: boolean;
+}
+
+
+/**
+ * The world item action hook handler function to be called when the hook's conditions are met.
  */
 export type worldItemAction = (worldItemActionData: WorldItemActionData) => void;
 
+
 /**
- * Details about a world item being interacted with.
+ * Details about a world item action being performed.
  */
 export interface WorldItemActionData {
     // The player performing the action.
@@ -24,28 +39,20 @@ export interface WorldItemActionData {
     itemDetails: ItemDetails;
 }
 
-/**
- * Defines an world item interaction plugin.
- */
-export interface WorldItemAction extends ActionHook {
-    // A single game item ID or a list of item IDs that this action applies to.
-    itemIds?: number | number[];
-    // A single option name or a list of option names that this action applies to.
-    options: string | string[];
-    // Whether or not the player needs to walk to this world item before performing the action.
-    walkTo: boolean;
-    // The action function to be performed.
-    action: worldItemAction;
-}
 
-// @TODO priority and cancelling other (lower priority) actions
-const worldItemActionHandler = (player: Player, worldItem: WorldItem, option: string): void => {
+/**
+ * The pipe that the game engine hands world item actions off to.
+ * @param player
+ * @param worldItem
+ * @param option
+ */
+const worldItemActionPipe = (player: Player, worldItem: WorldItem, option: string): void => {
     if(player.busy) {
         return;
     }
 
     // Find all world item action plugins that reference this world item
-    let interactionActions = getActionHooks('world_item_action').filter(plugin => {
+    let interactionActions = getActionHooks<WorldItemActionHook>('world_item_action').filter(plugin => {
         if(!questHookFilter(player, plugin)) {
             return false;
         }
@@ -73,7 +80,7 @@ const worldItemActionHandler = (player: Player, worldItem: WorldItem, option: st
         return;
     }
 
-    player.actionsCancelled.next();
+    player.actionsCancelled.next(null);
 
     // Separate out walk-to actions from immediate actions
     const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);
@@ -84,7 +91,7 @@ const worldItemActionHandler = (player: Player, worldItem: WorldItem, option: st
     // Make sure we walk to the NPC before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
         playerWalkTo(player, worldItem.position)
-            .then(() => walkToPlugins.forEach(plugin => plugin.action({
+            .then(() => walkToPlugins.forEach(plugin => plugin.handler({
                 player, worldItem, itemDetails
             })))
             .catch(() => logger.warn(`Unable to complete walk-to action.`));
@@ -92,13 +99,14 @@ const worldItemActionHandler = (player: Player, worldItem: WorldItem, option: st
 
     // Immediately run any non-walk-to plugins
     if(immediatePlugins.length !== 0) {
-        immediatePlugins.forEach(plugin => plugin.action({
+        immediatePlugins.forEach(plugin => plugin.handler({
             player, worldItem, itemDetails
         }));
     }
 };
 
-export default {
-    action: 'world_item_action',
-    handler: worldItemActionHandler
-};
+
+/**
+ * World item action pipe definition.
+ */
+export default [ 'world_item_action', worldItemActionPipe ];

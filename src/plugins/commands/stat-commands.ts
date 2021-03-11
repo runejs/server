@@ -1,7 +1,7 @@
-import { commandAction } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/world/action/player-command.action';
 
 
-const setLevelAction: commandAction = ({ player, args }) => {
+const setLevelAction: commandActionHandler = ({ player, args }) => {
     const skillId = args?.skillId || null;
     const level: number = args?.level as number || null;
 
