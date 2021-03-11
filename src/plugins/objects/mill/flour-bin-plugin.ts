@@ -1,5 +1,5 @@
 import { itemIds } from '@engine/world/config/item-ids';
-import { objectActionHandler } from '@engine/world/action/object.action';
+import { objectActionHandler } from '@engine/world/action/object-interaction.action';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
 import { LocationObjectDefinition } from '@runejs/cache-parser';

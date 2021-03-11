@@ -3,7 +3,7 @@ import { directionData, WNES } from '@engine/world/direction';
 import { logger } from '@runejs/core';
 import { world } from '@engine/game-server';
 import { ModifiedLocationObject } from '@engine/world/map/location-object';
-import { objectActionHandler } from '@engine/world/action/object.action';
+import { objectActionHandler } from '@engine/world/action/object-interaction.action';
 import { soundIds } from '@engine/world/config/sound-ids';
 
 const gates = [

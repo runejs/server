@@ -1,4 +1,4 @@
-import { objectActionHandler } from '@engine/world/action/object.action';
+import { objectActionHandler } from '@engine/world/action/object-interaction.action';
 import { cache } from '@engine/game-server';
 import { World } from '@engine/world';
 import { itemIds } from '@engine/world/config/item-ids';

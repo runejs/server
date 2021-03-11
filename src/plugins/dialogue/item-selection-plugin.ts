@@ -1,4 +1,4 @@
-import { widgetActionHandler } from '@engine/world/action/widget.action';
+import { widgetActionHandler } from '@engine/world/action/widget-interaction.action';
 
 /**
  * Handles an item selection dialogue choice.

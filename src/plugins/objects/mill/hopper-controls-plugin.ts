@@ -1,4 +1,4 @@
-import { objectActionHandler } from '@engine/world/action/object.action';
+import { objectActionHandler } from '@engine/world/action/object-interaction.action';
 import { World } from '@engine/world';
 import { LocationObject } from '@runejs/cache-parser';
 

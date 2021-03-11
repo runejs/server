@@ -1,4 +1,4 @@
-import { widgetActionHandler } from '@engine/world/action/widget.action';
+import { widgetActionHandler } from '@engine/world/action/widget-interaction.action';
 
 const widgetIds = [
     158, 161, 175,

@@ -1,4 +1,4 @@
-import { equipActionHandler } from '@engine/world/action/equip.action';
+import { equipActionHandler } from '@engine/world/action/equipment-change.action';
 
 export const equip: equipActionHandler = (details) => {
     const { player } = details;

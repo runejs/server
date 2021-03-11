@@ -1,7 +1,7 @@
 import { buttonActionHandler } from '@engine/world/action/button.action';
 import { logger } from '@runejs/core';
 import { Player } from '@engine/world/actor/player/player';
-import { widgetActionHandler } from '@engine/world/action/widget.action';
+import { widgetActionHandler } from '@engine/world/action/widget-interaction.action';
 import { skillGuides, widgets } from '@engine/config';
 import { SkillGuide, SkillSubGuide } from '@engine/config/skill-guide-config';
 

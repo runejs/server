@@ -1,6 +1,6 @@
 import { Player } from '@engine/world/actor/player/player';
 import { Npc } from '@engine/world/actor/npc/npc';
-import { npcActionHandler } from '@engine/world/action/npc.action';
+import { npcActionHandler } from '@engine/world/action/npc-interaction.action';
 import { logger } from '@runejs/core';
 import { handleTutorial } from '@plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy';
 

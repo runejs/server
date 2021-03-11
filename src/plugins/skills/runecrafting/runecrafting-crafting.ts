@@ -2,7 +2,7 @@
  * @Author NickNick
  */
 
-import { objectActionHandler, ObjectAction } from '@engine/world/action/object.action';
+import { objectActionHandler, ObjectAction } from '@engine/world/action/object-interaction.action';
 import { Skill } from '@engine/world/actor/skills';
 import {
     altars, combinationRunes,

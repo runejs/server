@@ -1,4 +1,4 @@
-import { equipActionHandler, EquipAction } from '@engine/world/action/equip.action';
+import { equipActionHandler, EquipAction } from '@engine/world/action/equipment-change.action';
 import { ItemDetails, WeaponStyle, weaponWidgetIds } from '@engine/config/item-config';
 import { widgetScripts } from '@engine/world/config/widget';
 import { Player, playerInitAction, SidebarTab } from '@engine/world/actor/player/player';

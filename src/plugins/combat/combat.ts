@@ -1,4 +1,4 @@
-import { npcActionHandler } from '@engine/world/action/npc.action';
+import { npcActionHandler } from '@engine/world/action/npc-interaction.action';
 import { Actor } from '@engine/world/actor/actor';
 import { Player } from '@engine/world/actor/player/player';
 import { lastValueFrom, timer } from 'rxjs';

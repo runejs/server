@@ -8,28 +8,27 @@ import { actionPipeline } from '@engine/game-server';
  * Content action type definitions.
  */
 export type ActionType =
-    'button_action'
-    | 'widget_action'
+    'button'
+    | 'widget_interaction'
 
-    | 'npc_init_action'
-    | 'npc_action'
+    | 'npc_init'
+    | 'npc_interaction'
 
-    | 'object_action'
+    | 'object_interaction'
 
-    | 'item_action'
-    | 'item_on_object_action'
-    | 'item_on_npc_action'
-    | 'swap_items_action'
-    | 'move_item_action'
-    | 'world_item_action'
-    | 'item_on_item_action'
-    | 'item_action_action'
-    | 'equip_action'
+    | 'item_interaction'
+    | 'item_on_object'
+    | 'item_on_npc'
+    | 'item_swap'
+    | 'move_item'
+    | 'spawned_item_interaction'
+    | 'item_on_item'
 
-    | 'player_init_action'
-    | 'player_command_action'
-    | 'player_action'
-    | 'region_change_action';
+    | 'player_init'
+    | 'player_command'
+    | 'player_interaction'
+    | 'region_change'
+    | 'equipment_change';
 
 
 /**

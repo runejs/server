@@ -1,4 +1,4 @@
-import { npcActionHandler } from '@engine/world/action/npc.action';
+import { npcActionHandler } from '@engine/world/action/npc-interaction.action';
 import { dialogue, DialogueTree, Emote, execute, goto } from '@engine/world/actor/dialogue';
 import { itemIds } from '@engine/world/config/item-ids';
 import { PlayerQuest, QuestJournalHandler } from '@engine/config/quest-config';

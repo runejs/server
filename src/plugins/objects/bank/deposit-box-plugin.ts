@@ -1,7 +1,7 @@
 import { objectIds } from '@engine/world/config/object-ids';
-import { objectActionHandler } from '@engine/world/action/object.action';
+import { objectActionHandler } from '@engine/world/action/object-interaction.action';
 import { ItemContainer } from '@engine/world/items/item-container';
-import { itemActionHandler } from '@engine/world/action/item.action';
+import { itemActionHandler } from '@engine/world/action/item-interaction.action';
 import { fromNote, Item } from '@engine/world/items/item';
 import { widgets } from '@engine/config';
 

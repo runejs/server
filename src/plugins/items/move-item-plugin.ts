@@ -1,4 +1,4 @@
-import { swapItemsActionHandler } from '@engine/world/action/swap-items.action';
+import { swapItemsActionHandler } from '@engine/world/action/item-swap.action';
 import { ItemContainer } from '@engine/world/items/item-container';
 import { Player } from '@engine/world/actor/player/player';
 import { widgets } from '@engine/config';

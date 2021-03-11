@@ -1,4 +1,4 @@
-import { objectActionHandler } from '@engine/world/action/object.action';
+import { objectActionHandler } from '@engine/world/action/object-interaction.action';
 import { Skill } from '@engine/world/actor/skills';
 import { canInitiateHarvest, handleHarvesting } from '@engine/world/skill-util/harvest-skill';
 import { getTreeFromHealthy, getTreeIds } from '@engine/world/config/harvestable-object';

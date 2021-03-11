@@ -1,7 +1,7 @@
 import { Item } from '@engine/world/items/item';
 import { ItemContainer } from '@engine/world/items/item-container';
 import { objectIds } from '@engine/world/config/object-ids';
-import { objectActionHandler, ObjectAction } from '@engine/world/action/object.action';
+import { objectActionHandler, ObjectAction } from '@engine/world/action/object-interaction.action';
 import { buttonActionHandler, ButtonAction } from '@engine/world/action/button.action';
 import { Skill } from '@engine/world/actor/skills';
 import { cache, loopingEvent } from '@engine/game-server';

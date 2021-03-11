@@ -1,4 +1,4 @@
-import { itemActionHandler } from '@engine/world/action/item.action';
+import { itemActionHandler } from '@engine/world/action/item-interaction.action';
 import { widgets } from '@engine/config';
 
 export const action: itemActionHandler = (details) => {

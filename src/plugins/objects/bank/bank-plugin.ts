@@ -1,8 +1,8 @@
 import { objectIds } from '@engine/world/config/object-ids';
 import { widgetScripts } from '@engine/world/config/widget';
-import { objectActionHandler } from '@engine/world/action/object.action';
+import { objectActionHandler } from '@engine/world/action/object-interaction.action';
 import { ItemContainer } from '@engine/world/items/item-container';
-import { itemActionHandler } from '@engine/world/action/item.action';
+import { itemActionHandler } from '@engine/world/action/item-interaction.action';
 import { fromNote, Item, toNote } from '@engine/world/items/item';
 import { buttonActionHandler } from '@engine/world/action/button.action';
 import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';

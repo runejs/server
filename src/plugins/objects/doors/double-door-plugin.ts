@@ -3,7 +3,7 @@ import { WNES } from '@engine/world/direction';
 import { logger } from '@runejs/core';
 import { world } from '@engine/game-server';
 import { action as doorAction } from '@plugins/objects/doors/door-plugin';
-import { objectActionHandler } from '@engine/world/action/object.action';
+import { objectActionHandler } from '@engine/world/action/object-interaction.action';
 
 const doubleDoors = [
     {
