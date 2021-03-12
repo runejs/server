@@ -1,0 +1,2275 @@
+{
+    "id": 143,
+    "name": "Construction",
+    "members": true,
+    "sub_guides": [
+      {
+        "name": "Rooms",
+        "lines": [
+          {
+            "item": "rs:garden",
+            "text": "Garden",
+            "level": 1
+          },
+          {
+            "item": "rs:parlour",
+            "text": "Parlour",
+            "level": 1
+          },
+          {
+            "item": "rs:kitchen",
+            "text": "Kitchen",
+            "level": 5
+          },
+          {
+            "item": "rs:dining_room",
+            "text": "Dining room",
+            "level": 10
+          },
+          {
+            "item": "rs:workshop",
+            "text": "Workshop",
+            "level": 15
+          },
+          {
+            "item": "rs:bedroom",
+            "text": "Bedroom",
+            "level": 20
+          },
+          {
+            "item": "rs:hall_skill_trophies",
+            "text": "Hall (skill trophies)",
+            "level": 25
+          },
+          {
+            "item": "rs:league_hall",
+            "text": "Leauge hall",
+            "level": 27
+          },
+          {
+            "item": "rs:games_room",
+            "text": "Games room",
+            "level": 30
+          },
+          {
+            "item": "rs:combat_room",
+            "text": "Combat room",
+            "level": 32
+          },
+          {
+            "item": "rs:hall_quest_trophies",
+            "text": "Hall (quest trophies)",
+            "level": 35
+          },
+          {
+            "item": "rs:menagerie",
+            "text": "Menagerie",
+            "level": 37
+          },
+          {
+            "item": "rs:study",
+            "text": "Study",
+            "level": 40
+          },
+          {
+            "item": "rs:costume_room",
+            "text": "Costume room",
+            "level": 42
+          },
+          {
+            "item": "rs:chapel",
+            "text": "Chapel",
+            "level": 45
+          },
+          {
+            "item": "rs:portal_chamber",
+            "text": "Portal chamber",
+            "level": 50
+          },
+          {
+            "item": "rs:formal_garden",
+            "text": "Formal garden",
+            "level": 55
+          },
+          {
+            "item": "rs:throne_room",
+            "text": "Throne room",
+            "level": 60
+          },
+          {
+            "item": "rs:oubliette",
+            "text": "Oubliette",
+            "level": 65
+          },
+          {
+            "item": "rs:superior_garden",
+            "text": "Superior garden",
+            "level": 65
+          },
+          {
+            "item": "rs:dungeon",
+            "text": "Dungeon",
+            "level": 70
+          },
+          {
+            "item": "rs:treasure_room",
+            "text": "Treasure room",
+            "level": 75
+          },
+          {
+            "item": "rs:achievement_gallery",
+            "text": "Achievement Gallery",
+            "level": 80
+          },
+          {
+            "item": "rs:league_hall",
+            "text": "Garden",
+            "level": 1
+          }
+        ]
+      },{
+        "name": "Skills",
+        "lines": [
+          {
+            "item": "rs:clay_fireplace",
+            "text": "Clay  fireplace",
+            "level": 3
+          },
+          {
+            "item": "rs:firepit",
+            "text": "Firepit",
+            "level": 5
+          },
+          {
+            "item": "rs:pump_and_drain",
+            "text": "Pump and drain",
+            "level": 7
+          },
+          {
+            "item": "rs:firepit_with_hook",
+            "text": "Firepit with hook",
+            "level": 11
+          },
+          {
+            "item": "rs:repair_bench",
+            "text": "Repair bench",
+            "level": 15
+          },
+          {
+            "item": "rs:pluming_stand",
+            "text": "Pluming stand",
+            "level": 16
+          },
+          {
+            "item": "rs:crafting_table_1",
+            "text": "Crafting table 1",
+            "level": 16
+          },
+          {
+            "item": "rs:firepit_with_pot",
+            "text": "Firepit with pot",
+            "level": 17
+          },
+          {
+            "item": "rs:wooden_workbench",
+            "text": "Wooden workbench",
+            "level": 17
+          },
+          {
+            "item": "rs:small_oven",
+            "text": "Small oven",
+            "level": 24
+          },
+          {
+            "item": "rs:crafting_table_2",
+            "text": "Crafting table 2",
+            "level": 25
+          },
+          {
+            "item": "rs:pump_and_tub",
+            "text": "Pump and tub",
+            "level": 27
+          },
+          {
+            "item": "rs:large_oven",
+            "text": "Large oven",
+            "level": 29
+          },
+          {
+            "item": "rs:oak_workbench",
+            "text": "Oak workbench",
+            "level": 32
+          },
+          {
+            "item": "rs:stone_fireplace",
+            "text": "Stone fireplace",
+            "level": 33
+          },
+          {
+            "item": "rs:crafting_table_3",
+            "text": "Crafting table 3",
+            "level": 34
+          },
+          {
+            "item": "rs:steel_range",
+            "text": "Steel range",
+            "level": 34
+          },
+          {
+            "item": "rs:whetstone",
+            "text": "Whetstone",
+            "level": 35
+          },
+          {
+            "item": "rs:shield_easel",
+            "text": "Shield easel",
+            "level": 41
+          },
+          {
+            "item": "rs:fancy_range",
+            "text": "Fancy range",
+            "level": 42
+          },
+          {
+            "item": "rs:crafting_table_4",
+            "text": "Crafting table 4",
+            "level": 42
+          },
+          {
+            "item": "rs:steel_framed_workbench",
+            "text": "Steel framed workbench",
+            "level": 46
+          },
+          {
+            "item": "rs:sink",
+            "text": "Sink",
+            "level": 47
+          },
+          {
+            "item": "rs:armour_stand",
+            "text": "Armour stand",
+            "level": 55
+          },
+          {
+            "item": "rs:workbench_with_vice",
+            "text": "Workbench with vice",
+            "level": 62
+          },
+          {
+            "item": "rs:marble_fireplace",
+            "text": "Marble fireplace",
+            "level": 63
+          },
+          {
+            "item": "rs:banner_easel",
+            "text": "Banner easel",
+            "level": 66
+          },
+          {
+            "item": "rs:workbench_with_lathe",
+            "text": "Workbench with lathe",
+            "level": 77
+          },
+          {
+            "item": "rs:ancient_altar",
+            "text": "Ancient altar",
+            "level": 80
+          },
+          {
+            "item": "rs:lunar_altar",
+            "text": "Lunar altar",
+            "level": 80
+          },
+          {
+            "item": "rs:dark_altar",
+            "text": "Dark altar",
+            "level": 80
+          }
+        ]
+      },{
+        "name": "Surfaces",
+        "lines": [
+          {
+            "item": "rs:crude_wooden_chair",
+            "text": "Crude wooden chair",
+            "level": 1
+          },
+          {
+            "item": "rs:wooden_chair",
+            "text": "Wooden chair",
+            "level": 8
+          },
+          {
+            "item": "rs:wooden_dining_table",
+            "text": "Wooden dining table",
+            "level": 10
+          },
+          {
+            "item": "rs:wooden_kitchen_table",
+            "text": "Wooden kitchen table",
+            "level": 12
+          },
+          {
+            "item": "rs:rocking_chair",
+            "text": "Rocking chair",
+            "level": 14
+          },
+          {
+            "item": "rs:oak_chair",
+            "text": "Oak chair",
+            "level": 19
+          },
+          {
+            "item": "rs:wooden_bed",
+            "text": "Wooden bed",
+            "level": 20
+          },
+          {
+            "item": "rs:oak_dining_table",
+            "text": "Oak dining table",
+            "level": 22
+          },
+          {
+            "item": "rs:oak_dining_bench",
+            "text": "Oak dining bench",
+            "level": 22
+          },
+          {
+            "item": "rs:oak_armchair",
+            "text": "Oak armchair",
+            "level": 26
+          },
+          {
+            "item": "rs:oak_bed",
+            "text": "Oak bed",
+            "level": 30
+          },
+          {
+            "item": "rs:carved_oak_dining_table",
+            "text": "Carved oak dining table",
+            "level": 31
+          },
+          {
+            "item": "rs:carved_oak_dining_bench",
+            "text": "Carved oak dining bench",
+            "level": 31
+          },
+          {
+            "item": "rs:oak_kitchen_table",
+            "text": "Oak kitchen table",
+            "level": 32
+          },
+          {
+            "item": "rs:large_oak_bed",
+            "text": "Large oak bed",
+            "level": 34
+          },
+          {
+            "item": "rs:teak_armchair",
+            "text": "Teak armchair",
+            "level": 35
+          },
+          {
+            "item": "rs:teak_dining_table",
+            "text": "Teak dining table",
+            "level": 38
+          },
+          {
+            "item": "rs:teak_dining_bench",
+            "text": "Teak dining bench",
+            "level": 38
+          },
+          {
+            "item": "rs:teak_bed",
+            "text": "Teak bed",
+            "level": 40
+          },
+          {
+            "item": "rs:carved_teak_dining_bench",
+            "text": "Carved teak dining bench",
+            "level": 44
+          },
+          {
+            "item": "rs:carved_teak_dining_table",
+            "text": "Carved teak dining table",
+            "level": 45
+          },
+          {
+            "item": "rs:large_teak_bed",
+            "text": "Large teak bed",
+            "level": 45
+          },
+          {
+            "item": "rs:mahogany_armchair",
+            "text": "Mahogany armchair",
+            "level": 50
+          },
+          {
+            "item": "rs:mahogany_dining_table",
+            "text": "Mahogany dining table",
+            "level": 52
+          },
+          {
+            "item": "rs:mahogany_dining_bench",
+            "text": "Mahogany dining bench",
+            "level": 52
+          },
+          {
+            "item": "rs:teak_kitchen_table",
+            "text": "Teak kitchen table",
+            "level": 52
+          },
+          {
+            "item": "rs:mahogany_four_poster_bed",
+            "text": "Mahogany four-poster bed",
+            "level": 53
+          },
+          {
+            "item": "rs:oak_throne",
+            "text": "Oak throne",
+            "level": 60
+          },
+          {
+            "item": "rs:gilded_mahogany_four_poster_bed",
+            "text": "Gilded mahogany four-poster bed",
+            "level": 60
+          },
+          {
+            "item": "rs:gilded_mahogany_dining_bench",
+            "text": "Gilded mahogany dining bench",
+            "level": 61
+          },
+          {
+            "item": "rs:teak_throne",
+            "text": "Teak throne",
+            "level": 67
+          },
+          {
+            "item": "rs:gilded_mahogany_and_marble_table",
+            "text": "Gilded mahogany and marble table",
+            "level": 72
+          },
+          {
+            "item": "rs:mahogany_throne",
+            "text": "Mahogany throne",
+            "level": 74
+          },
+          {
+            "item": "rs:gilded_mahogany_throne",
+            "text": "Gilded mahogany throne",
+            "level": 81
+          },
+          {
+            "item": "rs:teak_kitchen_table",
+            "text": "Teak kitchen table",
+            "level": 52
+          },
+          {
+            "item": "rs:teak_kitchen_table",
+            "text": "Teak kitchen table",
+            "level": 52
+          },
+          {
+            "item": "rs:teak_kitchen_table",
+            "text": "Teak kitchen table",
+            "level": 52
+          },
+          {
+            "item": "rs:skeleton_throne",
+            "text": "Skeleton throne",
+            "level": 88
+          },
+          {
+            "item": "rs:crystal_throne",
+            "text": "Crystal throne",
+            "level": 95
+          },
+          {
+            "item": "rs:demonic_throne",
+            "text": "Demonic throne",
+            "level": 99
+          }
+        ]
+      } ,{
+        "name": "Storage",
+        "lines": [
+          {
+            "item": "rs:wooden_bookcase",
+            "text": "Wooden bookcase",
+            "level": 4
+          },
+          {
+            "item": "rs:wooden_shelves_1",
+            "text": "Wooden shelves 1",
+            "level": 6
+          },
+          {
+            "item": "rs:beer_barrel",
+            "text": "Beer barrel",
+            "level": 7
+          },
+          {
+            "item": "rs:wooden_larder",
+            "text": "Wooden larder",
+            "level": 9
+          },
+          {
+            "item": "rs:cider_barrel",
+            "text": "Cider barrel",
+            "level": 12
+          },
+          {
+            "item": "rs:wooden_shelves_2",
+            "text": "Wooden shelves 2",
+            "level": 12
+          },
+          {
+            "item": "rs:tool_store_1",
+            "text": "Tool store 1",
+            "level": 15
+          },
+          {
+            "item": "rs:asgarnian_ale_barrel",
+            "text": "Asgarnian ale barrel",
+            "level": 18
+          },
+          {
+            "item": "rs:shoe_box",
+            "text": "Shoe box",
+            "level": 20
+          },
+          {
+            "item": "rs:wooden_shaving_stand",
+            "text": "Wooden shaving stand",
+            "level": 21
+          },
+          {
+            "item": "rs:wooden_shelves_3",
+            "text": "Wooden shelves 3",
+            "level": 23
+          },
+          {
+            "item": "rs:tool_store_2",
+            "text": "Tool store 2",
+            "level": 25
+          },
+          {
+            "item": "rs:greenmans_ale_barrel",
+            "text": "Greenman's Ale barrel",
+            "level": 26
+          },
+          {
+            "item": "rs:oak_chest_of_drawers",
+            "text": "oak chest of drawers",
+            "level": 27
+          },
+          {
+            "item": "rs:oak_bookcase",
+            "text": "Oak bookcase",
+            "level": 29
+          },
+          {
+            "item": "rs:oak_shaving_stand",
+            "text": "Oak shaving stand",
+            "level": 29
+          },
+          {
+            "item": "rs:oak_larder",
+            "text": "Oak larder",
+            "level": 33
+          },
+          {
+            "item": "rs:oak_shelves_1",
+            "text": "Oak shelves 1",
+            "level": 34
+          },
+          {
+            "item": "rs:tool_store_3",
+            "text": "Tool store 3",
+            "level": 35
+          },
+          {
+            "item": "rs:dragon_bitter_barrel",
+            "text": "Dragon Bitter barrel",
+            "level": 36
+          },
+          {
+            "item": "rs:oak_dresser",
+            "text": "Oak dresser",
+            "level": 37
+          },
+          {
+            "item": "rs:oak_Wardrobe_bedroom",
+            "text": "Oak wardrobe (bedroom)",
+            "level": 39
+          },
+          {
+            "item": "rs:mahogany_bookcase",
+            "text": "Mahogany bookcase",
+            "level": 40
+          },
+          {
+            "item": "rs:oak_wardrobe_costume_room",
+            "text": "Oak wardrobe (costtume room)",
+            "level": 15
+          },
+          {
+            "item": "rs:teak_larder",
+            "text": "Teak larder",
+            "level": 43
+          },
+          {
+            "item": "rs:oak_fancy_dress_box",
+            "text": "Oak fancy dress box",
+            "level": 44
+          },
+          {
+            "item": "rs:tool_store_4",
+            "text": "Tool store 4",
+            "level": 44
+          },
+          {
+            "item": "rs:oak_shelves_2",
+            "text": "Oak shelves 2",
+            "level": 45
+          },
+          {
+            "item": "rs:oak_armour_case",
+            "text": "Oak armour case",
+            "level": 46
+          },
+          {
+            "item": "rs:teak_dresser",
+            "text": "Teak dresser",
+            "level": 46
+          },
+          {
+            "item": "rs:chefs_delight_barrel",
+            "text": "Chef's Delight barrel",
+            "level": 48
+          },
+          {
+            "item": "rs:oak_treasure_chest",
+            "text": "Oak treasure chest",
+            "level": 48
+          },
+          {
+            "item": "rs:oak_toy_box",
+            "text": "Oak toy box",
+            "level": 50
+          },
+          {
+            "item": "rs:carved_oak_wardrobe_costume_room",
+            "text": "Carved oak wardrobe (costume room)",
+            "level": 51
+          },
+          {
+            "item": "rs:teak_chest_of_drawers",
+            "text": "Teak chest of drawers",
+            "level": 51
+          },
+          {
+            "item": "rs:oak_cape_rack",
+            "text": "Oak cape rack",
+            "level": 54
+          },
+          {
+            "item": "rs:tool_store_5",
+            "text": "Tool store 5",
+            "level": 55
+          },
+          {
+            "item": "rs:teak_shelves_1",
+            "text": "Teak shelves 1",
+            "level": 56
+          },
+          {
+            "item": "rs:fancy_teak_dresser",
+            "text": "Fancy teak dresser",
+            "level": 56
+          },
+          {
+            "item": "rs:servants_moneybag",
+            "text": "Servant's moneybag",
+            "level": 58
+          },
+          {
+            "item": "rs:teak_wardrobe_costume_room",
+            "text": "Teak wardrobe (costume room)",
+            "level": 60
+          },
+          {
+            "item": "rs:spice_rack",
+            "text": "Spice Rack",
+            "level": 60
+          },
+          {
+            "item": "rs:teak_fancy_dress_box",
+            "text": "Teak fancy dress box",
+            "level": 62
+          },
+          {
+            "item": "rs:teak_cape_rack",
+            "text": "Teak cape rack",
+            "level": 63
+          },
+          {
+            "item": "rs:teak_wardrobe_bedroom",
+            "text": "Teak wardrobe (bedroom)",
+            "level": 63
+          },
+          {
+            "item": "rs:teak_armour_case",
+            "text": "Teak armour case",
+            "level": 64
+          },
+          {
+            "item": "rs:mahogany_dresser",
+            "text": "Mahogany dresser",
+            "level": 64
+          },
+          {
+            "item": "rs:teak_treasure_chest",
+            "text": "Teak treasure chest",
+            "level": 66
+          },
+          {
+            "item": "rs:teak_toy_box",
+            "text": "Teak toyo boy",
+            "level": 68
+          },
+          {
+            "item": "rs:carved_teak_wardrobe_costume_room",
+            "text": "Carved teak wardrobe (costume room)",
+            "level": 69
+          },
+          {
+            "item": "rs:mahogany_cape_rack",
+            "text": "Mahogany cape rack",
+            "level": 72
+          },
+          {
+            "item": "rs:gilded_mahogany_dresser",
+            "text": "Gilded mahogany dresser",
+            "level": 74
+          },
+          {
+            "item": "rs:mahogany_wardrobe_bedroom",
+            "text": "Mahogany wardrobe (bedroom)",
+            "level": 75
+          },
+          {
+            "item": "rs:mahogany_wardrobe_costume_room",
+            "text": "Mahogany wardrobe (costume room)",
+            "level": 78
+          },
+          {
+            "item": "rs:mahogany_fancy_dress_box",
+            "text": "Mahogany fancy dress box",
+            "level": 80
+          },
+          {
+            "item": "rs:basic_jewellery_box",
+            "text": "Basic jewellery box",
+            "level": 81
+          },
+          {
+            "item": "rs:gilded_mahogany_cape_rack",
+            "text": "Gilded mahogany cape rack",
+            "level": 81
+          },
+          {
+            "item": "rs:mahogany_armour_case",
+            "text": "Mahogany armour case",
+            "level": 82
+          },
+          {
+            "item": "rs:mahogany_treasure_chest",
+            "text": "Mahogany treasure chest",
+            "level": 84
+          },
+          {
+            "item": "rs:fancy_jewellery_box",
+            "text": "Fancy jewellery box",
+            "level": 86
+          },
+          {
+            "item": "rs:mahogany_toy_box",
+            "text": "Mahogany toy box",
+            "level": 86
+          },
+          {
+            "item": "rs:gilded_mahogany_wardrobe_costume_room",
+            "text": "Gilded mahogany wardrobe (costume room)",
+            "level": 87
+          },
+          {
+            "item": "rs:gilded_mahogany_wardrobe_bedroom",
+            "text": "Gilded mahogany wardrobe (Bedroom)",
+            "level": 87
+          },
+          {
+            "item": "rs:marble_cape_rack",
+            "text": "Marble cape rack",
+            "level": 90
+          },
+          {
+            "item": "rs:marble_wardrobe_costume_room",
+            "text": "Marble wardrobe (costume room)",
+            "level": 96
+          },
+          {
+            "item": "rs:magic_stone_cape_rack",
+            "text": "Magic stone cape rack",
+            "level": 99
+          }
+    ]
+  },{
+    "name": "Decorative",
+    "lines": [
+      {
+        "item": "rs:redberry_bushes",
+        "text": "Redberry bushes\\nPayment: Cabbages(10) x4",
+        "level": 10
+      },
+      {
+        "item": "rs:brown_rug",
+        "text": "Brown rug",
+        "level": 2
+      },
+      {
+        "item": "rs:torn_curtains",
+        "text": "Torn curtains",
+        "level": 2
+      },
+      {
+        "item": "rs:rug",
+        "text": "Rug",
+        "level": 13
+      },
+      {
+        "item": "rs:curtains",
+        "text": "Curtains",
+        "level": 18
+      },
+      {
+        "item": "rs:oak_clock",
+        "text": "Oak clock",
+        "level": 25
+      },
+      {
+        "item": "rs:oak_lectern",
+        "text": "Oak lectern",
+        "level": 40
+      },
+      {
+        "item": "rs:opulent_curtains",
+        "text": "Opulent curtains",
+        "level": 40
+      },
+      {
+        "item": "rs:globe",
+        "text": "globe",
+        "level": 41
+      },
+      {
+        "item": "rs:alchemical_chart",
+        "text": "Alchemical chart",
+        "level": 43
+      },
+      {
+        "item": "rs:wooden_telescope",
+        "text": "Wooden telescope",
+        "level": 44
+      },
+      {
+        "item": "rs:oak_eagle_lectern",
+        "text": "Oak eagle lectern",
+        "level": 47
+      },
+      {
+        "item": "rs:oak_demon_lectern",
+        "text": "Oak demon lectern",
+        "level": 47
+      },
+      {
+        "item": "rs:ornamental_globe",
+        "text": "Ornamental globe",
+        "level": 50
+      },
+      {
+        "item": "rs:teak_clock",
+        "text": "Teak clock",
+        "level": 55
+      },
+      {
+        "item": "rs:teak_eagle_lectern",
+        "text": "Teak eagle lectern",
+        "level": 57
+      },
+      {
+        "item": "rs:teak_demon_lectern",
+        "text": "Teak demon lectern",
+        "level": 57
+      },
+      {
+        "item": "rs:lunar_globe",
+        "text": "Lunar globe",
+        "level": 59
+      },
+      {
+        "item": "rs:astronomical_chart",
+        "text": "Astronomical chart",
+        "level": 63
+      },
+      {
+        "item": "rs:teak_telescope",
+        "text": "Teak telescope",
+        "level": 64
+      },
+      {
+        "item": "rs:opulent_rug",
+        "text": "Opulent rug",
+        "level": 65
+      },
+      {
+        "item": "rs:mahogany_eagle_lectern",
+        "text": "Mahogany eagle lectern",
+        "level": 67
+      },
+      {
+        "item": "rs:mahogany_demon_lectern",
+        "text": "Mahogany demon lectern",
+        "level": 67
+      },
+      {
+        "item": "rs:celestial_globe",
+        "text": "Celestial globe",
+        "level": 68
+      },
+      {
+        "item": "rs:dungeon_candles",
+        "text": "Dungeon candles",
+        "level": 72
+      },
+      {
+        "item": "rs:decorative_dungeon_bloodstain",
+        "text": "Decorative dungeon bloodstain",
+        "level": 72
+      },
+      {
+        "item": "rs:armillary_sphere",
+        "text": "Armillary sphere",
+        "level": 77
+      },
+      {
+        "item": "rs:marble_lectern",
+        "text": "Marble lectern",
+        "level": 77
+      },
+      {
+        "item": "rs:infernal chart",
+        "text": "Infernal chart",
+        "level": 83
+      },
+      {
+        "item": "rs:decorative_dungeon_pipe",
+        "text": "Decorative dungeon pipe",
+        "level": 83
+      },
+      {
+        "item": "rs:dungeon_torches",
+        "text": "Dungeon torches",
+        "level": 84
+      },
+      {
+        "item": "rs:mahoganys_scope",
+        "text": "Mahogany's scope",
+        "level": 84
+      },
+      {
+        "item": "rs:gilded_mahogany_clock",
+        "text": "Gilded mahogany clock",
+        "level": 85
+      },
+      {
+        "item": "rs:small_orrery",
+        "text": "Small orrery",
+        "level": 86
+      },
+      {
+        "item": "rs:hanging_dungeon_skeleton",
+        "text": "Hanging dungeon skeleton",
+        "level": 94
+      },
+      {
+        "item": "rs:dungeon_skull_torches",
+        "text": "Dungeon skull torches",
+        "level": 94
+      },
+      {
+        "item": "rs:large_orrery",
+        "text": "Large orrery",
+        "level": 95
+      }
+    ]
+  },{
+    "name": "Trophies",
+    "lines": [
+      {
+        "item": "rs:oak_wall_decoration",
+        "text": "Oak wall decoration",
+        "level": 16
+      },
+      {
+        "item": "rs:trophy_pedestal",
+        "text": "Trophy pedestal",
+        "level": 27
+      },
+      {
+        "item": "rug_league_hall",
+        "text": "Rug (league hall)",
+        "level": 28
+      },
+      {
+        "item": "rs:trailblazer_rug",
+        "text": "Trailblazer rug",
+        "level": 28
+      },
+      {
+        "item": "rs:suit_of_armour",
+        "text": "Suit of armour",
+        "level": 28
+      },
+      {
+        "item": "rs:banner_stand",
+        "text": "Banner stand",
+        "level": 30
+      },
+      {
+        "item": "rs:league_statue",
+        "text": "League statue",
+        "level": 32
+      },
+      {
+        "item": "rs:trailblazer_globe",
+        "text": "Trailblazer globe",
+        "level": 32
+      },
+      {
+        "item": "rs:oak_outfit_stand",
+        "text": "Oak outfit stand",
+        "level": 34
+      },
+      {
+        "item": "rs:small_potrait",
+        "text": "Small potrait",
+        "level": 35
+      },
+      {
+        "item": "rs:oak_trophy_case",
+        "text": "Oak trophy case",
+        "level": 36
+      },
+      {
+        "item": "rs:mounted_bass",
+        "text": "mounted_bass",
+        "level": 36
+      },
+      {
+        "item": "rs:teak_wall_decoration",
+        "text": "Teak wall decoration",
+        "level": 36
+      },
+      {
+        "item": "rs:minor_slayer_monster_head",
+        "text": "Minor Slayer monster head",
+        "level": 38
+      },
+      {
+        "item": "rs:small_map",
+        "text": "Small map",
+        "level": 38
+      },
+      {
+        "item": "rs:rune_display_cases",
+        "text": "Rune display cases",
+        "level": 41
+      },
+      {
+        "item": "rs:mounted_sword",
+        "text": "Mounted sword",
+        "level": 42
+      },
+      {
+        "item": "rs:small_landscape",
+        "text": "Small landscape",
+        "level": 44
+      },
+      {
+        "item": "rs:mounted_anti_dragon_shield",
+        "text": "Mounted Anti-Dragon Shield",
+        "level": 47
+      },
+      {
+        "item": "rs:mounted_amulet_of_glory",
+        "text": "Mounted Amulet of Glory",
+        "level": 47
+      },
+      {
+        "item": "rs:mounted_cape_of_legends",
+        "text": "Mounted Cape of Legends",
+        "level": 47
+      },
+      {
+        "item": "rs:mounted_mythical_cape",
+        "text": "Mounted Mythical Cape",
+        "level": 47
+      },
+      {
+        "item": "rs:leagues_accomplishment_scroll",
+        "text": "Leaugues accomomplishment scroll",
+        "level": 48
+      },
+      {
+        "item": "rs:large_potrait",
+        "text": "Large potrait",
+        "level": 55
+      },
+      {
+        "item": "rs:gilded_mahogany_wall_decoration",
+        "text": "Gilded mahogany wall decoration",
+        "level": 56
+      },
+      {
+        "item": "rs:mounted_swordfish",
+        "text": "Mounted swordfish",
+        "level": 56
+      },
+      {
+        "item": "rs:medium_map",
+        "text": "Medium map",
+        "level": 58
+      },
+      {
+        "item": "rs:medium_slayer_monster_head",
+        "text": "Medium Slayer monster head",
+        "level": 58
+      },
+      {
+        "item": "rs:opulent_rug_league_hall",
+        "text": "Opulent rug league hall",
+        "level": 65
+      },
+      {
+        "item": "rs:large_landscape",
+        "text": "Large landscape",
+        "level": 65
+      },
+      {
+        "item": "rs:round_wall_mounted_shield",
+        "text": "Round wall mounted shield",
+        "level": 66
+      },
+      {
+        "item": "rs:mahogany_outfit_stand",
+        "text": "Mahogany outfit stand",
+        "level": 74
+      },
+      {
+        "item": "rs:mounted_shark",
+        "text": "Mounted shark",
+        "level": 76
+      },
+      {
+        "item": "rs:square_wall_mounted_shield",
+        "text": "Square wall-mounted shield",
+        "level": 76
+      },
+      {
+        "item": "rs:mahogany_trophy_case",
+        "text": "Mahogany trophy case",
+        "level": 78
+      },
+      {
+        "item": "rs:major_slayer_monster_head",
+        "text": "Major Slayer monster head",
+        "level": 78
+      },
+      {
+        "item": "rs:large_map",
+        "text": "Large map",
+        "level": 78
+      },
+      {
+        "item": "rs:quest_list",
+        "text": "Quest list",
+        "level": 80
+      },
+      {
+        "item": "rs:mounted_emblem",
+        "text": "Mounted emblem",
+        "level": 80
+      },
+      {
+        "item": "rs:mounted_coins",
+        "text": "Mounted coins",
+        "level": 80
+      },
+      {
+        "item": "rs:cape_hanger",
+        "text": "Cape hanger",
+        "level": 80
+      },
+      {
+        "item": "rs:mounted_digsite_pendant",
+        "text": "Mounted Digsite Pendant",
+        "level": 82
+      }
+     ]
+  },{
+    "name": "Games",
+    "lines": [
+      {
+        "item": "rs:hoop_and_stick_game",
+        "text": "Hoop-and-stick game",
+        "level": 30
+      },
+      {
+        "item": "rs:boxing_ring",
+        "text": "Boxing ring",
+        "level": 32
+      },
+      {
+        "item": "boxing_glove_rack",
+        "text": "Boxing glove rack",
+        "level": 34
+      },
+      {
+        "item": "rs:oak_prize_chest",
+        "text": "Oak pricechest",
+        "level": 34
+      },
+      {
+        "item": "rs:lesser_magical_balance",
+        "text": "Lesser magical balance",
+        "level": 37
+      },
+      {
+        "item": "rs:jester_game",
+        "text": "Jester game",
+        "level": 39
+      },
+      {
+        "item": "rs:clay_attack_stone",
+        "text": "Clay attack stone",
+        "level": 39
+      },
+      {
+        "item": "rs:fencing_ring",
+        "text": "Fencing ring",
+        "level": 41
+      },
+      {
+        "item": "rs:weapons_rack",
+        "text": "Weapons rack",
+        "level": 44
+      },
+      {
+        "item": "rs:teak_prize_chest",
+        "text": "Teak_prize_chest",
+        "level": 44
+      },
+      {
+        "item": "rs:combat_dummy",
+        "text": "Combat dummy",
+        "level": 48
+      },
+      {
+        "item": "rs:treasure_hunt_fairy_house",
+        "text": "Treasure hunt fairy house",
+        "level": 49
+      },
+      {
+        "item": "rs:combat_ring",
+        "text": "Combat ring",
+        "level": 51
+      },
+      {
+        "item": "rs:combat_dummy_undead_and_slayer",
+        "text": "Combat dummy (Undead and slayer)",
+        "level": 53
+      },
+      {
+        "item": "rs:dartboard",
+        "text": "Dartboard)",
+        "level": 54
+      },
+      {
+        "item": "rs:extra_weapons_rack",
+        "text": "Extra weapons rack",
+        "level": 54
+      },
+      {
+        "item": "rs:mahogany_prize_chest",
+        "text": "Mahogany prize chest",
+        "level": 54
+      },
+      {
+        "item": "rs:medium_balance",
+        "text": "Medium balance",
+        "level": 57
+      },
+      {
+        "item": "rs:limestone_attack_stone",
+        "text": "Limestone attack stone",
+        "level": 59
+      },
+      {
+        "item": "rs:hangman_game",
+        "text": "Hangman game",
+        "level": 59
+      },
+      {
+        "item": "rs:simple_pet_arena",
+        "text": "Simple pet arena",
+        "level": 63
+      },
+      {
+        "item": "rs:ranging pedestals",
+        "text": "Ranging pedestals",
+        "level": 71
+      },
+      {
+        "item": "rs:greater_magical_Balance",
+        "text": "Greater magical balance",
+        "level": 77
+      },
+      {
+        "item": "rs:marble_attack_stone",
+        "text": "Marble attack stone",
+        "level": 79
+      },
+      {
+        "item": "rs:archery_target",
+        "text": "Archergy target",
+        "level": 81
+      },
+      {
+        "item": "rs:balance_beam",
+        "text": "Balance beam",
+        "level": 81
+      }
+    ]
+  },{
+    "name": "Garden",
+    "lines": [
+      {
+        "item": "rs:exit_portal",
+        "text": "Exit portal",
+        "level": 1
+      },
+      {
+        "item": "rs:low_level_plants",
+        "text": "Low-level plants",
+        "level": 1
+      },
+      {
+        "item": "rs:decorative_rock",
+        "text": "Decorative_rock",
+        "level": 5
+      },
+      {
+        "item": "rs:con_tree",
+        "text": "Tree",
+        "level": 5
+      },
+      {
+        "item": "rs:mid_level_plants",
+        "text": "Mid-level plants",
+        "level": 6
+      },      {
+        "item": "rs:pond",
+        "text": "Pond",
+        "level": 10
+      },
+      {
+        "item": "rs:nice_tree",
+        "text": "Nice tree",
+        "level": 10
+      },
+      {
+        "item": "rs:high_level_plants",
+        "text": "High-level plants",
+        "level": 12
+      },
+      {
+        "item": "rs:imp_statue",
+        "text": "Imp statue",
+        "level": 15
+      },
+      {
+        "item": "rs:oak_tree",
+        "text": "Oak tree",
+        "level": 15
+      },
+      {
+        "item": "rs:willow_tree",
+        "text": "Willow tree",
+        "level": 30
+      },
+      {
+        "item": "rs:tip_jar",
+        "text": "Tip jar",
+        "level": 40
+      },
+      {
+        "item": "rs:maple_tree",
+        "text": "Maple tree",
+        "level": 45
+      },
+      {
+        "item": "rs:boundary_stones",
+        "text": "Boundary stones",
+        "level": 55
+      },
+      {
+        "item": "rs:thorny_hedge",
+        "text": "Thorny hedge",
+        "level": 56
+      },
+      {
+        "item": "rs:desert_pet_habitat",
+        "text": "Desert_pet_habitat",
+        "level": 57
+      },
+      {
+        "item": "rs:wooden_fence",
+        "text": "Wooden fence",
+        "level": 59
+      },
+      {
+        "item": "rs:nice_hedge",
+        "text": "Nice hedge",
+        "level": 60
+      },
+      {
+        "item": "rs:yew_tree",
+        "text": "Yew tree",
+        "level": 60
+      },
+      {
+        "item": "rs:stone_wall",
+        "text": "Stone wall",
+        "level": 63
+      },
+      {
+        "item": "rs:small_box_hedge",
+        "text": "Small box hedge",
+        "level": 64
+      },
+      {
+        "item": "rs:gazebo",
+        "text": "Gazebo",
+        "level": 65
+      },
+      {
+        "item": "rs:zen_theme",
+        "text": "Zen theme",
+        "level": 65
+      },
+      {
+        "item": "rs:topiary_bush",
+        "text": "Topiary bush",
+        "level": 65
+      },
+      {
+        "item": "rs:sunflower",
+        "text": "Sunflower",
+        "level": 66
+      },
+      {
+        "item": "rs:rosemary",
+        "text": "Rosemary",
+        "level": 66
+      },
+      {
+        "item": "rs:teak_garden_bench",
+        "text": "Teak garden bench",
+        "level": 66
+      },
+      {
+        "item": "rs:iron_railings",
+        "text": "Iron railings",
+        "level": 67
+      },
+      {
+        "item": "rs:topiary_hedge",
+        "text": "Topiary hedge",
+        "level": 68
+      },
+      {
+        "item": "rs:dungeon_entrance",
+        "text": "Dungeon entrance",
+        "level": 70
+      },
+      {
+        "item": "rs:marigolds",
+        "text": "marigolds",
+        "level": 71
+      },
+      {
+        "item": "rs:daffodils",
+        "text": "Daffodils",
+        "level": 71
+      },
+      {
+        "item": "rs:picket_fence",
+        "text": "Picket fence",
+        "level": 71
+      },
+      {
+        "item": "rs:small_fountain",
+        "text": "Small fountain",
+        "level": 71
+      },
+      {
+        "item": "rs:fancy_hedge",
+        "text": "Fancy hedge",
+        "level": 72
+      },
+      {
+        "item": "rs:magic_tree",
+        "text": "Magic tree",
+        "level": 75
+      },
+      {
+        "item": "rs:otherwordly_theme",
+        "text": "Otherworldly_theme",
+        "level": 75
+      },
+      {
+        "item": "rs:spirit_tree",
+        "text": "Spirit tree",
+        "level": 75
+      },
+      {
+        "item": "rs:large_fountain",
+        "text": "Large fountain",
+        "level": 75
+      },
+      {
+        "item": "rs:garden_fence",
+        "text": "Garden_fence",
+        "level": 75
+      },
+      {
+        "item": "rs:tall_fancy_hedge",
+        "text": "Tall fancy hedge",
+        "level": 76
+      },
+      {
+        "item": "rs:topiary_bush",
+        "text": "Topiary bush",
+        "level": 65
+      },
+      {
+        "item": "rs:topiary_bush",
+        "text": "Topiary bush",
+        "level": 65
+      },
+      {
+        "item": "rs:roses",
+        "text": "Roses",
+        "level": 76
+      },
+      {
+        "item": "rs:bluebells",
+        "text": "Bluebells",
+        "level": 76
+      },
+      {
+        "item": "rs:gnome_bench",
+        "text": "Gnome bench",
+        "level": 77
+      },
+      {
+        "item": "rs:marble_wall",
+        "text": "Marble wakk",
+        "level": 79
+      },
+      {
+        "item": "rs:obelisk",
+        "text": "Obelisk",
+        "level": 80
+      },
+      {
+        "item": "rs:tall_box_hedge",
+        "text": "Tall box hedge",
+        "level": 80
+      },
+      {
+        "item": "rs:posh_fountain",
+        "text": "Posh fountain",
+        "level": 81
+      },
+      {
+        "item": "rs:fairy_ring",
+        "text": "Fairy ring",
+        "level": 85
+      },
+      {
+        "item": "rs:marble_garden_bench",
+        "text": "Marble garden bench (decoration only)",
+        "level": 88
+      }
+    ]
+  },{
+    "name": "Dungeon",
+    "lines": [
+      {
+        "item": "rs:throne_room_floor_decoration",
+        "text": "2x Throne room floor decoration",
+        "level": 61
+      },
+      {
+        "item": "rs:oak_cage",
+        "text": "Oak cage",
+        "level": 65
+      },
+      {
+        "item": "rs:oubliette_spikes",
+        "text": "Oubliette spikes",
+        "level": 65
+      },
+      {
+        "item": "rs:steel_cage",
+        "text": "Steel cage",
+        "level": 68
+      },
+      {
+        "item": "rs:oak_and_steel_cage",
+        "text": "Oak and steel cage",
+        "level": 70
+      },      {
+        "item": "rs:skeleton_guard",
+        "text": "Skeleton guard",
+        "level": 70
+      },
+      {
+        "item": "rs:tentacle_pool",
+        "text": "Tentacle pool",
+        "level": 71
+      },
+      {
+        "item": "rs:spike_trap",
+        "text": "Spike trap",
+        "level": 72
+      },
+      {
+        "item": "rs:large_trapdoor",
+        "text": "Large trapdoor",
+        "level": 74
+      },
+      {
+        "item": "rs:oak_dungeon_door",
+        "text": "Oak dungeon door",
+        "level": 74
+      },      
+      {
+        "item": "rs:guard_dog",
+        "text": "Guard dog",
+        "level": 74
+      },      
+      {
+        "item": "rs:wooden_dungeon_treasure_crate",
+        "text": "Wooden dungeon treasure crate",
+        "level": 75
+      },      
+      {
+        "item": "rs:demon",
+        "text": "Demon",
+        "level": 75
+      },      
+      {
+        "item": "rs:steel_cage",
+        "text": "Steel cage",
+        "level": 75
+      },      
+      {
+        "item": "rs:man_trap",
+        "text": "Man trap",
+        "level": 76
+      },      
+      {
+        "item": "rs:oubliette_flame_pit",
+        "text": "Oubliette flame pit",
+        "level": 77
+      },      
+      {
+        "item": "rs:hobgoblin_guard",
+        "text": "Hobgoblin guard",
+        "level": 78
+      },      
+      {
+        "item": "rs:oak_dungeon_treasure_chest",
+        "text": "Oak dungeon treasure chest",
+        "level": 79
+      },      
+      {
+        "item": "rs:spiked_cage",
+        "text": "Spiked cage",
+        "level": 80
+      },      
+      {
+        "item": "rs:tangle_vine",
+        "text": "Tangle vine",
+        "level": 80
+      },      
+      {
+        "item": "rs:Kalphite soldier",
+        "text": "Kalphite soldier",
+        "level": 80
+      },      
+      {
+        "item": "rs:lesser_magic_cage",
+        "text": "Lesser magic cage",
+        "level": 82
+      },      
+      {
+        "item": "rs:baby_red_dragon",
+        "text": "Baby red dragon",
+        "level": 82
+      },      
+      {
+        "item": "rs:teak_dungeon_treasure_chest",
+        "text": "Teak dungeon treasure chest",
+        "level": 83
+      },      
+      {
+        "item": "rs:rocnar",
+        "text": "Rocnar",
+        "level": 83
+      },      
+      {
+        "item": "rs:steel_plated_oak_door",
+        "text": "Steel plated oak door",
+        "level": 84
+      },      
+      {
+        "item": "rs:marble_trap",
+        "text": "Marble trap",
+        "level": 84
+      },      
+      {
+        "item": "rs:tok-xil",
+        "text": "Tok-Xil",
+        "level": 85
+      },      
+      {
+        "item": "rs:bone_cage",
+        "text": "Bone cage",
+        "level": 85
+      },      
+      {
+        "item": "rs:huge_spider",
+        "text": "Huge spider",
+        "level": 86
+      },      
+      {
+        "item": "rs:mahogany_dungeon_treasure_chest",
+        "text": "Mahogany dungeon treasure chest",
+        "level": 87
+      },      
+      {
+        "item": "rs:teleport_trap",
+        "text": "Teleport trap",
+        "level": 88
+      },      
+      {
+        "item": "rs:greater_magic_cage",
+        "text": "Greater magic cage",
+        "level": 89
+      },      
+      {
+        "item": "rs:troll_guard",
+        "text": "Troll guard",
+        "level": 90
+      },      
+      {
+        "item": "rs:dagannoth",
+        "text": "Dagannoth",
+        "level": 90
+      },      
+      {
+        "item": "rs:magic_dungeon_treasure_chest",
+        "text": "Magic dungeon treasure chest",
+        "level": 91
+      },      
+      {
+        "item": "rs:marble_dungeon_door",
+        "text": "Marble dungeon door",
+        "level": 94
+      },      
+      {
+        "item": "rs:hellhound",
+        "text": "Hellhound",
+        "level": 94
+      },      
+      {
+        "item": "rs:steel_dragon",
+        "text": "steel_dragon",
+        "level": 95
+      }
+    ]
+  },{
+    "name": "Chapel",
+    "lines": [
+      {
+        "item": "rs:oak_altar",
+        "text": "Oak altar",
+        "level": 45
+      },
+      {
+        "item": "rs:steel_torches_chapel",
+        "text": "Steel torches chapel",
+        "level": 45
+      },
+      {
+        "item": "rs:icon_of_gnome_child",
+        "text": "Icon of Gnome Child",
+        "level": 45
+      },
+      {
+        "item": "rs:symbol_of_saradomin",
+        "text": "Symbol of Saradomin",
+        "level": 48
+      },
+      {
+        "item": "rs:symbol_of_guthix",
+        "text": "Symbol of Guthix",
+        "level": 48
+      },      {
+        "item": "rs:symbol_of_zamorak",
+        "text": "Symbol of Zamorak",
+        "level": 48
+      },
+      {
+        "item": "rs:wooden_torches_chapel",
+        "text": "Wooden torches (chapel)",
+        "level": 48
+      },
+      {
+        "item": "rs:chapel_windchimes",
+        "text": "Chapel windchimes",
+        "level": 49
+      },
+      {
+        "item": "rs:small_chapel_statue",
+        "text": "Small chapel statue",
+        "level": 49
+      },
+      {
+        "item": "rs:shuttered_chapel_window",
+        "text": "Shuttered chapel window",
+        "level": 49
+      },      
+      {
+        "item": "rs:teak_altar",
+        "text": "Teak altar",
+        "level": 50
+      },      
+      {
+        "item": "rs:steel_candlesticks",
+        "text": "Steel candlesticks",
+        "level": 53
+      },      
+      {
+        "item": "rs:cloth_covered_teak_altar",
+        "text": "Cloth covered teak altar",
+        "level": 56
+      },      
+      {
+        "item": "rs:gold_candlesticks",
+        "text": "Gold candlesticks",
+        "level": 57
+      },      
+      {
+        "item": "rs:chapel_bells",
+        "text": "Chapel bells",
+        "level": 58
+      },      
+      {
+        "item": "rs:icon_of_saradomin",
+        "text": "Icon of Saradomin",
+        "level": 59
+      },      
+      {
+        "item": "rs:Icon of Guthix",
+        "text": "Icon of Guthix",
+        "level": 59
+      },      
+      {
+        "item": "rs:icon_of_zamorak",
+        "text": "Icon of Zamorak",
+        "level": 59
+      },      
+      {
+        "item": "rs:cloth_covered_mahogany_altar",
+        "text": "Cloth-covered mahogany altar",
+        "level": 60
+      },      
+      {
+        "item": "rs:oak_incense_burners",
+        "text": "Oak incense burners",
+        "level": 61
+      },      
+      {
+        "item": "rs:limestone_altar",
+        "text": "Limestone altar",
+        "level": 64
+      },      
+      {
+        "item": "rs:mahogany_incense_burners",
+        "text": "Mahogany incense burners",
+        "level": 65
+      },      
+      {
+        "item": "rs:medium_chapel_statue",
+        "text": "Medium_chapel_statue",
+        "level": 69
+      },      
+      {
+        "item": "rs:chapel_organ",
+        "text": "Chapel organ",
+        "level": 69
+      },      
+      {
+        "item": "rs:decorative_chapel_window",
+        "text": "Decorative chapel window",
+        "level": 69
+      },      
+      {
+        "item": "rs:marble_incense_burner",
+        "text": "Marble incense burner",
+        "level": 69
+      },      
+      {
+        "item": "rs:marble_altar",
+        "text": "Marble altar",
+        "level": 70
+      },      
+      {
+        "item": "rs:icon_of_bob_the_cat",
+        "text": "Icon of bob the Cat",
+        "level": 71
+      },      
+      {
+        "item": "rs:gilded_marble_altar",
+        "text": "Gilded marble altar",
+        "level": 75
+      },      
+      {
+        "item": "rs:large_chapel_statue",
+        "text": "Large chapel statue",
+        "level": 89
+      },      
+      {
+        "item": "rs:stained_glass_chapel_window",
+        "text": "Stained-glass chapel window",
+        "level": 89
+      }
+    ]
+  },{
+    "name": "Other",
+    "lines": [
+      {
+        "item": "rs:cup_of_tea",
+        "text": "Mahogany Homes (beginner)",
+        "level": 1
+      },
+      {
+        "item": "rs:cat_blanket",
+        "text": "Cat blanket",
+        "level": 5
+      },
+      {
+        "item": "rs:stash_units",
+        "text": "STASH units (beginner)",
+        "level": 12
+      },
+      {
+        "item": "rs:cat_basket",
+        "text": "Cat basket",
+        "level": 19
+      },
+      {
+        "item": "rs:mahogany_homes",
+        "text": "Mahogany Homes(novice)",
+        "level": 20
+      },      {
+        "item": "rs:rope_bell_pull",
+        "text": "Rope bell pull",
+        "level": 26
+      },
+      {
+        "item": "rs:oak_staircase",
+        "text": "Oak staircase",
+        "level": 27
+      },
+      {
+        "item": "rs:stash_units_easy",
+        "text": "STASH units (easy)",
+        "level": 27
+      },
+      {
+        "item": "rs:cushioned_cat_basket",
+        "text": "Cushioned cat basket",
+        "level": 33
+      },
+      {
+        "item": "rs:teak_bell_pull",
+        "text": "Teak bell pull",
+        "level": 37
+      },      
+      {
+        "item": "rs:crystal_ball",
+        "text": "Crystal ball",
+        "level": 42
+      },      
+      {
+        "item": "rs:stash_units_medium",
+        "text": "STASH units (medium)",
+        "level": 42
+      },      
+      {
+        "item": "rs:teak_staircase",
+        "text": "Teak staircase",
+        "level": 48
+      },      
+      {
+        "item": "rs:teak_portal_frame",
+        "text": "Teak portal frame",
+        "level": 50
+      },      
+      {
+        "item": "rs:cup_of_tea",
+        "text": "Mahogany Homes (adept)",
+        "level": 50
+      },      
+      {
+        "item": "rs:elemental_sphere",
+        "text": "Elemental sphere",
+        "level": 54
+      },      
+      {
+        "item": "rs:stash_units_hard",
+        "text": "STASH units (hard)",
+        "level": 50
+      },      
+      {
+        "item": "rs:hallowed_sepulchre",
+        "text": "Hallowed Sepulchre - Repair bridge",
+        "level": 56
+      },      
+      {
+        "item": "rs:gilded_teak_bell_pull",
+        "text": "Gilded teak bell pull",
+        "level": 60
+      },      
+      {
+        "item": "rs:greater_teleport_focus",
+        "text": "Greater teleport focus",
+        "level": 65
+      },      
+      {
+        "item": "rs:mahogany_portal_frame",
+        "text": "Mahogany portal frame",
+        "level": 65
+      },      
+      {
+        "item": "rs:crystal_of_power",
+        "text": "Crystal of power",
+        "level": 66
+      },      
+      {
+        "item": "rs:limestone_spiral_staircase",
+        "text": "Limestone spiral staircase",
+        "level": 67
+      },      
+      {
+        "item": "rs:oak_oubliette_ladrer",
+        "text": "Oak oubliette ladder",
+        "level": 68
+      },      
+      {
+        "item": "rs:oak_lever",
+        "text": "Oak lever",
+        "level": 68
+      },      
+      {
+        "item": "rs:stash_units_elite",
+        "text": "STASH units (Elite)",
+        "level": 77
+      },      
+      {
+        "item": "rs:teak_oubliette_ladder",
+        "text": "Teak oubliette ladder",
+        "level": 78
+      },      
+      {
+        "item": "rs:teak_lever",
+        "text": "Teak lever",
+        "level": 78
+      },      
+      {
+        "item": "rs:marble_portal_frame",
+        "text": "Marble portal frame",
+        "level": 80
+      },      
+      {
+        "item": "rs:scrying_pool",
+        "text": "Scrying pool",
+        "level": 80
+      },      
+      {
+        "item": "rs:marble_staircase",
+        "text": "Marble staircase",
+        "level": 82
+      },      
+      {
+        "item": "rs:mahogany_oubliette_ladder",
+        "text": "Mahogany oubliette ladder",
+        "level": 88
+      },      
+      {
+        "item": "rs:mahogany_lever",
+        "text": "Mahogany lever",
+        "level": 88
+      },      
+      {
+        "item": "rs:stash_units_master",
+        "text": "STASH units (master)",
+        "level": 88
+      },      
+      {
+        "item": "rs:marble_spiral",
+        "text": "Marble spiral",
+        "level": 97
+      }
+    ]
+  },{
+    "name": "Servants",
+    "lines": [
+      {
+        "item": "rs:servant_rick",
+        "text": "Rick",
+        "level": 20
+      },
+      {
+        "item": "rs:servant_maid",
+        "text": "Maid",
+        "level": 25
+      },
+      {
+        "item": "rs:servant_cook",
+        "text": "Cook",
+        "level": 30
+      },
+      {
+        "item": "rs:servant_butler",
+        "text": "Butler",
+        "level": 39
+      },
+      {
+        "item": "rs:servant_demon_butler",
+        "text": "Demon Butler",
+        "level": 50
+      }
+    ]
+  },{
+    "name": "House Size",
+    "lines": [
+      {
+        "item": "rs:hammer",
+        "text": "Maximum rooms: 24",
+        "level": 1
+      },
+      {
+        "item": "rs:saw",
+        "text": "Maximum dimensions: 3x3",
+        "level": 1
+      },
+      {
+        "item": "rs:saw",
+        "text": "Maximum dimensions: 4x4",
+        "level": 15
+      },
+      {
+        "item": "rs:saw",
+        "text": "Maximum dimensions: 5x5",
+        "level": 30
+      },
+      {
+        "item": "rs:saw",
+        "text": "Maximum dimensions: 6x6",
+        "level": 45
+      },      {
+        "item": "rs:hammer",
+        "text": "Maximum rooms: 25",
+        "level": 50
+      },
+      {
+        "item": "rs:hammer",
+        "text": "Maximum rooms: 26",
+        "level": 56
+      },
+      {
+        "item": "rs:saw",
+        "text": "Maximum dimensions: 7x7",
+        "level": 60
+      },
+      {
+        "item": "rs:hammer",
+        "text": "Maximum rooms: 27",
+        "level": 62
+      },
+      {
+        "item": "rs:hammer",
+        "text": "Maximum rooms: 28",
+        "level": 68
+      },      
+      {
+        "item": "rs:hammer",
+        "text": "Maximum rooms: 29",
+        "level": 74
+      },      
+      {
+        "item": "rs:hammer",
+        "text": "Maximum rooms: 30",
+        "level": 80
+      },      
+      {
+        "item": "rs:hammer",
+        "text": "Maximum rooms: 31",
+        "level": 86
+      },      
+      {
+        "item": "rs:hammer",
+        "text": "Maximum rooms: 32",
+        "level": 92
+      },      
+      {
+        "item": "rs:hammer",
+        "text": "Maximum rooms: 33",
+        "level": 96
+      },      
+      {
+        "item": "rs:hammer",
+        "text": "Maximum rooms: 34",
+        "level": 99
+      }
+    ]
+  }
+]
+}

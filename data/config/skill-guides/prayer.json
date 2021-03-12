@@ -1,0 +1,153 @@
+{
+    "id": 130,
+    "name": "Prayer",
+    "members": false,
+    "sub_guides": [
+      {
+        "name": "Prayers",
+        "lines": [
+          {
+            "item": "rs:prayer_guide",
+            "text": "While any of your prayers are active, your prayer\\n points will drain. Once you have run out of prayer\\n points, you will no longer be able to use prayers.\\n Visit an altar to recharge your prayer points.", 
+            "level": ""
+           },
+          {
+            "item": "rs:thick_skin",
+            "text": "Thick Skin",
+            "level": 1
+          },
+          {
+            "item": "rs:burst_of_strength",
+            "text": "Burst of Strength",
+            "level": 4
+          },
+          {
+            "item": "rs:clarity_of_thought",
+            "text": "Clariy of Thought",
+            "level": 7
+          },
+          {
+            "item": "rs:sharp_eye",
+            "text": "Sharp Eye",
+            "level": 8
+          },
+          {
+            "item": "rs:mystic_will",
+            "text": "Mystic Will",
+            "level": 9
+          },
+          {
+            "item": "rs:rock_skin",
+            "text": "Rock Skin",
+            "level": 10
+          },
+          {
+            "item": "rs:superhuman_strength",
+            "text": "Superhuman Strength",
+            "level": 13
+          },
+          {
+            "item": "rs:improved_reflexes",
+            "text": "Improved Reflexes",
+            "level": 16
+          },
+          {
+            "item": "rs:rapid_restore",
+            "text": "Rapid Restore",
+            "level": 19
+          },
+          {
+            "item": "rs:rapid_heal",
+            "text": "Rapid Heal",
+            "level": 22
+          },
+          {
+            "item": "rs:protect_item",
+            "text": "Protect Item",
+            "level": 25
+          },
+          {
+            "item": "rs:hawk_eye",
+            "text": "Hawk Eye",
+            "level": 26
+          },
+          {
+            "item": "rs:mystic_lore",
+            "text": "Mystical Lore",
+            "level": 27
+          },
+          {
+            "item": "rs:steel_skin",
+            "text": "Steel Skin",
+            "level": 28
+          },
+          {
+            "item": "rs:ultimate_strength",
+            "text": "Ultimate Strength",
+            "level": 31
+          },
+          {
+            "item": "rs:incredible_reflexes",
+            "text": "Incredible Reflexes",
+            "level": 34
+          },
+          {
+            "item": "rs:protect_from_magic",
+            "text": "Protect from Magic",
+            "level": 37
+          },
+          {
+            "item": "rs:protect_from_missiles",
+            "text": "Protect from Missiles",
+            "level": 40
+          },
+          {
+            "item": "rs:protect_from_melee",
+            "text": "Protect from Melee",
+            "level": 43
+          },
+          {
+            "item": "rs:eagle_eye",
+            "text": "Eagle Eye",
+            "level": 44
+          },
+          {
+            "item": "rs:mystic_might",
+            "text": "Mystic Might",
+            "level": 45
+          },
+          {
+            "item": "rs:retribution",
+            "text": "Members: Retribution",
+            "level": 46
+          },
+          {
+            "item": "rs:redemption",
+            "text": "Members: Redemption",
+            "level": 49
+          },
+          {
+            "item": "rs:smite",
+            "text": "Members: Smite",
+            "level": 52
+          }
+        ]
+      },
+      {
+        "name": "Equipment",
+        "lines": [
+          {
+            "item": "rs:initate_full_helmet",
+            "text": "Initiate armour\\n(after Recruitment Drive, with\\nlevel 20 defence.", 
+            "level": "10"
+           },   
+           {
+            "item": "rs:proselyte_full_helmet",
+            "text": "Proselyte armour\\n(after Slug Menace, with\\nlevel 30 defence.", 
+            "level": "20"
+           }
+        ]
+      }
+    ]
+  }
+  

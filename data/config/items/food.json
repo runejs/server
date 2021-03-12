@@ -125,6 +125,10 @@
         "extends": "rs:food",
         "game_id": 1865
     },
+    "rs:uncooked_meat_pie": {
+        "extends": "rs:food",
+        "game_id": 2320
+    },
     "rs:redberry_pie": {
         "extends": "rs:food",
         "game_id": 2325
@@ -308,6 +312,110 @@
     "rs:butter": {
         "extends": "rs:food",
         "game_id": 6697
+    },
+    "rs:raw_shrimp": {
+        "extends": "rs:food",
+        "game_id": 317
+    },
+    "rs:raw_sardine": {
+        "extends": "rs:food",
+        "game_id": 327
+    },
+    "rs:raw_karambwanji": {
+        "extends": "rs:food",
+        "game_id": 3150
+    },
+    "rs:raw_herring": {
+        "extends": "rs:food",
+        "game_id": 345
+    },
+    "rs:raw_anchovies": {
+        "extends": "rs:food",
+        "game_id": 321
+    },
+    "rs:raw_mackerel": {
+        "extends": "rs:food",
+        "game_id": 353
+    },
+    "rs:raw_trout": {
+        "extends": "rs:food",
+        "game_id": 335
+    },
+    "rs:raw_cod": {
+        "extends": "rs:food",
+        "game_id": 341
+    },
+    "rs:raw_pike": {
+        "extends": "rs:food",
+        "game_id": 349
+    },
+    "rs:raw_slimy_eel": {
+        "extends": "rs:food",
+        "game_id": 3379
+    },
+    "rs:raw_salmon": {
+        "extends": "rs:food",
+        "game_id": 331
+    },
+    "rs:raw_tuna": {
+        "extends": "rs:food",
+        "game_id": 359
+    },
+    "rs:raw_cave_eel": {
+        "extends": "rs:food",
+        "game_id": 5001
+    },
+    "rs:raw_bass": {
+        "extends": "rs:food",
+        "game_id": 363
+    },
+    "rs:raw_lobster": {
+        "extends": "rs:food",
+        "game_id": 377
+    },
+    "rs:raw_swordfish": {
+        "extends": "rs:food",
+        "game_id": 371
+    },
+    "rs:raw_lava_eel": {
+        "extends": "rs:food",
+        "game_id": 2148
+    },
+    "rs:raw_monkfish": {
+        "extends": "rs:food",
+        "game_id": 7944
+    },
+    "rs:raw_karambwan": {
+        "extends": "rs:food",
+        "game_id": 3142
+    },
+    "rs:raw_shark": {
+        "extends": "rs:food",
+        "game_id": 383
+    },
+    "rs:raw_sea_turtle": {
+        "extends": "rs:food",
+        "game_id": 395
+    },
+    "rs:raw_manta_ray": {
+        "extends": "rs:food",
+        "game_id": 389
+    },
+    "rs:raw_manta_ray": {
+        "extends": "rs:food",
+        "game_id": 389
+    },
+    "rs:raw_leaping_trout": {
+        "extends": "rs:food",
+        "game_id": 389
+    },
+    "rs:raw_leaping_salmon": {
+        "extends": "rs:food",
+        "game_id": 11330
+    },
+    "rs:raw_leaping_sturgeon": {
+        "extends": "rs:food",
+        "game_id": 11332
     },
     "rs:cheese": {
         "extends": "rs:food",

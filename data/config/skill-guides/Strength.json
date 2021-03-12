@@ -1,0 +1,72 @@
+{
+  "id": 121,
+  "name": "Strength",
+  "members": false,
+  "sub_guides": [
+    {
+      "name": "Weapons",
+      "lines": [
+        {
+          "item": "rs:black_halberd",
+          "text": "Black halberd\\n(10 Attack is needed)",
+          "level": 5
+        },
+        {
+          "item": "rs:white_halberd",
+          "text": "White halberd\\n(10 Attack is needed)",
+          "level": 5
+        },
+        {
+          "item": "rs:mithril_halberd",
+          "text": "Mithril halberd\\n(20 Attack is needed)",
+          "level": 10
+        },
+        {
+          "item": "rs:adamant_halberd",
+          "text": "Adamant halberd\\n(30 Attack is needed)",
+          "level": 15
+        },
+        {
+          "item": "rs:rune_halberd",
+          "text": "Rune halberd\\n(40 Attack is needed)",
+          "level": 20
+        },
+        {
+          "item": "rs:dragon_halberd",
+          "text": "Dragon halberd\\n(60 Attack is needed)",
+          "level": 30
+        },
+        {
+          "item": "rs:granite_maul",
+          "text": "Granite maul\\n(50 Attack is needed)",
+          "level": 50
+        },
+        {
+          "item": "rs:tzhaar-ket-om",
+          "text": "TzHaar-Ket-Om\\nobsidian maul",
+          "level": 60
+        },
+        {
+          "item": "rs:dharoks_greataxe",
+          "text": "Dharok's greataxe\\n(70 Attack is needed)",
+          "level": 70
+        },
+        {
+          "item": "rs:torags_hammers",
+          "text": "Torag's hammers\\n(70 Attack is needed)",
+          "level": 70
+        }
+      ]
+    },
+    {
+      "name": "Armour",
+      "lines": [
+        {
+          "item": "rs:granite",
+          "text": "Granite Armour",
+          "level": 50
+        }
+      ]
+    }
+  ]
+}

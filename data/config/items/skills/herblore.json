@@ -1,0 +1,146 @@
+{
+    "rs:herblore_attack_potion": {
+        "game_id": 221
+    },
+    "rs:herblore_anti_poison_potion": {
+        "game_id": 235
+    },
+    "rs:herblore_relicyms_balm": {
+        "game_id": 1534
+    },
+    "rs:herblore_strength_potion": {
+        "game_id": 225
+    },
+    "rs:herblore_serum_207": {
+        "game_id": 592
+    },
+    "rs:herblore_stat_restore_potion": {
+        "game_id": 223
+    },
+    "rs:guthix_balance_potion": {
+        "game_id": 592
+    },
+    "rs:herblore_energy_potion": {
+        "game_id": 1975
+    },
+    "rs:herblore_defence_potion": {
+        "game_id": 239
+    },
+    "rs:herblore_agility_potion": {
+        "game_id": 2152
+    },
+    "rs:herblore_combat_potion": {
+        "game_id": 9736
+    },
+    "rs:herblore_prayer_restore_potion": {
+        "game_id": 231
+    },
+    "rs:herblore_super_attack_potion": {
+        "game_id": 221
+    },
+    "rs:herblore_super_anti_poison_potion": {
+        "game_id": 235
+    },
+    "rs:herblore_fishing_potion": {
+        "game_id": 231
+    },
+    "rs:herblore_super_energy_potion": {
+        "game_id": 2970
+    },
+    "rs:herblore_hunting_potion": {
+        "game_id": 10109
+    },
+    "rs:herblore_super_strength_potion": {
+        "game_id": 225
+    },
+    "rs:herblore_magic_essence_potion": {
+        "game_id": 9016
+    },
+    "rs:herblore_weapon_poison": {
+        "game_id": 243
+    },
+    "rs:herblore_super_restore_poison": {
+        "game_id": 223
+    },
+    "rs:herblore_super_defence_potion": {
+        "game_id": 239
+    },
+    "rs:herblore_antidote_plus": {
+        "game_id": 6049
+    },
+    "rs:herblore_anti_firebreath_potion": {
+        "game_id": 243
+    },
+    "rs:herblore_ranging_potion": {
+        "game_id": 245
+    },
+    "rs:herblore_weapon_poison_plus": {
+        "game_id": 6016
+    },
+    "rs:herblore_magic_potion": {
+        "game_id": 3138
+    },
+    "rs:herblore_zamorak_brew": {
+        "game_id": 247
+    },
+    "rs:herblore_antidote_plus_plus": {
+        "game_id": 6051
+    },
+    "rs:herblore_saradomin_brew": {
+        "game_id": 6693
+    },
+    "rs:herblore_weapon_poison_plus_plus": {
+        "game_id": 6018
+    },
+    "rs:guam_leaf": {
+        "game_id": 199
+    },
+    "rs:rogues_purse": {
+        "game_id": 1534
+    },
+    "rs:snake_weed": {
+        "game_id": 1526
+    },
+    "rs:marrentill": {
+        "game_id": 251
+    },
+    "rs:tarromin": {
+        "game_id": 253
+    },
+    "rs:harralander": {
+        "game_id": 255
+    },
+    "rs:ranarr_weed": {
+        "game_id": 257
+    },
+    "rs:toadflax": {
+        "game_id": 2998
+    },
+    "rs:irit_leaf": {
+        "game_id": 259
+    },
+    "rs:avantoe": {
+        "game_id": 261
+    },
+    "rs:kwuarm": {
+        "game_id": 263
+    },
+    "rs:snapdragon": {
+        "game_id": 3000
+    },
+    "rs:cadantine": {
+        "game_id": 265
+    },
+    "rs:lantadyme": {
+        "game_id": 2481
+    },
+    "rs:dwarf_weed": {
+        "game_id": 267
+    },
+    "rs:torstol": {
+        "game_id": 269
+    }
+
+}
+
+
