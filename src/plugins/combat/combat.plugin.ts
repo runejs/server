@@ -182,7 +182,7 @@ export default {
     pluginId: 'rs:combat',
     hooks: [
         {
-            type: 'npc_action',
+            type: 'npc_interaction',
             options: 'attack',
             walkTo: true,
             handler: attackNpcAction

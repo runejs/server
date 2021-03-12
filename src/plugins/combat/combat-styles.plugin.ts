@@ -95,12 +95,12 @@ const combatStyleSelection: buttonActionHandler = ({ player, buttonId }) => {
 export default {
     pluginId: 'rs:combat_styles',
     hooks: [{
-        type: 'equip_action',
-        equipType: 'EQUIP',
+        type: 'equipment_change',
+        eventType: 'equip',
         handler: equip
     }, {
-        type: 'equip_action',
-        equipType: 'UNEQUIP',
+        type: 'equipment_change',
+        eventType: 'unequip',
         handler: (details: EquipmentChangeAction): void => {
             if(details.equipmentSlot === 'main_hand') {
                 showUnarmed(details.player);

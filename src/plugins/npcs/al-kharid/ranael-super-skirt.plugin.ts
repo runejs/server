@@ -6,9 +6,12 @@ const tradeAction: npcInteractionActionHandler = ({ player }) =>
     findShop('rs:ranaels_skirt_store')?.open(player);
 
 export default {
-    type: 'npc_action',
-    npcs: 'rs:alkharid_ranael',
-    walkTo: true,
-    options: 'trade',
-    handler: tradeAction,
+    pluginId: 'rs:ranael_super_skirt',
+    hooks: [{
+        type: 'npc_interaction',
+        npcs: 'rs:alkharid_ranael',
+        walkTo: true,
+        options: 'trade',
+        handler: tradeAction
+    }]
 };
