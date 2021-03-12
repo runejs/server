@@ -14,6 +14,10 @@ export const animationIds = {
     smelting: 833,
     death: 2304,
     buryBones: 827,
+    herblore: {
+        make_potion: 363,
+        pestle_and_mortar: 364,
+    },
     combat: {
         punch: 422,
         kick: 423,

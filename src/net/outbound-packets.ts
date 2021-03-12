@@ -1,4 +1,4 @@
-import { Player } from '../world/actor/player/player';
+import { Player, SidebarTab } from '../world/actor/player/player';
 import { Socket } from 'net';
 import { Packet, PacketType } from '@server/net/packet';
 import { ItemContainer } from '@server/world/items/item-container';
@@ -418,7 +418,7 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    public sendTabWidget(tabIndex: number, widgetId: number | null): void {
+    public sendTabWidget(tabIndex: SidebarTab, widgetId: number | null): void {
         if(widgetId < 0) {
             return;
         }

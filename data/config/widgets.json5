@@ -21,6 +21,7 @@
         widgetId: 149,
         containerId: 0
     },
+    disabledTabs: 151, // Unsure if correct, but it works
     equipment: {
         widgetId: 387,
         containerId: 25
@@ -35,7 +36,8 @@
     },
     bank: {
         depositBoxWidget: {
-            widgetId: 11
+            widgetId: 11,
+            containerId: 61
         },
         pinSettingsWidget: {
             widgetId: 14

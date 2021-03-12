@@ -1,0 +1,125 @@
+{
+  "presets": {
+    "rs:grimy_herb_base": {
+      "examine": "It needs cleaning.",
+      "weight": 0.007,
+      "tradable": true
+    },
+    "rs:clean_herb_base": {
+      "weight": 0.007,
+      "tradable": true
+    }
+  },
+  "rs:grimy_guam": {
+    "extends": "rs:grimy_herb_base",
+    "game_id": 199
+  },
+  "rs:grimy_marrentill": {
+    "extends": "rs:grimy_herb_base",
+    "game_id": 201
+  },
+  "rs:grimy_tarromin": {
+    "extends": "rs:grimy_herb_base",
+    "game_id": 203
+  },
+  "rs:grimy_harralander": {
+    "extends": "rs:grimy_herb_base",
+    "game_id": 205
+  },
+  "rs:grimy_ranarr": {
+    "extends": "rs:grimy_herb_base",
+    "game_id": 207
+  },
+  "rs:grimy_irit": {
+    "extends": "rs:grimy_herb_base",
+    "game_id": 209
+  },
+  "rs:grimy_avantoe": {
+    "extends": "rs:grimy_herb_base",
+    "game_id": 211
+  },
+  "rs:grimy_kwuarm": {
+    "extends": "rs:grimy_herb_base",
+    "game_id": 213
+  },
+  "rs:grimy_cadantine": {
+    "extends": "rs:grimy_herb_base",
+    "game_id": 215
+  },
+  "rs:grimy_dwarf_weed": {
+    "extends": "rs:grimy_herb_base",
+    "game_id": 217
+  },
+  "rs:grimy_torstol": {
+    "extends": "rs:grimy_herb_base",
+    "game_id": 219
+  },
+  "rs:grimy_toadflax": {
+    "extends": "rs:grimy_herb_base",
+    "game_id": 3049
+  },
+  "rs:grimy_snapdragon": {
+    "extends": "rs:grimy_herb_base",
+    "game_id": 3051
+  },
+  "rs:grimy_lantadyme": {
+    "extends": "rs:grimy_herb_base",
+    "game_id": 2485
+  },
+  "rs:herb_guam": {
+    "extends": "rs:clean_herb_base",
+    "game_id": 249
+  },
+  "rs:herb_marrentill": {
+    "extends": "rs:clean_herb_base",
+    "game_id": 251
+  },
+  "rs:herb_tarromin": {
+    "extends": "rs:clean_herb_base",
+    "game_id": 253
+  },
+  "rs:herb_harralander": {
+    "extends": "rs:clean_herb_base",
+    "game_id": 255
+  },
+  "rs:herb_ranarr": {
+    "extends": "rs:clean_herb_base",
+    "game_id": 257
+  },
+  "rs:herb_irit": {
+    "extends": "rs:clean_herb_base",
+    "game_id": 259
+  },
+  "rs:herb_avantoe": {
+    "extends": "rs:clean_herb_base",
+    "game_id": 261
+  },
+  "rs:herb_kwuarm": {
+    "extends": "rs:clean_herb_base",
+    "game_id": 263
+  },
+  "rs:herb_cadantine": {
+    "extends": "rs:clean_herb_base",
+    "game_id": 265
+  },
+  "rs:herb_dwarf_weed": {
+    "extends": "rs:clean_herb_base",
+    "game_id": 267
+  },
+  "rs:herb_torstol": {
+    "extends": "rs:clean_herb_base",
+    "game_id": 269
+  },
+  "rs:herb_toadflax": {
+    "extends": "rs:clean_herb_base",
+    "game_id": 2998
+  },
+  "rs:herb_snapdragon": {
+    "extends": "rs:clean_herb_base",
+    "game_id": 3000
+  },
+  "rs:herb_lantadyme": {
+    "extends": "rs:clean_herb_base",
+    "game_id": 2481
+  }
+}
