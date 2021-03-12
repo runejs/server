@@ -1,8 +1,4 @@
-import {
-    ItemOnObjectAction,
-    itemOnObjectAction,
-    ItemOnObjectActionData
-} from '@server/world/action/item-on-object-action';
+import { itemOnObjectAction } from '@server/world/action/item-on-object-action';
 import { widgets } from '@server/config';
 import { Skill } from '@server/world/actor/skills';
 import { bars, smithables, widgetItems } from '@server/plugins/skills/smithing/forging-constants';
@@ -40,9 +36,10 @@ const findSmithableByItemId = (itemId) : Smithable => {
 };
 
 const smithItem : itemAction = (details) => {
-    const { player, itemDetails } = details;
+    const { player, option, itemDetails } = details;
 
     const smithable = findSmithableByItemId(itemDetails.id);
+
 
     // In case the smithable doesn't exist.
     if (!smithable) {
@@ -52,7 +49,7 @@ const smithItem : itemAction = (details) => {
     // Check if the player has the level required.
     if (smithable.level > player.skills.getLevel(Skill.SMITHING)) {
         const item = cache.itemDefinitions.get(smithable.item.itemId);
-        player.sendMessage(`You need to be level ${smithable.level} to smith ${item.name}.`, true);
+        player.sendMessage(`You have to be at least level ${smithable.level} to smith ${item.name}s.`, true);
         return;
     }
 
@@ -63,25 +60,35 @@ const smithItem : itemAction = (details) => {
 
     const loop = loopingAction({ player: details.player });
     let elapsedTicks = 0;
+    let wantedAmount = 0;
+    let forgedAmount = 0;
 
-    if (!hasIngredients(details.player, smithable, loop)) {
+    // How many? Quick and dirty.
+    switch (option) {
+        case 'make'     : wantedAmount = 1; break;
+        case 'make-5'   : wantedAmount = 5; break;
+        case 'make-10'  : wantedAmount = 10; break;
+    }
+
+    if (!hasIngredients(details.player, smithable)) {
         player.interfaceState.closeAllSlots();
         const bar = cache.itemDefinitions.get(smithable.ingredient.itemId);
         player.sendMessage(`You don't have enough ${bar.name}s.`, true);
     }
 
     loop.event.subscribe(() => {
-        if (!hasIngredients(details.player, smithable, loop)) {
+        if (!hasIngredients(details.player, smithable) || wantedAmount === forgedAmount) {
             loop.cancel();
             return;
         }
 
-        if (elapsedTicks % 3 === 0) {
+        if (elapsedTicks % 5 === 0) {
             player.playAnimation(898);
 
             // Remove ingredients
             for (let i=0; i<smithable.ingredient.amount; i++) {
                 player.inventory.removeFirst(smithable.ingredient.itemId);
+                details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, details.player.inventory);
             }
 
             // Add item to inventory
@@ -91,19 +98,16 @@ const smithItem : itemAction = (details) => {
 
             // Give the experience
             player.skills.addExp(Skill.SMITHING, smithable.experience);
+
+            forgedAmount++;
         }
 
         elapsedTicks++;
     });
 };
 
-const hasIngredients = (player: Player, smithable: Smithable, loop) => {
-
-    if (smithable.ingredient.amount > player.inventory.findAll(smithable.ingredient.itemId).length) {
-        return false;
-    }
-
-    return true;
+const hasIngredients = (player: Player, smithable: Smithable) => {
+    return smithable.ingredient.amount <= player.inventory.findAll(smithable.ingredient.itemId).length;
 };
 
 const openForgingInterface : itemOnObjectAction = (details) => {
