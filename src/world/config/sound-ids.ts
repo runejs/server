@@ -25,6 +25,7 @@ export const soundIds = {
     axeSwing: [88, 89, 90],
     oreEmpty: 2661,
     smelting: 2725,
+    eat: 2393,
     herblore: {
         clean_herb: 3920,
         make_potion: 2608, // both unfinished and finished
