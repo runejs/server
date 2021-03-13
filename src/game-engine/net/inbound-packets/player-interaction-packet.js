@@ -1,5 +1,5 @@
 import { playerOptions } from '../../world/actor/player/player';
-import { actionPipeline, world } from '../../game-server';
+import { world } from '../../game-server';
 import { World } from '../../world';
 import { logger } from '@runejs/core';
 
@@ -40,7 +40,7 @@ const playerInteractionPacket = (player, packet) => {
         return;
     }
 
-    actionPipeline.call('player_action', player, otherPlayer, position, playerOption.option.toLowerCase());
+    player.actionPipeline.call('player_interaction', player, otherPlayer, position, playerOption.option.toLowerCase());
 };
 
 export default [{

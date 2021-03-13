@@ -65,12 +65,6 @@ export let questMap: PluginQuestMap = {};
 
 
 /**
- * The pipeline through which game engine sends content actions for plugin hooks to consume.
- */
-export const actionPipeline = new ActionPipeline();
-
-
-/**
  * Searches for and loads all plugin files and their associated action hooks.
  */
 export async function loadPlugins(): Promise<void> {

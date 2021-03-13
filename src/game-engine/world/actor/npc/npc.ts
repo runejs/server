@@ -1,7 +1,7 @@
 import { Actor } from '@engine/world/actor/actor';
 import uuidv4 from 'uuid/v4';
 import { Position } from '@engine/world/position';
-import { cache, actionHookMap, world, actionPipeline } from '@engine/game-server';
+import { cache, world } from '@engine/game-server';
 import { directionData } from '@engine/world/direction';
 import { QuadtreeKey } from '@engine/world';
 import { findNpc } from '@engine/config';
@@ -9,7 +9,6 @@ import { animationIds } from '@engine/world/config/animation-ids';
 import { NpcAnimations, NpcDetails } from '@engine/config/npc-config';
 import { SkillName } from '@engine/world/actor/skills';
 import { NpcSpawn } from '@engine/config/npc-spawn-config';
-import { numberHookFilter } from '@engine/world/action/hooks/hook-filters';
 
 
 /**
@@ -91,7 +90,7 @@ export class Npc extends Actor {
             this.initiateRandomMovement();
         }
 
-        await actionPipeline.call('npc_init', { npc: this });
+        await this.actionPipeline.call('npc_init', { npc: this });
 
         this._initialized = true;
     }

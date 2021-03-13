@@ -1,5 +1,4 @@
 import { getItemOption } from '../../world/items/item';
-import { actionPipeline } from '../../game-server';
 
 const option1 = buffer => {
     const itemId = buffer.get('SHORT', 'UNSIGNED');
@@ -65,7 +64,7 @@ const itemInteractionPacket = (player, packet) => {
 
     const option = getItemOption(itemId, packetDetails.optionNumber, { widgetId, containerId });
 
-    actionPipeline.call('item_interaction', player, itemId, slot, widgetId, containerId, option);
+    player.actionPipeline.call('item_interaction', player, itemId, slot, widgetId, containerId, option);
 };
 
 export default [{

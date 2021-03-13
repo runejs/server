@@ -1,5 +1,4 @@
 import { Rights } from '../../world/actor/player/player';
-import { actionPipeline } from '../../game-server';
 
 const commandPacket = (player, packet) => {
     const input = packet.buffer.getString();
@@ -17,7 +16,7 @@ const commandPacket = (player, packet) => {
     if(player.rights !== Rights.ADMIN) {
         player.sendLogMessage('You need to be an administrator to use commands.', isConsole);
     } else {
-        actionPipeline.call('player_command', player, command, isConsole, args);
+        player.actionPipeline.call('player_command', player, command, isConsole, args);
     }
 };
 

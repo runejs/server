@@ -1,10 +1,4 @@
-import { widgets } from '../../config';
-
 const characterDesignPacket = (player, packet) => {
-    if(!player.activeWidget || player.activeWidget.widgetId !== widgets.characterDesign) {
-        return;
-    }
-
     const { buffer } = packet;
 
     // @TODO verify validity of selections
