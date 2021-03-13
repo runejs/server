@@ -1,0 +1,1009 @@
+{
+    "id": 123,
+    "name": "Smithing",
+    "members": true,
+    "sub_guides": [
+        {
+            "name": "Smelting",
+            "lines": [
+                {
+                    "item": "rs:bronze_bar",
+                    "text": "Bronze bar\\n1 tin ore & 1 copper ore",
+                    "level": 1
+                },
+                {
+                    "item": "rs:blurite_bar",
+                    "text": "Members: Blurite\\n(after Knight's Sword quest)",
+                    "level": 8
+                },
+                {
+                    "item": "rs:iron_bar",
+                    "text": "Iron bar\\n50% chance of success",
+                    "level": 15
+                },
+                {
+                    "item": "rs:silver_bar",
+                    "text": "Silver bar\\nSilver ore only",
+                    "level": 20
+                },
+                {
+                    "item": "rs:steel_bar",
+                    "text": "Steel bar\\n2 coal & iron ore",
+                    "level": 30
+                },
+                {
+                    "item": "rs:gold_bar",
+                    "text": "Gold bar\\nGold ore only",
+                    "level": 40
+                },
+                {
+                    "item": "rs:mithril_bar",
+                    "text": "Mithril bar\\n4 coal * 1 mithril ore",
+                    "level": 50
+                },
+                {
+                    "item": "rs:adamant_bar",
+                    "text": "Adamant bar\\n6 coal & 1 adamantite ore",
+                    "level": 70
+                },
+                {
+                    "item": "rs:runite_bar",
+                    "text": "Runite bar\\n8 coal & 1 runite ore",
+                    "level": 85
+                }
+            ]
+        },
+        {
+            "name": "Bronze",
+            "lines": [
+                {
+                    "item": "rs:bronze_dagger",
+                    "text": "Bronze daggers\\nrequires 1 bar",
+                    "level": 1
+                },
+                {
+                    "item": "rs:bronze_axes",
+                    "text": "Bronze axes \\nrequires 1 bar",
+                    "level": 1
+                },
+                {
+                    "item": "rs:bronze_mace",
+                    "text": "Bronze maces\\nrequires 1 bar",
+                    "level": 2
+                },
+                {
+                    "item": "rs:bronze_medium_helm",
+                    "text": "Bronze medium helms\\nrequires 1 bar",
+                    "level": 3
+                },
+                {
+                    "item": "rs:bronze_crossbow_bolts",
+                    "text": "Members: Bronze crossbow bolts\\nrequires 1 bar to make 10",
+                    "level": 3
+                },
+                {
+                    "item": "rs:bronze_sword",
+                    "text": "Bronze swords\\nrequires 1 bar",
+                    "level": 4
+                },
+                {
+                    "item": "rs:bronze_dart_tips",
+                    "text": "Members: Bronze dart tips\\nrequires 1 bar to make 10",
+                    "level": 4
+                },
+                {
+                    "item": "rs:bronze_wire",
+                    "text": "Bronze wire\\nrequires 1 bar",
+                    "level": 4
+                },
+                {
+                    "item": "rs:bronze_nails",
+                    "text": "Bronze nails\\nrequires 1 bar to make 10",
+                    "level": 4
+                },
+                {
+                    "item": "rs:bronze_scimitars",
+                    "text": "Bronze scimitars\\nrequires 2 bars",
+                    "level": 5
+                },
+                {
+                    "item": "rs:bronze_spears",
+                    "text": "Bronze spears\\nrequires 1 bar",
+                    "level": 5
+                },
+                {
+                    "item": "rs:bronze_hastae",
+                    "text": "Bronze hastae\\nrequires 1 bar & 1 log",
+                    "level": 5
+                },
+                {
+                    "item": "rs:bronze_arrowheads",
+                    "text": "Bronze arrowheads\\nrequires 1 bar to make 15",
+                    "level": 5
+                },
+                {
+                    "item": "rs:bronze_crossbow_limb",
+                    "text": "Bronze crossbow limbs\\nrequires 1 bar",
+                    "level": 6
+                },
+                {
+                    "item": "rs:bronze_longsword",
+                    "text": "Bronze longswords \\nrequires 2 bars",
+                    "level": 6
+                },
+                {
+                    "item": "rs:bronze_javelin_heads",
+                    "text": "Members: Bronze javelin heads\\nrequires 1 bar to make 5",
+                    "level": 6
+                },
+                {
+                    "item": "rs:bronze_full_helm",
+                    "text": "Bronze full helms\\nrequires 2 bars",
+                    "level": 7
+                },
+                {
+                    "item": "rs:bronze_throwing_knives",
+                    "text": "Members: Bronze throwing knives\\nrequires 1 bar to make 5",
+                    "level": 7
+                },
+                {
+                    "item": "rs:bronze_square_shield",
+                    "text": "Bronze square shields\\nrequires 2 bars",
+                    "level": 8
+                },
+                {
+                    "item": "rs:bronze_warhammer",
+                    "text": "Bronze warhammers\\nrequires 3 bars",
+                    "level": 9
+                },
+                {
+                    "item": "rs:bronze_battleaxe",
+                    "text": "Bronze battleaxes\\nrequires 3 bars",
+                    "level": 10
+                },
+                {
+                    "item": "rs:bronze_chainbody",
+                    "text": "Bronze chainbodies\\nrequires 3 bars",
+                    "level": 11
+                },
+                {
+                    "item": "rs:bronze_kiteshield",
+                    "text": "Bronze kiteshields\\nrequires 3 bars",
+                    "level": 12
+                },
+                {
+                    "item": "rs:bronze_claws",
+                    "text": "Members: Bronze claws\\nrequires 2 bars",
+                    "level": 13
+                },
+                {
+                    "item": "rs:bronze_two_handed_sword",
+                    "text": "Bronze two-handed swords\\nrequires 3 bars",
+                    "level": 14
+                },
+                {
+                    "item": "rs:bronze_platelegs",
+                    "text": "Bronze platelegs\\nrequires 3 bars",
+                    "level": 16
+                },
+                {
+                    "item": "rs:bronze_skirt",
+                    "text": "Bronze plateskirts\\nrequires 3 bars",
+                    "level": 16
+                },
+                {
+                    "item": "rs:bronze_platebody",
+                    "text": "Bronze platebodies \\nrequires 5 bars",
+                    "level": 18
+                }
+            ]
+        },
+        {
+            "name": "Blurite",
+            "lines": [
+                {
+                    "item": "rs:bronze_bolt",
+                    "text": "Bronze bolts",
+                    "level": 9
+                },
+                {
+                    "item": "rs:opal_bolt",
+                    "text": "Opal-tipped bronze bolts",
+                    "level": 11
+                },
+                {
+                    "item": "rs:blurite_bolt",
+                    "text": "Blurite bolts (After Knight´s Sword quest)",
+                    "level": 24
+                },
+                {
+                    "item": "rs:jade_bolt",
+                    "text": "Jade-tipped blurite bolts",
+                    "level": 26
+                },
+                {
+                    "item": "rs:iron_bolt",
+                    "text": "Iron bolts",
+                    "level": 39
+                },
+                {
+                    "item": "rs:silver_bolt",
+                    "text": "Silver bolts",
+                    "level": 43
+                },
+                {
+                    "item": "rs:steel_bolt",
+                    "text": "Steel bolts",
+                    "level": 46
+                },
+                {
+                    "item": "rs:mithril_bolt",
+                    "text": "Mithril bolts",
+                    "level": 54
+                },
+                {
+                    "item": "rs:sapphire_bolt",
+                    "text": "Sapphire-tipped mithril bolts",
+                    "level": 56
+                },
+                {
+                    "item": "rs:emerald_bolt",
+                    "text": "Emerald-tipped mithril bolts",
+                    "level": 56
+                },
+                {
+                    "item": "rs:adamant_bolt",
+                    "text": "Adamant bolts",
+                    "level": 61
+                },
+                {
+                    "item": "rs:runite_bolt",
+                    "text": "Runite bolts",
+                    "level": 69
+                },
+                {
+                    "item": "rs:onyx_bolt",
+                    "text": "Onyx bolts",
+                    "level": 69
+                }
+            ]
+        },
+        {
+            "name": "Iron",
+            "lines": [
+                {
+                    "item": "rs:iron_dagger",
+                    "text": "Iron daggers\\nrequires 1 bar",
+                    "level": 15
+                },
+                {
+                    "item": "rs:iron_axes",
+                    "text": "Iron axes \\nrequires 1 bar",
+                    "level": 16
+                },
+                {
+                    "item": "rs:iron_mace",
+                    "text": "Iron maces\\nrequires 1 bar",
+                    "level": 17
+                },
+                {
+                    "item": "rs:iron_medium_helm",
+                    "text": "Iron medium helms\\nrequires 1 bar",
+                    "level": 17
+                },
+                {
+                    "item": "rs:iron_crossbow_bolts",
+                    "text": "Members: Iron crossbow bolts\\nrequires 1 bar to make 10",
+                    "level": 18
+                },
+                {
+                    "item": "rs:iron_sword",
+                    "text": "Iron swords\\nrequires 1 bar",
+                    "level": 18
+                },
+                {
+                    "item": "rs:iron_dart_tips",
+                    "text": "Members: Iron dart tips\\nrequires 1 bar to make 10",
+                    "level": 19
+                },
+                {
+                    "item": "rs:iron_wire",
+                    "text": "Iron wire\\nrequires 1 bar",
+                    "level": 19
+                },
+                {
+                    "item": "rs:iron_nails",
+                    "text": "Iron nails\\nrequires 1 bar to make 10",
+                    "level": 19
+                },
+                {
+                    "item": "rs:iron_scimitars",
+                    "text": "Iron scimitars\\nrequires 2 bars",
+                    "level": 20
+                },
+                {
+                    "item": "rs:iron_spears",
+                    "text": "Iron spears\\nrequires 1 bar",
+                    "level": 20
+                },
+                {
+                    "item": "rs:iron_hastae",
+                    "text": "Iron hastae\\nrequires 1 bar & 1 log",
+                    "level": 20
+                },
+                {
+                    "item": "rs:iron_arrowheads",
+                    "text": "Iron arrowheads\\nrequires 1 bar to make 15",
+                    "level": 20
+                },
+                {
+                    "item": "rs:iron_crossbow_limb",
+                    "text": "Iron crossbow limbs\\nrequires 1 bar",
+                    "level": 20
+                },
+                {
+                    "item": "rs:iron_longsword",
+                    "text": "Iron longswords\\nrequires 2 bars",
+                    "level": 21
+                },
+                {
+                    "item": "rs:iron_javelin_heads",
+                    "text": "Members: Iron javelin heads\\nrequires 1 bar to make 5",
+                    "level": 21
+                },
+                {
+                    "item": "rs:iron_full_helm",
+                    "text": "Iron full helms\\nrequires 2 bars",
+                    "level": 22
+                },
+                {
+                    "item": "rs:iron_throwing_knives",
+                    "text": "Members: Iron throwing knives\\nrequires 1 bar to make 5",
+                    "level": 22
+                },
+                {
+                    "item": "rs:iron_square_shield",
+                    "text": "Iron square shields\\nrequires 2 bars",
+                    "level": 23
+                },
+                {
+                    "item": "rs:iron_warhammer",
+                    "text": "Iron warhammers\\nrequires 3 bars",
+                    "level": 24
+                },
+                {
+                    "item": "rs:iron_battleaxe",
+                    "text": "Iron battleaxes\\nrequires 3 bars",
+                    "level": 25
+                },
+                {
+                    "item": "rs:iron_chainbody",
+                    "text": "Iron chainbodies\\nrequires 3 bars",
+                    "level": 26
+                },
+                {
+                    "item": "rs:iron_kiteshield",
+                    "text": "Iron kiteshields\\nrequires 3 bars",
+                    "level": 27
+                },
+                {
+                    "item": "rs:iron_claws",
+                    "text": "Members: Iron claws\\nrequires 2 bars",
+                    "level": 28
+                },
+                {
+                    "item": "rs:iron_two_handed_sword",
+                    "text": "Iron two-handed swords\\nrequires 3 bars",
+                    "level": 29
+                },
+                {
+                    "item": "rs:iron_platelegs",
+                    "text": "Iron platelegs\\nrequires 3 bars",
+                    "level": 31
+                },
+                {
+                    "item": "rs:iron_skirt",
+                    "text": "Iron plateskirts\\nrequires 3 bars",
+                    "level": 31
+                },
+                {
+                    "item": "rs:iron_platebody",
+                    "text": "Iron platebodies \\nrequires 5 bars",
+                    "level": 33
+                }
+            ]
+        },
+        {
+            "name": "Steel",
+            "lines": [
+                {
+                    "item": "rs:Steel_dagger",
+                    "text": "Steel daggers\\nrequires 1 bar",
+                    "level": 30
+                },
+                {
+                    "item": "rs:Steel_axes",
+                    "text": "Steel axes \\nrequires 1 bar",
+                    "level": 31
+                },
+                {
+                    "item": "rs:Steel_mace",
+                    "text": "Steel maces\\nrequires 1 bar",
+                    "level": 32
+                },
+                {
+                    "item": "rs:Steel_medium_helm",
+                    "text": "Steel medium helms\\nrequires 1 bar",
+                    "level": 33
+                },
+                {
+                    "item": "rs:Steel_crossbow_bolts",
+                    "text": "Members: Steel crossbow bolts\\nrequires 1 bar to make 10",
+                    "level": 33
+                },
+                {
+                    "item": "rs:Steel_sword",
+                    "text": "Steel swords\\nrequires 1 bar",
+                    "level": 34
+                },
+                {
+                    "item": "rs:Steel_dart_tips",
+                    "text": "Members: Steel dart tips\\nrequires 1 bar to make 10",
+                    "level": 34
+                },
+                {
+                    "item": "rs:Steel_wire",
+                    "text": "Steel wire\\nrequires 1 bar",
+                    "level": 34
+                },
+                {
+                    "item": "rs:Steel_nails",
+                    "text": "Steel nails\\nrequires 1 bar to make 10",
+                    "level": 34
+                },
+                {
+                    "item": "rs:Steel_scimitars",
+                    "text": "Steel scimitars\\nrequires 2 bars",
+                    "level": 35
+                },
+                {
+                    "item": "rs:Steel_spears",
+                    "text": "Steel spears\\nrequires 1 bar",
+                    "level": 35
+                },
+                {
+                    "item": "rs:Steel_hastae",
+                    "text": "Steel hastae\\nrequires 1 bar & 1 Willow log",
+                    "level": 35
+                },
+                {
+                    "item": "rs:Steel_arrowheads",
+                    "text": "Steel arrowheads\\nrequires 1 bar to make 15",
+                    "level": 35
+                },
+                {
+                    "item": "rs:Steel_crossbow_limb",
+                    "text": "Steel crossbow limbs\\nrequires 1 bar",
+                    "level": 36
+                },
+                {
+                    "item": "rs:Steel_longsword",
+                    "text": "Steel longswords\\nrequires 2 bars",
+                    "level": 36
+                },
+                {
+                    "item": "rs:Steel_javelin_heads",
+                    "text": "Members: Steel javelin heads\\nrequires 1 bar to make 5",
+                    "level": 36
+                },
+                {
+                    "item": "rs:Steel_full_helm",
+                    "text": "Steel full helms\\nrequires 2 bars",
+                    "level": 33
+                },
+                {
+                    "item": "rs:Steel_throwing_knives",
+                    "text": "Members: Steel throwing knives\\nrequires 1 bar to make 5",
+                    "level": 33
+                },
+                {
+                    "item": "rs:Steel_square_shield",
+                    "text": "Steel square shields\\nrequires 2 bars",
+                    "level": 34
+                },
+                {
+                    "item": "rs:Steel_warhammer",
+                    "text": "Steel warhammers\\nrequires 3 bars",
+                    "level": 39
+                },
+                {
+                    "item": "rs:Steel_battleaxe",
+                    "text": "Steel battleaxes\\nrequires 3 bars",
+                    "level": 40
+                },
+                {
+                    "item": "rs:Steel_chainbody",
+                    "text": "Steel chainbodies\\nrequires 3 bars",
+                    "level": 41
+                },
+                {
+                    "item": "rs:Steel_kiteshield",
+                    "text": "Steel kiteshields\\nrequires 3 bars",
+                    "level": 42
+                },
+                {
+                    "item": "rs:Steel_claws",
+                    "text": "Members: Steel claws\\nrequires 2 bars",
+                    "level": 43
+                },
+                {
+                    "item": "rs:Steel_two_handed_sword",
+                    "text": "Steel two-handed swords\\nrequires 3 bars",
+                    "level": 44
+                },
+                {
+                    "item": "rs:Steel_platelegs",
+                    "text": "Steel platelegs\\nrequires 3 bars",
+                    "level": 46
+                },
+                {
+                    "item": "rs:Steel_skirt",
+                    "text": "Steel plateskirts\\nrequires 3 bars",
+                    "level": 46
+                },
+                {
+                    "item": "rs:Steel_platebody",
+                    "text": "Steel platebodies \\nrequires 5 bars",
+                    "level": 44
+                }
+            ]
+        },
+        {
+            "name": "Mithril",
+            "lines": [
+                {
+                    "item": "rs:mithril_dagger",
+                    "text": "Mithril daggers\\nrequires 1 bar",
+                    "level": 50
+                },
+                {
+                    "item": "rs:mithril_axes",
+                    "text": "Mithril axes \\nrequires 1 bar",
+                    "level": 51
+                },
+                {
+                    "item": "rs:mithril_mace",
+                    "text": "Mithril maces\\nrequires 1 bar",
+                    "level": 52
+                },
+                {
+                    "item": "rs:mithril_medium_helm",
+                    "text": "Mithril medium helms\\nrequires 1 bar",
+                    "level": 53
+                },
+                {
+                    "item": "rs:mithril_crossbow_bolts",
+                    "text": "Members: Mithril crossbow bolts\\nrequires 1 bar to make 10",
+                    "level": 53
+                },
+                {
+                    "item": "rs:mithril_sword",
+                    "text": "Mithril swords\\nrequires 1 bar",
+                    "level": 54
+                },
+                {
+                    "item": "rs:mithril_dart_tips",
+                    "text": "Members: Mithril dart tips\\nrequires 1 bar to make 10",
+                    "level": 54
+                },
+                {
+                    "item": "rs:mithril_wire",
+                    "text": "Mithril wire\\nrequires 1 bar",
+                    "level": 54
+                },
+                {
+                    "item": "rs:mithril_nails",
+                    "text": "Mithril nails\\nrequires 1 bar to make 10",
+                    "level": 54
+                },
+                {
+                    "item": "rs:mithril_scimitars",
+                    "text": "Mithril scimitars\\nrequires 2 bars",
+                    "level": 55
+                },
+                {
+                    "item": "rs:mithril_spears",
+                    "text": "Mithril spears\\nrequires 1 bar",
+                    "level": 55
+                },
+                {
+                    "item": "rs:mithril_hastae",
+                    "text": "Mithril hastae\\nrequires 1 bar & 1 maple log",
+                    "level": 55
+                },
+                {
+                    "item": "rs:mithril_arrowheads",
+                    "text": "Mithril arrowheads\\nrequires 1 bar to make 15",
+                    "level": 55
+                },
+                {
+                    "item": "rs:mithril_crossbow_limb",
+                    "text": "Mithril crossbow limbs\\nrequires 1 bar",
+                    "level": 56
+                },
+                {
+                    "item": "rs:mithril_longsword",
+                    "text": "Mithril longswords\\nrequires 2 bars",
+                    "level": 56
+                },
+                {
+                    "item": "rs:mithril_javelin_heads",
+                    "text": "Members: Mithril javelin heads\\nrequires 1 bar to make 5",
+                    "level": 56
+                },
+                {
+                    "item": "rs:mithril_full_helm",
+                    "text": "Mithril full helms\\nrequires 2 bars",
+                    "level": 57
+                },
+                {
+                    "item": "rs:mithril_throwing_knives",
+                    "text": "Members: Mithril throwing knives\\nrequires 1 bar to make 5",
+                    "level": 57
+                },
+                {
+                    "item": "rs:mithril_square_shield",
+                    "text": "Mithril square shields\\nrequires 2 bars",
+                    "level": 58
+                },
+                {
+                    "item": "rs:mithril_warhammer",
+                    "text": "Mithril warhammers\\nrequires 3 bars",
+                    "level": 59
+                },
+                {
+                    "item": "rs:mithril_battleaxe",
+                    "text": "Mithril battleaxes\\nrequires 3 bars",
+                    "level": 60
+                },
+                {
+                    "item": "rs:mithril_chainbody",
+                    "text": "Mithril chainbodies\\nrequires 3 bars",
+                    "level": 61
+                },
+                {
+                    "item": "rs:mithril_kiteshield",
+                    "text": "Mithril kiteshields\\nrequires 3 bars",
+                    "level": 62
+                },
+                {
+                    "item": "rs:mithril_claws",
+                    "text": "Members: Mithril claws\\nrequires 2 bars",
+                    "level": 63
+                },
+                {
+                    "item": "rs:mithril_two_handed_sword",
+                    "text": "Mithril two-handed swords\\nrequires 3 bars",
+                    "level": 64
+                },
+                {
+                    "item": "rs:mithril_platelegs",
+                    "text": "Mithril platelegs\\nrequires 3 bars",
+                    "level": 66
+                },
+                {
+                    "item": "rs:mithril_skirt",
+                    "text": "Mithril plateskirts\\nrequires 3 bars",
+                    "level": 66
+                },
+                {
+                    "item": "rs:mithril_platebody",
+                    "text": "Mithril platebodies \\nrequires 5 bars",
+                    "level": 68
+                }
+            ]
+        },
+        {
+            "name": "Adamant",
+            "lines": [
+                {
+                    "item": "rs:adamant_dagger",
+                    "text": "Adamant daggers\\nrequires 1 bar",
+                    "level": 70
+                },
+                {
+                    "item": "rs:adamant_axes",
+                    "text": "Adamant axes \\nrequires 1 bar",
+                    "level": 71
+                },
+                {
+                    "item": "rs:adamant_mace",
+                    "text": "Adamant maces\\nrequires 1 bar",
+                    "level": 72
+                },
+                {
+                    "item": "rs:adamant_medium_helm",
+                    "text": "Adamant medium helms\\nrequires 1 bar",
+                    "level": 73
+                },
+                {
+                    "item": "rs:adamant_crossbow_bolts",
+                    "text": "Members: Adamant crossbow bolts\\nrequires 1 bar to make 10",
+                    "level": 73
+                },
+                {
+                    "item": "rs:adamant_sword",
+                    "text": "Adamant swords\\nrequires 1 bar",
+                    "level": 74
+                },
+                {
+                    "item": "rs:adamant_dart_tips",
+                    "text": "Members: Adamant dart tips\\nrequires 1 bar to make 10",
+                    "level": 74
+                },
+                {
+                    "item": "rs:adamant_wire",
+                    "text": "Adamant wire\\nrequires 1 bar",
+                    "level": 74
+                },
+                {
+                    "item": "rs:adamant_nails",
+                    "text": "Adamant nails\\nrequires 1 bar to make 10",
+                    "level": 74
+                },
+                {
+                    "item": "rs:adamant_scimitars",
+                    "text": "Adamant scimitars\\nrequires 2 bars",
+                    "level": 75
+                },
+                {
+                    "item": "rs:adamant_spears",
+                    "text": "Adamant spears\\nrequires 1 bar",
+                    "level": 75
+                },
+                {
+                    "item": "rs:adamant_hastae",
+                    "text": "Adamant hastae\\nrequires 1 bar & 1 yew log",
+                    "level": 75
+                },
+                {
+                    "item": "rs:adamant_arrowheads",
+                    "text": "Adamant arrowheads\\nrequires 1 bar to make 15",
+                    "level": 75
+                },
+                {
+                    "item": "rs:adamant_crossbow_limb",
+                    "text": "Adamant crossbow limbs\\nrequires 1 bar",
+                    "level": 76
+                },
+                {
+                    "item": "rs:adamant_longsword",
+                    "text": "Adamant longswords\\nrequires 2 bars",
+                    "level": 76
+                },
+                {
+                    "item": "rs:adamant_javelin_heads",
+                    "text": "Members: Adamant javelin heads\\nrequires 1 bar to make 5",
+                    "level": 76
+                },
+                {
+                    "item": "rs:adamant_full_helm",
+                    "text": "Adamant full helms\\nrequires 2 bars",
+                    "level": 77
+                },
+                {
+                    "item": "rs:adamant_throwing_knives",
+                    "text": "Members: Adamant throwing knives\\nrequires 1 bar to make 5",
+                    "level": 77
+                },
+                {
+                    "item": "rs:adamant_square_shield",
+                    "text": "Adamant square shields\\nrequires 2 bars",
+                    "level": 78
+                },
+                {
+                    "item": "rs:adamant_warhammer",
+                    "text": "Adamant warhammers\\nrequires 3 bars",
+                    "level": 79
+                },
+                {
+                    "item": "rs:adamant_battleaxe",
+                    "text": "Adamant battleaxes\\nrequires 3 bars",
+                    "level": 80
+                },
+                {
+                    "item": "rs:adamant_chainbody",
+                    "text": "Adamant chainbodies\\nrequires 3 bars",
+                    "level": 81
+                },
+                {
+                    "item": "rs:adamant_kiteshield",
+                    "text": "Adamant kiteshields\\nrequires 3 bars",
+                    "level": 82
+                },
+                {
+                    "item": "rs:adamant_claws",
+                    "text": "Members: Adamant claws\\nrequires 2 bars",
+                    "level": 83
+                },
+                {
+                    "item": "rs:adamant_two_handed_sword",
+                    "text": "Adamant two-handed swords\\nrequires 3 bars",
+                    "level": 84
+                },
+                {
+                    "item": "rs:adamant_platelegs",
+                    "text": "Adamant platelegs\\nrequires 3 bars",
+                    "level": 86
+                },
+                {
+                    "item": "rs:adamant_skirt",
+                    "text": "Adamant plateskirts\\nrequires 3 bars",
+                    "level": 86
+                },
+                {
+                    "item": "rs:adamant_platebody",
+                    "text": "Adamant platebodies \\nrequires 5 bars",
+                    "level": 88
+                }
+            ]
+        },
+        {
+            "name": "Rune",
+            "lines": [
+                {
+                    "item": "rs:rune_dagger",
+                    "text": "Rune daggers\\nrequires 1 bar",
+                    "level": 85
+                },
+                {
+                    "item": "rs:rune_axes",
+                    "text": "Rune axes \\nrequires 1 bar",
+                    "level": 86
+                },
+                {
+                    "item": "rs:rune_mace",
+                    "text": "Rune maces\\nrequires 1 bar",
+                    "level": 87
+                },
+                {
+                    "item": "rs:rune_medium_helm",
+                    "text": "Rune medium helms\\nrequires 1 bar",
+                    "level": 88
+                },
+                {
+                    "item": "rs:rune_crossbow_bolts",
+                    "text": "Members: Rune crossbow bolts\\nrequires 1 bar to make 10",
+                    "level": 88
+                },
+                {
+                    "item": "rs:rune_sword",
+                    "text": "Rune swords\\nrequires 1 bar",
+                    "level": 89
+                },
+                {
+                    "item": "rs:rune_dart_tips",
+                    "text": "Members: Rune dart tips\\nrequires 1 bar to make 10",
+                    "level": 89
+                },
+                {
+                    "item": "rs:rune_wire",
+                    "text": "Rune wire\\nrequires 1 bar",
+                    "level": 89
+                },
+                {
+                    "item": "rs:rune_nails",
+                    "text": "Rune nails\\nrequires 1 bar to make 10",
+                    "level": 90
+                },
+                {
+                    "item": "rs:rune_scimitars",
+                    "text": "Rune scimitars\\nrequires 2 bars",
+                    "level": 90
+                },
+                {
+                    "item": "rs:rune_spears",
+                    "text": "Rune spears\\nrequires 1 bar",
+                    "level": 90
+                },
+                {
+                    "item": "rs:rune_hastae",
+                    "text": "Rune hastae\\nrequires 1 bar & 1 magic log",
+                    "level": 90
+                },
+                {
+                    "item": "rs:rune_arrowheads",
+                    "text": "Rune arrowheads\\nrequires 1 bar to make 15",
+                    "level": 90
+                },
+                {
+                    "item": "rs:rune_crossbow_limb",
+                    "text": "Rune crossbow limbs\\nrequires 1 bar",
+                    "level": 91
+                },
+                {
+                    "item": "rs:rune_longsword",
+                    "text": "Rune longswords\\nrequires 2 bars",
+                    "level": 91
+                },
+                {
+                    "item": "rs:rune_javelin_heads",
+                    "text": "Members: Rune javelin heads\\nrequires 1 bar to make 5",
+                    "level": 91
+                },
+                {
+                    "item": "rs:rune_full_helm",
+                    "text": "Rune full helms\\nrequires 2 bars",
+                    "level": 92
+                },
+                {
+                    "item": "rs:rune_throwing_knives",
+                    "text": "Members: Rune throwing knives\\nrequires 1 bar to make 5",
+                    "level": 92
+                },
+                {
+                    "item": "rs:rune_square_shield",
+                    "text": "Rune square shields\\nrequires 2 bars",
+                    "level": 93
+                },
+                {
+                    "item": "rs:rune_warhammer",
+                    "text": "Rune warhammers\\nrequires 3 bars",
+                    "level": 94
+                },
+                {
+                    "item": "rs:rune_battleaxe",
+                    "text": "Rune battleaxes\\nrequires 3 bars",
+                    "level": 95
+                },
+                {
+                    "item": "rs:rune_chainbody",
+                    "text": "Rune chainbodies\\nrequires 3 bars",
+                    "level": 96
+                },
+                {
+                    "item": "rs:rune_kiteshield",
+                    "text": "Rune kiteshields\\nrequires 3 bars",
+                    "level": 97
+                },
+                {
+                    "item": "rs:rune_claws",
+                    "text": "Members: Rune claws\\nrequires 2 bars",
+                    "level": 98
+                },
+                {
+                    "item": "rs:rune_two_handed_sword",
+                    "text": "Rune two-handed swords\\nrequires 3 bars",
+                    "level": 99
+                },
+                {
+                    "item": "rs:rune_platelegs",
+                    "text": "Rune platelegs\\nrequires 3 bars",
+                    "level": 99
+                },
+                {
+                    "item": "rs:rune_skirt",
+                    "text": "Rune plateskirts\\nrequires 3 bars",
+                    "level": 99
+                },
+                {
+                    "item": "rs:rune_platebody",
+                    "text": "Rune platebodies \\nrequires 5 bars",
+                    "level": 99
+                }
+            ]
+        },
+        {
+            "name": "Other",
+            "lines": [
+                {
+                    "item": "rs:dragon_square_shield",
+                    "text": "Dragon square shield",
+                    "level": 60
+                }           
+                
+            ]
+        }
+        
+    ]
+}

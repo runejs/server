@@ -1,0 +1,243 @@
+{
+    "id": 125,
+    "name": "Herblore",
+    "members": true,
+    "sub_guides": [
+      {
+        "name": "Potions",
+        "lines": [
+          {
+            "item": "rs:herblore_attack_potion",
+            "text": "Attack potion\\nGuam leaf & eye of newt",
+            "level": 3
+          },
+          {
+            "item": "rs:herblore_anti_poison_potion",
+            "text": "Anti-poison potion\\nMarrentil & ground unicorn horn",
+            "level": 5
+          },
+          {
+            "item": "rs:herblore_relicyms_balm",
+            "text": "Relicym's balm",
+            "level": 8
+          },
+          {
+            "item": "rs:herblore_strength_potion",
+            "text": "Strength potion\\nTarromin & limpwurt root",
+            "level": 12
+          },
+          {
+            "item": "rs:herblore_serum_207",
+            "text": "Serum 207\\nTarromin & ashes",
+            "level": 15
+          },
+          {
+            "item": "rs:herblore_stat_restore_potion",
+            "text": "Stat restore potion\\nHarralander & red spiders' eggs",
+            "level": 22
+          },
+          {
+            "item": "rs:guthix_balance_potion",
+            "text": "Guthix balance potion",
+            "level": 22
+          },
+          {
+            "item": "rs:herblore_energy_potion",
+            "text": "Energy potion\\nHarralander & chocolate dust",
+            "level": 26
+          },
+          {
+            "item": "rs:herblore_defence_potion",
+            "text": "Defence potion\\nRanarr weed & white berries",
+            "level": 30
+          },
+          {
+            "item": "rs:herblore_combat_potion",
+            "text": "Combat potion\\nHarralander & ground desert goat horn",
+            "level": 36
+          },
+          {
+            "item": "rs:herblore_prayer_restore_potion",
+            "text": "Prayer restore potion\\nRanarr weed & snape grass",
+            "level": 38
+          },
+          {
+            "item": "rs:herblore_super_attack_potion",
+            "text": "Super attack potion\\nIrit leaf & eye of newt",
+            "level": 45
+          },
+          {
+            "item": "rs:herblore_super_anti_poison_potion",
+            "text": "Super anti-poison potion\\nIrit leaf & ground unicorn horn",
+            "level": 48
+          },
+          {
+            "item": "rs:herblore_fishing_potion",
+            "text": "Fishing potion\\nAvantoe & snape grass",
+            "level": 50
+          },
+          {
+            "item": "rs:herblore_super_energy_potion",
+            "text": "Super energy potion\\nAvantoe & Mort Myre fungi",
+            "level": 52
+          },
+          {
+            "item": "rs:herblore_hunting_potion",
+            "text": "Hunting potion - Avantoe & ground\\nsabre-toothed kebbit teeth",
+            "level": 53
+          },
+          {
+            "item": "rs:herblore_super_strength_potion",
+            "text": "Super strength potion\\nKwuarm & limpwurt root",
+            "level": 55
+          },
+          {
+            "item": "rs:herblore_magic_essence_potion",
+            "text": "Magic essence potion\\nStar flower & ground gorak's claw",
+            "level": 57
+          },
+          {
+            "item": "rs:herblore_weapon_poison",
+            "text": "Weapon Poison\\nKwuarm & ground blue dragon scale",
+            "level": 60
+          },
+          {
+            "item": "rs:herblore_super_defence_potion",
+            "text": "Super defence potion\\nCadantine & white berries",
+            "level": 66
+          },
+          {
+            "item": "rs:herblore_antidote_plus",
+            "text": "Antidote+\\nCoconut milk, toadflax & yew roots",
+            "level": 68
+          },
+          {
+            "item": "rs:herblore_anti_firebreath_potion",
+            "text": "Anti-firebreath potion\\nLantadyme & ground blue dragon scale",
+            "level": 69
+          },
+          {
+            "item": "rs:herblore_ranging_potion",
+            "text": "Ranging potion\\nDwarf weed & wine of Zamorak",
+            "level": 72
+          },
+          {
+            "item": "rs:herblore_weapon_poison_plus",
+            "text": "Weapon poison(+)\\nCoconut milk, cactus spine & red spiders' eggs",
+            "level": 73
+          },
+          {
+            "item": "rs:herblore_magic_potion",
+            "text": "Magic potion\\nLantadyme & potato cactus",
+            "level": 76
+          },
+          {
+            "item": "rs:herblore_zamorak_brew",
+            "text": "Zamorak brew\\nTorstol & jangerberries",
+            "level": 78
+          },
+          {
+            "item": "rs:herblore_antidote_plus_plus",
+            "text": "Antidote++\\nCoconut milk, irit leaf & magic tree roots",
+            "level": 79
+          },
+          {
+            "item": "rs:herblore_saradomin_brew",
+            "text": "Saradomin brew\\nToadflax & crushed birdnest",
+            "level": 81
+          },
+          {
+            "item": "rs:herblore_weapon_poison_plus_plus",
+            "text": "Weapon poison(++)\\nCoconut milk, nightshade & poison ivy berries",
+            "level": 82
+          }
+        ]
+      },
+      {
+        "name": "Herbs",
+        "lines": [
+            {
+            "item": "rs:guam_leaf",
+            "text": "Guam leaf",
+            "level": 3
+          },
+          {
+            "item": "rs:rogues_purse",
+            "text": "Rogue's purse",
+            "level": 3
+          },
+          {
+            "item": "rs:snake_weed",
+            "text": "Snake weed",
+            "level": 3
+          },
+          {
+            "item": "rs:marrentill",
+            "text": "Marrentill",
+            "level": 5
+          },
+          {
+            "item": "rs:tarromin",
+            "text": "Tarromin",
+            "level": 11
+          },
+          {
+            "item": "rs:harralander",
+            "text": "Harralander",
+            "level": 20
+          },
+          {
+            "item": "rs:ranarr_weed",
+            "text": "Ranarr weed",
+            "level": 25
+          },
+          {
+            "item": "rs:toadflax",
+            "text": "Toadflax",
+            "level": 30
+          },
+          {
+            "item": "rs:irit_leaf",
+            "text": "Irit leaf",
+            "level": 40
+          },
+          {
+            "item": "rs:avantoe",
+            "text": "Avantoe",
+            "level": 48
+          },
+          {
+            "item": "rs:kwuarm",
+            "text": "Kwuarm",
+            "level": 54
+          },
+          {
+            "item": "rs:snapdragon",
+            "text": "Snapdragon",
+            "level": 59
+          },
+          {
+            "item": "rs:cadantine",
+            "text": "Cadantine",
+            "level": 65
+          },
+          {
+            "item": "rs:lantadyme",
+            "text": "Lantadyme",
+            "level": 67
+          },
+          {
+            "item": "rs:dwarf_weed",
+            "text": "Dwarf weed",
+            "level": 70
+          },
+          {
+            "item": "rs:torstol",
+            "text": "Torstol",
+            "level": 75
+          }
+        ]
+      }
+    ]
+  }
+  

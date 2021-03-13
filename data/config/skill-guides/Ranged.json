@@ -1,0 +1,272 @@
+{
+  "id": 127,
+  "name": "Ranged",
+  "members": false,
+  "sub_guides": [
+    {
+      "name": "Bows",
+      "lines": [
+        {
+          "item": "rs:standard_bow",
+          "text": "Standard bows\\n/Ammo: Arrows up to iron",
+          "level": 1
+        },
+        {
+          "item": "rs:oak_bow",
+          "text": "Oak bows\\nAmmo: Arrows up to steel",
+          "level": 5
+        },
+        {
+          "item": "rs:willow_bow",
+          "text": "Willow bows\\nAmmo: Arrows up to mithril",
+          "level": 20
+        },
+        {
+          "item": "rs:maple_bow",
+          "text": "Maple bows\\nAmmo: Arrows up to adamant",
+          "level": 30
+        },
+        {
+          "item": "rs:ogre_composite_bow",
+          "text": "Members: Ogre, composite bows\\nAmmo:'brutal' arrows up to rune",
+          "level": 30
+        },
+        {
+          "item": "rs:yew_bow",
+          "text": "Yew bows\\nAmmo: Arrows up to rune",
+          "level": 40
+        },
+        {
+          "item": "rs:magic_bow",
+          "text": "Magic bows\\nAmmo: Arrows up to rune",
+          "level": 50
+        },
+        {
+          "item": "rs:seercull_bow",
+          "text": "Members: Seercull bows\\nAmmo: Arrows up to rune",
+          "level": 50
+        },
+        {
+          "item": "rs:crystal_bow",
+          "text": "Members: Crystal bows (with 50 Agility)\\nAmmo: None",
+          "level": 70
+        }
+      ]
+    },
+    {
+      "name": "Thrown",
+      "lines": [
+        {
+          "item": "rs:bronze_knife",
+          "text": "Bronze knifes\\nthrowing knifes",
+          "level": 1
+        },
+        {
+          "item": "rs:iron_knife",
+          "text": "Iron knifes\\nthrowing knifes",
+          "level": 1
+        },
+        {
+          "item": "rs:steel_knife",
+          "text": "Steel knifes\\nthrowing knifes",
+          "level": 5
+        },
+        {
+          "item": "rs:black_knife",
+          "text": "Black knifes\\nthrowing knifes",
+          "level": 10
+        },
+        {
+          "item": "rs:mithril_knife",
+          "text": "Mithril knifes\\nthrowing knifes",
+          "level": 20
+        },
+        {
+          "item": "rs:adamant_knife",
+          "text": "Adamant knifes\\nthrowing knifes)",
+          "level": 30
+        },
+        {
+          "item": "rs:rune_knife",
+          "text": "Rune knifes\\nthrowing knifes",
+          "level": 40
+        },
+        {
+          "item": "rs:toktz-xil-ul",
+          "text": "Toktz xil ul\\nobsidian throwing rings",
+          "level": 60
+        }
+      ]
+    },
+    {
+      "name": "Crossbows",
+      "lines": [
+        {
+          "item": "rs:crossbow",
+          "text": "Crossbow\\nAmmo: Bronze crossbow bolts",
+          "level": 1
+        },
+        {
+          "item": "rs:phoenix_crossbow",
+          "text": "Phoenix crossbow\\nAmmo: Bronze crossbow bolts",
+          "level": 5
+        },
+        {
+          "item": "rs:bronze_crossbow",
+          "text": "Members: Crossbow\\nAmmo: Bronze crossbow bolts",
+          "level": 1
+        },
+        {
+          "item": "rs:blurite_crossbow",
+          "text": "Members: Blurite Crossbow\\nAmmo: bolts up to blurite",
+          "level": 16
+        },
+        {
+          "item": "rs:iron_crossbow",
+          "text": "Members: Crossbow\\nAmmo: Bolts up to iron",
+          "level": 26
+        },
+        {
+          "item": "rs:dorgeshuun_crossbow",
+          "text": "Members: Crossbow\\nAmmo: Bolts up to iron",
+          "level": 28
+        },
+        {
+          "item": "rs:steel_crossbow",
+          "text": "Members: Steel crossbow\\nAmmo: Bolts up to steel",
+          "level": 31
+        },
+        {
+          "item": "rs:mithril_crossbow",
+          "text": "Members: mithril crossbow\\nAmmo: Bolts up to mithril",
+          "level": 36
+        },
+        {
+          "item": "rs:adamant_crossbow",
+          "text": "Members: Adamant crossbow\\nAmmo: Bolts up to adamant",
+          "level": 46
+        },
+        {
+          "item": "rs:rune_crossbow",
+          "text": "Members: Rune crossbow\\nAmmo: Bolts up to rune",
+          "level": 61
+        },
+        {
+          "item": "rs:karils_crossbow",
+          "text": "Members: Karil's crossbow\\nAmmo: Bolt rack only",
+          "level": 70
+        }
+      ]
+    },
+     {
+      "name": "Armour",
+      "lines": [
+        {
+          "item": "rs:plain_leather_items",
+          "text": "Plain leather items\\nwield any bronze equipment",
+          "level": 1
+        },
+        {
+          "item": "rs:hard_leather_body",
+          "text": "Hard leather body\\n(10 Defence required)",
+          "level": 5
+        },
+        {
+          "item": "rs:studded_leather_body",
+          "text": "Studded leather chaps\\n(20 Defence required)",
+          "level": 20
+        },
+        {
+          "item": "rs:studded_leather_chaps",
+          "text": "Studded leather chaps",
+          "level": 20
+        },
+        {
+          "item": "rs:coif",
+          "text": "Coif",
+          "level": 20
+        },
+        {
+          "item": "rs:snake_skin_armour",
+          "text": "Members: Snakeskin armour\\n(30 Defence required)",
+          "level": 30
+        },
+        {
+          "item": "rs:ranger_boots",
+          "text": "Ranger boots",
+          "level": 40
+        },
+        {
+          "item": "rs:robin_hood_hat",
+          "text": "Robin Hood hat",
+          "level": 40
+        },
+        {
+          "item": "rs:green_dragonhide_vambraces",
+          "text": "Members: Green dragonhide vambraces)",
+          "level": 40
+        },
+        {
+          "item": "rs:green_dragonhide_chaps",
+          "text": "Members: Proselyte armour)",
+          "level": 40
+        },
+        {
+          "item": "rs:green_dragonhide_body",
+          "text": "Green dragonhide body\\n(40 Defence required)",
+          "level": 30
+        },
+        {
+          "item": "rs:blue_dragonhide_vambraces",
+          "text": "Members: Blue dragonhide vambraces)",
+          "level": 50
+        },
+        {
+          "item": "rs:blue_dragonhide_chaps",
+          "text": "Members: Blue dragonhide chaps",
+          "level": 50
+        },
+        {
+          "item": "rs:blue_dragonhide_body",
+          "text": "Members: Blue dragonhide body\\n(40 Defence required)",
+          "level": 50
+        },
+        {
+          "item": "rs:red_dragonhide_vambraces",
+          "text": "Members: Red dragonhide vambraces)",
+          "level": 60
+        },
+        {
+          "item": "rs:red_dragonhide_chaps",
+          "text": "Members: Red dragonhide chaps)",
+          "level": 60
+        },
+        {
+          "item": "rs:red_dragonhide_body",
+          "text": "Members: Red dragonhide body\\n(40 Defence required)",
+          "level": 60
+        },
+        {
+          "item": "rs:black_dragonhide_vambraces",
+          "text": "Members: Black dragonhide vambraces)",
+          "level": 70
+        },
+        {
+          "item": "rs:black_dragonhide_chaps",
+          "text": "Members: Black dragonhide chaps)",
+          "level": 70
+        },
+        {
+          "item": "rs:black_dragonhide_body",
+          "text": "Members: Black dragonhide body\\n(40 Defence required)",
+          "level": 70
+        },
+        {
+          "item": "rs:karils_leathertop",
+          "text": "Members: Karil's leather armour\\(70 Defence required)",
+          "level": 70
+        }
+      ]
+    }
+   ]
+}
