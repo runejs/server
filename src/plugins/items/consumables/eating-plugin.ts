@@ -1,5 +1,5 @@
 import { itemAction } from '@server/world/action/item-action';
-import { widgets } from '@server/config';
+import { findItem, widgets } from '@server/config';
 import { SkillName } from '@server/world/actor/skills';
 import { animationIds } from '@server/world/config/animation-ids';
 import { soundIds } from '@server/world/config/sound-ids';
@@ -34,7 +34,11 @@ export const action: itemAction = (details) => {
         return;
     }
 
-    player.inventory.items[itemSlot] = null;
+    if(itemDetails.metadata.consume_effects.replaced_by) {
+        player.inventory.items[itemSlot] = { itemId: findItem(itemDetails.metadata.consume_effects.replaced_by)?.gameId, amount: 1 };
+    } else {
+        player.inventory.items[itemSlot] = null;
+    }
     player.playSound(soundIds.eat);
     player.playAnimation(animationIds.eat)
 

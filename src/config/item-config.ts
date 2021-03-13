@@ -1,5 +1,6 @@
 import { loadConfigurationFiles } from '@server/config/index';
 import { SkillName } from '@server/world/actor/skills';
+import _ from "lodash";
 
 
 export type WeaponStyle = 'axe' | 'hammer' | 'bow' | 'claws' | 'crossbow' | 'longsword' |
@@ -85,6 +86,7 @@ export interface WeaponInfo {
 export interface ItemMetadata {
     [key: string]: unknown;
     consume_effects?: {
+        replaced_by?: string;
         clock: string; // Name of timer to be used for cooldown
         skills?: {
             [key in SkillName]: number | [number, number];
@@ -115,6 +117,9 @@ export interface ItemConfiguration {
     game_id: number;
     examine?: string;
     tradable?: boolean;
+    subitems?: [{
+        suffix: string;
+    } & ItemConfiguration];
     weight?: number;
     equippable?: boolean;
     consumable?: boolean;
@@ -198,7 +203,7 @@ export function translateItemConfig(key: string, config: ItemConfiguration): any
             skillBonuses: config.equipment_data?.skill_bonuses || undefined,
             weaponInfo: config.equipment_data?.weapon_info || undefined,
         } : undefined,
-        metadata: config.metadata
+        metadata: config.metadata? { ...config.metadata } : {}
     };
 }
 
@@ -216,9 +221,19 @@ export async function loadItemConfigurations(path: string): Promise<{ items: { [
             if(key === 'presets') {
                 itemPresets = { ...itemPresets, ...itemConfigs[key] };
             } else {
+
                 const itemConfig: ItemConfiguration = itemConfigs[key] as ItemConfiguration;
                 itemIds[itemConfig.game_id] = key;
                 items[key] = { ...translateItemConfig(key, itemConfig) };
+                if(itemConfig.subitems) {
+                    for(const subItem of itemConfig.subitems) {
+                        const subKey = key+':'+subItem.suffix;
+                        const baseItem = JSON.parse(JSON.stringify({ ...translateItemConfig(key, itemConfig) }));
+                        const subBaseItem = JSON.parse(JSON.stringify({ ...translateItemConfig(subKey, subItem) }));
+                        itemIds[subItem.game_id] = subKey;
+                        items[subKey] = _.merge(baseItem,subBaseItem);
+                    }
+                }
             }
         });
     });
