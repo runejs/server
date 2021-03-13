@@ -4,6 +4,8 @@ import { getItemFromContainer } from '@engine/world/items/item-container';
 import { serverConfig } from '@engine/game-server';
 import { Rights } from '@engine/world/actor/player/player';
 import { widgets } from '@engine/config';
+import { dialogue, execute } from '@engine/world/actor/dialogue';
+
 
 export const handler: itemInteractionActionHandler = ({ player, itemId, itemSlot }) => {
     const inventory = player.inventory;
@@ -15,7 +17,25 @@ export const handler: itemInteractionActionHandler = ({ player, itemId, itemSlot
     }
 
     if(!serverConfig.adminDropsEnabled && player.rights === Rights.ADMIN) {
-        player.sendMessage('Administrators are not allowed to drop items.', true);
+        dialogue([ player ], [
+            text => ('Administrators are not allowed to drop items.'),
+            options => [
+                `Destroy the item!`, [
+                    execute(() => {
+                        inventory.remove(itemSlot);
+                        player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, itemSlot, null);
+                    }),
+                ],
+                `Bank the item!`, [
+                    execute(() => {
+                        inventory.remove(itemSlot);
+                        player.bank.add(item);
+                        player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, itemSlot, null);
+                    }),
+                ]
+            ]
+        ]);
+
         return;
     }
 

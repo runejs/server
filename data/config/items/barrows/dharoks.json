@@ -1,52 +1,57 @@
 {
-    "presets": {
-        "rs:dharoks_axe_base": {
-            "tradable": true,
-            "equippable": true,
-            "equipment_data": {
-                "equipment_slot": "main_hand",
-                "equipment_type": "two_handed",
-                "requirements": {
-                    "skills": {
-                        "attack": 70,
-                        "strength": 70
-                    }
-                },
-                "offensive_bonuses": {
-                    "speed": 7,
-                    "stab": -4,
-                    "slash": 103,
-                    "crush": 95,
-                    "magic": -4
-                },
-                "defensive_bonuses": {
-                    "ranged": -1
-                },
-                "skill_bonuses": {
-                    "strength": 105
+    "rs:dharoks_axe" : {
+        "tradable": true,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "two_handed",
+            "requirements": {
+                "skills": {
+                    "attack": 70,
+                    "strength": 70
                 }
+            },
+            "offensive_bonuses": {
+                "speed": 7,
+                "stab": -4,
+                "slash": 103,
+                "crush": 95,
+                "magic": -4
+            },
+            "defensive_bonuses": {
+                "ranged": -1
+            },
+            "skill_bonuses": {
+                "strength": 105
             }
-        }
-    },
-
-    "rs:dharoks_axe_100": {
-        "extends": "rs:dharoks_axe_base",
-        "game_id": 4886
-    },
-    "rs:dharoks_axe_75": {
-        "extends": "rs:dharoks_axe_base",
-        "game_id": 4887
-    },
-    "rs:dharoks_axe_50": {
-        "extends": "rs:dharoks_axe_base",
-        "game_id": 4888
-    },
-    "rs:dharoks_axe_25": {
-        "extends": "rs:dharoks_axe_base",
-        "game_id": 4889
-    },
-    "rs:dharoks_axe_0": {
-        "extends": "rs:dharoks_axe_base",
-        "game_id": 4890
+        },
+        "game_id": 4718,
+        "subitems": [
+            {
+                "suffix": "100",
+                "tradable": false,
+                "game_id": 4886
+            },
+            {
+                "suffix": "75",
+                "tradable": false,
+                "game_id": 4887
+            },
+            {
+                "suffix": "50",
+                "tradable": false,
+                "game_id": 4888
+            },
+            {
+                "suffix": "25",
+                "tradable": false,
+                "game_id": 4889
+            },
+            {
+                "suffix": "0",
+                "tradable": false,
+                "game_id": 4890
+            }
+        ]
     }
 }
