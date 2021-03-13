@@ -13,6 +13,7 @@ export const animationIds = {
     climbLadder: 828,
     smelting: 833,
     death: 2304,
+    eat: 829,
     buryBones: 827,
     herblore: {
         make_potion: 363,

@@ -16,5 +16,15 @@
         "examine": "It's a wooden bucket.",
         "tradable": true,
         "weight": 1
+    },
+    "rs:bowl": {
+        "game_id": 1923,
+        "examine": "Useful for mixing things.",
+        "tradable": true
+    },
+    "rs:pie_dish": {
+        "game_id": 2313,
+        "examine": "Deceptively pie shaped.",
+        "tradable": true
     }
 }
