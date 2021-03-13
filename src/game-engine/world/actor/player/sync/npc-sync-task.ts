@@ -1,15 +1,14 @@
-import { Task } from '@engine/world/task';
 import { Player } from '../player';
 import { Packet, PacketType } from '@engine/net/packet';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { world } from '@engine/game-server';
-import { registerNewActors, syncTrackedActors } from './actor-sync';
+import { registerNewActors, syncTrackedActors, SyncTask } from './actor-sync';
 import { ByteBuffer } from '@runejs/core';
 
 /**
  * Handles the chonky npc synchronization packet for a specific player.
  */
-export class NpcSyncTask extends Task<void> {
+export class NpcSyncTask extends SyncTask<void> {
 
     private readonly player: Player;
 

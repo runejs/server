@@ -1,6 +1,18 @@
 import { actionHookMap } from '@engine/game-server';
 import { QuestKey } from '@engine/config/quest-config';
-import { ActionType } from '@engine/world/action';
+import { ActionPriority, TaskExecutor, ActionType } from '@engine/world/action';
+
+
+export interface HookTask<T = any> {
+    priority?: ActionPriority;
+    canActivate?: <Q = T>(task: TaskExecutor<Q>) => boolean | Promise<boolean>;
+    execute: <Q = T>(task: TaskExecutor<Q>) => void | undefined | boolean | Promise<void | undefined | boolean>;
+    onComplete?: <Q = T>(task: TaskExecutor<Q>) => void | Promise<void>;
+    delay?: number; // # of ticks before execution
+    delayMs?: number; // # of milliseconds before execution
+    interval?: number; // # of ticks between loop intervals (defaults to single run task)
+    intervalMs?: number;  // # of milliseconds between loop intervals (defaults to single run task)
+}
 
 
 /**
