@@ -1,8 +1,9 @@
-import { dialogue, Emote, execute, goto, animationIds, Achievements, giveAchievement } from '../../rune.js';
+import { dialogue, Emote, goto, execute } from '../../../game-engine/world/actor/dialogue';
+import { animationIds } from '../../../game-engine/world/config/animation-ids';
+import { Achievements, giveAchievement } from '../../../game-engine/world/actor/player/achievements';
 
-const action = async details => {
-    const { player, npc } = details;
 
+const handler = async ({ player, npc }) => {
     let sadEnding = false;
 
     const dialogueSuccessful = await dialogue([ player, { npc, key: 'hans' } ], [
@@ -50,6 +51,7 @@ const action = async details => {
     }
 };
 
+
 module.exports = {
     pluginId: 'rs:hans',
     hooks: [
@@ -58,7 +60,7 @@ module.exports = {
             npcs: 'rs:hans',
             options: 'talk-to',
             walkTo: true,
-            handler: action
+            handler
         }
     ]
 };
