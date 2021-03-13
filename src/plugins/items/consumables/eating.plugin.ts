@@ -96,10 +96,10 @@ export default {
     pluginId: 'rs:eating',
     hooks: [
         {
-            type: 'item_action',
+            type: 'item_interaction',
             widgets: widgets.inventory,
             options: 'eat',
-            action,
+            handler: action,
             cancelOtherActions: true
         }
     ]

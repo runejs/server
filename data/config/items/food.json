@@ -134,7 +134,7 @@
     },
     "rs:trout": {
         "extends": "rs:food",
-        "game_id": 335,
+        "game_id": 333,
         "metadata": {
             "consume_effects": {
                 "skills": {
