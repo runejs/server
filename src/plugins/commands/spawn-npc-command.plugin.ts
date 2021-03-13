@@ -32,13 +32,18 @@ const action: commandActionHandler = ({ player, args }) => {
 };
 
 export default {
-    type: 'player_command',
-    commands: [ 'npc', 'spawnnpc', 'spawn_npc' ],
-    args: [
+    pluginId: 'rs:spawn_npc_command',
+    hooks: [
         {
-            name: 'npcKey',
-            type: 'either'
+            type: 'player_command',
+            commands: [ 'npc', 'spawnnpc', 'spawn_npc' ],
+            args: [
+                {
+                    name: 'npcKey',
+                    type: 'either'
+                }
+            ],
+            handler: action
         }
-    ],
-    handler: action
+    ]
 };

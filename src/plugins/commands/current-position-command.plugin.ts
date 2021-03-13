@@ -6,7 +6,12 @@ const action: commandActionHandler = (details) => {
 };
 
 export default {
-    type: 'player_command',
-    commands: [ 'pos', 'loc', 'position', 'location', 'coords', 'coordinates', 'mypos', 'myloc' ],
-    handler: action
+    pluginId: 'rs:current_position_command',
+    hooks: [
+        {
+            type: 'player_command',
+            commands: [ 'pos', 'loc', 'position', 'location', 'coords', 'coordinates', 'mypos', 'myloc' ],
+            handler: action
+        }
+    ]
 };

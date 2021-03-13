@@ -12,10 +12,6 @@ const action: commandActionHandler = async (details) => {
 
     // Delete node cache for all the old JS plugins
     for(const path in require.cache) {
-        if(!require.cache.hasOwnProperty(path)) {
-            continue;
-        }
-
         if(!path.endsWith('.js')) {
             continue;
         }
@@ -71,6 +67,14 @@ const action: commandActionHandler = async (details) => {
 };
 
 export default {
-    type: 'player_command', commands: [
-        'plugins', 'reload', 'content', 'hotload', 'refresh', 'restart', 'r'
-    ], handler: action };
+    pluginId: 'rs:reload_content_command',
+    hooks: [
+        {
+            type: 'player_command',
+            commands: [
+                'plugins', 'reload', 'content', 'hotload', 'refresh', 'restart', 'r'
+            ],
+            handler: action
+        }
+    ]
+};

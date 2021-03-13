@@ -164,7 +164,6 @@ export async function runGameServer(): Promise<void> {
  *          player's `actionsCancelled` is fired during the loop.
  * `npc` the npc that the loop belongs to. This will Providing this field will cause the loop to cancel if
  *       this npc is flagged to no longer exist during the loop.
- * @deprecated To be replaced with a simplified method within the Actor (Player & NPC) API.
  */
 export const loopingEvent = (options?: { ticks?: number, delayTicks?: number, npc?: Npc, player?: Player }):
     { event: Subject<void>, cancel: () => void } => {

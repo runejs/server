@@ -71,32 +71,37 @@ const dumpSceneryAction: commandActionHandler = (details) => {
     player.metadata.spawnedScenery = [];
 };
 
-export default [{
-    type: 'player_command',
-    commands: [ 'scene', 'sc' ],
-    args: [
+export default {
+    pluginId: 'rs:spawn_scenery_command',
+    hooks: [
         {
-            name: 'locationObjectSearch',
-            type: 'string'
-        },
-        {
-            name: 'objectOrientation',
-            type: 'number',
-            defaultValue: 0
-        },
-        {
-            name: 'objectType',
-            type: 'number',
-            defaultValue: 10
+            type: 'player_command',
+            commands: [ 'scene', 'sc' ],
+            args: [
+                {
+                    name: 'locationObjectSearch',
+                    type: 'string'
+                },
+                {
+                    name: 'objectOrientation',
+                    type: 'number',
+                    defaultValue: 0
+                },
+                {
+                    name: 'objectType',
+                    type: 'number',
+                    defaultValue: 10
+                }
+            ],
+            handler: spawnSceneryAction
+        }, {
+            type: 'player_command',
+            commands: [ 'undoscene', 'undosc' ],
+            handler: undoSceneryAction
+        }, {
+            type: 'player_command',
+            commands: [ 'dumpscene', 'dumpsc' ],
+            handler: dumpSceneryAction
         }
-    ],
-    handler: spawnSceneryAction
-}, {
-    type: 'player_command',
-    commands: [ 'undoscene', 'undosc' ],
-    handler: undoSceneryAction
-}, {
-    type: 'player_command',
-    commands: [ 'dumpscene', 'dumpsc' ],
-    handler: dumpSceneryAction
-}];
+    ]
+};

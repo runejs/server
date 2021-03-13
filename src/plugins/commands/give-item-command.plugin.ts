@@ -66,18 +66,23 @@ const action: commandActionHandler = (details) => {
 };
 
 export default {
-    type: 'player_command',
-    commands: [ 'give', 'item', 'spawn' ],
-    args: [
+    pluginId: 'rs:give_item_command',
+    hooks: [
         {
-            name: 'itemSearch',
-            type: 'string'
-        },
-        {
-            name: 'amount',
-            type: 'number',
-            defaultValue: 1
+            type: 'player_command',
+            commands: [ 'give', 'item', 'spawn' ],
+            args: [
+                {
+                    name: 'itemSearch',
+                    type: 'string'
+                },
+                {
+                    name: 'amount',
+                    type: 'number',
+                    defaultValue: 1
+                }
+            ],
+            handler: action
         }
-    ],
-    handler: action
+    ]
 };

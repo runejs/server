@@ -18,6 +18,7 @@ export interface PlayerCommandActionHook extends ActionHook<commandActionHandler
     }[];
 }
 
+
 /**
  * The player command action hook handler function to be called when the hook's conditions are met.
  */

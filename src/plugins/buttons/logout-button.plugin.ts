@@ -19,6 +19,11 @@ export const handler: buttonActionHandler = (details) => {
 export default {
     pluginId: 'rs:logout_button',
     hooks: [
-        { type: 'button', widgetId: widgets.logoutTab, buttonIds: 6, handler }
+        {
+            type: 'button',
+            widgetId: widgets.logoutTab,
+            buttonIds: 6,
+            handler
+        }
     ]
 };

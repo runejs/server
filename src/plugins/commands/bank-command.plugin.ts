@@ -6,7 +6,12 @@ const action: commandActionHandler = (details) => {
 };
 
 export default {
-    type: 'player_command',
-    commands: [ 'bank' ],
-    handler: action
+    pluginId: 'rs:bank_command',
+    hooks: [
+        {
+            type: 'player_command',
+            commands: [ 'bank' ],
+            handler: action
+        }
+    ]
 };

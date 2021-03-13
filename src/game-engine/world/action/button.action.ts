@@ -45,7 +45,7 @@ export interface ButtonAction {
  * @param buttonId
  */
 const buttonActionPipe = (player: Player, widgetId: number, buttonId: number) => {
-    let interactionActions = getActionHooks<ButtonActionHook>('button')
+    let matchingHooks = getActionHooks<ButtonActionHook>('button')
         .filter(plugin =>
             questHookFilter(player, plugin) && (
                 (plugin.widgetId && plugin.widgetId === widgetId) ||
@@ -55,10 +55,10 @@ const buttonActionPipe = (player: Player, widgetId: number, buttonId: number) =>
             advancedNumberHookFilter(plugin.buttonIds, buttonId))
         );
 
-    const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
+    const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
-        interactionActions = questActions;
+        matchingHooks = questActions;
     }
 
     if(player.metadata.buttonListener) {
@@ -67,18 +67,18 @@ const buttonActionPipe = (player: Player, widgetId: number, buttonId: number) =>
         }
     }
 
-    if(interactionActions.length === 0) {
+    if(matchingHooks.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled button interaction: ${widgetId}:${buttonId}`);
         return;
     }
 
-    // Immediately run the plugins
-    for(const plugin of interactionActions) {
-        if(plugin.cancelActions) {
+    // Immediately run the hooks
+    for(const actionHook of matchingHooks) {
+        if(actionHook.cancelActions) {
             player.actionsCancelled.next('button');
         }
 
-        plugin.handler({ player, widgetId, buttonId });
+        actionHook.handler({ player, widgetId, buttonId });
     }
 };
 

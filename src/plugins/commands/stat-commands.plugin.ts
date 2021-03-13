@@ -22,18 +22,23 @@ const setLevelAction: commandActionHandler = ({ player, args }) => {
     player.outgoingPackets.updateSkill(player.skills.getSkillId(skillId as any), level, exp);
 };
 
-export default [{
-    type: 'player_command',
-    commands: [ 'setlevel', 'setlvl' ],
-    args: [
+export default {
+    pluginId: 'rs:stat_commands',
+    hooks: [
         {
-            name: 'skillId',
-            type: 'string'
-        },
-        {
-            name: 'level',
-            type: 'number'
+            type: 'player_command',
+            commands: [ 'setlevel', 'setlvl' ],
+            args: [
+                {
+                    name: 'skillId',
+                    type: 'string'
+                },
+                {
+                    name: 'level',
+                    type: 'number'
+                }
+            ],
+            handler: setLevelAction
         }
-    ],
-    handler: setLevelAction
-}];
+    ]
+};

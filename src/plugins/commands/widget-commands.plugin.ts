@@ -23,18 +23,23 @@ const action: commandActionHandler = (details) => {
 };
 
 export default {
-    type: 'player_command',
-    commands: [ 'widget' ],
-    args: [
+    pluginId: 'rs:widget_commands',
+    hooks: [
         {
-            name: 'widgetId',
-            type: 'number'
-        },
-        {
-            name: 'secondaryWidgetId',
-            type: 'number',
-            defaultValue: 1
+            type: 'player_command',
+            commands: [ 'widget' ],
+            args: [
+                {
+                    name: 'widgetId',
+                    type: 'number'
+                },
+                {
+                    name: 'secondaryWidgetId',
+                    type: 'number',
+                    defaultValue: 1
+                }
+            ],
+            handler: action
         }
-    ],
-    handler: action
+    ]
 };

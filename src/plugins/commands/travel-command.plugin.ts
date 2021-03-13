@@ -17,13 +17,18 @@ const action: commandActionHandler = (details) => {
 };
 
 export default {
-    type: 'player_command',
-    commands: [ 'travel' ],
-    args: [
+    pluginId: 'rs:travel_command',
+    hooks: [
         {
-            name: 'search',
-            type: 'string'
+            type: 'player_command',
+            commands: [ 'travel' ],
+            args: [
+                {
+                    name: 'search',
+                    type: 'string'
+                }
+            ],
+            handler: action
         }
-    ],
-    handler: action
+    ]
 };
