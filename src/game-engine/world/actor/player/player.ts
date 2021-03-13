@@ -4,7 +4,7 @@ import { Isaac } from '@engine/net/isaac';
 import { PlayerSyncTask } from './sync/player-sync-task';
 import { Actor } from '../actor';
 import { Position } from '@engine/world/position';
-import { actionPipeline, cache, actionHookMap, serverConfig, world } from '@engine/game-server';
+import { actionPipeline, cache, actionHookMap, serverConfig, world, questMap } from '@engine/game-server';
 import { logger } from '@runejs/core';
 import uuidv4 from 'uuid/v4';
 import {
@@ -421,11 +421,10 @@ export class Player extends Actor {
     public getQuestPoints(): number {
         let questPoints = 0;
 
-        // @TODO Tyn fix
-        /*if(this.quests && this.quests.length !== 0) {
+        if(this.quests && this.quests.length !== 0) {
             this.quests.filter(quest => quest.complete)
-                .forEach(quest => questPoints += pluginActionHooks.quests[quest.questId]?.points || 0);
-        }*/
+                .forEach(quest => questPoints += questMap[quest.questId]?.points || 0);
+        }
 
         return questPoints;
     }
@@ -985,8 +984,6 @@ export class Player extends Actor {
     private updateQuestTab(): void {
         this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, this.getQuestPoints());
 
-        // @TODO Tyn fix
-        /*const questMap = pluginActionHooks.quest;
         if(!questMap) {
             return;
         }
@@ -999,7 +996,7 @@ export class Player extends Actor {
             }
 
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: color });
-        });*/
+        });
     }
 
     private addBonuses(item: Item): void {
