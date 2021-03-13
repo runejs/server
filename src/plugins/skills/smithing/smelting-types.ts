@@ -1,4 +1,4 @@
-import { Item } from '@server/world/items/item';
+import { Item } from '@engine/world/items/item';
 
 export interface Bar {
     barId: number;

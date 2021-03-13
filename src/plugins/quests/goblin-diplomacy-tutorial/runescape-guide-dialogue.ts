@@ -1,7 +1,7 @@
-import { defaultPlayerTabWidgets, Player } from '@server/world/actor/player/player';
-import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
-import { updateCombatStyleWidget } from '@server/plugins/combat/combat-styles';
-import { QuestDialogueHandler } from '@server/config/quest-config';
+import { defaultPlayerTabWidgets, Player } from '@engine/world/actor/player/player';
+import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
+import { updateCombatStyleWidget } from '@plugins/combat/combat-styles.plugin';
+import { QuestDialogueHandler } from '@engine/config/quest-config';
 
 
 export const runescapeGuideDialogueHandler: QuestDialogueHandler = {

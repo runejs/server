@@ -15,7 +15,8 @@
         "allowJs": true,
         "outDir": "./dist/",
         "paths": {
-            "@server/*": ["src/*"]
+            "@engine/*": ["src/game-engine/*"],
+            "@plugins/*": ["src/plugins/*"]
         },
         "types": [
             "node"
