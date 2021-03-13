@@ -1,6 +1,6 @@
 import { loadConfigurationFiles } from '@server/config/index';
 import { SkillName } from '@server/world/actor/skills';
-import _ from "lodash";
+import _ from 'lodash';
 
 
 export type WeaponStyle = 'axe' | 'hammer' | 'bow' | 'claws' | 'crossbow' | 'longsword' |
