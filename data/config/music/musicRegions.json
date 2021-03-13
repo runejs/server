@@ -1,0 +1,3909 @@
+{
+  "musicRegions": [
+    {
+      "songId": 363,
+      "songName": "7th Realm",
+      "musicTabButtonId": 46165,
+      "musicTabInterfaceId": 11941,
+      "regionIds": [
+        10645,
+        10644
+      ]
+    },
+    {
+      "songId": 177,
+      "songName": "Adventure",
+      "musicTabButtonId": 16191,
+      "musicTabInterfaceId": 4287,
+      "regionIds": [
+        12854
+      ]
+    },
+    {
+      "songId": 50,
+      "songName": "Al-Kharid",
+      "musicTabButtonId": 16192,
+      "musicTabInterfaceId": 4288,
+      "regionIds": [
+        13105,
+        13361
+      ]
+    },
+    {
+      "songId": 73,
+      "songName": "All's Fairy In Love'N'War",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 102,
+      "songName": "Alone",
+      "musicTabButtonId": 16193,
+      "musicTabInterfaceId": 4289,
+      "regionIds": [
+        12086,
+        10390,
+        10134
+      ]
+    },
+    {
+      "songId": 90,
+      "songName": "Ambient Jungle",
+      "musicTabButtonId": 16194,
+      "musicTabInterfaceId": 4290,
+      "regionIds": [
+        11310
+      ]
+    },
+    {
+      "songId": 305,
+      "songName": "Anywhere",
+      "musicTabButtonId": 43126,
+      "musicTabInterfaceId": 11134,
+      "regionIds": [
+        10795
+      ]
+    },
+    {
+      "songId": 123,
+      "songName": "Arabian 2",
+      "musicTabButtonId": 16196,
+      "musicTabInterfaceId": 4292,
+      "regionIds": [
+        13107
+      ]
+    },
+    {
+      "songId": 124,
+      "songName": "Arabian 3",
+      "musicTabButtonId": 16197,
+      "musicTabInterfaceId": 4293,
+      "regionIds": [
+        12848
+      ]
+    },
+    {
+      "songId": 36,
+      "songName": "Arabian",
+      "musicTabButtonId": 16195,
+      "musicTabInterfaceId": 4291,
+      "regionIds": [
+        13617,
+        13106
+      ]
+    },
+    {
+      "songId": 19,
+      "songName": "Arabique",
+      "musicTabButtonId": 16198,
+      "musicTabInterfaceId": 4294,
+      "regionIds": [
+        11417
+      ]
+    },
+    {
+      "songId": 160,
+      "songName": "Army of Darkness",
+      "musicTabButtonId": 16199,
+      "musicTabInterfaceId": 4295,
+      "regionIds": [
+        12088
+      ]
+    },
+    {
+      "songId": 186,
+      "songName": "Arrival",
+      "musicTabButtonId": 16200,
+      "musicTabInterfaceId": 4296,
+      "regionIds": [
+        11572
+      ]
+    },
+    {
+      "songId": 247,
+      "songName": "Artistry",
+      "musicTabButtonId": 34231,
+      "musicTabInterfaceId": 8935,
+      "regionIds": [
+        8010
+      ]
+    },
+    {
+      "songId": 24,
+      "songName": "Attack 1",
+      "musicTabButtonId": 16201,
+      "musicTabInterfaceId": 4297,
+      "regionIds": [
+        10034
+      ]
+    },
+    {
+      "songId": 25,
+      "songName": "Attack 2",
+      "musicTabButtonId": 16202,
+      "musicTabInterfaceId": 4298,
+      "regionIds": [
+        11414
+      ]
+    },
+    {
+      "songId": 26,
+      "songName": "Attack 3",
+      "musicTabButtonId": 16203,
+      "musicTabInterfaceId": 4299,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 27,
+      "songName": "Attack 4",
+      "musicTabButtonId": 16204,
+      "musicTabInterfaceId": 4300,
+      "regionIds": [
+        10289
+      ]
+    },
+    {
+      "songId": 28,
+      "songName": "Attack 5",
+      "musicTabButtonId": 16205,
+      "musicTabInterfaceId": 4301,
+      "regionIds": [
+        9033
+      ]
+    },
+    {
+      "songId": 29,
+      "songName": "Attack 6",
+      "musicTabButtonId": 16206,
+      "musicTabInterfaceId": 4302,
+      "regionIds": [
+        10387
+      ]
+    },
+    {
+      "songId": 180,
+      "songName": "Attention",
+      "musicTabButtonId": 16207,
+      "musicTabInterfaceId": 4303,
+      "regionIds": [
+        11825
+      ]
+    },
+    {
+      "songId": 2,
+      "songName": "Autumn Voyage",
+      "musicTabButtonId": 16208,
+      "musicTabInterfaceId": 4304,
+      "regionIds": [
+        12851
+      ]
+    },
+    {
+      "songId": 497,
+      "songName": "Aye Car Rum Ba",
+      "musicTabButtonId": 58024,
+      "musicTabInterfaceId": 14872,
+      "regionIds": [
+        8527
+      ]
+    },
+    {
+      "songId": 248,
+      "songName": "Aztec",
+      "musicTabButtonId": 2152,
+      "musicTabInterfaceId": 664,
+      "regionIds": [
+        11157,
+        11158,
+        11156,
+        10902
+      ]
+    },
+    {
+      "songId": 324,
+      "songName": "Background",
+      "musicTabButtonId": 35011,
+      "musicTabInterfaceId": 8971,
+      "regionIds": [
+        11060,
+        11316,
+        7758
+      ]
+    },
+    {
+      "songId": 152,
+      "songName": "Ballad of Enchantment",
+      "musicTabButtonId": 16210,
+      "musicTabInterfaceId": 4306,
+      "regionIds": [
+        10290
+      ]
+    },
+    {
+      "songId": 263,
+      "songName": "Bandit Camp",
+      "musicTabButtonId": 29030,
+      "musicTabInterfaceId": 7454,
+      "regionIds": [
+        12590
+      ]
+    },
+    {
+      "songId": 141,
+      "songName": "Barbarianism",
+      "musicTabButtonId": 19000,
+      "musicTabInterfaceId": 4864,
+      "regionIds": [
+        12341,
+        12441
+      ]
+    },
+    {
+      "songId": 345,
+      "songName": "Barking Mad",
+      "musicTabButtonId": 47096,
+      "musicTabInterfaceId": 12128,
+      "regionIds": [
+        14234
+      ]
+    },
+    {
+      "songId": 99,
+      "songName": "Baroque",
+      "musicTabButtonId": 16211,
+      "musicTabInterfaceId": 4307,
+      "regionIds": [
+        10547
+      ]
+    },
+    {
+      "songId": 100,
+      "songName": "Beyond",
+      "musicTabButtonId": 16212,
+      "musicTabInterfaceId": 4308,
+      "regionIds": [
+        11675,
+        11419,
+        11418
+      ]
+    },
+    {
+      "songId": 83,
+      "songName": "Big Chords",
+      "musicTabButtonId": 16213,
+      "musicTabInterfaceId": 4309,
+      "regionIds": [
+        10032,
+        11593
+      ]
+    },
+    {
+      "songId": 498,
+      "songName": "Blistering Barnacles",
+      "musicTabButtonId": 58023,
+      "musicTabInterfaceId": 14871,
+      "regionIds": [
+        8528
+      ]
+    },
+    {
+      "songId": 342,
+      "songName": "Body Parts",
+      "musicTabButtonId": 47095,
+      "musicTabInterfaceId": 12127,
+      "regionIds": [
+        13979,
+        14235
+      ]
+    },
+    {
+      "songId": 154,
+      "songName": "Bone Dance",
+      "musicTabButtonId": 35008,
+      "musicTabInterfaceId": 8968,
+      "regionIds": [
+        13619
+      ]
+    },
+    {
+      "songId": 266,
+      "songName": "Bone Dry",
+      "musicTabButtonId": 50044,
+      "musicTabInterfaceId": 12844,
+      "regionIds": [
+        12946,
+        13202
+      ]
+    },
+    {
+      "songId": 64,
+      "songName": "Book of Spells",
+      "musicTabButtonId": 16214,
+      "musicTabInterfaceId": 4310,
+      "regionIds": [
+        12593
+      ]
+    },
+    {
+      "songId": 291,
+      "songName": "Borderland",
+      "musicTabButtonId": 39127,
+      "musicTabInterfaceId": 10111,
+      "regionIds": [
+        10809,
+        10810
+      ]
+    },
+    {
+      "songId": 132,
+      "songName": "Breeze",
+      "musicTabButtonId": 33117,
+      "musicTabInterfaceId": 8565,
+      "regionIds": [
+        9010
+      ]
+    },
+    {
+      "songId": 471,
+      "songName": "Brew Ho Ho",
+      "musicTabButtonId": 55162,
+      "musicTabInterfaceId": 14242,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 194,
+      "songName": "Brimstail's Scales",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        9625
+      ]
+    },
+    {
+      "songId": 489,
+      "songName": "Bubble And Squeak",
+      "musicTabButtonId": 60134,
+      "musicTabInterfaceId": 15494,
+      "regionIds": [
+        7753
+      ]
+    },
+    {
+      "songId": 104,
+      "songName": "Camelot",
+      "musicTabButtonId": 16215,
+      "musicTabInterfaceId": 4311,
+      "regionIds": [
+        11062,
+        11063
+      ]
+    },
+    {
+      "songId": 314,
+      "songName": "Castlewars",
+      "musicTabButtonId": 44212,
+      "musicTabInterfaceId": 11476,
+      "regionIds": [
+        9520,
+        9620
+      ]
+    },
+    {
+      "songId": 481,
+      "songName": "Catch Me If You Can",
+      "musicTabButtonId": 60133,
+      "musicTabInterfaceId": 15493,
+      "regionIds": [
+        10646
+      ]
+    },
+    {
+      "songId": 325,
+      "songName": "Cave Background",
+      "musicTabButtonId": 35012,
+      "musicTabInterfaceId": 8972,
+      "regionIds": [
+        12185,
+        11929,
+        12184
+      ]
+    },
+    {
+      "songId": 357,
+      "songName": "Cave of Beasts",
+      "musicTabButtonId": 48102,
+      "musicTabInterfaceId": 12390,
+      "regionIds": [
+        11165
+      ]
+    },
+    {
+      "songId": 389,
+      "songName": "Cave of The Goblins",
+      "musicTabButtonId": 49040,
+      "musicTabInterfaceId": 12584,
+      "regionIds": [
+        12949,
+        12693
+      ]
+    },
+    {
+      "songId": 68,
+      "songName": "Cavern",
+      "musicTabButtonId": 16217,
+      "musicTabInterfaceId": 4313,
+      "regionIds": [
+        10388,
+        10389,
+        12193
+      ]
+    },
+    {
+      "songId": 330,
+      "songName": "Cellar Song",
+      "musicTabButtonId": 35020,
+      "musicTabInterfaceId": 8980,
+      "regionIds": [
+        12697
+      ]
+    },
+    {
+      "songId": 63,
+      "songName": "Chain of Command",
+      "musicTabButtonId": 16218,
+      "musicTabInterfaceId": 4314,
+      "regionIds": [
+        10905,
+        10651,
+        10648,
+        10649,
+        10650
+      ]
+    },
+    {
+      "songId": 282,
+      "songName": "Chamber",
+      "musicTabButtonId": 44220,
+      "musicTabInterfaceId": 11484,
+      "regionIds": [
+        11078,
+        10821
+      ]
+    },
+    {
+      "songId": 583,
+      "songName": "Chef Surprise",
+      "musicTabButtonId": 246,
+      "musicTabInterfaceId": 18303,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 575,
+      "songName": "Chickened Out",
+      "musicTabButtonId": 71126,
+      "musicTabInterfaceId": 18302,
+      "regionIds": [
+        9796
+      ]
+    },
+    {
+      "songId": 71,
+      "songName": "Chompy Hunt",
+      "musicTabButtonId": 2162,
+      "musicTabInterfaceId": 674,
+      "regionIds": [
+        10542,
+        10642
+      ]
+    },
+    {
+      "songId": 383,
+      "songName": "City of The Dead",
+      "musicTabButtonId": 50049,
+      "musicTabInterfaceId": 12849,
+      "regionIds": [
+        12844,
+        12843,
+        13099
+      ]
+    },
+    {
+      "songId": 373,
+      "songName": "Claustrophobia",
+      "musicTabButtonId": 50010,
+      "musicTabInterfaceId": 12810,
+      "regionIds": [
+        9549,
+        9293
+      ]
+    },
+    {
+      "songId": 67,
+      "songName": "Close Quarters",
+      "musicTabButtonId": 27032,
+      "musicTabInterfaceId": 6944,
+      "regionIds": [
+        12602
+      ]
+    },
+    {
+      "songId": 269,
+      "songName": "Competition",
+      "musicTabButtonId": 42231,
+      "musicTabInterfaceId": 10983,
+      "regionIds": [
+        8781
+      ]
+    },
+    {
+      "songId": 142,
+      "songName": "Complication",
+      "musicTabButtonId": 19006,
+      "musicTabInterfaceId": 4870,
+      "regionIds": [
+        9035
+      ]
+    },
+    {
+      "songId": 258,
+      "songName": "Contest",
+      "musicTabButtonId": 32244,
+      "musicTabInterfaceId": 8436,
+      "regionIds": [
+        11576
+      ]
+    },
+    {
+      "songId": 418,
+      "songName": "Corporal Punishment",
+      "musicTabButtonId": 24007,
+      "musicTabInterfaceId": 6151,
+      "regionIds": [
+        12619
+      ]
+    },
+    {
+      "songId": 509,
+      "songName": "Corridors of Power",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 178,
+      "songName": "Courage",
+      "musicTabButtonId": 19016,
+      "musicTabInterfaceId": 4880,
+      "regionIds": [
+        11673,
+        11674
+      ]
+    },
+    {
+      "songId": 259,
+      "songName": "Crystal Castle",
+      "musicTabButtonId": 33119,
+      "musicTabInterfaceId": 8567,
+      "regionIds": [
+        9011,
+        9012
+      ]
+    },
+    {
+      "songId": 181,
+      "songName": "Crystal Cave",
+      "musicTabButtonId": 16219,
+      "musicTabInterfaceId": 4315,
+      "regionIds": [
+        9797
+      ]
+    },
+    {
+      "songId": 169,
+      "songName": "Crystal Sword",
+      "musicTabButtonId": 16220,
+      "musicTabInterfaceId": 4316,
+      "regionIds": [
+        12855,
+        10647
+      ]
+    },
+    {
+      "songId": 59,
+      "songName": "Cursed",
+      "musicTabButtonId": 2165,
+      "musicTabInterfaceId": 677,
+      "regionIds": [
+        9879,
+        9623
+      ]
+    },
+    {
+      "songId": 198,
+      "songName": "Dagannoth Dawn",
+      "musicTabButtonId": 52073,
+      "musicTabInterfaceId": 13385,
+      "regionIds": [
+        7748,
+        7236
+      ]
+    },
+    {
+      "songId": 560,
+      "songName": "Dance of Death",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 380,
+      "songName": "Dance of The Undead",
+      "musicTabButtonId": 52040,
+      "musicTabInterfaceId": 13352,
+      "regionIds": [
+        14131
+      ]
+    },
+    {
+      "songId": 336,
+      "songName": "Dangerous Road",
+      "musicTabButtonId": 39144,
+      "musicTabInterfaceId": 10128,
+      "regionIds": [
+        11413
+      ]
+    },
+    {
+      "songId": 381,
+      "songName": "Dangerous Way",
+      "musicTabButtonId": 52041,
+      "musicTabInterfaceId": 13353,
+      "regionIds": [
+        14231
+      ]
+    },
+    {
+      "songId": 182,
+      "songName": "Dangerous",
+      "musicTabButtonId": 16221,
+      "musicTabInterfaceId": 4317,
+      "regionIds": [
+        12343,
+        13115,
+        13371
+      ]
+    },
+    {
+      "songId": 326,
+      "songName": "Dark",
+      "musicTabButtonId": 35013,
+      "musicTabInterfaceId": 8973,
+      "regionIds": [
+        13113,
+        13369
+      ]
+    },
+    {
+      "songId": 576,
+      "songName": "Davy Jones Locker",
+      "musicTabButtonId": 71099,
+      "musicTabInterfaceId": 18275,
+      "regionIds": [
+        11924
+      ]
+    },
+    {
+      "songId": 476,
+      "songName": "Dead Can Dance",
+      "musicTabButtonId": 56117,
+      "musicTabInterfaceId": 14453,
+      "regionIds": [
+        12601
+      ]
+    },
+    {
+      "songId": 84,
+      "songName": "Dead Quiet",
+      "musicTabButtonId": 44219,
+      "musicTabInterfaceId": 8142,
+      "regionIds": [
+        13621,
+        9294,
+        9550
+      ]
+    },
+    {
+      "songId": 288,
+      "songName": "Deadlands",
+      "musicTabButtonId": 34232,
+      "musicTabInterfaceId": 8936,
+      "regionIds": [
+        14134,
+        14390
+      ]
+    },
+    {
+      "songId": 278,
+      "songName": "Deep Down",
+      "musicTabButtonId": 31206,
+      "musicTabInterfaceId": 11483,
+      "regionIds": [
+        11079,
+        10822,
+        10823
+      ]
+    },
+    {
+      "songId": 37,
+      "songName": "Deep Wildy",
+      "musicTabButtonId": 16223,
+      "musicTabInterfaceId": 4319,
+      "regionIds": [
+        11835,
+        11836
+      ]
+    },
+    {
+      "songId": 465,
+      "songName": "Desert Heat",
+      "musicTabButtonId": 23108,
+      "musicTabInterfaceId": 5996,
+      "regionIds": [
+        13615,
+        13614
+      ]
+    },
+    {
+      "songId": 174,
+      "songName": "Desert Voyage",
+      "musicTabButtonId": 16224,
+      "musicTabInterfaceId": 4320,
+      "regionIds": [
+        13103,
+        13359,
+        13102
+      ]
+    },
+    {
+      "songId": 532,
+      "songName": "Diango's Little Helpers",
+      "musicTabButtonId": 61226,
+      "musicTabInterfaceId": 15842,
+      "regionIds": [
+        8005
+      ]
+    },
+    {
+      "songId": 86,
+      "songName": "Dimension X",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 501,
+      "songName": "Distant Land",
+      "musicTabButtonId": 12248,
+      "musicTabInterfaceId": 3320,
+      "regionIds": [
+        13874,
+        14130,
+        13873,
+        14129
+      ]
+    },
+    {
+      "songId": 610,
+      "songName": "Distillery Hilarity",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 537,
+      "songName": "Dogs of War",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 56,
+      "songName": "Doorways",
+      "musicTabButtonId": 16225,
+      "musicTabInterfaceId": 4321,
+      "regionIds": [
+        12598
+      ]
+    },
+    {
+      "songId": 361,
+      "songName": "Down Below",
+      "musicTabButtonId": 50048,
+      "musicTabInterfaceId": 12848,
+      "regionIds": [
+        12439,
+        12438
+      ]
+    },
+    {
+      "songId": 143,
+      "songName": "Down To Earth",
+      "musicTabButtonId": 19015,
+      "musicTabInterfaceId": 4879,
+      "regionIds": [
+        10571
+      ]
+    },
+    {
+      "songId": 358,
+      "songName": "Dragontooth Island",
+      "musicTabButtonId": 48001,
+      "musicTabInterfaceId": 12289,
+      "regionIds": [
+        15159
+      ]
+    },
+    {
+      "songId": 327,
+      "songName": "Dream",
+      "musicTabButtonId": 35014,
+      "musicTabInterfaceId": 8974,
+      "regionIds": [
+        12594
+      ]
+    },
+    {
+      "songId": 47,
+      "songName": "Duel Arena",
+      "musicTabButtonId": 24154,
+      "musicTabInterfaceId": 6298,
+      "regionIds": [
+        13362
+      ]
+    },
+    {
+      "songId": 173,
+      "songName": "Dunjun",
+      "musicTabButtonId": 16227,
+      "musicTabInterfaceId": 4323,
+      "regionIds": [
+        11928,
+        11672
+      ]
+    },
+    {
+      "songId": 351,
+      "songName": "Dynasty",
+      "musicTabButtonId": 50035,
+      "musicTabInterfaceId": 12835,
+      "regionIds": [
+        13358
+      ]
+    },
+    {
+      "songId": 69,
+      "songName": "Egypt",
+      "musicTabButtonId": 16228,
+      "musicTabInterfaceId": 4324,
+      "regionIds": [
+        13104,
+        13360
+      ]
+    },
+    {
+      "songId": 252,
+      "songName": "Elven Mist",
+      "musicTabButtonId": 33127,
+      "musicTabInterfaceId": 8575,
+      "regionIds": [
+        9266
+      ]
+    },
+    {
+      "songId": 148,
+      "songName": "Emotion",
+      "musicTabButtonId": 16229,
+      "musicTabInterfaceId": 4325,
+      "regionIds": [
+        10033,
+        10133,
+        10309,
+        11081
+      ]
+    },
+    {
+      "songId": 138,
+      "songName": "Emperor",
+      "musicTabButtonId": 17089,
+      "musicTabInterfaceId": 4441,
+      "regionIds": [
+        11570,
+        11670
+      ]
+    },
+    {
+      "songId": 17,
+      "songName": "Escape",
+      "musicTabButtonId": 27031,
+      "musicTabInterfaceId": 6943,
+      "regionIds": [
+        10903
+      ]
+    },
+    {
+      "songId": 285,
+      "songName": "Etcetera",
+      "musicTabButtonId": 43100,
+      "musicTabInterfaceId": 11108,
+      "regionIds": [
+        10300
+      ]
+    },
+    {
+      "songId": 586,
+      "songName": "Everlasting Fire",
+      "musicTabButtonId": 73096,
+      "musicTabInterfaceId": 18784,
+      "regionIds": [
+        13373
+      ]
+    },
+    {
+      "songId": 268,
+      "songName": "Everywhere",
+      "musicTabButtonId": 33124,
+      "musicTabInterfaceId": 8572,
+      "regionIds": [
+        8499,
+        8755
+      ]
+    },
+    {
+      "songId": 411,
+      "songName": "Evil Bob's Island",
+      "musicTabButtonId": 55163,
+      "musicTabInterfaceId": 14243,
+      "regionIds": [
+        10058
+      ]
+    },
+    {
+      "songId": 106,
+      "songName": "Expanse",
+      "musicTabButtonId": 16230,
+      "musicTabInterfaceId": 4326,
+      "regionIds": [
+        12852,
+        12605,
+        12952
+      ]
+    },
+    {
+      "songId": 41,
+      "songName": "Expecting",
+      "musicTabButtonId": 16231,
+      "musicTabInterfaceId": 4327,
+      "regionIds": [
+        9522,
+        9778,
+        9878
+      ]
+    },
+    {
+      "songId": 153,
+      "songName": "Expedition",
+      "musicTabButtonId": 17085,
+      "musicTabInterfaceId": 4437,
+      "regionIds": [
+        11676,
+        9619
+      ]
+    },
+    {
+      "songId": 270,
+      "songName": "Exposed",
+      "musicTabButtonId": 33120,
+      "musicTabInterfaceId": 8568,
+      "regionIds": [
+        8752
+      ]
+    },
+    {
+      "songId": 118,
+      "songName": "Faerie",
+      "musicTabButtonId": 16232,
+      "musicTabInterfaceId": 4328,
+      "regionIds": [
+        9541,
+        9540
+      ]
+    },
+    {
+      "songId": 337,
+      "songName": "Faithless",
+      "musicTabButtonId": 39145,
+      "musicTabInterfaceId": 10129,
+      "regionIds": [
+        12856,
+        13112
+      ]
+    },
+    {
+      "songId": 72,
+      "songName": "Fanfare",
+      "musicTabButtonId": 16233,
+      "musicTabInterfaceId": 4329,
+      "regionIds": [
+        11828
+      ]
+    },
+    {
+      "songId": 166,
+      "songName": "Fanfare2",
+      "musicTabButtonId": 16234,
+      "musicTabInterfaceId": 4330,
+      "regionIds": [
+        11823
+      ]
+    },
+    {
+      "songId": 167,
+      "songName": "Fanfare3",
+      "musicTabButtonId": 16235,
+      "musicTabInterfaceId": 4331,
+      "regionIds": [
+        10545
+      ]
+    },
+    {
+      "songId": 504,
+      "songName": "Fangs For The Memory",
+      "musicTabButtonId": 72084,
+      "musicTabInterfaceId": 18516,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 372,
+      "songName": "Far Away",
+      "musicTabButtonId": 27118,
+      "musicTabInterfaceId": 7030,
+      "regionIds": [
+        9265
+      ]
+    },
+    {
+      "songId": 602,
+      "songName": "Fear And Loathing",
+      "musicTabButtonId": 58222,
+      "musicTabInterfaceId": 15070,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 344,
+      "songName": "Fenkenstrain's Refrain",
+      "musicTabButtonId": 47094,
+      "musicTabInterfaceId": 12126,
+      "regionIds": [
+        13879,
+        14135
+      ]
+    },
+    {
+      "songId": 375,
+      "songName": "Fight Or Flight",
+      "musicTabButtonId": 27132,
+      "musicTabInterfaceId": 7044,
+      "regionIds": [
+        8008,
+        7752
+      ]
+    },
+    {
+      "songId": 312,
+      "songName": "Find My Way",
+      "musicTabButtonId": 43134,
+      "musicTabInterfaceId": 11142,
+      "regionIds": [
+        10894,
+        11150
+      ]
+    },
+    {
+      "songId": 463,
+      "songName": "Fire And Brimstone",
+      "musicTabButtonId": 10242,
+      "musicTabInterfaceId": 2802,
+      "regionIds": [
+        9552
+      ]
+    },
+    {
+      "songId": 119,
+      "songName": "Fishing",
+      "musicTabButtonId": 16236,
+      "musicTabInterfaceId": 4332,
+      "regionIds": [
+        11317
+      ]
+    },
+    {
+      "songId": 163,
+      "songName": "Flute Salad",
+      "musicTabButtonId": 16237,
+      "musicTabInterfaceId": 4333,
+      "regionIds": [
+        12595
+      ]
+    },
+    {
+      "songId": 558,
+      "songName": "Food For Thought",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 121,
+      "songName": "Forbidden",
+      "musicTabButtonId": 2164,
+      "musicTabInterfaceId": 676,
+      "regionIds": [
+        13111,
+        13367
+      ]
+    },
+    {
+      "songId": 251,
+      "songName": "Forest",
+      "musicTabButtonId": 33126,
+      "musicTabInterfaceId": 8574,
+      "regionIds": [
+        9009
+      ]
+    },
+    {
+      "songId": 98,
+      "songName": "Forever",
+      "musicTabButtonId": 16238,
+      "musicTabInterfaceId": 4334,
+      "regionIds": [
+        12342,
+        12444,
+        12443,
+        12442
+      ]
+    },
+    {
+      "songId": 436,
+      "songName": "Forgettable Melody",
+      "musicTabButtonId": 55087,
+      "musicTabInterfaceId": 14167,
+      "regionIds": [
+        7501
+      ]
+    },
+    {
+      "songId": 378,
+      "songName": "Forgotten",
+      "musicTabButtonId": 50042,
+      "musicTabInterfaceId": 12842,
+      "regionIds": [
+        10828
+      ]
+    },
+    {
+      "songId": 409,
+      "songName": "Frogland",
+      "musicTabButtonId": 55109,
+      "musicTabInterfaceId": 14189,
+      "regionIds": [
+        9802
+      ]
+    },
+    {
+      "songId": 294,
+      "songName": "Frostbite",
+      "musicTabButtonId": 50047,
+      "musicTabInterfaceId": 12847,
+      "regionIds": [
+        11323,
+        11579
+      ]
+    },
+    {
+      "songId": 347,
+      "songName": "Fruits De Mer",
+      "musicTabButtonId": 43099,
+      "musicTabInterfaceId": 11107,
+      "regionIds": [
+        11059
+      ]
+    },
+    {
+      "songId": 603,
+      "songName": "Funny Bunnies",
+      "musicTabButtonId": 72253,
+      "musicTabInterfaceId": 18685,
+      "regionIds": [
+        9810
+      ]
+    },
+    {
+      "songId": 159,
+      "songName": "Gaol",
+      "musicTabButtonId": 16239,
+      "musicTabInterfaceId": 4335,
+      "regionIds": [
+        10031,
+        12090,
+        10131
+      ]
+    },
+    {
+      "songId": 125,
+      "songName": "Garden",
+      "musicTabButtonId": 16240,
+      "musicTabInterfaceId": 4336,
+      "regionIds": [
+        12853,
+        12953
+      ]
+    },
+    {
+      "songId": 22,
+      "songName": "Gnome King",
+      "musicTabButtonId": 16241,
+      "musicTabInterfaceId": 4337,
+      "regionIds": [
+        9782,
+        9783
+      ]
+    },
+    {
+      "songId": 150,
+      "songName": "Gnome Theme",
+      "musicTabButtonId": 16242,
+      "musicTabInterfaceId": 4338,
+      "regionIds": [
+        12085
+      ]
+    },
+    {
+      "songId": 33,
+      "songName": "Gnome Village",
+      "musicTabButtonId": 16243,
+      "musicTabInterfaceId": 4339,
+      "regionIds": [
+        9781
+      ]
+    },
+    {
+      "songId": 101,
+      "songName": "Gnome Village2",
+      "musicTabButtonId": 16244,
+      "musicTabInterfaceId": 4340,
+      "regionIds": [
+        9269,
+        9525
+      ]
+    },
+    {
+      "songId": 23,
+      "songName": "Gnome",
+      "musicTabButtonId": 16245,
+      "musicTabInterfaceId": 4341,
+      "regionIds": [
+        11830
+      ]
+    },
+    {
+      "songId": 112,
+      "songName": "Gnomeball",
+      "musicTabButtonId": 16246,
+      "musicTabInterfaceId": 4342,
+      "regionIds": [
+        9270,
+        9526,
+        9271,
+        9527
+      ]
+    },
+    {
+      "songId": 346,
+      "songName": "Goblin Game",
+      "musicTabButtonId": 43098,
+      "musicTabInterfaceId": 11106,
+      "regionIds": [
+        10393
+      ]
+    },
+    {
+      "songId": 535,
+      "songName": "Golden Touch",
+      "musicTabButtonId": 62016,
+      "musicTabInterfaceId": 15888,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 116,
+      "songName": "Greatness",
+      "musicTabButtonId": 16247,
+      "musicTabInterfaceId": 4343,
+      "regionIds": [
+        12596
+      ]
+    },
+    {
+      "songId": 520,
+      "songName": "Grip of The Talon",
+      "musicTabButtonId": 59246,
+      "musicTabInterfaceId": 15350,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 246,
+      "songName": "Grotto",
+      "musicTabButtonId": 31202,
+      "musicTabInterfaceId": 8138,
+      "regionIds": [
+        13720
+      ]
+    },
+    {
+      "songId": 466,
+      "songName": "Ground Scape",
+      "musicTabButtonId": 54148,
+      "musicTabInterfaceId": 13972,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 128,
+      "songName": "Grumpy",
+      "musicTabButtonId": 2163,
+      "musicTabInterfaceId": 675,
+      "regionIds": [
+        10286
+      ]
+    },
+    {
+      "songId": 638,
+      "songName": "Ham Fisted",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 76,
+      "songName": "Harmony",
+      "musicTabButtonId": 16248,
+      "musicTabInterfaceId": 4344,
+      "regionIds": [
+        12850,
+        7507
+      ]
+    },
+    {
+      "songId": 46,
+      "songName": "Harmony2",
+      "musicTabButtonId": 26187,
+      "musicTabInterfaceId": 6843,
+      "regionIds": [
+        12950
+      ]
+    },
+    {
+      "songId": 277,
+      "songName": "Haunted Mine",
+      "musicTabButtonId": 44217,
+      "musicTabInterfaceId": 11481,
+      "regionIds": [
+        11077
+      ]
+    },
+    {
+      "songId": 434,
+      "songName": "Have A Blast",
+      "musicTabButtonId": 57010,
+      "musicTabInterfaceId": 14602,
+      "regionIds": [
+        7757
+      ]
+    },
+    {
+      "songId": 612,
+      "songName": "Head To Head",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 190,
+      "songName": "Heart And Mind",
+      "musicTabButtonId": 27033,
+      "musicTabInterfaceId": 6945,
+      "regionIds": [
+        10059
+      ]
+    },
+    {
+      "songId": 4,
+      "songName": "Hells Bells",
+      "musicTabButtonId": 46105,
+      "musicTabInterfaceId": 11881,
+      "regionIds": [
+        11066,
+        11067
+      ]
+    },
+    {
+      "songId": 97,
+      "songName": "Hermit",
+      "musicTabButtonId": 32242,
+      "musicTabInterfaceId": 8434,
+      "regionIds": [
+        9034
+      ]
+    },
+    {
+      "songId": 55,
+      "songName": "High Seas",
+      "musicTabButtonId": 16249,
+      "musicTabInterfaceId": 4345,
+      "regionIds": [
+        11057
+      ]
+    },
+    {
+      "songId": 18,
+      "songName": "Horizon",
+      "musicTabButtonId": 16250,
+      "musicTabInterfaceId": 4346,
+      "regionIds": [
+        11573
+      ]
+    },
+    {
+      "songId": 384,
+      "songName": "Hypnotized",
+      "musicTabButtonId": 17154,
+      "musicTabInterfaceId": 4506,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 1,
+      "songName": "Iban",
+      "musicTabButtonId": 16251,
+      "musicTabInterfaceId": 4347,
+      "regionIds": [
+        8519,
+        8520,
+        8521
+      ]
+    },
+    {
+      "songId": 87,
+      "songName": "Ice Melody",
+      "musicTabButtonId": 3193,
+      "musicTabInterfaceId": 961,
+      "regionIds": [
+        11318
+      ]
+    },
+    {
+      "songId": 370,
+      "songName": "In Between",
+      "musicTabButtonId": 50009,
+      "musicTabInterfaceId": 12809,
+      "regionIds": [
+        10317,
+        10061
+      ]
+    },
+    {
+      "songId": 530,
+      "songName": "In The Brine",
+      "musicTabButtonId": 68101,
+      "musicTabInterfaceId": 17509,
+      "regionIds": [
+        14638
+      ]
+    },
+    {
+      "songId": 511,
+      "songName": "In The Clink",
+      "musicTabButtonId": 63018,
+      "musicTabInterfaceId": 16146,
+      "regionIds": [
+        8261
+      ]
+    },
+    {
+      "songId": 188,
+      "songName": "In The Manor",
+      "musicTabButtonId": 16252,
+      "musicTabInterfaceId": 4348,
+      "regionIds": [
+        10287
+      ]
+    },
+    {
+      "songId": 469,
+      "songName": "In The Pits",
+      "musicTabButtonId": 10243,
+      "musicTabInterfaceId": 2803,
+      "regionIds": [
+        9808
+      ]
+    },
+    {
+      "songId": 519,
+      "songName": "Incantation",
+      "musicTabButtonId": 59251,
+      "musicTabInterfaceId": 15355,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 260,
+      "songName": "Insect Queen",
+      "musicTabButtonId": 6203,
+      "musicTabInterfaceId": 1739,
+      "regionIds": [
+        13972,
+        14228
+      ]
+    },
+    {
+      "songId": 96,
+      "songName": "Inspiration",
+      "musicTabButtonId": 16253,
+      "musicTabInterfaceId": 4349,
+      "regionIds": [
+        12087
+      ]
+    },
+    {
+      "songId": 412,
+      "songName": "Into The Abyss",
+      "musicTabButtonId": 53144,
+      "musicTabInterfaceId": 13712,
+      "regionIds": [
+        12108,
+        12107
+      ]
+    },
+    {
+      "songId": 95,
+      "songName": "Intrepid",
+      "musicTabButtonId": 16254,
+      "musicTabInterfaceId": 4350,
+      "regionIds": [
+        9369,
+        9370
+      ]
+    },
+    {
+      "songId": 306,
+      "songName": "Island Life",
+      "musicTabButtonId": 43130,
+      "musicTabInterfaceId": 11138,
+      "regionIds": [
+        10794,
+        11050
+      ]
+    },
+    {
+      "songId": 627,
+      "songName": "Isle of Everywhere",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 6,
+      "songName": "Jolly-R",
+      "musicTabButtonId": 16255,
+      "musicTabInterfaceId": 4351,
+      "regionIds": [
+        11058
+      ]
+    },
+    {
+      "songId": 172,
+      "songName": "Jungle Island",
+      "musicTabButtonId": 17000,
+      "musicTabInterfaceId": 4352,
+      "regionIds": [
+        11309,
+        11313
+      ]
+    },
+    {
+      "songId": 479,
+      "songName": "Jungle Troubles",
+      "musicTabButtonId": 57011,
+      "musicTabInterfaceId": 14603,
+      "regionIds": [
+        11568,
+        10055
+      ]
+    },
+    {
+      "songId": 114,
+      "songName": "Jungly 1",
+      "musicTabButtonId": 17001,
+      "musicTabInterfaceId": 4353,
+      "regionIds": [
+        11054,
+        11154
+      ]
+    },
+    {
+      "songId": 115,
+      "songName": "Jungly 2",
+      "musicTabButtonId": 17002,
+      "musicTabInterfaceId": 4354,
+      "regionIds": [
+        10802
+      ]
+    },
+    {
+      "songId": 117,
+      "songName": "Jungly 3",
+      "musicTabButtonId": 17003,
+      "musicTabInterfaceId": 4355,
+      "regionIds": [
+        11055
+      ]
+    },
+    {
+      "songId": 362,
+      "songName": "Karamja Jam",
+      "musicTabButtonId": 46163,
+      "musicTabInterfaceId": 11939,
+      "regionIds": [
+        10900,
+        10899
+      ]
+    },
+    {
+      "songId": 9,
+      "songName": "Kingdom",
+      "musicTabButtonId": 32243,
+      "musicTabInterfaceId": 8435,
+      "regionIds": [
+        11319
+      ]
+    },
+    {
+      "songId": 191,
+      "songName": "Knightly",
+      "musicTabButtonId": 17004,
+      "musicTabInterfaceId": 4356,
+      "regionIds": [
+        10291
+      ]
+    },
+    {
+      "songId": 134,
+      "songName": "La Mort",
+      "musicTabButtonId": 23138,
+      "musicTabInterfaceId": 6026,
+      "regionIds": [
+        8779
+      ]
+    },
+    {
+      "songId": 287,
+      "songName": "Lair",
+      "musicTabButtonId": 35007,
+      "musicTabInterfaceId": 8967,
+      "regionIds": [
+        13975
+      ]
+    },
+    {
+      "songId": 197,
+      "songName": "Lament of Meiyerditch",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 542,
+      "songName": "Lament",
+      "musicTabButtonId": 63020,
+      "musicTabInterfaceId": 16148,
+      "regionIds": [
+        12433
+      ]
+    },
+    {
+      "songId": 506,
+      "songName": "Land Down Under",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 396,
+      "songName": "Land of the Dwarves",
+      "musicTabButtonId": 53008,
+      "musicTabInterfaceId": 13576,
+      "regionIds": [
+        11423
+      ]
+    },
+    {
+      "songId": 164,
+      "songName": "Landlubber",
+      "musicTabButtonId": 7091,
+      "musicTabInterfaceId": 1883,
+      "regionIds": [
+        10801
+      ]
+    },
+    {
+      "songId": 546,
+      "songName": "Last Stand",
+      "musicTabButtonId": 247,
+      "musicTabInterfaceId": 247,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 60,
+      "songName": "Lasting",
+      "musicTabButtonId": 17005,
+      "musicTabInterfaceId": 4357,
+      "regionIds": [
+        10549
+      ]
+    },
+    {
+      "songId": 293,
+      "songName": "Legend",
+      "musicTabButtonId": 29028,
+      "musicTabInterfaceId": 7452,
+      "regionIds": [
+        10808,
+        11064
+      ]
+    },
+    {
+      "songId": 66,
+      "songName": "Legion",
+      "musicTabButtonId": 17006,
+      "musicTabInterfaceId": 4358,
+      "regionIds": [
+        10039,
+        10295,
+        12089
+      ]
+    },
+    {
+      "songId": 631,
+      "songName": "Life's A Beach!",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 320,
+      "songName": "Lighthouse",
+      "musicTabButtonId": 39147,
+      "musicTabInterfaceId": 10131,
+      "regionIds": [
+        10040,
+        9799
+      ]
+    },
+    {
+      "songId": 113,
+      "songName": "Lightness",
+      "musicTabButtonId": 17007,
+      "musicTabInterfaceId": 4359,
+      "regionIds": [
+        12599
+      ]
+    },
+    {
+      "songId": 74,
+      "songName": "Lightwalk",
+      "musicTabButtonId": 17008,
+      "musicTabInterfaceId": 4360,
+      "regionIds": [
+        11061
+      ]
+    },
+    {
+      "songId": 632,
+      "songName": "Little Cave of Horrors",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 168,
+      "songName": "Lonesome",
+      "musicTabButtonId": 24041,
+      "musicTabInterfaceId": 6185,
+      "regionIds": [
+        13203
+      ]
+    },
+    {
+      "songId": 161,
+      "songName": "Long Ago",
+      "musicTabButtonId": 17009,
+      "musicTabInterfaceId": 4361,
+      "regionIds": [
+        10544
+      ]
+    },
+    {
+      "songId": 12,
+      "songName": "Long Way Home",
+      "musicTabButtonId": 17010,
+      "musicTabInterfaceId": 4362,
+      "regionIds": [
+        11826
+      ]
+    },
+    {
+      "songId": 253,
+      "songName": "Lost Soul",
+      "musicTabButtonId": 33121,
+      "musicTabInterfaceId": 8569,
+      "regionIds": [
+        9008,
+        9264
+      ]
+    },
+    {
+      "songId": 20,
+      "songName": "Lullaby",
+      "musicTabButtonId": 17012,
+      "musicTabInterfaceId": 4364,
+      "regionIds": [
+        13365,
+        10551
+      ]
+    },
+    {
+      "songId": 264,
+      "songName": "Mad Eadgar",
+      "musicTabButtonId": 189,
+      "musicTabInterfaceId": 189,
+      "regionIds": [
+        11677
+      ]
+    },
+    {
+      "songId": 13,
+      "songName": "Mage Arena",
+      "musicTabButtonId": 55106,
+      "musicTabInterfaceId": 4365,
+      "regionIds": [
+        12348,
+        12349,
+        10057
+      ]
+    },
+    {
+      "songId": 185,
+      "songName": "Magic Dance",
+      "musicTabButtonId": 17014,
+      "musicTabInterfaceId": 4366,
+      "regionIds": [
+        10288
+      ]
+    },
+    {
+      "songId": 184,
+      "songName": "Magical Journey",
+      "musicTabButtonId": 17015,
+      "musicTabInterfaceId": 4367,
+      "regionIds": [
+        10805
+      ]
+    },
+    {
+      "songId": 544,
+      "songName": "Making Waves",
+      "musicTabButtonId": 248,
+      "musicTabInterfaceId": 248,
+      "regionIds": [
+        9272,
+        9528,
+        9273
+      ]
+    },
+    {
+      "songId": 559,
+      "songName": "Malady",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 328,
+      "songName": "March",
+      "musicTabButtonId": 35015,
+      "musicTabInterfaceId": 8975,
+      "regionIds": [
+        10036
+      ]
+    },
+    {
+      "songId": 304,
+      "songName": "Marooned",
+      "musicTabButtonId": 43129,
+      "musicTabInterfaceId": 11137,
+      "regionIds": [
+        11562,
+        12117
+      ]
+    },
+    {
+      "songId": 261,
+      "songName": "Marzipan",
+      "musicTabButtonId": 190,
+      "musicTabInterfaceId": 190,
+      "regionIds": [
+        11421,
+        11167,
+        11166
+      ]
+    },
+    {
+      "songId": 340,
+      "songName": "Masquerade",
+      "musicTabButtonId": 47015,
+      "musicTabInterfaceId": 12047,
+      "regionIds": [
+        10908
+      ]
+    },
+    {
+      "songId": 577,
+      "songName": "Mastermindless",
+      "musicTabButtonId": 71128,
+      "musicTabInterfaceId": 18304,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 156,
+      "songName": "Mausoleum",
+      "musicTabButtonId": 31180,
+      "musicTabInterfaceId": 8116,
+      "regionIds": [
+        13722
+      ]
+    },
+    {
+      "songId": 508,
+      "songName": "Meddling Kids",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 157,
+      "songName": "Medieval",
+      "musicTabButtonId": 17016,
+      "musicTabInterfaceId": 4368,
+      "regionIds": [
+        13109
+      ]
+    },
+    {
+      "songId": 193,
+      "songName": "Mellow",
+      "musicTabButtonId": 17017,
+      "musicTabInterfaceId": 4369,
+      "regionIds": [
+        10293
+      ]
+    },
+    {
+      "songId": 317,
+      "songName": "Melodrama",
+      "musicTabButtonId": 44213,
+      "musicTabInterfaceId": 11477,
+      "regionIds": [
+        9776
+      ]
+    },
+    {
+      "songId": 254,
+      "songName": "Meridian",
+      "musicTabButtonId": 33122,
+      "musicTabInterfaceId": 8570,
+      "regionIds": [
+        8497,
+        8753,
+        9287
+      ]
+    },
+    {
+      "songId": 600,
+      "songName": "Method of Madness",
+      "musicTabButtonId": 58226,
+      "musicTabInterfaceId": 15074,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 107,
+      "songName": "Miles Away",
+      "musicTabButtonId": 17018,
+      "musicTabInterfaceId": 4370,
+      "regionIds": [
+        11571,
+        10569
+      ]
+    },
+    {
+      "songId": 534,
+      "songName": "Mind Over Matter",
+      "musicTabButtonId": 62017,
+      "musicTabInterfaceId": 15889,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 65,
+      "songName": "Miracle Dance",
+      "musicTabButtonId": 17019,
+      "musicTabInterfaceId": 4371,
+      "regionIds": [
+        11083
+      ]
+    },
+    {
+      "songId": 388,
+      "songName": "Mirage",
+      "musicTabButtonId": 17155,
+      "musicTabInterfaceId": 4507,
+      "regionIds": [
+        13199
+      ]
+    },
+    {
+      "songId": 284,
+      "songName": "Miscellania",
+      "musicTabButtonId": 43101,
+      "musicTabInterfaceId": 11109,
+      "regionIds": [
+        10044
+      ]
+    },
+    {
+      "songId": 21,
+      "songName": "Monarch Waltz",
+      "musicTabButtonId": 17020,
+      "musicTabInterfaceId": 4372,
+      "regionIds": [
+        10807
+      ]
+    },
+    {
+      "songId": 303,
+      "songName": "Monkey Madness",
+      "musicTabButtonId": 43128,
+      "musicTabInterfaceId": 11136,
+      "regionIds": [
+        11051
+      ]
+    },
+    {
+      "songId": 343,
+      "songName": "Monster Melee",
+      "musicTabButtonId": 48048,
+      "musicTabInterfaceId": 12336,
+      "regionIds": [
+        12694
+      ]
+    },
+    {
+      "songId": 10,
+      "songName": "Moody",
+      "musicTabButtonId": 17021,
+      "musicTabInterfaceId": 4373,
+      "regionIds": [
+        9523,
+        9779,
+        12600
+      ]
+    },
+    {
+      "songId": 48,
+      "songName": "Morytania",
+      "musicTabButtonId": 31181,
+      "musicTabInterfaceId": 8117,
+      "regionIds": [
+        13622
+      ]
+    },
+    {
+      "songId": 515,
+      "songName": "Mudskipper Melody",
+      "musicTabButtonId": 59189,
+      "musicTabInterfaceId": 15293,
+      "regionIds": [
+        11824
+      ]
+    },
+    {
+      "songId": 348,
+      "songName": "Narnode's Theme",
+      "musicTabButtonId": 43125,
+      "musicTabInterfaceId": 11133,
+      "regionIds": [
+        9882
+      ]
+    },
+    {
+      "songId": 245,
+      "songName": "Natural",
+      "musicTabButtonId": 31203,
+      "musicTabInterfaceId": 8139,
+      "regionIds": [
+        13620,
+        9038
+      ]
+    },
+    {
+      "songId": 155,
+      "songName": "Neverland",
+      "musicTabButtonId": 17022,
+      "musicTabInterfaceId": 4374,
+      "regionIds": [
+        9780
+      ]
+    },
+    {
+      "songId": 62,
+      "songName": "Newbie Melody",
+      "musicTabButtonId": 17023,
+      "musicTabInterfaceId": 4375,
+      "regionIds": [
+        12080,
+        12336,
+        12592,
+        12079,
+        12335
+      ]
+    },
+    {
+      "songId": 646,
+      "songName": "Night of The Vampyre",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 127,
+      "songName": "Nightfall",
+      "musicTabButtonId": 17024,
+      "musicTabInterfaceId": 4376,
+      "regionIds": [
+        11827,
+        12861
+      ]
+    },
+    {
+      "songId": 594,
+      "songName": "No Way Out",
+      "musicTabButtonId": 58229,
+      "musicTabInterfaceId": 15077,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 58,
+      "songName": "Nomad",
+      "musicTabButtonId": 7101,
+      "musicTabInterfaceId": 1893,
+      "regionIds": [
+        11056
+      ]
+    },
+    {
+      "songId": 587,
+      "songName": "Null And Void",
+      "musicTabButtonId": 72034,
+      "musicTabInterfaceId": 18466,
+      "regionIds": [
+        10537
+      ]
+    },
+    {
+      "songId": 633,
+      "songName": "On The Wing",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 103,
+      "songName": "Oriental",
+      "musicTabButtonId": 17025,
+      "musicTabInterfaceId": 4377,
+      "regionIds": [
+        11666,
+        11668
+      ]
+    },
+    {
+      "songId": 322,
+      "songName": "Out of The Deep",
+      "musicTabButtonId": 39148,
+      "musicTabInterfaceId": 10132,
+      "regionIds": [
+        10140,
+        10056
+      ]
+    },
+    {
+      "songId": 447,
+      "songName": "Over To Nardah",
+      "musicTabButtonId": 60230,
+      "musicTabInterfaceId": 15590,
+      "regionIds": [
+        13613
+      ]
+    },
+    {
+      "songId": 256,
+      "songName": "Overpass",
+      "musicTabButtonId": 33125,
+      "musicTabInterfaceId": 8573,
+      "regionIds": [
+        9267
+      ]
+    },
+    {
+      "songId": 7,
+      "songName": "Overture",
+      "musicTabButtonId": 17026,
+      "musicTabInterfaceId": 4378,
+      "regionIds": [
+        10806
+      ]
+    },
+    {
+      "songId": 93,
+      "songName": "Parade",
+      "musicTabButtonId": 17027,
+      "musicTabInterfaceId": 4379,
+      "regionIds": [
+        13110,
+        13366
+      ]
+    },
+    {
+      "songId": 393,
+      "songName": "Path of Peril",
+      "musicTabButtonId": 50045,
+      "musicTabInterfaceId": 12845,
+      "regionIds": [
+        10575,
+        10831
+      ]
+    },
+    {
+      "songId": 364,
+      "songName": "Pathways",
+      "musicTabButtonId": 46164,
+      "musicTabInterfaceId": 11940,
+      "regionIds": [
+        10901
+      ]
+    },
+    {
+      "songId": 588,
+      "songName": "Pest Control",
+      "musicTabButtonId": 73002,
+      "musicTabInterfaceId": 18690,
+      "regionIds": [
+        10536
+      ]
+    },
+    {
+      "songId": 505,
+      "songName": "Pharaoh's Tomb",
+      "musicTabButtonId": 63019,
+      "musicTabInterfaceId": 16147,
+      "regionIds": [
+        13356,
+        12105
+      ]
+    },
+    {
+      "songId": 354,
+      "songName": "Phasmatys",
+      "musicTabButtonId": 47255,
+      "musicTabInterfaceId": 12287,
+      "regionIds": [
+        14746
+      ]
+    },
+    {
+      "songId": 419,
+      "songName": "Pheasant Peasant",
+      "musicTabButtonId": 55108,
+      "musicTabInterfaceId": 14188,
+      "regionIds": [
+        10314
+      ]
+    },
+    {
+      "songId": 614,
+      "songName": "Pinball Wizard",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 149,
+      "songName": "Principality",
+      "musicTabButtonId": 32241,
+      "musicTabInterfaceId": 8433,
+      "regionIds": [
+        11575
+      ]
+    },
+    {
+      "songId": 334,
+      "songName": "Pirates of Peril",
+      "musicTabButtonId": 39143,
+      "musicTabInterfaceId": 10127,
+      "regionIds": [
+        12093
+      ]
+    },
+    {
+      "songId": 158,
+      "songName": "Quest",
+      "musicTabButtonId": 17028,
+      "musicTabInterfaceId": 4380,
+      "regionIds": [
+        10315
+      ]
+    },
+    {
+      "songId": 482,
+      "songName": "Rat A Tat Tat",
+      "musicTabButtonId": 60136,
+      "musicTabInterfaceId": 15496,
+      "regionIds": [
+        11599
+      ]
+    },
+    {
+      "songId": 491,
+      "songName": "Rat Hunt",
+      "musicTabButtonId": 60137,
+      "musicTabInterfaceId": 15497,
+      "regionIds": [
+        11343
+      ]
+    },
+    {
+      "songId": 318,
+      "songName": "Ready For Battle",
+      "musicTabButtonId": 44214,
+      "musicTabInterfaceId": 11478,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 329,
+      "songName": "Regal",
+      "musicTabButtonId": 35016,
+      "musicTabInterfaceId": 8976,
+      "regionIds": [
+        13117
+      ]
+    },
+    {
+      "songId": 78,
+      "songName": "Reggae",
+      "musicTabButtonId": 17030,
+      "musicTabInterfaceId": 4382,
+      "regionIds": [
+        11565,
+        11821
+      ]
+    },
+    {
+      "songId": 89,
+      "songName": "Reggae2",
+      "musicTabButtonId": 17031,
+      "musicTabInterfaceId": 4383,
+      "regionIds": [
+        11567
+      ]
+    },
+    {
+      "songId": 289,
+      "songName": "Rellekka",
+      "musicTabButtonId": 39128,
+      "musicTabInterfaceId": 10112,
+      "regionIds": [
+        10297,
+        10553,
+        10554
+      ]
+    },
+    {
+      "songId": 44,
+      "songName": "Right On Track",
+      "musicTabButtonId": 55088,
+      "musicTabInterfaceId": 14168,
+      "regionIds": [
+        7501
+      ]
+    },
+    {
+      "songId": 262,
+      "songName": "Righteousness",
+      "musicTabButtonId": 192,
+      "musicTabInterfaceId": 192,
+      "regionIds": [
+        9803
+      ]
+    },
+    {
+      "songId": 91,
+      "songName": "Riverside",
+      "musicTabButtonId": 17032,
+      "musicTabInterfaceId": 4384,
+      "regionIds": [
+        8496,
+        10803
+      ]
+    },
+    {
+      "songId": 533,
+      "songName": "Roll The Bones",
+      "musicTabButtonId": 62018,
+      "musicTabInterfaceId": 15890,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 335,
+      "songName": "Romancing The Crone",
+      "musicTabButtonId": 46106,
+      "musicTabInterfaceId": 11882,
+      "regionIds": [
+        11068
+      ]
+    },
+    {
+      "songId": 390,
+      "songName": "Romper Chomper",
+      "musicTabButtonId": 52047,
+      "musicTabInterfaceId": 13359,
+      "regionIds": [
+        9263,
+        9519
+      ]
+    },
+    {
+      "songId": 53,
+      "songName": "Royale",
+      "musicTabButtonId": 17033,
+      "musicTabInterfaceId": 4385,
+      "regionIds": [
+        11671
+      ]
+    },
+    {
+      "songId": 57,
+      "songName": "Rune Essence",
+      "musicTabButtonId": 17034,
+      "musicTabInterfaceId": 4386,
+      "regionIds": [
+        11595
+      ]
+    },
+    {
+      "songId": 5,
+      "songName": "Sad Meadow",
+      "musicTabButtonId": 17035,
+      "musicTabInterfaceId": 4387,
+      "regionIds": [
+        10035
+      ]
+    },
+    {
+      "songId": 290,
+      "songName": "Saga",
+      "musicTabButtonId": 29027,
+      "musicTabInterfaceId": 7451,
+      "regionIds": [
+        10296,
+        10552
+      ]
+    },
+    {
+      "songId": 359,
+      "songName": "Sarcophagus",
+      "musicTabButtonId": 50046,
+      "musicTabInterfaceId": 12846,
+      "regionIds": [
+        12945
+      ]
+    },
+    {
+      "songId": 490,
+      "songName": "Sarim's Vermin",
+      "musicTabButtonId": 60138,
+      "musicTabInterfaceId": 15498,
+      "regionIds": [
+        11926
+      ]
+    },
+    {
+      "songId": 144,
+      "songName": "Scape Cave",
+      "musicTabButtonId": 17036,
+      "musicTabInterfaceId": 4388,
+      "regionIds": [
+        12436,
+        12698,
+        13210,
+        12954
+      ]
+    },
+    {
+      "songId": 0,
+      "songName": "Scape Main",
+      "musicTabButtonId": 17037,
+      "musicTabInterfaceId": 4389,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 400,
+      "songName": "Scape Original",
+      "musicTabButtonId": 50040,
+      "musicTabInterfaceId": 12840,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 331,
+      "songName": "Scape Sad",
+      "musicTabButtonId": 35017,
+      "musicTabInterfaceId": 8977,
+      "regionIds": [
+        13116,
+        13372
+      ]
+    },
+    {
+      "songId": 547,
+      "songName": "Scape Santa",
+      "musicTabButtonId": 46104,
+      "musicTabInterfaceId": 11880,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 321,
+      "songName": "Scape Scared",
+      "musicTabButtonId": 39142,
+      "musicTabInterfaceId": 10126,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 54,
+      "songName": "Scape Soft",
+      "musicTabButtonId": 23100,
+      "musicTabInterfaceId": 5988,
+      "regionIds": [
+        11829
+      ]
+    },
+    {
+      "songId": 332,
+      "songName": "Scape Wild",
+      "musicTabButtonId": 35018,
+      "musicTabInterfaceId": 8978,
+      "regionIds": [
+        12857,
+        12604,
+        12860
+      ]
+    },
+    {
+      "songId": 352,
+      "songName": "Scarab",
+      "musicTabButtonId": 50050,
+      "musicTabInterfaceId": 12850,
+      "regionIds": [
+        12589,
+        12845,
+        13101,
+        11085,
+        11341,
+        11597
+      ]
+    },
+    {
+      "songId": 35,
+      "songName": "Sea Shanty 2",
+      "musicTabButtonId": 17041,
+      "musicTabInterfaceId": 4393,
+      "regionIds": [
+        12082
+      ]
+    },
+    {
+      "songId": 92,
+      "songName": "Sea Shanty",
+      "musicTabButtonId": 17040,
+      "musicTabInterfaceId": 4392,
+      "regionIds": [
+        11569
+      ]
+    },
+    {
+      "songId": 110,
+      "songName": "Serenade",
+      "musicTabButtonId": 17042,
+      "musicTabInterfaceId": 4394,
+      "regionIds": [
+        9521,
+        9777
+      ]
+    },
+    {
+      "songId": 52,
+      "songName": "Serene",
+      "musicTabButtonId": 17043,
+      "musicTabInterfaceId": 4395,
+      "regionIds": [
+        11936,
+        11937,
+        11339,
+        11837
+      ]
+    },
+    {
+      "songId": 356,
+      "songName": "Settlement",
+      "musicTabButtonId": 48103,
+      "musicTabInterfaceId": 12391,
+      "regionIds": [
+        11065
+      ]
+    },
+    {
+      "songId": 286,
+      "songName": "Shadowland",
+      "musicTabButtonId": 35010,
+      "musicTabInterfaceId": 8970,
+      "regionIds": [
+        13618,
+        13875,
+        8526
+      ]
+    },
+    {
+      "songId": 122,
+      "songName": "Shine",
+      "musicTabButtonId": 17044,
+      "musicTabInterfaceId": 4396,
+      "regionIds": [
+        13363
+      ]
+    },
+    {
+      "songId": 120,
+      "songName": "Shining",
+      "musicTabButtonId": 23102,
+      "musicTabInterfaceId": 5990,
+      "regionIds": [
+        12858
+      ]
+    },
+    {
+      "songId": 353,
+      "songName": "Shipwrecked",
+      "musicTabButtonId": 47254,
+      "musicTabInterfaceId": 12286,
+      "regionIds": [
+        14391
+      ]
+    },
+    {
+      "songId": 311,
+      "songName": "Showdown",
+      "musicTabButtonId": 43133,
+      "musicTabInterfaceId": 11141,
+      "regionIds": [
+        10895
+      ]
+    },
+    {
+      "songId": 640,
+      "songName": "Sigmund's Showdown",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 257,
+      "songName": "Sojourn",
+      "musicTabButtonId": 188,
+      "musicTabInterfaceId": 188,
+      "regionIds": [
+        11321,
+        11577
+      ]
+    },
+    {
+      "songId": 80,
+      "songName": "Soundscape",
+      "musicTabButtonId": 17045,
+      "musicTabInterfaceId": 4397,
+      "regionIds": [
+        9774,
+        10030
+      ]
+    },
+    {
+      "songId": 387,
+      "songName": "Sphinx",
+      "musicTabButtonId": 50051,
+      "musicTabInterfaceId": 12851,
+      "regionIds": [
+        13100
+      ]
+    },
+    {
+      "songId": 175,
+      "songName": "Spirit",
+      "musicTabButtonId": 17046,
+      "musicTabInterfaceId": 4398,
+      "regionIds": [
+        12597
+      ]
+    },
+    {
+      "songId": 462,
+      "songName": "Spirits of The Elid",
+      "musicTabButtonId": 60231,
+      "musicTabInterfaceId": 15591,
+      "regionIds": [
+        13461
+      ]
+    },
+    {
+      "songId": 77,
+      "songName": "Splendour",
+      "musicTabButtonId": 17047,
+      "musicTabInterfaceId": 4399,
+      "regionIds": [
+        11574
+      ]
+    },
+    {
+      "songId": 129,
+      "songName": "Spooky Jungle",
+      "musicTabButtonId": 17049,
+      "musicTabInterfaceId": 4401,
+      "regionIds": [
+        11053
+      ]
+    },
+    {
+      "songId": 333,
+      "songName": "Spooky",
+      "musicTabButtonId": 35019,
+      "musicTabInterfaceId": 8979,
+      "regionIds": [
+        12340
+      ]
+    },
+    {
+      "songId": 11,
+      "songName": "Spooky2",
+      "musicTabButtonId": 44218,
+      "musicTabInterfaceId": 11482,
+      "regionIds": [
+        13718,
+        13974
+      ]
+    },
+    {
+      "songId": 241,
+      "songName": "Stagnant",
+      "musicTabButtonId": 31205,
+      "musicTabInterfaceId": 8141,
+      "regionIds": [
+        13876,
+        8782
+      ]
+    },
+    {
+      "songId": 108,
+      "songName": "Starlight",
+      "musicTabButtonId": 17050,
+      "musicTabInterfaceId": 4402,
+      "regionIds": [
+        12181,
+        11925
+      ]
+    },
+    {
+      "songId": 151,
+      "songName": "Start",
+      "musicTabButtonId": 17082,
+      "musicTabInterfaceId": 4434,
+      "regionIds": [
+        12339
+      ]
+    },
+    {
+      "songId": 111,
+      "songName": "Still Night",
+      "musicTabButtonId": 17051,
+      "musicTabInterfaceId": 4403,
+      "regionIds": [
+        13108
+      ]
+    },
+    {
+      "songId": 319,
+      "songName": "Stillness",
+      "musicTabButtonId": 46130,
+      "musicTabInterfaceId": 11906,
+      "regionIds": [
+        13977
+      ]
+    },
+    {
+      "songId": 292,
+      "songName": "Stranded",
+      "musicTabButtonId": 59130,
+      "musicTabInterfaceId": 11883,
+      "regionIds": [
+        11322,
+        11578
+      ]
+    },
+    {
+      "songId": 470,
+      "songName": "Strange Place",
+      "musicTabButtonId": 46107,
+      "musicTabInterfaceId": 15234,
+      "regionIds": [
+        7494
+      ]
+    },
+    {
+      "songId": 243,
+      "songName": "Stratosphere",
+      "musicTabButtonId": 29036,
+      "musicTabInterfaceId": 7460,
+      "regionIds": [
+        8523
+      ]
+    },
+    {
+      "songId": 568,
+      "songName": "Storm Brew",
+      "musicTabButtonId": 68116,
+      "musicTabInterfaceId": 17524,
+      "regionIds": [
+        10577
+      ]
+    },
+    {
+      "songId": 517,
+      "songName": "Subterranea",
+      "musicTabButtonId": 59076,
+      "musicTabInterfaceId": 15180,
+      "regionIds": [
+        10142,
+        10398
+      ]
+    },
+    {
+      "songId": 267,
+      "songName": "Sunburn",
+      "musicTabButtonId": 29029,
+      "musicTabInterfaceId": 7453,
+      "regionIds": [
+        12846,
+        13357
+      ]
+    },
+    {
+      "songId": 265,
+      "songName": "Superstition",
+      "musicTabButtonId": 19017,
+      "musicTabInterfaceId": 4881,
+      "regionIds": [
+        11153
+      ]
+    },
+    {
+      "songId": 308,
+      "songName": "Suspicious",
+      "musicTabButtonId": 43132,
+      "musicTabInterfaceId": 11140,
+      "regionIds": [
+        10567,
+        10311
+      ]
+    },
+    {
+      "songId": 395,
+      "songName": "Tale of Keldagrim",
+      "musicTabButtonId": 53007,
+      "musicTabInterfaceId": 13575,
+      "regionIds": [
+        11678,
+        11679
+      ]
+    },
+    {
+      "songId": 140,
+      "songName": "Talking Forest",
+      "musicTabButtonId": 17083,
+      "musicTabInterfaceId": 4435,
+      "regionIds": [
+        10550
+      ]
+    },
+    {
+      "songId": 397,
+      "songName": "Tears of Guthix",
+      "musicTabButtonId": 12204,
+      "musicTabInterfaceId": 3276,
+      "regionIds": [
+        12948
+      ]
+    },
+    {
+      "songId": 296,
+      "songName": "Technology",
+      "musicTabButtonId": 43127,
+      "musicTabInterfaceId": 11135,
+      "regionIds": [
+        10566,
+        10310,
+        9626
+      ]
+    },
+    {
+      "songId": 376,
+      "songName": "Temple of Light",
+      "musicTabButtonId": 23137,
+      "musicTabInterfaceId": 6025,
+      "regionIds": [
+        7496
+      ]
+    },
+    {
+      "songId": 307,
+      "songName": "Temple",
+      "musicTabButtonId": 43131,
+      "musicTabInterfaceId": 11139,
+      "regionIds": [
+        11151
+      ]
+    },
+    {
+      "songId": 478,
+      "songName": "The Cellar Dwellers",
+      "musicTabButtonId": 56119,
+      "musicTabInterfaceId": 14455,
+      "regionIds": [
+        10135,
+        10391
+      ]
+    },
+    {
+      "songId": 425,
+      "songName": "The Chosen",
+      "musicTabButtonId": 54076,
+      "musicTabInterfaceId": 13900,
+      "regionIds": [
+        9805
+      ]
+    },
+    {
+      "songId": 79,
+      "songName": "The Desert",
+      "musicTabButtonId": 17052,
+      "musicTabInterfaceId": 4404,
+      "regionIds": [
+        12591,
+        12847
+      ]
+    },
+    {
+      "songId": 461,
+      "songName": "The Desolate Isle",
+      "musicTabButtonId": 43087,
+      "musicTabInterfaceId": 11095,
+      "regionIds": [
+        10042
+      ]
+    },
+    {
+      "songId": 541,
+      "songName": "The Enchanter",
+      "musicTabButtonId": 62015,
+      "musicTabInterfaceId": 15887,
+      "regionIds": [
+        13462
+      ]
+    },
+    {
+      "songId": 403,
+      "songName": "The Far Side",
+      "musicTabButtonId": 53212,
+      "musicTabInterfaceId": 13780,
+      "regionIds": [
+        12111
+      ]
+    },
+    {
+      "songId": 630,
+      "songName": "The Galleon",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 464,
+      "songName": "The Genie",
+      "musicTabButtonId": 23109,
+      "musicTabInterfaceId": 5997,
+      "regionIds": [
+        13457
+      ]
+    },
+    {
+      "songId": 377,
+      "songName": "The Golem",
+      "musicTabButtonId": 50041,
+      "musicTabInterfaceId": 12841,
+      "regionIds": [
+        13616,
+        13872
+      ]
+    },
+    {
+      "songId": 643,
+      "songName": "The Last Shanty",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 407,
+      "songName": "The Lost Melody",
+      "musicTabButtonId": 52048,
+      "musicTabInterfaceId": 13360,
+      "regionIds": [
+        13206
+      ]
+    },
+    {
+      "songId": 420,
+      "songName": "The Lost Tribe",
+      "musicTabButtonId": 52049,
+      "musicTabInterfaceId": 13361,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 625,
+      "songName": "The Lunar Isle",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 573,
+      "songName": "The Mad Mole",
+      "musicTabButtonId": 70255,
+      "musicTabInterfaceId": 18175,
+      "regionIds": [
+        6992,
+        6993
+      ]
+    },
+    {
+      "songId": 448,
+      "songName": "The Monsters Below",
+      "musicTabButtonId": 17013,
+      "musicTabInterfaceId": 14186,
+      "regionIds": [
+        9886
+      ]
+    },
+    {
+      "songId": 316,
+      "songName": "The Navigator",
+      "musicTabButtonId": 39130,
+      "musicTabInterfaceId": 10114,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 485,
+      "songName": "The Noble Rodent",
+      "musicTabButtonId": 60135,
+      "musicTabInterfaceId": 15495,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 355,
+      "songName": "The Other Side",
+      "musicTabButtonId": 48000,
+      "musicTabInterfaceId": 12288,
+      "regionIds": [
+        14646,
+        14647
+      ]
+    },
+    {
+      "songId": 398,
+      "songName": "The Power of Tears",
+      "musicTabButtonId": 12205,
+      "musicTabInterfaceId": 3277,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 413,
+      "songName": "The Quizmaster",
+      "musicTabButtonId": 55110,
+      "musicTabInterfaceId": 14190,
+      "regionIds": [
+        7754
+      ]
+    },
+    {
+      "songId": 402,
+      "songName": "The Rogues Den",
+      "musicTabButtonId": 53211,
+      "musicTabInterfaceId": 13779,
+      "regionIds": [
+        11855,
+        11854,
+        12110,
+        12109
+      ]
+    },
+    {
+      "songId": 170,
+      "songName": "The Shadow",
+      "musicTabButtonId": 17053,
+      "musicTabInterfaceId": 4405,
+      "regionIds": [
+        11314,
+        11315
+      ]
+    },
+    {
+      "songId": 341,
+      "songName": "The Slayer",
+      "musicTabButtonId": 47017,
+      "musicTabInterfaceId": 12049,
+      "regionIds": [
+        11164
+      ]
+    },
+    {
+      "songId": 339,
+      "songName": "The Terrible Tower",
+      "musicTabButtonId": 47016,
+      "musicTabInterfaceId": 12048,
+      "regionIds": [
+        13623
+      ]
+    },
+    {
+      "songId": 133,
+      "songName": "The Tower",
+      "musicTabButtonId": 17054,
+      "musicTabInterfaceId": 4406,
+      "regionIds": [
+        10292,
+        10136,
+        10392
+      ]
+    },
+    {
+      "songId": 109,
+      "songName": "Theme",
+      "musicTabButtonId": 17084,
+      "musicTabInterfaceId": 4436,
+      "regionIds": [
+        10294,
+        10138,
+        10394
+      ]
+    },
+    {
+      "songId": 379,
+      "songName": "Throne of The Demon",
+      "musicTabButtonId": 50043,
+      "musicTabInterfaceId": 12843,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 242,
+      "songName": "Time Out",
+      "musicTabButtonId": 32240,
+      "musicTabInterfaceId": 8432,
+      "regionIds": [
+        11591
+      ]
+    },
+    {
+      "songId": 369,
+      "songName": "Time To Mine",
+      "musicTabButtonId": 50008,
+      "musicTabInterfaceId": 12808,
+      "regionIds": [
+        11422
+      ]
+    },
+    {
+      "songId": 338,
+      "songName": "Tiptoe",
+      "musicTabButtonId": 39149,
+      "musicTabInterfaceId": 10133,
+      "regionIds": [
+        12440
+      ]
+    },
+    {
+      "songId": 525,
+      "songName": "Title Fight",
+      "musicTabButtonId": 61210,
+      "musicTabInterfaceId": 15826,
+      "regionIds": [
+        12696
+      ]
+    },
+    {
+      "songId": 591,
+      "songName": "Tomb Raider",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 105,
+      "songName": "Tomorrow",
+      "musicTabButtonId": 24153,
+      "musicTabInterfaceId": 6297,
+      "regionIds": [
+        12081
+      ]
+    },
+    {
+      "songId": 582,
+      "songName": "Too Many Cooks...",
+      "musicTabButtonId": 71129,
+      "musicTabInterfaceId": 18305,
+      "regionIds": [
+        11930
+      ]
+    },
+    {
+      "songId": 51,
+      "songName": "Trawler Minor",
+      "musicTabButtonId": 17056,
+      "musicTabInterfaceId": 4408,
+      "regionIds": [
+        7755,
+        8011
+      ]
+    },
+    {
+      "songId": 38,
+      "songName": "Trawler",
+      "musicTabButtonId": 17055,
+      "musicTabInterfaceId": 4407,
+      "regionIds": [
+        7499,
+        8012
+      ]
+    },
+    {
+      "songId": 130,
+      "songName": "Tree Spirits",
+      "musicTabButtonId": 17057,
+      "musicTabInterfaceId": 4409,
+      "regionIds": [
+        9268,
+        9524
+      ]
+    },
+    {
+      "songId": 187,
+      "songName": "Tremble",
+      "musicTabButtonId": 32245,
+      "musicTabInterfaceId": 8437,
+      "regionIds": [
+        11320
+      ]
+    },
+    {
+      "songId": 94,
+      "songName": "Tribal 2",
+      "musicTabButtonId": 17060,
+      "musicTabInterfaceId": 4412,
+      "regionIds": [
+        11566,
+        11822
+      ]
+    },
+    {
+      "songId": 162,
+      "songName": "Tribal Background",
+      "musicTabButtonId": 17058,
+      "musicTabInterfaceId": 4410,
+      "regionIds": [
+        11312,
+        11412
+      ]
+    },
+    {
+      "songId": 165,
+      "songName": "Tribal",
+      "musicTabButtonId": 17059,
+      "musicTabInterfaceId": 4411,
+      "regionIds": [
+        11311
+      ]
+    },
+    {
+      "songId": 192,
+      "songName": "Trinity",
+      "musicTabButtonId": 17061,
+      "musicTabInterfaceId": 4413,
+      "regionIds": [
+        10804,
+        10904
+      ]
+    },
+    {
+      "songId": 611,
+      "songName": "Trouble Brewing",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 183,
+      "songName": "Troubled",
+      "musicTabButtonId": 17062,
+      "musicTabInterfaceId": 4414,
+      "regionIds": [
+        11833
+      ]
+    },
+    {
+      "songId": 88,
+      "songName": "Twilight",
+      "musicTabButtonId": 29037,
+      "musicTabInterfaceId": 7461,
+      "regionIds": [
+        10906
+      ]
+    },
+    {
+      "songId": 473,
+      "songName": "Tzhaar!",
+      "musicTabButtonId": 23125,
+      "musicTabInterfaceId": 6013,
+      "regionIds": [
+        9551
+      ]
+    },
+    {
+      "songId": 176,
+      "songName": "Undercurrent",
+      "musicTabButtonId": 7098,
+      "musicTabInterfaceId": 1890,
+      "regionIds": [
+        12345
+      ]
+    },
+    {
+      "songId": 179,
+      "songName": "Underground",
+      "musicTabButtonId": 17063,
+      "musicTabInterfaceId": 4415,
+      "regionIds": [
+        13368,
+        11416
+      ]
+    },
+    {
+      "songId": 323,
+      "songName": "Underground Pass",
+      "musicTabButtonId": 28214,
+      "musicTabInterfaceId": 7382,
+      "regionIds": [
+        9622,
+        9621
+      ]
+    },
+    {
+      "songId": 131,
+      "songName": "Understanding",
+      "musicTabButtonId": 2166,
+      "musicTabInterfaceId": 678,
+      "regionIds": [
+        9547
+      ]
+    },
+    {
+      "songId": 3,
+      "songName": "Unknown Land",
+      "musicTabButtonId": 17066,
+      "musicTabInterfaceId": 4418,
+      "regionIds": [
+        12338,
+        8524
+      ]
+    },
+    {
+      "songId": 70,
+      "songName": "Upcoming",
+      "musicTabButtonId": 17068,
+      "musicTabInterfaceId": 4420,
+      "regionIds": [
+        10546
+      ]
+    },
+    {
+      "songId": 75,
+      "songName": "Venture",
+      "musicTabButtonId": 17069,
+      "musicTabInterfaceId": 4421,
+      "regionIds": [
+        13364
+      ]
+    },
+    {
+      "songId": 45,
+      "songName": "Venture2",
+      "musicTabButtonId": 26211,
+      "musicTabInterfaceId": 6867,
+      "regionIds": [
+        13465,
+        13464
+      ]
+    },
+    {
+      "songId": 528,
+      "songName": "Victory Is Mine",
+      "musicTabButtonId": 61213,
+      "musicTabInterfaceId": 15829,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 61,
+      "songName": "Village",
+      "musicTabButtonId": 31182,
+      "musicTabInterfaceId": 8118,
+      "regionIds": [
+        13878
+      ]
+    },
+    {
+      "songId": 85,
+      "songName": "Vision",
+      "musicTabButtonId": 17070,
+      "musicTabInterfaceId": 4422,
+      "regionIds": [
+        12337,
+        12437
+      ]
+    },
+    {
+      "songId": 30,
+      "songName": "Voodoo Cult",
+      "musicTabButtonId": 17071,
+      "musicTabInterfaceId": 4423,
+      "regionIds": [
+        11665,
+        9545
+      ]
+    },
+    {
+      "songId": 32,
+      "songName": "Voyage",
+      "musicTabButtonId": 17072,
+      "musicTabInterfaceId": 4424,
+      "regionIds": [
+        10038
+      ]
+    },
+    {
+      "songId": 622,
+      "songName": "Waking Dream",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 49,
+      "songName": "Wander",
+      "musicTabButtonId": 17073,
+      "musicTabInterfaceId": 4425,
+      "regionIds": [
+        12083
+      ]
+    },
+    {
+      "songId": 295,
+      "songName": "Warrior",
+      "musicTabButtonId": 39129,
+      "musicTabInterfaceId": 10113,
+      "regionIds": [
+        10653
+      ]
+    },
+    {
+      "songId": 634,
+      "songName": "Warriors' Guild",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 82,
+      "songName": "Waterfall",
+      "musicTabButtonId": 17074,
+      "musicTabInterfaceId": 4426,
+      "regionIds": [
+        10037,
+        10137
+      ]
+    },
+    {
+      "songId": 244,
+      "songName": "Waterlogged",
+      "musicTabButtonId": 31204,
+      "musicTabInterfaceId": 8140,
+      "regionIds": [
+        13877,
+        14133,
+        8014,
+        8270
+      ]
+    },
+    {
+      "songId": 626,
+      "songName": "Way of The Enchanter",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 394,
+      "songName": "Wayward",
+      "musicTabButtonId": 52042,
+      "musicTabInterfaceId": 13354,
+      "regionIds": [
+        9875
+      ]
+    },
+    {
+      "songId": 126,
+      "songName": "We Are The Fairies",
+      "musicTabButtonId": -1,
+      "musicTabInterfaceId": 0,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 271,
+      "songName": "Well of Voyage",
+      "musicTabButtonId": 33118,
+      "musicTabInterfaceId": 8566,
+      "regionIds": [
+        9366
+      ]
+    },
+    {
+      "songId": 475,
+      "songName": "Wild Side",
+      "musicTabButtonId": 56118,
+      "musicTabInterfaceId": 14454,
+      "regionIds": [
+        12092,
+        12348
+      ]
+    },
+    {
+      "songId": 435,
+      "songName": "Wilderness",
+      "musicTabButtonId": 53145,
+      "musicTabInterfaceId": 13713,
+      "regionIds": [
+        11832,
+        12346
+      ]
+    },
+    {
+      "songId": 42,
+      "songName": "Wilderness2",
+      "musicTabButtonId": 17075,
+      "musicTabInterfaceId": 4427,
+      "regionIds": [
+        12091,
+        12347
+      ]
+    },
+    {
+      "songId": 43,
+      "songName": "Wilderness3",
+      "musicTabButtonId": 17076,
+      "musicTabInterfaceId": 4428,
+      "regionIds": [
+        11834
+      ]
+    },
+    {
+      "songId": 8,
+      "songName": "Wildwood",
+      "musicTabButtonId": 27071,
+      "musicTabInterfaceId": 6983,
+      "regionIds": [
+        12344
+      ]
+    },
+    {
+      "songId": 14,
+      "songName": "Witching",
+      "musicTabButtonId": 17078,
+      "musicTabInterfaceId": 4430,
+      "regionIds": [
+        13114,
+        13370
+      ]
+    },
+    {
+      "songId": 529,
+      "songName": "Woe of The Wyvern",
+      "musicTabButtonId": 61214,
+      "musicTabInterfaceId": 15830,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 189,
+      "songName": "Wolf Mountain",
+      "musicTabButtonId": 26186,
+      "musicTabInterfaceId": 6842,
+      "regionIds": [
+        12603,
+        12859
+      ]
+    },
+    {
+      "songId": 34,
+      "songName": "Wonder",
+      "musicTabButtonId": 17079,
+      "musicTabInterfaceId": 4431,
+      "regionIds": [
+        11831
+      ]
+    },
+    {
+      "songId": 81,
+      "songName": "Wonderous",
+      "musicTabButtonId": 17080,
+      "musicTabInterfaceId": 4432,
+      "regionIds": [
+        10548
+      ]
+    },
+    {
+      "songId": 255,
+      "songName": "Woodland",
+      "musicTabButtonId": 33123,
+      "musicTabInterfaceId": 8571,
+      "regionIds": [
+        8498,
+        8754
+      ]
+    },
+    {
+      "songId": 15,
+      "songName": "Workshop",
+      "musicTabButtonId": 17081,
+      "musicTabInterfaceId": 4433,
+      "regionIds": [
+        12084
+      ]
+    },
+    {
+      "songId": 565,
+      "songName": "Wrath And Ruin",
+      "musicTabButtonId": 58233,
+      "musicTabInterfaceId": 15081,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 524,
+      "songName": "Xenophobe",
+      "musicTabButtonId": 59242,
+      "musicTabInterfaceId": 15346,
+      "regionIds": [
+        7492,
+        11589
+      ]
+    },
+    {
+      "songId": 145,
+      "songName": "Yesteryear",
+      "musicTabButtonId": 23101,
+      "musicTabInterfaceId": 5989,
+      "regionIds": [
+        12849
+      ]
+    },
+    {
+      "songId": 146,
+      "songName": "Zealot",
+      "musicTabButtonId": 7106,
+      "musicTabInterfaceId": 1898,
+      "regionIds": [
+        10827
+      ]
+    },
+    {
+      "songId": 392,
+      "songName": "Zogre Dance",
+      "musicTabButtonId": 52043,
+      "musicTabInterfaceId": 13355,
+      "regionIds": [
+        9775
+      ]
+    }
+  ]
+}

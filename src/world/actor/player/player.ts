@@ -47,6 +47,7 @@ import { InterfaceState } from '@server/world/actor/player/interface-state';
 import { dialogue } from '@server/world/actor/dialogue';
 import { PlayerQuest, QuestKey } from '@server/config/quest-config';
 import { Quest } from '@server/world/actor/player/quest';
+import { regionChangedDataFactory } from '@server/world/action/player-region-changed';
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
@@ -233,7 +234,6 @@ export class Player extends Actor {
         this.updateBonuses();
         this.updateCarryWeight(true);
         this.modifyWidget(widgets.musicPlayerTab, { childId: 82, textColor: colors.green }); // Set "Harmony" to green/unlocked on the music tab
-        this.playSong(songs.harmony);
         this.updateQuestTab();
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
@@ -592,7 +592,8 @@ export class Player extends Actor {
      * @param newPosition The player's new position.
      */
     public teleport(newPosition: Position): void {
-        const oldChunk = world.chunkManager.getChunkForWorldPosition(this.position);
+        const originalPosition = this.position;
+        const oldChunk = world.chunkManager.getChunkForWorldPosition(originalPosition);
         const newChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
 
         this.walkingQueue.clear();
@@ -604,6 +605,9 @@ export class Player extends Actor {
 
         if(!oldChunk.equals(newChunk)) {
             this.metadata['updateChunk'] = { newChunk, oldChunk };
+
+            actionHandler.call('player_region_changed', regionChangedDataFactory(
+                this, originalPosition, newPosition, true));
         }
     }
 
