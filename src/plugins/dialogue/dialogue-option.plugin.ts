@@ -15,4 +15,14 @@ export const action: widgetInteractionActionHandler = (details) => {
     player.interfaceState.closeWidget(widgetId, childId);
 };
 
-export default { type: 'widget_interaction', widgetIds: dialogueIds, handler: action, cancelActions: true };
+export default {
+    pluginId: 'rs:dialog_choice',
+    hooks: [
+        {
+            type: 'widget_interaction',
+            widgetIds: dialogueIds,
+            handler: action,
+            cancelActions: true
+        }
+    ]
+};

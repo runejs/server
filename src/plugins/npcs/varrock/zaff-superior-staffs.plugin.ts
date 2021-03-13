@@ -36,16 +36,21 @@ const talkToAction : npcInteractionActionHandler = (details) => {
     ]);
 };
 
-export default [{
-    type: 'npc_interaction',
-    npcs: 'rs:varrock_zaff',
-    options: 'trade',
-    walkTo: true,
-    handler: tradeAction
-}, {
-    type: 'npc_interaction',
-    npcs: 'rs:varrock_zaff',
-    options: 'talk-to',
-    walkTo: true,
-    handler: talkToAction
-}];
+export default {
+    pluginId: 'rs:zaffs_staffs',
+    hooks: [
+        {
+            type: 'npc_interaction',
+            npcs: 'rs:varrock_zaff',
+            options: 'trade',
+            walkTo: true,
+            handler: tradeAction
+        }, {
+            type: 'npc_interaction',
+            npcs: 'rs:varrock_zaff',
+            options: 'talk-to',
+            walkTo: true,
+            handler: talkToAction
+        }
+    ]
+};

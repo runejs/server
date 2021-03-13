@@ -67,9 +67,14 @@ const talkTo : npcInteractionActionHandler = (details) => {
 };
 
 export default {
-    type: 'npc_interaction',
-    npcs: 'rs:master_smithing_tutor',
-    options: ['talk-to'],
-    walkTo: true,
-    handler: talkTo
+    pluginId: 'rs:master_smithing_tutor',
+    hooks: [
+        {
+            type: 'npc_interaction',
+            npcs: 'rs:master_smithing_tutor',
+            options: [ 'talk-to' ],
+            walkTo: true,
+            handler: talkTo
+        }
+    ]
 };

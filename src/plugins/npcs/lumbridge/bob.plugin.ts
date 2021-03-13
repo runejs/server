@@ -6,9 +6,14 @@ const action: npcInteractionActionHandler = ({ player }) =>
     findShop('rs:lumbridge_bobs_axes')?.open(player);
 
 export default {
-    type: 'npc_interaction',
-    npcs: 'rs:lumbridge_bob',
-    options: 'trade',
-    walkTo: true,
-    handler: action
+    pluginId: 'rs:bob',
+    hooks: [
+        {
+            type: 'npc_interaction',
+            npcs: 'rs:lumbridge_bob',
+            options: 'trade',
+            walkTo: true,
+            handler: action
+        }
+    ]
 };

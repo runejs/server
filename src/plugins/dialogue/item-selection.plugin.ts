@@ -8,4 +8,14 @@ export const action: widgetInteractionActionHandler = (details) => {
     player.interfaceState.closeWidget(widgetId, childId);
 };
 
-export default { type: 'widget_interaction', widgetIds: [ 303, 304, 305, 306, 307, 309 ], handler: action, cancelActions: false };
+export default {
+    pluginId: 'rs:item_selection_choice',
+    hooks: [
+        {
+            type: 'widget_interaction',
+            widgetIds: [ 303, 304, 305, 306, 307, 309 ],
+            handler: action,
+            cancelActions: false
+        }
+    ]
+};

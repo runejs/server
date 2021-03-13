@@ -51,9 +51,14 @@ const action = async details => {
 };
 
 module.exports = {
-    type: 'npc_interaction',
-    npcs: 'rs:hans',
-    options: 'talk-to',
-    walkTo: true,
-    handler: action
+    pluginId: 'rs:hans',
+    hooks: [
+        {
+            type: 'npc_interaction',
+            npcs: 'rs:hans',
+            options: 'talk-to',
+            walkTo: true,
+            handler: action
+        }
+    ]
 };
