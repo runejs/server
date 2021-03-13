@@ -11,7 +11,7 @@ The server runs on the 435 revision of the game, which was a game update made on
 
 **RuneJS is completely open-source and open to all pull requests and/or issues. Many plugins have been added by contributor pull requests and we're always happy to have more!**
 
-![RuneJS Lumbridge](https://prnt.sc/10krr67)
+![RuneJS Lumbridge](https://i.imgur.com/KVCqKSb.png)
 
 ## Setup
 
