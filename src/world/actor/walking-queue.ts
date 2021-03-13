@@ -3,6 +3,9 @@ import { Position } from '../position';
 import { Player } from './player/player';
 import { world } from '@server/game-server';
 import { Npc } from './npc/npc';
+import { regionChangedDataFactory } from '@server/world/action/player-region-changed';
+import { actionHandler } from '@server/world/action';
+
 
 /**
  * Controls an actor's movement.
@@ -33,7 +36,7 @@ export class WalkingQueue {
         }
     }
 
-    public add(x: number, y: number, positionMetadata?: { [key: string ]: any}): void {
+    public add(x: number, y: number, positionMetadata?: { [key: string]: any }): void {
         let lastPosition = this.getLastPosition();
 
         let lastX = lastPosition.x;
@@ -147,14 +150,14 @@ export class WalkingQueue {
             this.actor.clearFaceActor();
         }
 
-        const currentPosition = this.actor.position;
+        const originalPosition = this.actor.position;
 
-        if(this.actor.pathfinding.canMoveTo(currentPosition, walkPosition)) {
-            const oldChunk = world.chunkManager.getChunkForWorldPosition(currentPosition);
+        if(this.actor.pathfinding.canMoveTo(originalPosition, walkPosition)) {
+            const oldChunk = world.chunkManager.getChunkForWorldPosition(originalPosition);
             const lastMapRegionUpdatePosition = this.actor.lastMapRegionUpdatePosition;
 
-            const walkDiffX = walkPosition.x - currentPosition.x;
-            const walkDiffY = walkPosition.y - currentPosition.y;
+            const walkDiffX = walkPosition.x - originalPosition.x;
+            const walkDiffY = walkPosition.y - originalPosition.y;
             const walkDir = this.calculateDirection(walkDiffX, walkDiffY);
 
             if(walkDir === -1) {
@@ -213,6 +216,9 @@ export class WalkingQueue {
             if(!oldChunk.equals(newChunk)) {
                 if(this.actor instanceof Player) {
                     this.actor.metadata['updateChunk'] = { newChunk, oldChunk };
+
+                    actionHandler.call('player_region_changed', regionChangedDataFactory(
+                        this.actor, originalPosition, this.actor.position));
                 } else if(this.actor instanceof Npc) {
                     oldChunk.removeNpc(this.actor);
                     newChunk.addNpc(this.actor);

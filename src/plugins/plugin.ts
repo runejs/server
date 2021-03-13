@@ -2,11 +2,12 @@ import { Player } from '@server/world/actor/player/player';
 import { Action } from '@server/world/action';
 import { basicNumberFilter } from '@server/plugins/plugin-loader';
 import { Quest } from '@server/world/actor/player/quest';
+import { QuestKey } from '@server/config/quest-config';
 
 
 export interface QuestRequirement {
     questId: string;
-    stage?: number;
+    stage?: QuestKey;
     stages?: number[];
 }
 
@@ -26,13 +27,19 @@ export function questFilter(player: Player, plugin: Action): boolean {
         return plugin.questRequirement.stage === 0;
     }
 
-    if(plugin.questRequirement.stage !== undefined) {
-        if(!basicNumberFilter(plugin.questRequirement.stage, playerQuest.progress)) {
-            return false;
-        }
-    } else if(plugin.questRequirement.stages !== undefined) {
-        if(!basicNumberFilter(plugin.questRequirement.stages, playerQuest.progress)) {
-            return false;
+    if(plugin.questRequirement.stage === 'complete') {
+        return playerQuest.progress === 'complete';
+    }
+
+    if(typeof playerQuest.progress === 'number') {
+        if(plugin.questRequirement.stage !== undefined) {
+            if(!basicNumberFilter(plugin.questRequirement.stage, playerQuest.progress)) {
+                return false;
+            }
+        } else if(plugin.questRequirement.stages !== undefined) {
+            if(!basicNumberFilter(plugin.questRequirement.stages, playerQuest.progress)) {
+                return false;
+            }
         }
     }
 

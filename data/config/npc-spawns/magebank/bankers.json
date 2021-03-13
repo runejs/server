@@ -1,0 +1,9 @@
+[
+    {
+        "npc": "rs:banker",
+        "spawn_x": 2534,
+        "spawn_y": 4713,
+        "movement_radius": 0,
+        "face": "WEST"
+    }
+]

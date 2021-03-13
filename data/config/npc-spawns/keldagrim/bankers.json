@@ -1,0 +1,16 @@
+[
+    {
+        "npc": "rs:banker",
+        "spawn_x": 2836,
+        "spawn_y": 10205,
+        "movement_radius": 0,
+        "face": "NORTH"
+    },
+    {
+        "npc": "rs:banker",
+        "spawn_x": 2838,
+        "spawn_y": 10205,
+        "movement_radius": 0,
+        "face": "NORTH"
+    }
+]
