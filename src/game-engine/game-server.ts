@@ -75,6 +75,7 @@ export const actionPipeline = new ActionPipeline();
  */
 export async function loadPlugins(): Promise<void> {
     actionHookMap = {};
+    questMap = {};
     const plugins = await loadPluginFiles();
 
     const pluginActionHookList = plugins?.filter(plugin => !!plugin?.hooks)?.map(plugin => plugin.hooks);
