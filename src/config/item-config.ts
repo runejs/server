@@ -1,4 +1,5 @@
 import { loadConfigurationFiles } from '@server/config/index';
+import { SkillName } from '@server/world/actor/skills';
 
 
 export type WeaponStyle = 'axe' | 'hammer' | 'bow' | 'claws' | 'crossbow' | 'longsword' |
@@ -81,6 +82,20 @@ export interface WeaponInfo {
     playerAnimations: any;
 }
 
+export interface ItemMetadata {
+    [key: string]: unknown;
+    consume_effects?: {
+        clock: string; // Name of timer to be used for cooldown
+        skills?: {
+            [key in SkillName]: number | [number, number];
+        };
+        energy?: number | [number, number];
+        special: boolean;
+    };
+}
+
+
+
 export interface EquipmentData {
     equipmentSlot: EquipmentSlot;
     equipmentType?: EquipmentType;
@@ -102,6 +117,7 @@ export interface ItemConfiguration {
     tradable?: boolean;
     weight?: number;
     equippable?: boolean;
+    consumable?: boolean;
     destroy?: string | boolean;
     equipment_data?: {
         equipment_slot: EquipmentSlot;
@@ -112,7 +128,7 @@ export interface ItemConfiguration {
         skill_bonuses?: SkillBonuses;
         weapon_info?: WeaponInfo;
     };
-    metadata?: { [key: string]: unknown };
+    metadata?: ItemMetadata;
 }
 
 /**
@@ -129,7 +145,8 @@ export class ItemDetails {
     destroy?: string | boolean;
     weight: number;
     equipmentData: EquipmentData;
-    metadata: { [key: string]: unknown } = {};
+    metadata: ItemMetadata = {};
+    consumable?: boolean;
     stackable: boolean = false;
     value: number = 0;
     members: boolean = false;
@@ -171,6 +188,7 @@ export function translateItemConfig(key: string, config: ItemConfiguration): any
         equippable: config.equippable,
         weight: config.weight,
         destroy: config.destroy || undefined,
+        consumable: config.consumable,
         equipmentData: config.equipment_data ? {
             equipmentType: config.equipment_data?.equipment_type || undefined,
             equipmentSlot: config.equipment_data?.equipment_slot || undefined,

@@ -200,7 +200,7 @@ export class Skills extends SkillShortcuts {
         const start = Skills.confine((index || Skills.MAXIMUM_INDEX), Skills.MINIMUM_LEVEL, Skills.MAXIMUM_INDEX);
         for (let level = start; level >= 1; level--) {
             const requirement = Skills.EXPERIENCE_LOOKUP_TABLE[level];
-            if (exp > requirement) {
+            if (exp >= requirement) {
                 return level + 1;
             }
         }
