@@ -4,7 +4,7 @@ import { getItemFromContainer } from '@server/world/items/item-container';
 import { serverConfig } from '@server/game-server';
 import { Rights } from '@server/world/actor/player/player';
 import { widgets } from '@server/config';
-import { dialogue, Emote, execute } from "@server/world/actor/dialogue";
+import { dialogue, Emote, execute } from '@server/world/actor/dialogue';
 
 export const action: itemAction = ({ player, itemId, itemSlot }) => {
     const inventory = player.inventory;
