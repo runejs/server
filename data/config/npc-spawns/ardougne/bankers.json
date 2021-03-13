@@ -1,0 +1,41 @@
+[
+    {
+        "npc": "rs:banker",
+        "spawn_x": 2657,
+        "spawn_y": 3286,
+        "movement_radius": 0
+    },
+    {
+        "npc": "rs:banker",
+        "spawn_x": 2657,
+        "spawn_y": 3283,
+        "movement_radius": 0
+    },
+    {
+        "npc": "rs:banker",
+        "spawn_x": 2657,
+        "spawn_y": 3280,
+        "movement_radius": 0
+    },
+    {
+        "npc": "rs:banker",
+        "spawn_x": 2619,
+        "spawn_y": 3330,
+        "movement_radius": 0,
+        "face": "NORTH"
+    },
+    {
+        "npc": "rs:banker",
+        "spawn_x": 2618,
+        "spawn_y": 3330,
+        "movement_radius": 0,
+        "face": "NORTH"
+    },
+    {
+        "npc": "rs:banker",
+        "spawn_x": 2615,
+        "spawn_y": 3330,
+        "movement_radius": 0,
+        "face": "NORTH"
+    }
+]

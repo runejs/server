@@ -31,7 +31,7 @@ export class NpcSpawn {
 
 export function translateNpcSpawnConfig(config: NpcSpawnConfiguration): NpcSpawn {
     return new NpcSpawn(config.npc, new Position(config.spawn_x, config.spawn_y, config.spawn_level || 0),
-        config.movement_radius || 0);
+        config.movement_radius || 0, config.face || 'WEST');
 }
 
 export async function loadNpcSpawnConfigurations(path: string): Promise<NpcSpawn[]> {
