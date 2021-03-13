@@ -19,10 +19,10 @@ export type ActionType =
     | 'item_interaction'
     | 'item_on_object'
     | 'item_on_npc'
+    | 'item_on_item'
     | 'item_swap'
     | 'move_item'
     | 'spawned_item_interaction'
-    | 'item_on_item'
 
     | 'player_init'
     | 'player_command'

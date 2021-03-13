@@ -17,7 +17,7 @@ const talkTo : npcInteractionActionHandler = (details) => {
 
 export default {
     npcs: 'rs:varrock_wilough',
-    type: 'npc_action',
+    type: 'npc_interaction',
     options: ['talk-to'],
     walkTo: true,
     handler: talkTo

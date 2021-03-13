@@ -5,7 +5,7 @@ import { logger } from '@runejs/core';
 import { Item } from '@engine/world/items/item';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { playerWalkTo } from '@engine/game-server';
-import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
+import { advancedNumberHookFilter, questHookFilter, stringHookFilter } from '@engine/world/action/hooks/hook-filters';
 import { ActionPipe } from '@engine/world/action/index';
 
 
@@ -13,8 +13,8 @@ import { ActionPipe } from '@engine/world/action/index';
  * Defines an item-on-npc action hook.
  */
 export interface ItemOnNpcActionHook extends ActionHook<itemOnNpcActionHandler> {
-    // A single NPC ID or a list of NPC IDs that this action applies to.
-    npcsIds: number | number[];
+    // A single npc key or a list of npc keys that this action applies to.
+    npcs: string | string[];
     // A single game item ID or a list of item IDs that this action applies to.
     itemIds: number | number[];
     // Whether or not the player needs to walk to this NPC before performing the action.
@@ -65,7 +65,7 @@ const itemOnNpcActionPipe = (player: Player, npc: Npc, position: Position, item:
     // Find all item on npc action plugins that reference this npc and item
     let interactionActions = getActionHooks<ItemOnNpcActionHook>('item_on_npc').filter(plugin =>
         questHookFilter(player, plugin) &&
-        advancedNumberHookFilter(plugin.npcsIds, npc.id) && advancedNumberHookFilter(plugin.itemIds, item.itemId));
+        stringHookFilter(plugin.npcs, npc.key) && advancedNumberHookFilter(plugin.itemIds, item.itemId));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {

@@ -37,13 +37,13 @@ const talkToAction : npcInteractionActionHandler = (details) => {
 };
 
 export default [{
-    type: 'npc_action',
+    type: 'npc_interaction',
     npcs: 'rs:varrock_zaff',
     options: 'trade',
     walkTo: true,
     handler: tradeAction
 }, {
-    type: 'npc_action',
+    type: 'npc_interaction',
     npcs: 'rs:varrock_zaff',
     options: 'talk-to',
     walkTo: true,

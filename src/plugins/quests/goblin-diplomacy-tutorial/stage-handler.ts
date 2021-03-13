@@ -4,7 +4,7 @@ import {
     npcHint, showTabWidgetHint, spawnGoblinBoi,
     startTutorial,
     unlockAvailableTabs
-} from '@plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy';
+} from '@plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy-quest.plugin';
 import { schedule } from '@engine/world/task';
 import { world } from '@engine/game-server';
 import { findNpc } from '@engine/config';

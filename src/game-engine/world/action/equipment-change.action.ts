@@ -13,7 +13,7 @@ export interface EquipmentChangeActionHook extends ActionHook<equipmentChangeAct
     // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
     // A single option name or a list of option names that this action applies to.
-    equipType?: EquipmentChangeType | EquipmentChangeType[];
+    eventType?: EquipmentChangeType | EquipmentChangeType[];
 }
 
 
@@ -66,8 +66,8 @@ const equipmentChangeActionPipe = (player: Player, itemId: number, eventType: Eq
         }
 
 
-        if(equipActionHook.equipType !== undefined) {
-            if(!stringHookFilter(equipActionHook.equipType, eventType)) {
+        if(equipActionHook.eventType !== undefined) {
+            if(!stringHookFilter(equipActionHook.eventType, eventType)) {
                 return false;
             }
         }

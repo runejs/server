@@ -3,7 +3,7 @@ import { logger, parseServerConfig } from '@runejs/core';
 import { Cache, LocationObject } from '@runejs/cache-parser';
 import { ServerConfig } from '@engine/config/server-config';
 
-import { loadPluginFiles } from '@engine/world/plugins/content-plugin';
+import { loadPluginFiles } from '@engine/plugins/content-plugin';
 
 import { loadPackets } from '@engine/net/inbound-packets';
 import { watchForChanges, watchSource } from '@engine/util/files';
@@ -36,14 +36,32 @@ export let cache: Cache;
 export let world: World;
 
 
+/**
+ * A type for describing the plugin action hook map.
+ */
 type PluginActionHookMap = {
     [key in ActionType]?: ActionHook[];
 };
+
+
+/**
+ * A type for describing the plugin action hook map.
+ */
+interface PluginQuestMap {
+    [key: string]: Quest;
+}
+
 
 /**
  * A list of action hooks imported from content plugins.
  */
 export let actionHookMap: PluginActionHookMap = {};
+
+
+/**
+ * A list of quests imported from content plugins.
+ */
+export let questMap: PluginQuestMap = {};
 
 
 /**
@@ -80,6 +98,13 @@ export async function loadPlugins(): Promise<void> {
         });
     } else {
         logger.warn(`No action hooks detected - update plugins.`);
+    }
+
+    const pluginQuestList = plugins?.filter(plugin => !!plugin?.quests)?.map(plugin => plugin.quests);
+
+    if(pluginQuestList && pluginQuestList.length > 0) {
+        pluginQuestList.reduce((prev, curr) => prev.concat(curr))
+            .forEach(quest => questMap[quest.id] = quest);
     }
 
     // @TODO implement proper sorting rules

@@ -41,5 +41,5 @@ export const action: objectInteractionActionHandler = (details) => {
     }, World.TICK_LENGTH);
 };
 
-export default { type: 'object_action', objectIds: [313, 5583, 5584, 5585, 1161, 3366,
+export default { type: 'object_interaction', objectIds: [313, 5583, 5584, 5585, 1161, 3366,
     312, 2646], options: ['pick'], walkTo: true, handler: action };

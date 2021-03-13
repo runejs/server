@@ -65,7 +65,7 @@ const itemInteractionPacket = (player, packet) => {
 
     const option = getItemOption(itemId, packetDetails.optionNumber, { widgetId, containerId });
 
-    actionPipeline.call('item_action', player, itemId, slot, widgetId, containerId, option);
+    actionPipeline.call('item_interaction', player, itemId, slot, widgetId, containerId, option);
 };
 
 export default [{

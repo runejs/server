@@ -41,7 +41,7 @@ export default [
         handler: actionItem
     },
     {
-        type: 'object_action',
+        type: 'object_interaction',
         objectIds: [1782],
         options: ['empty'],
         walkTo: true,

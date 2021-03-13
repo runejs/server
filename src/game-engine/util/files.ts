@@ -14,30 +14,30 @@ export async function* getFiles(directory: string, list: string[] = [], useWhite
     const files = await readdir(directory);
 
     for(const file of files) {
-        if(!useWhitelist) {
-            // blacklist
-            const invalid = list.some(item => file === item);
-
-            if(invalid) {
-                continue;
-            }
-        } else {
-            // whitelist
-            const valid = list.some(item => file === item || file.endsWith(item));
-
-            if(!valid) {
-                continue;
-            }
-        }
-
         const path = directory + '/' + file;
         const statistics = await stat(path);
 
         if(statistics.isDirectory()) {
-            for await (const child of getFiles(path, list)) {
+            for await (const child of getFiles(path, list, useWhitelist)) {
                 yield child;
             }
         } else {
+            if(!useWhitelist) {
+                // blacklist
+                const invalid = list.some(item => file === item);
+
+                if(invalid) {
+                    continue;
+                }
+            } else {
+                // whitelist
+                const invalid = !list.some(item => file.endsWith(item));
+
+                if(invalid) {
+                    continue;
+                }
+            }
+
             yield path;
         }
     }

@@ -13,7 +13,7 @@ const itemSwapPacket = (player, packet) => {
     }
 
     if(swapType === 0) {
-        actionPipeline.call('swap_items', player, fromSlot, toSlot, { widgetId, containerId })
+        actionPipeline.call('item_swap', player, fromSlot, toSlot, { widgetId, containerId })
     } else if(swapType === 1) {
         actionPipeline.call('move_item', player, fromSlot, toSlot, { widgetId, containerId })
     }

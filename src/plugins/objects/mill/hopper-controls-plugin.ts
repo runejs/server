@@ -28,7 +28,7 @@ export const action: objectInteractionActionHandler = (details) => {
 };
 
 export default {
-    type: 'object_action',
+    type: 'object_interaction',
     objectIds: [2718],
     options: ['operate'],
     walkTo: true,

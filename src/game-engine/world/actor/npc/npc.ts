@@ -91,7 +91,7 @@ export class Npc extends Actor {
             this.initiateRandomMovement();
         }
 
-        await actionPipeline.call('npc_init_action', { npc: this });
+        await actionPipeline.call('npc_init', { npc: this });
 
         this._initialized = true;
     }

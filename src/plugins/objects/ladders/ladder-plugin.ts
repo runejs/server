@@ -47,7 +47,7 @@ export const action: objectInteractionActionHandler = (details) => {
 };
 
 export default {
-    type: 'object_action',
+    type: 'object_interaction',
     objectIds: [1738, 1739, 1740, 1746, 1747, 1748, 12964, 12965, 12966],
     options: ['climb', 'climb-up', 'climb-down'],
     walkTo: true,

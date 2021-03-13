@@ -51,7 +51,7 @@ const action = async details => {
 };
 
 module.exports = {
-    type: 'npc_action',
+    type: 'npc_interaction',
     npcs: 'rs:hans',
     options: 'talk-to',
     walkTo: true,

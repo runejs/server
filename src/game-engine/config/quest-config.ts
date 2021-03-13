@@ -2,7 +2,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { logger } from '@runejs/core';
-import { handleTutorial } from '@plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy';
+import { handleTutorial } from '@plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy-quest.plugin';
 
 
 export type QuestKey = number | 'complete';

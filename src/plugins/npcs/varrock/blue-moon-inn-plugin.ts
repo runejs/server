@@ -156,11 +156,11 @@ const talkToCook : npcInteractionActionHandler = (details) => {
 };
 
 export default [{
-    type: 'npc_action',
+    type: 'npc_interaction',
     npcs: 'rs:blue_moon_innk_bartender',
     handler: talkToBartender,
 }, {
-    type: 'npc_action',
+    type: 'npc_interaction',
     npcs: 'rs:blue_moon_inn_cook',
     handler: talkToCook
 }];

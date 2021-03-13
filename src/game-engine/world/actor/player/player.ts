@@ -30,7 +30,7 @@ import { itemIds } from '@engine/world/config/item-ids';
 import { colors, hexToRgb, rgbTo16Bit } from '@engine/util/colors';
 import { ItemDefinition } from '@runejs/cache-parser';
 import { PlayerCommandActionHook } from '@engine/world/action/player-command.action';
-import { updateBonusStrings } from '@plugins/items/equipment/equipment-stats-plugin';
+import { updateBonusStrings } from '@plugins/items/equipment/equipment-stats.plugin';
 import { ActionHook } from '@engine/world/action/hooks';
 import {
     DefensiveBonuses,
@@ -188,7 +188,7 @@ export class Player extends Actor {
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
         for(const item of this.equipment.items) {
             if(item) {
-                actionPipeline.call('equip_action', this, item.itemId, 'EQUIP');
+                actionPipeline.call('equipment_change', this, item.itemId, 'EQUIP');
             }
         }
 
@@ -256,10 +256,10 @@ export class Player extends Actor {
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
 
         if(this.rights === Rights.ADMIN) {
-            this.sendCommandList(actionHookMap.player_command_action as PlayerCommandActionHook[]);
+            this.sendCommandList(actionHookMap.player_command as PlayerCommandActionHook[]);
         }
 
-        await actionPipeline.call('player_init_action', { player: this });
+        await actionPipeline.call('player_init', { player: this });
 
         world.spawnWorldItems(this);
         this.chunkChanged(playerChunk);
@@ -602,7 +602,7 @@ export class Player extends Actor {
         if(!oldChunk.equals(newChunk)) {
             this.metadata['updateChunk'] = { newChunk, oldChunk };
 
-            actionPipeline.call('region_change_action', regionChangeActionFactory(
+            actionPipeline.call('region_change', regionChangeActionFactory(
                 this, originalPosition, newPosition, true));
         }
     }
@@ -728,6 +728,10 @@ export class Player extends Actor {
     }
 
     public sendCommandList(commands: PlayerCommandActionHook[]): void {
+        if(!commands || commands.length === 0) {
+            return;
+        }
+
         for(const command of commands) {
             let strCmd: string;
             if(Array.isArray(command.commands)) {
@@ -812,7 +816,7 @@ export class Player extends Actor {
                 return false;
             }
 
-            actionPipeline.call('equip_action', this, itemToUnequip.itemId, 'UNEQUIP', slot);
+            actionPipeline.call('equipment_change', this, itemToUnequip.itemId, 'UNEQUIP', slot);
 
             this.equipment.remove(slotIndex, false);
             this.inventory.remove(itemSlot, false);
@@ -833,7 +837,7 @@ export class Player extends Actor {
             }
         }
 
-        actionPipeline.call('equip_action', this, itemId, 'EQUIP', slot);
+        actionPipeline.call('equipment_change', this, itemId, 'equip', slot);
         this.equipmentChanged();
         return true;
     }
@@ -874,7 +878,7 @@ export class Player extends Actor {
             return true;
         }
 
-        actionPipeline.call('equip_action', this, itemInSlot.itemId, 'UNEQUIP', slot);
+        actionPipeline.call('equipment_change', this, itemInSlot.itemId, 'unequip', slot);
 
         this.equipment.remove(slotIndex);
         this.inventory.set(inventorySlot, itemInSlot);

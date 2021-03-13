@@ -6,6 +6,7 @@
     "scripts": {
         "start": "npm run build && concurrently \"npm run build:watch\" \"npm run start:infra\" \"npm run start:game\"",
         "start:game": "nodemon --delay 5000ms --max-old-space-size=2048 dist/index.js",
+        "start:game:dev": "concurrently \"npm run build:watch\" \"npm run start:game\"",
         "start:login": "node --max-old-space-size=1024 dist/game-engine/login-server.js",
         "start:update": "node --max-old-space-size=1024 dist/game-engine/update-server.js",
         "start:infra": "concurrently \"npm run start:update\" \"npm run start:login\"",

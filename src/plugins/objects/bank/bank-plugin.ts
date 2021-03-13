@@ -222,24 +222,24 @@ const useBankBoothAction : objectInteractionActionHandler = (details) => {
 };
 
 export default [{
-    type: 'object_action',
+    type: 'object_interaction',
     objectIds: objectIds.bankBooth,
     options: ['use'],
     walkTo: true,
     handler: useBankBoothAction
 }, {
-    type: 'object_action',
+    type: 'object_interaction',
     objectIds: objectIds.bankBooth,
     options: ['use-quickly'],
     walkTo: true,
     handler: openBankInterface
 }, {
-    type: 'item_action',
+    type: 'item_interaction',
     widgets: widgets.bank.tabWidget,
     options: ['deposit-1', 'deposit-5', 'deposit-10', 'deposit-all'],
     handler: depositItem,
 }, {
-    type: 'item_action',
+    type: 'item_interaction',
     widgets: widgets.bank.screenWidget,
     options: ['withdraw-1', 'withdraw-5', 'withdraw-10', 'withdraw-all'],
     handler: withdrawItem,

@@ -43,7 +43,7 @@ export const actionInteract: objectInteractionActionHandler = (details) => milkC
 export default
 [
     {
-        type: 'object_action',
+        type: 'object_interaction',
         objectIds: objectIds.milkableCow,
         options: 'milk',
         walkTo: true,

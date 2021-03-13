@@ -78,13 +78,13 @@ const gillieDialogue: npcInteractionActionHandler = async (details) =>
     ]);
 
 export default [{
-    type: 'npc_action',
+    type: 'npc_interaction',
     npcs: 'rs:gillie_groats',
     options: 'talk-to',
     walkTo: true,
     handler: gillieDialogue
 }, {
-    type: 'npc_action',
+    type: 'npc_interaction',
     npcs: 'rs:millie_miller',
     options: 'talk-to',
     walkTo: true,

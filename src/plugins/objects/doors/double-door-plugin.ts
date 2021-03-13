@@ -96,5 +96,5 @@ const action: objectInteractionActionHandler = (details) => {
     });
 };
 
-export default { type: 'object_action', objectIds: [1519, 1516, 1517, 1520],
+export default { type: 'object_interaction', objectIds: [1519, 1516, 1517, 1520],
     options: [ 'open', 'close' ], walkTo: true, handler: action };
