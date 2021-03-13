@@ -87,15 +87,20 @@ export const depositItem: itemInteractionActionHandler = (details) => {
 
 
 
-export default [{
-    type: 'object_interaction',
-    objectIds: objectIds.depositBox,
-    options: ['deposit'],
-    walkTo: true,
-    handler: openDepositBoxInterface
-}, {
-    type: 'item_interaction',
-    widgets: widgets.bank.depositBoxWidget,
-    options: ['deposit-1', 'deposit-5', 'deposit-10', 'deposit-all'],
-    handler: depositItem,
-}];
+export default {
+    pluginId: 'rs:bank_deposit_box',
+    hooks: [
+        {
+            type: 'object_interaction',
+            objectIds: objectIds.depositBox,
+            options: [ 'deposit' ],
+            walkTo: true,
+            handler: openDepositBoxInterface
+        }, {
+            type: 'item_interaction',
+            widgets: widgets.bank.depositBoxWidget,
+            options: [ 'deposit-1', 'deposit-5', 'deposit-10', 'deposit-all' ],
+            handler: depositItem,
+        }
+    ]
+};

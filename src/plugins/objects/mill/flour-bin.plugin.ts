@@ -32,19 +32,22 @@ const actionItem: itemOnObjectActionHandler = (details) => {
     flourBin(details);
 };
 
-export default [
-    {
-        type: 'item_on_object',
-        objectIds: [1782],
-        itemIds: [itemIds.pot],
-        walkTo: true,
-        handler: actionItem
-    },
-    {
-        type: 'object_interaction',
-        objectIds: [1782],
-        options: ['empty'],
-        walkTo: true,
-        handler: actionInteract
-    }
-];
+export default {
+    pluginId: 'rs:flour_bin',
+    hooks: [
+        {
+            type: 'item_on_object',
+            objectIds: [ 1782 ],
+            itemIds: [ itemIds.pot ],
+            walkTo: true,
+            handler: actionItem
+        },
+        {
+            type: 'object_interaction',
+            objectIds: [ 1782 ],
+            options: [ 'empty' ],
+            walkTo: true,
+            handler: actionInteract
+        }
+    ]
+};

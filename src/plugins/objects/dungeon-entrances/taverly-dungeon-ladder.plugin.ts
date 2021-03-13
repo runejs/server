@@ -23,19 +23,22 @@ export const exitDungeon: objectInteractionActionHandler = (details) => {
 };
 
 
-export default [
-    {
-        type: 'object_interaction',
-        objectIds: objectIds.ladders.taverlyDungeonOverworld,
-        options: ['climb-down'],
-        walkTo: true,
-        handler: enterDungeon
-    },
-    {
-        type: 'object_interaction',
-        objectIds: objectIds.ladders.taverlyDungeonUnderground,
-        options: ['climb-up'],
-        walkTo: true,
-        handler: exitDungeon
-    }
-];
+export default {
+    pluginId: 'rs:taverly_dungeon_ladder',
+    hooks: [
+        {
+            type: 'object_interaction',
+            objectIds: objectIds.ladders.taverlyDungeonOverworld,
+            options: [ 'climb-down' ],
+            walkTo: true,
+            handler: enterDungeon
+        },
+        {
+            type: 'object_interaction',
+            objectIds: objectIds.ladders.taverlyDungeonUnderground,
+            options: [ 'climb-up' ],
+            walkTo: true,
+            handler: exitDungeon
+        }
+    ]
+};

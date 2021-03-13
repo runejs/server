@@ -3,6 +3,7 @@ import { dialogueAction } from '@engine/world/actor/player/dialogue-action';
 import { World } from '@engine/world';
 import { Position } from '@engine/world/position';
 
+
 const planes = { min: 0, max: 3 };
 const validate: (level: number) => boolean = (level) => {
     return planes.min <= level && level <= planes.max;
@@ -21,10 +22,10 @@ export const action: objectInteractionActionHandler = (details) => {
                 ]))
             .then(d => {
                 d.close();
-                switch (d.handler) {
+                switch (d.action) {
                     case 1:
                     case 2:
-                        action({ ...details, option: `climb-${(d.handler === 1 ? 'up' : 'down')}` });
+                        action({ ...details, option: `climb-${(d.action === 1 ? 'up' : 'down')}` });
                         return;
                 }
             });
@@ -47,9 +48,14 @@ export const action: objectInteractionActionHandler = (details) => {
 };
 
 export default {
-    type: 'object_interaction',
-    objectIds: [1738, 1739, 1740, 1746, 1747, 1748, 12964, 12965, 12966],
-    options: ['climb', 'climb-up', 'climb-down'],
-    walkTo: true,
-    handler: action
+    pluginId: 'rs:ladders',
+    hooks: [
+        {
+            type: 'object_interaction',
+            objectIds: [ 1738, 1739, 1740, 1746, 1747, 1748, 12964, 12965, 12966 ],
+            options: [ 'climb', 'climb-up', 'climb-down' ],
+            walkTo: true,
+            handler: action
+        }
+    ]
 };

@@ -2,7 +2,7 @@ import { Position } from '@engine/world/position';
 import { WNES } from '@engine/world/direction';
 import { logger } from '@runejs/core';
 import { world } from '@engine/game-server';
-import { action as doorAction } from '@plugins/objects/doors/door-plugin';
+import { action as doorAction } from '@plugins/objects/doors/door.plugin';
 import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
 
 const doubleDoors = [
@@ -96,5 +96,12 @@ const action: objectInteractionActionHandler = (details) => {
     });
 };
 
-export default { type: 'object_interaction', objectIds: [1519, 1516, 1517, 1520],
-    options: [ 'open', 'close' ], walkTo: true, handler: action };
+export default {
+    pluginId: 'rs:double_doors',
+    hooks: [
+        {
+            type: 'object_interaction', objectIds: [ 1519, 1516, 1517, 1520 ],
+            options: [ 'open', 'close' ], walkTo: true, handler: action
+        }
+    ]
+};

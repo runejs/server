@@ -23,9 +23,14 @@ export const action: itemOnObjectActionHandler = (details) => {
 };
 
 export default {
-    type: 'item_on_object',
-    objectIds: [2714],
-    itemIds: [itemIds.grain],
-    walkTo: true,
-    handler: action
+    pluginId: 'rs:grain_hopper',
+    hooks: [
+        {
+            type: 'item_on_object',
+            objectIds: [ 2714 ],
+            itemIds: [ itemIds.grain ],
+            walkTo: true,
+            handler: action
+        }
+    ]
 };

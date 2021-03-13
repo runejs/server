@@ -28,9 +28,14 @@ export const action: objectInteractionActionHandler = (details) => {
 };
 
 export default {
-    type: 'object_interaction',
-    objectIds: [2718],
-    options: ['operate'],
-    walkTo: true,
-    handler: action
+    pluginId: 'rs:grain_hopper_controls',
+    hooks: [
+        {
+            type: 'object_interaction',
+            objectIds: [ 2718 ],
+            options: [ 'operate' ],
+            walkTo: true,
+            handler: action
+        }
+    ]
 };

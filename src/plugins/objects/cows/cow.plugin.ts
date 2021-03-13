@@ -40,20 +40,22 @@ export const actionItem: itemOnObjectActionHandler = (details) => milkCow(detail
 
 export const actionInteract: objectInteractionActionHandler = (details) => milkCow(details);
 
-export default
-[
-    {
-        type: 'object_interaction',
-        objectIds: objectIds.milkableCow,
-        options: 'milk',
-        walkTo: true,
-        handler: actionInteract
-    },
-    {
-        type: 'item_on_object',
-        objectIds: objectIds.milkableCow,
-        itemIds: itemIds.bucket,
-        walkTo: true,
-        handler: actionItem
-    }
-];
+export default {
+    pluginId: 'rs:cow_milking',
+    hooks: [
+        {
+            type: 'object_interaction',
+            objectIds: objectIds.milkableCow,
+            options: 'milk',
+            walkTo: true,
+            handler: actionInteract
+        },
+        {
+            type: 'item_on_object',
+            objectIds: objectIds.milkableCow,
+            itemIds: itemIds.bucket,
+            walkTo: true,
+            handler: actionItem
+        }
+    ]
+};

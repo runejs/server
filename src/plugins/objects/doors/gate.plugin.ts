@@ -205,6 +205,11 @@ const action: objectInteractionActionHandler = (details) => {
 };
 
 export default {
-    type: 'object_interaction', objectIds: [1551, 1552, 1553, 1556, 12986, 12987, 12988, 12989],
-    options: ['open', 'close'], walkTo: true, handler: action
+    pluginId: 'rs:gates',
+    hooks: [
+        {
+            type: 'object_interaction', objectIds: [ 1551, 1552, 1553, 1556, 12986, 12987, 12988, 12989 ],
+            options: [ 'open', 'close' ], walkTo: true, handler: action
+        }
+    ]
 };
