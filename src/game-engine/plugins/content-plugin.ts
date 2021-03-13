@@ -37,7 +37,12 @@ export async function loadPluginFiles(): Promise<ContentPlugin[]> {
 
             const plugin = pluginFile as ContentPlugin;
             if(!plugin.pluginId) {
-                logger.error(`Plugin ID not provided for .plugin file at ${path}`);
+                logger.error(`Error loading plugin: Plugin ID not provided for .plugin file at ${path}`);
+                continue;
+            }
+
+            if(plugins.find(loadedPlugin => loadedPlugin.pluginId === plugin.pluginId)) {
+                logger.error(`Error loading plugin: Duplicate plugin ID ${plugin.pluginId} at ${path}`);
                 continue;
             }
 
