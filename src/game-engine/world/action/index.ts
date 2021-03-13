@@ -66,6 +66,14 @@ export class ActionPipeline {
     public constructor(public readonly actor: Actor) {
     }
 
+    public static getPipe(action: ActionType): Map<string, any> {
+        return ActionPipeline.pipes.get(action);
+    }
+
+    public static register(action: ActionType, actionPipe: (...args: any[]) => void): void {
+        ActionPipeline.pipes.set(action.toString(), actionPipe);
+    }
+
     public async call(action: ActionType, ...args: any[]): Promise<void> {
         const actionHandler = ActionPipeline.pipes.get(action.toString());
         if(actionHandler) {
@@ -79,14 +87,6 @@ export class ActionPipeline {
                 logger.error(error);
             }
         }
-    }
-
-    public static getPipe(action: ActionType): Map<string, any> {
-        return ActionPipeline.pipes.get(action);
-    }
-
-    public static register(action: ActionType, actionPipe: (...args: any[]) => void): void {
-        ActionPipeline.pipes.set(action.toString(), actionPipe);
     }
 
 }
