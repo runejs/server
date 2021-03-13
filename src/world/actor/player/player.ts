@@ -29,6 +29,8 @@ import { colors, hexToRgb, rgbTo16Bit } from '@server/util/colors';
 import { ItemDefinition } from '@runejs/cache-parser';
 import { PlayerCommandAction } from '@server/world/action/player-command-action';
 import { updateBonusStrings } from '@server/plugins/items/equipment/equipment-stats-plugin';
+import { musicRegions } from '@server/config/index';
+
 import { Action, actionHandler } from '@server/world/action';
 import {
     DefensiveBonuses,
@@ -48,6 +50,7 @@ import { dialogue } from '@server/world/actor/dialogue';
 import { PlayerQuest, QuestKey } from '@server/config/quest-config';
 import { Quest } from '@server/world/actor/player/quest';
 import { regionChangedDataFactory } from '@server/world/action/player-region-changed';
+import {PlayerMusicTrack} from "@server/plugins/music/music-track";
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
@@ -119,6 +122,7 @@ export class Player extends Actor {
     public savedMetadata: { [key: string]: any } = {};
     public sessionMetadata: { [key: string]: any } = {};
     public quests: PlayerQuest[] = [];
+    public musicTracks: { [key: string]: any } = {};
     public achievements: string[] = [];
     public friendsList: string[] = [];
     public ignoreList: string[] = [];
@@ -233,8 +237,8 @@ export class Player extends Actor {
 
         this.updateBonuses();
         this.updateCarryWeight(true);
-        this.modifyWidget(widgets.musicPlayerTab, { childId: 82, textColor: colors.green }); // Set "Harmony" to green/unlocked on the music tab
         this.updateQuestTab();
+        this.updateMusicTab();
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
 
@@ -1001,6 +1005,23 @@ export class Player extends Actor {
         });
     }
 
+  /**
+   * Updates the player's quest tab progress.
+   */
+  private updateMusicTab(): void {
+    Object.keys(musicRegions).forEach(key => {
+      const musicData = musicRegions[key];
+      let color = colors.red;
+
+      if(this.musicTracks[musicData.songId]) {
+        color = colors.green;
+      }
+
+      // this.sendMessage("Updating " + musicData.songName);
+      this.modifyWidget(widgets.musicPlayerTab, { childId: musicData.musicTabButtonId, textColor: color });
+    });
+  }
+
     private addBonuses(item: Item): void {
         const itemData: ItemDetails = findItem(item.itemId);
 
@@ -1076,6 +1097,9 @@ export class Player extends Actor {
 
             if(playerSave.questList) {
                 this.quests = playerSave.questList;
+            }
+            if(playerSave.musicTracks) {
+                this.musicTracks = playerSave.musicTracks;
             }
             if(playerSave.achievements) {
                 this.achievements = playerSave.achievements;

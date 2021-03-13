@@ -1,7 +1,9 @@
-import { musicRegionMap, musicRegions } from '@server/config';
+import {findMusicTrack, musicRegionMap, musicRegions, widgets} from '@server/config';
 import { songs } from '@server/world/config/songs';
 import { playerRegionChangedHook } from '@server/world/action/player-region-changed';
 import { playerInitAction } from '@server/world/actor/player/player';
+import {PlayerMusicTrack} from "@server/plugins/music/music-track";
+import {colors} from "@server/util/colors";
 
 
 musicRegions.forEach(song => song.regionIds.forEach(region => musicRegionMap.set(region, song.songId)));
@@ -15,9 +17,17 @@ function getByValue(map, searchValue) {
 
 const regionChangedHandler = ({ player, currentMapRegionId }): void => {
     const songId: number = musicRegionMap.get(currentMapRegionId);
-    player.sendMessage(`Playing ${songId}:${getByValue(songs, songId)} at region ${currentMapRegionId}`);
-    player.playSong(songId);
-    player.metadata['updateMusic'] = false;
+    const songName = findMusicTrack(songId).songName;
+    // player.sendMessage(`Playing ${songId}:${getByValue(songs, songId)} at region ${currentMapRegionId}`);
+    let playerTrack = new PlayerMusicTrack(songId, true);
+    if(!player.musicTracks[songId]) {
+      player.sendMessage('You have unlocked a new music track: <col=ef101f>' + songName + '.</col>');
+      player.musicTracks[songId] = true;
+      player.modifyWidget(widgets.musicPlayerTab, { childId:  findMusicTrack(songId).musicTabButtonId, textColor: colors.green });
+    }
+  player.modifyWidget(widgets.musicPlayerTab, { childId: 177, text: songName, textColor: colors.green });
+  player.playSong(songId);
+    //player.metadata['updateMusic'] = false;
 };
 
 const playerInitHandler: playerInitAction = ({ player }): void => {

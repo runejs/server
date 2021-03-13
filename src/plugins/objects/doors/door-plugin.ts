@@ -11,6 +11,11 @@ const doors = [
         hinge: 'RIGHT'
     },
     {
+        closed: 11707,
+        open: 11708,
+        hinge: 'RIGHT'
+    },
+    {
         closed: 1533,
         open: 1534,
         hinge: 'RIGHT'
@@ -88,4 +93,4 @@ export const action: objectAction = ({ player, object: door, position, cacheOrig
 };
 
 export default { type: 'object_action', objectIds: [1530, 4465, 4467, 3014, 3017, 3018,
-    3019, 1536, 1537, 1533, 1531, 1534, 12348, 11993, 11994], options: [ 'open', 'close' ], walkTo: true, action };
+    3019, 1536, 1537, 1533, 1531, 1534, 11707, 11708, 12348, 11993, 11994], options: [ 'open', 'close' ], walkTo: true, action };

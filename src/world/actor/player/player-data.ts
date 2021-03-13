@@ -6,6 +6,7 @@ import { Player } from './player';
 import { SkillValue } from '@server/world/actor/skills';
 import { hasValueNotNull } from '@server/util/data';
 import { PlayerQuest } from '@server/config/quest-config';
+import { PlayerMusicTrack } from "@server/plugins/music/music-track";
 
 
 export interface Appearance {
@@ -64,6 +65,7 @@ export interface PlayerSave {
     settings: PlayerSettings;
     savedMetadata: { [key: string]: any };
     questList: PlayerQuest[];
+    musicTracks: { [key: string]: boolean };
     achievements: string[];
     friendsList: string[];
     ignoreList: string[];
@@ -133,6 +135,7 @@ export function savePlayerData(player: Player): boolean {
         settings: player.settings,
         savedMetadata: player.savedMetadata,
         questList: player.quests,
+        musicTracks: player.musicTracks,
         achievements: player.achievements,
         friendsList: player.friendsList,
         ignoreList: player.ignoreList

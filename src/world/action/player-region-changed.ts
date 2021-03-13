@@ -59,8 +59,8 @@ export interface PlayerRegionChangedAction extends Action {
  * @param teleporting Whether or not the player is teleporting; defaults to false.
  */
 export const regionChangedDataFactory = (player: Player,
-                                         originalPosition: Position, currentPosition: Position,
-                                         teleporting: boolean = false): PlayerRegionChangedData => {
+    originalPosition: Position, currentPosition: Position,
+    teleporting: boolean = false): PlayerRegionChangedData => {
     const regionTypes: RegionType[] = [];
     const originalMapRegionId: number = ((originalPosition.x >> 6) << 8) + (originalPosition.y >> 6);
     const currentMapRegionId: number = ((currentPosition.x >> 6) << 8) + (currentPosition.y >> 6);

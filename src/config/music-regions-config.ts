@@ -4,35 +4,32 @@ export interface MusicRegionsConfiguration {
   songId: number;
   songName: string;
   musicTabButtonId: number;
-  musicTabInterfaceId: number;
   regionIds: number[];
 }
 
 
-export class MusicRegions {
+export class MusicTrack {
 
   public songId: number;
   public songName: string;
   public musicTabButtonId: number;
-  public musicTabInterfaceId: number;
   public regionIds: number[];
 
-  public constructor(songId: number, songName: string, musicTabButtonId: number, musicTabInterfaceId: number, regionIds: number[]) {
+  public constructor(songId: number, songName: string, musicTabButtonId: number, regionIds: number[]) {
       this.songId = songId;
       this.songName = songName;
       this.musicTabButtonId = musicTabButtonId;
-      this.musicTabInterfaceId = musicTabInterfaceId;
       this.regionIds = regionIds;
   }
 }
 
-export function translateMusicRegionsConfig(config: MusicRegionsConfiguration): MusicRegions {
-    return new MusicRegions(config.songId, config.songName, config.musicTabButtonId, config.musicTabInterfaceId, config.regionIds);
+export function translateMusicRegionsConfig(config: MusicRegionsConfiguration): MusicTrack {
+    return new MusicTrack(config.songId, config.songName, config.musicTabButtonId, config.regionIds);
 }
 
-export async function loadMusicRegionConfigurations(): Promise<MusicRegions[]> {
+export async function loadMusicRegionConfigurations(): Promise<MusicTrack[]> {
     const regions = [];
 
-    await musicRegionsFile.musicRegions.forEach(musicRegion => regions.push(translateMusicRegionsConfig(musicRegion)));
+   await musicRegionsFile.musicRegions.forEach(musicRegion => regions.push(translateMusicRegionsConfig(musicRegion)));
     return regions;
 }

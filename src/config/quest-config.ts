@@ -32,7 +32,6 @@ export interface QuestCompletion {
 }
 
 export class PlayerQuest {
-
     public readonly questId: string;
     public progress: QuestKey = 0;
     public complete: boolean = false;
@@ -41,7 +40,6 @@ export class PlayerQuest {
     public constructor(questId: string) {
         this.questId = questId;
     }
-
 }
 
 export function questDialogueActionFactory(questId: string, npcDialogueHandler: QuestDialogueHandler): npcAction {

@@ -1,105 +1,1060 @@
-- name: Lumbridge
-  x: 3221
-  y: 3219
+- name: Abandoned Mine
+  x: 3441
+  y: 3236
+  z: 0
+- name: Agility Arena
+  x: 2809
+  y: 3191
+  z: 0
+- name: Agility Pyramid
+  x: 3364
+  y: 2840
+  z: 0
+- name: Agility Training Area 1
+  x: 2481
+  y: 3424
+  z: 0
+- name: Agility Training Area 2
+  x: 2533
+  y: 3538
+  z: 0
+- name: Agility Training Area 3
+  x: 2998
+  y: 3952
+  z: 0
 - name: Al Kharid
   x: 3293
-  y: 3184
-- name: Varrock
-  x: 3213
-  y: 3425
-- name: Barbarian Outpost
-  x: 2520
-  y: 3570
-- name: Barbarian Village
-  x: 3082
-  y: 3416
-- name: Edgeville
-  x: 3089
-  y: 3487
-- name: Draynor Village
-  x: 3083
-  y: 3249
-- name: Wizard's Tower
-  x: 3113
-  y: 3169
-- name: Port Sarim
-  x: 3019
-  y: 3244
-- name: Rimmington
-  x: 2956
-  y: 3209
-- name: Falador
-  x: 2965
-  y: 3383
-- name: Taverly
-  x: 2895
-  y: 3436
-- name: Burthorpe
-  x: 2898
-  y: 3544
-- name: Catherby
-  x: 2805
-  y: 3435
-- name: Seer's Village
-  x: 2730
-  y: 3485
-- name: Rellekka
-  x: 2659
-  y: 3657
-- name: Entrana
-  x: 2827
-  y: 3343
-- name: Karamja
-  x: 2917
-  y: 3175
-- name: Brimhaven
-  x: 2795
-  y: 3177
-- name: Shilo Village
-  x: 2849
-  y: 2961
-- name: Marim
-  x: 2758
-  y: 2781
-- name: Yanille
-  x: 2605
-  y: 3093
-- name: Port Khazard
+  y: 3151
+  z: 0
+- name: Ape Atoll
+  x: 2747
+  y: 2751
+  z: 0
+- name: Arandar
+  x: 2342
+  y: 3294
+  z: 0
+- name: Ardougne Sewers
+  x: 2567
+  y: 9682
+  z: 0
+- name: Ardougne Sewers Mine
   x: 2655
-  y: 3157
-- name: Ardougne
-  x: 2663
-  y: 3305
-- name: West Ardougne
-  x: 2533
-  y: 3306
-- name: Tree Gnome Stronghold
-  x: 2450
-  y: 3422
-- name: Digsite
-  x: 3359
-  y: 3416
-- name: Canifis
-  x: 3494
-  y: 3483
-- name: Mort'ton
-  x: 3488
+  y: 9677
+  z: 0
+- name: Ardougne Zoo
+  x: 2612
+  y: 3275
+  z: 0
+- name: Asgarnian Ice Dungeon
+  x: 3038
+  y: 9580
+  z: 0
+- name: Ah Za Rhoon
+  x: 2908
+  y: 9336
+  z: 0
+- name: Bandit Camp
+  x: 3037
+  y: 3699
+  z: 0
+- name: Bandit Camp
+  x: 3171
+  y: 2979
+  z: 0
+- name: Barbarian Outpost
+  x: 2552
+  y: 3561
+  z: 0
+- name: Barbarian Village
+  x: 3080
+  y: 3419
+  z: 0
+- name: Barrows
+  x: 3564
   y: 3288
-- name: Port Phasmatys
-  x: 3666
-  y: 3486
-- name: Ruins of Uzer
-  x: 3482
-  y: 3090
-- name: Nardah
-  x: 3419
-  y: 2917
-- name: Sophanem
-  x: 3305
-  y: 2788
-- name: Pollnivneach
-  x: 3358
-  y: 2970
+  z: 0
+- name: Barrows Crypt
+  x: 3551
+  y: 9695
+  z: 0
+- name: Battlefield
+  x: 2520
+  y: 3232
+  z: 0
+- name: Baxtorian Falls
+  x: 2513
+  y: 3461
+  z: 0
+- name: Bear
+  x: 3285
+  y: 3838
+  z: 0
 - name: Bedabin Camp
   x: 3169
-  y: 3034
+  y: 3036
+  z: 0
+- name: Beehives
+  x: 2759
+  y: 3442
+  z: 0
+- name: Black Knights' Fortress
+  x: 3025
+  y: 3514
+  z: 0
+- name: Bone Yard
+  x: 3236
+  y: 3746
+  z: 0
+- name: Brimhaven
+  x: 2773
+  y: 3176
+  z: 0
+- name: Brimhaven Dungeon
+  x: 2668
+  y: 9520
+  z: 0
+- name: Burgh de Rott
+  x: 3495
+  y: 3218
+  z: 0
+- name: Burthorpe
+  x: 2893
+  y: 3541
+  z: 0
+- name: Cairn Isle
+  x: 2765
+  y: 2976
+  z: 0
+- name: Cairn Island Dungeon
+  x: 2764
+  y: 9376
+  z: 0
+- name: Camelot Castle
+  x: 2758
+  y: 3507
+  z: 0
+- name: Canifis
+  x: 3495
+  y: 3487
+  z: 0
+- name: Castle Wars
+  x: 2430
+  y: 3104
+  z: 0
+- name: Catherby
+  x: 2821
+  y: 3433
+  z: 0
+- name: Champions' Guild
+  x: 3191
+  y: 3360
+  z: 0
+- name: Chaos Druid Tower Dungeon
+  x: 2580
+  y: 9743
+  z: 0
+- name: Chaos Temple
+  x: 2933
+  y: 3514
+  z: 0
+- name: Chaos Temple
+  x: 3240
+  y: 3608
+  z: 0
+- name: Clan Wars
+  x: 3371
+  y: 3162
+  z: 0
+- name: Clan Wars
+  x: 3422
+  y: 4735
+  z: 0
+- name: Clocktower
+  x: 2571
+  y: 3240
+  z: 0
+- name: Clocktower Dungeon
+  x: 2590
+  y: 9630
+  z: 0
+- name: Coal Trucks
+  x: 2598
+  y: 3489
+  z: 0
+- name: Combat Training Camp
+  x: 2515
+  y: 3369
+  z: 0
+- name: Cooks' Guild
+  x: 3143
+  y: 3447
+  z: 0
+- name: Cosmic entity's plane
+  x: 2079
+  y: 4828
+  z: 0
+- name: Crafting Guild
+  x: 2926
+  y: 3281
+  z: 0
+- name: Crandor
+  x: 2836
+  y: 3271
+  z: 0
+- name: Crandor Dungeon
+  x: 2849
+  y: 9636
+  z: 0
+- name: Crash Island
+  x: 2914
+  y: 2720
+  z: 0
+- name: Dark Warriors' Fortress
+  x: 3029
+  y: 3630
+  z: 0
+- name: Dark Wizards' Tower
+  x: 2908
+  y: 3334
+  z: 0
+- name: Death Plateau
+  x: 2863
+  y: 3590
+  z: 0
+- name: Deep Wilderness Dungeon
+  x: 3040
+  y: 10336
+  z: 0
+- name: Demonic Ruins
+  x: 3289
+  y: 3885
+  z: 0
+- name: Desert Mining Camp
+  x: 3288
+  y: 3021
+  z: 0
+- name: Deserted Keep
+  x: 3153
+  y: 3931
+  z: 0
+- name: Digsite
+  x: 3362
+  y: 3417
+  z: 0
+- name: Dragontooth Island
+  x: 3806
+  y: 3554
+  z: 0
+- name: Draynor Manor
+  x: 3104
+  y: 3341
+  z: 0
+- name: Draynor Sewers
+  x: 3107
+  y: 9672
+  z: 0
+- name: Draynor Village
+  x: 3105
+  y: 3258
+  z: 0
+- name: Druids' Circle
+  x: 2925
+  y: 3482
+  z: 0
+- name: Duel Arena
+  x: 3361
+  y: 3232
+  z: 0
+- name: Dwarven Mine
+  x: 3015
+  y: 3445
+  z: 0
+- name: Dwarven Mine Dungeon
+  x: 3024
+  y: 9791
+  z: 0
+- name: Eagles' Peak
+  x: 2332
+  y: 3486
+  z: 0
+- name: East Ardougne
+  x: 2598
+  y: 3295
+  z: 0
+- name: Ectofuntus
+  x: 3659
+  y: 3519
+  z: 0
+- name: Edgeville Dungeon
+  x: 3114
+  y: 9917
+  z: 0
+- name: Edgeville
+  x: 3086
+  y: 3497
+  z: 0
+- name: Elemental Workshop
+  x: 1963
+  y: 5149
+  z: 0
+- name: Elf Camp
+  x: 2196
+  y: 3251
+  z: 0
+- name: Enakhra's Temple Bottom Floor
+  x: 3104
+  y: 9312
+  z: 0
+- name: Entrana
+  x: 2843
+  y: 3378
+  z: 0
+- name: Etceteria
+  x: 2609
+  y: 3874
+  z: 0
+- name: Exam Centre
+  x: 3363
+  y: 3339
+  z: 0
+- name: Falador
+  x: 3004
+  y: 3361
+  z: 0
+- name: Falador Mole Lair
+  x: 1760
+  y: 5190
+  z: 0
+- name: Falconer
+  x: 2374
+  y: 3604
+  z: 0
+- name: Feldip Hills
+  x: 2556
+  y: 2982
+  z: 0
+- name: Ferox Enclave
+  x: 3141
+  y: 3629
+  z: 0
+- name: Fenkenstrain's Castle
+  x: 3548
+  y: 3554
+  z: 0
+- name: Fenkenstrain's Dungeon
+  x: 3519
+  y: 9952
+  z: 0
+- name: Fight Arena
+  x: 2592
+  y: 3161
+  z: 0
+- name: Fishing Guild
+  x: 2604
+  y: 3400
+  z: 0
+- name: Fishing Platform
+  x: 2772
+  y: 3283
+  z: 0
+- name: Flax
+  x: 2744
+  y: 3443
+  z: 0
+- name: Forinthry Dungeon
+  x: 3211
+  y: 10150
+  z: 0
+- name: Fountain of Rune
+  x: 3378
+  y: 3891
+  z: 0
+- name: Fremennik Province
+  x: 2666
+  y: 3632
+  z: 0
+- name: Fremennik Slayer Dungeon
+  x: 2805
+  y: 10001
+  z: 0
+- name: Frozen Waste Plateau
+  x: 2962
+  y: 3917
+  z: 0
+- name: 2006 Easter Event
+  x: 2464
+  y: 5280
+  z: 0
+- name: Glarial's Tomb
+  x: 2543
+  y: 9827
+  z: 0
+- name: Gnome Ball Field
+  x: 2395
+  y: 3486
+  z: 0
+- name: Goblin Cave
+  x: 2587
+  y: 9830
+  z: 0
+- name: Goblin Village
+  x: 2956
+  y: 3505
+  z: 0
+- name: Golden Apple Tree
+  x: 2766
+  y: 3607
+  z: 0
+- name: Grand Tree
+  x: 2464
+  y: 3501
+  z: 0
+- name: Grand Tree Tunnels
+  x: 2463
+  y: 9887
+  z: 0
+- name: Graveyard of Shadows
+  x: 3164
+  y: 3672
+  z: 0
+- name: Graveyard
+  x: 3569
+  y: 3404
+  z: 0
+- name: Gu'Tanoth
+  x: 2521
+  y: 3043
+  z: 0
+- name: Haunted Woods
+  x: 3564
+  y: 3490
+  z: 0
+- name: Hemenster
+  x: 2634
+  y: 3437
+  z: 0
+- name: Heroes' Guild
+  x: 2896
+  y: 3510
+  z: 0
+- name: Iban's Lair
+  x: 2335
+  y: 9855
+  z: 0
+- name: Ice Mountain
+  x: 3007
+  y: 3481
+  z: 0
+- name: Ice path
+  x: 2854
+  y: 3808
+  z: 0
+- name: Ice Queen's lair
+  x: 2865
+  y: 9954
+  z: 0
+- name: Isafdar
+  x: 2244
+  y: 3180
+  z: 0
+- name: Jail
+  x: 3125
+  y: 3242
+  z: 0
+- name: Jiggig
+  x: 2465
+  y: 3045
+  z: 0
+- name: Lower Jiggig Dungeon
+  x: 2465
+  y: 9441
+  z: 0
+- name: Middle Jiggig Dungeon
+  x: 2465
+  y: 9441
+  z: 2
+- name: Kalphite Lair
+  x: 3226
+  y: 3106
+  z: 0
+- name: Karamja
+  x: 2859
+  y: 3043
+  z: 0
+- name: Karamja Dungeon
+  x: 2840
+  y: 9571
+  z: 0
+- name: Keep Le Faye
+  x: 2769
+  y: 3399
+  z: 0
+- name: Keldagrim Entrance
+  x: 2725
+  y: 3712
+  z: 0
+- name: Keldagrim
+  x: 2855
+  y: 10175
+  z: 0
+- name: Kharazi Jungle
+  x: 2833
+  y: 2922
+  z: 0
+- name: Kharidian Desert
+  x: 3264
+  y: 2960
+  z: 0
+- name: Kingdom of Asgarnia
+  x: 2991
+  y: 3405
+  z: 0
+- name: Kingdom of Kandarin
+  x: 2572
+  y: 3445
+  z: 0
+- name: Kingdom of Misthalin
+  x: 3215
+  y: 3318
+  z: 0
+- name: Lava Dragon Isle
+  x: 3197
+  y: 3825
+  z: 0
+- name: Lava Maze
+  x: 3075
+  y: 3845
+  z: 0
+- name: Lava Maze Dungeon
+  x: 3040
+  y: 10272
+  z: 0
+- name: Legends' Guild
+  x: 2730
+  y: 3377
+  z: 0
+- name: Legends' Guild Dungeon
+  x: 2720
+  y: 9754
+  z: 0
+- name: Lighthouse
+  x: 2510
+  y: 3626
+  z: 0
+- name: Lighthouse Dungeon
+  x: 2518
+  y: 10021
+  z: 0
+- name: Lizards
+  x: 3421
+  y: 3041
+  z: 0
+- name: Lletya
+  x: 2346
+  y: 3177
+  z: 0
+- name: Lumber Yard
+  x: 3305
+  y: 3505
+  z: 0
+- name: Lumbridge Swamp Caves
+  x: 3169
+  y: 9571
+  z: 0
+- name: Lumbridge Swamp
+  x: 3184
+  y: 3179
+  z: 0
+- name: Lumbridge
+  x: 3224
+  y: 3218
+  z: 0
+- name: Mage Arena
+  x: 3105
+  y: 3932
+  z: 0
+- name: Mage Training Arena Rooms
+  x: 3357
+  y: 9666
+  z: 0
+- name: Mage Training Arena
+  x: 3363
+  y: 3304
+  z: 0
+- name: Marim
+  x: 2760
+  y: 2783
+  z: 0
+- name: Market
+  x: 3082
+  y: 3246
+  z: 0
+- name: Mausoleum
+  x: 3503
+  y: 3572
+  z: 0
+- name: McGrubor's Wood
+  x: 2641
+  y: 3480
+  z: 0
+- name: Melzar's Maze
+  x: 2933
+  y: 3248
+  z: 0
+- name: Menaphos
+  x: 3233
+  y: 2780
+  z: 0
+- name: Miscellania
+  x: 2537
+  y: 3875
+  z: 0
+- name: Miscellania dungeon
+  x: 2558
+  y: 10276
+  z: 0
+- name: Mogre Camp
+  x: 2974
+  y: 9496
+  z: 1
+- name: Monastery 1
+  x: 2602
+  y: 3215
+  z: 0
+- name: Monastery 2
+  x: 3052
+  y: 3487
+  z: 0
+- name: Mort Myre Swamp
+  x: 3440
+  y: 3380
+  z: 0
+- name: Mort'ton
+  x: 3487
+  y: 3283
+  z: 0
+- name: Morytania
+  x: 3467
+  y: 3441
+  z: 0
+- name: Mor Ul Rek
+  x: 2494
+  y: 5124
+  z: 0
+- name: Mountain Camp
+  x: 2801
+  y: 3670
+  z: 0
+- name: Mouse Hole
+  x: 2280
+  y: 5535
+  z: 0
+- name: Mudskipper Point
+  x: 2992
+  y: 3116
+  z: 0
+- name: Musa Point
+  x: 2897
+  y: 3161
+  z: 0
+- name: Nardah
+  x: 3427
+  y: 2903
+  z: 0
+- name: Necromancer
+  x: 2669
+  y: 3241
+  z: 0
+- name: Nightmare Zone
+  x: 2603
+  y: 3115
+  z: 0
+- name: Observatory
+  x: 2441
+  y: 3157
+  z: 0
+- name: Observatory Dungeon
+  x: 2398
+  y: 9441
+  z: 0
+- name: Ogre Enclave
+  x: 2592
+  y: 9444
+  z: 0
+- name: Otto's Grotto
+  x: 2502
+  y: 3488
+  z: 0
+- name: Outpost
+  x: 2441
+  y: 3345
+  z: 0
+- name: Palace
+  x: 3212
+  y: 3479
+  z: 0
+- name: Pest Control
+  x: 2656
+  y: 2593
+  z: 0
+- name: Pirates' Hideout
+  x: 3041
+  y: 3950
+  z: 0
+- name: Piscatoris Fishing Colony
+  x: 2343
+  y: 3690
+  z: 0
+- name: Poision Waste
+  x: 2232
+  y: 3096
+  z: 0
+- name: Pollnivneach
+  x: 3352
+  y: 2977
+  z: 0
+- name: Port Khazard
+  x: 2655
+  y: 3185
+  z: 0
+- name: Port Phasmatys
+  x: 3674
+  y: 3486
+  z: 0
+- name: Port Sarim
+  x: 3044
+  y: 3218
+  z: 0
+- name: Pothole Dungeon
+  x: 2845
+  y: 9505
+  z: 0
+- name: Prifddinas
+  x: 2235
+  y: 3317
+  z: 0
+- name: Pyramid
+  x: 3233
+  y: 2896
+  z: 0
+- name: Quarry
+  x: 3172
+  y: 2908
+  z: 0
+- name: Ranging Guild
+  x: 2666
+  y: 3429
+  z: 0
+- name: Ratcatchers Mansion
+  x: 2847
+  y: 5086
+  z: 0
+- name: Rellekka
+  x: 2668
+  y: 3676
+  z: 0
+- name: Resource Area
+  x: 3185
+  y: 3934
+  z: 0
+- name: Rimmington
+  x: 2957
+  y: 3215
+  z: 0
+- name: River Elid
+  x: 3372
+  y: 3074
+  z: 0
+- name: River Lum
+  x: 3167
+  y: 3346
+  z: 0
+- name: River Salve
+  x: 3403
+  y: 3442
+  z: 0
+- name: Rogue's Den
+  x: 3047
+  y: 4976
+  z: 1
+- name: Rogues' Castle
+  x: 3286
+  y: 3931
+  z: 0
+- name: Ruins of Uzer
+  x: 3479
+  y: 3098
+  z: 0
+- name: Ruins
+  x: 2967
+  y: 3695
+  z: 0
+- name: Ruins
+  x: 3164
+  y: 3734
+  z: 0
+- name: Scorpion Pit
+  x: 3232
+  y: 3942
+  z: 0
+- name: Secret Hangar
+  x: 2391
+  y: 9890
+  z: 0
+- name: Seers' Village
+  x: 2701
+  y: 3483
+  z: 0
+- name: Shadow Dungeon
+  x: 2687
+  y: 5088
+  z: 0
+- name: Shantay Pass
+  x: 3304
+  y: 3122
+  z: 0
+- name: Shilo Village
+  x: 2844
+  y: 2982
+  z: 0
+- name: Ship Yard
+  x: 2987
+  y: 3055
+  z: 0
+- name: Sinclair Mansion
+  x: 2742
+  y: 3549
+  z: 0
+- name: Slayer Tower
+  x: 3428
+  y: 3554
+  z: 0
+- name: Smoke Dungeon
+  x: 3265
+  y: 9373
+  z: 0
+- name: Sophanem
+  x: 3296
+  y: 2780
+  z: 0
+- name: Sorcerer's Tower
+  x: 2702
+  y: 3404
+  z: 0
+- name: Spider
+  x: 3320
+  y: 3756
+  z: 0
+- name: Stronghold Slayer Cave
+  x: 2435
+  y: 9806
+  z: 0
+- name: Swamp
+  x: 2418
+  y: 3511
+  z: 0
+- name: Tai Bwo Wannai
+  x: 2789
+  y: 3063
+  z: 0
+- name: Taverley Dungeon
+  x: 2886
+  y: 9811
+  z: 0
+- name: Taverly
+  x: 2896
+  y: 3455
+  z: 0
+- name: Temple
+  x: 3414
+  y: 3487
+  z: 0
+- name: Temple of Ikov
+  x: 2649
+  y: 9854
+  z: 0
+- name: Temple of Marimbo Dungeon
+  x: 2784
+  y: 9184
+  z: 0
+- name: The Forgotten Cemetery
+  x: 2976
+  y: 3750
+  z: 0
+- name: The Hollows
+  x: 3498
+  y: 3381
+  z: 0
+- name: "The Warrens"
+  x: 1776
+  y: 10143
+  z: 0
+- name: Tirannwn
+  x: 2240
+  y: 3263
+  z: 0
+- name: Toll Gate
+  x: 3271
+  y: 3226
+  z: 0
+- name: Tower of Life
+  x: 2648
+  y: 3215
+  z: 0
+- name: Trawler
+  x: 2683
+  y: 3166
+  z: 0
+- name: Tree Gnome Stronghold
+  x: 2430
+  y: 3447
+  z: 0
+- name: Tree Gnome Village
+  x: 2527
+  y: 3166
+  z: 0
+- name: Troll Stronghold
+  x: 2832
+  y: 3682
+  z: 0
+- name: Trollheim
+  x: 2891
+  y: 3676
+  z: 0
+- name: Trollweiss Mountain
+  x: 2782
+  y: 3862
+  z: 0
+- name: Tutorial Island
+  x: 3101
+  y: 3094
+  z: 0
+- name: Tyras Camp
+  x: 2186
+  y: 3146
+  z: 0
+- name: TzHaar City
+  x: 2451
+  y: 5146
+  z: 0
+- name: Underground Pass
+  x: 2449
+  y: 3312
+  z: 0
+- name: Underground Pass Area 1
+  x: 2464
+  y: 9700
+  z: 0
+- name: Underground Pass Area 2
+  x: 2399
+  y: 9637
+  z: 0
+- name: Underground Pass Area 3
+  x: 2398
+  y: 9710
+  z: 0
+- name: Varrock
+  x: 3213
+  y: 3449
+  z: 0
+- name: Viyeldi caves
+  x: 2398
+  y: 4717
+  z: 0
+- name: Viyeldi caves (2)
+  x: 2782
+  y: 9315
+  z: 0
+- name: Void Knights' Outpost
+  x: 2639
+  y: 2674
+  z: 0
+- name: Vultures
+  x: 3337
+  y: 2868
+  z: 0
+- name: Waterbirth Island
+  x: 2521
+  y: 3757
+  z: 0
+- name: Waterbirth Dungeon 1
+  x: 2495
+  y: 10144
+  z: 0
+- name: Waterbirth Dungeon 2
+  x: 1895
+  y: 4367
+  z: 0
+- name: Waterbirth Dungeon 3
+  x: 1895
+  y: 4367
+  z: 1
+- name: Waterbirth Dungeon 4
+  x: 1895
+  y: 4367
+  z: 2
+- name: Waterbirth Dungeon 5
+  x: 1895
+  y: 4367
+  z: 3
+- name: Waterbirth Dungeon 6
+  x: 2912
+  y: 4448
+  z: 0
+- name: Waterfall Dungeon
+  x: 2577
+  y: 9890
+  z: 0
+- name: West Ardougne
+  x: 2524
+  y: 3305
+  z: 0
+- name: White Knights' Castle
+  x: 2969
+  y: 3341
+  z: 0
+- name: White Wolf Mountain
+  x: 2847
+  y: 3494
+  z: 0
+- name: Wilderness
+  x: 3144
+  y: 3775
+  z: 0
+- name: Witchaven
+  x: 2709
+  y: 3289
+  z: 0
+- name: Witchaven Dungeon
+  x: 2722
+  y: 9689
+  z: 0
+- name: Witchaven Dungeon (2)
+  x: 2329
+  y: 5097
+  z: 0
+- name: Wizards' Guild
+  x: 2583
+  y: 3078
+  z: 0
+- name: Wizards' Tower
+  x: 3110
+  y: 3157
+  z: 0
+- name: Yanille
+  x: 2554
+  y: 3089
+  z: 0
+- name: Yanille Agility Dungeon
+  x: 2581
+  y: 9499
+  z: 0
+- name: Yanille Agility Dungeon (2)
+  x: 2580
+  y: 9577
+  z: 0
+- name: Zanaris
+  x: 2415
+  y: 4455
+  z: 0
