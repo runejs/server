@@ -1,0 +1,167 @@
+{
+  "id": 126,
+  "name": "Fishing",
+  "members": false,
+  "sub_guides": [
+    {
+      "name": "Catching",
+      "lines": [
+        {
+          "item": "rs:raw_shrimp",
+          "text": "Raw Shrimp",
+          "level": 1
+        },
+        {
+          "item": "rs:raw_sardine",
+          "text": "Raw Sardine",
+          "level": 5
+        },
+        {
+          "item": "rs:raw_karambwanji",
+          "text": "Members: Raw Karambwanji",
+          "level": 5
+        },
+        {
+          "item": "rs:raw_herring",
+          "text": "Raw Herring",
+          "level": 10
+        },
+        {
+          "item": "rs:raw_anchovies",
+          "text": "Raw Anchovies",
+          "level": 15
+        },
+        {
+          "item": "rs:raw_mackerel",
+          "text": "Members: Raw Mackerel",
+          "level": 16
+        },
+        {
+          "item": "rs:raw_trout",
+          "text": "Raw Trout",
+          "level": 20
+        },
+        {
+          "item": "rs:raw_cod",
+          "text": "Members: Raw Cod",
+          "level": 23
+        },
+        {
+          "item": "rs:raw_pike",
+          "text": "Raw Pike",
+          "level": 25
+        },
+        {
+          "item": "rs:raw_slimy_eel",
+          "text": "Members: Raw Slimy Eel",
+          "level": 28
+        },
+        {
+          "item": "rs:raw_salmon",
+          "text": "Raw Salmon",
+          "level": 30
+        },
+        {
+          "item": "rs:raw_tuna",
+          "text": "Raw Tuna",
+          "level": 35
+        },
+        {
+          "item": "rs:raw_cave_eel",
+          "text": "Members: Raw Cave Eel",
+          "level": 38
+        },
+        {
+          "item": "rs:raw_lobster",
+          "text": "Raw Lobster",
+          "level": 40
+        },
+        {
+          "item": "rs:raw_bass",
+          "text": "Members: Raw Bass",
+          "level": 46
+        },
+        {
+          "item": "rs:raw_swordfish",
+          "text": "Raw Swordfish",
+          "level": 50
+        },
+        {
+          "item": "rs:raw_lava_eel",
+          "text": "Members: Raw Lava Eel",
+          "level": 53
+        },
+        {
+          "item": "rs:raw_monkfish",
+          "text": "Members: Raw Monkfish",
+          "level": 62
+        },
+        {
+          "item": "rs:raw_karambwan",
+          "text": "Members: Raw Karambwan",
+          "level": 65
+        },
+        {
+          "item": "rs:raw_shark",
+          "text": "Raw Shark",
+          "level": 76
+        },
+        {
+          "item": "rs:raw_sea_turtle",
+          "text": "Raw Sea Turtle",
+          "level": 79
+        },
+        {
+          "item": "rs:raw_manta_ray",
+          "text": "Raw Manta Ray",
+          "level": 81
+        }
+      ]
+    },
+    {
+      "name": "Equipment",
+      "lines": [
+        {
+          "item": "rs:small_fishing_net",
+          "text": "Small Fishing Net",
+          "level": 1
+        },
+        {
+          "item": "rs:fishing_rod",
+          "text": "Fishing Rod",
+          "level": 5
+        },
+        {
+          "item": "rs:big_fishing_net",
+          "text": "Big Fishing Net",
+          "level": 16
+        },
+        {
+          "item": "rs:fly_fishing_rod",
+          "text": "Members: Fly Fishing Rod",
+          "level": 20
+        },
+        {
+          "item": "rs:harpoon",
+          "text": "harpoon",
+          "level": 35
+        },
+        {
+          "item": "rs:lobster_pot",
+          "text": "Lobster_Pot",
+          "level": 40
+        },
+        {
+          "item": "rs:oily_fishing_rod",
+          "text": "Oily Fishing Rod",
+          "level": 53
+        },
+        {
+          "item": "rs:karambwan_vessel",
+          "text": "Karambwan Vessel",
+          "level": 65
+        }
+      ]
+    }
+  ]
+}
