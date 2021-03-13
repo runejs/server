@@ -1,5 +1,3 @@
-import { actionPipeline } from '../../game-server';
-
 const itemEquipPacket = (player, packet) => {
     const { buffer } = packet;
     const containerId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
@@ -7,7 +5,7 @@ const itemEquipPacket = (player, packet) => {
     const slot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
     const itemId = buffer.get('SHORT', 'UNSIGNED');
 
-    actionPipeline.call('item_interaction', player, itemId, slot, widgetId, containerId, 'equip');
+    player.actionPipeline.call('item_interaction', player, itemId, slot, widgetId, containerId, 'equip');
 };
 
 export default {

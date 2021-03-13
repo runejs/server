@@ -12,13 +12,14 @@ import { filter, take } from 'rxjs/operators';
 import { world } from '@engine/game-server';
 import { WorldInstance } from '@engine/world/instances';
 import { Player } from '@engine/world/actor/player/player';
-import { ActionCancelType } from '@engine/world/action';
+import { ActionCancelType, ActionPipeline } from '@engine/world/action';
 
 /**
  * Handles an actor within the game world.
  */
 export abstract class Actor {
 
+    public readonly actionPipeline = new ActionPipeline(this);
     public readonly updateFlags: UpdateFlags;
     public readonly skills: Skills;
     public readonly metadata: { [key: string]: any } = {};

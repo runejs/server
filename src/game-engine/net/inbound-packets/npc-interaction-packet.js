@@ -1,4 +1,4 @@
-import { actionPipeline, world } from '../../game-server';
+import { world } from '../../game-server';
 import { World } from '../../world';
 import { logger } from '@runejs/core';
 
@@ -56,7 +56,7 @@ const npcInteractionPacket = (player, packet) => {
         return;
     }
 
-    actionPipeline.call('npc_interaction', player, npc, position, optionName.toLowerCase());
+    player.actionPipeline.call('npc_interaction', player, npc, position, optionName.toLowerCase());
 };
 
 export default [{

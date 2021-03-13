@@ -1,5 +1,5 @@
 import { logger } from '@runejs/core';
-import { actionPipeline, world } from '../../game-server';
+import { world } from '../../game-server';
 import { World } from '../../world';
 import { widgets } from '../../config';
 
@@ -47,7 +47,7 @@ const itemOnNpcPacket = (player, packet) => {
         return;
     }
 
-    actionPipeline.call('item_on_npc', player, npc, position, usedItem, itemWidgetId, itemContainerId)
+    player.actionPipeline.call('item_on_npc', player, npc, position, usedItem, itemWidgetId, itemContainerId)
 };
 
 export default {

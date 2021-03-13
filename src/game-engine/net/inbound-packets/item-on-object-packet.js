@@ -1,6 +1,6 @@
 import { logger } from '@runejs/core';
 import { Position } from '../../world/position';
-import { actionPipeline, cache, world } from '../../game-server';
+import { cache, world } from '../../game-server';
 import { widgets } from '../../config';
 
 const itemOnObjectPacket = (player, packet) => {
@@ -41,7 +41,7 @@ const itemOnObjectPacket = (player, packet) => {
 
     const locationObjectDefinition = cache.locationObjectDefinitions.get(objectId);
 
-    actionPipeline.call('item_on_object', player, locationObject, locationObjectDefinition, objectPosition, usedItem, itemWidgetId, itemContainerId, cacheOriginal);
+    player.actionPipeline.call('item_on_object', player, locationObject, locationObjectDefinition, objectPosition, usedItem, itemWidgetId, itemContainerId, cacheOriginal);
 };
 
 export default {

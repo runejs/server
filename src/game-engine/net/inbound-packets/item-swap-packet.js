@@ -1,5 +1,3 @@
-import { actionPipeline } from '../../game-server';
-
 const itemSwapPacket = (player, packet) => {
     const { buffer } = packet;
     const swapType = buffer.get();
@@ -13,9 +11,9 @@ const itemSwapPacket = (player, packet) => {
     }
 
     if(swapType === 0) {
-        actionPipeline.call('item_swap', player, fromSlot, toSlot, { widgetId, containerId })
+        player.actionPipeline.call('item_swap', player, fromSlot, toSlot, { widgetId, containerId })
     } else if(swapType === 1) {
-        actionPipeline.call('move_item', player, fromSlot, toSlot, { widgetId, containerId })
+        player.actionPipeline.call('move_item', player, fromSlot, toSlot, { widgetId, containerId })
     }
 };
 

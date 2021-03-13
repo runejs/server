@@ -1,5 +1,5 @@
 import { Position } from '../../world/position';
-import { actionPipeline, cache, world } from '../../game-server';
+import { cache, world } from '../../game-server';
 import { logger } from '@runejs/core';
 
 const option1 = packet => {
@@ -64,7 +64,7 @@ const objectInteractionPacket = (player, packet) => {
         return;
     }
 
-    actionPipeline.call('object_interaction', player, locationObject, locationObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
+    player.actionPipeline.call('object_interaction', player, locationObject, locationObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
 };
 
 export default [{

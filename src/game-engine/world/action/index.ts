@@ -1,7 +1,13 @@
 import { gameEngineDist } from '@engine/util/directories';
 import { getFiles } from '@engine/util/files';
 import { logger } from '@runejs/core';
-import { actionPipeline } from '@engine/game-server';
+import { Actor } from '@engine/world/actor/actor';
+
+
+/**
+ * The priority of an action within the pipeline.
+ */
+export type ActionPriority = 'weak' | 'normal' | 'strong';
 
 
 /**
@@ -50,19 +56,18 @@ export type ActionPipe = [ ActionType, (...args: any[]) => void ];
 
 
 /**
- * The action pipeline handler.
+ * A specific actor's action pipeline handler.
  * Records action pipes and distributes content actions from the game engine down to execute plugin hooks.
  */
 export class ActionPipeline {
 
-    public actionPipes = new Map<string, any>();
+    private static pipes = new Map<string, any>();
 
-    public get(action: ActionType): any {
-        this.actionPipes.get(action.toString());
+    public constructor(public readonly actor: Actor) {
     }
 
     public async call(action: ActionType, ...args: any[]): Promise<void> {
-        const actionHandler = this.actionPipes.get(action.toString());
+        const actionHandler = ActionPipeline.pipes.get(action.toString());
         if(actionHandler) {
             try {
                 await new Promise(resolve => {
@@ -76,8 +81,12 @@ export class ActionPipeline {
         }
     }
 
-    public register(action: ActionType, actionPipe: (...args: any[]) => void): void {
-        this.actionPipes.set(action.toString(), actionPipe);
+    public static getPipe(action: ActionType): Map<string, any> {
+        return ActionPipeline.pipes.get(action);
+    }
+
+    public static register(action: ActionType, actionPipe: (...args: any[]) => void): void {
+        ActionPipeline.pipes.set(action.toString(), actionPipe);
     }
 
 }
@@ -102,7 +111,7 @@ export async function loadActionFiles(): Promise<void> {
         try {
             const importedAction = (require(location)?.default || null) as ActionPipe | null;
             if(importedAction && Array.isArray(importedAction) && importedAction[0] && importedAction[1]) {
-                actionPipeline.register(importedAction[0], importedAction[1]);
+                ActionPipeline.register(importedAction[0], importedAction[1]);
             }
         } catch(error) {
             logger.error(`Error loading action file at ${location}:`);
