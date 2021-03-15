@@ -1,7 +1,8 @@
 import { Subject } from 'rxjs';
 
 export const widgetScripts = {
-    musicPlayer: 18,
+    musicPlayerAutoManual: 18,
+    musicPlayerLoop: 19,
     attackStyle: 43,
     brightness: 166,
     unknown: 167, // ????

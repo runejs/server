@@ -17,9 +17,15 @@
   type: 10
   orientation: 0
 # Start lumby castle roof bank construction objects
-- objectId: 10293
-  x: 3211
-  'y': 3220
+- objectId: 1530
+  x: 3011
+  'y': 3364
+  level: 0
+  type: 10
+  orientation: 0
+- objectId: 357
+  x: 3208
+  'y': 3223
   level: 2
   type: 10
   orientation: 0

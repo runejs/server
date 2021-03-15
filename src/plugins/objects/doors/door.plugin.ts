@@ -11,6 +11,11 @@ const doors = [
         hinge: 'RIGHT'
     },
     {
+        closed: 11707,
+        open: 11708,
+        hinge: 'RIGHT'
+    },
+    {
         closed: 1533,
         open: 1534,
         hinge: 'RIGHT'

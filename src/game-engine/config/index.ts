@@ -20,14 +20,13 @@ import { loadShopConfigurations, Shop } from '@engine/config/shop-config';
 import { Quest } from '@engine/world/actor/player/quest';
 import { ItemSpawn, loadItemSpawnConfigurations } from '@engine/config/item-spawn-config';
 import { loadSkillGuideConfigurations, SkillGuide } from '@engine/config/skill-guide-config';
-import { loadMusicRegionConfigurations, MusicRegions } from '@engine/config/music-regions-config';
-
+import { loadMusicRegionConfigurations, MusicTrack } from '@engine/config/music-regions-config';
 require('json5/lib/register');
 
 export async function loadConfigurationFiles(configurationDir: string): Promise<any[]> {
     const files = [];
 
-    for await(const path of getFiles(configurationDir)) {
+    for await(const path of getFiles(configurationDir, ['.json'], true)) {
         try {
             const configContent = JSON.parse(readFileSync(path, 'utf8'));
 
@@ -51,7 +50,7 @@ export let npcMap: { [key: string]: NpcDetails };
 export let npcIdMap: { [key: number]: string };
 export let npcPresetMap: NpcPresetConfiguration;
 export let npcSpawns: NpcSpawn[] = [];
-export let musicRegions: MusicRegions[] = [];
+export let musicRegions: MusicTrack[] = [];
 export let itemSpawns: ItemSpawn[] = [];
 export let shopMap: { [key: string]: Shop };
 export let skillGuides: SkillGuide[] = [];
@@ -190,4 +189,16 @@ export const findShop = (shopKey: string): Shop | null => {
 export const findQuest = (questId: string): Quest | null => {
     const quests: Quest[] = actionHookMap.quest;
     return quests.find(quest => quest.id.toLocaleLowerCase() === questId.toLocaleLowerCase()) || null;
+};
+
+export const findMusicTrack = (trackId: number): MusicTrack | null => {
+    return musicRegions.find(track => track.songId === trackId) || null;
+};
+
+export const findMusicTrackByButtonId = (buttonId: number): MusicTrack | null => {
+    return musicRegions.find(track => track.musicTabButtonId === buttonId) || null;
+};
+
+export const findSongIdByRegionId = (regionId: number): number | null => {
+    return musicRegionMap.has(regionId) ? musicRegionMap.get(regionId) : null;
 };

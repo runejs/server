@@ -50,7 +50,7 @@ const buttonActionPipe = (player: Player, widgetId: number, buttonId: number) =>
             questHookFilter(player, plugin) && (
                 (plugin.widgetId && plugin.widgetId === widgetId) ||
                 (plugin.widgetIds && advancedNumberHookFilter(plugin.widgetIds, widgetId)
-            ))
+                ))
         && (plugin.buttonIds === undefined ||
             advancedNumberHookFilter(plugin.buttonIds, buttonId))
         );
