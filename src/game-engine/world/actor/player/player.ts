@@ -136,7 +136,6 @@ export class Player extends Actor {
     private _bonuses: { offensive: OffensiveBonuses, defensive: DefensiveBonuses, skill: SkillBonuses };
     private _carryWeight: number;
     private _settings: PlayerSettings;
-    private _walkingTo: Position;
     private _nearbyChunks: Chunk[];
     private quadtreeKey: QuadtreeKey = null;
     private privateMessageIndex: number = 1;
@@ -1163,14 +1162,6 @@ export class Player extends Actor {
 
     public get settings(): PlayerSettings {
         return this._settings;
-    }
-
-    public get walkingTo(): Position {
-        return this._walkingTo;
-    }
-
-    public set walkingTo(value: Position) {
-        this._walkingTo = value;
     }
 
     public get nearbyChunks(): Chunk[] {

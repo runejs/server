@@ -3,13 +3,13 @@ import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { ItemDetails } from '@engine/config/item-config';
 import { findItem } from '@engine/config';
 import { numberHookFilter, stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe } from '@engine/world/action/index';
+import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
 
 
 /**
  * Defines an item action hook.
  */
-export interface ItemInteractionActionHook extends ActionHook<itemInteractionActionHandler> {
+export interface ItemInteractionActionHook extends ActionHook<ItemInteractionAction, itemInteractionActionHandler> {
     // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
     // A single UI widget ID or a list of widget IDs that this action applies to.
@@ -57,15 +57,10 @@ export interface ItemInteractionAction {
  * @param containerId
  * @param option
  */
-const itemInteractionActionPipe = (player: Player, itemId: number, slot: number, widgetId: number, containerId: number, option: string): void => {
-    if(player.busy) {
-        return;
-    }
-
-    let cancelActions = false;
-
+const itemInteractionActionPipe = (player: Player, itemId: number, slot: number, widgetId: number,
+                                   containerId: number, option: string): RunnableHooks<ItemInteractionAction> => {
     // Find all object action plugins that reference this location object
-    let interactionActions = getActionHooks<ItemInteractionActionHook>('item_interaction', plugin => {
+    let matchingHooks = getActionHooks<ItemInteractionActionHook>('item_interaction', plugin => {
         if(!questHookFilter(player, plugin)) {
             return false;
         }
@@ -101,31 +96,24 @@ const itemInteractionActionPipe = (player: Player, itemId: number, slot: number,
                 return false;
             }
         }
-
-        if(plugin.cancelOtherActions) {
-            cancelActions = true;
-        }
         return true;
     });
 
-    const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
+    const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
-        interactionActions = questActions;
+        matchingHooks = questActions;
     }
 
-    if(interactionActions.length === 0) {
+    if(matchingHooks.length === 0) {
         player.outgoingPackets.chatboxMessage(
             `Unhandled item option: ${option} ${itemId} in slot ${slot} within widget ${widgetId}:${containerId}`);
-        return;
+        return null;
     }
 
-    if(cancelActions) {
-        player.actionsCancelled.next(null);
-    }
-
-    for(const plugin of interactionActions) {
-        plugin.handler({
+    return {
+        hooks: matchingHooks,
+        action: {
             player,
             itemId,
             itemSlot: slot,
@@ -133,7 +121,7 @@ const itemInteractionActionPipe = (player: Player, itemId: number, slot: number,
             containerId,
             itemDetails: findItem(itemId),
             option
-        });
+        }
     }
 
 };

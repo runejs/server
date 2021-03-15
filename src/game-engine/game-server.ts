@@ -216,10 +216,10 @@ export const playerWalkTo = async (player: Player, position: Position, interacti
     interactingObject?: LocationObject;
 }): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
-        player.walkingTo = position;
+        player.metadata.walkingTo = position;
 
         const inter = setInterval(() => {
-            if(!player.walkingTo || !player.walkingTo.equals(position)) {
+            if(!player.metadata.walkingTo || !player.metadata.walkingTo.equals(position)) {
                 reject();
                 clearInterval(inter);
                 return;
@@ -244,7 +244,7 @@ export const playerWalkTo = async (player: Player, position: Position, interacti
                 }
 
                 clearInterval(inter);
-                player.walkingTo = null;
+                player.metadata.walkingTo = null;
             }
         }, 100);
     });

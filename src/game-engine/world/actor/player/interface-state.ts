@@ -121,7 +121,7 @@ export class InterfaceState {
     }
 
     public async widgetClosed(slot: GameInterfaceSlot): Promise<WidgetClosedEvent> {
-        return await lastValueFrom(this.closed.pipe(
+        return await lastValueFrom(this.closed.asObservable().pipe(
             filter(event => event.widget.slot === slot)).pipe(take(1)));
     }
 

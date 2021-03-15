@@ -530,17 +530,15 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 
             const widgetClosedEvent = await player.interfaceState.widgetClosed('chatbox');
 
-            if(widgetClosedEvent.data === undefined) {
-                throw new Error('Dialogue Cancelled.');
-            }
-
-            if(isOptions && typeof widgetClosedEvent.data === 'number') {
-                const optionsAction = dialogueAction as OptionsDialogueAction;
-                const options = Object.keys(optionsAction.options);
-                const trees = options.map(option => optionsAction.options[option]);
-                const tree: ParsedDialogueTree = trees[widgetClosedEvent.data - 1];
-                if(tree && tree.length !== 0) {
-                    await runParsedDialogue(player, tree, tag, additionalOptions);
+            if(widgetClosedEvent.data !== undefined) {
+                if(isOptions && typeof widgetClosedEvent.data === 'number') {
+                    const optionsAction = dialogueAction as OptionsDialogueAction;
+                    const options = Object.keys(optionsAction.options);
+                    const trees = options.map(option => optionsAction.options[option]);
+                    const tree: ParsedDialogueTree = trees[widgetClosedEvent.data - 1];
+                    if(tree && tree.length !== 0) {
+                        await runParsedDialogue(player, tree, tag, additionalOptions);
+                    }
                 }
             }
         }
@@ -590,7 +588,7 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
         return true;
     } catch(error) {
         player.interfaceState.closeAllSlots();
-        logger.warn(Object.keys(error.message));
+        logger.warn(error);
         return false;
     }
 }

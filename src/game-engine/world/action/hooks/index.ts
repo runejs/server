@@ -1,10 +1,9 @@
 import { actionHookMap } from '@engine/game-server';
 import { QuestKey } from '@engine/config/quest-config';
-import { ActionPriority, TaskExecutor, ActionType } from '@engine/world/action';
+import { TaskExecutor, ActionType, ActionStrength } from '@engine/world/action';
 
 
 export interface HookTask<T = any> {
-    priority?: ActionPriority;
     canActivate?: <Q = T>(task: TaskExecutor<Q>) => boolean | Promise<boolean>;
     execute: <Q = T>(task: TaskExecutor<Q>) => void | undefined | boolean | Promise<void | undefined | boolean>;
     onComplete?: <Q = T>(task: TaskExecutor<Q>) => void | Promise<void>;
@@ -28,15 +27,21 @@ export interface QuestRequirement {
 /**
  * Defines a generic extensible game content action hook.
  */
-export interface ActionHook<T = any> {
-    // The type of action to perform.
+export interface ActionHook<A = any, H = any> {
+    // The type of action to perform
     type: ActionType;
-    // The action's priority over other actions.
+    // Whether or not this hook will allow other hooks from the same action to queue after it
+    multi?: boolean;
+    // The action's priority over other actions
     priority?: number;
-    // [optional] Quest requirements that must be completed in order to run this hook.
+    // The strength of the action hook
+    strength?: ActionStrength;
+    // [optional] Quest requirements that must be completed in order to run this hook
     questRequirement?: QuestRequirement;
-    // The action function to be performed.
-    handler: T;
+    // [optional] The action function to be performed
+    handler?: H;
+    // [optional] The task to be performed
+    task?: HookTask<A>;
 }
 
 

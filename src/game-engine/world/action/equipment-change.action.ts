@@ -3,13 +3,13 @@ import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { findItem } from '@engine/config';
 import { EquipmentSlot, ItemDetails } from '@engine/config/item-config';
 import { numberHookFilter, stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe } from '@engine/world/action/index';
+import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
 
 
 /**
  * Defines an equipment change action hook.
  */
-export interface EquipmentChangeActionHook extends ActionHook<equipmentChangeActionHandler> {
+export interface EquipmentChangeActionHook extends ActionHook<EquipmentChangeAction, equipmentChangeActionHandler> {
     // A single game item ID or a list of item IDs that this action applies to.
     itemIds?: number | number[];
     // A single option name or a list of option names that this action applies to.
@@ -53,8 +53,9 @@ export interface EquipmentChangeAction {
  * @param eventType
  * @param slot
  */
-const equipmentChangeActionPipe = (player: Player, itemId: number, eventType: EquipmentChangeType, slot: EquipmentSlot): void => {
-    let filteredActions = getActionHooks<EquipmentChangeActionHook>('equipment_change', equipActionHook => {
+const equipmentChangeActionPipe = (player: Player, itemId: number,
+                                   eventType: EquipmentChangeType, slot: EquipmentSlot): RunnableHooks<EquipmentChangeAction> => {
+    let matchingHooks = getActionHooks<EquipmentChangeActionHook>('equipment_change', equipActionHook => {
         if(!questHookFilter(player, equipActionHook)) {
             return false;
         }
@@ -74,21 +75,26 @@ const equipmentChangeActionPipe = (player: Player, itemId: number, eventType: Eq
         return true;
     });
 
-    const questActions = filteredActions.filter(plugin => plugin.questRequirement !== undefined);
+    const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
-        filteredActions = questActions;
+        matchingHooks = questActions;
     }
 
-    for(const plugin of filteredActions) {
-        plugin.handler({
+    if(!matchingHooks || matchingHooks.length === 0) {
+        return null;
+    }
+
+    return {
+        hooks: matchingHooks,
+        action: {
             player,
             itemId,
             itemDetails: findItem(itemId),
             eventType,
             equipmentSlot: slot
-        });
-    }
+        }
+    };
 };
 
 

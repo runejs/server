@@ -1,13 +1,13 @@
 import { Player } from '@engine/world/actor/player/player';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe } from '@engine/world/action/index';
+import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
 
 
 /**
  * Defines a button action hook.
  */
-export interface ButtonActionHook extends ActionHook<buttonActionHandler> {
+export interface ButtonActionHook extends ActionHook<ButtonAction, buttonActionHandler> {
     // The ID of the UI widget that the button is on.
     widgetId?: number;
     // The IDs of the UI widgets that the buttons are on.
@@ -44,7 +44,7 @@ export interface ButtonAction {
  * @param widgetId
  * @param buttonId
  */
-const buttonActionPipe = (player: Player, widgetId: number, buttonId: number) => {
+const buttonActionPipe = (player: Player, widgetId: number, buttonId: number): RunnableHooks<ButtonAction> => {
     let matchingHooks = getActionHooks<ButtonActionHook>('button')
         .filter(plugin =>
             questHookFilter(player, plugin) && (
@@ -69,17 +69,15 @@ const buttonActionPipe = (player: Player, widgetId: number, buttonId: number) =>
 
     if(matchingHooks.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled button interaction: ${widgetId}:${buttonId}`);
-        return;
+        return null;
     }
 
-    // Immediately run the hooks
-    for(const actionHook of matchingHooks) {
-        if(actionHook.cancelActions) {
-            player.actionsCancelled.next('button');
+    return {
+        hooks: matchingHooks,
+        action: {
+            player, widgetId, buttonId
         }
-
-        actionHook.handler({ player, widgetId, buttonId });
-    }
+    };
 };
 
 

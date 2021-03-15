@@ -8,7 +8,7 @@ import { ActionPipe } from '@engine/world/action/index';
 /**
  * Defines a player region change action hook.
  */
-export interface RegionChangeActionHook extends ActionHook<regionChangeActionHandler> {
+export interface RegionChangeActionHook extends ActionHook<RegionChangeAction, regionChangeActionHandler> {
     // Optional single region type for the action hook to apply to.
     regionType?: RegionType;
     // Optional multiple region types for the action hook to apply to.

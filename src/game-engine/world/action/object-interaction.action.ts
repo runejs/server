@@ -5,13 +5,13 @@ import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
 import { playerWalkTo } from '@engine/game-server';
 import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe } from '@engine/world/action/index';
+import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
 
 
 /**
  * Defines an object action hook.
  */
-export interface ObjectInteractionActionHook extends ActionHook<objectInteractionActionHandler> {
+export interface ObjectInteractionActionHook extends ActionHook<ObjectInteractionAction, objectInteractionActionHandler> {
     // A single game object ID or a list of object IDs that this action applies to.
     objectIds: number | number[];
     // A single option name or a list of option names that this action applies to.
@@ -56,62 +56,37 @@ export interface ObjectInteractionAction {
  * @param cacheOriginal
  */
 const objectInteractionActionPipe = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
-    position: Position, option: string, cacheOriginal: boolean): void => {
-    if(player.busy || player.metadata.blockObjectInteractions) {
+    position: Position, option: string, cacheOriginal: boolean): RunnableHooks<ObjectInteractionAction> => {
+    if(player.metadata.blockObjectInteractions) {
         return;
     }
 
     // Find all object action plugins that reference this location object
-    let interactionActions = getActionHooks<ObjectInteractionActionHook>('object_interaction')
+    let matchingHooks = getActionHooks<ObjectInteractionActionHook>('object_interaction')
         .filter(plugin => questHookFilter(player, plugin) && advancedNumberHookFilter(plugin.objectIds, locationObject.objectId, plugin.options, option));
-    const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
+    const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
-        interactionActions = questActions;
+        matchingHooks = questActions;
     }
 
-    if(interactionActions.length === 0) {
+    if(matchingHooks.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled object interaction: ${option} ${locationObjectDefinition.name} ` +
             `(id-${locationObject.objectId}) @ ${position.x},${position.y},${position.level}`);
-        return;
+        return null;
     }
 
-    player.actionsCancelled.next(null);
-
-    // Separate out walk-to actions from immediate actions
-    const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);
-    const immediatePlugins = interactionActions.filter(plugin => !plugin.walkTo);
-
-    // Make sure we walk to the object before running any of the walk-to plugins
-    if(walkToPlugins.length !== 0) {
-        playerWalkTo(player, position, { interactingObject: locationObject })
-            .then(() => {
-                player.face(position);
-
-                walkToPlugins.forEach(plugin =>
-                    plugin.handler({
-                        player,
-                        object: locationObject,
-                        objectDefinition: locationObjectDefinition,
-                        option,
-                        position,
-                        cacheOriginal
-                    }));
-            })
-            .catch(() => logger.warn(`Unable to complete walk-to action.`));
-    }
-
-    // Immediately run any non-walk-to plugins
-    if(immediatePlugins.length !== 0) {
-        immediatePlugins.forEach(plugin =>
-            plugin.handler({
-                player,
-                object: locationObject,
-                objectDefinition: locationObjectDefinition,
-                option,
-                position,
-                cacheOriginal
-            }));
+    return {
+        hooks: matchingHooks,
+        actionPosition: position,
+        action: {
+            player,
+            object: locationObject,
+            objectDefinition: locationObjectDefinition,
+            option,
+            position,
+            cacheOriginal
+        }
     }
 };
 

@@ -2,29 +2,39 @@ import { gameEngineDist } from '@engine/util/directories';
 import { getFiles } from '@engine/util/files';
 import { logger } from '@runejs/core';
 import { Actor } from '@engine/world/actor/actor';
-import { HookTask } from '@engine/world/action/hooks';
+import { ActionHook, HookTask } from '@engine/world/action/hooks';
 import { lastValueFrom, Subscription, timer } from 'rxjs';
 import { World } from '@engine/world';
+import { Position } from '@engine/world/position';
+import uuidv4 from 'uuid/v4';
 
 
 /**
  * The priority of an queueable action within the pipeline.
  */
-export type ActionPriority = 'weak' | 'normal' | 'strong';
+export type ActionStrength = 'weak' | 'normal' | 'strong';
 
 
 // T = current action info (ButtonAction, MoveItemAction, etc)
 export class TaskExecutor<T> {
 
     public running: boolean = false;
+    public readonly taskId = uuidv4();
     private intervalSubscription: Subscription;
+    private readonly strength: ActionStrength;
 
     public constructor(public readonly actor: Actor,
                        public readonly task: HookTask<T>,
+                       public readonly hook: ActionHook,
                        public readonly actionData: T) {
+        this.strength = this.hook.strength || 'normal';
     }
 
     public async run(): Promise<void> {
+        if(!await this.canActivate()) {
+            return;
+        }
+
         this.running = true;
 
         if(!!this.task.delay || !!this.task.delayMs) {
@@ -168,12 +178,27 @@ export type ActionPipe = [ ActionType, (...args: any[]) => void ];
 
 
 /**
+ * A list of filtered hooks for an actor to run.
+ */
+export interface RunnableHooks<T = any> {
+    // The action in progress
+    action: T;
+    // Matching action hooks
+    hooks?: ActionHook[];
+    // If a location is provided, then the actor must first move to that location to run the action
+    actionPosition?: Position;
+}
+
+
+/**
  * A specific actor's action pipeline handler.
  * Records action pipes and distributes content actions from the game engine down to execute plugin hooks.
  */
 export class ActionPipeline {
 
     private static pipes = new Map<string, any>();
+
+    private runningTasks: TaskExecutor<any>[] = [];
 
     public constructor(public readonly actor: Actor) {
     }
@@ -186,22 +211,73 @@ export class ActionPipeline {
         ActionPipeline.pipes.set(action.toString(), actionPipe);
     }
 
-    public async queue(action: ActionType, ...args: any[]): Promise<void> {
-
-    }
-
     public async call(action: ActionType, ...args: any[]): Promise<void> {
         const actionHandler = ActionPipeline.pipes.get(action.toString());
         if(actionHandler) {
             try {
-                await new Promise(resolve => {
-                    actionHandler(...args);
-                    resolve();
-                });
+                await this.runActionHandler(actionHandler, ...args);
             } catch(error) {
                 logger.error(`Error handling action ${action.toString()}`);
                 logger.error(error);
             }
+        }
+    }
+
+    private cancelWeakerActions(runningActionPriority: ActionStrength): void {
+        if(!this.runningTasks || this.runningTasks.length === 0) {
+            return;
+        }
+
+        // @TODO
+    }
+
+    private async runActionHandler(actionHandler: any, ...args: any[]): Promise<void> {
+        const runnableHooks: RunnableHooks | null | undefined = actionHandler(...args);
+
+        if(!runnableHooks?.hooks || runnableHooks.hooks.length === 0) {
+            return;
+        }
+
+        if(runnableHooks.actionPosition) {
+            await this.actor.waitForPathing(runnableHooks.actionPosition);
+        }
+
+        for(let i = 0; i < runnableHooks.hooks.length; i++) {
+            const hook = runnableHooks.hooks[i];
+            await this.runHook(hook, runnableHooks.action);
+            if(!hook.multi) {
+                // If the highest priority hook does not allow other hooks
+                // to run during this same action, then return here to break
+                // out of the loop and complete execution.
+                return;
+            }
+        }
+    }
+
+    private async runHook(actionHook: ActionHook, action: any): Promise<void> {
+        const { handler, task } = actionHook;
+
+        await this.cancelWeakerActions(actionHook.strength || 'normal');
+
+        // @TODO remove when existing actions are converted away from this
+        this.actor.actionsCancelled.next(null);
+
+        if(task) {
+            // Schedule task-based hook
+            const taskExecutor = new TaskExecutor(this.actor, task, actionHook, action);
+            this.runningTasks.push(taskExecutor);
+
+            // Run the task until complete
+            await taskExecutor.run();
+
+            // Cleanup and remove the task once completed
+            const taskIdx = this.runningTasks.findIndex(task => task.taskId === taskExecutor.taskId);
+            if(taskIdx !== -1) {
+                this.runningTasks.splice(taskIdx, 1);
+            }
+        } else if(handler) {
+            // Run basic hook
+            await handler(action);
         }
     }
 

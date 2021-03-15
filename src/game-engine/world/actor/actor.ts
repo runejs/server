@@ -13,6 +13,7 @@ import { world } from '@engine/game-server';
 import { WorldInstance } from '@engine/world/instances';
 import { Player } from '@engine/world/actor/player/player';
 import { ActionCancelType, ActionPipeline } from '@engine/world/action';
+import { LocationObject } from '@runejs/cache-parser';
 
 /**
  * Handles an actor within the game world.
@@ -69,6 +70,39 @@ export abstract class Actor {
         return remainingHitpoints === 0 ? 'dead' : 'alive';
     }
 
+    public async waitForPathing(position: Position | LocationObject): Promise<void> {
+        await new Promise((resolve, reject) => {
+            this.metadata.walkingTo = position;
+
+            const inter = setInterval(() => {
+                if(!this.metadata.walkingTo || !this.metadata.walkingTo.equals(position)) {
+                    reject();
+                    clearInterval(inter);
+                    return;
+                }
+
+                if(!this.walkingQueue.moving()) {
+                    if(position instanceof Position) {
+                        if(this.position.distanceBetween(position) > 1) {
+                            reject();
+                        } else {
+                            resolve();
+                        }
+                    } else {
+                        if(this.position.withinInteractionDistance(position)) {
+                            resolve();
+                        } else {
+                            reject();
+                        }
+                    }
+
+                    clearInterval(inter);
+                    this.metadata.walkingTo = null;
+                }
+            }, 100);
+        });
+    }
+
     public async moveBehind(target: Actor): Promise<boolean> {
         const distance = Math.floor(this.position.distanceBetween(target.position));
         if(distance > 16) {
@@ -123,8 +157,12 @@ export abstract class Actor {
         });
     }
 
-    public async walkTo(target: Actor): Promise<boolean> {
-        const distance = Math.floor(this.position.distanceBetween(target.position));
+    public async walkTo(target: Actor): Promise<boolean>;
+    public async walkTo(position: Position): Promise<boolean>;
+    public async walkTo(target: Actor | Position): Promise<boolean> {
+        const desiredPosition = target instanceof Position ? target : target.position;
+
+        const distance = Math.floor(this.position.distanceBetween(desiredPosition));
 
         if(distance <= 1) {
             return false;
@@ -135,8 +173,6 @@ export abstract class Actor {
             this.metadata.faceActorClearedByWalking = true;
             return false;
         }
-
-        const desiredPosition = target.position;
 
         await this.pathfinding.walkTo(desiredPosition, {
             pathingSearchRadius: distance + 2,

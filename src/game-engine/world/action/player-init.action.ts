@@ -6,7 +6,7 @@ import { ActionPipe } from '@engine/world/action/index';
 /**
  * Defines a player init action hook.
  */
-export type PlayerInitActionHook = ActionHook<playerInitActionHandler>;
+export type PlayerInitActionHook = ActionHook<PlayerInitAction, playerInitActionHandler>;
 
 
 /**
