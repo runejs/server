@@ -217,8 +217,10 @@ export class ActionPipeline {
             try {
                 await this.runActionHandler(actionHandler, ...args);
             } catch(error) {
-                logger.error(`Error handling action ${action.toString()}`);
-                logger.error(error);
+                if(error) {
+                    logger.error(`Error handling action ${action.toString()}`);
+                    logger.error(error);
+                }
             }
         }
     }
