@@ -359,7 +359,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
 }
 
 async function runDialogueAction(player: Player, dialogueAction: string | DialogueFunction | DialogueAction,
-    tag?: string, additionalOptions?: AdditionalOptions): Promise<string | undefined> {
+    tag?: string | undefined | false, additionalOptions?: AdditionalOptions): Promise<string | undefined | false> {
     if(dialogueAction instanceof DialogueFunction && !tag) {
         // Code execution dialogue.
         dialogueAction.execute();
@@ -540,6 +540,8 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
                         await runParsedDialogue(player, tree, tag, additionalOptions);
                     }
                 }
+            } else {
+                return false;
             }
         }
     }
@@ -547,9 +549,13 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
     return tag;
 }
 
-async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTree, tag?: string, additionalOptions?: AdditionalOptions): Promise<boolean> {
+async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTree, tag?: string | undefined | false,
+                                 additionalOptions?: AdditionalOptions): Promise<boolean> {
     for(let i = 0; i < dialogueTree.length; i++) {
         tag = await runDialogueAction(player, dialogueTree[i], tag, additionalOptions);
+        if(tag === false) {
+            break;
+        }
     }
 
     return tag === undefined;
@@ -572,18 +578,8 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
     const parsedDialogueTree = parseDialogueTree(player, npcParticipants, dialogueTree);
     player.metadata.dialogueTree = parsedDialogueTree;
 
-    async function run(): Promise<void> {
-        return await new Promise<void>((resolve, reject) => {
-            runParsedDialogue(player, parsedDialogueTree, undefined, additionalOptions).then(() => {
-                resolve();
-            }).catch(error => {
-                reject(error);
-            });
-        });
-    }
-
     try {
-        await run();
+        await runParsedDialogue(player, parsedDialogueTree, undefined, additionalOptions);
         player.interfaceState.closeAllSlots();
         return true;
     } catch(error) {

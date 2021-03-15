@@ -20,8 +20,8 @@ export class TaskExecutor<T> {
 
     public running: boolean = false;
     public readonly taskId = uuidv4();
+    public readonly strength: ActionStrength;
     private intervalSubscription: Subscription;
-    private readonly strength: ActionStrength;
 
     public constructor(public readonly actor: Actor,
                        public readonly task: HookTask<T>,
@@ -117,7 +117,7 @@ export class TaskExecutor<T> {
         }
     }
 
-    private async stop(): Promise<void> {
+    public async stop(): Promise<void> {
         this.intervalSubscription?.unsubscribe();
 
         await this.task?.onComplete(this);
@@ -223,12 +223,35 @@ export class ActionPipeline {
         }
     }
 
-    private cancelWeakerActions(runningActionPriority: ActionStrength): void {
+    private async cancelWeakerActions(newActionStrength: ActionStrength): Promise<void> {
         if(!this.runningTasks || this.runningTasks.length === 0) {
             return;
         }
 
-        // @TODO
+        const pendingRemoval: string[] = [];
+
+        for(const runningTask of this.runningTasks) {
+            if(!runningTask.running) {
+                pendingRemoval.push(runningTask.taskId);
+                continue;
+            }
+
+            if(runningTask.strength === 'weak' || (runningTask.strength === 'normal' && newActionStrength === 'strong')) {
+                // Cancel obviously weaker tasks
+                await runningTask.stop();
+                pendingRemoval.push(runningTask.taskId);
+                continue;
+            }
+
+            if(runningTask.strength === 'normal') {
+                // @TODO normal task handling
+            } else if(runningTask.strength === 'strong') {
+                // @TODO strong task handling
+            }
+        }
+
+        // Remove all non-running and ceased tasks
+        this.runningTasks = this.runningTasks.filter(task => !pendingRemoval.includes(task.taskId));
     }
 
     private async runActionHandler(actionHandler: any, ...args: any[]): Promise<void> {
@@ -258,9 +281,6 @@ export class ActionPipeline {
         const { handler, task } = actionHook;
 
         await this.cancelWeakerActions(actionHook.strength || 'normal');
-
-        // @TODO remove when existing actions are converted away from this
-        this.actor.actionsCancelled.next(null);
 
         if(task) {
             // Schedule task-based hook
