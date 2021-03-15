@@ -1,9 +1,9 @@
-import {findMusicTrack, musicRegionMap, musicRegions, widgets} from '@server/config';
+import { findMusicTrack, findSongIdByRegionId, musicRegionMap, musicRegions, widgets } from '@server/config';
 import { songs } from '@server/world/config/songs';
 import { playerRegionChangedHook } from '@server/world/action/player-region-changed';
 import { playerInitAction } from '@server/world/actor/player/player';
-import {PlayerMusicTrack} from "@server/plugins/music/music-track";
-import {colors} from "@server/util/colors";
+import { colors } from '@server/util/colors';
+import { MusicPlayerMode } from '@server/plugins/music/music-tab-plugin';
 
 
 musicRegions.forEach(song => song.regionIds.forEach(region => musicRegionMap.set(region, song.songId)));
@@ -16,18 +16,20 @@ function getByValue(map, searchValue) {
 }
 
 const regionChangedHandler = ({ player, currentMapRegionId }): void => {
-    const songId: number = musicRegionMap.get(currentMapRegionId);
+    const songId: number = findSongIdByRegionId(currentMapRegionId);
+    if(songId == null) {
+        return;
+    }
     const songName = findMusicTrack(songId).songName;
     // player.sendMessage(`Playing ${songId}:${getByValue(songs, songId)} at region ${currentMapRegionId}`);
-    let playerTrack = new PlayerMusicTrack(songId, true);
-    if(!player.musicTracks[songId]) {
-      player.sendMessage('You have unlocked a new music track: <col=ef101f>' + songName + '.</col>');
-      player.musicTracks[songId] = true;
-      player.modifyWidget(widgets.musicPlayerTab, { childId:  findMusicTrack(songId).musicTabButtonId, textColor: colors.green });
+    if(!player.musicTracks.includes(songId)) {
+        player.musicTracks.push(songId);
+        player.sendMessage('You have unlocked a new music track: <col=ef101f>' + songName + '.</col>');
+        player.modifyWidget(widgets.musicPlayerTab, { childId:  findMusicTrack(songId).musicTabButtonId, textColor: colors.green });
     }
-  player.modifyWidget(widgets.musicPlayerTab, { childId: 177, text: songName, textColor: colors.green });
-  player.playSong(songId);
-    //player.metadata['updateMusic'] = false;
+    if(player.settings.musicPlayerMode === MusicPlayerMode.AUTO) {
+      player.playSong(songId);
+    }
 };
 
 const playerInitHandler: playerInitAction = ({ player }): void => {

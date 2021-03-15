@@ -81,7 +81,7 @@ export async function loadConfigurations(): Promise<void> {
     skillGuides = await loadSkillGuideConfigurations('data/config/skill-guides');
 
     logger.info(`Loaded ${musicRegions.length} music regions, ${Object.keys(itemMap).length} items, ${itemSpawns.length} item spawns, ` +
-        `${Object.keys(npcMap).length} npcs, ${npcSpawns.length} npc spawns, ${Object.keys(shopMap).length} shops and ${skillGuides.length} skill guides.`);
+    `${Object.keys(npcMap).length} npcs, ${npcSpawns.length} npc spawns, ${Object.keys(shopMap).length} shops and ${skillGuides.length} skill guides.`);
 }
 
 
@@ -187,10 +187,18 @@ export const findShop = (shopKey: string): Shop | null => {
 
 
 export const findQuest = (questId: string): Quest | null => {
-  const quests: Quest[] = pluginActions.quest;
-  return quests.find(quest => quest.id.toLocaleLowerCase() === questId.toLocaleLowerCase()) || null;
+    const quests: Quest[] = pluginActions.quest;
+    return quests.find(quest => quest.id.toLocaleLowerCase() === questId.toLocaleLowerCase()) || null;
 };
 
 export const findMusicTrack = (trackId: number): MusicTrack | null => {
-  return musicRegions.find(track => track.songId === trackId) || null;
+    return musicRegions.find(track => track.songId === trackId) || null;
+};
+
+export const findMusicTrackByButtonId = (buttonId: number): MusicTrack | null => {
+    return musicRegions.find(track => track.musicTabButtonId === buttonId) || null;
+};
+
+export const findSongIdByRegionId = (regionId: number): number | null => {
+    return musicRegionMap.has(regionId) ? musicRegionMap.get(regionId) : null;
 };

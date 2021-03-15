@@ -354,6 +354,14 @@
       ]
     },
     {
+      "songId": 545,
+      "songName": "Cabin Fever",
+      "musicTabButtonId": 400,
+      "regionIds": [
+        0
+      ]
+    },
+    {
       "songId": 104,
       "songName": "Camelot",
       "musicTabButtonId": 49,
@@ -796,6 +804,14 @@
       "musicTabButtonId": 60,
       "regionIds": [
         12594
+      ]
+    },
+    {
+      "songId": 623,
+      "songName": "Dreamstate",
+      "musicTabButtonId": 446,
+      "regionIds": [
+        0
       ]
     },
     {
@@ -1348,6 +1364,30 @@
       "musicTabButtonId": 83,
       "regionIds": [
         11057
+      ]
+    },
+    {
+      "songId": 205,
+      "songName": "High Spirits",
+      "musicTabButtonId": 459,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 454,
+      "songName": "Home Sweet Home",
+      "musicTabButtonId": 428,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 621,
+      "songName": "HomeScape",
+      "musicTabButtonId": 427,
+      "regionIds": [
+        0
       ]
     },
     {
@@ -1930,6 +1970,14 @@
       ]
     },
     {
+      "songId": 200,
+      "songName": "The Mollusc Menace",
+      "musicTabButtonId": 455,
+      "regionIds": [
+        0
+      ]
+    },
+    {
       "songId": 21,
       "songName": "Monarch Waltz",
       "musicTabButtonId": 110,
@@ -1977,6 +2025,14 @@
       "musicTabButtonId": 371,
       "regionIds": [
         11824
+      ]
+    },
+    {
+      "songId": 203,
+      "songName": "My Arm's Journey",
+      "musicTabButtonId": 457,
+      "regionIds": [
+        0
       ]
     },
     {
@@ -2280,6 +2336,14 @@
       "regionIds": [
         8496,
         10803
+      ]
+    },
+    {
+      "songId": 204,
+      "songName": "Roc and Roll",
+      "musicTabButtonId": 458,
+      "regionIds": [
+        0
       ]
     },
     {
@@ -2927,6 +2991,14 @@
       ]
     },
     {
+      "songId": 202,
+      "songName": "Prime Time",
+      "musicTabButtonId": 456,
+      "regionIds": [
+        0
+      ]
+    },
+    {
       "songId": 413,
       "songName": "The Quizmaster",
       "musicTabButtonId": 356,
@@ -2960,6 +3032,22 @@
       "musicTabButtonId": 302,
       "regionIds": [
         11164
+      ]
+    },
+    {
+      "songId": 510,
+      "songName": "Slither and Thither",
+      "musicTabButtonId": 426,
+      "regionIds": [
+        0
+      ]
+    },
+    {
+      "songId": 201,
+      "songName": "Slug a bug Ball",
+      "musicTabButtonId": 266,
+      "regionIds": [
+        0
       ]
     },
     {

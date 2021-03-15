@@ -297,7 +297,7 @@ export class OutboundPackets {
         packet.put(widgetId << 16 | childId, 'INT', 'LITTLE_ENDIAN');
         packet.putString(value);
         if(value === 'gay' || value == 'Book Of Spells') {
-          this.player.sendMessage('Stop!' + value);
+            this.player.sendMessage('Stop!' + value);
         }
 
         this.queue(packet);

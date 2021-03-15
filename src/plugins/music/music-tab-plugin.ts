@@ -1,56 +1,49 @@
 import { buttonAction } from '@server/world/action/button-action';
-import { pluginActions } from '@server/game-server';
-import { widgets } from '@server/config';
-import { Quest } from '@server/world/actor/player/quest';
-import { QuestKey } from '@server/config/quest-config';
+import { widgets, findMusicTrackByButtonId, findSongIdByRegionId } from '@server/config';
+import { widgetScripts } from '@server/world/config/widget';
+import { world } from '@server/game-server';
 
+export const action: buttonAction = ({ player, buttonId }) => {
+    if(buttonId === MusicTabButtonIds.AUTO_BUTTON_ID) {
+        player.settings.musicPlayerMode = MusicPlayerMode.AUTO;
+        const songIdForCurrentRegion = findSongIdByRegionId(
+            world.chunkManager.getRegionIdForWorldPosition(player.position));
 
-export const action: buttonAction = async ({ player, buttonId }) => {
-    const [ quest ] = pluginActions.quest.filter((quest: Quest) => quest.questTabId === buttonId) as Quest[];
-    if(!quest) {
-        return;
-    }
-
-    const [ playerQuest ] = player.quests.filter(
-        (playerQuest) => playerQuest.questId === quest.id
-    );
-
-    let playerStage: QuestKey = 0;
-    if(playerQuest && playerQuest.progress !== undefined) {
-        playerStage = playerQuest.progress;
-    }
-
-    const journalHandler = quest.journalHandler[playerStage];
-    if(journalHandler === undefined) {
-        const questJournalStages = Object.keys(quest.journalHandler);
-        let journalEntry;
-        for(const stage of questJournalStages) {
-            const stageNum = parseInt(stage, 10);
-            if(isNaN(stageNum)) {
-                continue;
-            }
-
-            if(stageNum <= playerStage) {
-                journalEntry = stage;
-            } else {
-                break;
-            }
+        if(player.savedMetadata['currentSongIdPlaying'] !== songIdForCurrentRegion) {
+            player.playSong(songIdForCurrentRegion);
         }
+    } else if(buttonId === MusicTabButtonIds.MANUAL_BUTTON_ID) {
+        player.settings.musicPlayerMode = MusicPlayerMode.MANUAL;
+    } else if(buttonId === MusicTabButtonIds.LOOP_BUTTON_ID) {
+        player.settings.musicPlayerLoopMode ^= 1;
     }
 
-    const color = 128;
-    let text: string;
-
-    if(typeof journalHandler === 'function') {
-        text = await Promise.resolve(journalHandler(player));
-    } else if(typeof journalHandler === 'string') {
-        text = journalHandler;
+    const musicTrack = findMusicTrackByButtonId(buttonId);
+    if(musicTrack === null) {
+        return;
+    } else if(player.musicTracks.includes(musicTrack.songId)) {
+        player.playSong(musicTrack.songId);
+        player.settings.musicPlayerMode = MusicPlayerMode.MANUAL;
+        player.outgoingPackets.updateClientConfig(widgetScripts.musicPlayerAutoManual, 0);
+    } else {
+        player.sendMessage('You haven\'t unlocked this piece of music yet!');
     }
-
-    player.interfaceState.openWidget(widgets.questJournal, {
-        slot: 'screen',
-        multi: false
-    });
 };
+
+export enum MusicPlayerMode {
+  MANUAL = 0,
+  AUTO = 1
+}
+
+export enum MusicPlayerLoopMode {
+  ENABLED = 0,
+  DISABLED = 1
+}
+
+export enum MusicTabButtonIds {
+  AUTO_BUTTON_ID = 180,
+  MANUAL_BUTTON_ID = 181,
+  LOOP_BUTTON_ID = 251
+}
 
 export default { type: 'button', widgetId: widgets.musicPlayerTab, action };

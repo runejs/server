@@ -1,7 +1,7 @@
 import { QuestCompletion, QuestJournalHandler } from '@server/config/quest-config';
 
 
-  export class Quest {
+export class Quest {
 
     public id: string;
     public questTabId: number;

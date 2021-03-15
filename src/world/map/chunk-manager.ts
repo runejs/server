@@ -123,20 +123,6 @@ export class ChunkManager {
       return ((position.x >> 6) << 8) + (position.y >> 6);
   }
 
-  /**
-   * Determines whether or not the player has entered a new map region by comparing their old and new positions when they
-   * enter a new Chunk.
-   *
-   * TODO: Use Action/Plugin instead of this, purely for testing purposes
-   * @param oldPos
-   * @param newPos
-   */
-  public getMapRegionChanged(oldPos: Position, newPos: Position): boolean {
-      const oldRegionKey = this.getRegionIdForWorldPosition(oldPos);
-      const newRegionKey = this.getRegionIdForWorldPosition(newPos);
-      return oldRegionKey !== newRegionKey;
-  }
-
   public getChunkForWorldPosition(position: Position): Chunk {
       return this.getChunk({ x: position.chunkX, y: position.chunkY, level: position.level });
   }
