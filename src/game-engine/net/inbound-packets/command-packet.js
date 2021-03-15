@@ -7,7 +7,7 @@ const commandPacket = (player, packet) => {
         return;
     }
 
-    const isConsole = packet.opcode === 246;
+    const isConsole = packet.packetId === 246;
 
     const args = input.trim().split(' ');
     const command = args[0];
