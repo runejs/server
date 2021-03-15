@@ -296,9 +296,6 @@ export class OutboundPackets {
         const packet = new Packet(110, PacketType.DYNAMIC_LARGE);
         packet.put(widgetId << 16 | childId, 'INT', 'LITTLE_ENDIAN');
         packet.putString(value);
-        if(value === 'gay' || value == 'Book Of Spells') {
-            this.player.sendMessage('Stop!' + value);
-        }
 
         this.queue(packet);
     }
