@@ -1,10 +1,12 @@
-import { buttonAction } from '@server/world/action/button-action';
-import { widgets, findMusicTrackByButtonId, findSongIdByRegionId } from '@server/config';
-import { widgetScripts } from '@server/world/config/widget';
-import { world } from '@server/game-server';
+import { buttonActionHandler } from '@engine/world/action/button.action';
+import { widgets, findMusicTrackByButtonId, findSongIdByRegionId } from '@engine/config';
+import { widgetScripts } from '@engine/world/config/widget';
+import { world } from '@engine/game-server';
 
-export const action: buttonAction = ({ player, buttonId }) => {
-    if(buttonId === MusicTabButtonIds.AUTO_BUTTON_ID) {
+export const handler: buttonActionHandler = (details) => {
+  const { player, buttonId } = details;
+
+  if(buttonId === MusicTabButtonIds.AUTO_BUTTON_ID) {
         player.settings.musicPlayerMode = MusicPlayerMode.AUTO;
         const songIdForCurrentRegion = findSongIdByRegionId(
             world.chunkManager.getRegionIdForWorldPosition(player.position));
@@ -46,4 +48,9 @@ export enum MusicTabButtonIds {
   LOOP_BUTTON_ID = 251
 }
 
-export default { type: 'button', widgetId: widgets.musicPlayerTab, action };
+export default {
+  pluginId: 'rs:music_tab',
+  hooks: [
+    { type: 'button', widgetId: widgets.musicPlayerTab, handler }
+  ]
+};

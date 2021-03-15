@@ -26,7 +26,7 @@ require('json5/lib/register');
 export async function loadConfigurationFiles(configurationDir: string): Promise<any[]> {
     const files = [];
 
-    for await(const path of getFiles(configurationDir)) {
+    for await(const path of getFiles(configurationDir, ['.json'], true)) {
         try {
             const configContent = JSON.parse(readFileSync(path, 'utf8'));
 

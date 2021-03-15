@@ -53,6 +53,7 @@ import { dialogue } from '@engine/world/actor/dialogue';
 import { PlayerQuest, QuestKey } from '@engine/config/quest-config';
 import { Quest } from '@engine/world/actor/player/quest';
 import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
+import { MusicPlayerMode } from "@plugins/music/music-tab.plugin";
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [

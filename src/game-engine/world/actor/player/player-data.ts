@@ -6,7 +6,7 @@ import { Player } from './player';
 import { SkillValue } from '@engine/world/actor/skills';
 import { hasValueNotNull } from '@engine/util/data';
 import { PlayerQuest } from '@engine/config/quest-config';
-import { MusicPlayerLoopMode, MusicPlayerMode } from '@plugins/music/music-tab-plugin';
+import { MusicPlayerLoopMode, MusicPlayerMode } from '@plugins/music/music-tab.plugin';
 
 export interface Appearance {
   gender: number;
