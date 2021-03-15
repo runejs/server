@@ -1,0 +1,97 @@
+{
+  "id": 124,
+  "name": "Defence",
+  "members": false,
+  "sub_guides": [
+    {
+      "name": "Armour",
+      "lines": [
+        {
+          "item": "rs:bronze_medium_helm",
+          "text": "Bronze armour\\nwield any bronze equipment",
+          "level": 1
+        },
+        {
+          "item": "rs:iron_medium_helm",
+          "text": "Iron armour\\nwield any iron equipment",
+          "level": 1
+        },
+        {
+          "item": "rs:steel_medium_helm",
+          "text": "Steel armour\\nwield any steel equipment",
+          "level": 5
+        },
+        {
+          "item": "rs:black_medium_helm",
+          "text": "Black armour\\nwield any black equipment",
+          "level": 10
+        },
+        {
+          "item": "rs:white_medium_helm",
+          "text": "Members: white armour\\nwield any white equipment",
+          "level": 10
+        },
+        {
+          "item": "rs:initiate_medium_helm",
+          "text": "Members: Initiate armour\\n(after Recruitment Drive, with 10 Prayer)",
+          "level": 20
+        },
+        {
+          "item": "rs:mithril_medium_helm",
+          "text": "Mithril armour\\nwield any mithril equipment",
+          "level": 20
+        },
+        {
+          "item": "rs:adamant_medium_helm",
+          "text": "Adamant armour\\nwield any adamant equipment",
+          "level": 30
+        },
+        {
+          "item": "rs:proselyte_medium_helm",
+          "text": "Members: Proselyte armour\\n(after Slug Menance, with 20 Prayer)",
+          "level": 30
+        },
+        {
+          "item": "rs:rune_medium_helm",
+          "text": "Rune armour\\nwield any rune equipment",
+          "level": 40
+        },
+        {
+          "item": "rs:rock_shell_helm",
+          "text": "Members: Rock-shell armour\\n(after completing Fremennik Trials)",
+          "level": 40
+        },
+        {
+          "item": "rs:berserker_helm",
+          "text": "Members: Fremennik helmets\\n(after completing Fremennik Trials)",
+          "level": 45
+        },
+        {
+          "item": "rs:granite_shield",
+          "text": "Granite armour\\nwield any granite equipment",
+          "level": 50
+        },
+        {
+          "item": "rs:helm_of_neitiznot",
+          "text": "Members: Helm of neitiznot\\n(after Fremennik Isles)",
+          "level": 55
+        },
+        {
+          "item": "rs:Members: Dragon armour",
+          "text": "Dragon armour\\nwield any dragon equipment",
+          "level": 60
+        },
+        {
+          "item": "rs:3rd_age_full_helmet",
+          "text": "3rd Age armour\\nwield any 3rd Age equipment",
+          "level": 65
+        },
+        {
+          "item": "rs:torags_helmet",
+          "text": "Barrows armour\\nwield any Barrows equipment",
+          "level": 70
+        }
+      ]
+    }
+   ]
+}

@@ -1,0 +1,432 @@
+{
+    "id": 142,
+    "name": "Farming",
+    "members": true,
+    "sub_guides": [
+      {
+        "name": "Allotments",
+        "lines": [
+          {
+            "item": "rs:potatoes",
+            "text": "Potatoes\\nPayment: Compost x2",
+            "level": 1
+          },
+          {
+            "item": "rs:onions",
+            "text": "Onions\\nPayment: Potatoes(10)",
+            "level": 5
+          },
+          {
+            "item": "rs:cabbages",
+            "text": "Cabbages\\nPayment: Onions(10)",
+            "level": 7
+          },
+          {
+            "item": "rs:tomatoes",
+            "text": "Tomatoes\\nPayment: Cabbages(10)",
+            "level": 12
+          },
+          {
+            "item": "rs:sweetcorn",
+            "text": "Sweetcorn\\nPayment: Jute fibre x10",
+            "level": 20
+          },
+          {
+            "item": "rs:strawberries",
+            "text": "Strawberries\\nPayment: Apples(5)",
+            "level": 31
+          },
+          {
+            "item": "rs:watermelons",
+            "text": "Watermelons\\nPayment: Curry leaf x10",
+            "level": 47
+          },
+          {
+            "item": "rs:snape_grass",
+            "text": "Snape grass\\nPayment: Jangerberries x5",
+            "level": 61
+          }
+        ]
+      },{
+        "name": "Hops",
+        "lines": [
+          {
+            "item": "rs:barley",
+            "text": "Barley\\nPayment: Compost x3",
+            "level": 3
+          },
+          {
+            "item": "rs:hammerstone_hops",
+            "text": "Hammerstone hops\\nPayment: Marigolds",
+            "level": 4
+          },
+          {
+            "item": "rs:asgarnian_hops",
+            "text": "Asgarnian hops\\nPayment: Onions(10)",
+            "level": 8
+          },
+          {
+            "item": "rs:jute_plants",
+            "text": "Jute plants\\nPayment: Barley malt x6",
+            "level": 13
+          },
+          {
+            "item": "rs:yanillian_hops",
+            "text": "Yanillian hops\\nPayment: Tomatoes(5)",
+            "level": 16
+          },
+          {
+            "item": "rs:krandorian_hops",
+            "text": "Krandorian hops\\nPayment: Cabbages(10) x3",
+            "level": 21
+          },
+          {
+            "item": "rs:wildblood_hops",
+            "text": "Wildblood hops\\nPayment: Nasturtiums",
+            "level": 28
+          }
+        ]
+      },{
+        "name": "Trees",
+        "lines": [
+          {
+            "item": "rs:oak_trees",
+            "text": "Oak trees\\nPayment: Tomatoes(5)",
+            "level": 15
+          },
+          {
+            "item": "rs:willow_trees",
+            "text": "Willow trees\\nPayment: Apples(5)",
+            "level": 30
+          },
+          {
+            "item": "rs:maple_trees",
+            "text": "Mapple trees\\nPayment: Oranges(5)",
+            "level": 45
+          },
+          {
+            "item": "rs:yew_trees",
+            "text": "Yew trees\\nPayment: Cactus spine x10",
+            "level": 60
+          },
+          {
+            "item": "rs:magic_trees",
+            "text": "Magic trees\\nPayment: Coconut x25",
+            "level": 75
+          }
+        ]
+      } ,{
+        "name": "Fruit Trees",
+        "lines": [
+          {
+            "item": "rs:apple_trees",
+            "text": "Apple trees\\nPayment: Sweetcorn x9",
+            "level": 27
+          },
+          {
+            "item": "rs:banana_trees",
+            "text": "Banana trees\\nPayment: Apples(5) x4",
+            "level": 33
+          },
+          {
+            "item": "rs:orange_trees",
+            "text": "Orange trees\\nPayment: Strawberries(5) x3",
+            "level": 39
+          },
+          {
+            "item": "rs:curry_trees",
+            "text": "Curry trees\\nPayment: Bananas(5) x3",
+            "level": 42
+          },
+          {
+            "item": "rs:pineapple_trees",
+            "text": "Pineapple trees\\nPayment: Watermelon x10",
+            "level": 51
+          },
+          {
+            "item": "rs:papaya_trees",
+            "text": "Papaya trees\\nPayment: Pineapple x10",
+            "level": 57
+          },
+          {
+            "item": "rs:palm_trees",
+            "text": "Palm trees\\nPayment: Papaya fruit x15",
+            "level": 68
+          }
+    ]
+  },{
+    "name": "Bushes",
+    "lines": [
+      {
+        "item": "rs:redberry_bushes",
+        "text": "Redberry bushes\\nPayment: Cabbages(10) x4",
+        "level": 10
+      },
+      {
+        "item": "rs:cadavaberry_bushes",
+        "text": "Cadavanerry bushes\\nPayment: Tomatoes(5) x3",
+        "level": 22
+      },
+      {
+        "item": "rs:dwellberry_bushes",
+        "text": "Dwellberry bushes\\nPayment: Strawberries(5) x3",
+        "level": 36
+      },
+      {
+        "item": "rs:jangerberry_bushes",
+        "text": "Jangerberry bushes\\nPayment: Watermelon x6",
+        "level": 48
+      },
+      {
+        "item": "rs:white_berry_bushes",
+        "text": "White berry bushes\\nPayment: Mushroom x8",
+        "level": 59
+      },
+      {
+        "item": "rs:poison_ivy_bushes",
+        "text": "Poison ivy bushes",
+        "level": 70
+      }
+    ]
+  },{
+    "name": "Flowers",
+    "lines": [
+      {
+        "item": "rs:marigolds",
+        "text": "Marigolds\\nProtects onions, tomatoes and potatoes",
+        "level": 2
+      },
+      {
+        "item": "rs:rosemary",
+        "text": "Rosemary\\nProtects cabbages from disease",
+        "level": 22
+      },
+      {
+        "item": "scarecrow",
+        "text": "Make and place a scarecrow\\nProtects sweetcorn from birds",
+        "level": 23
+      },
+      {
+        "item": "rs:nasturtiums",
+        "text": "Nasturtiums\\nProtects watermelons from disease",
+        "level": 24
+      },
+      {
+        "item": "rs:woad",
+        "text": "Woad",
+        "level": 25
+      },
+      {
+        "item": "rs:limpwurt_root",
+        "text": "Limpwurt plants",
+        "level": 26
+      },
+      {
+        "item": "rs:white_lily",
+        "text": "White lily\\nProtects all allotment crops",
+        "level": 58
+      }
+    ]
+  },{
+    "name": "Herbs",
+    "lines": [
+      {
+        "item": "rs:guam_leaf",
+        "text": "Guam leaf",
+        "level": 9
+      },
+      {
+        "item": "rs:marrentill",
+        "text": "Marrentill",
+        "level": 14
+      },
+      {
+        "item": "tarromin",
+        "text": "Tarromin",
+        "level": 19
+      },
+      {
+        "item": "rs:harralander",
+        "text": "Harralander",
+        "level": 26
+      },
+      {
+        "item": "rs:goutweed",
+        "text": "Goutweed\\nMust have completed Eadgar's Ruse",
+        "level": 29
+      },
+      {
+        "item": "rs:ranarr_weed",
+        "text": "Ranarr weed",
+        "level": 32
+      },
+      {
+        "item": "rs:toadflax",
+        "text": "Toadflax",
+        "level": 38
+      },
+      {
+        "item": "rs:avantoe",
+        "text": "Avantoe",
+        "level": 50
+      },
+      {
+        "item": "rs:kwuarm",
+        "text": "Kwuarm",
+        "level": 56
+      },
+      {
+        "item": "rs:snapdragon",
+        "text": "Snapdragon",
+        "level": 62
+      },
+      {
+        "item": "rs:cadantine",
+        "text": "Cadantine",
+        "level": 67
+      },
+      {
+        "item": "rs:lantadyme",
+        "text": "Lantadyme",
+        "level": 73
+      },
+      {
+        "item": "rs:dwarf_weed",
+        "text": "Dwarf weed",
+        "level": 79
+      },
+      {
+        "item": "rs:torstol",
+        "text": "Torstol",
+        "level": 85
+      }
+    ]
+  },{
+    "name": "special",
+    "lines": [
+      {
+        "item": "rs:teak_trees",
+        "text": "Teak trees\\nPayment: Limpwurt root x15",
+        "level": 35
+      },
+      {
+        "item": "rs:grapes",
+        "text": "Grapes",
+        "level": 36
+      },
+      {
+        "item": "rs:bittercap_mushrooms",
+        "text": "Bittercap mushrooms",
+        "level": 53
+      },
+      {
+        "item": "rs:mahogany_trees",
+        "text": "Mahogany trees\\nPayment: yanillian hops x25",
+        "level": 55
+      },
+      {
+        "item": "rs:cacti",
+        "text": "Cacti\\nPayment: Cadava berries x6",
+        "level": 55
+      },      {
+        "item": "rs:belladonna",
+        "text": "Belladonna",
+        "level": 63
+      },
+      {
+        "item": "rs:potato_cacti",
+        "text": "Potato cacti",
+        "level": 64
+      },
+      {
+        "item": "rs:hespori",
+        "text": "Hespori",
+        "level": 65
+      },
+      {
+        "item": "rs:calquat_trees",
+        "text": "Calquat trees\\nPayment: Poison ivy Berries x8",
+        "level": 72
+      }
+    ]
+  },{
+    "name": "Multiple roots",
+    "lines": [
+      {
+        "item": "rs:oak_roots",
+        "text": "2x oak roots",
+        "level": 23
+      },
+      {
+        "item": "rs:oak_roots",
+        "text": "3x oak roots",
+        "level": 31
+      },
+      {
+        "item": "rs:willow_roots",
+        "text": "2x willow roots",
+        "level": 38
+      },
+      {
+        "item": "rs:oak_roots",
+        "text": "4x oak roots",
+        "level": 39
+      },
+      {
+        "item": "rs:willow_roots",
+        "text": "3x willow roots",
+        "level": 46
+      },      {
+        "item": "rs:mapple_roots",
+        "text": "2x mapple roots",
+        "level": 53
+      },
+      {
+        "item": "rs:willow_roots",
+        "text": "4x willow roots",
+        "level": 54
+      },
+      {
+        "item": "rs:maple_roots",
+        "text": "3x mapple roots",
+        "level": 61
+      },
+      {
+        "item": "rs:yew_roots",
+        "text": "2x yew roots",
+        "level": 68
+      },
+      {
+        "item": "rs:maple_roots",
+        "text": "4x mapple roots",
+        "level": 69
+      },      
+      {
+        "item": "rs:yew_roots",
+        "text": "3x yew roots",
+        "level": 76
+      },      
+      {
+        "item": "rs:magic_roots",
+        "text": "2x magic roots",
+        "level": 83
+      },      
+      {
+        "item": "rs:yew_roots",
+        "text": "4x yew roots",
+        "level": 84
+      },      
+      {
+        "item": "rs:magic_roots",
+        "text": "3x magic roots",
+        "level": 91
+      },      
+      {
+        "item": "rs:magic_roots",
+        "text": "4x magic roots",
+        "level": 99
+      }
+    ]
+  }
+]
+}

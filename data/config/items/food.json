@@ -2,315 +2,1144 @@
     "presets": {
         "rs:food": {
             "tradable": true,
-            "consumable": true
+            "consumable": true,
+            "metadata": {
+                "consume_effects":{
+                    "clock": "food"
+                },
+                "special": false
+            }
         },
         "rs:beverage": {
             "tradable": true,
-            "consumable": true
+            "consumable": true,
+            "metadata": {
+                "consume_effects":{
+                    "clock": "food"
+                },
+                "special": false
+            }
         }
     },
     "rs:meat": {
         "extends": "rs:food",
-        "game_id": 2142
+        "game_id": 2142,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 3
+                }
+            }
+        }
     },
     "rs:shrimps": {
         "extends": "rs:food",
-        "game_id": 315
+        "game_id": 315,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 3
+                }
+            }
+        }
     },
     "rs:chicken": {
         "extends": "rs:food",
-        "game_id": 2140
+        "game_id": 2140,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 3
+                }
+            }
+        }
     },
     "rs:anchovies": {
         "extends": "rs:food",
-        "game_id": 319
+        "game_id": 319,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 1
+                }
+            }
+        }
     },
     "rs:sardine": {
         "extends": "rs:food",
-        "game_id": 325
+        "game_id": 325,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 4
+                }
+            }
+        }
     },
     "rs:karambwan": {
         "extends": "rs:food",
-        "game_id": 3142
+        "game_id": 3142,
+        "metadata": {
+            "consume_effects": {
+                "clock": "special_food",
+                "skills": {
+                    "hitpoints": 18
+                }
+            }
+        }
     },
     "rs:ugthanki_kebab": {
         "extends": "rs:food",
-        "game_id": 1883
+        "game_id": 1883,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 19
+                }
+            }
+        }
     },
     "rs:herring": {
         "extends": "rs:food",
-        "game_id": 345
+        "game_id": 345,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 5
+                }
+            }
+        }
     },
     "rs:mackerel": {
         "extends": "rs:food",
-        "game_id": 355
+        "game_id": 355,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 6
+                }
+            }
+        }
     },
     "rs:thin_snail_meat": {
         "extends": "rs:food",
-        "game_id": 3369
+        "game_id": 3369,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": [5,7]
+                }
+            }
+        }
     },
     "rs:trout": {
         "extends": "rs:food",
-        "game_id": 335
+        "game_id": 333,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 7
+                }
+            }
+        }
     },
     "rs:lean_snail_meat": {
         "extends": "rs:food",
-        "game_id": 3371
+        "game_id": 3371,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": [5,8]
+                }
+            }
+        }
     },
     "rs:cod": {
         "extends": "rs:food",
-        "game_id": 339
+        "game_id": 339,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 7
+                }
+            }
+        }
     },
     "rs:pike": {
         "extends": "rs:food",
-        "game_id": 351
+        "game_id": 351,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 8
+                }
+            }
+        }
     },
     "rs:salmon": {
         "extends": "rs:food",
-        "game_id": 329
+        "game_id": 329,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 9
+                }
+            }
+        }
     },
     "rs:tuna": {
         "extends": "rs:food",
-        "game_id": 361
+        "game_id": 361,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 10
+                }
+            }
+        }
     },
     "rs:cooked_chompy": {
         "extends": "rs:food",
-        "game_id": 7228
+        "game_id": 2878,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 10
+                }
+            }
+        }
     },
     "rs:fish_cake": {
         "extends": "rs:food",
-        "game_id": 7530
+        "game_id": 7530,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 11
+                }
+            }
+        }
     },
     "rs:cave_eel": {
         "extends": "rs:food",
-        "game_id": 5003
+        "game_id": 5003,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": [8,12]
+                }
+            }
+        }
     },
     "rs:lobster": {
         "extends": "rs:food",
-        "game_id": 379
+        "game_id": 379,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 12
+                }
+            }
+        }
     },
     "rs:jubbly": {
         "extends": "rs:food",
-        "game_id": 7568
+        "game_id": 7568,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 15
+                }
+            }
+        }
     },
     "rs:bass": {
         "extends": "rs:food",
-        "game_id": 365
+        "game_id": 365,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 13
+                }
+            }
+        }
     },
     "rs:swordfish": {
         "extends": "rs:food",
-        "game_id": 373
+        "game_id": 373,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 14
+                }
+            }
+        }
     },
     "rs:lava_eel": {
         "extends": "rs:food",
-        "game_id": 2149
+        "game_id": 2149,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 11
+                }
+            }
+        }
     },
     "rs:shark": {
         "extends": "rs:food",
-        "game_id": 385
+        "game_id": 385,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 20
+                }
+            }
+        }
     },
     "rs:sea_turtle": {
         "extends": "rs:food",
-        "game_id": 397
+        "game_id": 397,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 21
+                }
+            }
+        }
     },
     "rs:manta_ray": {
         "extends": "rs:food",
-        "game_id": 391
+        "game_id": 391,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 22
+                }
+            }
+        }
     },
     "rs:bread": {
         "extends": "rs:food",
-        "game_id": 2309
+        "game_id": 2309,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 5
+                }
+            }
+        }
     },
-    "rs:pitta_bread": {
+    "rs:uncooked_meat_pie": {
         "extends": "rs:food",
-        "game_id": 1865
+        "game_id": 2320
     },
     "rs:redberry_pie": {
         "extends": "rs:food",
-        "game_id": 2325
+        "game_id": 2325,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:redberry_pie:1",
+                "skills": {
+                    "hitpoints": 5
+                }
+            }
+        },
+        "subitems": [
+            {
+                "metadata": {
+                    "consume_effects": {
+                        "replaced_by": "rs:pie_dish"
+                    }
+                },
+                "suffix": "1",
+                "tradable": false,
+                "game_id": 2333
+            }
+        ]
     },
     "rs:meat_pie": {
         "extends": "rs:food",
-        "game_id": 2327
-    },
-    "rs:mud_pie": {
-        "extends": "rs:food",
-        "game_id": 7170
+        "game_id": 2327,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:meat_pie:1",
+
+                "skills": {
+                    "hitpoints": 6
+                }
+            }
+        },
+        "subitems": [
+            {
+                "metadata": {
+                    "consume_effects": {
+                        "replaced_by": "rs:pie_dish"
+                    }
+                },
+                "suffix": "1",
+                "tradable": false,
+                "game_id": 2327
+            }
+        ]
     },
     "rs:apple_pie": {
         "extends": "rs:food",
-        "game_id": 2323
+        "game_id": 2323,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:apple_pie:2",
+                "skills": {
+                    "hitpoints": 7
+                }
+            }
+        },
+        "subitems": [
+            {
+                "metadata": {
+                    "consume_effects": {
+                        "replaced_by": "rs:pie_dish"
+                    }
+                },
+                "suffix": "1",
+                "tradable": false,
+                "game_id": 2335
+            }
+        ]
     },
     "rs:garden_pie": {
         "extends": "rs:food",
-        "game_id": 7178
+        "game_id": 7178,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:garden_pie:1",
+                "skills": {
+                    "hitpoints": 6,
+                    "farming": 3
+                }
+            }
+        },
+        "subitems": [
+            {
+                "metadata": {
+                    "consume_effects": {
+                        "replaced_by": "rs:pie_dish"
+                    }
+                },
+                "suffix": "1",
+                "tradable": false,
+                "game_id": 7180
+            }
+        ]
     },
     "rs:fish_pie": {
         "extends": "rs:food",
-        "game_id": 7188
+        "game_id": 7188,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:fish_pie:1",
+                "skills": {
+                    "hitpoints": 6,
+                    "fishing": 3
+                }
+            }
+        },
+        "subitems": [
+            {
+                "metadata": {
+                    "consume_effects": {
+                        "replaced_by": "rs:pie_dish"
+                    }
+                },
+                "suffix": "1",
+                "tradable": false,
+                "game_id": 7190
+            }
+        ]
     },
     "rs:admiral_pie": {
         "extends": "rs:food",
-        "game_id": 7198
+        "game_id": 7198,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:admiral_pie:1",
+                "skills": {
+                    "hitpoints": 8,
+                    "fishing": 5
+                }
+            }
+        },
+        "subitems": [
+                {
+                    "metadata": {
+                        "consume_effects": {
+                            "replaced_by": "rs:pie_dish"
+                        }
+                    },
+                    "suffix": "1",
+                    "tradable": false,
+                    "game_id": 7200
+                }
+            ]
     },
     "rs:wild_pie": {
         "extends": "rs:food",
-        "game_id": 7208
+        "game_id": 7208,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:wild_pie:1",
+                "skills": {
+                    "hitpoints": 11,
+                    "slayer": 5,
+                    "ranged": 4
+                }
+            }
+        },
+        "subitems": [
+            {
+                "metadata": {
+                    "consume_effects": {
+                        "replaced_by": "rs:pie_dish"
+                    }
+                },
+                "suffix": "1",
+                "tradable": false,
+                "game_id": 7210
+            }
+        ]
     },
     "rs:summer_pie": {
         "extends": "rs:food",
-        "game_id": 7218
+        "game_id": 7218,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:summer_pie:1",
+                "skills": {
+                    "hitpoints": 11,
+                    "agility": 5
+                },
+                "energy": 10
+            }
+        },
+        "subitems": [
+            {
+                "metadata": {
+                    "consume_effects": {
+                        "replaced_by": "rs:pie_dish"
+                    }
+                },
+                "suffix": "1",
+                "tradable": false,
+                "game_id": 7220
+            }
+        ]
     },
     "rs:stew": {
         "extends": "rs:food",
-        "game_id": 2003
+        "game_id": 2003,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:bowl",
+                "skills": {
+                    "hitpoints": 11
+                }
+            }
+        }
     },
     "rs:banana_stew": {
         "extends": "rs:food",
-        "game_id": 4016
+        "game_id": 4016,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:bowl",
+                "skills": {
+                    "hitpoints": 11
+                }
+            }
+        }
     },
     "rs:spicy_stew": {
         "extends": "rs:food",
-        "game_id": 7479
+        "game_id": 7479,
+        "metadata": {
+            "consume_effects": {
+                "special": true
+            }
+        }
     },
     "rs:plain_pizza": {
         "extends": "rs:food",
-        "game_id": 2289
+        "game_id": 2289,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:plain_pizza:1",
+                "skills": {
+                    "hitpoints": 7
+                }
+            }
+        },
+        "subitems": [
+            {
+                "metadata": {
+                    "consume_effects": {
+                        "replaced_by": null
+                    }
+                },
+                "suffix": "1",
+                "tradable": false,
+                "game_id": 2291
+            }
+        ]
     },
     "rs:meat_pizza": {
         "extends": "rs:food",
-        "game_id": 2293
+        "game_id": 2293,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:meat_pizza:1",
+                "skills": {
+                    "hitpoints": 8
+                }
+            }
+        },
+        "subitems": [
+            {
+                "metadata": {
+                    "consume_effects": {
+                        "replaced_by": null
+                    }
+                },
+                "suffix": "1",
+                "tradable": false,
+                "game_id": 2295
+            }
+        ]
     },
     "rs:anchovy_pizza": {
         "extends": "rs:food",
-        "game_id": 2297
+        "game_id": 2297,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:anchovy_pizza:1",
+                "skills": {
+                    "hitpoints": 9
+                }
+            }
+        },
+        "subitems": [
+            {
+                "metadata": {
+                    "consume_effects": {
+                        "replaced_by": null
+                    }
+                },
+                "suffix": "1",
+                "tradable": false,
+                "game_id": 2299
+            }
+        ]
     },
     "rs:pineapple_pizza": {
         "extends": "rs:food",
-        "game_id": 2301
+        "game_id": 2301,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:pineapple_pizza:1",
+                "skills": {
+                    "hitpoints": 11
+                }
+            }
+        },
+        "subitems": [
+            {
+                "metadata": {
+                    "consume_effects": {
+                        "replaced_by": null
+                    }
+                },
+                "suffix": "1",
+                "tradable": false,
+                "game_id": 2303
+            }
+        ]
     },
     "rs:cake": {
         "extends": "rs:food",
-        "game_id": 1891
+        "game_id": 1891,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:cake:1",
+                "skills": {
+                    "hitpoints": 4
+                }
+            }
+        },
+        "subitems": [
+            {
+                "metadata": {
+                    "consume_effects": {
+                        "replaced_by": "rs:cake:2"
+                    }
+                },
+                "suffix": "1",
+                "tradable": false,
+                "game_id": 1893
+            },
+            {
+                "metadata": {
+                    "consume_effects": {
+                        "replaced_by": null
+                    }
+                },
+                "suffix": "2",
+                "tradable": false,
+                "game_id": 1895
+            }
+        ]
     },
     "rs:chocolate_cake": {
         "extends": "rs:food",
-        "game_id": 1897
+        "game_id": 1897,
+        "metadata": {
+            "consume_effects": {
+                "replaced_by": "rs:chocolate_cake:1",
+                "skills": {
+                    "hitpoints": 5
+                }
+            }
+        },
+        "subitems": [
+            {
+                "metadata": {
+                    "consume_effects": {
+                        "replaced_by": "rs:chocolate_cake:2"
+                    }
+                },
+                "suffix": "1",
+                "tradable": false,
+                "game_id": 1899
+            },
+            {
+                "metadata": {
+                    "consume_effects": {
+                        "replaced_by": null
+                    }
+                },
+                "suffix": "2",
+                "tradable": false,
+                "game_id": 1901
+            }
+        ]
     },
     "rs:wine": {
         "extends": "rs:beverage",
-        "game_id": 1993
+        "game_id": 1993,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 11,
+                    "attack": -2
+                }
+            }
+        }
     },
-    "rs:wine_of_zamorak": {
-        "extends": "rs:beverage",
-        "game_id": 245
-    },
+
     "rs:nettle_tea": {
         "extends": "rs:beverage",
-        "game_id": 4239
+        "game_id": 4239,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 3
+                },
+                "energy": 5
+            }
+        }
     },
     "rs:cider": {
         "extends": "rs:beverage",
-        "game_id": 5763
+        "game_id": 5763,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 2,
+                    "farming": 1
+                }
+            }
+        }
     },
     "rs:dwarven_stout": {
         "extends": "rs:beverage",
-        "game_id": 1913
+        "game_id": 1913,
+        "metadata": {
+            "consume_effects": {
+                "special": true
+            }
+        }
     },
     "rs:asgarnian_ale": {
         "extends": "rs:beverage",
-        "game_id": 1905
+        "game_id": 1905,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 2,
+                    "strength": 2,
+                    "attack": -4
+                }
+            }
+        }
     },
     "rs:greenmans_ale": {
         "extends": "rs:beverage",
-        "game_id": 7746
+        "game_id": 7746,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 1,
+                    "herblore": 1,
+                    "attack": -3,
+                    "strength": -3,
+                    "defence": -3
+                }
+            }
+        }
     },
     "rs:wizards_mind_bomb": {
         "extends": "rs:beverage",
-        "game_id": 1907
+        "game_id": 1907,
+        "metadata": {
+            "consume_effects": {
+                "special": true
+            }
+        }
     },
     "rs:dragon_bitter": {
         "extends": "rs:beverage",
-        "game_id": 1911
+        "game_id": 1911,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 1,
+                    "attack": -3,
+                    "strength": 2
+                }
+            }
+        }
     },
     "rs:moonlight_mead": {
         "extends": "rs:beverage",
-        "game_id": 2955
+        "game_id": 2955,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 4
+                }
+            }
+        }
     },
     "rs:axemans_folly": {
         "extends": "rs:beverage",
-        "game_id": 5751
+        "game_id": 5751,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 1,
+                    "woodcutting": 1,
+                    "strength": -3,
+                    "attack": -3
+                }
+            }
+        }
     },
     "rs:chefs_delight": {
         "extends": "rs:beverage",
-        "game_id": 5755
+        "game_id": 5755,
+        "metadata": {
+            "consume_effects": {
+                "special": true
+            }
+        }
     },
     "rs:slayers_respite": {
         "extends": "rs:beverage",
-        "game_id": 5759
+        "game_id": 5759,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 1,
+                    "slayer": 2,
+                    "strength": -2,
+                    "attack": -2
+                }
+            }
+        }
     },
-    "rs:baked_potato": {
-        "extends": "rs:food",
-        "game_id": 6701
-    },
+
     "rs:spicy_sauce": {
         "extends": "rs:food",
-        "game_id": 7072
+        "game_id": 7072,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 2
+                }
+            }
+        }
     },
     "rs:scrambled_egg": {
         "extends": "rs:food",
-        "game_id": 7078
+        "game_id": 7078,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 5
+                }
+            }
+        }
     },
     "rs:scrambled_egg_and_tomato": {
         "extends": "rs:food",
-        "game_id": 7064
+        "game_id": 7064,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 8
+                }
+            }
+        }
     },
     "rs:sweetcorn": {
         "extends": "rs:food",
-        "game_id": 7088
+        "game_id": 7088,
+        "metadata": {
+            "consume_effects": {
+                "special": true
+            }
+        }
     },
     "rs:baked_potato_with_butter": {
         "extends": "rs:food",
-        "game_id": 6703
+        "game_id": 6703,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 14
+                }
+            }
+        }
     },
     "rs:fried_onion": {
         "extends": "rs:food",
-        "game_id": 7084
+        "game_id": 7084,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 5
+                }
+            }
+        }
     },
     "rs:fried_mushroom": {
         "extends": "rs:food",
-        "game_id": 7082
+        "game_id": 7082,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 5
+                }
+            }
+        }
     },
     "rs:baked_potato_with_butter_and_cheese": {
         "extends": "rs:food",
-        "game_id": 6705
+        "game_id": 6705,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 16
+                }
+            }
+        }
     },
     "rs:baked_potato_with_egg_and_tomato": {
         "extends": "rs:food",
-        "game_id": 7056
+        "game_id": 7056,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 16
+                }
+            }
+        }
     },
     "rs:fried_mushroom_and_onion": {
         "extends": "rs:food",
-        "game_id": 7066
+        "game_id": 7066,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 11
+                }
+            }
+        }
     },
     "rs:baked_potato_with_mushroom_and_onion": {
         "extends": "rs:food",
-        "game_id": 7058
+        "game_id": 7058,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 20
+                }
+            }
+        }
     },
     "rs:tuna_and_sweetcorn": {
         "extends": "rs:food",
-        "game_id": 7068
+        "game_id": 7068,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 13
+                }
+            }
+        }
     },
     "rs:baked_potato_with_tuna_and_sweetcorn": {
         "extends": "rs:food",
-        "game_id": 7060
+        "game_id": 7060,
+        "metadata": {
+            "consume_effects": {
+                "skills": {
+                    "hitpoints": 22
+                }
+            }
+        }
     },
     "rs:butter": {
-        "extends": "rs:food",
+        "tradable": true,
         "game_id": 6697
+
+    },
+    "rs:raw_shrimp": {
+        "extends": "rs:food",
+        "game_id": 317
+    },
+    "rs:raw_sardine": {
+        "extends": "rs:food",
+        "game_id": 327
+    },
+    "rs:raw_karambwanji": {
+        "extends": "rs:food",
+        "game_id": 3150
+    },
+    "rs:raw_herring": {
+        "extends": "rs:food",
+        "game_id": 345
+    },
+    "rs:raw_anchovies": {
+        "extends": "rs:food",
+        "game_id": 321
+    },
+    "rs:raw_mackerel": {
+        "extends": "rs:food",
+        "game_id": 353
+    },
+    "rs:raw_trout": {
+        "extends": "rs:food",
+        "game_id": 335
+    },
+    "rs:raw_cod": {
+        "extends": "rs:food",
+        "game_id": 341
+    },
+    "rs:raw_pike": {
+        "extends": "rs:food",
+        "game_id": 349
+    },
+    "rs:raw_slimy_eel": {
+        "extends": "rs:food",
+        "game_id": 3379
+    },
+    "rs:raw_salmon": {
+        "extends": "rs:food",
+        "game_id": 331
+    },
+    "rs:raw_tuna": {
+        "extends": "rs:food",
+        "game_id": 359
+    },
+    "rs:raw_cave_eel": {
+        "extends": "rs:food",
+        "game_id": 5001
+    },
+    "rs:raw_bass": {
+        "extends": "rs:food",
+        "game_id": 363
+    },
+    "rs:raw_lobster": {
+        "extends": "rs:food",
+        "game_id": 377
+    },
+    "rs:raw_swordfish": {
+        "extends": "rs:food",
+        "game_id": 371
+    },
+    "rs:raw_lava_eel": {
+        "extends": "rs:food",
+        "game_id": 2148
+    },
+    "rs:raw_monkfish": {
+        "extends": "rs:food",
+        "game_id": 7944
+    },
+    "rs:raw_karambwan": {
+        "extends": "rs:food",
+        "game_id": 3142
+    },
+    "rs:raw_shark": {
+        "extends": "rs:food",
+        "game_id": 383
+    },
+    "rs:raw_sea_turtle": {
+        "extends": "rs:food",
+        "game_id": 395
+    },
+    "rs:raw_manta_ray": {
+        "extends": "rs:food",
+        "game_id": 389
+    },
+    "rs:raw_manta_ray": {
+        "extends": "rs:food",
+        "game_id": 389
+    },
+    "rs:raw_leaping_trout": {
+        "extends": "rs:food",
+        "game_id": 389
+    },
+    "rs:raw_leaping_salmon": {
+        "extends": "rs:food",
+        "game_id": 11330
+    },
+    "rs:raw_leaping_sturgeon": {
+        "extends": "rs:food",
+        "game_id": 11332
     },
     "rs:cheese": {
-        "extends": "rs:food",
+        "tradable": true,
         "game_id": 1985
+    },
+    "rs:pitta_bread": {
+        "tradable": true,
+        "game_id": 1865
+    },
+    "rs:wine_of_zamorak": {
+        "game_id": 245,
+        "tradable": true
+    },
+    "rs:baked_potato": {
+        "tradable": "true",
+        "game_id": 6701
     }
 }

@@ -2,8 +2,8 @@
  * @Author NickNick
  */
 
-import { Item } from '@server/world/items/item';
-import { Position } from '@server/world/position';
+import { Item } from '@engine/world/items/item';
+import { Position } from '@engine/world/position';
 
 export interface RunecraftingRecipe {
     ingredients: Item[] | number[];

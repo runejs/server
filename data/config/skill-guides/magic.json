@@ -1,0 +1,815 @@
+{
+    "id": 137,
+    "name": "Magic",
+    "members": false,
+    "sub_guides": [
+      {
+        "name": "Normal Spells",
+        "lines": [
+            {
+                "item": "rs:magic_guide",
+                "text": "Click a spell icon below to see the\\nrequired runes to cast each spell.\\n\\nBy opening the spellbook icon on the side\\n interface, you can see what each spell does\\nby moving your mouse over its icon.",
+                "level": ""
+              },
+              {
+            "item": "rs:spell_home_teleport",
+            "text": "Click a spell icon below to see the\\nrequired runes to cast each spell.\\n\\nBy opening the spellbook icon on the side\\n interface, you can see what each spell does\\nby moving your mouse over its icon.",
+            "level": ""
+              },
+          {
+            "item": "rs:spell_wind_strike",
+            "text": "Wind Strike",
+            "level": 1
+          },
+          {
+            "item": "rs:spell_confuse",
+            "text": "Confuse",
+            "level": 3
+          },
+          {
+            "item": "rs:spell_water_strike",
+            "text": "Water Strike",
+            "level": 5
+          },
+          {
+            "item": "rs:spell_level_1_enchant",
+            "text": "Level 1 enchant",
+            "level": 7
+          },
+          {
+            "item": "rs:spell_earth_strike",
+            "text": "Earth Strike",
+            "level": 9
+          },
+          {
+            "item": "rs:spell_weaken",
+            "text": "Weaken",
+            "level": 11
+          },
+          {
+            "item": "rs:spell_fire_strike",
+            "text": "Fire Strike",
+            "level": 13
+          },
+          {
+            "item": "rs:spell_bones_to_bananas",
+            "text": "Bones to bananas",
+            "level": 15
+          },
+          {
+            "item": "rs:spell_wind_bolt",
+            "text": "Wind Bolt",
+            "level": 17
+          },
+          {
+            "item": "rs:spell_curse",
+            "text": "Curse",
+            "level": 19
+          },
+          {
+            "item": "rs:spell_bind",
+            "text": "Bind",
+            "level": 20
+          },
+          {
+            "item": "rs:spell_low_level_alchemy",
+            "text": "Low level alchemy",
+            "level": 21
+          },
+          {
+            "item": "rs:spell_water_bolt",
+            "text": "Water Bolt",
+            "level": 23
+          },
+          {
+            "item": "rs:spell_varrock_teleport",
+            "text": "Varrock teleport",
+            "level": 25
+          },
+          {
+            "item": "rs:spell_level_2_enchant",
+            "text": "Level 2 enchant",
+            "level": 27
+          },
+          {
+            "item": "rs:spell_earth_bolt",
+            "text": "Earth Bolt",
+            "level": 29
+          },
+          {
+            "item": "rs:spell_lumbridge_teleport",
+            "text": "Lumbridge teleport",
+            "level": 31
+          },
+          {
+            "item": "rs:spell_telekinetic_grab",
+            "text": "Telekinetic grab",
+            "level": 33
+          },
+          {
+            "item": "rs:spell_fire_bolt",
+            "text": "Fire Bolt",
+            "level": 35
+          },
+          {
+            "item": "rs:spell_falador_teleport",
+            "text": "Falador teleport",
+            "level": 37
+          },
+          {
+            "item": "rs:spell_crumble_undead",
+            "text": "Crumble undead",
+            "level":39
+          },
+          {
+            "item": "rs:spell_teleport_to_house",
+            "text": "Teleport to house",
+            "level": 40
+          },
+          {
+            "item": "rs:spell_wind_blast",
+            "text": "Wind Blast",
+            "level": 41
+          },
+          {
+            "item": "rs:spell_superheat_item",
+            "text": "Superheat item",
+            "level": 43
+          },
+          {
+            "item": "rs:spell_camelot_teleport",
+            "text": "Members: Camelot teleport",
+            "level": 45
+          },
+          {
+            "item": "rs:spell_water_blast",
+            "text": "Water Blast",
+            "level": 47
+          },
+          {
+            "item": "rs:spell_level_3_enchant",
+            "text": "Level 3 enchant",
+            "level": 49
+          },
+          {
+            "item": "rs:spell_iban_blast",
+            "text": "Members: Iban blast\\n(after Underground Pass)",
+            "level": 50
+          },
+          {
+            "item": "rs:spell_snare",
+            "text": "Snare",
+            "level": 50
+          },
+          {
+            "item": "rs:spell_magic_dart",
+            "text": "Members: Magic dart\\n(with 55 Slayer)",
+            "level": 50
+          },
+          {
+            "item": "rs:spell_ardougne_teleport",
+            "text": "Members: Ardougne teleport\\n(after Plague City)",
+            "level": 51
+          },
+          {
+            "item": "rs:spell_earth_blast",
+            "text": "Earth Blast",
+            "level": 53
+          },
+          {
+            "item": "rs:spell_high_level_alchemy",
+            "text": "High level alchemy",
+            "level": 55
+          },
+          {
+            "item": "rs:spell_charge_water_orb",
+            "text": "Members: Charge water orb",
+            "level": 56
+          },
+          {
+            "item": "rs:spell_level_4_enchant",
+            "text": "Level 4 enchant",
+            "level": 57
+          },
+          {
+            "item": "rs:spell_watchtower_teleport",
+            "text": "Members: Watchtower teleport\\n(after Watchtower)",
+            "level": 58
+          },
+          {
+            "item": "rs:spell_fire_blast",
+            "text": "Fire Blast",
+            "level": 59
+          },
+          {
+            "item": "rs:spell_charge_earth_orb",
+            "text": "Members: Charge earth orb",
+            "level": 60
+          },
+          {
+            "item": "rs:spell_bones_to_peaches",
+            "text": "Members: Bones to peaches",
+            "level": 60
+          },
+          {
+            "item": "rs:spell_claws_of_guthix",
+            "text": "Members: Claws of Guthix\\n(after Mage Arena)",
+            "level": 60
+          },
+          {
+            "item": "rs:spell_flames_of_zamorak",
+            "text": "Members: Flames of Zamorak\\n(after Mage Arena",
+            "level": 60
+          },
+          {
+            "item": "rs:spell_saradomin_strike",
+            "text": "Members: Saradomin Strike\\n(after Mage Arena)",
+            "level": 60
+          },
+          {
+            "item": "rs:spell_trollheim_teleport",
+            "text": "Members: Trollheim teleport\\n(after Eadgar's Ruse)",
+            "level": 61
+          },
+          {
+            "item": "rs:spell_wind_wave",
+            "text": "Members: Wind Wave",
+            "level": 62
+          },
+          {
+            "item": "rs:spell_charge_fire_orb",
+            "text": "Members: Charge fire orb",
+            "level": 63
+          },
+          {
+            "item": "rs:spell_ape_atoll_teleport",
+            "text": "Members: Ape atoll teleport\\n(after Recipe for Disaster)",
+            "level": 64
+          },
+          {
+            "item": "rs:spell_water_wave",
+            "text": "Members: Water wave",
+            "level": 65
+          },
+          {
+            "item": "rs:spell_charge_air_orb",
+            "text": "Members: Charge air orb",
+            "level": 66
+          },
+          {
+            "item": "rs:spell_vulnerability",
+            "text": "Members: Vulnerability",
+            "level": 66
+          },
+          {
+            "item": "rs:spell_level_5_enchant",
+            "text": "Members: Level 5 enchant",
+            "level": 68
+          },
+          {
+            "item": "rs:spell_earth_wave",
+            "text": "Members: Earth Wave",
+            "level": 70
+          },
+          {
+            "item": "rs:spell_enfeeble",
+            "text": "Members: Enfeeble",
+            "level": 73
+          },
+          {
+            "item": "rs:spell_teleother_lumbridge",
+            "text": "Members: Teleother Lumbridge",
+            "level": 74
+          },
+          {
+            "item": "rs:spell_fire_wave",
+            "text": "Members: Fire Wave",
+            "level": 75
+          },
+          {
+            "item": "rs:spell_entangle",
+            "text": "Members: Entangle",
+            "level": 79
+          },
+          {
+            "item": "rs:spell_stun",
+            "text": "Members: Stun",
+            "level": 80
+          },
+          {
+            "item": "rs:spell_charge",
+            "text": "Members: Charge\\n(after Mage Arena)",
+            "level": 80
+          },
+          {
+            "item": "rs:spell_teleother_falador",
+            "text": "Members: Teleother to Falador",
+            "level": 82
+          },
+          {
+            "item": "rs:spell_tele_block",
+            "text": "Tele block",
+            "level": 85
+          },
+          {
+            "item": "rs:spell_level_6_enchant",
+            "text": "Level 6 enchant",
+            "level": 87
+          },
+          {
+            "item": "rs:spell_teleother_camelot",
+            "text": "Members: Teleother to Camelot",
+            "level": 90
+          }
+        ]
+      },{
+        "name": "Ancient Magicks",
+        "members": true,
+        "lines": [
+           {
+           "item": "rs:ancient_magick_guide",
+           "text": "Ancient magicks are available after\\ncompleting the Desert Treasure quest.",
+           "level": ""
+           },
+          {
+            "item": "rs:spell_home_teleport_ancient",
+            "text": "Home teleport (Edgeville)",
+            "level": ""
+          },
+          {
+            "item": "rs:spell_smoke_rush",
+            "text": "Smoke rush",
+            "level": 50
+          },
+          {
+            "item": "rs:spell_shadow_rush",
+            "text": "Shadow rush",
+            "level": 52
+          },
+          {
+            "item": "rs:spell_paddewwa_teleport",
+            "text": "Paddewwa teleport",
+            "level": 54
+          },
+          {
+            "item": "rs:spell_blood_rush",
+            "text": "Blood rush",
+            "level": 56
+          },
+          {
+            "item": "rs:spell_ice_rush",
+            "text": "Mithril",
+            "level": 58
+          },
+          {
+            "item": "rs:spell_senntisten_teleport",
+            "text": "Senntisten teleport",
+            "level": 60
+          },
+          {
+            "item": "rs:spell_smoke_burst",
+            "text": "Smoke burst",
+            "level": 62
+          },
+          {
+            "item": "rs:spell_shadow_burst",
+            "text": "Shadow burst",
+            "level": 64
+          },
+          {
+            "item": "rs:Kharyll teleport",
+            "text": "Kharyll teleport",
+            "level": 66
+          },
+          {
+            "item": "rs:spell_blood_burst",
+            "text": "Blood burst",
+            "level": 68
+          },
+          {
+            "item": "rs:spell_ice_burst",
+            "text": "Ice burst",
+            "level": 70
+          },
+          {
+            "item": "rs:spell_lassar_teleport",
+            "text": "Lassar teleport",
+            "level": 72
+          },
+          {
+            "item": "rs:spell_smoke_blitz",
+            "text": "Smoke Blitz",
+            "level": 74
+          },
+          {
+            "item": "rs:spell_shadow_blitz",
+            "text": "Shadow blitz",
+            "level": 76
+          },
+          {
+            "item": "rs:spell_dareeyak_teleport",
+            "text": "Dareeyak teleport",
+            "level": 78
+          },
+          {
+            "item": "rs:spell_blood_blitz",
+            "text": "Blood Blitz",
+            "level": 80
+          },
+          {
+            "item": "rs:spell_ice_blitz",
+            "text": "Ice blitz",
+            "level": 82
+          },
+          {
+            "item": "rs:guthans_warspear",
+            "text": "Members: Guthan's warspear",
+            "level": 84
+          },
+          {
+            "item": "rs:spell_carrallangar_teleport",
+            "text": "Carrallangar teleport",
+            "level": 85
+          },
+          {
+            "item": "rs:spell_smoke_barrage",
+            "text": "Smoke barrage",
+            "level": 86
+          },
+          {
+            "item": "rs:spell_shadow_barrage",
+            "text": "Shadow barrage",
+            "level": 88
+          },
+          {
+            "item": "rs:spell_annakarl teleport",
+            "text": "Annakarl teleport",
+            "level": 90
+          },
+          {
+            "item": "rs:spell_blood_barrage",
+            "text": "Blood barrage",
+            "level": 92
+          },
+          {
+            "item": "rs:spell_ice_barrage",
+            "text": "Ice barrage",
+            "level": 94
+          },
+          {
+            "item": "rs:spell_ghorrock_teleport",
+            "text": "Ghorrock teleport",
+            "level": 96
+          }
+        ]
+      },{
+        "name": "Lunar Spells",
+        "members": true,
+        "lines": [
+           {
+           "item": "rs:lunar_spells_guide",
+           "text": "Lunar spells are available after completing\\nthe Lunar Diplomacy quest.",
+           "level": ""
+           },
+          {
+            "item": "rs:spell_home_teleport_lunar",
+            "text": "Home teleport (Lunar Isle)",
+            "level": ""
+          },
+          {
+            "item": "rs:spell_bake_pie",
+            "text": "Bake pie",
+            "level": 65
+          },
+          {
+            "item": "rs:spell_geomancy",
+            "text": "Geomancy",
+            "level": 65
+          },
+          {
+            "item": "rs:spell_cure_plant",
+            "text": "Cure plant",
+            "level": 66
+          },
+          {
+            "item": "rs:spell_npc_contact",
+            "text": "NPC Contact",
+            "level": 67
+          },
+          {
+            "item": "rs:spell_cure_other",
+            "text": "Cure other",
+            "level": 68
+          },
+          {
+            "item": "rs:spell_moonclan_teleport",
+            "text": "Moonclan teleport",
+            "level": 69
+          },
+          {
+            "item": "rs:spell_telegroup_moonclan",
+            "text": "Tele group Moonclan",
+            "level": 70
+          },
+          {
+            "item": "rs:spell_cure_me",
+            "text": "Cure me",
+            "level": 71
+          },
+          {
+            "item": "rs:spell_ourania_teleport",
+            "text": "Ourania teleport",
+            "level": 71
+          },
+          {
+            "item": "rs:spell_waterbirth_teleport",
+            "text": "Waterbirth teleport",
+            "level": 72
+          },
+          {
+            "item": "rs:spell_telegroup_waterbirth",
+            "text": "Tele group Waterbirth",
+            "level": 73
+          },
+          {
+            "item": "rs:spell_barbarian_teleport",
+            "text": "Barbarian teleport",
+            "level": 72
+          },
+          {
+            "item": "rs:spell_telegroup_barbarian",
+            "text": "Tele group Barbarian",
+            "level": 74
+          },
+          {
+            "item": "rs:spell_spin_flax",
+            "text": "Spin Flax",
+            "level": 76
+          },
+          {
+            "item": "rs:spell_superglass_make",
+            "text": "Superglass make",
+            "level": 77
+          },
+          {
+            "item": "rs:spell_khazard_teleport",
+            "text": "Khazard teleport",
+            "level": 78
+          },
+          {
+            "item": "rs:spell_telegroup_khazard",
+            "text": "Tele group Khazard",
+            "level": 79
+          },
+          {
+            "item": "rs:spell_string_jewellery",
+            "text": "String jewellery",
+            "level": 80
+          },
+          {
+            "item": "rs:spell_stat_restore_pot_share",
+            "text": "Stat restore pot share",
+            "level": 81
+          },
+          {
+            "item": "rs:spell_magic_imbue",
+            "text": "Magic imbue",
+            "level": 82
+          },
+          {
+            "item": "rs:spell_fertile_soil",
+            "text": "Fertile soil",
+            "level": 83
+          },
+          {
+            "item": "rs:spell_boost_potion_share",
+            "text": "Boost potion share",
+            "level": 84
+          },
+          {
+            "item": "rs:spell_fishing_guild_teleport",
+            "text": "Fishing guild teleport",
+            "level": 85
+          },
+          {
+            "item": "rs:spell_telegroup_fishing_guild",
+            "text": "Tele  group fishing guild",
+            "level": 86
+          },
+          {
+            "item": "rs:spell_catherby_teleport",
+            "text": "Catherby teleport",
+            "level": 87
+          },
+          {
+            "item": "rs:spell_telegroup_catherby",
+            "text": "Tele group Catherby",
+            "level": 88
+          },
+          {
+            "item": "rs:spell_recharge_dragonstone",
+            "text": "Recharge Dragonstone",
+            "level": 89
+          },
+          {
+            "item": "rs:spell_ice_plateau_teleport",
+            "text": "Ice plateau teleport",
+            "level": 89
+          },
+          {
+            "item": "rs:spell_telegroup_ice_plateau",
+            "text": "Tele group Ice plateau",
+            "level": 90
+          },
+          {
+            "item": "rs:spell_energy_transfer",
+            "text": "Energy transfer",
+            "level": 91
+          },
+          {
+            "item": "rs:spell_heal_other",
+            "text": "Heal other",
+            "level": 92
+          },
+          {
+            "item": "rs:spell_vengeance_other",
+            "text": "Vengeance other",
+            "level": 93
+          },
+          {
+            "item": "rs:spell_vengeancer",
+            "text": "Vengeance",
+            "level": 94
+          },
+          {
+            "item": "rs:spell_heal_group",
+            "text": "Heal group",
+            "level": 95
+          }
+        ]
+      },{
+        "name": "Armour",
+        "members": true,
+        "lines": [
+          {
+            "item": "rs:wizard_boots",
+            "text": "Wizard boots",
+            "level": 20
+          },
+          {
+            "item": "rsmystic_robes",
+            "text": "Mystic robes\\n(20 Defence required)",
+            "level": 40
+          },
+          {
+            "item": "rs:enchanted_robes",
+            "text": "Enchanted robes\\n(20 Defence required)",
+            "level": 40
+          },
+          {
+            "item": "rs:splitbark_armour",
+            "text": "Splitbark armour\\n(40 Defence required)",
+            "level": 40
+          },
+          {
+            "item": "rs:skeletal_armour",
+            "text": "Skeletal_armour\\n(after The Fremmenik Trials, 40 Defence required",
+            "level": 40
+          },
+          {
+            "item": "rs:infinity_robes",
+            "text": "Infinity robes\\n(25 Defence required)",
+            "level": 50
+          },
+          {
+            "item": "rs:god_capes",
+            "text": "God capes\\n(after Mage Arena)",
+            "level": 60
+          },
+          {
+            "item": "rs:lunar_armour",
+            "text": "Lunar armour\\n(after Lunar Diplomacy, 40 Defence required)",
+            "level": 65
+          },
+          {
+            "item": "rs:ahrims_robes",
+            "text": "Ahrims robes\\n(with 70 Defence)",
+            "level": 70
+          }
+        ]
+      },{
+        "name": "Bolts",
+        "members": true,
+        "lines": [
+          {
+            "item": "rs:spell_enchant_opal_tipped_crossbow_bolts",
+            "text": "Opal-tipped crossbow bolts\\n1 cosmic + 2 air runes",
+            "level": 4
+          },          {
+            "item": "rs:spell_enchant_sapphire_tipped_crossbow_bolts",
+            "text": "Sapphire-tipped crossbow bolts\\n1 cosmic + 1 water + 1 mind rune",
+            "level": 7
+          },
+          {
+            "item": "rs:spell_enchant_jade_tipped_crossbow_bolts",
+            "text": "Jade-tipped crossbow bolts\\n1 cosmic + 2 earth runes",
+            "level": 14
+          },
+          {
+            "item": "rs:spell_enchant_pearl_tipped_crossbow_bolts",
+            "text": "Pearl-tipped crossbow bolts\\n1 cosmic + 2 water runes",
+            "level": 24
+          },
+          {
+            "item": "rs:spell_enchant_emerald_tipped_crossbow_bolts",
+            "text": "Emerald-tipped crossbow bolts\\n1 cosmic + 3 air runes + 1 nature rune",
+            "level": 27
+          },
+          {
+            "item": "rs:spell_enchant_red_topaz_tipped_crossbow_bolts",
+            "text": "Red topaz-tipped crossbow bolts\\n1 cosmic + 2 blood runes",
+            "level": 29
+          },
+          {
+            "item": "rs:spell_enchant_ruby_tipped_crossbow_bolts",
+            "text": "Opal-tipped crossbow bolts\\n1 cosmic + 5 fire + 1 blood runes",
+            "level": 49
+          },
+          {
+            "item": "rs:spell_enchant_diamond_tipped_crossbow_bolts",
+            "text": "Diamond-tipped crossbow bolts\\n1 cosmic + 10 earth + 2 law runes",
+            "level": 57
+          },
+          {
+            "item": "rs:spell_enchant_dragonstone_tipped_crossbow_bolts",
+            "text": "Dragonstone-tipped crossbow bolts\\n1 cosmic + 15 earth + 1 soul runes",
+            "level": 68
+          },
+          {
+            "item": "rs:spell_enchant_onyx_tipped_crossbow_bolts",
+            "text": "Onyx-tipped crossbow bolts\\n1 cosmic + 20 fire + 1 death runes",
+            "level": 87
+          }
+        ]
+      },{
+        "name": "Weapons",
+        "members": true,
+        "lines": [
+          {
+            "item": "rs:battlestaves",
+            "text": "Battlestaves\\n(30 Attack required)",
+            "level": 20
+          },
+          {
+            "item": "rs:mysticstaves",
+            "text": "Mystic staves\\n(40 Attack required)",
+            "level": 40
+          },
+          {
+            "item": "rs:beginner_wand",
+            "text": "Beginner wand",
+            "level": 45
+          },
+          {
+            "item": "rs:apprentice_wand",
+            "text": "Apprentice wand",
+            "level": 50
+          },
+          {
+            "item": "rs:ancient_staff",
+            "text": "Ancient staff\\n(after Desert Treasure, 50 Attack required",
+            "level": 50
+          },
+          {
+            "item": "rs:slayer_staff",
+            "text": "Slayer staff\\n(with 55 Slayer)",
+            "level": 50
+          },
+          {
+            "item": "rs:teacher_wand",
+            "text": "Teacher wand",
+            "level": 55
+          },
+          {
+            "item": "rs:master_wand",
+            "text": "Master wand",
+            "level": 60
+          },          {
+            "item": "rs:god_staves",
+            "text": "God staves\\n(after Mage Arena)",
+            "level": 60
+          },          {
+            "item": "rs:toktz-mej-tal",
+            "text": "TokTz-Mej-Tal\\n(60 Attack required)",
+            "level": 60
+          },
+          {
+            "item": "rs:ahrims_robes",
+            "text": "Ahrim's staff\\n(70 Attack required)",
+            "level": 70
+          }
+        ]
+      }
+    ]
+  }
+  

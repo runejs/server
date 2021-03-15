@@ -1,0 +1,268 @@
+{
+    "rs:iron_halberd": {
+        "game_id": 3192,
+        "examine": "Short but pointy.",
+        "tradable": true,
+        "weight": 3.175,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "two_handed",
+            "offensive_bonuses": {
+                "speed": 7,
+                "stab": 9,
+                "slash": 12,
+                "crush": 0,
+                "magic": -4,
+                "ranged": 0
+            },
+            "defensive_bonuses": {
+                "stab": -1,
+                "slash": 1,
+                "crush": 2,
+                "magic": 0,
+                "ranged": 0
+            },
+            "skill_bonuses": {
+                "strength": 12,
+                "prayer": 0
+            },
+            "weapon_info": {
+                "style": "halberd"
+            }
+        }
+
+    },
+    "rs:steel_halberd": {
+        "game_id": 3194,
+        "examine": "Short but pointy.",
+        "tradable": true,
+        "weight": 3.175,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "two_handed",
+            "offensive_bonuses": {
+                "speed": 7,
+                "stab": 14,
+                "slash": 19,
+                "crush": 0,
+                "magic": -4,
+                "ranged": 0
+            },
+            "defensive_bonuses": {
+                "stab": -1,
+                "slash": 1,
+                "crush": 2,
+                "magic": 0,
+                "ranged": 0
+            },
+            "skill_bonuses": {
+                "strength": 20,
+                "prayer": 0
+            },
+            "weapon_info": {
+                "style": "halberd"
+            }
+        }
+    },
+    "rs:black_halberd": {
+        "game_id": 3196,
+        "examine": "Short but pointy.",
+        "tradable": true,
+        "weight": 3.175,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "two_handed",
+            "offensive_bonuses": {
+                "speed": 7,
+                "stab": 19,
+                "slash": 25,
+                "crush": 0,
+                "magic": -4,
+                "ranged": 0
+            },
+            "defensive_bonuses": {
+                "stab": -1,
+                "slash": 2,
+                "crush": 3,
+                "magic": 0,
+                "ranged": 0
+            },
+            "skill_bonuses": {
+                "strength": 20,
+                "prayer": 0
+            },
+            "weapon_info": {
+                "style": "halberd"
+            }
+        }
+    },
+    "rs:white_halberd": {
+        "game_id": 6599,
+        "examine": "Short but pointy.",
+        "tradable": true,
+        "weight": 3.175,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "two_handed",
+            "offensive_bonuses": {
+                "speed": 7,
+                "stab": 19,
+                "slash": 25,
+                "crush": 0,
+                "magic": -4,
+                "ranged": 0
+            },
+            "defensive_bonuses": {
+                "stab": -1,
+                "slash": 2,
+                "crush": 3,
+                "magic": 0,
+                "ranged": 0
+            },
+            "skill_bonuses": {
+                "strength": 20,
+                "prayer": 0
+            },
+            "weapon_info": {
+                "style": "halberd"
+            }
+        }
+    },
+    "rs:mithril_halberd": {
+        "game_id": 3198,
+        "examine": "Short but pointy.",
+        "tradable": true,
+        "weight": 3.175,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "two_handed",
+            "offensive_bonuses": {
+                "speed": 7,
+                "stab": 22,
+                "slash": 28,
+                "crush": 0,
+                "magic": -4,
+                "ranged": 0
+            },
+            "defensive_bonuses": {
+                "stab": -1,
+                "slash": 2,
+                "crush": 4,
+                "magic": 0,
+                "ranged": 0
+            },
+            "skill_bonuses": {
+                "strength": 29,
+                "prayer": 0
+            },
+            "weapon_info": {
+                "style": "halberd"
+            }
+        }
+    },
+    "rs:adamant_halberd": {
+        "game_id": 3200,
+        "examine": "Short but pointy.",
+        "tradable": true,
+        "weight": 3.175,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "two_handed",
+            "offensive_bonuses": {
+                "speed": 7,
+                "stab": 28,
+                "slash": 41,
+                "crush": 0,
+                "magic": -4,
+                "ranged": 0
+            },
+            "defensive_bonuses": {
+                "stab": -1,
+                "slash": 3,
+                "crush": 4,
+                "magic": 0,
+                "ranged": 0
+            },
+            "skill_bonuses": {
+                "strength": 42,
+                "prayer": 0
+            },
+            "weapon_info": {
+                "style": "halberd"
+            }
+        }
+    },
+    "rs:rune_halberd": {
+        "game_id": 3202,
+        "examine": "Short but pointy.",
+        "tradable": true,
+        "weight": 3.175,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "two_handed",
+            "offensive_bonuses": {
+                "speed": 7,
+                "stab": 48,
+                "slash": 67,
+                "crush": 0,
+                "magic": -4,
+                "ranged": 0
+            },
+            "defensive_bonuses": {
+                "stab": -1,
+                "slash": 4,
+                "crush": 5,
+                "magic": 0,
+                "ranged": 0
+            },
+            "skill_bonuses": {
+                "strength": 68,
+                "prayer": 0
+            },
+            "weapon_info": {
+                "style": "halberd"
+            }
+        }
+    },
+    "rs:dragon_halberd": {
+        "game_id": 3204,
+        "examine": "Short but pointy.",
+        "tradable": true,
+        "weight": 3.175,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "main_hand",
+            "equipment_type": "two_handed",
+            "offensive_bonuses": {
+                "speed": 7,
+                "stab": 70,
+                "slash": 95,
+                "crush": 0,
+                "magic": -4,
+                "ranged": 0
+            },
+            "defensive_bonuses": {
+                "stab": -1,
+                "slash": 4,
+                "crush": 5,
+                "magic": 0,
+                "ranged": 0
+            },
+            "skill_bonuses": {
+                "strength": 89,
+                "prayer": 0
+            },
+            "weapon_info": {
+                "style": "halberd"
+         }
+        
+        }
+    }
+}
