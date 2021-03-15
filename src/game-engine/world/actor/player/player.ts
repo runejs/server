@@ -53,7 +53,7 @@ import { dialogue } from '@engine/world/actor/dialogue';
 import { PlayerQuest, QuestKey } from '@engine/config/quest-config';
 import { Quest } from '@engine/world/actor/player/quest';
 import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
-import { MusicPlayerMode } from "@plugins/music/music-tab.plugin";
+import { MusicPlayerMode } from '@plugins/music/music-tab.plugin';
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
@@ -191,7 +191,7 @@ export class Player extends Actor {
       this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
       for(const item of this.equipment.items) {
           if(item) {
-                await this.actionPipeline.call('equipment_change', this, item.itemId, 'EQUIP');
+              await this.actionPipeline.call('equipment_change', this, item.itemId, 'EQUIP');
           }
       }
 
@@ -259,10 +259,10 @@ export class Player extends Actor {
       this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
 
       if(this.rights === Rights.ADMIN) {
-            this.sendCommandList(actionHookMap.player_command as PlayerCommandActionHook[]);
+          this.sendCommandList(actionHookMap.player_command as PlayerCommandActionHook[]);
       }
 
-        await this.actionPipeline.call('player_init', { player: this });
+      await this.actionPipeline.call('player_init', { player: this });
 
       world.spawnWorldItems(this);
       this.chunkChanged(playerChunk);
@@ -426,7 +426,7 @@ export class Player extends Actor {
 
       if(this.quests && this.quests.length !== 0) {
           this.quests.filter(quest => quest.complete)
-                .forEach(quest => questPoints += questMap[quest.questId]?.points || 0);
+              .forEach(quest => questPoints += questMap[quest.questId]?.points || 0);
       }
 
       return questPoints;
@@ -606,7 +606,7 @@ export class Player extends Actor {
       if(!oldChunk.equals(newChunk)) {
           this.metadata['updateChunk'] = { newChunk, oldChunk };
 
-            this.actionPipeline.call('region_change', regionChangeActionFactory(
+          this.actionPipeline.call('region_change', regionChangeActionFactory(
               this, originalPosition, newPosition, true));
       }
   }
@@ -731,10 +731,10 @@ export class Player extends Actor {
       }
   }
 
-    public sendCommandList(commands: PlayerCommandActionHook[]): void {
-        if(!commands || commands.length === 0) {
-            return;
-        }
+  public sendCommandList(commands: PlayerCommandActionHook[]): void {
+      if(!commands || commands.length === 0) {
+          return;
+      }
 
       for(const command of commands) {
           let strCmd: string;
@@ -820,7 +820,7 @@ export class Player extends Actor {
               return false;
           }
 
-            this.actionPipeline.call('equipment_change', this, itemToUnequip.itemId, 'UNEQUIP', slot);
+          this.actionPipeline.call('equipment_change', this, itemToUnequip.itemId, 'UNEQUIP', slot);
 
           this.equipment.remove(slotIndex, false);
           this.inventory.remove(itemSlot, false);
@@ -841,7 +841,7 @@ export class Player extends Actor {
           }
       }
 
-        this.actionPipeline.call('equipment_change', this, itemId, 'equip', slot);
+      this.actionPipeline.call('equipment_change', this, itemId, 'equip', slot);
       this.equipmentChanged();
       return true;
   }
@@ -882,7 +882,7 @@ export class Player extends Actor {
           return true;
       }
 
-        this.actionPipeline.call('equipment_change', this, itemInSlot.itemId, 'unequip', slot);
+      this.actionPipeline.call('equipment_change', this, itemInSlot.itemId, 'unequip', slot);
 
       this.equipment.remove(slotIndex);
       this.inventory.set(inventorySlot, itemInSlot);

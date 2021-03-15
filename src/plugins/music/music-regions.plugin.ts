@@ -26,7 +26,7 @@ const regionChangedHandler = ({ player, currentMapRegionId }): void => {
         player.modifyWidget(widgets.musicPlayerTab, { childId:  findMusicTrack(songId).musicTabButtonId, textColor: colors.green });
     }
     if(player.settings.musicPlayerMode === MusicPlayerMode.AUTO) {
-      player.playSong(songId);
+        player.playSong(songId);
     }
 };
 

@@ -4,9 +4,9 @@ import { widgetScripts } from '@engine/world/config/widget';
 import { world } from '@engine/game-server';
 
 export const handler: buttonActionHandler = (details) => {
-  const { player, buttonId } = details;
+    const { player, buttonId } = details;
 
-  if(buttonId === MusicTabButtonIds.AUTO_BUTTON_ID) {
+    if(buttonId === MusicTabButtonIds.AUTO_BUTTON_ID) {
         player.settings.musicPlayerMode = MusicPlayerMode.AUTO;
         const songIdForCurrentRegion = findSongIdByRegionId(
             world.chunkManager.getRegionIdForWorldPosition(player.position));
@@ -49,8 +49,8 @@ export enum MusicTabButtonIds {
 }
 
 export default {
-  pluginId: 'rs:music_tab',
-  hooks: [
-    { type: 'button', widgetId: widgets.musicPlayerTab, handler }
-  ]
+    pluginId: 'rs:music_tab',
+    hooks: [
+        { type: 'button', widgetId: widgets.musicPlayerTab, handler }
+    ]
 };
