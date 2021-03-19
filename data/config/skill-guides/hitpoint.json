@@ -1,0 +1,296 @@
+{
+    "id": 119,
+    "name": "Hitpoints",
+    "members": false,
+    "sub_guides": [
+        {
+            "name": "Hitpoints",
+            "lines": [
+              {
+                "text": "Hitpoints are used to tell you how healthy\\n your character is. A character who reaches\\n0 Hitpoints has died, but will reappear in\\ntheir chosen respawn location(normally Lumbridge).\\n\\nIf you see any red 'hit splash' during combat\\n, the number shown corresponds to the number\\n of Hitpoints lost as a result of that strike.\\n\\nBlue hit splash means no damage has been dealt.\\n\\nGreen hit splash are poison damage.",
+                "level": ""
+              }
+            ]
+          },{
+        "name": "Healing",
+        "lines": [
+          {
+            "item": "rs:purple_sweets",
+            "text": "Purple Sweets: Restores 1-3 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:anchovies",
+            "text": "Anchovies: Restores 1 Hitpoint",
+            "level": ""
+          },         
+          {
+            "item": "rs:shrimp",
+            "text": "Shrimp: Restores 3 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:cooked_chicken",
+            "text": "Cooked chicken: Restores 3 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:sardine",
+            "text": "Sardine: Restores 3 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:cooked_meat",
+            "text": "Cooked meat: Restores 3 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:bread",
+            "text": "Bread: Restores 5 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:bread",
+            "text": "Bread: Restores 5 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:herring",
+            "text": "Herring: Restores 5 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:cooked_rabbit",
+            "text": "Cooked Rabbit: Restores 5 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:mackerel",
+            "text": "Mackerel: Restores 6 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:botanical_pie",
+            "text": "Botanical Pie: Restores 6 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:slimy_eel",
+            "text": "Slimy Eel: Restores 6-10 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:trout",
+            "text": "Trout: Restores 7 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:cod",
+            "text": "Cod: Restores 7 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:roast_rabbit",
+            "text": "Roast Rabbit: Restores 7 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:cave_eel",
+            "text": "Cave Eel: Restores 7-11 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:pike",
+            "text": "Pike: Restores 8 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:salmon",
+            "text": "Salmon: Restores 9 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:redberry_pie",
+            "text": "Redberry Pie: Restores 9 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:tuna",
+            "text": "Tuna: Restores 10 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:crab_meat",
+            "text": "Crab meat: Restores 10 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:fishcake",
+            "text": "Cooked Fishcake: Restores 11 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:jug_of_wine",
+            "text": "Jug of wine: Restores 11 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:meat_pie",
+            "text": "Meat pie: Restores 11 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:lava_eel",
+            "text": "Lava Eel: Restores 11 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:garden_pie",
+            "text": "Garden pie: Restores 12 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:fish_pie",
+            "text": "Fish pie: Restores 12 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:cake",
+            "text": "Cake: Restores 12 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:lobster",
+            "text": "Lobster: Restores 12 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:bass",
+            "text": "Bass: Restores 13 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:swordfish",
+            "text": "Swordfish: Restores 14 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:plain_pizza",
+            "text": "Plain pizza: Restores 14 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:apple_pie",
+            "text": "Apple pie: Restores 14 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:potato_with_butter",
+            "text": "Potato with butter: Restores 14 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:chilli_potato",
+            "text": "Chilli Potato: Restores 14 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:chocolate_cake",
+            "text": "Chocolate Cake: Restores 15 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:monkfish",
+            "text": "Monkfish: Restores 16 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:admiral_pie",
+            "text": "Admiral pie: Restores 16 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:meat_pizza",
+            "text": "Meat pizza: Restores 16 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:potato_with_cheese",
+            "text": "Potato with cheese: Restores 16 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:egg_potato",
+            "text": "Egg Potato: Restores 16 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:cooked_karambwan",
+            "text": "Cooked karambwan: Restores 18 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:anchovy_pizza",
+            "text": "Anchovy pizza: Restores 18 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:ugthanki_kebab",
+            "text": "Ugthanki kebab: Restores 19 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:jug_of_wine",
+            "text": "Jug of wine: Restores 11 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:shark",
+            "text": "Shark: Restores 20 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:mushroom_potato",
+            "text": "Mushroom Potato: Restores 20 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:sea_turtle",
+            "text": "Sea Turtle: Restores 21 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:manta_ray",
+            "text": "Manta Ray: Restores 22 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:tuna_potato",
+            "text": "Tuna Potato: Restores 22 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:wild_pie",
+            "text": "Wild pie: Restores 22 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:summer_pie",
+            "text": "Summer pie: Restores 22 Hitpoints\\n(Members only)",
+            "level": ""
+          },         
+          {
+            "item": "rs:pineapple_pizza",
+            "text": "Pineapple pizza: Restores 22 Hitpoints",
+            "level": ""
+          },         
+          {
+            "item": "rs:saradomin_brew",
+            "text": "Saradomin brew: Restores 15% of your\\nHitpoints level plus 2 - can boost beyond\\nyour level (members only)",
+            "level": ""
+          }
+        ]
+      }
+    ]
+  }
+  

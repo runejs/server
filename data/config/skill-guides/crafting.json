@@ -1,0 +1,515 @@
+{
+    "id": 131,
+    "name": "Crafting",
+    "members": false,
+    "sub_guides": [
+      {
+        "name": "Weaving",
+        "lines": [
+          {
+            "item": "rs:vegetable_sack",
+            "text": "Vegetable sack",
+            "level": 21
+          },
+          {
+            "item": "rs:drift_net",
+            "text": "Drift net",
+            "level": 26
+          },
+          {
+            "item": "rs:fruit_basket",
+            "text": "Fruit basket",
+            "level": 36
+          }
+        ]
+      },{
+        "name": "Armour",
+        "lines": [
+          {
+            "item": "rs:leather_gloves",
+            "text": "Leather gloves",
+            "level": 1
+          },
+          {
+            "item": "rs:leather_boots",
+            "text": "Leather boots",
+            "level": 7
+          },
+          {
+            "item": "rs:leather_cowl",
+            "text": "Leather cowl",
+            "level": 5
+          },
+          {
+            "item": "rs:leather_vambraces",
+            "text": "Leather vambraces",
+            "level": 11
+          },
+          {
+            "item": "rs:leather_body",
+            "text": "Leather body",
+            "level": 14
+          },
+          {
+            "item": "rs:snelmet",
+            "text": "Members: Snail helmet",
+            "level": 15
+          },
+          {
+            "item": "rs:crab_shell_armour",
+            "text": "Crab shell armour",
+            "level": 15
+          },
+          {
+            "item": "rs:leather_chaps",
+            "text": "Leather chaps",
+            "level": 18
+          },
+          {
+            "item": "rs:hard_leather_body",
+            "text": "Hard leather body",
+            "level": 28
+          },
+          {
+            "item": "rs:broodoo_shield",
+            "text": "Members: Broodoo shield",
+            "level": 35
+          },
+          {
+            "item": "rs:coif",
+            "text": "Members: Coif",
+            "level": 38
+          },
+          {
+            "item": "rs:studded_body",
+            "text": "Members: Studded body",
+            "level": 41
+          },
+          {
+            "item": "rs:studded_chaps",
+            "text": "Members: Studded chaps",
+            "level": 44
+          },
+          {
+            "item": "rs:snakeskin_boots",
+            "text": "Members: Snakeskin boots",
+            "level": 45
+          },
+          {
+            "item": "rs:snakeskin_vambraces",
+            "text": "Members: Snakeskin vambraces",
+            "level": 47
+          },
+          {
+            "item": "rs:snakeskin_bandana",
+            "text": "Members: Snakeskin Bandana",
+            "level": 48
+          },
+          {
+            "item": "rs:snakeskin_chaps",
+            "text": "Members: Snakeskin chaps",
+            "level": 51
+          },
+          {
+            "item": "rs:snakeskin_body",
+            "text": "Members: Snakeskin body",
+            "level": 53
+          },
+          {
+            "item": "rs:green_dragonhide_vambraces",
+            "text": "Members: Green Dragonhide vambraces",
+            "level": 57
+          },
+          {
+            "item": "rs:green_dragonhide_chaps",
+            "text": "Members: Green dragonhide chaps",
+            "level": 60
+          },
+          {
+            "item": "rs:splitbark_gauntlets",
+            "text": "Members: Splitbark gauntlets",
+            "level": 60
+          },
+          {
+            "item": "rs:splitbark_boots",
+            "text": "Members: Splitbark boots",
+            "level": 60
+          },
+          {
+            "item": "rs:splitbark_helm",
+            "text": "Members: Splitbark helm",
+            "level": 61
+          },
+          {
+            "item": "rs:splitbark_body",
+            "text": "Members: Splitbark body",
+            "level": 62
+          },
+          {
+            "item": "rs:splitbark_legs",
+            "text": "Members: Splitbark legs",
+            "level": 62
+          },
+          {
+            "item": "rs:green_dragonhide_chaps",
+            "text": "Members: Green dragonhide chaps",
+            "level": 63
+          },
+          {
+            "item": "rs:blue_dragonhide_chaps",
+            "text": "Members: Blue dragonhide chaps",
+            "level": 66
+          },
+          {
+            "item": "rs:blue_dragonhide_chaps",
+            "text": "Members: Blue dragonhide chaps",
+            "level": 68
+          },
+          {
+            "item": "rs:blue_dragonhide_body",
+            "text": "Members: Blue dragonhide body",
+            "level": 71
+          },
+          {
+            "item": "rs:red_dragonhide_vambraces",
+            "text": "Members: Red dragonhide vambraces",
+            "level": 73
+          },
+          {
+            "item": "rs:red_dragonhide_chaps",
+            "text": "Members: Red dragonhide chaps",
+            "level": 75
+          },
+          {
+            "item": "rs:red_dragonhide_body",
+            "text": "Members: Red dragonhide body",
+            "level": 77
+          },
+          {
+            "item": "rs:black_dragonhide_vambraces",
+            "text": "Members: Snakeskin chaps",
+            "level": 79
+          },
+          {
+            "item": "rs:black_dragonhide_chaps",
+            "text": "Members: Snakeskin chaps",
+            "level": 82
+          },
+          {
+            "item": "rs:black_dragonhide_body",
+            "text": "Members: Black dragonhide body",
+            "level": 84
+          }
+        ]
+      },{
+        "name": "Spinning",
+        "lines": [
+          {
+            "item": "rs:wool",
+            "text": "Wool",
+            "level": 1
+          },
+          {
+            "item": "rs:bow_strings",
+            "text": "Members: Flax into bow strings",
+            "level": 10
+          },
+          {
+            "item": "rs:sinew_strings",
+            "text": "Members: Sinew into crossbow strings",
+            "level": 10
+          },
+          {
+            "item": "rs:magic_strings",
+            "text": "Members: Magic tree roots into magic strings",
+            "level": 19
+          },
+          {
+            "item": "rs:yak_hair",
+            "text": "Members: Yak hair into rope",
+            "level": 30
+          }
+        ]
+      },{
+        "name": "Pottery",
+        "lines": [
+          {
+            "item": "rs:pot",
+            "text": "Pot",
+            "level": 1
+          },
+          {
+            "item": "rs:pie_dish",
+            "text": "Pie dish",
+            "level": 7
+          },
+          {
+            "item": "rs:bowl",
+            "text": "Bowl",
+            "level": 8
+          },          {
+            "item": "rs:plant_pot",
+            "text": "Members: Plant pot",
+            "level": 19
+          },          {
+            "item": "rs:pot_lid",
+            "text": "Members: Pot lid",
+            "level": 25
+          }
+        ]
+      },{
+        "name": "Glass",
+        "lines": [
+          {
+            "item": "rs:beer_glass",
+            "text": "Beer Glass",
+            "level": 1
+          },
+          {
+            "item": "rs:candle_lantern",
+            "text": "Candle lantern",
+            "level": 4
+          },
+          {
+            "item": "rs:oil_lamp",
+            "text": "Oil lamp",
+            "level": 12
+          },
+          {
+            "item": "rs:oil_lantern",
+            "text": "Oil lantern",
+            "level": 26
+          },
+          {
+            "item": "rs:vial",
+            "text": "Vial",
+            "level": 33
+          },
+          {
+            "item": "rs:fishbowl",
+            "text": "Fishbowl",
+            "level": 42
+          },
+          {
+            "item": "rs:glass_orb",
+            "text": "Glass orb",
+            "level": 46
+          },
+          {
+            "item": "rs:bullseye_lantern_lens",
+            "text": "Bullsye lantern lens",
+            "level": 49
+          }
+        ]
+      },{
+        "name": "Jewellery",
+        "lines": [
+          {
+            "item": "rs:cut_opal",
+            "text": "Cut opal",
+            "level": 1
+          },
+          {
+            "item": "rs:opal_ring",
+            "text": "Opal ring",
+            "level": 1
+          },
+          {
+            "item": "rs:polished_buttons",
+            "text": "Polished buttons",
+            "level": 3
+          },
+          {
+            "item": "rs:gold_ring",
+            "text": "Gold ring",
+            "level": 5
+          },
+          {
+            "item": "rs:gold_necklace",
+            "text": "Gold necklace",
+            "level": 6
+          },
+          {
+            "item": "rs:gold_amulet",
+            "text": "Gold amulet",
+            "level": 8
+          },
+          {
+            "item": "rs:cut_jade",
+            "text": "Cut jade",
+            "level": 13
+          },
+          {
+            "item": "rs:jade_ring",
+            "text": "Jade ring",
+            "level": 13
+          },
+          {
+            "item": "rs:holy_symbol",
+            "text": "Holy symbol",
+            "level": 16
+          },
+          {
+            "item": "rs:cut_red_topaz",
+            "text": "Members: Cut red topaz",
+            "level": 16
+          },
+          {
+            "item": "rs:cut_sapphire",
+            "text": "Cut sapphire",
+            "level": 20
+          },
+          {
+            "item": "rs:sapphire_ring",
+            "text": "Sapphire ring",
+            "level": 20
+          },
+          {
+            "item": "rs:sapphire_necklace",
+            "text": "Sapphire necklace",
+            "level": 22
+          },
+          {
+            "item": "rs:tiara",
+            "text": "Tiara",
+            "level": 23
+          },
+          {
+            "item": "rs:sapphire_amulet",
+            "text": "Sapphire amulet",
+            "level": 24
+          },
+          {
+            "item": "rs:cut_emerald",
+            "text": "Cut emerald",
+            "level": 27
+          },
+          {
+            "item": "rs:emerald_ring",
+            "text": "Emerald ring",
+            "level": 27
+          },
+          {
+            "item": "rs:emerald_necklace",
+            "text": "Emerald necklace",
+            "level": 29
+          },
+          {
+            "item": "rs:emerald_amulet",
+            "text": "Emerald amulet",
+            "level": 31
+          },
+          {
+            "item": "rs:cut_ruby",
+            "text": "Cut ruby",
+            "level": 34
+          },
+          {
+            "item": "rs:ruby_ring",
+            "text": "Ruby ring",
+            "level": 34
+          },
+          {
+            "item": "rs:ruby_necklace",
+            "text": "Ruby necklace",
+            "level": 40
+          },
+          {
+            "item": "rs:cut_diamond",
+            "text": "Cut diamond",
+            "level": 43
+          },
+          {
+            "item": "rs:diamond_ring",
+            "text": "Diamond ring",
+            "level": 43
+          },
+          {
+            "item": "rs:ruby_amulet",
+            "text": "Ruby amulet",
+            "level": 50
+          },
+          {
+            "item": "rs:cut_dragonstone",
+            "text": "Members: Cut Dragonstone",
+            "level": 55
+          },
+          {
+            "item": "rs:dragonstone_ring",
+            "text": "Members: Dragonstone ring",
+            "level": 55
+          },
+          {
+            "item": "rs:diamond_necklace",
+            "text": "Diamond necklace",
+            "level": 56
+          },
+          {
+            "item": "rs:cut_onyx",
+            "text": "Members: Cut onyx",
+            "level": 67
+          },
+          {
+            "item": "rs:onyx_ring",
+            "text": "Onyx Ring",
+            "level": 67
+          },
+          {
+            "item": "rs:diamond_amulet",
+            "text": "Diamond amulet",
+            "level": 70
+          },
+          {
+            "item": "rs:dragonstone_amulet",
+            "text": "Members: Dragonstone amulet",
+            "level": 80
+          },
+          {
+            "item": "rs:onyx_necklace",
+            "text": "Members Onyx necklace",
+            "level": 82
+          },
+          {
+            "item": "rs:onyx_amulet",
+            "text": "Members: Onyx amulet",
+            "level": 90
+          }
+        ]
+      }, {
+        "name": "Weaponry",
+        "lines": [
+          {
+            "item": "rs:silver_sickle",
+            "text": "Silver sickle",
+            "level": 18
+          },
+          {
+            "item": "rs:silver_crossbow_bolts",
+            "text": "Silver crossbow bolts",
+            "level": 21
+          },
+          {
+            "item": "rs:water_battlestaff",
+            "text": "Water battlestaf",
+            "level": 54
+          },
+          {
+            "item": "rs:earth_battlestaff",
+            "text": "Earth battlestaf",
+            "level": 58
+          },
+          {
+            "item": "rs:fire_battlestaff",
+            "text": "Fire battlestaf",
+            "level": 62
+          },
+          {
+            "item": "rs:air_battlestaff",
+            "text": "Air battlestaf",
+            "level": 66
+          }
+        ]
+      }
+    ]
+  }
+  

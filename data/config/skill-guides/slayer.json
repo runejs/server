@@ -1,0 +1,271 @@
+{
+    "id": 141,
+    "name": "Slayer",
+    "members": false,
+    "sub_guides": [
+      {
+        "name": "Monsters",
+        "lines": [
+          {
+            "item": "rs:crawling_hands",
+            "text": "Crawling hands",
+            "level": 5
+          },
+          {
+            "item": "rs:cave_bugs",
+            "text": "Cave bugs",
+            "level": 7
+          },          
+          {
+            "item": "rs:cave_crawlers",
+            "text": "Cave crawlers",
+            "level": 10
+          },
+          {
+            "item": "rs:Banshees",
+            "text": "banshees",
+            "level": 15
+          },
+          {
+            "item": "rs:cave_slime",
+            "text": "Cave slime",
+            "level": 17
+          },
+          {
+            "item": "rs:rockslugs",
+            "text": "Rockslugs",
+            "level": 20
+          },
+          {
+            "item": "rs:desert_lizards",
+            "text": "Desert lizards",
+            "level": 22
+          },
+          {
+            "item": "rs:cockatrice",
+            "text": "Cockatrice",
+            "level": 25
+          },
+          {
+            "item": "rs:pyrefiends",
+            "text": "Pyrefiends",
+            "level": 30
+          },
+          {
+            "item": "rs:mogres",
+            "text": "Mogres",
+            "level": 32
+          },
+          {
+            "item": "rs:harpie_bug_swarms",
+            "text": "Harpie bug swarms",
+            "level": 33
+          },
+          {
+            "item": "rs:wall_beasts",
+            "text": "Wall beasts",
+            "level": 35
+          },
+          {
+            "item": "rs:killerwatts",
+            "text": "Killerwatts",
+            "level": 37
+          },
+          {
+            "item": "rs:basilisks",
+            "text": "Basilisks",
+            "level": 40
+          },
+          {
+            "item": "rs:fever_spiders",
+            "text": "Fever spiders",
+            "level": 42
+          },
+          {
+            "item": "rs:infernal_mages",
+            "text": "Infernal mages",
+            "level": 45
+          },
+          {
+            "item": "rs:brine_rats",
+            "text": "Brine rats",
+            "level": 47
+          },
+          {
+            "item": "rs:bloodvelds",
+            "text": "Bloodvelds",
+            "level": 50
+          },
+          {
+            "item": "rs:jellies",
+            "text": "Jellies",
+            "level": 52
+          },
+          {
+            "item": "rs:turoth",
+            "text": "Turoth",
+            "level": 55
+          },
+          {
+            "item": "rs:cave_horrors",
+            "text": "Cave horrors",
+            "level": 58
+          },
+          {
+            "item": "rs:aberrant_spectres",
+            "text": "Aberrant spectres",
+            "level": 60
+          },
+          {
+            "item": "rs:dust_devils",
+            "text": "Dust devils",
+            "level": 65
+          },
+          {
+            "item": "rs:kurask",
+            "text": "Kurask",
+            "level": 70
+          },
+          {
+            "item": "rs:skeletal_wyverns",
+            "text": "Skeletal wyverns",
+            "level": 72
+          },
+          {
+            "item": "rs:gargoyles",
+            "text": "Gargoyles",
+            "level": 75
+          },
+          {
+            "item": "rs:nechryael",
+            "text": "Nechryael",
+            "level": 80
+          },
+          {
+            "item": "rs:abyssal demons",
+            "text": "Abyssal demons",
+            "level": 85
+          },
+          {
+            "item": "rs:dark_beasts",
+            "text": "Dark beasts",
+            "level": 58
+          }
+        ]
+      },      {
+        "name": "Equipment",
+        "lines": [
+          {
+            "item": "rs:spiny_helmet",
+            "text": "Spiney helmet\\n(5 Defence required)",
+            "level": 1
+          },
+          {
+            "item": "rs:rock_hammer",
+            "text": "Rock hammer & Rock Thrownhammer",
+            "level": 1
+          },          
+          {
+            "item": "rs:facemask",
+            "text": "Facemask",
+            "level": 10
+          },          
+          {
+            "item": "rs:earmuffs",
+            "text": "Earmuffs",
+            "level": 15
+          },          
+          {
+            "item": "rs:mirror_shield",
+            "text": "Mirror shield\\n(20 Defence required)",
+            "level": 25
+          },          
+          {
+            "item": "rs:harpie_bug_lantern",
+            "text": "Harpie bug lantern\\n(not a light source)",
+            "level": 33
+          },          
+          {
+            "item": "rs:witchwood_icon",
+            "text": "Witchwood icon",
+            "level": 35
+          },          
+          {
+            "item": "rs:insulated_boots",
+            "text": "Insultated boots",
+            "level": 37
+          },          
+          {
+            "item": "rs:slayer_bell",
+            "text": "Slayer bell",
+            "level": 39
+          },          
+          {
+            "item": "rs:slayer_gloves",
+            "text": "Slayer gloves",
+            "level": 42
+          },          
+          {
+            "item": "rs:boots_of_stone",
+            "text": "Boots of Stone",
+            "level": 44
+          },          
+          {
+            "item": "rs:leaf_bladed_spear",
+            "text": "Leafbladed spear\\n(50 Attack required)",
+            "level": 55
+          },          
+          {
+            "item": "rs:broad_arrows",
+            "text": "Broad arrows\\n(50 Ranged required)",
+            "level": 55
+          },          
+          {
+            "item": "rs:slayer_staff",
+            "text": "Slayer's staff\\n(50 Magic required)",
+            "level": 55
+          },          
+          {
+            "item": "rs:fungicide_spray",
+            "text": "Fungicide spray",
+            "level": 57
+          },          
+          {
+            "item": "rs:nose_peg",
+            "text": "Nose peg",
+            "level": 60
+          }
+        ]
+      },{
+        "name": "Slayer Masters",
+        "lines": [
+          {
+            "item": "rs:enchanted_gem",
+            "text": "Burthorpe master\\n(Level 3 combat required)",
+            "level": 1
+          },          
+          {
+            "item": "rs:enchanted_gem",
+            "text": "Canifis master\\n(Level 20 combat required)",
+            "level": 1
+          },          {
+            "item": "rs:enchanted_gem",
+            "text": "Edgeville Dungeon master\\n(Level 40 combat required)",
+            "level": 1
+          },
+          {
+            "item": "rs:enchanted_gem",
+            "text": "Zanaris master\\n(Level 70 combat required)",
+            "level": 1
+          },
+          {
+            "item": "rs:enchanted_gem",
+            "text": "Shilo Village master\\n(Level 100 combat required)",
+            "level": 50
+          }       
+          
+        ]
+      }
+    ]
+  }
+  

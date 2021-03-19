@@ -1,0 +1,26 @@
+{
+    "rs:small_fishing_net": {
+        "game_id": 303
+    },
+    "rs:big_fishing_net": {
+        "game_id": 305
+    },
+    "rs:fishing_rod": {
+        "game_id": 307
+    },
+    "rs:fly_fishing_rod": {
+        "game_id": 309
+    },
+    "rs:harpoon": {
+        "game_id": 311
+    },
+    "rs:lobster_pot": {
+        "game_id": 301
+    },
+    "rs:oily_fishing_rod": {
+        "game_id": 1585
+    },
+    "rs:karambwan_vessel": {
+        "game_id": 3157
+    }
+}

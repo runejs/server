@@ -1,91 +1,91 @@
-import { widgets } from '@server/config';
-import { itemIds } from '@server/world/config/item-ids';
-import { Bar, Smeltable } from '@server/plugins/skills/smithing/smelting-types';
+import { widgets } from '@engine/config';
+import { itemIds } from '@engine/world/config/item-ids';
+import { Bar, Smeltable } from '@plugins/skills/smithing/smelting-types';
 
 const BRONZE : Bar = {
-    barId: itemIds.bronzeBar,
+    barId: itemIds.bars.bronze,
     requiredLevel: 1,
     experience: 6.2,
     ingredients: [
-        { itemId: itemIds.copperOre, amount: 1 },
-        { itemId: itemIds.tinOre, amount: 1 }
+        { itemId: itemIds.ores.copper, amount: 1 },
+        { itemId: itemIds.ores.tin, amount: 1 }
     ]
 };
 
 const BLURITE : Bar = {
-    barId: itemIds.bluriteBar,
+    barId: itemIds.bars.blurite,
     quest: 'theKnightsSword',
     requiredLevel: 8,
     experience: 8,
     ingredients: [
-        { itemId: itemIds.bluriteOre, amount: 1 }
+        { itemId: itemIds.ores.blurite, amount: 1 }
     ]
 };
 
 const IRON : Bar = {
-    barId: itemIds.ironBar,
+    barId: itemIds.bars.iron,
     requiredLevel: 15,
     experience: 12.5,
     ingredients: [
-        { itemId: itemIds.ironOre, amount: 1 }
+        { itemId: itemIds.ores.iron, amount: 1 }
     ]
 };
 
 const SILVER : Bar = {
-    barId: itemIds.silverBar,
+    barId: itemIds.bars.silver,
     requiredLevel: 20,
     experience: 13.6,
     ingredients: [
-        { itemId: itemIds.silverOre, amount: 1 }
+        { itemId: itemIds.ores.silver, amount: 1 }
     ]
 };
 
 const STEEL : Bar = {
-    barId: itemIds.steelBar,
+    barId: itemIds.bars.steel,
     requiredLevel: 30,
     experience: 17.5,
     ingredients: [
-        { itemId: itemIds.ironOre, amount: 1 },
-        { itemId: itemIds.coal, amount: 2 }
+        { itemId: itemIds.ores.iron, amount: 1 },
+        { itemId: itemIds.ores.coal, amount: 2 }
     ]
 };
 
 const GOLD : Bar = {
-    barId: itemIds.goldBar,
+    barId: itemIds.bars.gold,
     requiredLevel: 40,
     experience: 22.5,
     ingredients: [
-        { itemId: itemIds.goldOre, amount: 1 }
+        { itemId: itemIds.ores.gold, amount: 1 }
     ]
 };
 
 const MITHRIL : Bar = {
-    barId: itemIds.mithrilBar,
+    barId: itemIds.bars.mithril,
     requiredLevel: 50,
     experience: 30,
     ingredients: [
-        { itemId: itemIds.mithrilOre, amount: 1 },
-        { itemId: itemIds.coal, amount: 4 },
+        { itemId: itemIds.ores.mithril, amount: 1 },
+        { itemId: itemIds.ores.coal, amount: 4 },
     ]
 };
 
 const ADAMANTITE : Bar = {
-    barId: itemIds.adamantiteBar,
+    barId: itemIds.bars.adamantite,
     requiredLevel: 70,
     experience: 37.5,
     ingredients: [
-        { itemId: itemIds.adamantiteOre, amount: 1 },
-        { itemId: itemIds.coal, amount: 6 },
+        { itemId: itemIds.ores.adamantite, amount: 1 },
+        { itemId: itemIds.ores.coal, amount: 6 },
     ]
 };
 
 const RUNEITE : Bar = {
-    barId: itemIds.runiteBar,
+    barId: itemIds.bars.runite,
     requiredLevel: 85,
     experience: 50,
     ingredients: [
-        { itemId: itemIds.runiteOre, amount: 1 },
-        { itemId: itemIds.coal, amount: 8 },
+        { itemId: itemIds.ores.runite, amount: 1 },
+        { itemId: itemIds.ores.coal, amount: 8 },
     ]
 };
 

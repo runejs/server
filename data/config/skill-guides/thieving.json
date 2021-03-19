@@ -1,0 +1,324 @@
+{
+  "id": 128,
+  "name": "Attack",
+  "members": true,
+  "sub_guides": [
+    {
+      "name": "Pickpocket",
+      "lines": [
+        {
+          "item": "rs:citizen",
+          "text": "Citizen",
+          "level": 1
+        },
+        {
+          "item": "rs:farmer",
+          "text": "Farmer",
+          "level": 10
+        },
+        {
+          "item": "rs:female_ham_follower",
+          "text": "Female H.A.M follower",
+          "level": 15
+        },
+        {
+          "item": "rs:male_ham_follower",
+          "text": "Male H.A.M follower",
+          "level": 20
+        },
+        {
+          "item": "rs:warrior",
+          "text": "Warrior",
+          "level": 25
+        },
+        {
+          "item": "rs:rogue",
+          "text": "Rogue",
+          "level": 32
+        },
+        {
+          "item": "rs:cave_goblin",
+          "text": "Cave goblin",
+          "level": 36
+        },
+        {
+          "item": "rs:master_farmer",
+          "text": "Master f armer",
+          "level": 38
+        },
+        {
+          "item": "rs:guard",
+          "text": "Guard",
+          "level": 40
+        },
+        {
+          "item": "rs:fremennik",
+          "text": "Fremennik",
+          "level": 45
+        },
+        {
+          "item": "rs:bearded_pollnivnian_bandit",
+          "text": "Bearded Pollnivnian bandit",
+          "level": 45
+        },
+        {
+          "item": "rs:desert_bandit",
+          "text": "Desert bandit",
+          "level": 53
+        },
+        {
+          "item": "rs:knight",
+          "text": "Knight",
+          "level": 55
+        },
+        {
+          "item": "rs:pollnivnian_bandit",
+          "text": "Pollnivnian bandit",
+          "level": 55
+        },
+        {
+          "item": "rs:watchman",
+          "text": "Watchman",
+          "level": 65
+        },
+        {
+          "item": "rs:menaphite_thug",
+          "text": "Menaphite thug",
+          "level": 65
+        },
+        {
+          "item": "rs:paladin",
+          "text": "Paladin",
+          "level": 70
+        },
+        {
+          "item": "rs:gnome",
+          "text": "Gnome",
+          "level": 75
+        },
+        {
+          "item": "rs:hero",
+          "text": "Hero",
+          "level": 80
+        },
+        {
+          "item": "rs:vyre",
+          "text": "Vyre",
+          "level": 82
+        },
+        {
+          "item": "rs:elf",
+          "text": "Elf",
+          "level": 85
+        },
+        {
+          "item": "rs:tzhaar",
+          "text": "TzHaar",
+          "level": 90
+        }
+      ]
+    },  {
+      "name": "Stalls",
+      "lines": [
+        {
+          "item": "rs:vegetable_stall",
+          "text": "Vegetable stall",
+          "level": 2
+        },
+        {
+          "item": "rs:Cake_stall",
+          "text": "Cake stall",
+          "level": 5
+        },
+        {
+          "item": "rs:tea_stall",
+          "text": "Tea stall",
+          "level": 5
+        },
+        {
+          "item": "rs:crafting_stall",
+          "text": "Crafting stall",
+          "level": 5
+        },
+        {
+          "item": "rs:monkey_food_stall",
+          "text": "Monkey food stall",
+          "level": 5
+        },
+        {
+          "item": "rs:silk_stall",
+          "text": "Silk stall",
+          "level": 20
+        },
+        {
+          "item": "rs:wine_stall",
+          "text": "Wine stall",
+          "level": 22
+        },
+        {
+          "item": "rs:fruit_stall",
+          "text": "Fruit stall",
+          "level": 25
+        },
+        {
+          "item": "rs:seed_stall",
+          "text": "Seed stall",
+          "level": 27
+        },
+        {
+          "item": "rs:fur_stall",
+          "text": "Fur stall",
+          "level": 35
+        },
+        {
+          "item": "rs:fish_stall",
+          "text": "Fish stall",
+          "level": 42
+        },
+        {
+          "item": "rs:crossbow_stall",
+          "text": "Crossbow stall",
+          "level": 49
+        },
+        {
+          "item": "rs:silver_stall",
+          "text": "Silver stall",
+          "level": 50
+        },
+        {
+          "item": "rs:magic_stall",
+          "text": "Magic stall",
+          "level": 65
+        },
+        {
+          "item": "rs:scimitar_stall",
+          "text": "Scimitar stall",
+          "level": 65
+        },
+        {
+          "item": "rs:spices_stall",
+          "text": "Spices stall",
+          "level": 65
+        },
+        {
+          "item": "rs:gems_stall",
+          "text": "Gems stall",
+          "level": 75
+        },
+        {
+          "item": "rs:ore_stall",
+          "text": "Ore stall",
+          "level": 82
+        }
+      ]
+    },  {
+      "name": "Chests",
+      "lines": [
+        {
+          "item": "rs:ardougne_relekka_wilderness",
+          "text": "Ardougne, Rellekka and the Wilderness",
+          "level": 13
+        },
+        {
+          "item": "rs:upstairs_ardougne_rellekka",
+          "text": "Upstairs in Ardougne and Rellekka",
+          "level": 28
+        },
+        {
+          "item": "rs:the_isles_of_souls",
+          "text": "The Isle of Souls",
+          "level": 28
+        },
+        {
+          "item": "rs:upstairs_ardougne",
+          "text": "Upstairs in Ardougne",
+          "level": 43
+        },
+        {
+          "item": "rs:hemenster_rellekka",
+          "text": "Hemenster and Rellekka",
+          "level": 47
+        },
+        {
+          "item": "rs:dorgesh_kaan_average_chest",
+          "text": "Dorgesh-Kaan (average chests)",
+          "level": 52
+        },
+        {
+          "item": "rs:chaos_druid_tower_north_ardougne",
+          "text": "Chaos druid tower north of Ardougne",
+          "level": 59
+        },
+        {
+          "item": "rs:lizardman_temple_molch",
+          "text": "Lizardman Temple beneath Molch",
+          "level": 64
+        },
+        {
+          "item": "rs:ardougne_castle",
+          "text": "Ardougne Castle",
+          "level": 72
+        },
+        {
+          "item": "rs:dorgesh_kaan_rich",
+          "text": "Dorgesh-Kaan (rich chests)",
+          "level": 78
+        },
+        {
+          "item": "rs:wilderness_rogues_castle",
+          "text": "Wilderness Rogue's Castle",
+          "level": 84
+        }
+      ]
+    },  {
+      "name": "Other",
+      "lines": [
+        {
+          "item": "rs:pyramid_plunder_room_1",
+          "text": "Pyramid Plunder minigame - Room 1\\nIn the Jalsavrah Pyramid in Sophanem",
+          "level": 21
+        },
+        {
+          "item": "rs:pyramid_plunder_room_2",
+          "text": "Pyramid Plunder - Room 2",
+          "level": 31
+        },
+        {
+          "item": "rs:pyramid_plunder_room_3",
+          "text": "Pyramid Plunder - Room 3",
+          "level": 41
+        },
+        {
+          "item": "rs:uncut_sapphire",
+          "text": "Can crack the wall safes in Rogues'Den",
+          "level": 50
+        },
+        {
+          "item": "rs:pyramid_plunder_room_4",
+          "text": "Pyramid Plunder - Room 4",
+          "level": 51
+        },
+        {
+          "item": "rs:pyramid_plunder_room_5",
+          "text": "Pyramid Plunder - Room 5",
+          "level": 61
+        },
+        {
+          "item": "rs:pyramid_plunder_room_6",
+          "text": "Pyramid Plunder - 6",
+          "level": 71
+        },
+        {
+          "item": "rs:pyramid_plunder_room_7",
+          "text": "Pyramid Plunder - 7)",
+          "level": 81
+        },
+        {
+          "item": "rs:pyramid_plunder_room_8",
+          "text": "Pyramid Plunder - 8",
+          "level": 91
+        }
+      ]
+    }
+  ]
+}
