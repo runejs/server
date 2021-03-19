@@ -1,6 +1,7 @@
-import { DefensiveBonuses } from '@engine/config/item-config';
+import { DefensiveBonuses, translateItemConfig } from '@engine/config/item-config';
 import { loadConfigurationFiles } from '@engine/config/index';
 import { cache } from '@engine/game-server';
+import _ from 'lodash';
 
 export interface NpcSkills {
     [key: string]: number;
@@ -49,6 +50,9 @@ export interface NpcConfiguration {
         ranged_strength?: number;
     };
     defensive_stats?: DefensiveBonuses;
+    variations?: [{
+        suffix: string;
+    } & NpcConfiguration];
     animations?: NpcAnimations;
     drop_table?: DropTable;
     metadata: { [key: string]: unknown };
@@ -126,6 +130,18 @@ export async function loadNpcConfigurations(path: string): Promise<{ npcs: { [ke
                 npcIds[npcConfig.game_id] = key;
                 npcs[key] = { ...translateNpcConfig(key, npcConfig),
                     ...cache.npcDefinitions.get(npcConfig.game_id) };
+                if(npcConfig.variations) {
+                    for(const variation of npcConfig.variations) {
+                        const subKey = key+':'+variation.suffix;
+                        const baseItem = JSON.parse(JSON.stringify({ ...translateNpcConfig(key, npcConfig),
+                            ...cache.npcDefinitions.get(npcConfig.game_id) }));
+
+                        const subBaseItem = JSON.parse(JSON.stringify({ ...translateNpcConfig(subKey, variation),
+                            ...cache.npcDefinitions.get(variation.game_id) }));
+                        npcIds[variation.game_id] = subKey;
+                        npcs[subKey] = _.merge(baseItem,subBaseItem);
+                    }
+                }
             }
         });
     });
