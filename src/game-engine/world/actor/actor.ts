@@ -528,7 +528,7 @@ export abstract class Actor {
         return this instanceof Npc;
     }
 
-    public get type(): { player?: Player; npc?: Npc; } {
+    public get type(): { player?: Player, npc?: Npc } {
         return {
             player: this.isPlayer ? this as unknown as Player : undefined,
             npc: this.isNpc ? this as unknown as Npc : undefined

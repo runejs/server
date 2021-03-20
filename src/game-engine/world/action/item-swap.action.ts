@@ -44,8 +44,8 @@ export interface ItemSwapAction {
  * @param toSlot
  * @param widget
  */
-const itemSwapActionPipe = async (player: Player, fromSlot: number, toSlot: number, widget:
-    { widgetId: number, containerId: number }): Promise<RunnableHooks<ItemSwapAction>> => {
+const itemSwapActionPipe = async (player: Player, fromSlot: number, toSlot: number, widget: {
+    widgetId: number; containerId: number; }): Promise<RunnableHooks<ItemSwapAction>> => {
     const matchingHooks = getActionHooks<ItemSwapActionHook>('item_swap')
         .filter(plugin => numberHookFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 

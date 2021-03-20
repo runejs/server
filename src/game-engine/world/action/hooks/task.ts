@@ -45,13 +45,14 @@ export class TaskExecutor<T> {
         this.running = true;
 
         if(!!this.task.delay || !!this.task.delayMs) {
-            await lastValueFrom(timer(!!this.task.delayMs ? this.task.delayMs :
-                (this.task.delay * World.TICK_LENGTH)));
+            await lastValueFrom(timer(this.task.delayMs !== undefined ? this.task.delayMs :
+                    (this.task.delay * World.TICK_LENGTH)));
         }
 
         if(!!this.task.interval || !!this.task.intervalMs) {
             // Looping execution task
-            const intervalMs = this.task.intervalMs || (this.task.interval * World.TICK_LENGTH);
+            const intervalMs = this.task.intervalMs !== undefined ? this.task.intervalMs :
+                    (this.task.interval * World.TICK_LENGTH);
 
             await new Promise(resolve => {
                 this.intervalSubscription = timer(0, intervalMs).subscribe(
@@ -61,11 +62,11 @@ export class TaskExecutor<T> {
                             resolve();
                         }
                     },
-                    async error => {
+                    error => {
                         logger.error(error);
                         resolve();
                     },
-                    async() => resolve());
+                    () => resolve());
             });
         } else {
             // Single execution task
@@ -140,8 +141,7 @@ export class TaskExecutor<T> {
         player: Player | undefined;
         npc: Npc | undefined;
         actionData: T;
-        session: TaskSessionData;
-    } {
+        session: TaskSessionData; } {
         const {
             type: {
                 player,

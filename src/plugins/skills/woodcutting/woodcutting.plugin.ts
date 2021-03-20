@@ -80,18 +80,14 @@ const activate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: nu
             const targetName: string = cache.itemDefinitions.get(tree.itemId).name.toLowerCase();
 
             if(actor.inventory.hasSpace()) {
-                let randomLoot = false;
-                let roll = randomBetween(1, 256);
-                if(roll === 1) {
-                    randomLoot = true;
+                const itemToAdd = tree.itemId;
+                const roll = randomBetween(1, 256);
+
+                if(roll === 1) { // Bird nest chance
                     player?.sendMessage(colorText(`A bird's nest falls out of the tree.`, colors.red));
                     world.globalInstance.spawnWorldItem(rollBirdsNestType(), actor.position,
                         { owner: player || null, expires: 300 });
-                }
-
-                const itemToAdd = tree.itemId;
-
-                if(!randomLoot) {
+                } else { // Standard log chopper
                     player?.sendMessage(`You manage to chop some ${targetName}.`);
                     actor.giveItem(itemToAdd);
                 }
@@ -105,14 +101,16 @@ const activate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: nu
                     return false;
                 }
             } else {
-                player?.sendMessage(`Your inventory is too full to hold any more ${targetName}.`, true);
+                player?.sendMessage(
+                    `Your inventory is too full to hold any more ${targetName}.`, true);
                 player?.playSound(soundIds.inventoryFull);
                 return false;
             }
         }
     } else {
         if(taskIteration % 1 === 0 && taskIteration !== 0) {
-            player?.playSound(soundIds.axeSwing[Math.floor(Math.random() * soundIds.axeSwing.length)], 7, 0);
+            const randomSoundIdx = Math.floor(Math.random() * soundIds.axeSwing.length);
+            player?.playSound(soundIds.axeSwing[randomSoundIdx], 7, 0);
         }
     }
 
