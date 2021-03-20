@@ -6,6 +6,7 @@ import { ActionHook } from '@engine/world/action/hooks';
 import { Position } from '@engine/world/position';
 import { Player } from '@engine/world/actor/player/player';
 import { TaskExecutor } from '@engine/world/action/hooks/task';
+import { LocationObject } from '@runejs/cache-parser';
 
 
 /**
@@ -146,7 +147,16 @@ export class ActionPipeline {
         }
 
         if(runnableHooks.actionPosition) {
-            await this.actor.waitForPathing(runnableHooks.actionPosition);
+            try {
+                const gameObject = runnableHooks.action['object'] || null;
+                await this.actor.waitForPathing(
+                    !gameObject ? runnableHooks.actionPosition : (gameObject as LocationObject));
+            } catch(error) {
+                logger.error(`Error pathing to hook target`, error);
+                return;
+            }
+
+            logger.info(`Pathing successful`);
         }
 
         for(let i = 0; i < runnableHooks.hooks.length; i++) {

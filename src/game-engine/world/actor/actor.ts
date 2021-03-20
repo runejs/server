@@ -83,26 +83,33 @@ export abstract class Actor {
      * @param gameObject The game object to wait for the actor to reach.
      */
     public async waitForPathing(gameObject: LocationObject): Promise<void>;
-    public async waitForPathing(position: Position | LocationObject): Promise<void> {
+
+    /**
+     * Waits for the actor to reach the specified game object before resolving it's promise.
+     * The promise will be rejected if the actor's walking queue changes or their movement is otherwise canceled.
+     * @param target The position or game object that the actor needs to reach for the promise to resolve.
+     */
+    public async waitForPathing(target: Position | LocationObject): Promise<void>;
+    public async waitForPathing(target: Position | LocationObject): Promise<void> {
         await new Promise((resolve, reject) => {
-            this.metadata.walkingTo = position;
+            this.metadata.walkingTo = target instanceof Position ? target : new Position(target.x, target.y, target.level);
 
             const inter = setInterval(() => {
-                if(!this.metadata.walkingTo || !this.metadata.walkingTo.equals(position)) {
+                if(!this.metadata.walkingTo || !this.metadata.walkingTo.equals(target)) {
                     reject();
                     clearInterval(inter);
                     return;
                 }
 
                 if(!this.walkingQueue.moving()) {
-                    if(position instanceof Position) {
-                        if(this.position.distanceBetween(position) > 1) {
+                    if(target instanceof Position) {
+                        if(this.position.distanceBetween(target) > 1) {
                             reject();
                         } else {
                             resolve();
                         }
                     } else {
-                        if(this.position.withinInteractionDistance(position)) {
+                        if(this.position.withinInteractionDistance(target)) {
                             resolve();
                         } else {
                             reject();
