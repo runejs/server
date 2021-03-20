@@ -40,9 +40,41 @@ module.exports = {
         "object-curly-spacing": [ "error", "always" ],
         "no-var": "error",
         "prefer-const": "error",
-        "indent": [ "warn", 4, {
-            "SwitchCase": 1
-        } ],
+        "indent": [
+            "error", 4, {
+                "SwitchCase": 1,
+                "FunctionDeclaration": {
+                    "parameters": "off",
+                    "body": 1
+                },
+                "FunctionExpression": {
+                    "parameters": "off",
+                    "body": 1
+                },
+                "offsetTernaryExpressions": true
+            }
+        ],
+        "@typescript-eslint/indent": [
+            "error", 4, {
+                "SwitchCase": 1,
+                "FunctionDeclaration": {
+                    "parameters": "off",
+                    "body": 1
+                },
+                "FunctionExpression": {
+                    "parameters": "off",
+                    "body": 1
+                },
+                "offsetTernaryExpressions": true,
+                "ignoredNodes": [
+                    "ArrowFunctionExpression > BlockStatement",
+                    "NoSubstitutionTemplateLiteral",
+                    "TemplateLiteral",
+                    "TSTypeAliasDeclaration *"
+                ]
+            }
+        ],
+        "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-inferrable-types": 0,
         "@typescript-eslint/no-empty-function": 0,
         "@typescript-eslint/no-explicit-any": 0,

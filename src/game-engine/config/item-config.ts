@@ -1,11 +1,12 @@
 import { loadConfigurationFiles } from '@engine/config/index';
 import { SkillName } from '@engine/world/actor/skills';
 import _ from 'lodash';
+import { logger } from '@runejs/core';
 
 
-export type WeaponStyle = 'axe' | 'hammer' | 'bow' | 'claws' | 'crossbow' | 'longsword' |
-    '2h_sword' | 'pickaxe' | 'halberd' | 'staff' | 'scythe' | 'spear' | 'mace' |
-    'dagger' | 'magical_staff' | 'darts' | 'unarmed';
+export type WeaponStyle = 'axe' | 'hammer' | 'bow' | 'claws' | 'crossbow' | 'longsword'
+    | '2h_sword' | 'pickaxe' | 'halberd' | 'staff' | 'scythe' | 'spear' | 'mace'
+    | 'dagger' | 'magical_staff' | 'darts' | 'unarmed';
 
 export const weaponWidgetIds = {
     'axe': 75,
@@ -114,10 +115,10 @@ export interface ItemPresetConfiguration {
 
 export interface ItemConfiguration {
     extends?: string | string[];
-    game_id: number;
+    game_id?: number;
     examine?: string;
     tradable?: boolean;
-    subitems?: [{
+    variations?: [{
         suffix: string;
     } & ItemConfiguration];
     weight?: number;
@@ -223,15 +224,23 @@ export async function loadItemConfigurations(path: string): Promise<{ items: { [
             } else {
 
                 const itemConfig: ItemConfiguration = itemConfigs[key] as ItemConfiguration;
-                itemIds[itemConfig.game_id] = key;
-                items[key] = { ...translateItemConfig(key, itemConfig) };
-                if(itemConfig.subitems) {
-                    for(const subItem of itemConfig.subitems) {
-                        const subKey = key+':'+subItem.suffix;
+                if(!isNaN(itemConfig.game_id)) {
+                    itemIds[itemConfig.game_id] = key;
+                    items[key] = { ...translateItemConfig(key, itemConfig) };
+                }
+
+                if(itemConfig.variations) {
+                    for(const subItem of itemConfig.variations) {
+                        const subKey = subItem.suffix ? key + ':' + subItem.suffix : key;
                         const baseItem = JSON.parse(JSON.stringify({ ...translateItemConfig(key, itemConfig) }));
                         const subBaseItem = JSON.parse(JSON.stringify({ ...translateItemConfig(subKey, subItem) }));
                         itemIds[subItem.game_id] = subKey;
-                        items[subKey] = _.merge(baseItem,subBaseItem);
+
+                        if(!items[subKey]) {
+                            items[subKey] = _.merge(baseItem, subBaseItem);
+                        } else {
+                            logger.warn(`Duplicate item key ${subKey} found - the item was not loaded.`);
+                        }
                     }
                 }
             }

@@ -159,9 +159,14 @@ export async function runGameServer(): Promise<void> {
  *          player's `actionsCancelled` is fired during the loop.
  * `npc` the npc that the loop belongs to. This will Providing this field will cause the loop to cancel if
  *       this npc is flagged to no longer exist during the loop.
+ * @deprecated - use new Action Hook task system instead.
  */
-export const loopingEvent = (options?: { ticks?: number, delayTicks?: number, npc?: Npc, player?: Player }):
-    { event: Subject<void>, cancel: () => void } => {
+export const loopingEvent = (options?: {
+    ticks?: number;
+    delayTicks?: number;
+    npc?: Npc;
+    player?: Player;
+}): { event: Subject<void>, cancel: () => void } => {
     if(!options) {
         options = {};
     }
@@ -210,7 +215,7 @@ export const loopingEvent = (options?: { ticks?: number, delayTicks?: number, np
  * @param player The player that must walk to a specific position.
  * @param position The position that the player needs to end up at.
  * @param interactingAction [optional] The information about the interaction that the player is making. Not required.
- * @deprecated To be replaced with a simplified method within the Actor (Player & NPC) API.
+ * @deprecated - use methods provided within the Actor API to force or await movement
  */
 export const playerWalkTo = async (player: Player, position: Position, interactingAction?: {
     interactingObject?: LocationObject;

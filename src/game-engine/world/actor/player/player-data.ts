@@ -9,67 +9,67 @@ import { PlayerQuest } from '@engine/config/quest-config';
 import { MusicPlayerLoopMode, MusicPlayerMode } from '@plugins/music/music-tab.plugin';
 
 export interface Appearance {
-  gender: number;
-  head: number;
-  torso: number;
-  arms: number;
-  legs: number;
-  hands: number;
-  feet: number;
-  facialHair: number;
-  hairColor: number;
-  torsoColor: number;
-  legColor: number;
-  feetColor: number;
-  skinColor: number;
+    gender: number;
+    head: number;
+    torso: number;
+    arms: number;
+    legs: number;
+    hands: number;
+    feet: number;
+    facialHair: number;
+    hairColor: number;
+    torsoColor: number;
+    legColor: number;
+    feetColor: number;
+    skinColor: number;
 }
 
 export class PlayerSettings {
-  musicVolume: number = 0;
-  musicPlayerMode: number = MusicPlayerMode.AUTO;
-  musicPlayerLoopMode: number = MusicPlayerLoopMode.ENABLED;
-  soundEffectVolume: number = 0;
-  areaEffectVolume: number = 0;
-  splitPrivateChatEnabled: boolean = false;
-  twoMouseButtonsEnabled: boolean = true;
-  screenBrightness: number = 2;
-  chatEffectsEnabled: boolean = true;
-  acceptAidEnabled: boolean = true;
-  runEnabled: boolean = false;
-  autoRetaliateEnabled: boolean = true;
-  attackStyle: number = 0;
-  bankInsertMode: number = 0;
-  bankWithdrawNoteMode: number = 0;
-  publicChatMode: number = 0;
-  privateChatMode: number = 0;
-  tradeMode: number = 0;
+    musicVolume: number = 0;
+    musicPlayerMode: number = MusicPlayerMode.AUTO;
+    musicPlayerLoopMode: number = MusicPlayerLoopMode.ENABLED;
+    soundEffectVolume: number = 0;
+    areaEffectVolume: number = 0;
+    splitPrivateChatEnabled: boolean = false;
+    twoMouseButtonsEnabled: boolean = true;
+    screenBrightness: number = 2;
+    chatEffectsEnabled: boolean = true;
+    acceptAidEnabled: boolean = true;
+    runEnabled: boolean = false;
+    autoRetaliateEnabled: boolean = true;
+    attackStyle: number = 0;
+    bankInsertMode: number = 0;
+    bankWithdrawNoteMode: number = 0;
+    publicChatMode: number = 0;
+    privateChatMode: number = 0;
+    tradeMode: number = 0;
 }
 
 export interface PlayerSave {
-  username: string;
-  passwordHash: string;
-  rights: number;
-  position: {
-    x: number;
-    y: number;
-    level: number;
-  };
-  lastLogin: {
-    date: Date;
-    address: string;
-  };
-  appearance: Appearance;
-  inventory: Item[];
-  bank: Item[];
-  equipment: Item[];
-  skills: SkillValue[];
-  settings: PlayerSettings;
-  savedMetadata: { [key: string]: any };
-  questList: PlayerQuest[];
-  musicTracks: Array<number>;
-  achievements: string[];
-  friendsList: string[];
-  ignoreList: string[];
+    username: string;
+    passwordHash: string;
+    rights: number;
+    position: {
+        x: number;
+        y: number;
+        level: number;
+    };
+    lastLogin: {
+        date: Date;
+        address: string;
+    };
+    appearance: Appearance;
+    inventory: Item[];
+    bank: Item[];
+    equipment: Item[];
+    skills: SkillValue[];
+    settings: PlayerSettings;
+    savedMetadata: { [key: string]: any };
+    questList: PlayerQuest[];
+    musicTracks: Array<number>;
+    achievements: string[];
+    friendsList: string[];
+    ignoreList: string[];
 }
 
 export const defaultAppearance = (): Appearance => {

@@ -28,8 +28,18 @@
         }
     },
 
-    "rs:generic_man_1": {
+    "rs:man": {
         "extends": "rs:human_male",
-        "game_id": 1
+        "game_id": 1,
+        "variations": [
+            {
+                "suffix": "0",
+                "game_id": 2
+            },
+            {
+                "suffix": "1",
+                "game_id": 3
+            }
+        ]
     }
 }
