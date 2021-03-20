@@ -128,11 +128,11 @@ export class TaskExecutor<T> {
     }
 
     public async stop(): Promise<void> {
+        this.running = false;
         this.intervalSubscription?.unsubscribe();
 
         await this.task?.onComplete(this, this.iteration);
 
-        this.running = false;
         this.session = null;
     }
 

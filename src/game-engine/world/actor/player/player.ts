@@ -279,7 +279,9 @@ export class Player extends Actor {
         this.save();
 
         this.actionsCancelled.complete();
-        this.movementEvent.complete();
+        this.walkingQueue.movementEvent.complete();
+        this.walkingQueue.movementQueued.complete();
+        this.actionPipeline.shutdown();
         this.outgoingPackets.logout();
         this.instance = null;
         world.chunkManager.getChunkForWorldPosition(this.position).removePlayer(this);

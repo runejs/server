@@ -20,40 +20,42 @@ import { LocationObject } from '@runejs/cache-parser';
  */
 export abstract class Actor {
 
+    public readonly updateFlags: UpdateFlags = new UpdateFlags();
+    public readonly skills: Skills = new Skills(this);
+    public readonly walkingQueue: WalkingQueue = new WalkingQueue(this);
+    public readonly inventory: ItemContainer = new ItemContainer(28);
+    public readonly bank: ItemContainer = new ItemContainer(376);
     public readonly actionPipeline = new ActionPipeline(this);
-    public readonly updateFlags: UpdateFlags;
-    public readonly skills: Skills;
     public readonly metadata: { [key: string]: any } = {};
-    public readonly actionsCancelled: Subject<ActionCancelType>;
-    public readonly movementEvent: Subject<Position>;
-    public pathfinding: Pathfinding;
+
+    /**
+     * @deprecated - use new action system instead
+     */
+    public readonly actionsCancelled: Subject<ActionCancelType> = new Subject<ActionCancelType>();
+
+    public pathfinding: Pathfinding = new Pathfinding(this);
     public lastMovementPosition: Position;
+
     protected randomMovementInterval;
-    private readonly _walkingQueue: WalkingQueue;
-    private readonly _inventory: ItemContainer;
-    private readonly _bank: ItemContainer;
+
     private _position: Position;
     private _lastMapRegionUpdatePosition: Position;
     private _worldIndex: number;
     private _walkDirection: number;
     private _runDirection: number;
     private _faceDirection: number;
-    private _busy: boolean;
     private _instance: WorldInstance = null;
 
+    /**
+     * @deprecated - use new action system instead
+     */
+    private _busy: boolean;
+
     protected constructor() {
-        this.updateFlags = new UpdateFlags();
-        this._walkingQueue = new WalkingQueue(this);
         this._walkDirection = -1;
         this._runDirection = -1;
         this._faceDirection = 6;
-        this._inventory = new ItemContainer(28);
-        this._bank = new ItemContainer(376);
-        this.skills = new Skills(this);
         this._busy = false;
-        this.pathfinding = new Pathfinding(this);
-        this.actionsCancelled = new Subject<ActionCancelType>();
-        this.movementEvent = new Subject<Position>();
     }
 
     public damage(amount: number, damageType: DamageType = DamageType.DAMAGE): 'alive' | 'dead' {
@@ -165,7 +167,7 @@ export abstract class Actor {
         this.metadata['following'] = target;
 
         this.moveBehind(target);
-        const subscription = target.movementEvent.subscribe(async () => this.moveBehind(target));
+        const subscription = target.walkingQueue.movementEvent.subscribe(async () => this.moveBehind(target));
 
         this.actionsCancelled.pipe(
             filter(type => type !== 'pathing-movement'),
@@ -212,7 +214,7 @@ export abstract class Actor {
         this.metadata['tailing'] = target;
 
         this.moveTo(target);
-        const subscription = target.movementEvent.subscribe(async () => this.moveTo(target));
+        const subscription = target.walkingQueue.movementEvent.subscribe(async () => this.moveTo(target));
 
         this.actionsCancelled.pipe(
             filter(type => type !== 'pathing-movement'),
@@ -267,8 +269,7 @@ export abstract class Actor {
     }
 
     public stopAnimation(): void {
-        const animation = { id: -1, delay: 0 };
-        this.updateFlags.animation = animation;
+        this.updateFlags.animation = { id: -1, delay: 0 };
     }
 
     public playGraphics(graphics: number | Graphic): void {
@@ -280,30 +281,29 @@ export abstract class Actor {
     }
 
     public stopGraphics(): void {
-        const graphics = { id: -1, delay: 0, height: 120 };
-        this.updateFlags.graphics = graphics;
+        this.updateFlags.graphics = { id: -1, delay: 0, height: 120 };
     }
 
     public removeItem(slot: number): void {
-        this._inventory.remove(slot);
+        this.inventory.remove(slot);
     }
 
     public removeBankItem(slot: number): void {
-        this._bank.remove(slot);
+        this.bank.remove(slot);
     }
 
     public giveItem(item: number | Item): boolean {
-        return this._inventory.add(item) !== null;
+        return this.inventory.add(item) !== null;
     }
     public giveBankItem(item: number | Item): boolean {
-        return this._bank.add(item) !== null;
+        return this.bank.add(item) !== null;
     }
 
     public hasItemInInventory(item: number | Item): boolean {
-        return this._inventory.has(item);
+        return this.inventory.has(item);
     }
     public hasItemInBank(item: number | Item): boolean {
-        return this._bank.has(item);
+        return this.bank.has(item);
     }
 
     public hasItemOnPerson(item: number | Item): boolean {
@@ -465,10 +465,6 @@ export abstract class Actor {
         this._worldIndex = value;
     }
 
-    public get walkingQueue(): WalkingQueue {
-        return this._walkingQueue;
-    }
-
     public get walkDirection(): number {
         return this._walkDirection;
     }
@@ -491,13 +487,6 @@ export abstract class Actor {
 
     public set faceDirection(value: number) {
         this._faceDirection = value;
-    }
-
-    public get inventory(): ItemContainer {
-        return this._inventory;
-    }
-    public get bank(): ItemContainer {
-        return this._bank;
     }
 
     public get busy(): boolean {

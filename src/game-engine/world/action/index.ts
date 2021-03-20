@@ -7,6 +7,7 @@ import { Position } from '@engine/world/position';
 import { Player } from '@engine/world/actor/player/player';
 import { TaskExecutor } from '@engine/world/action/hooks/task';
 import { LocationObject } from '@runejs/cache-parser';
+import { Subscription } from 'rxjs';
 
 
 /**
@@ -83,7 +84,11 @@ export class ActionPipeline {
 
     private runningTasks: TaskExecutor<any>[] = [];
 
+    private movementSubscription: Subscription;
+
     public constructor(public readonly actor: Actor) {
+        this.movementSubscription = this.actor.walkingQueue.movementQueued$
+            .subscribe(() => this.handleMovement());
     }
 
     public static getPipe(action: ActionType): Map<string, any> {
@@ -92,6 +97,10 @@ export class ActionPipeline {
 
     public static register(action: ActionType, actionPipe: (...args: any[]) => void): void {
         ActionPipeline.pipes.set(action.toString(), actionPipe);
+    }
+
+    public shutdown(): void {
+        this.movementSubscription.unsubscribe();
     }
 
     public async call(action: ActionType, ...args: any[]): Promise<void> {
@@ -106,6 +115,22 @@ export class ActionPipeline {
                 }
             }
         }
+    }
+
+    private async handleMovement(): Promise<void> {
+        console.log('movement');
+        if(!this.runningTasks || this.runningTasks.length === 0) {
+            return;
+        }
+
+        for(const runningTask of this.runningTasks) {
+            if(runningTask.running) {
+                await runningTask.stop();
+            }
+        }
+
+        // Remove all tasks
+        this.runningTasks = [];
     }
 
     private async cancelWeakerActions(newActionStrength: ActionStrength): Promise<void> {
