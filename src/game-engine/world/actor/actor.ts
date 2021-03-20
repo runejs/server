@@ -93,6 +93,10 @@ export abstract class Actor {
      */
     public async waitForPathing(target: Position | LocationObject): Promise<void>;
     public async waitForPathing(target: Position | LocationObject): Promise<void> {
+        if(this.position.withinInteractionDistance(target)) {
+            return;
+        }
+
         await new Promise((resolve, reject) => {
             this.metadata.walkingTo = target instanceof Position ? target : new Position(target.x, target.y, target.level);
 

@@ -45,6 +45,7 @@ export class Position {
 
     public withinInteractionDistance(gameObject: LocationObject, minimumDistance?: number): boolean;
     public withinInteractionDistance(position: Position, minimumDistance?: number): boolean;
+    public withinInteractionDistance(target: LocationObject | Position, minimumDistance?: number): boolean;
     public withinInteractionDistance(target: LocationObject | Position, minimumDistance: number = 1): boolean {
         if(target instanceof Position) {
             return this.distanceBetween(target) <= minimumDistance;

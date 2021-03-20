@@ -88,7 +88,7 @@ export class ActionPipeline {
 
     public constructor(public readonly actor: Actor) {
         this.movementSubscription = this.actor.walkingQueue.movementQueued$
-            .subscribe(async () => this.handleMovement());
+            .subscribe(async () => this.cancelRunningTasks());
     }
 
     public static getPipe(action: ActionType): Map<string, any> {
@@ -117,7 +117,7 @@ export class ActionPipeline {
         }
     }
 
-    private async handleMovement(): Promise<void> {
+    public async cancelRunningTasks(): Promise<void> {
         if(this.canceling || !this.runningTasks || this.runningTasks.length === 0) {
             return;
         }
@@ -135,37 +135,6 @@ export class ActionPipeline {
         this.canceling = false;
     }
 
-    private async cancelWeakerActions(newActionStrength: ActionStrength): Promise<void> {
-        if(!this.runningTasks || this.runningTasks.length === 0) {
-            return;
-        }
-
-        const pendingRemoval: string[] = [];
-
-        for(const runningTask of this.runningTasks) {
-            if(!runningTask.running) {
-                pendingRemoval.push(runningTask.taskId);
-                continue;
-            }
-
-            if(runningTask.strength === 'weak' || (runningTask.strength === 'normal' && newActionStrength === 'strong')) {
-                // Cancel obviously weaker tasks
-                await runningTask.stop();
-                pendingRemoval.push(runningTask.taskId);
-                continue;
-            }
-
-            if(runningTask.strength === 'normal') {
-                // @TODO normal task handling
-            } else if(runningTask.strength === 'strong') {
-                // @TODO strong task handling
-            }
-        }
-
-        // Remove all non-running and ceased tasks
-        this.runningTasks = this.runningTasks.filter(task => !pendingRemoval.includes(task.taskId));
-    }
-
     private async runActionHandler(actionHandler: any, ...args: any[]): Promise<void> {
         const runnableHooks: RunnableHooks | null | undefined = actionHandler(...args);
 
@@ -173,19 +142,26 @@ export class ActionPipeline {
             return;
         }
 
-        if(runnableHooks.actionPosition) {
-            try {
-                const gameObject = runnableHooks.action['object'] || null;
-                await this.actor.waitForPathing(
-                    !gameObject ? runnableHooks.actionPosition : (gameObject as LocationObject));
-            } catch(error) {
-                logger.error(`Error pathing to hook target`, error);
-                return;
-            }
-        }
-
         for(let i = 0; i < runnableHooks.hooks.length; i++) {
             const hook = runnableHooks.hooks[i];
+
+            if(!hook) {
+                continue;
+            }
+
+            await this.cancelRunningTasks();
+
+            if(runnableHooks.actionPosition) {
+                try {
+                    const gameObject = runnableHooks.action['object'] || null;
+                    await this.actor.waitForPathing(
+                        !gameObject ? runnableHooks.actionPosition : (gameObject as LocationObject));
+                } catch(error) {
+                    logger.error(`Error pathing to hook target`, error);
+                    return;
+                }
+            }
+
             await this.runHook(hook, runnableHooks.action);
             if(!hook.multi) {
                 // If the highest priority hook does not allow other hooks
@@ -198,8 +174,6 @@ export class ActionPipeline {
 
     private async runHook(actionHook: ActionHook, action: any): Promise<void> {
         const { handler, task } = actionHook;
-
-        await this.cancelWeakerActions(actionHook.strength || 'normal');
 
         if(task) {
             // Schedule task-based hook
