@@ -454,7 +454,7 @@ export class Player extends Actor {
   public setQuestProgress(questId: string, progress: QuestKey): void {
       const questData: Quest = findQuest(questId);
 
-      if(!questData) {
+      if (!questData) {
           logger.warn(`Quest data not found for ${questId}`);
           return;
       }
@@ -466,6 +466,7 @@ export class Player extends Actor {
       }
 
       if(playerQuest.progress === 0 && !playerQuest.complete) {
+          playerQuest.progress = progress;
           this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
       } else if(!playerQuest.complete && progress === 'complete') {
           playerQuest.complete = true;
