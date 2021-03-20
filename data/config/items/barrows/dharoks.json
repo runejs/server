@@ -27,31 +27,25 @@
         },
         "variations": [
             {
-                "suffix": "0",
                 "game_id": 4718
             },
             {
-                "suffix": "1",
                 "tradable": false,
                 "game_id": 4886
             },
             {
-                "suffix": "2",
                 "tradable": false,
                 "game_id": 4887
             },
             {
-                "suffix": "3",
                 "tradable": false,
                 "game_id": 4888
             },
             {
-                "suffix": "4",
                 "tradable": false,
                 "game_id": 4889
             },
             {
-                "suffix": "5",
                 "game_id": 4890
             }
         ]

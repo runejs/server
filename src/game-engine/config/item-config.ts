@@ -118,7 +118,7 @@ export interface ItemConfiguration {
     examine?: string;
     tradable?: boolean;
     variations?: [{
-        suffix: string;
+        suffix?: string; // if not used, will be auto incrementing starting from 0
     } & ItemConfiguration];
     weight?: number;
     equippable?: boolean;
@@ -229,7 +229,13 @@ export async function loadItemConfigurations(path: string): Promise<{ items: { [
                 }
 
                 if(itemConfig.variations) {
+                    let currentVariation = 0;
+
                     for(const subItem of itemConfig.variations) {
+                        if(!subItem.suffix){
+                            subItem.suffix = currentVariation.toString();
+                            currentVariation++;
+                        }
                         const subKey = key+':'+subItem.suffix;
                         const baseItem = JSON.parse(JSON.stringify({ ...translateItemConfig(key, itemConfig) }));
                         const subBaseItem = JSON.parse(JSON.stringify({ ...translateItemConfig(subKey, subItem) }));
