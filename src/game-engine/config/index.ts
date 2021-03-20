@@ -104,7 +104,10 @@ export const findItem = (itemKey: number | string): ItemDetails | null => {
 
     if(itemKey) {
         item = itemMap[itemKey];
-
+        if(!item) {
+            // Try fetching variation with suffix 0
+            item = itemMap[`${itemKey}:0`]
+        }
         if(item?.gameId) {
             gameId = item.gameId;
         }
@@ -154,6 +157,11 @@ export const findNpc = (npcKey: number | string): NpcDetails | null => {
     }
 
     let npc = npcMap[npcKey];
+    if(!npc) {
+        // Try fetching variation with suffix 0
+        npc = npcMap[`${npc}:0`]
+    }
+
     if(!npc) {
         logger.warn(`NPC ${npcKey} is not yet configured on the server and a matching cache NPC was not provided.`);
         return null;

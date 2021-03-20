@@ -51,7 +51,7 @@ export interface NpcConfiguration {
     };
     defensive_stats?: DefensiveBonuses;
     variations?: [{
-        suffix: string;
+        suffix?: string; // if not used, will be auto incrementing starting from 0
     } & NpcConfiguration];
     animations?: NpcAnimations;
     drop_table?: DropTable;
@@ -127,11 +127,21 @@ export async function loadNpcConfigurations(path: string): Promise<{ npcs: { [ke
                 npcPresets = { ...npcPresets, ...npcConfigs[key] };
             } else {
                 const npcConfig = npcConfigs[key] as NpcConfiguration;
-                npcIds[npcConfig.game_id] = key;
-                npcs[key] = { ...translateNpcConfig(key, npcConfig),
-                    ...cache.npcDefinitions.get(npcConfig.game_id) };
+                if(!isNaN(npcConfig.game_id)) {
+                    npcIds[npcConfig.game_id] = key;
+                    npcs[key] = {
+                        ...translateNpcConfig(key, npcConfig),
+                        ...cache.npcDefinitions.get(npcConfig.game_id)
+                    };
+                }
                 if(npcConfig.variations) {
+                    let currentVariation = 0;
+
                     for(const variation of npcConfig.variations) {
+                        if(!variation.suffix){
+                            variation.suffix = currentVariation.toString();
+                            currentVariation++;
+                        }
                         const subKey = key+':'+variation.suffix;
                         const baseItem = JSON.parse(JSON.stringify({ ...translateNpcConfig(key, npcConfig),
                             ...cache.npcDefinitions.get(npcConfig.game_id) }));
