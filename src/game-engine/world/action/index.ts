@@ -83,12 +83,12 @@ export class ActionPipeline {
     private static pipes = new Map<string, any>();
 
     private runningTasks: TaskExecutor<any>[] = [];
-
+    private canceling: boolean = false;
     private movementSubscription: Subscription;
 
     public constructor(public readonly actor: Actor) {
         this.movementSubscription = this.actor.walkingQueue.movementQueued$
-            .subscribe(() => this.handleMovement());
+            .subscribe(async () => this.handleMovement());
     }
 
     public static getPipe(action: ActionType): Map<string, any> {
@@ -104,6 +104,10 @@ export class ActionPipeline {
     }
 
     public async call(action: ActionType, ...args: any[]): Promise<void> {
+        if(this.canceling) {
+            return;
+        }
+
         const actionHandler = ActionPipeline.pipes.get(action.toString());
         if(actionHandler) {
             try {
@@ -118,10 +122,11 @@ export class ActionPipeline {
     }
 
     private async handleMovement(): Promise<void> {
-        console.log('movement');
-        if(!this.runningTasks || this.runningTasks.length === 0) {
+        if(this.canceling || !this.runningTasks || this.runningTasks.length === 0) {
             return;
         }
+
+        this.canceling = true;
 
         for(const runningTask of this.runningTasks) {
             if(runningTask.running) {
@@ -131,6 +136,7 @@ export class ActionPipeline {
 
         // Remove all tasks
         this.runningTasks = [];
+        this.canceling = false;
     }
 
     private async cancelWeakerActions(newActionStrength: ActionStrength): Promise<void> {
@@ -182,6 +188,10 @@ export class ActionPipeline {
             }
 
             logger.info(`Pathing successful`);
+        }
+
+        if(this.canceling) {
+            return;
         }
 
         for(let i = 0; i < runnableHooks.hooks.length; i++) {
