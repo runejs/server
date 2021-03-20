@@ -6,7 +6,7 @@
         "movement_radius": 8
     },
     {
-        "npc": "rs:generic_man_1",
+        "npc": "rs:man",
         "spawn_x": 3222,
         "spawn_y": 3218,
         "movement_radius": 12

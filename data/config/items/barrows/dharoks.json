@@ -25,31 +25,27 @@
                 "strength": 105
             }
         },
-        "game_id": 4718,
-        "subitems": [
+        "variations": [
             {
-                "suffix": "100",
+                "game_id": 4718
+            },
+            {
                 "tradable": false,
                 "game_id": 4886
             },
             {
-                "suffix": "75",
                 "tradable": false,
                 "game_id": 4887
             },
             {
-                "suffix": "50",
                 "tradable": false,
                 "game_id": 4888
             },
             {
-                "suffix": "25",
                 "tradable": false,
                 "game_id": 4889
             },
             {
-                "suffix": "0",
-                "tradable": false,
                 "game_id": 4890
             }
         ]

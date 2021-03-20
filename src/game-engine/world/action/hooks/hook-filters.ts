@@ -33,7 +33,7 @@ export const numberHookFilter = (expected: number | number[], input: number): bo
 
 
 export const advancedNumberHookFilter = (expected: number | number[], input: number, options?: string | string[],
-                                         searchOption?: string): boolean => {
+    searchOption?: string): boolean => {
     if(expected !== undefined) {
         if(Array.isArray(expected)) {
             if(expected.indexOf(input) === -1) {
