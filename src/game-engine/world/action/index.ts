@@ -104,10 +104,6 @@ export class ActionPipeline {
     }
 
     public async call(action: ActionType, ...args: any[]): Promise<void> {
-        if(this.canceling) {
-            return;
-        }
-
         const actionHandler = ActionPipeline.pipes.get(action.toString());
         if(actionHandler) {
             try {
