@@ -114,10 +114,10 @@ export interface ItemPresetConfiguration {
 
 export interface ItemConfiguration {
     extends?: string | string[];
-    game_id: number;
+    game_id?: number;
     examine?: string;
     tradable?: boolean;
-    subitems?: [{
+    variations?: [{
         suffix: string;
     } & ItemConfiguration];
     weight?: number;
@@ -223,10 +223,13 @@ export async function loadItemConfigurations(path: string): Promise<{ items: { [
             } else {
 
                 const itemConfig: ItemConfiguration = itemConfigs[key] as ItemConfiguration;
-                itemIds[itemConfig.game_id] = key;
-                items[key] = { ...translateItemConfig(key, itemConfig) };
-                if(itemConfig.subitems) {
-                    for(const subItem of itemConfig.subitems) {
+                if(!isNaN(itemConfig.game_id)) {
+                    itemIds[itemConfig.game_id] = key;
+                    items[key] = { ...translateItemConfig(key, itemConfig) };
+                }
+
+                if(itemConfig.variations) {
+                    for(const subItem of itemConfig.variations) {
                         const subKey = key+':'+subItem.suffix;
                         const baseItem = JSON.parse(JSON.stringify({ ...translateItemConfig(key, itemConfig) }));
                         const subBaseItem = JSON.parse(JSON.stringify({ ...translateItemConfig(subKey, subItem) }));
