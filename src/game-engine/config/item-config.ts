@@ -4,9 +4,9 @@ import _ from 'lodash';
 import { logger } from '@runejs/core';
 
 
-export type WeaponStyle = 'axe' | 'hammer' | 'bow' | 'claws' | 'crossbow' | 'longsword' |
-    '2h_sword' | 'pickaxe' | 'halberd' | 'staff' | 'scythe' | 'spear' | 'mace' |
-    'dagger' | 'magical_staff' | 'darts' | 'unarmed';
+export type WeaponStyle = 'axe' | 'hammer' | 'bow' | 'claws' | 'crossbow' | 'longsword'
+    | '2h_sword' | 'pickaxe' | 'halberd' | 'staff' | 'scythe' | 'spear' | 'mace'
+    | 'dagger' | 'magical_staff' | 'darts' | 'unarmed';
 
 export const weaponWidgetIds = {
     'axe': 75,

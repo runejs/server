@@ -9,7 +9,7 @@ export type RegionType = 'map' | 'chunk';
  * A type for defining region tile sizes.
  */
 export type RegionSizeMap = {
-  [key in RegionType]: number;
+    [key in RegionType]: number;
 };
 
 /**
