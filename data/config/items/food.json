@@ -572,14 +572,15 @@
         "variations": [
             {
                 "game_id": 7218,
+                "suffix": "0",
                 "metadata": {
                     "consume_effects": {
-                        "replaced_by": "rs:summer_pie:half"
+                        "replaced_by": "rs:summer_pie:1"
                     }
                 }
             },
             {
-                "suffix": "half",
+                "suffix": "1",
                 "tradable": false,
                 "game_id": 7220,
                 "metadata": {

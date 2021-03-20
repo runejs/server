@@ -119,7 +119,7 @@ export interface ItemConfiguration {
     examine?: string;
     tradable?: boolean;
     variations?: [{
-        suffix?: string;
+        suffix: string;
     } & ItemConfiguration];
     weight?: number;
     equippable?: boolean;
