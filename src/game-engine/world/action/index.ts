@@ -7,6 +7,7 @@ import { lastValueFrom, Subscription, timer } from 'rxjs';
 import { World } from '@engine/world';
 import { Position } from '@engine/world/position';
 import uuidv4 from 'uuid/v4';
+import { Player } from '@engine/world/actor/player/player';
 
 
 /**
@@ -19,6 +20,7 @@ export type ActionStrength = 'weak' | 'normal' | 'strong';
 export class TaskExecutor<T> {
 
     public running: boolean = false;
+    public session: { [key: string]: any } = {}; // a session store to use for the lifetime of the task
     public readonly taskId = uuidv4();
     public readonly strength: ActionStrength;
     private intervalSubscription: Subscription;
@@ -50,9 +52,10 @@ export class TaskExecutor<T> {
             const intervalMs = this.task.intervalMs || (this.task.interval * World.TICK_LENGTH);
 
             await new Promise(resolve => {
+                let index: number = 0;
                 this.intervalSubscription = timer(0, intervalMs).subscribe(
                     async () => {
-                        if(!await this.execute()) {
+                        if(!await this.execute(index++)) {
                             this.intervalSubscription?.unsubscribe();
                             resolve();
                         }
@@ -73,7 +76,7 @@ export class TaskExecutor<T> {
         }
     }
 
-    public async execute(): Promise<boolean> {
+    public async execute(index: number = 0): Promise<boolean> {
         if(!this.actor) {
             // Actor destroyed, cancel the task
             return false;
@@ -90,7 +93,7 @@ export class TaskExecutor<T> {
         }
 
         try {
-            const response = await this.task.execute(this);
+            const response = await this.task.activate(this, index);
             return typeof response === 'boolean' ? response : true;
         } catch(error) {
             logger.error(`Error executing action task`);
@@ -123,10 +126,11 @@ export class TaskExecutor<T> {
         await this.task?.onComplete(this);
 
         this.running = false;
+        this.session = null;
     }
 
     public get valid(): boolean {
-        return !!this.task?.execute && !!this.actionData;
+        return !!this.task?.activate && !!this.actionData;
     }
 
 }
@@ -304,6 +308,12 @@ export class ActionPipeline {
     }
 
     public get paused(): boolean {
+        if(this.actor instanceof Player) {
+            if(this.actor.interfaceState.widgetOpen()) {
+                return true;
+            }
+        }
+
         return false;
     }
 

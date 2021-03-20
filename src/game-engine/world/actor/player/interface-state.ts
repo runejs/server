@@ -202,7 +202,12 @@ export class InterfaceState {
         return widget || null;
     }
 
-    public widgetOpen(slot: GameInterfaceSlot, widgetId?: number): boolean {
+    public widgetOpen(slot?: GameInterfaceSlot, widgetId?: number): boolean {
+        if(!slot) {
+            const slots: GameInterfaceSlot[] = Object.keys(this.widgetSlots) as GameInterfaceSlot[];
+            return slots.some(s => this.getWidget(s) !== null);
+        }
+
         if(widgetId === undefined) {
             return this.getWidget(slot) !== null;
         } else {

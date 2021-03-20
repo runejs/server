@@ -70,6 +70,19 @@ export abstract class Actor {
         return remainingHitpoints === 0 ? 'dead' : 'alive';
     }
 
+    /**
+     * Waits for the actor to reach the specified position before resolving it's promise.
+     * The promise will be rejected if the actor's walking queue changes or their movement is otherwise canceled.
+     * @param position The position that the actor needs to reach for the promise to resolve.
+     */
+    public async waitForPathing(position: Position): Promise<void>;
+
+    /**
+     * Waits for the actor to reach the specified game object before resolving it's promise.
+     * The promise will be rejected if the actor's walking queue changes or their movement is otherwise canceled.
+     * @param gameObject The game object to wait for the actor to reach.
+     */
+    public async waitForPathing(gameObject: LocationObject): Promise<void>;
     public async waitForPathing(position: Position | LocationObject): Promise<void> {
         await new Promise((resolve, reject) => {
             this.metadata.walkingTo = position;
@@ -506,4 +519,20 @@ export abstract class Actor {
 
         this._instance = value;
     }
+
+    public get isPlayer(): boolean {
+        return this instanceof Player;
+    }
+
+    public get isNpc(): boolean {
+        return this instanceof Npc;
+    }
+
+    public get type(): { player?: Player; npc?: Npc; } {
+        return {
+            player: this.isPlayer ? this as unknown as Player : undefined,
+            npc: this.isNpc ? this as unknown as Npc : undefined
+        };
+    }
+
 }

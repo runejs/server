@@ -5,7 +5,7 @@ import { TaskExecutor, ActionType, ActionStrength } from '@engine/world/action';
 
 export interface HookTask<T = any> {
     canActivate?: <Q = T>(task: TaskExecutor<Q>) => boolean | Promise<boolean>;
-    execute: <Q = T>(task: TaskExecutor<Q>) => void | undefined | boolean | Promise<void | undefined | boolean>;
+    activate: <Q = T>(task: TaskExecutor<Q>, index?: number) => void | undefined | boolean | Promise<void | undefined | boolean>;
     onComplete?: <Q = T>(task: TaskExecutor<Q>) => void | Promise<void>;
     delay?: number; // # of ticks before execution
     delayMs?: number; // # of milliseconds before execution
