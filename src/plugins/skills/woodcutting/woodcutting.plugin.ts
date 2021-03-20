@@ -1,24 +1,21 @@
 import {
     ObjectInteractionAction,
-    objectInteractionActionHandler,
     ObjectInteractionActionHook
 } from '@engine/world/action/object-interaction.action';
 import { Skill } from '@engine/world/actor/skills';
-import { canInitiateHarvest, handleHarvesting } from '@engine/world/skill-util/harvest-skill';
-import { getTreeFromHealthy, getTreeIds, IHarvestable, Tree } from '@engine/world/config/harvestable-object';
-import { TaskExecutor } from '@engine/world/action';
-import { Player } from '@engine/world/actor/player/player';
+import { canInitiateHarvest } from '@engine/world/skill-util/harvest-skill';
+import { getTreeFromHealthy, getTreeIds, IHarvestable } from '@engine/world/config/harvestable-object';
 import { randomBetween } from '@engine/util/num';
-import { checkForGemBoost } from '@engine/world/skill-util/glory-boost';
 import { colorText } from '@engine/util/strings';
 import { colors } from '@engine/util/colors';
 import { rollBirdsNestType } from '@engine/world/skill-util/harvest-roll';
 import { cache, world } from '@engine/game-server';
 import { soundIds } from '@engine/world/config/sound-ids';
-import { Axe, getAxe } from '@engine/world/config/harvest-tool';
+import { Axe, getAxe, HarvestTool } from '@engine/world/config/harvest-tool';
+import { TaskExecutor } from '@engine/world/action';
 
 
-const canActivate = (task: TaskExecutor<ObjectInteractionAction>): boolean => {
+const canActivate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: number): boolean => {
     const { actor, actionData: { position, object } } = task;
     const tree = getTreeFromHealthy(object.objectId);
 
@@ -34,52 +31,43 @@ const canActivate = (task: TaskExecutor<ObjectInteractionAction>): boolean => {
         return false;
     }
 
-    player?.sendMessage('You swing your axe at the tree.');
+    task.session.tool = tool;
+    task.session.tree = tree;
 
-    actor.face(position);
-    actor.playAnimation(tool.animation);
+    if(taskIteration === 0) {
+        // First run
+
+        player?.sendMessage('You swing your axe at the tree.');
+
+        actor.face(position);
+        actor.playAnimation(tool.animation);
+    }
 
     return true;
 };
 
 
-const activate = (task: TaskExecutor<ObjectInteractionAction>, elapsedTicks: number): void => {
-    const {
-        actor,
-        actionData: {
-            position: objectPosition,
-            object: {
-                objectId
-            }
-        }
-    } = task;
-
-    const {
-        type: {
-            player
-        }, isPlayer
-    } = actor;
-
-    const tree = getTreeFromHealthy(objectId);
-    const tool = isPlayer ? canInitiateHarvest(player, tree, Skill.WOODCUTTING) : getAxe(Axe.STEEL);
+const activate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: number): boolean => {
+    const { actor, player, actionData, session } = task.getDetails();
+    const { position: objectPosition, object: actionObject } = actionData;
+    const tree: IHarvestable = session.tree;
+    const tool: HarvestTool = session.tool;
 
     // Cancel if the actor no longer has their tool or level requirements.
-    if(!tool) {
-        task.stop();
-        return;
+    if(!tool || !tree) {
+        return false;
     }
 
     // Grab the tree manually every loop so that we can make sure it's still alive.
-    const { object } = world.findObjectAtLocation(actor, objectId, objectPosition);
+    const { object } = world.findObjectAtLocation(actor, actionObject.objectId, objectPosition);
 
     if(!object) {
         // Tree has been chopped down, cancel.
-        task.stop();
-        return;
+        return false;
     }
 
     // Check if the amount of ticks passed equal the tools pulses.
-    if(elapsedTicks % 3 === 0 && elapsedTicks != 0) {
+    if(taskIteration % 3 === 0 && taskIteration != 0) {
         const successChance = randomBetween(0, 255);
 
         let toolLevel = tool.level - 1;
@@ -98,7 +86,7 @@ const activate = (task: TaskExecutor<ObjectInteractionAction>, elapsedTicks: num
                     randomLoot = true;
                     player?.sendMessage(colorText(`A bird's nest falls out of the tree.`, colors.red));
                     world.globalInstance.spawnWorldItem(rollBirdsNestType(), actor.position,
-                        isPlayer ? { owner: player, expires: 300 } : { owner: null, expires: 300 });
+                        { owner: player || null, expires: 300 });
                 }
 
                 const itemToAdd = tree.itemId;
@@ -112,27 +100,27 @@ const activate = (task: TaskExecutor<ObjectInteractionAction>, elapsedTicks: num
 
                 if(randomBetween(0, 100) <= tree.break) {
                     player?.playSound(soundIds.oreDepeleted);
-                    actor.instance.replaceGameObject(tree.objects.get(objectId),
+                    actor.instance.replaceGameObject(tree.objects.get(actionObject.objectId),
                         object, randomBetween(tree.respawnLow, tree.respawnHigh));
-                    task.stop();
-                    return;
+                    return false;
                 }
             } else {
                 player?.sendMessage(`Your inventory is too full to hold any more ${targetName}.`, true);
                 player?.playSound(soundIds.inventoryFull);
-                task.stop();
-                return;
+                return false;
             }
         }
     } else {
-        if(elapsedTicks % 1 == 0 && elapsedTicks != 0) {
+        if(taskIteration % 1 === 0 && taskIteration !== 0) {
             player?.playSound(soundIds.axeSwing[Math.floor(Math.random() * soundIds.axeSwing.length)], 7, 0);
         }
     }
 
-    if(elapsedTicks % 3 == 0 && elapsedTicks != 0) {
+    if(taskIteration % 3 === 0 && taskIteration !== 0) {
         actor.playAnimation(tool.animation);
     }
+
+    return true;
 };
 
 const onComplete = (task: TaskExecutor<ObjectInteractionAction>): void => {
@@ -147,7 +135,6 @@ export default {
             type: 'object_interaction',
             options: [ 'chop down', 'chop' ],
             objectIds: getTreeIds(),
-            // handler: action,
             strength: 'normal',
             task: {
                 canActivate,

@@ -2,138 +2,16 @@ import { gameEngineDist } from '@engine/util/directories';
 import { getFiles } from '@engine/util/files';
 import { logger } from '@runejs/core';
 import { Actor } from '@engine/world/actor/actor';
-import { ActionHook, HookTask } from '@engine/world/action/hooks';
-import { lastValueFrom, Subscription, timer } from 'rxjs';
-import { World } from '@engine/world';
+import { ActionHook } from '@engine/world/action/hooks';
 import { Position } from '@engine/world/position';
-import uuidv4 from 'uuid/v4';
 import { Player } from '@engine/world/actor/player/player';
+import { TaskExecutor } from '@engine/world/action/hooks/task';
 
 
 /**
  * The priority of an queueable action within the pipeline.
  */
 export type ActionStrength = 'weak' | 'normal' | 'strong';
-
-
-// T = current action info (ButtonAction, MoveItemAction, etc)
-export class TaskExecutor<T> {
-
-    public running: boolean = false;
-    public session: { [key: string]: any } = {}; // a session store to use for the lifetime of the task
-    public readonly taskId = uuidv4();
-    public readonly strength: ActionStrength;
-    private intervalSubscription: Subscription;
-
-    public constructor(public readonly actor: Actor,
-                       public readonly task: HookTask<T>,
-                       public readonly hook: ActionHook,
-                       public readonly actionData: T) {
-        this.strength = this.hook.strength || 'normal';
-    }
-
-    public async run(): Promise<void> {
-        if(!await this.canActivate()) {
-            return;
-        }
-
-        this.running = true;
-
-        if(!!this.task.delay || !!this.task.delayMs) {
-            await lastValueFrom(timer(!!this.task.delayMs ? this.task.delayMs : (this.task.delay * World.TICK_LENGTH)));
-        }
-
-        if(!this.running) {
-            return;
-        }
-
-        if(!!this.task.interval || !!this.task.intervalMs) {
-            // Looping execution task
-            const intervalMs = this.task.intervalMs || (this.task.interval * World.TICK_LENGTH);
-
-            await new Promise(resolve => {
-                let index: number = 0;
-                this.intervalSubscription = timer(0, intervalMs).subscribe(
-                    async () => {
-                        if(!await this.execute(index++)) {
-                            this.intervalSubscription?.unsubscribe();
-                            resolve();
-                        }
-                    },
-                    async error => {
-                        logger.error(error);
-                        resolve();
-                    },
-                    async () => resolve());
-                    });
-        } else {
-            // Single execution task
-            await this.execute();
-        }
-
-        if(this.running) {
-            await this.stop();
-        }
-    }
-
-    public async execute(index: number = 0): Promise<boolean> {
-        if(!this.actor) {
-            // Actor destroyed, cancel the task
-            return false;
-        }
-
-        if(this.actor.actionPipeline.paused) {
-            // Action paused, continue loop if applicable
-            return true;
-        }
-
-        if(!this.running) {
-            // Task no longer running, cancel execution
-            return false;
-        }
-
-        try {
-            const response = await this.task.activate(this, index);
-            return typeof response === 'boolean' ? response : true;
-        } catch(error) {
-            logger.error(`Error executing action task`);
-            logger.error(error);
-            return false;
-        }
-    }
-
-    public async canActivate(): Promise<boolean> {
-        if(!this.valid) {
-            return false;
-        }
-
-        if(!this.task.canActivate) {
-            return true;
-        }
-
-        try {
-            return this.task.canActivate(this);
-        } catch(error) {
-            logger.error(`Error calling action canActivate`, this.task);
-            logger.error(error);
-            return false;
-        }
-    }
-
-    public async stop(): Promise<void> {
-        this.intervalSubscription?.unsubscribe();
-
-        await this.task?.onComplete(this);
-
-        this.running = false;
-        this.session = null;
-    }
-
-    public get valid(): boolean {
-        return !!this.task?.activate && !!this.actionData;
-    }
-
-}
 
 
 /**
@@ -349,3 +227,6 @@ export async function loadActionFiles(): Promise<void> {
 
     return Promise.resolve();
 }
+
+
+export * from './hooks/index';
