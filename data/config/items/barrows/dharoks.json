@@ -31,22 +31,27 @@
             },
             {
                 "tradable": false,
-                "game_id": 4886
+                "game_id": 4886,
+                "suffix": "100"
             },
             {
                 "tradable": false,
-                "game_id": 4887
+                "game_id": 4887,
+                "suffix": "75"
             },
             {
                 "tradable": false,
-                "game_id": 4888
+                "game_id": 4888,
+                "suffix": "50"
             },
             {
                 "tradable": false,
-                "game_id": 4889
+                "game_id": 4889,
+                "suffix": "25"
             },
             {
-                "game_id": 4890
+                "game_id": 4890,
+                "suffix": "degraded"
             }
         ]
     }

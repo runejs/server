@@ -571,23 +571,22 @@
         },
         "variations": [
             {
+                "game_id": 7218,
                 "metadata": {
                     "consume_effects": {
-                        "replaced_by": "rs:summer_pie:1"
+                        "replaced_by": "rs:summer_pie:half"
                     }
-                },
-                "suffix": "1",
-                "game_id": 7218
+                }
             },
             {
+                "suffix": "half",
+                "tradable": false,
+                "game_id": 7220,
                 "metadata": {
                     "consume_effects": {
                         "replaced_by": "rs:pie_dish"
                     }
-                },
-                "suffix": "1",
-                "tradable": false,
-                "game_id": 7220
+                }
             }
         ]
     },
