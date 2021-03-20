@@ -186,12 +186,6 @@ export class ActionPipeline {
                 logger.error(`Error pathing to hook target`, error);
                 return;
             }
-
-            logger.info(`Pathing successful`);
-        }
-
-        if(this.canceling) {
-            return;
         }
 
         for(let i = 0; i < runnableHooks.hooks.length; i++) {
