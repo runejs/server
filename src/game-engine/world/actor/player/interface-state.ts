@@ -58,7 +58,7 @@ export class Widget {
 
 }
 
-interface WidgetClosedEvent {
+export interface WidgetClosedEvent {
     widget: Widget;
     data?: number;
 }
@@ -129,7 +129,6 @@ export class InterfaceState {
     public closeWidget(slot: GameInterfaceSlot, data?: number): void;
     public closeWidget(i: GameInterfaceSlot | number, data?: number): void {
         let widget: Widget | null;
-
         if(typeof i === 'number') {
             widget = this.findWidget(i);
         } else {
