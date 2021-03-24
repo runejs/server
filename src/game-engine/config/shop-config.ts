@@ -1,7 +1,9 @@
-import { ItemContainer } from '@engine/world/items/item-container';
+import { ContainerUpdateEvent, ItemContainer } from '@engine/world/items/item-container';
 import { findItem, loadConfigurationFiles, widgets } from '@engine/config/index';
 import { Player } from '@engine/world/actor/player/player';
 import { ItemDetails } from '@engine/config/item-config';
+import { WidgetClosedEvent } from '@engine/world/actor/player/interface-state';
+import { Subscription } from 'rxjs';
 
 
 export type ShopStock = [ [ string, number ] ];
@@ -18,6 +20,8 @@ export class Shop {
     public sellRate: number;
     public buyRate: number;
     public rateModifier: number;
+    private customers: Player[];
+    private containerSubscription: Subscription;
 
     public constructor(key: string, name: string, generalStore: boolean, stock: ShopStock, sellRate: number, buyRate: number, modifier: number) {
         this.key = key;
@@ -30,6 +34,8 @@ export class Shop {
         this.rateModifier = modifier;
         this.originalStock = stock;
         this.container = new ItemContainer(40);
+        this.containerSubscription = this.container.containerUpdated.subscribe((_update: ContainerUpdateEvent) => this.updateCustomers())
+        this.customers = [];
         this.resetShopStock();
     }
 
@@ -91,6 +97,12 @@ export class Shop {
 
     public open(player: Player): void {
         player.metadata['lastOpenedShop'] = this;
+        player.metadata['shopCloseListener'] = player.interfaceState.closed.subscribe((whatClosed: WidgetClosedEvent) => {
+            if(whatClosed && whatClosed.widget && whatClosed.widget.widgetId === widgets.shop.widgetId) {
+                this.removePlayerFromShop(player);
+            }
+        })
+
         player.outgoingPackets.updateWidgetString(widgets.shop.widgetId, widgets.shop.title, this.name);
         player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shop, this.container);
         player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shopPlayerInventory, player.inventory);
@@ -103,8 +115,26 @@ export class Shop {
             slot: 'tabarea',
             multi: true
         });
+        this.customers.push(player);
     }
 
+    private updateCustomers() {
+        for (const player of this.customers) {
+            if(player.metadata['lastOpenedShop'] === this){
+                player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shop, this.container);
+            } else {
+                this.removePlayerFromShop(player);
+            }
+        }
+    }
+
+    private removePlayerFromShop(player: Player) {
+        if(player.metadata['lastOpenedShop'] === this) {
+            player.metadata['lastOpenedShop'] = undefined;
+            player.metadata['shopCloseListener'].unsubscribe();
+        }
+        this.customers = this.customers.filter((c) => c !== player);
+    }
 }
 
 export interface ShopConfiguration {
