@@ -34,7 +34,7 @@ export class Shop {
         this.rateModifier = modifier;
         this.originalStock = stock;
         this.container = new ItemContainer(40);
-        this.containerSubscription = this.container.containerUpdated.subscribe((_update: ContainerUpdateEvent) => this.updateCustomers())
+        this.containerSubscription = this.container.containerUpdated.subscribe((_update: ContainerUpdateEvent) => this.updateCustomers());
         this.customers = [];
         this.resetShopStock();
     }
