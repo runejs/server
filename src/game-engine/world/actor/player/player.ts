@@ -1003,9 +1003,17 @@ export class Player extends Actor {
         Object.keys(questMap).forEach(questKey => {
             const questData = questMap[questKey];
             const playerQuest = this.quests.find(quest => quest.questId === questData.id);
-            let color = colors.green;
-            if(playerQuest && !playerQuest.complete) {
-                color = playerQuest.progress === 0 ? colors.red : colors.yellow;
+            let color: number;
+
+            if (playerQuest?.complete) {
+                // Quest complete, regardless of progress
+                color = colors.green;
+            } else if (playerQuest?.progress > 0) {
+                // Quest in progress, not yet complete but progress is greater than 0
+                color = colors.yellow;
+            } else {
+                // Everything else failed, so quest hasn't been started yet
+                color = colors.red;
             }
 
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: color });
