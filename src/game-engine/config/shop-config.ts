@@ -101,7 +101,7 @@ export class Shop {
             if(whatClosed && whatClosed.widget && whatClosed.widget.widgetId === widgets.shop.widgetId) {
                 this.removePlayerFromShop(player);
             }
-        })
+        });
 
         player.outgoingPackets.updateWidgetString(widgets.shop.widgetId, widgets.shop.title, this.name);
         player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shop, this.container);
@@ -120,7 +120,7 @@ export class Shop {
 
     private updateCustomers() {
         for (const player of this.customers) {
-            if(player.metadata['lastOpenedShop'] === this){
+            if(player.metadata['lastOpenedShop'] === this) {
                 player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shop, this.container);
             } else {
                 this.removePlayerFromShop(player);
