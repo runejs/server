@@ -134,7 +134,6 @@ export class InterfaceState {
         } else {
             widget = this.widgetSlots[i] || null;
         }
-        console.log("widget closed", data,widget);
 
         if(!widget) {
             return;
@@ -161,8 +160,6 @@ export class InterfaceState {
 
         this.widgetSlots[widget.slot] = widget;
         this.showWidget(widget);
-        console.log("widget opened");
-
     }
 
     public setTab(type: TabType, widget: Widget | number | null): void {
