@@ -1,0 +1,23 @@
+[
+  {
+    "npc": "rs:guard:0",
+    "spawn_x": 2967,
+    "spawn_y": 3388,
+    "movement_radius": 5,
+    "face": "NORTH"
+  },
+  {
+    "npc": "rs:guard:0",
+    "spawn_x": 2965,
+    "spawn_y": 3383,
+    "movement_radius": 5,
+    "face": "NORTH"
+  },
+  {
+    "npc": "rs:guard:1",
+    "spawn_x": 2968,
+    "spawn_y": 3377,
+    "movement_radius": 5,
+    "face": "NORTH"
+  }
+]
