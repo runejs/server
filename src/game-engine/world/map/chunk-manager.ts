@@ -1,13 +1,35 @@
 import { Chunk } from './chunk';
 import { Position } from '../position';
 import { logger } from '@runejs/core';
-import { cache } from '@engine/game-server';
-import { decodeRegion, LocationObject, Tile } from '@runejs/cache-parser';
+import { filestore } from '@engine/game-server';
+import { LandscapeObject, Region } from '@runejs/filestore';
+
+
+export class Tile {
+
+    public settings: number;
+    public nonWalkable: boolean;
+    public bridge: boolean;
+
+    public constructor(public x: number, public y: number, public level: number, settings?: number) {
+        if(settings) {
+            this.setSettings(settings);
+        }
+    }
+
+    public setSettings(settings: number): void {
+        this.settings = settings;
+        this.nonWalkable = (this.settings & 0x1) == 0x1;
+        this.bridge = (this.settings & 0x2) == 0x2;
+    }
+
+}
 
 export interface MapRegion {
     tiles: Tile[];
-    objects: LocationObject[];
+    objects: LandscapeObject[];
 }
+
 
 /**
  * Controls all of the game world's map chunks.
@@ -32,16 +54,29 @@ export class ChunkManager {
 
         this.regionMap.set(key, { tiles: [], objects: [] });
 
-        let region: MapRegion;
+        let region: MapRegion; // MapRegion wrapper used by the game engine
+        let regionFile: Region;
         try {
-            region = decodeRegion(cache, mapRegionX, mapRegionY);
+            regionFile = filestore.regionStore.getRegion(mapRegionX, mapRegionY);
         } catch(error) {
             logger.error(`Error decoding map region ${mapRegionX},${mapRegionY}`);
             logger.error(error);
         }
 
-        if(!region) {
-            region = { tiles: [], objects: [] };
+        region = { tiles: new Array(64 * 64 * 4),
+            objects: regionFile?.landscapeFile?.landscapeObjects || [] };
+        if(regionFile?.mapFile) {
+            // Parse map tiles for game engine use
+
+            let tileIndex: number = 0;
+            for(let level = 0; level < 4; level++) {
+                for(let x = 0; x < 64; x++) {
+                    for(let y = 0; y < 64; y++) {
+                        const tileSettings = regionFile.mapFile.tileSettings[level][x][y];
+                        region.tiles[tileIndex++] = new Tile(x, y, level, tileSettings);
+                    }
+                }
+            }
         }
 
         this.regionMap.set(key, region);
@@ -66,7 +101,7 @@ export class ChunkManager {
 
                 // And also add the bridge tile itself, so that game objects know about it
                 this.tileMap.set(key, tile);
-            } else if(tile.nonWalkable && tile.flags) { // No need to know about walkable tiles for collision maps, only nonwalkable
+            } else if(tile.nonWalkable) { // No need to know about walkable tiles for collision maps, only nonwalkable
                 if(!this.tileMap.has(key)) {
                     // Otherwise add a new tile if it hasn't already been set (IE by a bridge tile above)
                     this.tileMap.set(key, tile);
@@ -75,7 +110,7 @@ export class ChunkManager {
         }
     }
 
-    public registerObjects(objects: LocationObject[]): void {
+    public registerObjects(objects: LandscapeObject[]): void {
         if(!objects || objects.length === 0) {
             return;
         }
@@ -95,7 +130,7 @@ export class ChunkManager {
                 position.level -= 1;
             }
 
-            this.getChunkForWorldPosition(position).setCacheLocationObject(locationObject);
+            this.getChunkForWorldPosition(position).setFilestoreLandscapeObject(locationObject);
         }
     }
 

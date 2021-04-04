@@ -8,7 +8,7 @@ import {
     loadItemConfigurations,
     translateItemConfig
 } from '@engine/config/item-config';
-import { cache, questMap } from '@engine/game-server';
+import { filestore, questMap } from '@engine/game-server';
 import {
     loadNpcConfigurations,
     NpcDetails,
@@ -22,6 +22,7 @@ import { ItemSpawn, loadItemSpawnConfigurations } from '@engine/config/item-spaw
 import { loadSkillGuideConfigurations, SkillGuide } from '@engine/config/skill-guide-config';
 import { loadMusicRegionConfigurations, MusicTrack } from '@engine/config/music-regions-config';
 require('json5/lib/register');
+
 
 export async function loadConfigurationFiles(configurationDir: string): Promise<any[]> {
     const files = [];
@@ -128,7 +129,7 @@ export const findItem = (itemKey: number | string): ItemDetails | null => {
     }
 
     if(gameId) {
-        const cacheItem = cache.itemDefinitions.get(gameId);
+        const cacheItem = filestore.configStore.itemStore.getItem(gameId);
         item = _.merge(item, cacheItem);
     }
 
@@ -146,7 +147,7 @@ export const findNpc = (npcKey: number | string): NpcDetails | null => {
         npcKey = npcIdMap[gameId];
 
         if(!npcKey) {
-            const cacheNpc = cache.npcDefinitions.get(gameId);
+            const cacheNpc = filestore.npcDefinitions.get(gameId);
             if(cacheNpc) {
                 return cacheNpc as any;
             } else {

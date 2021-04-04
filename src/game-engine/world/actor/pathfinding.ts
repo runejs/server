@@ -2,10 +2,11 @@ import { world } from '@engine/game-server';
 import { Actor } from '@engine/world/actor/actor';
 import { Position } from '../position';
 import { Chunk } from '@engine/world/map/chunk';
-import { Tile } from '@runejs/cache-parser';
 import { Player } from '@engine/world/actor/player/player';
 import { logger } from '@runejs/core';
 import { WorldInstance } from '@engine/world/instances';
+import { Tile } from '@engine/world/map/chunk-manager';
+
 
 class Point {
 

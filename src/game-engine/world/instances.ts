@@ -1,4 +1,3 @@
-import { LocationObject } from '@runejs/cache-parser';
 import { Position } from '@engine/world/position';
 import { world } from '@engine/game-server';
 import { WorldItem } from '@engine/world/items/world-item';
@@ -7,6 +6,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { World } from '@engine/world/index';
 import { schedule } from '@engine/world/task';
 import { CollisionMap } from '@engine/world/map/collision-map';
+import { LandscapeObject } from '@runejs/filestore';
 
 
 /**
@@ -55,12 +55,12 @@ export class TileModifications {
     /**
      * New game objects that have been introduced to an instance.
      */
-    public readonly spawnedObjects: LocationObject[] = [];
+    public readonly spawnedObjects: LandscapeObject[] = [];
 
     /**
      * Cache/standard game objects that have been hidden from an instance.
      */
-    public readonly hiddenObjects: LocationObject[] = [];
+    public readonly hiddenObjects: LandscapeObject[] = [];
 
     /**
      * World items spawned onto this tile within an instance.
@@ -244,7 +244,7 @@ export class WorldInstance {
      * @param object The game object to temporarily hide from view.
      * @param hideTicks The number of game cycles/ticks before the object will be shown again.
      */
-    public async hideGameObjectTemporarily(object: LocationObject, hideTicks: number): Promise<void> {
+    public async hideGameObjectTemporarily(object: LandscapeObject, hideTicks: number): Promise<void> {
         this.hideGameObject(object);
         await schedule(hideTicks);
         this.showGameObject(object);
@@ -257,7 +257,7 @@ export class WorldInstance {
      * @param position The position to spawn the object at.
      * @param despawnTicks The number of game cycles/ticks before the object will de-spawn.
      */
-    public async spawnTemporaryGameObject(object: LocationObject, position: Position, despawnTicks: number): Promise<void> {
+    public async spawnTemporaryGameObject(object: LandscapeObject, position: Position, despawnTicks: number): Promise<void> {
         this.spawnGameObject(object);
         await schedule(despawnTicks);
         this.despawnGameObject(object);
@@ -271,7 +271,7 @@ export class WorldInstance {
      * @param oldObject The game object being removed.
      * @param newObjectInCache Whether or not the object being added is the original game-cache object.
      */
-    public toggleGameObjects(newObject: LocationObject, oldObject: LocationObject, newObjectInCache: boolean): void {
+    public toggleGameObjects(newObject: LandscapeObject, oldObject: LandscapeObject, newObjectInCache: boolean): void {
         if(newObjectInCache) {
             this.showGameObject(newObject);
             this.despawnGameObject(oldObject);
@@ -291,7 +291,7 @@ export class WorldInstance {
      * If not provided, the original game object will never re-spawn and the new location object will forever
      * remain in it's place (in this instance).
      */
-    public async replaceGameObject(newObject: LocationObject | number, oldObject: LocationObject, respawnTicks?: number): Promise<void> {
+    public async replaceGameObject(newObject: LandscapeObject | number, oldObject: LandscapeObject, respawnTicks?: number): Promise<void> {
         if(typeof newObject === 'number') {
             newObject = {
                 objectId: newObject,
@@ -300,7 +300,7 @@ export class WorldInstance {
                 level: oldObject.level,
                 type: oldObject.type,
                 orientation: oldObject.orientation
-            } as LocationObject;
+            } as LandscapeObject;
         }
 
         this.hideGameObject(oldObject);
@@ -308,7 +308,7 @@ export class WorldInstance {
 
         if(respawnTicks !== undefined) {
             await schedule(respawnTicks);
-            this.despawnGameObject(newObject as LocationObject);
+            this.despawnGameObject(newObject as LandscapeObject);
             this.showGameObject(oldObject);
         }
     }
@@ -317,7 +317,7 @@ export class WorldInstance {
      * Spawn a new game object into the instance.
      * @param object The game object to spawn.
      */
-    public spawnGameObject(object: LocationObject): void {
+    public spawnGameObject(object: LandscapeObject): void {
         const position = new Position(object.x, object.y, object.level);
 
         const { chunk: instancedChunk, mods } = this.getTileModifications(position);
@@ -335,7 +335,7 @@ export class WorldInstance {
      * Remove a previously spawned game object from the instance.
      * @param object The game object to de-spawn.
      */
-    public despawnGameObject(object: LocationObject): void {
+    public despawnGameObject(object: LandscapeObject): void {
         const position = new Position(object.x, object.y, object.level);
         const instancedChunk = this.getInstancedChunk(position);
 
@@ -367,7 +367,7 @@ export class WorldInstance {
      * Hides a static game object from an instance.
      * @param object The cache game object to hide from the instance.
      */
-    public hideGameObject(object: LocationObject): void {
+    public hideGameObject(object: LandscapeObject): void {
         const position = new Position(object.x, object.y, object.level);
 
         const { chunk: instancedChunk, mods } = this.getTileModifications(position);
@@ -385,7 +385,7 @@ export class WorldInstance {
      * Shows a previously hidden static game object.
      * @param object The cache game object to stop hiding from view.
      */
-    public showGameObject(object: LocationObject): void {
+    public showGameObject(object: LandscapeObject): void {
         const position = new Position(object.x, object.y, object.level);
         const instancedChunk = this.getInstancedChunk(position);
 

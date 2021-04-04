@@ -14,14 +14,14 @@ import { itemOnObjectActionHandler, ItemOnObjectAction } from '@engine/world/act
 import { RunecraftingCombinationRune } from '@plugins/skills/runecrafting/runecrafting-types';
 import { randomBetween } from '@engine/util/num';
 import { itemIds } from '@engine/world/config/item-ids';
-import { cache } from '@engine/game-server';
+import { filestore } from '@engine/game-server';
 import { widgets } from '@engine/config';
 
 
 const craftRune: objectInteractionActionHandler = (details: ObjectInteractionAction) => {
     const { player, object } = details;
     const rune = getEntityByAttr(runes, 'altar.craftingId', object.objectId);
-    const runeDetails = cache.itemDefinitions.get(rune.id);
+    const runeDetails = filestore.itemDefinitions.get(rune.id);
 
     const level = player.skills.get(Skill.RUNECRAFTING).level;
     if (level < rune.level) {
@@ -79,7 +79,7 @@ const craftCombinationRune: itemOnObjectActionHandler = (details: ItemOnObjectAc
         player.sendMessage(`You don't have any runes to bind.`);
         return;
     }
-    const runeDetails = cache.itemDefinitions.get(rune.id);
+    const runeDetails = filestore.itemDefinitions.get(rune.id);
 
     const level = player.skills.get(Skill.RUNECRAFTING).level;
     if (level < rune.level) {

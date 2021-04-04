@@ -9,7 +9,7 @@ import {
     talismans,
 } from '@plugins/skills/runecrafting/runecrafting-constants';
 import { itemOnObjectActionHandler, ItemOnObjectAction } from '@engine/world/action/item-on-object.action';
-import { cache } from '@engine/game-server';
+import { filestore } from '@engine/game-server';
 import { objectInteractionActionHandler, ObjectInteractionAction } from '@engine/world/action/object-interaction.action';
 import { RunecraftingAltar, RunecraftingRune } from '@plugins/skills/runecrafting/runecrafting-types';
 import { itemIds } from '@engine/world/config/item-ids';
@@ -46,7 +46,7 @@ const enterAltar: itemOnObjectActionHandler = (details: ItemOnObjectAction) => {
 };
 
 function finishEnterAltar(player: Player, item: Item, altar: RunecraftingAltar): void {
-    const talisman = cache.itemDefinitions.get(item.itemId);
+    const talisman = filestore.itemDefinitions.get(item.itemId);
     player.sendMessage(`You hold the ${talisman.name} towards the mysterious ruins.`);
     player.sendMessage(`You feel a powerful force take hold of you..`);
     player.teleport(altar.entrance);

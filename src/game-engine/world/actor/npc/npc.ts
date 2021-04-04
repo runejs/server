@@ -1,7 +1,7 @@
 import { Actor } from '@engine/world/actor/actor';
 import uuidv4 from 'uuid/v4';
 import { Position } from '@engine/world/position';
-import { cache, world } from '@engine/game-server';
+import { filestore, world } from '@engine/game-server';
 import { directionData } from '@engine/world/direction';
 import { QuadtreeKey } from '@engine/world';
 import { findNpc } from '@engine/config';
@@ -64,7 +64,7 @@ export class Npc extends Actor {
             }
         }
 
-        const cacheDetails = cache.npcDefinitions.get(this.id);
+        const cacheDetails = filestore.npcDefinitions.get(this.id);
         if(cacheDetails) {
             // NPC not registered on the server, but exists in the game cache - use that for our info and assume it's
             // Not a combatant NPC since we have no useful combat information for it.

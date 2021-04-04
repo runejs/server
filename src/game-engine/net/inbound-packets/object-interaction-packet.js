@@ -1,5 +1,5 @@
 import { Position } from '../../world/position';
-import { cache, world } from '../../game-server';
+import { filestore, world } from '../../game-server';
 import { logger } from '@runejs/core';
 
 const option1 = packet => {
@@ -46,7 +46,7 @@ const objectInteractionPacket = (player, packet) => {
         return;
     }
 
-    const locationObjectDefinition = cache.locationObjectDefinitions.get(objectId);
+    const locationObjectDefinition = filestore.locationObjectDefinitions.get(objectId);
 
     const actionIdx = options[packetId].index;
     let optionName = `action-${actionIdx + 1}`;

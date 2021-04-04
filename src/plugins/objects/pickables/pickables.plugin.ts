@@ -1,5 +1,5 @@
 import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
-import { cache } from '@engine/game-server';
+import { filestore } from '@engine/game-server';
 import { World } from '@engine/world';
 import { itemIds } from '@engine/world/config/item-ids';
 
@@ -29,7 +29,7 @@ export const action: objectInteractionActionHandler = (details) => {
             itemId = itemIds.cabbage;
             break;
     }
-    const pickedItem = cache.itemDefinitions.get(itemId);
+    const pickedItem = filestore.itemDefinitions.get(itemId);
     setTimeout(() => {
         details.player.sendMessage(`You ${details.option} the ${details.objectDefinition.name.toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`);
         details.player.playSound(2581, 7);

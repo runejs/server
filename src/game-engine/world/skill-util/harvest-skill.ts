@@ -2,7 +2,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { IHarvestable } from '@engine/world/config/harvestable-object';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { Skill } from '@engine/world/actor/skills';
-import { cache, loopingEvent, world } from '@engine/game-server';
+import { filestore, loopingEvent, world } from '@engine/game-server';
 import { getBestAxe, getBestPickaxe, HarvestTool } from '@engine/world/config/harvest-tool';
 import { randomBetween } from '@engine/util/num';
 import { ObjectInteractionAction } from '@engine/world/action/object-interaction.action';
@@ -27,7 +27,7 @@ export function canInitiateHarvest(player: Player, target: IHarvestable, skill: 
         return;
     }
 
-    let targetName: string = cache.itemDefinitions.get(target.itemId).name.toLowerCase();
+    let targetName: string = filestore.itemDefinitions.get(target.itemId).name.toLowerCase();
     switch (skill) {
         case Skill.MINING:
             targetName = targetName.replace(' ore', '');
@@ -87,7 +87,7 @@ export function handleHarvesting(details: ObjectInteractionAction, tool: Harvest
     if (details.object.objectId === 2111 && details.player.skills.hasLevel(Skill.MINING, 30)) {
         itemToAdd = rollGemRockResult().itemId;
     }
-    let targetName: string = cache.itemDefinitions.get(itemToAdd).name.toLowerCase();
+    let targetName: string = filestore.itemDefinitions.get(itemToAdd).name.toLowerCase();
 
     switch (skill) {
         case Skill.MINING:

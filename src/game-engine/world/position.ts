@@ -1,6 +1,7 @@
 import { Direction, directionData } from '@engine/world/direction';
-import { LocationObject } from '@runejs/cache-parser';
-import { cache } from '@engine/game-server';
+import { filestore } from '@engine/game-server';
+import { LandscapeObject } from '@runejs/filestore';
+
 
 const directionDeltaX = [-1, 0, 1, -1, 1, -1, 0, 1];
 const directionDeltaY = [1, 1, 1, 0, 0, -1, -1, -1];
@@ -43,8 +44,8 @@ export class Position {
         return new Position(this.x, this.y, this.level);
     }
 
-    public withinInteractionDistance(locationObject: LocationObject): boolean {
-        const definition = cache.locationObjectDefinitions.get(locationObject.objectId);
+    public withinInteractionDistance(locationObject: LandscapeObject): boolean {
+        const definition = filestore.locationObjectDefinitions.get(locationObject.objectId);
         const occupantX = locationObject.x;
         const occupantY = locationObject.y;
         let width = definition.sizeX;

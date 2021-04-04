@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { writeFileSync } from 'fs';
-import { cache } from '@engine/game-server';
+import { filestore } from '@engine/game-server';
 import { logger } from '@runejs/core';
 import { ItemDefinition, NpcDefinition, Widget } from '@runejs/cache-parser';
 
@@ -22,13 +22,13 @@ function dump<T>(fileName: string, definitions: Map<number, T>): boolean {
 }
 
 export function dumpNpcs(): boolean {
-    return dump<NpcDefinition>('npcs.json', cache.npcDefinitions);
+    return dump<NpcDefinition>('npcs.json', filestore.npcDefinitions);
 }
 
 export function dumpItems(): boolean {
-    return dump<ItemDefinition>('items.json', cache.itemDefinitions);
+    return dump<ItemDefinition>('items.json', filestore.itemDefinitions);
 }
 
 export function dumpWidgets(): boolean {
-    return dump<Widget>('widgets.json', cache.widgets);
+    return dump<Widget>('widgets.json', filestore.widgets);
 }

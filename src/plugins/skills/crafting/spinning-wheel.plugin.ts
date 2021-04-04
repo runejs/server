@@ -3,7 +3,7 @@ import { buttonActionHandler, ButtonAction } from '@engine/world/action/button.a
 import { soundIds } from '@engine/world/config/sound-ids';
 import { itemIds } from '@engine/world/config/item-ids';
 import { Skill } from '@engine/world/actor/skills';
-import { cache, loopingEvent } from '@engine/game-server';
+import { filestore, loopingEvent } from '@engine/game-server';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { objectIds } from '@engine/world/config/object-ids';
 import { widgets } from '@engine/config';
@@ -111,7 +111,7 @@ const spinProduct: any = (details: ButtonAction, spinnable: Spinnable, count: nu
                 cancel = true;
             }
             if (cancel) {
-                details.player.sendMessage(`You don't have any ${cache.itemDefinitions.get(currentItem).name.toLowerCase()}.`);
+                details.player.sendMessage(`You don't have any ${filestore.itemDefinitions.get(currentItem).name.toLowerCase()}.`);
                 loop.cancel();
                 return;
             }
@@ -144,7 +144,7 @@ export const buttonClicked: buttonActionHandler = (details) => {
     details.player.interfaceState.closeAllSlots();
 
     if (!details.player.skills.hasLevel(Skill.CRAFTING, product.spinnable.requiredLevel)) {
-        details.player.sendMessage(`You need a crafting level of ${product.spinnable.requiredLevel} to craft ${cache.itemDefinitions.get(product.spinnable.output).name.toLowerCase()}.`, true);
+        details.player.sendMessage(`You need a crafting level of ${product.spinnable.requiredLevel} to craft ${filestore.itemDefinitions.get(product.spinnable.output).name.toLowerCase()}.`, true);
         return;
     }
 

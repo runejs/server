@@ -1,5 +1,5 @@
 import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
-import { cache } from '@engine/game-server';
+import { filestore } from '@engine/game-server';
 import { dialogueAction, DialogueEmote } from '@engine/world/actor/player/dialogue-action';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
@@ -13,7 +13,7 @@ import { findNpc } from '@engine/config';
 
 function milkCow(details: { objectDefinition: LocationObjectDefinition, player: Player }): void {
     const { player, objectDefinition } = details;
-    const emptyBucketItem = cache.itemDefinitions.get(itemIds.bucket);
+    const emptyBucketItem = filestore.itemDefinitions.get(itemIds.bucket);
 
     if (player.hasItemInInventory(itemIds.bucket)) {
         player.playAnimation(animationIds.milkCow);

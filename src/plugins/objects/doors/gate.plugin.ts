@@ -2,7 +2,7 @@ import { Position } from '@engine/world/position';
 import { directionData, WNES } from '@engine/world/direction';
 import { logger } from '@runejs/core';
 import { world } from '@engine/game-server';
-import { ModifiedLocationObject } from '@engine/world/map/location-object';
+import { ModifiedLandscapeObject } from '@engine/world/map/landscape-object';
 import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
 import { soundIds } from '@engine/world/config/sound-ids';
 
@@ -28,8 +28,8 @@ const action: objectInteractionActionHandler = (details) => {
     const { player, cacheOriginal } = details;
     let { object: gate, position } = details;
 
-    if((gate as ModifiedLocationObject).metadata) {
-        const metadata = (gate as ModifiedLocationObject).metadata;
+    if((gate as ModifiedLandscapeObject).metadata) {
+        const metadata = (gate as ModifiedLandscapeObject).metadata;
 
         player.instance.toggleGameObjects(metadata.originalMain, metadata.main, true);
         player.instance.toggleGameObjects(metadata.originalSecond, metadata.second, true);
@@ -165,7 +165,7 @@ const action: objectInteractionActionHandler = (details) => {
         const gateSecondChunk = world.chunkManager.getChunkForWorldPosition(gateSecondPosition);
 
         if(!clickedSecondary) {
-            secondGate = gateSecondChunk.getCacheObject(details.secondary, gateSecondPosition);
+            secondGate = gateSecondChunk.getFilestoreLandscapeObject(details.secondary, gateSecondPosition);
         }
 
         const newPosition = position.step(1, direction);
@@ -178,7 +178,7 @@ const action: objectInteractionActionHandler = (details) => {
             level: newPosition.level,
             type: gate.type,
             orientation: directionData[newDirection].rotation
-        } as ModifiedLocationObject;
+        } as ModifiedLandscapeObject;
         const newSecond = {
             objectId: details.secondaryOpen,
             x: newSecondPosition.x,
@@ -186,7 +186,7 @@ const action: objectInteractionActionHandler = (details) => {
             level: newSecondPosition.level,
             type: gate.type,
             orientation: directionData[newDirection].rotation
-        } as ModifiedLocationObject;
+        } as ModifiedLandscapeObject;
 
         const metadata = {
             second: JSON.parse(JSON.stringify(newSecond)),
