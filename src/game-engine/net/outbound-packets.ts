@@ -82,7 +82,6 @@ export class OutboundPackets {
     public playSong(songId: number): void {
         const packet = new Packet(217);
         packet.put(songId, 'SHORT', 'LITTLE_ENDIAN');
-
         this.queue(packet);
     }
 
@@ -158,6 +157,7 @@ export class OutboundPackets {
     }
 
     public setWorldItem(worldItem: WorldItem, position: Position, offset: number = 0): void {
+
         this.updateReferencePosition(position);
 
         const packet = new Packet(175);

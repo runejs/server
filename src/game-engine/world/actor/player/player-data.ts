@@ -6,7 +6,7 @@ import { Player } from './player';
 import { SkillValue } from '@engine/world/actor/skills';
 import { hasValueNotNull } from '@engine/util/data';
 import { PlayerQuest } from '@engine/config/quest-config';
-
+import { MusicPlayerLoopMode, MusicPlayerMode } from '@plugins/music/music-tab.plugin';
 
 export interface Appearance {
     gender: number;
@@ -26,6 +26,8 @@ export interface Appearance {
 
 export class PlayerSettings {
     musicVolume: number = 0;
+    musicPlayerMode: number = MusicPlayerMode.AUTO;
+    musicPlayerLoopMode: number = MusicPlayerLoopMode.ENABLED;
     soundEffectVolume: number = 0;
     areaEffectVolume: number = 0;
     splitPrivateChatEnabled: boolean = false;
@@ -64,6 +66,7 @@ export interface PlayerSave {
     settings: PlayerSettings;
     savedMetadata: { [key: string]: any };
     questList: PlayerQuest[];
+    musicTracks: Array<number>;
     achievements: string[];
     friendsList: string[];
     ignoreList: string[];
@@ -133,6 +136,7 @@ export function savePlayerData(player: Player): boolean {
         settings: player.settings,
         savedMetadata: player.savedMetadata,
         questList: player.quests,
+        musicTracks: player.musicTracks,
         achievements: player.achievements,
         friendsList: player.friendsList,
         ignoreList: player.ignoreList

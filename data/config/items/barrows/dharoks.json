@@ -25,32 +25,34 @@
                 "strength": 105
             }
         },
-        "game_id": 4718,
-        "subitems": [
+        "variations": [
             {
-                "suffix": "100",
-                "tradable": false,
-                "game_id": 4886
+                "game_id": 4718,
+                "suffix": "0"
             },
             {
-                "suffix": "75",
                 "tradable": false,
-                "game_id": 4887
+                "game_id": 4886,
+                "suffix": "1"
             },
             {
-                "suffix": "50",
                 "tradable": false,
-                "game_id": 4888
+                "game_id": 4887,
+                "suffix": "2"
             },
             {
-                "suffix": "25",
                 "tradable": false,
-                "game_id": 4889
+                "game_id": 4888,
+                "suffix": "3"
             },
             {
-                "suffix": "0",
                 "tradable": false,
-                "game_id": 4890
+                "game_id": 4889,
+                "suffix": "4"
+            },
+            {
+                "game_id": 4890,
+                "suffix": "5"
             }
         ]
     }

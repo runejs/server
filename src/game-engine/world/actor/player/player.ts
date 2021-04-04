@@ -31,6 +31,8 @@ import { colors, hexToRgb, rgbTo16Bit } from '@engine/util/colors';
 import { ItemDefinition } from '@runejs/cache-parser';
 import { PlayerCommandActionHook } from '@engine/world/action/player-command.action';
 import { updateBonusStrings } from '@plugins/items/equipment/equipment-stats.plugin';
+import { findMusicTrack, findSongIdByRegionId, musicRegions } from '@engine/config/index';
+
 import {
     DefensiveBonuses,
     equipmentIndex,
@@ -51,6 +53,7 @@ import { dialogue } from '@engine/world/actor/dialogue';
 import { PlayerQuest, QuestKey } from '@engine/config/quest-config';
 import { Quest } from '@engine/world/actor/player/quest';
 import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
+import { MusicPlayerMode } from '@plugins/music/music-tab.plugin';
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
@@ -116,6 +119,7 @@ export class Player extends Actor {
     public savedMetadata: { [key: string]: any } = {};
     public sessionMetadata: { [key: string]: any } = {};
     public quests: PlayerQuest[] = [];
+    public musicTracks: Array<number> = [ 0, 400, 547, 321 ];
     public achievements: string[] = [];
     public friendsList: string[] = [];
     public ignoreList: string[] = [];
@@ -210,7 +214,7 @@ export class Player extends Actor {
                 loginDaysStr = daysSinceLogin + ' days ago';
             }
             this.outgoingPackets.updateWidgetString(widgets.welcomeScreenChildren.question, 1, `Want to help RuneJS improve?\\nSend us a pull request over on Github!`);
-            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 13, `You last logged in @red@${ loginDaysStr }@bla@ from: @red@${ this.lastAddress }`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 13, `You last logged in @red@${loginDaysStr}@bla@ from: @red@${this.lastAddress}`);
             this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 16, `You have @yel@0 unread messages\\nin your message centre.`);
             this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 14, `\\nYou have not yet set any recovery questions.\\nIt is @lre@strongly@yel@ recommended that you do so.\\n\\nIf you don't you will be @lre@unable to recover your\\n@lre@password@yel@ if you forget it, or it is stolen.`);
             this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 22, `To change your recovery questions:\\n1) Logout and return to the frontpage of this website.\\n2) Choose 'Set new recovery questions'.`);
@@ -230,8 +234,8 @@ export class Player extends Actor {
 
         this.updateBonuses();
         this.updateCarryWeight(true);
-        this.modifyWidget(widgets.musicPlayerTab, { childId: 82, textColor: colors.green }); // Set "Harmony" to green/unlocked on the music tab
         this.updateQuestTab();
+        this.updateMusicTab();
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
 
@@ -264,7 +268,7 @@ export class Player extends Actor {
         this.chunkChanged(playerChunk);
 
         this.outgoingPackets.flushQueue();
-        logger.info(`${ this.username }:${ this.worldIndex } has logged in.`);
+        logger.info(`${this.username}:${this.worldIndex} has logged in.`);
     }
 
     public logout(): void {
@@ -283,7 +287,7 @@ export class Player extends Actor {
         world.deregisterPlayer(this);
 
         this.loggedIn = false;
-        logger.info(`${ this.username } has logged out.`);
+        logger.info(`${this.username} has logged out.`);
     }
 
     public save(): void {
@@ -462,23 +466,26 @@ export class Player extends Actor {
         }
 
         if(playerQuest.progress === 0 && !playerQuest.complete) {
+            playerQuest.progress = progress;
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
         } else if(!playerQuest.complete && progress === 'complete') {
             playerQuest.complete = true;
             playerQuest.progress = 'complete';
             this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, questData.points + this.getQuestPoints());
-            this.modifyWidget(widgets.questReward, { childId: 2, text: `You have completed ${ questData.name }!` });
+            this.modifyWidget(widgets.questReward, { childId: 2, text: `You have completed ${questData.name}!` });
             this.modifyWidget(widgets.questReward, {
                 childId: 8,
-                text: `${ questData.points } Quest Point${ questData.points > 1 ? 's' : '' }`
+                text: `${questData.points} Quest Point${questData.points > 1 ? 's' : ''}`
             });
 
             for(let i = 0; i < 5; i++) {
                 if(i >= questData.onComplete.questCompleteWidget.rewardText.length) {
                     this.modifyWidget(widgets.questReward, { childId: 9 + i, text: '' });
                 } else {
-                    this.modifyWidget(widgets.questReward, { childId: 9 + i,
-                        text: questData.onComplete.questCompleteWidget.rewardText[i] });
+                    this.modifyWidget(widgets.questReward, {
+                        childId: 9 + i,
+                        text: questData.onComplete.questCompleteWidget.rewardText[i]
+                    });
                 }
             }
 
@@ -543,6 +550,12 @@ export class Player extends Actor {
      * @param songId The id of the song to play.
      */
     public playSong(songId: number): void {
+        this.modifyWidget(widgets.musicPlayerTab, {
+            childId: 177,
+            text: findMusicTrack(songId).songName,
+            textColor: colors.green
+        });
+        this.savedMetadata['currentSongIdPlaying'] = songId;
         this.outgoingPackets.playSong(songId);
     }
 
@@ -741,9 +754,9 @@ export class Player extends Actor {
             if(command.args) {
                 for(const arg of command.args) {
                     if(arg.defaultValue) {
-                        strHelp = `${ strHelp } \\<${ arg.name } = ${ arg.defaultValue }>`;
+                        strHelp = `${strHelp} \\<${arg.name} = ${arg.defaultValue}>`;
                     } else {
-                        strHelp = `${ strHelp } \\<${ arg.name }>`;
+                        strHelp = `${strHelp} \\<${arg.name}>`;
                     }
                 }
             }
@@ -787,7 +800,7 @@ export class Player extends Actor {
         const itemDetails: ItemDetails = findItem(itemId);
 
         if(!itemDetails || !itemDetails.equipmentData || !itemDetails.equipmentData.equipmentSlot) {
-            this.sendMessage(`Unable to equip item ${ itemId }/${ itemDetails.name }: Missing equipment data.`);
+            this.sendMessage(`Unable to equip item ${itemId}/${itemDetails.name}: Missing equipment data.`);
             return;
         }
 
@@ -989,12 +1002,46 @@ export class Player extends Actor {
         Object.keys(questMap).forEach(questKey => {
             const questData = questMap[questKey];
             const playerQuest = this.quests.find(quest => quest.questId === questData.id);
-            let color = colors.green;
-            if(playerQuest && !playerQuest.complete) {
-                color = playerQuest.progress === 0 ? colors.red : colors.yellow;
+            let color: number;
+
+            if (playerQuest?.complete) {
+                // Quest complete, regardless of progress
+                color = colors.green;
+            } else if (playerQuest?.progress > 0) {
+                // Quest in progress, not yet complete but progress is greater than 0
+                color = colors.yellow;
+            } else {
+                // Everything else failed, so quest hasn't been started yet
+                color = colors.red;
             }
 
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: color });
+        });
+    }
+
+    /**
+     * Updates the player's music tab progress.
+     */
+    private updateMusicTab(): void {
+        if(!this.savedMetadata['currentSongIdPlaying']) {
+            this.savedMetadata['currentSongIdPlaying'] =
+                findSongIdByRegionId(world.chunkManager.getRegionIdForWorldPosition(
+                    this.position));
+        }
+
+        if(this.settings.musicPlayerMode === MusicPlayerMode.MANUAL) {
+            this.playSong(this.savedMetadata['currentSongIdPlaying']);
+        }
+
+        Object.keys(musicRegions).forEach(key => {
+            const musicData = musicRegions[key];
+            let color = colors.red;
+
+            if(this.musicTracks.includes(musicData.songId)) {
+                color = colors.green;
+            }
+
+            this.modifyWidget(widgets.musicPlayerTab, { childId: musicData.musicTabButtonId, textColor: color });
         });
     }
 
@@ -1073,6 +1120,9 @@ export class Player extends Actor {
 
             if(playerSave.questList) {
                 this.quests = playerSave.questList;
+            }
+            if(playerSave.musicTracks) {
+                this.musicTracks = playerSave.musicTracks;
             }
             if(playerSave.achievements) {
                 this.achievements = playerSave.achievements;

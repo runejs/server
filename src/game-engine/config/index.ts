@@ -8,7 +8,7 @@ import {
     loadItemConfigurations,
     translateItemConfig
 } from '@engine/config/item-config';
-import { cache, actionHookMap } from '@engine/game-server';
+import { cache, questMap } from '@engine/game-server';
 import {
     loadNpcConfigurations,
     NpcDetails,
@@ -20,7 +20,7 @@ import { loadShopConfigurations, Shop } from '@engine/config/shop-config';
 import { Quest } from '@engine/world/actor/player/quest';
 import { ItemSpawn, loadItemSpawnConfigurations } from '@engine/config/item-spawn-config';
 import { loadSkillGuideConfigurations, SkillGuide } from '@engine/config/skill-guide-config';
-import { loadMusicRegionConfigurations, MusicRegions } from '@engine/config/music-regions-config';
+import { loadMusicRegionConfigurations, MusicTrack } from '@engine/config/music-regions-config';
 import { loadXTEARegionConfigurations, XTEARegion } from '@engine/config/xtea-config';
 
 require('json5/lib/register');
@@ -28,7 +28,7 @@ require('json5/lib/register');
 export async function loadConfigurationFiles(configurationDir: string): Promise<any[]> {
     const files = [];
 
-    for await(const path of getFiles(configurationDir)) {
+    for await(const path of getFiles(configurationDir, ['.json'], true)) {
         try {
             const configContent = JSON.parse(readFileSync(path, 'utf8'));
 
@@ -52,7 +52,7 @@ export let npcMap: { [key: string]: NpcDetails };
 export let npcIdMap: { [key: number]: string };
 export let npcPresetMap: NpcPresetConfiguration;
 export let npcSpawns: NpcSpawn[] = [];
-export let musicRegions: MusicRegions[] = [];
+export let musicRegions: MusicTrack[] = [];
 export let itemSpawns: ItemSpawn[] = [];
 export let shopMap: { [key: string]: Shop };
 export let skillGuides: SkillGuide[] = [];
@@ -107,7 +107,10 @@ export const findItem = (itemKey: number | string): ItemDetails | null => {
 
     if(itemKey) {
         item = itemMap[itemKey];
-
+        if(!item) {
+            // Try fetching variation with suffix 0
+            item = itemMap[`${itemKey}:0`]
+        }
         if(item?.gameId) {
             gameId = item.gameId;
         }
@@ -158,6 +161,11 @@ export const findNpc = (npcKey: number | string): NpcDetails | null => {
 
     let npc = npcMap[npcKey];
     if(!npc) {
+        // Try fetching variation with suffix 0
+        npc = npcMap[`${npc}:0`]
+    }
+
+    if(!npc) {
         logger.warn(`NPC ${npcKey} is not yet configured on the server and a matching cache NPC was not provided.`);
         return null;
     }
@@ -190,6 +198,17 @@ export const findShop = (shopKey: string): Shop | null => {
 
 
 export const findQuest = (questId: string): Quest | null => {
-    const quests: Quest[] = actionHookMap.quest;
-    return quests.find(quest => quest.id.toLocaleLowerCase() === questId.toLocaleLowerCase()) || null;
+    return questMap[Object.keys(questMap).find(quest => quest.toLocaleLowerCase() === questId.toLocaleLowerCase())] || null;
+};
+
+export const findMusicTrack = (trackId: number): MusicTrack | null => {
+    return musicRegions.find(track => track.songId === trackId) || null;
+};
+
+export const findMusicTrackByButtonId = (buttonId: number): MusicTrack | null => {
+    return musicRegions.find(track => track.musicTabButtonId === buttonId) || null;
+};
+
+export const findSongIdByRegionId = (regionId: number): number | null => {
+    return musicRegionMap.has(regionId) ? musicRegionMap.get(regionId) : null;
 };
