@@ -19,18 +19,19 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+ssh://git@github.com/rune-js/server.git"
+        "url": "git+ssh://git@github.com/runejs/server.git"
     },
     "bugs": {
-        "url": "https://github.com/rune-js/server/issues"
+        "url": "https://github.com/runejs/server/issues"
     },
-    "homepage": "https://github.com/rune-js/server#readme",
+    "homepage": "https://github.com/runejs/server#readme",
     "author": "Tynarus",
     "license": "GPL-3.0",
     "dependencies": {
         "@hapi/joi": "^16.1.8",
         "@runejs/cache-parser": "0.7.0",
-        "@runejs/core": "^1.0.0-beta.0",
+        "@runejs/core": "^1.2.0",
+        "@runejs/filestore": "^0.9.0",
         "@runejs/login-server": "^1.0.0-beta.2",
         "@runejs/update-server": "^1.0.0-beta.0",
         "bcrypt": "^5.0.0",
@@ -44,9 +45,9 @@
         "quadtree-lib": "^1.0.9",
         "rxjs": "^7.0.0-beta.8",
         "source-map-support": "^0.5.16",
-        "ts-node": "^8.4.1",
-        "tslib": "^1.10.0",
-        "typescript": "^3.7.2",
+        "ts-node": "^9.1.1",
+        "tslib": "^2.1.0",
+        "typescript": "^4.2.3",
         "uuid": "^3.3.3",
         "yargs": "^15.3.1"
     },
@@ -64,7 +65,7 @@
         "@types/js-yaml": "^3.12.1",
         "@types/json5": "0.0.30",
         "@types/lodash": "^4.14.149",
-        "@types/node": "^12.12.6",
+        "@types/node": "^14.14.37",
         "@types/uuid": "^3.4.6",
         "@types/yargs": "^13.0.4",
         "@typescript-eslint/eslint-plugin": "^4.6.0",
