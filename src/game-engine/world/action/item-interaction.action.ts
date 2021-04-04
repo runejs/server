@@ -63,6 +63,11 @@ const itemInteractionActionPipe = (player: Player, itemId: number, slot: number,
     }
 
     let cancelActions = false;
+    const playerWidget = Object.values(player.interfaceState.widgetSlots).find((widget) => widget && widget.widgetId === widgetId);
+
+    if(playerWidget && playerWidget.fakeWidget != undefined) {
+        widgetId = playerWidget.fakeWidget;
+    }
 
     // Find all object action plugins that reference this location object
     let interactionActions = getActionHooks<ItemInteractionActionHook>('item_interaction', plugin => {

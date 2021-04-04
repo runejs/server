@@ -2,5 +2,10 @@
     "rs:dwarf_remains": {
         "game_id": 0,
         "tradable": false
+    },
+    "rs:rotten_potato": {
+        "game_id": 5733,
+        "tradable": false,
+        "examine": "Yuk!"
     }
 }
