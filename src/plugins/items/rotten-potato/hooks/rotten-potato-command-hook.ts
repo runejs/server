@@ -1,4 +1,4 @@
-import {commandActionHandler} from "@engine/world/action/player-command.action";
+import { commandActionHandler } from '@engine/world/action/player-command.action';
 
 
 const spawnPotato: commandActionHandler = (details) => {

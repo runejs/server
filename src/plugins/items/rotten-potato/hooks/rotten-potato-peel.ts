@@ -1,15 +1,15 @@
-import { itemInteractionActionHandler } from "@engine/world/action/item-interaction.action";
-import { Player } from "@engine/world/actor/player/player";
-import { dialogue, execute } from "@engine/world/actor/dialogue";
-import { getActionHooks } from "@engine/world/action/hooks";
-import { advancedNumberHookFilter } from "@engine/world/action/hooks/hook-filters";
-import { ObjectInteractionActionHook } from "@engine/world/action/object-interaction.action";
-import { objectIds } from "@engine/world/config/object-ids";
+import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { Player } from '@engine/world/actor/player/player';
+import { dialogue, execute } from '@engine/world/actor/dialogue';
+import { getActionHooks } from '@engine/world/action/hooks';
+import { advancedNumberHookFilter } from '@engine/world/action/hooks/hook-filters';
+import { ObjectInteractionActionHook } from '@engine/world/action/object-interaction.action';
+import { objectIds } from '@engine/world/config/object-ids';
 
 
 function openBank(player: Player) {
-    let interactionActions = getActionHooks<ObjectInteractionActionHook>('object_interaction')
-        .filter(plugin => advancedNumberHookFilter(plugin.objectIds, objectIds.bankBooth, plugin.options, "use-quickly"));
+    const interactionActions = getActionHooks<ObjectInteractionActionHook>('object_interaction')
+        .filter(plugin => advancedNumberHookFilter(plugin.objectIds, objectIds.bankBooth, plugin.options, 'use-quickly'));
     interactionActions.forEach(plugin =>
         plugin.handler({
             player: player,
@@ -22,7 +22,7 @@ function openBank(player: Player) {
                 type: 0
             },
             objectDefinition: undefined,
-            option: "use-quickly",
+            option: 'use-quickly',
             position: player.position,
             cacheOriginal: undefined
         }));
@@ -60,7 +60,7 @@ const peelPotato: itemInteractionActionHandler = async (details) => {
             openBank(details.player);
             break;
         default:
-            console.log("i broke")
+            console.log('i broke')
     }
 
 };

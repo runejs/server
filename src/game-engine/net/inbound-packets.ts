@@ -10,9 +10,9 @@ interface InboundPacket {
 }
 
 export interface PacketData {
-    packetId: number,
-    packetSize: number,
-    buffer: ByteBuffer
+    packetId: number;
+    packetSize: number;
+    buffer: ByteBuffer;
 }
 
 export const incomingPackets = new Map<number, InboundPacket>();

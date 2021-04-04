@@ -1,13 +1,13 @@
-import {itemOnItemActionHandler} from "@engine/world/action/item-on-item.action";
-import { RottenPotatoItem } from "@plugins/items/rotten-potato/helpers/rotten-potato-helpers";
-import { findItem, widgets } from "@engine/config";
-import { itemOnPlayerActionHandler } from "@engine/world/action/item-on-player.action";
-import { itemInteractionActionHandler } from "@engine/world/action/item-interaction.action";
-import { fromNote, Item } from "@engine/world/items/item";
-import { ItemContainer } from "@engine/world/items/item-container";
+import { itemOnItemActionHandler } from '@engine/world/action/item-on-item.action';
+import { RottenPotatoItem } from '@plugins/items/rotten-potato/helpers/rotten-potato-helpers';
+import { findItem, widgets } from '@engine/config';
+import { itemOnPlayerActionHandler } from '@engine/world/action/item-on-player.action';
+import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { fromNote, Item } from '@engine/world/items/item';
+import { ItemContainer } from '@engine/world/items/item-container';
 
 export const potatoOnPlayer: itemOnPlayerActionHandler = (details) => {
-    console.log("called")
+    console.log('called')
     const widget = details.player.interfaceState.openWidget(widgets.bank.depositBoxWidget.widgetId, {
         slot: 'screen',
         fakeWidget: 3100001
@@ -38,7 +38,7 @@ export const potatoManipulatePlayerInventory: itemInteractionActionHandler = (de
 
 
     // If the item is a noted item, we need to de-note it
-    let itemIdToAdd: number = details.itemId;
+    const itemIdToAdd: number = details.itemId;
 
     let countToRemove: number;
     if (details.option.endsWith('all')) {

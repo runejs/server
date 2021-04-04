@@ -2,8 +2,8 @@ import { logger } from '@runejs/core';
 import { world } from '../../game-server';
 import { World } from '../../world';
 import { widgets } from '../../config';
-import { Player } from "@engine/world/actor/player/player";
-import { PacketData } from "@engine/net/inbound-packets";
+import { Player } from '@engine/world/actor/player/player';
+import { PacketData } from '@engine/net/inbound-packets';
 
 const itemOnPlayerPacket = (player: Player, packet: PacketData) => {
     const { buffer } = packet;

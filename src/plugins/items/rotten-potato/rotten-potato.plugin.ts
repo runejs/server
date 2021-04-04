@@ -1,9 +1,9 @@
-import {widgets} from "@engine/config";
-import spawnPotato from "@plugins/items/rotten-potato/hooks/rotten-potato-command-hook";
-import itemOnPotato from "@plugins/items/rotten-potato/hooks/rotten-potato-item-on-item";
-import { ExecuteIfAdmin, RottenPotatoItem } from "@plugins/items/rotten-potato/helpers/rotten-potato-helpers";
-import peelPotato from "@plugins/items/rotten-potato/hooks/rotten-potato-peel";
-import { potatoOnPlayer, potatoManipulatePlayerInventory } from "@plugins/items/rotten-potato/hooks/rotten-potato-item-on-player";
+import { widgets } from '@engine/config';
+import spawnPotato from '@plugins/items/rotten-potato/hooks/rotten-potato-command-hook';
+import itemOnPotato from '@plugins/items/rotten-potato/hooks/rotten-potato-item-on-item';
+import { ExecuteIfAdmin, RottenPotatoItem } from '@plugins/items/rotten-potato/helpers/rotten-potato-helpers';
+import peelPotato from '@plugins/items/rotten-potato/hooks/rotten-potato-peel';
+import { potatoOnPlayer, potatoManipulatePlayerInventory } from '@plugins/items/rotten-potato/hooks/rotten-potato-item-on-player';
 
 export default {
     pluginId: 'promises:rotten-potato',
@@ -29,7 +29,7 @@ export default {
         },
         {
             type: 'item_on_item',
-            items: [{item1: RottenPotatoItem.gameId}],
+            items: [{ item1: RottenPotatoItem.gameId }],
             handler: (details) => ExecuteIfAdmin(details, itemOnPotato),
             cancelOtherActions: true
         },
