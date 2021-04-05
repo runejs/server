@@ -15,7 +15,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { Subject, timer } from 'rxjs';
 import { Position } from '@engine/world/position';
 import { ActionHook, sortActionHooks } from '@engine/world/action/hooks';
-import { ActionPipeline, ActionType } from '@engine/world/action';
+import { ActionType } from '@engine/world/action';
 
 
 /**
