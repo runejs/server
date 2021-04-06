@@ -642,7 +642,7 @@ export class Player extends Actor {
         this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, slot, null);
     }
 
-    public giveItem(item: number | Item): boolean {
+    public giveItem(item: number | Item | string): boolean {
         const addedItem = this.inventory.add(item);
         if(addedItem === null) {
             return false;
