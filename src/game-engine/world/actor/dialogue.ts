@@ -502,7 +502,8 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
             if(dialogueAction.type === 'NPC') {
                 widgetId = npcWidgetIds[lines.length - 1];
                 player.outgoingPackets.setWidgetNpcHead(widgetId, 0, npcId as number);
-                player.outgoingPackets.updateWidgetString(widgetId, 1, filestore.npcDefinitions.get(npcId as number).name);
+                player.outgoingPackets.updateWidgetString(widgetId, 1,
+                    filestore.configStore.npcStore.getNpc(npcId as number).name);
             } else {
                 widgetId = playerWidgetIds[lines.length - 1];
                 player.outgoingPackets.setWidgetPlayerHead(widgetId, 0);

@@ -41,8 +41,8 @@ const objectInteractionPacket = (player, packet) => {
     const level = player.position.level;
     const objectPosition = new Position(x, y, level);
 
-    const { object: locationObject, cacheOriginal } = world.findObjectAtLocation(player, objectId, objectPosition);
-    if(!locationObject) {
+    const { object: landscapeObject, cacheOriginal } = world.findObjectAtLocation(player, objectId, objectPosition);
+    if(!landscapeObject) {
         return;
     }
 
@@ -64,7 +64,7 @@ const objectInteractionPacket = (player, packet) => {
         return;
     }
 
-    player.actionPipeline.call('object_interaction', player, locationObject, objectConfig, objectPosition, optionName.toLowerCase(), cacheOriginal);
+    player.actionPipeline.call('object_interaction', player, landscapeObject, objectConfig, objectPosition, optionName.toLowerCase(), cacheOriginal);
 };
 
 export default [{

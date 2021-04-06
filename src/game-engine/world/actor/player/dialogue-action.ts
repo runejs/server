@@ -116,7 +116,8 @@ export class DialogueAction {
 
             if(options.type === 'NPC') {
                 this.p.outgoingPackets.setWidgetNpcHead(widgetId, 0, options.npc);
-                this.p.outgoingPackets.updateWidgetString(widgetId, 1, filestore.npcDefinitions.get(options.npc).name);
+                this.p.outgoingPackets.updateWidgetString(widgetId, 1,
+                    filestore.configStore.npcStore.getNpc(options.npc).name);
             } else if(options.type === 'PLAYER') {
                 this.p.outgoingPackets.setWidgetPlayerHead(widgetId, 0);
                 this.p.outgoingPackets.updateWidgetString(widgetId, 1, this.p.username);

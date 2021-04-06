@@ -2,7 +2,7 @@ import { Chunk } from './chunk';
 import { Position } from '../position';
 import { logger } from '@runejs/core';
 import { filestore } from '@engine/game-server';
-import { LandscapeObject, Region } from '@runejs/filestore';
+import { LandscapeFile, LandscapeObject, MapFile, Region } from '@runejs/filestore';
 
 
 export class Tile {
@@ -54,23 +54,29 @@ export class ChunkManager {
 
         this.regionMap.set(key, { tiles: [], objects: [] });
 
-        let region: MapRegion; // MapRegion wrapper used by the game engine
-        let regionFile: Region;
+        let mapFile: MapFile;
+        let landscapeFile: LandscapeFile;
+
         try {
-            regionFile = filestore.regionStore.getRegion(mapRegionX, mapRegionY);
+            mapFile = filestore.regionStore.getMapFile(mapRegionX, mapRegionY);
         } catch(error) {
-            logger.error(`Error decoding map region ${mapRegionX},${mapRegionY}`);
+            logger.error(`Error decoding map file ${mapRegionX},${mapRegionY}`);
+        }
+        try {
+            landscapeFile = filestore.regionStore.getLandscapeFile(mapRegionX, mapRegionY);
+        } catch(error) {
+            logger.error(`Error decoding landscape file ${mapRegionX},${mapRegionY}`);
         }
 
-        region = { tiles: new Array(64 * 64 * 4),
-        objects: regionFile?.landscapeFile?.landscapeObjects || [] };
+        const region: MapRegion = { tiles: new Array(64 * 64 * 4),
+            objects: landscapeFile?.landscapeObjects || [] };
 
         // Parse map tiles for game engine use
         let tileIndex: number = 0;
         for(let level = 0; level < 4; level++) {
             for(let x = 0; x < 64; x++) {
                 for(let y = 0; y < 64; y++) {
-                    const tileSettings = regionFile?.mapFile?.tileSettings[level][x][y] || 0;
+                    const tileSettings = mapFile?.tileSettings[level][x][y] || 0;
                     region.tiles[tileIndex++] = new Tile(x, y, level, tileSettings);
                 }
             }
@@ -112,8 +118,8 @@ export class ChunkManager {
             return;
         }
 
-        for(const locationObject of objects) {
-            const position = new Position(locationObject.x, locationObject.y, locationObject.level);
+        for(const object of objects) {
+            const position = new Position(object.x, object.y, object.level);
 
             const tile = this.tileMap.get(position.key);
             if(tile?.bridge) {
@@ -121,13 +127,13 @@ export class ChunkManager {
                 position.level -= 1;
             }
 
-            const tileAbove = this.tileMap.get(`${locationObject.x},${locationObject.y},${locationObject.level + 1}`);
+            const tileAbove = this.tileMap.get(`${object.x},${object.y},${object.level + 1}`);
             if(tileAbove?.bridge) {
                 // Object is below a bridge tile, move it down a level to create proper collision maps
                 position.level -= 1;
             }
 
-            this.getChunkForWorldPosition(position).setFilestoreLandscapeObject(locationObject);
+            this.getChunkForWorldPosition(position).setFilestoreLandscapeObject(object);
         }
     }
 
