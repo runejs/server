@@ -1,7 +1,7 @@
 import { directionData, WNES } from '@engine/world/direction';
 import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
 import { soundIds } from '@engine/world/config/sound-ids';
-import { LocationObject } from '@runejs/cache-parser';
+import { LandscapeObject } from '@runejs/filestore';
 
 // @TODO move to yaml config
 const doors = [
@@ -78,7 +78,7 @@ export const action: objectInteractionActionHandler = ({ player, object: door, p
     const endDir = hingeConfig[startDir];
     const endPosition = position.step(opening ? 1 : -1, opening ? startDir : endDir);
 
-    const replacementDoor: LocationObject = {
+    const replacementDoor: LandscapeObject = {
         objectId: replacementDoorId,
         x: endPosition.x,
         y: endPosition.y,

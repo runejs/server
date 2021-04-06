@@ -9,9 +9,9 @@ const FountainIds: number[] = [879];
 const SinkIds: number[] = [14878, 873];
 const WellIds: number[] = [878];
 export const handler: itemOnObjectActionHandler = (details) => {
-    const { player, objectDefinition, item } = details;
+    const { player, objectConfig, item } = details;
     const itemDef = filestore.itemDefinitions.get(item.itemId);
-    if (item.itemId !== itemIds.bucket && WellIds.indexOf(objectDefinition.id) > -1) {
+    if (item.itemId !== itemIds.bucket && WellIds.indexOf(objectConfig.id) > -1) {
         player.sendMessage(`If I drop my ${itemDef.name.toLowerCase()} down there, I don't think I'm likely to get it back.`);
         return;
     }
@@ -30,7 +30,7 @@ export const handler: itemOnObjectActionHandler = (details) => {
 
     }
 
-    player.sendMessage(`You fill the ${itemDef.name.toLowerCase()} from the ${objectDefinition.name.toLowerCase()}.`);
+    player.sendMessage(`You fill the ${itemDef.name.toLowerCase()} from the ${objectConfig.name.toLowerCase()}.`);
 
 };
 

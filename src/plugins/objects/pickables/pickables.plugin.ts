@@ -9,7 +9,7 @@ export const action: objectInteractionActionHandler = (details) => {
     details.player.playAnimation(827);
     let itemId: number;
     let prefix = 'some';
-    switch (details.objectDefinition.name) {
+    switch (details.objectConfig.name) {
         case 'Wheat':
             itemId = itemIds.grain;
             break;
@@ -31,9 +31,9 @@ export const action: objectInteractionActionHandler = (details) => {
     }
     const pickedItem = filestore.itemDefinitions.get(itemId);
     setTimeout(() => {
-        details.player.sendMessage(`You ${details.option} the ${details.objectDefinition.name.toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`);
+        details.player.sendMessage(`You ${details.option} the ${details.objectConfig.name.toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`);
         details.player.playSound(2581, 7);
-        if (details.objectDefinition.name !== 'Flax' || Math.floor(Math.random() * 10) === 1) {
+        if (details.objectConfig.name !== 'Flax' || Math.floor(Math.random() * 10) === 1) {
             details.player.instance.hideGameObjectTemporarily(details.object, 30);
         }
         details.player.giveItem(pickedItem.id);

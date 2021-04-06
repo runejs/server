@@ -39,9 +39,9 @@ const itemOnObjectPacket = (player, packet) => {
         return;
     }
 
-    const locationObjectDefinition = filestore.locationObjectDefinitions.get(objectId);
+    const objectConfig = filestore.configStore.objectStore.getObject(objectId);
 
-    player.actionPipeline.call('item_on_object', player, locationObject, locationObjectDefinition, objectPosition, usedItem, itemWidgetId, itemContainerId, cacheOriginal);
+    player.actionPipeline.call('item_on_object', player, locationObject, objectConfig, objectPosition, usedItem, itemWidgetId, itemContainerId, cacheOriginal);
 };
 
 export default {
