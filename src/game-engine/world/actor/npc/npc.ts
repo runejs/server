@@ -6,7 +6,7 @@ import { directionData } from '@engine/world/direction';
 import { QuadtreeKey } from '@engine/world';
 import { findNpc } from '@engine/config';
 import { animationIds } from '@engine/world/config/animation-ids';
-import { NpcAnimations, NpcDetails } from '@engine/config/npc-config';
+import { NpcCombatAnimations, NpcDetails } from '@engine/config/npc-config';
 import { SkillName } from '@engine/world/actor/skills';
 import { NpcSpawn } from '@engine/config/npc-spawn-config';
 
@@ -21,7 +21,13 @@ export class Npc extends Actor {
     public readonly initialPosition: Position;
     public readonly key: string;
     public id: number;
-    public animations: NpcAnimations;
+    public animations: NpcCombatAnimations & {
+        walk?: number;
+        turnAround?: number;
+        turnLeft?: number;
+        turnRight?: number;
+        stand?: number;
+    };
     public instanceId: string = null;
 
     private _name: string;
@@ -55,7 +61,7 @@ export class Npc extends Actor {
         } else {
             this.id = npcDetails.gameId;
             this._combatLevel = npcDetails.combatLevel;
-            this.animations = npcDetails.animations;
+            this.animations = npcDetails.combatAnimations;
             this.options = npcDetails.options;
 
             if(npcDetails.skills) {
@@ -64,7 +70,7 @@ export class Npc extends Actor {
             }
         }
 
-        const cacheDetails = filestore.npcDefinitions.get(this.id);
+        const cacheDetails = filestore.configStore.npcStore.getNpc(this.id);
         if(cacheDetails) {
             // NPC not registered on the server, but exists in the game cache - use that for our info and assume it's
             // Not a combatant NPC since we have no useful combat information for it.
@@ -96,7 +102,7 @@ export class Npc extends Actor {
     }
 
     public getAttackAnimation(): number {
-        let attackAnim = findNpc(this.id)?.animations?.attack || animationIds.combat.punch;
+        let attackAnim = findNpc(this.id)?.combatAnimations?.attack || animationIds.combat.punch;
         if(Array.isArray(attackAnim)) {
             // NPC has multiple attack animations possible, pick a random one from the list to use
             const idx = Math.floor(Math.random() * attackAnim.length);
@@ -107,7 +113,7 @@ export class Npc extends Actor {
     }
 
     public getBlockAnimation(): number {
-        return findNpc(this.id)?.animations?.defend || animationIds.combat.armBlock;
+        return findNpc(this.id)?.combatAnimations?.defend || animationIds.combat.armBlock;
     }
 
     public kill(respawn: boolean = true): void {

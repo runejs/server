@@ -41,7 +41,7 @@ export class CollisionMap {
         const y: number = landscapeObject.y;
         const objectType = landscapeObject.type;
         const objectOrientation = landscapeObject.orientation;
-        const objectDetails: LocationObjectDefinition = filestore.locationObjectDefinitions.get(landscapeObject.objectId);
+        const objectDetails = filestore.configStore.objectStore.getObject(landscapeObject.objectId);
 
         if(objectDetails.solid) {
             if(objectType === 22) {
@@ -49,7 +49,8 @@ export class CollisionMap {
                     this.markBlocked(x, y, mark);
                 }
             } else if(objectType >= 9) {
-                this.markSolidOccupant(x, y, objectDetails.sizeX, objectDetails.sizeY, objectOrientation, objectDetails.nonWalkable, mark);
+                this.markSolidOccupant(x, y, objectDetails.rendering.sizeX, objectDetails.rendering.sizeY,
+                    objectOrientation, objectDetails.nonWalkable, mark);
             } else if(objectType >= 0 && objectType <= 3) {
                 if(mark) {
                     this.markWall(x, y, objectType, objectOrientation, objectDetails.nonWalkable);

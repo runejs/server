@@ -13,7 +13,7 @@ import {
     loadNpcConfigurations,
     NpcDetails,
     NpcPresetConfiguration,
-    translateNpcConfig
+    translateNpcServerConfig
 } from '@engine/config/npc-config';
 import { loadNpcSpawnConfigurations, NpcSpawn } from '@engine/config/npc-spawn-config';
 import { loadShopConfigurations, Shop } from '@engine/config/shop-config';
@@ -147,7 +147,7 @@ export const findNpc = (npcKey: number | string): NpcDetails | null => {
         npcKey = npcIdMap[gameId];
 
         if(!npcKey) {
-            const cacheNpc = filestore.npcDefinitions.get(gameId);
+            const cacheNpc = filestore.configStore.npcStore.getNpc(gameId);
             if(cacheNpc) {
                 return cacheNpc as any;
             } else {
@@ -177,7 +177,7 @@ export const findNpc = (npcKey: number | string): NpcDetails | null => {
         extensions.forEach(extKey => {
             const extensionNpc = npcPresetMap[extKey];
             if(extensionNpc) {
-                npc = _.merge(npc, translateNpcConfig(undefined, extensionNpc));
+                npc = _.merge(npc, translateNpcServerConfig(undefined, extensionNpc));
             }
         });
     }

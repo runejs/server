@@ -45,11 +45,11 @@ export class Position {
     }
 
     public withinInteractionDistance(locationObject: LandscapeObject): boolean {
-        const definition = filestore.locationObjectDefinitions.get(locationObject.objectId);
+        const definition = filestore.configStore.objectStore.getObject(locationObject.objectId);
         const occupantX = locationObject.x;
         const occupantY = locationObject.y;
-        let width = definition.sizeX;
-        let height = definition.sizeY;
+        let width = definition.rendering.sizeX;
+        let height = definition.rendering.sizeY;
 
         if(width === undefined || width === null || width < 1) {
             width = 1;
