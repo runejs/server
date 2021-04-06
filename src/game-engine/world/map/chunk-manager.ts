@@ -60,21 +60,18 @@ export class ChunkManager {
             regionFile = filestore.regionStore.getRegion(mapRegionX, mapRegionY);
         } catch(error) {
             logger.error(`Error decoding map region ${mapRegionX},${mapRegionY}`);
-            logger.error(error);
         }
 
         region = { tiles: new Array(64 * 64 * 4),
-            objects: regionFile?.landscapeFile?.landscapeObjects || [] };
-        if(regionFile?.mapFile) {
-            // Parse map tiles for game engine use
+        objects: regionFile?.landscapeFile?.landscapeObjects || [] };
 
-            let tileIndex: number = 0;
-            for(let level = 0; level < 4; level++) {
-                for(let x = 0; x < 64; x++) {
-                    for(let y = 0; y < 64; y++) {
-                        const tileSettings = regionFile.mapFile.tileSettings[level][x][y];
-                        region.tiles[tileIndex++] = new Tile(x, y, level, tileSettings);
-                    }
+        // Parse map tiles for game engine use
+        let tileIndex: number = 0;
+        for(let level = 0; level < 4; level++) {
+            for(let x = 0; x < 64; x++) {
+                for(let y = 0; y < 64; y++) {
+                    const tileSettings = regionFile?.mapFile?.tileSettings[level][x][y] || 0;
+                    region.tiles[tileIndex++] = new Tile(x, y, level, tileSettings);
                 }
             }
         }
