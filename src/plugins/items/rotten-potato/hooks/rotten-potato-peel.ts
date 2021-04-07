@@ -48,12 +48,12 @@ const peelPotato: itemInteractionActionHandler = async (details) => {
             `Travel Far!`, [
                 execute(() => chosenOption = DialogueOption.TELEPORT_MENU)
             ],
-            `Teleport to RARE!`, [
-                execute(() => chosenOption = DialogueOption.TELEPORT_TO_RARE_DROP)
-            ],
-            `Spawn RARE!`, [
-                execute(() => chosenOption = DialogueOption.FORCE_RARE_DROP)
-            ],
+            // `Teleport to RARE!`, [
+            //     execute(() => chosenOption = DialogueOption.TELEPORT_TO_RARE_DROP)
+            // ],
+            // `Spawn RARE!`, [
+            //     execute(() => chosenOption = DialogueOption.FORCE_RARE_DROP)
+            // ],
         ]
     ]);
     switch (chosenOption) {
