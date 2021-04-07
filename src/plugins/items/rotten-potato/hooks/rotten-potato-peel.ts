@@ -5,7 +5,7 @@ import { getActionHooks } from '@engine/world/action/hooks';
 import { advancedNumberHookFilter } from '@engine/world/action/hooks/hook-filters';
 import { ObjectInteractionActionHook } from '@engine/world/action/object-interaction.action';
 import { objectIds } from '@engine/world/config/object-ids';
-import { openTravel } from "@plugins/items/rotten-potato/helpers/rotten-potato-travel";
+import { openTravel } from '@plugins/items/rotten-potato/helpers/rotten-potato-travel';
 
 
 function openBank(player: Player) {
@@ -64,7 +64,7 @@ const peelPotato: itemInteractionActionHandler = async (details) => {
             openTravel(details.player, 1);
             break;
         default:
-            console.log('i broke')
+            break;
     }
 
 };

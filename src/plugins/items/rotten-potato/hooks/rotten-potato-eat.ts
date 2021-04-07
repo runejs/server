@@ -1,12 +1,5 @@
 import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
-import { Player } from '@engine/world/actor/player/player';
 import { dialogue, execute } from '@engine/world/actor/dialogue';
-import { getActionHooks } from '@engine/world/action/hooks';
-import { advancedNumberHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ObjectInteractionActionHook } from '@engine/world/action/object-interaction.action';
-import { objectIds } from '@engine/world/config/object-ids';
-
-
 
 enum DialogueOption {
     SET_ALL_STATS,
@@ -45,7 +38,7 @@ const eatPotato: itemInteractionActionHandler = async (details) => {
         case DialogueOption.TELEPORT_TO_PLAYER:
             break;
         default:
-            console.log('i broke')
+            break;
     }
 
 };

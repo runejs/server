@@ -3,7 +3,6 @@ import { world } from '@engine/game-server';
 import {
     widgetInteractionActionHandler
 } from '@engine/world/action/widget-interaction.action';
-import { widgets } from '@engine/config';
 
 export function openTravel(player: Player, page: number) {
     const widget = player.interfaceState.openWidget(27, {
@@ -66,7 +65,6 @@ export const travelMenuInteract: widgetInteractionActionHandler = (details) => {
     const playerWidget = details.player.interfaceState.findWidget(27);
 
     if(!playerWidget || !playerWidget.metadata.page) {
-        console.log('wtf');
         return;
     }
     switch (details.childId){
