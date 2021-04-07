@@ -36,6 +36,32 @@
         "movement_radius": 4
     },
     {
+        "npc": "rs:draul_leptoc",
+        "spawn_x": 3162,
+        "spawn_y": 3435,
+        "movement_radius": 4
+    },
+    {
+        "npc": "rs:man",
+        "spawn_x": 3153,
+        "spawn_y": 3429,
+        "movement_radius": 4
+    },
+    {
+        "npc": "rs:phillipa",
+        "spawn_x": 3163,
+        "spawn_y": 3430,
+        "spawn_level": 1,
+        "movement_radius": 5
+    },
+    {
+        "npc": "rs:juliet",
+        "spawn_x": 3158,
+        "spawn_y": 3425,
+        "spawn_level": 1,
+        "movement_radius": 1
+    },
+    {
         "npc": "rs:varrock_shop_keeper",
         "spawn_x": 3214,
         "spawn_y": 3417,

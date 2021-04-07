@@ -48,7 +48,9 @@ const startQuestAction = async details => {
             break;
     
         case 5:
-            await dialogue(participants, [romeo => [Emote.WORRIED, `What is to become of me and my darling Juliet, I cannot find her anywhere, have you seen her?`]]);
+            await dialogue(participants, [
+                romeo => [Emote.WORRIED, `What is to become of me and my darling Juliet, I cannot find her anywhere, have you seen her?`]
+            ]);
             break;
     }
   
@@ -81,8 +83,10 @@ const startQuestAction = async details => {
             `Perhaps I could help to find her for you? `, [
                 player => [Emote.WONDERING, `Perhaps I can help find her for you? What does she look like?`],
                 romeo => [Emote.HAPPY, `Oh would you? That would be great! She has this sort of hair...`],
-                player => [Emote.WONDERING, `Hair...check..`], romeo => [Emote.HAPPY, `...and she these...great lips...`],
-                player => [Emote.WONDERING, `Lips...right.`], romeo => [Emote.HAPPY, `Oh and she has these lovely shoulders as well..`],
+                player => [Emote.WONDERING, `Hair...check..`],
+                romeo => [Emote.HAPPY, `...and she these...great lips...`],
+                player => [Emote.WONDERING, `Lips...right.`],
+                romeo => [Emote.HAPPY, `Oh and she has these lovely shoulders as well..`],
                 player => [Emote.GENERIC, `Shoulders...right, so she has hair, lips and shoulders...that should cut it down a bit.`],
                 romeo => [Emote.HAPPY, `Oh yes, Juliet is very different...please tell her that she is the love of my long and that I life to be with her?`],
                 player => [Emote.WONDERING, `What? Surely you mean that she is the love of your life and that you long to be with her?`],
@@ -163,6 +167,15 @@ const moreInfo = () => {
     ];
 };
 
+const julietFirstTalk = async details => {
+    const { player, npc } = details;
+    const participants = [player, { npc, key: 'juliet' }];
+    await dialogue(participants, [
+        player => [Emote.GENERIC, `test`],
+        juliet => [Emote.WONDERING, `test`]
+    ]);
+};
+
 export default {
     pluginId: 'rs:romeo_and_juliet',
     quests: [
@@ -203,5 +216,15 @@ export default {
         options: 'talk-to',
         walkTo: true,
         handler: romeoSecondTalk
+    }, {
+        type: 'npc_interaction',
+        questRequirement: {
+            questId: 'rs:romeo_and_juliet',
+            stage: 1
+        },
+        npcs: 'rs:juliet',
+        options: 'talk-to',
+        walkTo: true,
+        handler: julietFirstTalk
     }]
 };

@@ -29,6 +29,15 @@
     "rs:romeo": {
         "game_id": 639
     },
+    "rs:draul_leptoc": {
+        "game_id": 3324
+    },
+    "rs:phillipa": {
+        "game_id": 3325
+    },
+    "rs:juliet": {
+        "game_id": 637
+    },
     "rs:varrock_shop_keeper": {
         "game_id": 520
     },
