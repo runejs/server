@@ -84,17 +84,17 @@ export class World {
         const tileModifications = player.instance.getTileModifications(objectPosition);
         const personalTileModifications = player.personalInstance.getTileModifications(objectPosition);
 
-        let locationObject = objectChunk.getFilestoreLandscapeObject(objectId, objectPosition);
-        if(!locationObject) {
+        let landscapeObject = objectChunk.getFilestoreLandscapeObject(objectId, objectPosition);
+        if(!landscapeObject) {
             const tileObjects = [ ...tileModifications.mods.spawnedObjects,
                 ...personalTileModifications.mods.spawnedObjects ];
 
-            locationObject = tileObjects.find(spawnedObject =>
+            landscapeObject = tileObjects.find(spawnedObject =>
                 spawnedObject.objectId === objectId && spawnedObject.x === x && spawnedObject.y === y) || null;
 
             cacheOriginal = false;
 
-            if(!locationObject) {
+            if(!landscapeObject) {
                 return { object: null, cacheOriginal: false };
             }
         }
@@ -108,7 +108,7 @@ export class World {
         }
 
         return {
-            object: locationObject,
+            object: landscapeObject,
             cacheOriginal
         };
     }

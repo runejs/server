@@ -2,6 +2,7 @@ import { objectInteractionActionHandler } from '@engine/world/action/object-inte
 import { filestore } from '@engine/game-server';
 import { World } from '@engine/world';
 import { itemIds } from '@engine/world/config/item-ids';
+import { findItem } from '@engine/config';
 
 
 export const action: objectInteractionActionHandler = (details) => {
@@ -29,7 +30,7 @@ export const action: objectInteractionActionHandler = (details) => {
             itemId = itemIds.cabbage;
             break;
     }
-    const pickedItem = filestore.itemDefinitions.get(itemId);
+    const pickedItem = findItem(itemId);
     setTimeout(() => {
         details.player.sendMessage(`You ${details.option} the ${details.objectConfig.name.toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`);
         details.player.playSound(2581, 7);

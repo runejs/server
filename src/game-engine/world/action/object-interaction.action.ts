@@ -99,7 +99,10 @@ const objectInteractionActionPipe = (player: Player, landscapeObject: LandscapeO
                         cacheOriginal
                     }));
             })
-            .catch(() => logger.warn(`Unable to complete walk-to action.`));
+            .catch(error => {
+                logger.warn(`Unable to complete walk-to action.`);
+                console.error(error);
+            });
     }
 
     // Immediately run any non-walk-to plugins

@@ -2,7 +2,8 @@ import { Chunk } from './chunk';
 import { Position } from '../position';
 import { logger } from '@runejs/core';
 import { filestore } from '@engine/game-server';
-import { LandscapeFile, LandscapeObject, MapFile, Region } from '@runejs/filestore';
+import { LandscapeFile, LandscapeObject, MapFile } from '@runejs/filestore';
+import { getTreeIds } from '@engine/world/config/harvestable-object';
 
 
 export class Tile {
@@ -12,7 +13,7 @@ export class Tile {
     public bridge: boolean;
 
     public constructor(public x: number, public y: number, public level: number, settings?: number) {
-        if(settings) {
+        if(settings !== undefined) {
             this.setSettings(settings);
         }
     }
@@ -52,8 +53,6 @@ export class ChunkManager {
             return;
         }
 
-        this.regionMap.set(key, { tiles: [], objects: [] });
-
         let mapFile: MapFile;
         let landscapeFile: LandscapeFile;
 
@@ -68,23 +67,25 @@ export class ChunkManager {
             logger.error(`Error decoding landscape file ${mapRegionX},${mapRegionY}`);
         }
 
-        const region: MapRegion = { tiles: new Array(64 * 64 * 4),
+        const region: MapRegion = { tiles: [],
             objects: landscapeFile?.landscapeObjects || [] };
 
         // Parse map tiles for game engine use
-        let tileIndex: number = 0;
         for(let level = 0; level < 4; level++) {
             for(let x = 0; x < 64; x++) {
                 for(let y = 0; y < 64; y++) {
                     const tileSettings = mapFile?.tileSettings[level][x][y] || 0;
-                    region.tiles[tileIndex++] = new Tile(x, y, level, tileSettings);
+                    region.tiles.push(new Tile(x, y, level, tileSettings));
                 }
             }
         }
 
         this.regionMap.set(key, region);
         this.registerTiles(region.tiles);
-        this.registerObjects(region.objects);
+
+        const worldX = (mapRegionX & 0xff) * 64;
+        const worldY = mapRegionY * 64;
+        this.registerObjects(region.objects, worldX, worldY);
     }
 
     public registerTiles(tiles: Tile[]): void {
@@ -97,9 +98,7 @@ export class ChunkManager {
 
             if(tile.bridge) {
                 // Move this tile down one level if it's a bridge tile
-                const newTile = new Tile(tile.x, tile.y, tile.level - 1);
-                newTile.nonWalkable = false;
-                newTile.bridge = false;
+                const newTile = new Tile(tile.x, tile.y, tile.level - 1, 0);
                 this.tileMap.set(`${newTile.x},${newTile.y},${newTile.level}`, newTile);
 
                 // And also add the bridge tile itself, so that game objects know about it
@@ -113,7 +112,7 @@ export class ChunkManager {
         }
     }
 
-    public registerObjects(objects: LandscapeObject[]): void {
+    public registerObjects(objects: LandscapeObject[], mapRegionStartX: number, mapRegionStartY: number): void {
         if(!objects || objects.length === 0) {
             return;
         }

@@ -3,6 +3,7 @@ import { soundIds } from '@engine/world/config/sound-ids';
 import { World } from '@engine/world';
 import { filestore } from '@engine/game-server';
 import { getAllOreIds, getOreFromRock } from '@engine/world/config/harvestable-object';
+import { findItem } from '@engine/config';
 
 const action: objectInteractionActionHandler = (details) => {
     details.player.sendMessage('You examine the rock for ores.');
@@ -15,7 +16,7 @@ const action: objectInteractionActionHandler = (details) => {
             details.player.sendMessage('There is current no ore available in this rock.');
             return;
         }
-        const oreName = filestore.itemDefinitions.get(ore.itemId).name.toLowerCase().replace(' ore', '');
+        const oreName = findItem(ore.itemId).name.toLowerCase().replace(' ore', '');
 
         details.player.sendMessage(`This rock contains ${oreName}.`);
     }, World.TICK_LENGTH * 3);

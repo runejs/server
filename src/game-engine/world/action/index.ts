@@ -79,7 +79,7 @@ export class ActionPipeline {
         const actionHandler = ActionPipeline.pipes.get(action.toString());
         if(actionHandler) {
             try {
-                await new Promise(resolve => {
+                await new Promise<void>(resolve => {
                     actionHandler(...args);
                     resolve();
                 });

@@ -37,7 +37,7 @@ const action: commandActionHandler = (details) => {
         throw new Error(`Unable to give more than 2,000,000,000.`);
     }
 
-    const itemDefinition = filestore.itemDefinitions.get(itemId);
+    const itemDefinition = findItem(itemId);
     if(!itemDefinition) {
         throw new Error(`Item ID ${itemId} not found!`);
     }

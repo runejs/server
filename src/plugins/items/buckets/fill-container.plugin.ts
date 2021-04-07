@@ -3,6 +3,7 @@ import { filestore } from '@engine/game-server';
 import { itemIds } from '@engine/world/config/item-ids';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
+import { findItem } from '@engine/config';
 
 
 const FountainIds: number[] = [879];
@@ -10,7 +11,7 @@ const SinkIds: number[] = [14878, 873];
 const WellIds: number[] = [878];
 export const handler: itemOnObjectActionHandler = (details) => {
     const { player, objectConfig, item } = details;
-    const itemDef = filestore.itemDefinitions.get(item.itemId);
+    const itemDef = findItem(item.itemId);
     if (item.itemId !== itemIds.bucket && WellIds.indexOf(objectConfig.id) > -1) {
         player.sendMessage(`If I drop my ${itemDef.name.toLowerCase()} down there, I don't think I'm likely to get it back.`);
         return;

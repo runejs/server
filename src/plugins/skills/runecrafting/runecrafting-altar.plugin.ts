@@ -15,6 +15,7 @@ import { RunecraftingAltar, RunecraftingRune } from '@plugins/skills/runecraftin
 import { itemIds } from '@engine/world/config/item-ids';
 import { Player } from '@engine/world/actor/player/player';
 import { Item } from '@engine/world/items/item';
+import { findItem } from '@engine/config';
 
 
 const enterAltar: itemOnObjectActionHandler = (details: ItemOnObjectAction) => {
@@ -46,7 +47,7 @@ const enterAltar: itemOnObjectActionHandler = (details: ItemOnObjectAction) => {
 };
 
 function finishEnterAltar(player: Player, item: Item, altar: RunecraftingAltar): void {
-    const talisman = filestore.itemDefinitions.get(item.itemId);
+    const talisman = findItem(item.itemId);
     player.sendMessage(`You hold the ${talisman.name} towards the mysterious ruins.`);
     player.sendMessage(`You feel a powerful force take hold of you..`);
     player.teleport(altar.entrance);

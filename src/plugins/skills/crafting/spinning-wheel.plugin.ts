@@ -6,7 +6,7 @@ import { Skill } from '@engine/world/actor/skills';
 import { filestore, loopingEvent } from '@engine/game-server';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { objectIds } from '@engine/world/config/object-ids';
-import { widgets } from '@engine/config';
+import { findItem, widgets } from '@engine/config';
 
 interface Spinnable {
     input: number | number[];
@@ -111,7 +111,7 @@ const spinProduct: any = (details: ButtonAction, spinnable: Spinnable, count: nu
                 cancel = true;
             }
             if (cancel) {
-                details.player.sendMessage(`You don't have any ${filestore.itemDefinitions.get(currentItem).name.toLowerCase()}.`);
+                details.player.sendMessage(`You don't have any ${findItem(currentItem).name.toLowerCase()}.`);
                 loop.cancel();
                 return;
             }
@@ -144,7 +144,7 @@ export const buttonClicked: buttonActionHandler = (details) => {
     details.player.interfaceState.closeAllSlots();
 
     if (!details.player.skills.hasLevel(Skill.CRAFTING, product.spinnable.requiredLevel)) {
-        details.player.sendMessage(`You need a crafting level of ${product.spinnable.requiredLevel} to craft ${filestore.itemDefinitions.get(product.spinnable.output).name.toLowerCase()}.`, true);
+        details.player.sendMessage(`You need a crafting level of ${product.spinnable.requiredLevel} to craft ${findItem(product.spinnable.output).name.toLowerCase()}.`, true);
         return;
     }
 

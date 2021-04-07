@@ -48,8 +48,8 @@ export class Position {
         const definition = filestore.configStore.objectStore.getObject(locationObject.objectId);
         const occupantX = locationObject.x;
         const occupantY = locationObject.y;
-        let width = definition.rendering.sizeX;
-        let height = definition.rendering.sizeY;
+        let width = definition.rendering?.sizeX || 1;
+        let height = definition.rendering?.sizeY || 1;
 
         if(width === undefined || width === null || width < 1) {
             width = 1;

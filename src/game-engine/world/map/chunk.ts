@@ -36,12 +36,14 @@ export class Chunk {
     public registerMapRegion(): void {
         const mapRegionX = Math.floor(this.position.x / 8);
         const mapRegionY = Math.floor(this.position.y / 8);
+
         world.chunkManager.registerMapRegion(mapRegionX, mapRegionY);
     }
 
     public setFilestoreLandscapeObject(landscapeObject: LandscapeObject): void {
+        this._filestoreLandscapeObjects.set(`${ landscapeObject.x },${ landscapeObject.y },${ landscapeObject.objectId }`,
+            landscapeObject);
         this._collisionMap.markGameObject(landscapeObject, true);
-        this._filestoreLandscapeObjects.set(`${ landscapeObject.x },${ landscapeObject.y },${ landscapeObject.objectId }`, landscapeObject);
     }
 
     public addPlayer(player: Player): void {

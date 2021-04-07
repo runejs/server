@@ -51,7 +51,7 @@ const objectInteractionPacket = (player, packet) => {
     const actionIdx = options[packetId].index;
     let optionName = `action-${actionIdx + 1}`;
     if(objectConfig.options && objectConfig.options.length >= actionIdx) {
-        if(!objectConfig.options[actionIdx] || objectConfig.options[actionIdx].toLowerCase() === 'hidden') {
+        if(!objectConfig.options[actionIdx]) {
             // Invalid action
             logger.error(`1: Invalid object ${objectId} option ${actionIdx + 1}, options: ${JSON.stringify(objectConfig.options)}`);
             return;
