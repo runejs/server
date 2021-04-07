@@ -1,5 +1,4 @@
 import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
-import { filestore } from '@engine/game-server';
 import { World } from '@engine/world';
 import { itemIds } from '@engine/world/config/item-ids';
 import { findItem } from '@engine/config';
@@ -37,7 +36,7 @@ export const action: objectInteractionActionHandler = (details) => {
         if (details.objectConfig.name !== 'Flax' || Math.floor(Math.random() * 10) === 1) {
             details.player.instance.hideGameObjectTemporarily(details.object, 30);
         }
-        details.player.giveItem(pickedItem.id);
+        details.player.giveItem(pickedItem.gameId);
         details.player.busy = false;
     }, World.TICK_LENGTH);
 };

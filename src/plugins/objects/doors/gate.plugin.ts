@@ -5,6 +5,7 @@ import { world } from '@engine/game-server';
 import { ModifiedLandscapeObject } from '@engine/world/map/landscape-object';
 import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
 import { soundIds } from '@engine/world/config/sound-ids';
+import { Chunk } from '@engine/world/map/chunk';
 
 const gates = [
     {
@@ -40,7 +41,8 @@ const action: objectInteractionActionHandler = (details) => {
         let secondGate;
         let hinge;
         let direction = WNES[gate.orientation];
-        let hingeChunk, gateSecondPosition;
+        let hingeChunk: Chunk;
+        let gateSecondPosition: Position;
 
         if(!details) {
             details = gates.find(g => g.secondary === gate.objectId);
@@ -86,7 +88,7 @@ const action: objectInteractionActionHandler = (details) => {
 
             const pos = new Position(gate.x + deltaX, gate.y + deltaY, gate.level);
             hingeChunk = world.chunkManager.getChunkForWorldPosition(pos);
-            gate = hingeChunk.getCacheObject(details.main, pos);
+            gate = hingeChunk.getFilestoreLandscapeObject(details.main, pos);
             direction = WNES[gate.orientation];
             position = pos;
         } else {
