@@ -2,15 +2,15 @@ import { itemIds } from '@engine/world/config/item-ids';
 import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
-import { LocationObjectDefinition } from '@runejs/cache-parser';
 import { Player } from '@engine/world/actor/player/player';
+import { ObjectConfig } from '@runejs/filestore';
 
 
-function flourBin(details: { objectDefinition: LocationObjectDefinition, player: Player }): void {
-    const { player, objectDefinition } = details;
+function flourBin(details: { objectConfig: ObjectConfig, player: Player }): void {
+    const { player, objectConfig } = details;
 
     if (!details.player.metadata['flour']) {
-        player.sendMessage(`The ${objectDefinition.name.toLowerCase()} is already empty. You need to place wheat in the hopper upstairs `);
+        player.sendMessage(`The ${objectConfig.name.toLowerCase()} is already empty. You need to place wheat in the hopper upstairs `);
         player.sendMessage(`first.`);
         return;
     }

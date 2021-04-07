@@ -1,5 +1,7 @@
-import { cache } from '@engine/game-server';
+import { filestore } from '@engine/game-server';
 import { findItem, itemMap } from '@engine/config';
+import { ParentWidget, StaticItemWidget } from '@runejs/filestore';
+
 
 export interface Item {
     itemId: number;
@@ -7,21 +9,21 @@ export interface Item {
 }
 
 function itemInventoryOptions(itemId: number): string[] {
-    const itemDefinition = cache.itemDefinitions.get(itemId);
+    const itemDefinition = filestore.configStore.itemStore.getItem(itemId);
     if(!itemDefinition) {
         return [];
     }
 
-    return itemDefinition.inventoryOptions;
+    return itemDefinition.widgetOptions;
 }
 
 export const getItemOptions = (itemId: number, widget: { widgetId: number, containerId: number }): string[] => {
-    const widgetDefinition = cache.widgets.get(widget.widgetId);
+    const widgetDefinition = filestore.widgetStore.decodeWidget(widget.widgetId) as ParentWidget;
     if(!widgetDefinition || !widgetDefinition.children || widgetDefinition.children.length <= widget.containerId) {
         return itemInventoryOptions(itemId);
     }
 
-    const widgetChild = widgetDefinition.children[widget.containerId];
+    const widgetChild = widgetDefinition.children[widget.containerId] as StaticItemWidget;
     if(!widgetChild || !widgetChild.items || !widgetChild.options) {
         return itemInventoryOptions(itemId);
     }

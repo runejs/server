@@ -134,7 +134,7 @@ class Combat {
         let deathAnim: number = animationIds.death;
 
         if(victim instanceof Npc) {
-            deathAnim = findNpc(victim.id)?.animations?.death || animationIds.death
+            deathAnim = findNpc(victim.id)?.combatAnimations?.death || animationIds.death
         }
 
         this.cancelCombat();

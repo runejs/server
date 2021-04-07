@@ -188,7 +188,7 @@ export const goblinDiplomacyStageHandler: QuestStageHandler = {
         await schedule(3);
 
         const goblinDetails = findNpc('rs:goblin');
-        let anim = goblinDetails.animations.attack;
+        let anim = goblinDetails.combatAnimations.attack;
         if(Array.isArray(anim)) {
             anim = anim[0];
         }

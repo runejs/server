@@ -1,17 +1,18 @@
 import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
-import { cache } from '@engine/game-server';
+import { filestore } from '@engine/game-server';
 import { itemIds } from '@engine/world/config/item-ids';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
+import { findItem } from '@engine/config';
 
 
 const FountainIds: number[] = [879];
 const SinkIds: number[] = [14878, 873];
 const WellIds: number[] = [878];
 export const handler: itemOnObjectActionHandler = (details) => {
-    const { player, objectDefinition, item } = details;
-    const itemDef = cache.itemDefinitions.get(item.itemId);
-    if (item.itemId !== itemIds.bucket && WellIds.indexOf(objectDefinition.id) > -1) {
+    const { player, objectConfig, item } = details;
+    const itemDef = findItem(item.itemId);
+    if (item.itemId !== itemIds.bucket && WellIds.indexOf(objectConfig.gameId) > -1) {
         player.sendMessage(`If I drop my ${itemDef.name.toLowerCase()} down there, I don't think I'm likely to get it back.`);
         return;
     }
@@ -30,7 +31,7 @@ export const handler: itemOnObjectActionHandler = (details) => {
 
     }
 
-    player.sendMessage(`You fill the ${itemDef.name.toLowerCase()} from the ${objectDefinition.name.toLowerCase()}.`);
+    player.sendMessage(`You fill the ${itemDef.name.toLowerCase()} from the ${objectConfig.name.toLowerCase()}.`);
 
 };
 

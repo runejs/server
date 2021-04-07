@@ -1,7 +1,7 @@
-import { itemAction, ItemActionData } from '@server/world/action/item-action';
-import { findItem, widgets } from '@server/config';
-import { soundIds } from '@server/world/config/sound-ids';
-import { ItemDetails } from '@server/config/item-config';
+import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { findItem, widgets } from '@engine/config';
+import { soundIds } from '@engine/world/config/sound-ids';
+import { ItemDetails } from '@engine/config/item-config';
 
 interface IGrimyHerb {
     grimy: ItemDetails;
@@ -97,7 +97,7 @@ const herbs: IGrimyHerb[] = [
 ]
 
 
-export const action: itemAction = (details: ItemActionData) => {
+export const action: itemInteractionActionHandler = details => {
     const { player, itemId, itemSlot } = details;
     const herb: IGrimyHerb = herbs.find((herb) => herb.grimy.gameId === itemId);
     if(!herb) {

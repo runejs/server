@@ -2,13 +2,13 @@ import { Position } from '../position';
 import { Player } from '../actor/player/player';
 import { CollisionMap } from './collision-map';
 import { world } from '../../game-server';
-import { LocationObject } from '@runejs/cache-parser';
 import { Npc } from '../actor/npc/npc';
 import { WorldItem } from '@engine/world/items/world-item';
+import { LandscapeObject } from '@runejs/filestore';
 
 
 export interface ChunkUpdateItem {
-    object?: LocationObject;
+    object?: LandscapeObject;
     worldItem?: WorldItem;
     type: 'ADD' | 'REMOVE';
 }
@@ -22,26 +22,28 @@ export class Chunk {
     private readonly _players: Player[];
     private readonly _npcs: Npc[];
     private readonly _collisionMap: CollisionMap;
-    private readonly _cacheLocationObjects: Map<string, LocationObject>;
+    private readonly _filestoreLandscapeObjects: Map<string, LandscapeObject>;
 
     public constructor(position: Position) {
         this._position = position;
         this._players = [];
         this._npcs = [];
         this._collisionMap = new CollisionMap(position.x, position.y, position.level, { chunk: this });
-        this._cacheLocationObjects = new Map<string, LocationObject>();
+        this._filestoreLandscapeObjects = new Map<string, LandscapeObject>();
         this.registerMapRegion();
     }
 
     public registerMapRegion(): void {
         const mapRegionX = Math.floor(this.position.x / 8);
         const mapRegionY = Math.floor(this.position.y / 8);
+
         world.chunkManager.registerMapRegion(mapRegionX, mapRegionY);
     }
 
-    public setCacheLocationObject(locationObject: LocationObject): void {
-        this._collisionMap.markGameObject(locationObject, true);
-        this._cacheLocationObjects.set(`${ locationObject.x },${ locationObject.y },${ locationObject.objectId }`, locationObject);
+    public setFilestoreLandscapeObject(landscapeObject: LandscapeObject): void {
+        this._filestoreLandscapeObjects.set(`${ landscapeObject.x },${ landscapeObject.y },${ landscapeObject.objectId }`,
+            landscapeObject);
+        this._collisionMap.markGameObject(landscapeObject, true);
     }
 
     public addPlayer(player: Player): void {
@@ -70,12 +72,13 @@ export class Chunk {
         }
     }
 
-    public getCacheObject(objectId: number, position: Position): LocationObject {
-        return this.cacheLocationObjects.get(`${position.x},${position.y},${objectId}`);
+    public getFilestoreLandscapeObject(objectId: number, position: Position): LandscapeObject {
+        return this.filestoreLandscapeObjects.get(`${position.x},${position.y},${objectId}`);
     }
 
     public equals(chunk: Chunk): boolean {
-        return this.position.x === chunk.position.x && this.position.y === chunk.position.y && this.position.level === chunk.position.level;
+        return this.position.x === chunk.position.x && this.position.y === chunk.position.y
+            && this.position.level === chunk.position.level;
     }
 
     public get position(): Position {
@@ -94,7 +97,7 @@ export class Chunk {
         return this._collisionMap;
     }
 
-    public get cacheLocationObjects(): Map<string, LocationObject> {
-        return this._cacheLocationObjects;
+    public get filestoreLandscapeObjects(): Map<string, LandscapeObject> {
+        return this._filestoreLandscapeObjects;
     }
 }
