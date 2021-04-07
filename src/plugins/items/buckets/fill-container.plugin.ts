@@ -12,7 +12,7 @@ const WellIds: number[] = [878];
 export const handler: itemOnObjectActionHandler = (details) => {
     const { player, objectConfig, item } = details;
     const itemDef = findItem(item.itemId);
-    if (item.itemId !== itemIds.bucket && WellIds.indexOf(objectConfig.id) > -1) {
+    if (item.itemId !== itemIds.bucket && WellIds.indexOf(objectConfig.gameId) > -1) {
         player.sendMessage(`If I drop my ${itemDef.name.toLowerCase()} down there, I don't think I'm likely to get it back.`);
         return;
     }
