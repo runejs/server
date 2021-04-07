@@ -1,5 +1,5 @@
 import { Position } from '../../world/position';
-import { cache, world } from '../../game-server';
+import { filestore, world } from '../../game-server';
 import { logger } from '@runejs/core';
 
 const option1 = packet => {
@@ -41,30 +41,30 @@ const objectInteractionPacket = (player, packet) => {
     const level = player.position.level;
     const objectPosition = new Position(x, y, level);
 
-    const { object: locationObject, cacheOriginal } = world.findObjectAtLocation(player, objectId, objectPosition);
-    if(!locationObject) {
+    const { object: landscapeObject, cacheOriginal } = world.findObjectAtLocation(player, objectId, objectPosition);
+    if(!landscapeObject) {
         return;
     }
 
-    const locationObjectDefinition = cache.locationObjectDefinitions.get(objectId);
+    const objectConfig = filestore.configStore.objectStore.getObject(objectId);
 
     const actionIdx = options[packetId].index;
     let optionName = `action-${actionIdx + 1}`;
-    if(locationObjectDefinition.options && locationObjectDefinition.options.length >= actionIdx) {
-        if(!locationObjectDefinition.options[actionIdx] || locationObjectDefinition.options[actionIdx].toLowerCase() === 'hidden') {
+    if(objectConfig.options && objectConfig.options.length >= actionIdx) {
+        if(!objectConfig.options[actionIdx]) {
             // Invalid action
-            logger.error(`1: Invalid object ${objectId} option ${actionIdx + 1}, options: ${JSON.stringify(locationObjectDefinition.options)}`);
+            logger.error(`1: Invalid object ${objectId} option ${actionIdx + 1}, options: ${JSON.stringify(objectConfig.options)}`);
             return;
         }
 
-        optionName = locationObjectDefinition.options[actionIdx];
+        optionName = objectConfig.options[actionIdx];
     } else {
         // Invalid action
-        logger.error(`2: Invalid object ${objectId} option ${actionIdx + 1}, options: ${JSON.stringify(locationObjectDefinition.options)}`);
+        logger.error(`2: Invalid object ${objectId} option ${actionIdx + 1}, options: ${JSON.stringify(objectConfig.options)}`);
         return;
     }
 
-    player.actionPipeline.call('object_interaction', player, locationObject, locationObjectDefinition, objectPosition, optionName.toLowerCase(), cacheOriginal);
+    player.actionPipeline.call('object_interaction', player, landscapeObject, objectConfig, objectPosition, optionName.toLowerCase(), cacheOriginal);
 };
 
 export default [{

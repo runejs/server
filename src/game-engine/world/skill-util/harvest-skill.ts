@@ -2,7 +2,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { IHarvestable } from '@engine/world/config/harvestable-object';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { Skill } from '@engine/world/actor/skills';
-import { cache, loopingEvent, world } from '@engine/game-server';
+import { loopingEvent, world } from '@engine/game-server';
 import { getBestAxe, getBestPickaxe, HarvestTool } from '@engine/world/config/harvest-tool';
 import { randomBetween } from '@engine/util/num';
 import { ObjectInteractionAction } from '@engine/world/action/object-interaction.action';
@@ -10,6 +10,7 @@ import { colors } from '@engine/util/colors';
 import { checkForGemBoost } from '@engine/world/skill-util/glory-boost';
 import { colorText } from '@engine/util/strings';
 import { rollBirdsNestType, rollGemRockResult, rollGemType } from '@engine/world/skill-util/harvest-roll';
+import { findItem } from '@engine/config';
 
 export function canInitiateHarvest(player: Player, target: IHarvestable, skill: Skill): undefined | HarvestTool {
     if (!target) {
@@ -27,7 +28,7 @@ export function canInitiateHarvest(player: Player, target: IHarvestable, skill: 
         return;
     }
 
-    let targetName: string = cache.itemDefinitions.get(target.itemId).name.toLowerCase();
+    let targetName: string = findItem(target.itemId).name.toLowerCase();
     switch (skill) {
         case Skill.MINING:
             targetName = targetName.replace(' ore', '');
@@ -87,7 +88,7 @@ export function handleHarvesting(details: ObjectInteractionAction, tool: Harvest
     if (details.object.objectId === 2111 && details.player.skills.hasLevel(Skill.MINING, 30)) {
         itemToAdd = rollGemRockResult().itemId;
     }
-    let targetName: string = cache.itemDefinitions.get(itemToAdd).name.toLowerCase();
+    let targetName: string = findItem(itemToAdd).name.toLowerCase();
 
     switch (skill) {
         case Skill.MINING:
