@@ -1,6 +1,5 @@
 import { World } from './world';
 import { logger, parseServerConfig } from '@runejs/core';
-import { Cache, LocationObject } from '@runejs/cache-parser';
 import { ServerConfig } from '@engine/config/server-config';
 
 import { loadPluginFiles } from '@engine/plugins/content-plugin';
@@ -16,6 +15,7 @@ import { Subject, timer } from 'rxjs';
 import { Position } from '@engine/world/position';
 import { ActionHook, sortActionHooks } from '@engine/world/action/hooks';
 import { ActionType } from '@engine/world/action';
+import { Filestore, LandscapeObject } from '@runejs/filestore';
 
 
 /**
@@ -27,7 +27,7 @@ export let serverConfig: ServerConfig;
 /**
  * The singleton instance referencing the game's asset filestore.
  */
-export let cache: Cache;
+export let filestore: Filestore;
 
 
 /**
@@ -122,12 +122,7 @@ export async function runGameServer(): Promise<void> {
         return;
     }
 
-    cache = new Cache('cache', {
-        items: true,
-        npcs: true,
-        locationObjects: true,
-        widgets: true
-    });
+    filestore = new Filestore('cache');
 
     await loadConfigurations();
     await loadPackets();
@@ -218,7 +213,7 @@ export const loopingEvent = (options?: {
  * @deprecated - use methods provided within the Actor API to force or await movement
  */
 export const playerWalkTo = async (player: Player, position: Position, interactingAction?: {
-    interactingObject?: LocationObject;
+    interactingObject?: LandscapeObject;
 }): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
         player.walkingTo = position;

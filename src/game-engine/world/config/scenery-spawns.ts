@@ -1,13 +1,14 @@
 import { logger } from '@runejs/core';
 import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 import { readFileSync } from 'fs';
-import { LocationObject } from '@runejs/cache-parser';
+import { LandscapeObject } from '@runejs/filestore';
 
-export function parseScenerySpawns(): LocationObject[] {
+export function parseScenerySpawns(): LandscapeObject[] {
     try {
         logger.info('Parsing scenery spawns...');
 
-        const scenerySpawns = safeLoad(readFileSync('data/config/scenery-spawns.yaml', 'utf8'), { schema: JSON_SCHEMA }) as LocationObject[];
+        const scenerySpawns = safeLoad(readFileSync('data/config/scenery-spawns.yaml', 'utf8'),
+            { schema: JSON_SCHEMA }) as LandscapeObject[];
 
         if(!scenerySpawns || scenerySpawns.length === 0) {
             throw new Error('Unable to read scenery spawns.');

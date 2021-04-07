@@ -1,5 +1,5 @@
 import { Player } from '@engine/world/actor/player/player';
-import { cache } from '@engine/game-server';
+import { filestore } from '@engine/game-server';
 import { Npc } from '@engine/world/actor/npc/npc';
 
 export const dialogueWidgetIds = {
@@ -116,7 +116,8 @@ export class DialogueAction {
 
             if(options.type === 'NPC') {
                 this.p.outgoingPackets.setWidgetNpcHead(widgetId, 0, options.npc);
-                this.p.outgoingPackets.updateWidgetString(widgetId, 1, cache.npcDefinitions.get(options.npc).name);
+                this.p.outgoingPackets.updateWidgetString(widgetId, 1,
+                    filestore.configStore.npcStore.getNpc(options.npc).name);
             } else if(options.type === 'PLAYER') {
                 this.p.outgoingPackets.setWidgetPlayerHead(widgetId, 0);
                 this.p.outgoingPackets.updateWidgetString(widgetId, 1, this.p.username);

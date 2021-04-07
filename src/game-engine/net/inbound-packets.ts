@@ -43,7 +43,7 @@ export function handlePacket(player: Player, packetId: number, packetSize: numbe
         return;
     }
 
-    new Promise(resolve => {
+    new Promise<void>(resolve => {
         incomingPacket.handler(player, { packetId, packetSize, buffer });
         resolve();
     }).catch(error => logger.error(`Error handling inbound packet ${packetId} with size ${packetSize}: ${error}`));

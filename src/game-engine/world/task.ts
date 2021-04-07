@@ -1,10 +1,10 @@
-import { lastValueFrom, Observable, timer } from 'rxjs';
+import { lastValueFrom, timer } from 'rxjs';
 import { World } from '@engine/world/index';
 import { take } from 'rxjs/operators';
 
 export abstract class Task<T> {
 
-    public abstract async execute(): Promise<T>;
+    public abstract execute(): T | Promise<T>;
 
 }
 

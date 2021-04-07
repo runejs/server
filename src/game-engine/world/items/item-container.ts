@@ -1,9 +1,10 @@
 import { Item } from './item';
 import { Subject } from 'rxjs';
-import { cache } from '@engine/game-server';
+import { filestore } from '@engine/game-server';
 import { hasValueNotNull } from '@engine/util/data';
 import { findItem } from '@engine/config';
 import { logger } from '@runejs/core';
+
 
 export interface ContainerUpdateEvent {
     slot?: number;
@@ -303,7 +304,7 @@ export class ItemContainer {
     }
 
     public canFit(item: Item, everythingStacks: boolean = false): boolean {
-        const itemDefinition = cache.itemDefinitions.get(item.itemId);
+        const itemDefinition = filestore.configStore.itemStore.getItem(item.itemId);
         if(!itemDefinition) {
             throw new Error(`Item ID ${ item.itemId } not found!`);
         }

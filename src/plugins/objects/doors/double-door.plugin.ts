@@ -82,14 +82,14 @@ const action: objectInteractionActionHandler = (details) => {
     doorAction({
         player,
         object: door,
-        objectDefinition: null,
+        objectConfig: null,
         position, cacheOriginal,
         option: opening ? 'open' : 'close'
     });
     doorAction({
         player,
         object: otherDoor,
-        objectDefinition: null,
+        objectConfig: null,
         position: otherDoorPosition,
         cacheOriginal,
         option: opening ? 'open' : 'close'

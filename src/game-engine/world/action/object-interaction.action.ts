@@ -1,11 +1,11 @@
 import { Player } from '@engine/world/actor/player/player';
-import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@engine/world/position';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
 import { playerWalkTo } from '@engine/game-server';
 import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
 import { ActionPipe } from '@engine/world/action/index';
+import { LandscapeObject, ObjectConfig } from '@runejs/filestore';
 
 
 /**
@@ -34,9 +34,9 @@ export interface ObjectInteractionAction {
     // The player performing the action.
     player: Player;
     // The object the action is being performed on.
-    object: LocationObject;
+    object: LandscapeObject;
     // Additional details about the object that the action is being performed on.
-    objectDefinition: LocationObjectDefinition;
+    objectConfig: ObjectConfig;
     // The position that the game object was at when the action was initiated.
     position: Position;
     // Whether or not this game object is an original map object or if it has been added/replaced.
@@ -49,21 +49,22 @@ export interface ObjectInteractionAction {
 /**
  * The pipe that the game engine hands object actions off to.
  * @param player
- * @param locationObject
- * @param locationObjectDefinition
+ * @param landscapeObject
+ * @param objectConfig
  * @param position
  * @param option
  * @param cacheOriginal
  */
-const objectInteractionActionPipe = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
-    position: Position, option: string, cacheOriginal: boolean): void => {
+const objectInteractionActionPipe = (player: Player, landscapeObject: LandscapeObject, objectConfig: ObjectConfig,
+                                     position: Position, option: string, cacheOriginal: boolean): void => {
     if(player.busy || player.metadata.blockObjectInteractions) {
         return;
     }
 
     // Find all object action plugins that reference this location object
     let interactionActions = getActionHooks<ObjectInteractionActionHook>('object_interaction')
-        .filter(plugin => questHookFilter(player, plugin) && advancedNumberHookFilter(plugin.objectIds, locationObject.objectId, plugin.options, option));
+        .filter(plugin => questHookFilter(player, plugin) && advancedNumberHookFilter(plugin.objectIds,
+            landscapeObject.objectId, plugin.options, option));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
@@ -71,8 +72,8 @@ const objectInteractionActionPipe = (player: Player, locationObject: LocationObj
     }
 
     if(interactionActions.length === 0) {
-        player.outgoingPackets.chatboxMessage(`Unhandled object interaction: ${option} ${locationObjectDefinition.name} ` +
-            `(id-${locationObject.objectId}) @ ${position.x},${position.y},${position.level}`);
+        player.outgoingPackets.chatboxMessage(`Unhandled object interaction: ${option} ${objectConfig.name} ` +
+            `(id-${landscapeObject.objectId}) @ ${position.x},${position.y},${position.level}`);
         return;
     }
 
@@ -84,21 +85,24 @@ const objectInteractionActionPipe = (player: Player, locationObject: LocationObj
 
     // Make sure we walk to the object before running any of the walk-to plugins
     if(walkToPlugins.length !== 0) {
-        playerWalkTo(player, position, { interactingObject: locationObject })
+        playerWalkTo(player, position, { interactingObject: landscapeObject })
             .then(() => {
                 player.face(position);
 
                 walkToPlugins.forEach(plugin =>
                     plugin.handler({
                         player,
-                        object: locationObject,
-                        objectDefinition: locationObjectDefinition,
+                        object: landscapeObject,
+                        objectConfig,
                         option,
                         position,
                         cacheOriginal
                     }));
             })
-            .catch(() => logger.warn(`Unable to complete walk-to action.`));
+            .catch(error => {
+                logger.warn(`Unable to complete walk-to action.`);
+                console.error(error);
+            });
     }
 
     // Immediately run any non-walk-to plugins
@@ -106,8 +110,8 @@ const objectInteractionActionPipe = (player: Player, locationObject: LocationObj
         immediatePlugins.forEach(plugin =>
             plugin.handler({
                 player,
-                object: locationObject,
-                objectDefinition: locationObjectDefinition,
+                object: landscapeObject,
+                objectConfig,
                 option,
                 position,
                 cacheOriginal

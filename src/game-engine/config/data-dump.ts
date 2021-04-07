@@ -1,15 +1,16 @@
 import { join } from 'path';
 import { writeFileSync } from 'fs';
-import { cache } from '@engine/game-server';
+import { filestore } from '@engine/game-server';
 import { logger } from '@runejs/core';
-import { ItemDefinition, NpcDefinition, Widget } from '@runejs/cache-parser';
+import { ItemConfig, NpcConfig, ObjectConfig } from '@runejs/filestore';
 
-function dump<T>(fileName: string, definitions: Map<number, T>): boolean {
+
+function dump<T>(fileName: string, definitions: T[]): boolean {
     const filePath = join('data/dump', fileName);
 
     const arr = [];
-    for(let i = 0; i < definitions.size; i++) {
-        arr.push(definitions.get(i));
+    for(let i = 0; i < definitions.length; i++) {
+        arr.push(definitions[i]);
     }
 
     try {
@@ -22,13 +23,13 @@ function dump<T>(fileName: string, definitions: Map<number, T>): boolean {
 }
 
 export function dumpNpcs(): boolean {
-    return dump<NpcDefinition>('npcs.json', cache.npcDefinitions);
+    return dump<NpcConfig>('npcs.json', filestore.configStore.npcStore.decodeNpcStore());
 }
 
 export function dumpItems(): boolean {
-    return dump<ItemDefinition>('items.json', cache.itemDefinitions);
+    return dump<ItemConfig>('items.json', filestore.configStore.itemStore.decodeItemStore());
 }
 
-export function dumpWidgets(): boolean {
-    return dump<Widget>('widgets.json', cache.widgets);
+export function dumpObjects(): boolean {
+    return dump<ObjectConfig>('objects.json', filestore.configStore.objectStore.decodeObjectStore());
 }
