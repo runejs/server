@@ -19,7 +19,7 @@ const action: commandActionHandler = (details) => {
                 orientation: 0,
                 type: 0
             },
-            objectDefinition: undefined,
+            objectConfig: undefined,
             option: 'use-quickly',
             position: details.player.position,
             cacheOriginal: undefined
