@@ -21,7 +21,7 @@ function openBank(player: Player) {
                 orientation: 0,
                 type: 0
             },
-            objectDefinition: undefined,
+            objectConfig: undefined,
             option: 'use-quickly',
             position: player.position,
             cacheOriginal: undefined

@@ -1,13 +1,12 @@
-import { itemOnObjectAction } from '@server/world/action/item-on-object-action';
-import { widgets } from '@server/config';
-import { Skill } from '@server/world/actor/skills';
-import { bars, smithables, widgetItems } from '@server/plugins/skills/smithing/forging-constants';
-import { itemIds } from '@server/world/config/item-ids';
-import { cache } from '@server/game-server';
-import { Smithable } from '@server/plugins/skills/smithing/forging-types';
-import { itemAction } from '@server/world/action/item-action';
-import { loopingAction } from '@server/world/action';
-import { Player } from '@server/world/actor/player/player';
+import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
+import { widgets } from '@engine/config';
+import { Skill } from '@engine/world/actor/skills';
+import { bars, smithables, widgetItems } from '@plugins/skills/smithing/forging-constants';
+import { itemIds } from '@engine/world/config/item-ids';
+import { Smithable } from '@plugins/skills/smithing/forging-types';
+import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { loopingEvent } from '@engine/game-server';
+import { Player } from '@engine/world/actor/player/player';
 import { findItem } from '@engine/config';
 
 const mapWidgetItemsToFlatArray = (input) => {
@@ -36,10 +35,10 @@ const findSmithableByItemId = (itemId) : Smithable => {
     });
 };
 
-const smithItem : itemAction = (details) => {
+const smithItem: itemInteractionActionHandler = (details) => {
     const { player, option, itemDetails } = details;
 
-    const smithable = findSmithableByItemId(itemDetails.id);
+    const smithable = findSmithableByItemId(itemDetails.gameId);
 
 
     // In case the smithable doesn't exist.
@@ -59,7 +58,7 @@ const smithItem : itemAction = (details) => {
     // Close the forging interface.
     player.interfaceState.closeAllSlots();
 
-    const loop = loopingAction({ player: details.player });
+    const loop = loopingEvent({ player: details.player });
     let elapsedTicks = 0;
     let wantedAmount = 0;
     let forgedAmount = 0;
@@ -111,7 +110,7 @@ const hasIngredients = (player: Player, smithable: Smithable) => {
     return smithable.ingredient.amount <= player.inventory.findAll(smithable.ingredient.itemId).length;
 };
 
-const openForgingInterface : itemOnObjectAction = (details) => {
+const openForgingInterface: itemOnObjectActionHandler = (details) => {
     const { player, item } = details;
     const amountInInventory = player.inventory.findAll(item).length;
 
