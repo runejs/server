@@ -6,10 +6,12 @@ import { npcInteractionActionHandler, NpcInteractionActionHook } from '@engine/w
 
 const journalHandler = {
     0: `I can start this quest by speaking to <col=800000>Romeo</col> in
-          <col=800000>Varrock</col> central square by the <col=800000>fountain.</col>`,
-    1: `<str=800000>I have agreed to find Juliet for Romeo and tell her how he feels.\nFor some reason he can't just do this by himself.</str>\n
-          I should go and speak to <col=800000>Juliet</col>. I can find her
-          <col=800000>west</col> of <col=800000>Varrock.</col>`
+        <col=800000>Varrock</col> central square by the <col=800000>fountain.</col>`,
+    1: `<str>I have agreed to find Juliet for Romeo and tell her how he feels.\nFor some reason he can't just do this by himself.</str>\n
+        I should go and speak to <col=800000>Juliet</col>. I can find her <col=800000>west</col> of <col=800000>Varrock.</col>`,
+    2: `<str>I have agreed to find Juliet for Romeo and tell her how he feels. For some reason he can't just do this himself.</str>\n
+        <str>I found Juliet on the Western edge of Varrock, and told her about Romeo. She gave me a message to take back.</str>\n
+        I should take the <col=800000>message</col> from <col=800000>Juliet</col> to <col=800000>Romeo</col> in <col=800000>Varrock</col> central square.`
 };
 
 const startQuestAction: npcInteractionActionHandler = async details => {
@@ -195,6 +197,16 @@ const julietFirstTalk: npcInteractionActionHandler = async details => {
     }
 };
 
+const phillipaStartDialogue: npcInteractionActionHandler = async details => {
+    const { player, npc } = details;
+    const participants = [player, { npc, key: 'phillipa' }];
+    await dialogue(participants, [
+        player => [Emote.GENERIC, `Hello`],
+        phillipa => [Emote.HAPPY, `Hi, I'm Phillipa! Juliet's cousin? I like to keep an eye on her, make sure that dashing young Romeo doesn't just steal away from here under our plain old noses!`],
+        phillipa => [Emote.GENERIC, `He'd do it you know... he's ever so dashing, and cavalier, in a wet blanket sort of way.`]
+    ]);
+};
+
 export default <ContentPlugin>{
     pluginId: 'rs:romeo_and_juliet',
     quests: [
@@ -246,5 +258,15 @@ export default <ContentPlugin>{
         options: 'talk-to',
         walkTo: true,
         handler: julietFirstTalk
+    }, {
+        type: 'npc_interaction',
+        questRequirement: {
+            questId: 'rs:romeo_and_juliet',
+            stages: [0, 1, 2]
+        },
+        npcs: 'rs:phillipa',
+        options: 'talk-to',
+        walkTo: true,
+        handler: phillipaStartDialogue
     }]
 };

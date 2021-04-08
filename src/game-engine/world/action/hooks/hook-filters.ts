@@ -70,24 +70,20 @@ export function questHookFilter(player: Player, actionHook: ActionHook): boolean
 
     const questId = actionHook.questRequirement.questId;
     const playerQuest = player.quests.find(quest => quest.questId === questId);
-    if(!playerQuest) {
+    if (!playerQuest) {
         // @TODO quest requirements
         return actionHook.questRequirement.stage === 0;
     }
 
-    if(actionHook.questRequirement.stage === 'complete') {
+    if (actionHook.questRequirement.stage === 'complete') {
         return playerQuest.progress === 'complete';
     }
 
-    if(typeof playerQuest.progress === 'number') {
-        if(actionHook.questRequirement.stage !== undefined) {
-            if(!numberHookFilter(actionHook.questRequirement.stage, playerQuest.progress)) {
-                return false;
-            }
-        } else if(actionHook.questRequirement.stages !== undefined) {
-            if(!numberHookFilter(actionHook.questRequirement.stages, playerQuest.progress)) {
-                return false;
-            }
+    if (typeof playerQuest.progress === 'number') {
+        if (actionHook.questRequirement.stage !== undefined) {
+            return numberHookFilter(actionHook.questRequirement.stage, playerQuest.progress);
+        } else if (actionHook.questRequirement.stages !== undefined) {
+            return numberHookFilter(actionHook.questRequirement.stages, playerQuest.progress);
         }
     }
 
