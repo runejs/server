@@ -265,11 +265,11 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    public setWidgetModelRotationAndZoom(widgetId: number, childId: number, rotationX: number, rotationY: number, zoom: number): void {
+    public setWidgetModelRotationAndZoom(widgetId: number, childId: number, rotationY: number, rotationX: number, zoom: number): void {
         const packet = new Packet(142);
-        packet.put(rotationX, 'SHORT');
-        packet.put(zoom, 'SHORT', 'LITTLE_ENDIAN');
         packet.put(rotationY, 'SHORT');
+        packet.put(zoom, 'SHORT', 'LITTLE_ENDIAN');
+        packet.put(rotationX, 'SHORT');
         packet.put(widgetId << 16 | childId, 'INT', 'LITTLE_ENDIAN');
 
         this.queue(packet);

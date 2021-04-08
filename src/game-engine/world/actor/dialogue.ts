@@ -4,7 +4,7 @@ import { filestore } from '@engine/game-server';
 import { logger } from '@runejs/core';
 import _ from 'lodash';
 import { wrapText } from '@engine/util/strings';
-import { findNpc } from '@engine/config';
+import { findItem, findNpc } from '@engine/config';
 
 
 export enum Emote {
@@ -104,12 +104,13 @@ enum EmoteAnimation {
 }
 
 const nonLineEmotes = [ Emote.BLANK_STARE, Emote.SINGLE_WORD, Emote.EVIL_STARE, Emote.LAUGH_EVIL ];
-const playerWidgetIds = [ 64, 65, 66, 67 ];
-const npcWidgetIds = [ 241, 242, 243, 244 ];
-const optionWidgetIds = [ 228, 230, 232, 234, 235 ];
-const continuableTextWidgetIds = [ 210, 211, 212, 213, 214 ];
-const textWidgetIds = [ 215, 216, 217, 218, 219 ];
-const titledTextWidgetId = 372;
+export const playerWidgetIds = [ 64, 65, 66, 67 ];
+export const npcWidgetIds = [ 241, 242, 243, 244 ];
+export const optionWidgetIds = [ 228, 230, 232, 234, 235 ];
+export const continuableTextWidgetIds = [ 210, 211, 212, 213, 214 ];
+export const textWidgetIds = [ 215, 216, 217, 218, 219 ];
+export const itemWidgetIds = [ 101, 102, 103, 104 ];
+export const titledTextWidgetId = 372;
 
 function wrapDialogueText(text: string, type: 'ACTOR' | 'TEXT'): string[] {
     return wrapText(text, type === 'ACTOR' ? 340 : 430);
@@ -186,6 +187,11 @@ interface PlayerDialogueAction extends ActorDialogueAction {
 interface TextDialogueAction extends DialogueAction {
     lines: string[];
     canContinue: boolean;
+}
+
+interface ItemDialogueAction extends DialogueAction {
+    lines: string[];
+    itemId: number | string;
 }
 
 interface TitledTextDialogueAction extends DialogueAction {
@@ -285,6 +291,12 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
             const text: string = dialogueAction();
             const lines = wrapDialogueText(text, 'TEXT');
             parsedDialogueTree.push({ lines, tag, type: 'TEXT', canContinue: true } as TextDialogueAction);
+        } else if(dialogueType === 'item') {
+            // Dialogue with an item on the left
+
+            const [ itemId, text ] = dialogueAction();
+            const lines = wrapDialogueText(text, 'TEXT');
+            parsedDialogueTree.push({ lines, tag, itemId, type: 'ITEM' } as ItemDialogueAction);
         } else if(dialogueType === 'overlay') {
             // Text-only dialogue (no option to continue).
 
@@ -425,6 +437,50 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 
             for(let i = 0; i < lines.length; i++) {
                 player.outgoingPackets.updateWidgetString(widgetId, i, lines[i]);
+            }
+        }
+    } else if(dialogueAction.type === 'ITEM') {
+        // Dialogue with an item on the left.
+
+        if(tag === undefined || dialogueAction.tag === tag) {
+            tag = undefined;
+
+            const itemDialogueAction = dialogueAction as ItemDialogueAction;
+            const lines = itemDialogueAction.lines;
+
+            if(lines.length > 5) {
+                throw new Error(`Too many lines for item dialogue! Dialogue has ${lines.length} lines but ` +
+                    `the maximum is 4: ${JSON.stringify(lines)}`);
+            }
+
+            widgetId = itemWidgetIds[lines.length - 1];
+            let itemId: number;
+
+            if (typeof itemDialogueAction.itemId === 'number') {
+                itemId = itemDialogueAction.itemId;
+            } else if (typeof itemDialogueAction.itemId === 'string') {
+                const itemDetails = findItem(itemDialogueAction.itemId);
+                if (!itemDetails) {
+                    throw new Error(`The item ${itemDialogueAction.itemId} is not configured in the server!`);
+                }
+                itemId = itemDetails.gameId;
+            } else {
+                throw new Error(`Invalid item ID provided: ${itemDialogueAction.itemId}`);
+            }
+
+            const model = filestore.configStore.itemStore.getItem(itemId)?.model2d;
+
+            if (!model) {
+                throw new Error(`The model for item ${itemDialogueAction.itemId} was not found in the filestore!`);
+            }
+
+            player.outgoingPackets.updateWidgetModel1(widgetId, 0, model.widgetModel);
+            player.outgoingPackets.setWidgetModelRotationAndZoom(widgetId, 0,
+                model.rotationY || 0,
+                model.rotationX || 0,
+                model.zoom / 2 || 0);
+            for(let i = 0; i < lines.length; i++) {
+                player.outgoingPackets.updateWidgetString(widgetId, i + 1, lines[i]);
             }
         }
     } else if(dialogueAction.type === 'TITLED') {

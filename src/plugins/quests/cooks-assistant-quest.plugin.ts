@@ -262,8 +262,8 @@ export default {
                     rewardText: [ '300 Cooking XP' ],
                     itemId: 1891,
                     modelZoom: 240,
-                    modelRotationX: 180,
-                    modelRotationY: 180
+                    modelRotationY: 180,
+                    modelRotationX: 180
                 },
                 giveRewards: (player: Player): void =>
                     player.skills.cooking.addExp(300)

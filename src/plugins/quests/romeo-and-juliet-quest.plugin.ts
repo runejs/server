@@ -1,6 +1,8 @@
 import { randomBetween } from '@engine/util/num';
 import { dialogue, Emote, execute, goto } from '@engine/world/actor/dialogue';
 import { Quest } from '@engine/world/actor/player/quest';
+import { ContentPlugin } from '@engine/plugins/content-plugin';
+import { npcInteractionActionHandler, NpcInteractionActionHook } from '@engine/world/action/npc-interaction.action';
 
 const journalHandler = {
     0: `I can start this quest by speaking to <col=800000>Romeo</col> in
@@ -10,7 +12,7 @@ const journalHandler = {
           <col=800000>west</col> of <col=800000>Varrock.</col>`
 };
 
-const startQuestAction = async details => {
+const startQuestAction: npcInteractionActionHandler = async details => {
     const { player, npc } = details;
     const participants = [player, { npc, key: 'romeo' }];
   
@@ -119,7 +121,7 @@ const startQuestAction = async details => {
     ]);
 };
 
-const romeoSecondTalk = async details => {
+const romeoSecondTalk: npcInteractionActionHandler = async details => {
     const { player, npc } = details;
     const participants = [player, { npc, key: 'romeo' }];
     await dialogue(participants, [
@@ -167,16 +169,33 @@ const moreInfo = () => {
     ];
 };
 
-const julietFirstTalk = async details => {
+const julietFirstTalk: npcInteractionActionHandler = async details => {
     const { player, npc } = details;
     const participants = [player, { npc, key: 'juliet' }];
     await dialogue(participants, [
-        player => [Emote.GENERIC, `test`],
-        juliet => [Emote.WONDERING, `test`]
+        player => [Emote.GENERIC, `Juliet, I come from Romeo. He begs me to tell you that he cares still.`],
+        juliet => [Emote.HAPPY, `Oh how my heart soars to hear this news! Please take this message to him with great haste.`],
+        player => [Emote.GENERIC, `Well, I hope it's good news...he was quite upset when I left him.`],
+        juliet => [Emote.POMPOUS, `He's quite often upset...the poor sensitive soul. But I don't think he's going to take this news very well, however, all is not lost.`],
+        juliet => [Emote.HAPPY, `Everything is explained in the letter, would you be so kind and deliver it to him please?`],
+        player => [Emote.HAPPY, `Certainly, I'll do so straight away.`],
+        juliet => [Emote.HAPPY, `Many thanks! Oh, I'm so very grateful. You may be our only hope.`]
     ]);
+
+    const giveLetterSuccess = player.giveItem('rs:juliet_letter');
+    if (giveLetterSuccess) {
+        player.setQuestProgress('rs:romeo_and_juliet', 2);
+        await dialogue(participants, [
+            item => ['rs:juliet_letter', `Juliet gives you a message.`]
+        ]);
+    } else {
+        await dialogue(participants, [
+            text => `You don't have enough space in your inventory!`
+        ]);
+    }
 };
 
-export default {
+export default <ContentPlugin>{
     pluginId: 'rs:romeo_and_juliet',
     quests: [
         new Quest({
@@ -190,13 +209,14 @@ export default {
                     rewardText: ['5 Quest Points'],
                     itemId: 1891,
                     modelZoom: 240,
-                    modelRotationX: 180,
-                    modelRotationY: 180
+                    modelRotationY: 180,
+                    modelRotationX: 180
                 }
             }
         })
     ],
-    hooks: [{
+    hooks: <NpcInteractionActionHook[]>[{
+        // TODO you can actually start the quest by talking to Juliet first
         type: 'npc_interaction',
         questRequirement: {
             questId: 'rs:romeo_and_juliet',
