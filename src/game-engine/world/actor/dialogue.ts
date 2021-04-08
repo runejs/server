@@ -5,6 +5,7 @@ import { logger } from '@runejs/core';
 import _ from 'lodash';
 import { wrapText } from '@engine/util/strings';
 import { findItem, findNpc } from '@engine/config';
+import { FontName, ParentWidget, TextWidget } from '@runejs/filestore';
 
 
 export enum Emote {
@@ -112,8 +113,29 @@ export const textWidgetIds = [ 215, 216, 217, 218, 219 ];
 export const itemWidgetIds = [ 101, 102, 103, 104 ];
 export const titledTextWidgetId = 372;
 
+/**
+ * Wraps dialogue text into multiple lines.
+ * @param text - The text to wrap.
+ * @param type - 'ACTOR' if the widget has a chat-head or an item sprite on the left, 'TEXT' if the dialogue is text only
+ */
 function wrapDialogueText(text: string, type: 'ACTOR' | 'TEXT'): string[] {
-    return wrapText(text, type === 'ACTOR' ? 340 : 430);
+    let widget: TextWidget;
+    let width = 0;
+
+    switch (type) {
+        case 'ACTOR':
+            widget = (filestore.widgetStore.decodeWidget(playerWidgetIds[0]) as ParentWidget).children[2] as TextWidget;
+            width = widget.width;
+            break;
+        case 'TEXT':
+            widget = filestore.widgetStore.decodeWidget(textWidgetIds[0]) as TextWidget;
+            width = widget.width;
+            break;
+        default:
+            throw new Error(`Unhandled widget type: ${type}`);
+    }
+
+    return wrapText(text, width, widget.fontId);
 }
 
 function parseDialogueFunctionArgs(func: Function): string[] {
@@ -295,7 +317,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
             // Dialogue with an item on the left
 
             const [ itemId, text ] = dialogueAction();
-            const lines = wrapDialogueText(text, 'TEXT');
+            const lines = wrapDialogueText(text, 'ACTOR');
             parsedDialogueTree.push({ lines, tag, itemId, type: 'ITEM' } as ItemDialogueAction);
         } else if(dialogueType === 'overlay') {
             // Text-only dialogue (no option to continue).

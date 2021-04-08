@@ -7,11 +7,13 @@ import { npcInteractionActionHandler, NpcInteractionActionHook } from '@engine/w
 const journalHandler = {
     0: `I can start this quest by speaking to <col=800000>Romeo</col> in
         <col=800000>Varrock</col> central square by the <col=800000>fountain.</col>`,
+
     1: `<str>I have agreed to find Juliet for Romeo and tell her how he feels.\nFor some reason he can't just do this by himself.</str>\n
         I should go and speak to <col=800000>Juliet</col>. I can find her <col=800000>west</col> of <col=800000>Varrock.</col>`,
-    2: `<str>I have agreed to find Juliet for Romeo and tell her how he feels. For some reason he can't just do this himself.</str>\n
-        <str>I found Juliet on the Western edge of Varrock, and told her about Romeo. She gave me a message to take back.</str>\n
-        I should take the <col=800000>message</col> from <col=800000>Juliet</col> to <col=800000>Romeo</col> in <col=800000>Varrock</col> central square.`
+
+    2: `<str>I have agreed to find Juliet for Romeo and tell her how he feels. For some reason he can't just do this himself.\n
+I found Juliet on the Western edge of Varrock, and told her about Romeo. She gave me a message to take back.</str>\n
+I should take the <col=#800000>message</col> from <col=#800000>Juliet</col> to <col=#800000>Romeo</col> in <col=#800000>Varrock</col> central square.`
 };
 
 const startQuestAction: npcInteractionActionHandler = async details => {

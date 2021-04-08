@@ -1,9 +1,10 @@
 import { buttonActionHandler } from '@engine/world/action/button.action';
 import { wrapText } from '@engine/util/strings';
-import { questMap } from '@engine/game-server';
+import { filestore, questMap } from '@engine/game-server';
 import { widgets } from '@engine/config';
 import { Quest } from '@engine/world/actor/player/quest';
 import { QuestKey } from '@engine/config/quest-config';
+import { ParentWidget, TextWidget } from '@runejs/filestore';
 
 
 export const handler: buttonActionHandler = async ({ player, buttonId }) => {
@@ -40,7 +41,8 @@ export const handler: buttonActionHandler = async ({ player, buttonId }) => {
         }
     }
 
-    const color = 128;
+    // TODO check osrs for the right default color
+    const color = '#000000';
     let text: string;
 
     if(typeof journalHandler === 'function') {
@@ -49,9 +51,15 @@ export const handler: buttonActionHandler = async ({ player, buttonId }) => {
         text = journalHandler;
     }
 
+    // Fetch the quest diary widget
+    const widget = (filestore.widgetStore.decodeWidget(275) as ParentWidget).children[3] as TextWidget;
+    if (!widget) {
+        throw new Error('Error fetching the quest widget!');
+    }
+
     let lines;
     if(text) {
-        lines = wrapText(text as string, 395);
+        lines = wrapText(text as string, widget.width, widget.fontId);
     } else {
         lines = [ 'Invalid Quest Stage' ];
     }
