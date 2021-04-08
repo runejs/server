@@ -81,7 +81,7 @@ export function wrapText(text: string, maxWidth: number, font?: number | string)
                 rendered = false;
                 break;
             case ' ':
-                if(currentLine[currentLine.length-1] === ' ' || currentWidth === 0){
+                if (currentLine[currentLine.length-1] === ' ' || currentWidth === 0){
                     hidden = true;
                     rendered = false;
                 }
@@ -89,9 +89,11 @@ export function wrapText(text: string, maxWidth: number, font?: number | string)
             default:
                 break;
         }
-        if(rendered) {
+
+        if (rendered) {
             currentLine += char;
         }
+
         if (!hidden && currentTagIndex == -1) {
             const charWidth = selectedFont.getCharWidth(char);
             currentWidth += charWidth;
@@ -100,7 +102,7 @@ export function wrapText(text: string, maxWidth: number, font?: number | string)
         if (currentWidth >= maxWidth) {
             let lastSpace = currentLine.lastIndexOf(' ');
             const lastTag = currentLine.lastIndexOf('<');
-            if(lastTag > lastSpace && char !== '\n') {
+            if (lastTag > lastSpace && char !== '\n') {
                 lastSpace = lastTag;
                 const type = getStylingType(currentLine.substring(lastTag+1));
                 if (type === TextDecoration.Decoration) {
@@ -111,7 +113,7 @@ export function wrapText(text: string, maxWidth: number, font?: number | string)
             }
             let lineToPush = currentLine;
             let remainder = '';
-            if(lastSpace != -1 && char != '\n') {
+            if (lastSpace != -1 && char != '\n') {
                 lineToPush = lineToPush.substring(0, lastSpace);
                 remainder = currentLine.substring(lastSpace);
 
@@ -128,7 +130,10 @@ export function wrapText(text: string, maxWidth: number, font?: number | string)
         }
 
     }
-    lines.push(currentLine);
+
+    if (currentLine !== '') {
+        lines.push(currentLine);
+    }
 
     return lines;
 }
