@@ -28,7 +28,7 @@ const readLocations = (): TravelLocation[] => {
 };
 
 export default class TravelLocations {
-    private readonly locations: TravelLocation[];
+    public readonly locations: TravelLocation[];
 
     public constructor () {
         this.locations = readLocations();

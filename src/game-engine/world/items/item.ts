@@ -53,7 +53,11 @@ export const getItemOption = (itemId: number, optionNumber: number, widget: { wi
         }
     }
 
-    return option.replace(/ /g, '-');
+    option = option.replace(/ /g, '-')
+    if(['wield','wear','equip'].find((s) => s === option)){
+        option = 'equip';
+    }
+    return option;
 };
 
 export function parseItemId(item: number | Item): number {
