@@ -3,6 +3,7 @@ import { dialogue, Emote, execute, goto } from '@engine/world/actor/dialogue';
 import { Quest } from '@engine/world/actor/player/quest';
 import { ContentPlugin } from '@engine/plugins/content-plugin';
 import { npcInteractionActionHandler, NpcInteractionActionHook } from '@engine/world/action/npc-interaction.action';
+import { findItem } from '@engine/config';
 
 const journalHandler = {
     0: `I can start this quest by speaking to <col=800000>Romeo</col> in
@@ -15,6 +16,10 @@ const journalHandler = {
         I found Juliet on the Western edge of Varrock, and told her about Romeo. She gave me a message to take back.</str></col>
         I should take the <col=800000>message</col> from <col=800000>Juliet</col> to <col=800000>Romeo</col> in <col=800000>Varrock</col> central square.`
 };
+
+const questItems = {
+    julietLetter: findItem('rs:juliet_letter')
+}
 
 const startQuestAction: npcInteractionActionHandler = async details => {
     const { player, npc } = details;
@@ -190,12 +195,46 @@ const julietFirstTalk: npcInteractionActionHandler = async details => {
     if (giveLetterSuccess) {
         player.setQuestProgress('rs:romeo_and_juliet', 2);
         await dialogue(participants, [
-            item => ['rs:juliet_letter', `Juliet gives you a message.`]
+            item => [questItems.julietLetter.gameId, `Juliet gives you a message.`]
         ]);
     } else {
         await dialogue(participants, [
             text => `You don't have enough space in your inventory!`
         ]);
+    }
+};
+
+const julietSecondTalk: npcInteractionActionHandler = async details => {
+    const { player, npc } = details;
+    const participants = [player, { npc, key: 'juliet' }];
+
+    const hasLetter = player.hasItemInInventory(questItems.julietLetter.gameId) || player.hasItemInBank(questItems.julietLetter.gameId);
+    if (hasLetter) {
+        await dialogue(participants, [
+            player => [Emote.HAPPY, `Hello Juliet!`],
+            juliet => [Emote.HAPPY, `Hello there...have you delivered the message to Romeo yet? What news do you have from my loved one?`],
+            player => [Emote.SKEPTICAL, `Oh, sorry, I've not had chance to deliver it yet!`],
+            juliet => [Emote.SAD, `Oh, that's a shame. I've been waiting so patiently to hear some word from him.`]
+        ]);
+    } else {
+        await dialogue(participants, [
+            player => [Emote.HAPPY, `Hello Juliet!`],
+            juliet => [Emote.HAPPY, `Hello there...have you delivered the message to Romeo yet? What news do you have from my loved one?`],
+            player => [Emote.SKEPTICAL, `Hmmm, that's the thing about messages...they're so easy to misplace...`],
+            juliet => [Emote.SAD, `How could you lose that message? It was incredibly important...and it took me an age to write! I used joined up writing and everything!`],
+            juliet => [Emote.SAD, `Please, take this new message to him, and please don't lose it.`]
+        ]);
+
+        const giveLetterSuccess = player.giveItem('rs:juliet_letter');
+        if (giveLetterSuccess) {
+            await dialogue(participants, [
+                item => [questItems.julietLetter.gameId, `Juliet gives you another message.`]
+            ]);
+        } else {
+            await dialogue(participants, [
+                text => `You don't have enough space in your inventory!`
+            ]);
+        }
     }
 };
 
@@ -270,5 +309,15 @@ export default <ContentPlugin>{
         options: 'talk-to',
         walkTo: true,
         handler: phillipaStartDialogue
+    }, {
+        type: 'npc_interaction',
+        questRequirement: {
+            questId: 'rs:romeo_and_juliet',
+            stage: 2
+        },
+        npcs: 'rs:juliet',
+        options: 'talk-to',
+        walkTo: true,
+        handler: julietSecondTalk
     }]
 };
