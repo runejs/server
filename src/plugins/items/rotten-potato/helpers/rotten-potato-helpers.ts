@@ -1,7 +1,7 @@
 import { findItem, widgets } from '@engine/config';
 import { ItemDetails } from '@engine/config/item-config';
 import { Rights } from '@engine/world/actor/player/player';
-import { ItemOnItemAction, itemOnItemActionHandler } from '@engine/world/action/item-on-item.action';
+import { ItemOnItemAction } from '@engine/world/action/item-on-item.action';
 
 export const RottenPotatoItem: ItemDetails = findItem('rs:rotten_potato');
 

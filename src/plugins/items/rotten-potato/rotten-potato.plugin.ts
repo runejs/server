@@ -4,6 +4,8 @@ import itemOnPotato from '@plugins/items/rotten-potato/hooks/rotten-potato-item-
 import { ExecuteIfAdmin, RottenPotatoItem } from '@plugins/items/rotten-potato/helpers/rotten-potato-helpers';
 import peelPotato from '@plugins/items/rotten-potato/hooks/rotten-potato-peel';
 import { potatoOnPlayer, potatoManipulatePlayerInventory } from '@plugins/items/rotten-potato/hooks/rotten-potato-item-on-player';
+import eatPotato from '@plugins/items/rotten-potato/hooks/rotten-potato-eat';
+import { travelMenuInteract } from '@plugins/items/rotten-potato/helpers/rotten-potato-travel';
 
 export default {
     pluginId: 'promises:rotten-potato',
@@ -11,8 +13,17 @@ export default {
         {
             type: 'item_interaction',
             widgets: widgets.inventory,
+            itemIds: RottenPotatoItem.gameId,
             options: 'peel',
             handler: (details) => ExecuteIfAdmin(details, peelPotato),
+            cancelOtherActions: true
+        },
+        {
+            type: 'item_interaction',
+            widgets: widgets.inventory,
+            itemIds: RottenPotatoItem.gameId,
+            options: 'eat',
+            handler: (details) => ExecuteIfAdmin(details, eatPotato),
             cancelOtherActions: true
         },
         {
@@ -38,6 +49,11 @@ export default {
             widgets: { ...widgets.bank.depositBoxWidget, widgetId: 3100001 },
             options: [ 'deposit-1', 'deposit-5', 'deposit-10', 'deposit-all' ],
             handler: (details) => ExecuteIfAdmin(details, potatoManipulatePlayerInventory),
+        },
+        {
+            type: 'widget_interaction',
+            widgetId: 3100002,
+            handler: (details) => ExecuteIfAdmin(details, travelMenuInteract),
         }
     ]
 };

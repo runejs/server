@@ -5,6 +5,7 @@ import { getActionHooks } from '@engine/world/action/hooks';
 import { advancedNumberHookFilter } from '@engine/world/action/hooks/hook-filters';
 import { ObjectInteractionActionHook } from '@engine/world/action/object-interaction.action';
 import { objectIds } from '@engine/world/config/object-ids';
+import { openTravel } from '@plugins/items/rotten-potato/helpers/rotten-potato-travel';
 
 
 function openBank(player: Player) {
@@ -30,7 +31,7 @@ function openBank(player: Player) {
 
 enum DialogueOption {
     BANK,
-    RANDOM_EVENTS_FOR_ALL,
+    TELEPORT_MENU,
     TELEPORT_TO_RARE_DROP,
     FORCE_RARE_DROP
 }
@@ -38,29 +39,32 @@ enum DialogueOption {
 const peelPotato: itemInteractionActionHandler = async (details) => {
 
     let chosenOption: DialogueOption;
-
+    // console.log(world.travelLocations.locations)
     await dialogue([details.player], [
         options => [
             `Bank menu`, [
                 execute(() => chosenOption = DialogueOption.BANK)
             ],
-            `AMEs for all!`, [
-                execute(() => chosenOption = DialogueOption.RANDOM_EVENTS_FOR_ALL)
+            `Travel Far!`, [
+                execute(() => chosenOption = DialogueOption.TELEPORT_MENU)
             ],
-            `Teleport to RARE!`, [
-                execute(() => chosenOption = DialogueOption.TELEPORT_TO_RARE_DROP)
-            ],
-            `Spawn RARE!`, [
-                execute(() => chosenOption = DialogueOption.FORCE_RARE_DROP)
-            ],
+            // `Teleport to RARE!`, [
+            //     execute(() => chosenOption = DialogueOption.TELEPORT_TO_RARE_DROP)
+            // ],
+            // `Spawn RARE!`, [
+            //     execute(() => chosenOption = DialogueOption.FORCE_RARE_DROP)
+            // ],
         ]
     ]);
     switch (chosenOption) {
         case DialogueOption.BANK:
             openBank(details.player);
             break;
+        case DialogueOption.TELEPORT_MENU:
+            openTravel(details.player, 1);
+            break;
         default:
-            console.log('i broke')
+            break;
     }
 
 };

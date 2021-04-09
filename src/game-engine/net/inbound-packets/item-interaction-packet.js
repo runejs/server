@@ -32,6 +32,14 @@ const option4 = buffer => {
     return { widgetId, containerId, itemId, slot };
 };
 
+const option5 = buffer => {
+    const containerId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const widgetId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const slot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const itemId = buffer.get('SHORT', 'UNSIGNED');
+    return { widgetId, containerId, itemId, slot };
+};
+
 const inventoryOption1 = buffer => {
     const slot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
     const itemId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
@@ -55,6 +63,7 @@ const itemInteractionPacket = (player, packet) => {
         228: { packetDef: option2, optionNumber: 2 },
         26: { packetDef: option3, optionNumber: 3 },
         147: { packetDef: option4, optionNumber: 4 },
+        102: { packetDef: option5, optionNumber: 2 },
         98: { packetDef: inventoryOption4, optionNumber: 4 },
         240: { packetDef: inventoryOption1, optionNumber: 1 },
     };
@@ -89,6 +98,10 @@ export default [{
     handler: itemInteractionPacket
 },{
     opcode: 240,
+    size: 8,
+    handler: itemInteractionPacket
+}, {
+    opcode: 102,
     size: 8,
     handler: itemInteractionPacket
 }];

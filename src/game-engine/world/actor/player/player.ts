@@ -528,7 +528,7 @@ export class Player extends Actor {
                 this.outgoingPackets.updateWidgetString(widgetId, childId, text);
             }
             if(hidden !== undefined) {
-                this.outgoingPackets.toggleWidgetVisibility(widgets.skillGuide, childId, hidden);
+                this.outgoingPackets.toggleWidgetVisibility(widgetId, childId, hidden);
             }
             if(textColor !== undefined) {
                 const { r, g, b } = hexToRgb(textColor);
