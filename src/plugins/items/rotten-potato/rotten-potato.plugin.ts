@@ -13,6 +13,7 @@ export default {
         {
             type: 'item_interaction',
             widgets: widgets.inventory,
+            itemIds: RottenPotatoItem.gameId,
             options: 'peel',
             handler: (details) => ExecuteIfAdmin(details, peelPotato),
             cancelOtherActions: true
@@ -20,6 +21,7 @@ export default {
         {
             type: 'item_interaction',
             widgets: widgets.inventory,
+            itemIds: RottenPotatoItem.gameId,
             options: 'eat',
             handler: (details) => ExecuteIfAdmin(details, eatPotato),
             cancelOtherActions: true
