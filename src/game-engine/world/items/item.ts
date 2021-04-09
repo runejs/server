@@ -66,12 +66,20 @@ export function parseItemId(item: number | Item): number {
 
 export function toNote(item: number | Item): number {
     item = parseItemId(item);
-    const notedItem = Object.values(itemMap).find(i => i.notedId === item);
+    let notedItem = Object.values(itemMap).find(i => i.bankNoteId === item);
+
+    if (!notedItem) {
+        const fallbackNote = findItem(item + 1);
+        if (fallbackNote?.bankNoteId === item) {
+            notedItem = fallbackNote;
+        }
+    }
+
     return !notedItem ? -1 : notedItem.gameId;
 }
 
 export function fromNote(item: number | Item): number {
     item = parseItemId(item);
     const notedItem = findItem(item);
-    return !notedItem ? -1 : notedItem.notedId;
+    return !notedItem ? -1 : notedItem.bankNoteId;
 }
