@@ -7,6 +7,7 @@ import { fromNote, Item, toNote } from '@engine/world/items/item';
 import { buttonActionHandler } from '@engine/world/action/button.action';
 import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
 import { widgets } from '@engine/config';
+import { Player } from '@engine/world/actor/player/player';
 
 
 const buttonIds: number[] = [
@@ -39,17 +40,15 @@ export const openPinSettings: objectInteractionActionHandler = ({ player }) => {
 };
 
 export const depositItem: itemInteractionActionHandler = (details) => {
-    // Check if player might be spawning widget clientside
+    // Check if player might be spawning widget client-side
     if (!details.player.interfaceState.findWidget(widgets.bank.screenWidget.widgetId)) {
         return;
     }
 
     // Check if the player has the item
-
     if (!details.player.hasItemInInventory(details.itemId)) {
         return;
     }
-
 
     let itemIdToAdd: number = details.itemId;
     const fromNoteId: number = fromNote(details.itemId);
@@ -58,19 +57,34 @@ export const depositItem: itemInteractionActionHandler = (details) => {
     }
 
     let countToRemove: number;
-    if (details.option.endsWith('all')) {
-        countToRemove = -1;
-    } else {
-        countToRemove = +details.option.replace('deposit-', '');
+    switch (details.option) {
+        case 'option-1':
+            // Deposit 1
+            countToRemove = 1;
+            break;
+        case 'option-2':
+            // Deposit 5
+            countToRemove = 5;
+            break;
+        case 'option-3':
+            // Deposit 10
+            countToRemove = 10;
+            break;
+        case 'option-4':
+            // Deposit all
+            countToRemove = -1;
+            break;
+        default:
+            // Should never happen
+            throw new Error('Unhandled option in banking plugin: ' + details.option);
     }
-
 
     const playerInventory: ItemContainer = details.player.inventory;
     const playerBank: ItemContainer = details.player.bank;
     const slotsWithItem: number[] = playerInventory.findAll(details.itemId);
     let itemAmount: number = 0;
     slotsWithItem.forEach((slot) => itemAmount += playerInventory.items[slot].amount);
-    if (countToRemove == -1 || countToRemove > itemAmount) {
+    if (countToRemove === -1 || countToRemove > itemAmount) {
         countToRemove = itemAmount;
     }
 
@@ -79,33 +93,18 @@ export const depositItem: itemInteractionActionHandler = (details) => {
         return;
     }
 
-
-    const itemToAdd: Item = { itemId: itemIdToAdd, amount: 0 };
-    while (countToRemove > 0 && playerInventory.has(details.itemId)) {
-        const invIndex = playerInventory.findIndex(details.itemId);
-        const invItem = playerInventory.items[invIndex];
-        if (countToRemove >= invItem.amount) {
-            itemToAdd.amount += invItem.amount;
-            countToRemove -= invItem.amount;
-            playerInventory.remove(invIndex);
-        } else {
-            itemToAdd.amount += countToRemove;
-            invItem.amount -= countToRemove;
-            countToRemove = 0;
-        }
-    }
+    const itemToAdd: Item = {
+        itemId: itemIdToAdd,
+        amount: removeFromContainer(playerInventory, details.itemId, countToRemove)
+    };
 
     playerBank.addStacking(itemToAdd);
-
-
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, details.player.inventory);
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, details.player.inventory);
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, details.player.bank);
+    updateBankingInterface(details.player);
 };
 
 
 export const withdrawItem: itemInteractionActionHandler = (details) => {
-    // Check if player might be spawning widget clientside
+    // Check if player might be spawning widget client-side
     if (!details.player.interfaceState.findWidget(widgets.bank.screenWidget.widgetId)) {
         return;
     }
@@ -124,19 +123,34 @@ export const withdrawItem: itemInteractionActionHandler = (details) => {
         }
     }
 
-
     let countToRemove: number;
-    if (details.option.endsWith('all')) {
-        countToRemove = -1;
-    } else {
-        countToRemove = +details.option.replace('withdraw-', '');
+    switch (details.option) {
+        case 'withdraw-1':
+            // Withdraw 1
+            countToRemove = 1;
+            break;
+        case 'withdraw-5':
+            // Withdraw 5
+            countToRemove = 5;
+            break;
+        case 'withdraw-10':
+            // Withdraw 10
+            countToRemove = 10;
+            break;
+        case 'withdraw-all':
+            // Withdraw all
+            countToRemove = -1;
+            break;
+        default:
+            // Should never happen
+            throw new Error('Unhandled option in banking plugin: ' + details.option);
     }
 
     const playerBank: ItemContainer = details.player.bank;
     const playerInventory: ItemContainer = details.player.inventory;
     const slotWithItem: number = playerBank.findIndex(details.itemId);
     const itemAmount: number = playerBank.items[slotWithItem].amount;
-    if (countToRemove == -1 || countToRemove > itemAmount) {
+    if (countToRemove === -1 || countToRemove > itemAmount) {
         countToRemove = itemAmount;
     }
 
@@ -151,30 +165,52 @@ export const withdrawItem: itemInteractionActionHandler = (details) => {
         return;
     }
 
+    const itemToAdd: Item = {
+        itemId: itemIdToAdd,
+        amount: removeFromContainer(playerBank, details.itemId, countToRemove)
+    };
 
-    const itemToAdd: Item = { itemId: itemIdToAdd, amount: 0 };
-    while (countToRemove > 0 && playerBank.has(details.itemId)) {
-        const invIndex = playerBank.findIndex(details.itemId);
-        const invItem = playerBank.items[invIndex];
-        if (countToRemove >= invItem.amount) {
-            itemToAdd.amount += invItem.amount;
-            countToRemove -= invItem.amount;
-            playerBank.remove(invIndex);
-        } else {
-            itemToAdd.amount += countToRemove;
-            invItem.amount -= countToRemove;
-            countToRemove = 0;
-        }
-    }
     for (let i = 0; i < itemToAdd.amount; i++) {
         playerInventory.add({ itemId: itemIdToAdd, amount: 1 });
     }
 
-
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, details.player.inventory);
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, details.player.inventory);
-    details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, details.player.bank);
+    updateBankingInterface(details.player);
 };
+
+export const updateBankingInterface = (player: Player) => {
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.tabWidget, player.inventory);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
+    player.outgoingPackets.sendUpdateAllWidgetItems(widgets.bank.screenWidget, player.bank);
+}
+
+/**
+ * Removes an item from a container (e.g. bank or inventory) and returns the amount of items it removed.
+ * @param from - The container to remove from
+ * @param itemId - The item to remove
+ * @param amount - The amount to remove
+ * @returns The amount of items it removed
+ */
+export const removeFromContainer = (from: ItemContainer, itemId: number, amount: number) => {
+    let resultingAmount = 0;
+    let removeAmount = amount;
+
+    while (removeAmount > 0 && from.has(itemId)) {
+        const containerIndex = from.findIndex(itemId);
+        const containerItem = from.items[containerIndex];
+
+        if (removeAmount >= containerItem.amount) {
+            resultingAmount += containerItem.amount;
+            removeAmount -= containerItem.amount;
+            from.remove(containerIndex);
+        } else {
+            resultingAmount += removeAmount;
+            containerItem.amount -= removeAmount;
+            removeAmount = 0;
+        }
+    }
+
+    return resultingAmount;
+}
 
 export const btnAction: buttonActionHandler = (details) => {
     const { player, buttonId } = details;
@@ -194,20 +230,22 @@ export const btnAction: buttonActionHandler = (details) => {
     player.settings[config.setting] = config.value;
 };
 
-const useBankBoothAction : objectInteractionActionHandler = (details) => {
+const useBankBoothAction : objectInteractionActionHandler = async (details) => {
     const { player } = details;
 
-    dialogue([player, { npc: 'rs:generic_banker', key: 'banker' }], [
+    let openBank = false;
+    let openPin = false;
+    await dialogue([player, { npc: 'rs:generic_banker', key: 'banker' }], [
         banker => [Emote.HAPPY, `Good day, how can I help you?`],
         options => [
             `I'd Like to access my bank account, please.`, [
                 execute(() => {
-                    openBankInterface(details as any);
+                    openBank = true;
                 })
             ],
             `I'd like to check my PIN settings.`, [
                 execute(() => {
-                    openPinSettings(details);
+                    openPin = true;
                 })
             ],
             `What is this place?`, [
@@ -219,6 +257,12 @@ const useBankBoothAction : objectInteractionActionHandler = (details) => {
             ]
         ]
     ]);
+
+    if (openBank) {
+        openBankInterface(details as any);
+    } else if (openPin) {
+        openPinSettings(details);
+    }
 };
 
 export default {
@@ -239,7 +283,7 @@ export default {
         }, {
             type: 'item_interaction',
             widgets: widgets.bank.tabWidget,
-            options: [ 'deposit-1', 'deposit-5', 'deposit-10', 'deposit-all' ],
+            options: [ 'option-1', 'option-2', 'option-3', 'option-4' ],
             handler: depositItem,
         }, {
             type: 'item_interaction',
