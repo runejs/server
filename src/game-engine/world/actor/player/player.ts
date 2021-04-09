@@ -459,15 +459,15 @@ export class Player extends Actor {
         }
 
         let playerQuest = this.quests.find(quest => quest.questId === questId);
-        if(!playerQuest) {
+        if (!playerQuest) {
             playerQuest = new PlayerQuest(questId);
             this.quests.push(playerQuest);
         }
 
-        if(playerQuest.progress === 0 && !playerQuest.complete) {
+        if (typeof progress === 'number' && progress > 0) {
             playerQuest.progress = progress;
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
-        } else if(!playerQuest.complete && progress === 'complete') {
+        } else if (progress === 'complete') {
             playerQuest.complete = true;
             playerQuest.progress = 'complete';
             this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, questData.points + this.getQuestPoints());
@@ -510,6 +510,8 @@ export class Player extends Actor {
             if(questData.onComplete.giveRewards) {
                 questData.onComplete.giveRewards(this);
             }
+        } else {
+            throw new Error('Unhandled progress value: ' + progress);
         }
     }
 

@@ -41,8 +41,7 @@ export const handler: buttonActionHandler = async ({ player, buttonId }) => {
         }
     }
 
-    // TODO check osrs for the right default color
-    const color = '#000000';
+    const color = '000080';
     let text: string;
 
     if(typeof journalHandler === 'function') {
