@@ -58,19 +58,19 @@ export const depositItem: itemInteractionActionHandler = (details) => {
 
     let countToRemove: number;
     switch (details.option) {
-        case 'option-1':
+        case 'deposit-1':
             // Deposit 1
             countToRemove = 1;
             break;
-        case 'option-2':
+        case 'deposit-5':
             // Deposit 5
             countToRemove = 5;
             break;
-        case 'option-3':
+        case 'deposit-10':
             // Deposit 10
             countToRemove = 10;
             break;
-        case 'option-4':
+        case 'deposit-all':
             // Deposit all
             countToRemove = -1;
             break;
@@ -283,7 +283,7 @@ export default {
         }, {
             type: 'item_interaction',
             widgets: widgets.bank.tabWidget,
-            options: [ 'option-1', 'option-2', 'option-3', 'option-4' ],
+            options: [ 'deposit-1', 'deposit-5', 'deposit-10', 'deposit-all' ],
             handler: depositItem,
         }, {
             type: 'item_interaction',
