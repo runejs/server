@@ -33,8 +33,7 @@ export const getItemOptions = (itemId: number, widget: { widgetId: number, conta
         return itemInventoryOptions(itemId);
     }
 
-    let optionsWidget;
-
+    let optionsWidget: StaticItemWidget;
     if (IsStaticItemWidget(widgetDefinition) && widgetDefinition.options && !widget.containerId) {
         optionsWidget = widgetDefinition;
     }
@@ -46,15 +45,7 @@ export const getItemOptions = (itemId: number, widget: { widgetId: number, conta
         }
     }
 
-    let hasWidgetOptions = false;
-    if (optionsWidget && optionsWidget.items && optionsWidget.options) {
-        for (const option of optionsWidget.options) {
-            if (option) {
-                hasWidgetOptions = true;
-            }
-        }
-    }
-    if(!hasWidgetOptions) {
+    if (!optionsWidget || !optionsWidget.items || !optionsWidget.options) {
         return itemInventoryOptions(itemId);
     }
 
