@@ -1,7 +1,10 @@
-import { DefensiveBonuses, translateItemConfig } from '@engine/config/item-config';
+import { DefensiveBonuses } from '@engine/config/item-config';
 import { loadConfigurationFiles } from '@engine/config/index';
-import { cache } from '@engine/game-server';
+import { filestore } from '@engine/game-server';
 import _ from 'lodash';
+import { NpcConfig } from '@runejs/filestore';
+import { logger } from '@runejs/core';
+
 
 export interface NpcSkills {
     [key: string]: number;
@@ -17,24 +20,19 @@ export interface OffensiveStats {
     rangedStrength?: number;
 }
 
-export interface NpcAnimations {
+export interface NpcCombatAnimations {
     attack?: number | number[];
     defend?: number;
     death?: number;
-    stand?: number;
-    walk?: number;
-    turnAround?: number;
-    turnRight?: number;
-    turnLeft?: number;
 }
 
 export type DropTable = [ [ string, string, number, number? ] ];
 
 export interface NpcPresetConfiguration {
-    [key: string]: NpcConfiguration;
+    [key: string]: NpcServerConfig;
 }
 
-export interface NpcConfiguration {
+export interface NpcServerConfig {
     extends?: string | string[];
     game_id: number;
     skills?: NpcSkills;
@@ -52,8 +50,8 @@ export interface NpcConfiguration {
     defensive_stats?: DefensiveBonuses;
     variations?: [{
         suffix: string;
-    } & NpcConfiguration];
-    animations?: NpcAnimations;
+    } & NpcServerConfig];
+    animations?: NpcCombatAnimations;
     drop_table?: DropTable;
     metadata: { [key: string]: unknown };
 }
@@ -61,38 +59,30 @@ export interface NpcConfiguration {
 /**
  * Full server + cache details about a specific game NPC.
  */
-export class NpcDetails {
+export class NpcDetails extends NpcConfig {
+
     extends?: string | string[];
     key: string;
-    gameId: number;
-    name?: string;
     skills?: NpcSkills;
     killable?: boolean;
     respawnTime?: number;
     offensiveStats?: OffensiveStats;
     defensiveStats?: DefensiveBonuses;
-    animations?: NpcAnimations;
+    combatAnimations?: NpcCombatAnimations;
     dropTable?: DropTable;
     metadata: { [key: string]: unknown } = {};
-    options?: string[];
-    models?: number[];
-    headModels?: number[];
-    minimapVisible?: boolean;
-    combatLevel?: number;
-    boundary?: number;
-    sizeX?: number;
-    sizeY?: number;
-    renderPriority?: boolean;
-    headIcon?: number;
-    clickable?: boolean;
-    turnDegrees?: number;
+
+    public constructor(defaultValues: { [key: string]: any }) {
+        super();
+        Object.keys(defaultValues).forEach(key => this[key] = defaultValues[key]);
+    }
+
 }
 
-export function translateNpcConfig(npcKey: string, config: NpcConfiguration): NpcDetails {
-    return {
+export function translateNpcServerConfig(npcKey: string, config: NpcServerConfig): NpcDetails {
+    return new NpcDetails({
         key: npcKey,
         extends: config.extends || undefined,
-        gameId: config.game_id,
         skills: config.skills || {},
         killable: config.killable || false,
         respawnTime: config.respawn_time || 1,
@@ -106,10 +96,10 @@ export function translateNpcConfig(npcKey: string, config: NpcConfiguration): Np
             rangedStrength: config.offensive_stats.ranged_strength || undefined
         } : undefined,
         defensiveStats: config.defensive_stats || undefined,
-        animations: config.animations || {},
+        combatAnimations: config.animations || {},
         dropTable: config.drop_table || undefined,
         metadata: config.metadata || {}
-    };
+    });
 }
 
 export async function loadNpcConfigurations(path: string): Promise<{ npcs: { [key: string]: NpcDetails };
@@ -126,25 +116,33 @@ export async function loadNpcConfigurations(path: string): Promise<{ npcs: { [ke
             if(key === 'presets') {
                 npcPresets = { ...npcPresets, ...npcConfigs[key] };
             } else {
-                const npcConfig = npcConfigs[key] as NpcConfiguration;
+                const npcConfig = npcConfigs[key] as NpcServerConfig;
                 if(!isNaN(npcConfig.game_id)) {
                     npcIds[npcConfig.game_id] = key;
                     npcs[key] = {
-                        ...translateNpcConfig(key, npcConfig),
-                        ...cache.npcDefinitions.get(npcConfig.game_id)
+                        ...translateNpcServerConfig(key, npcConfig),
+                        ...filestore.configStore.npcStore.getNpc(npcConfig.game_id)
                     };
                 }
                 if(npcConfig.variations) {
-
                     for(const variation of npcConfig.variations) {
-                        const subKey = key+':'+variation.suffix;
-                        const baseItem = JSON.parse(JSON.stringify({ ...translateNpcConfig(key, npcConfig),
-                            ...cache.npcDefinitions.get(npcConfig.game_id) }));
+                        try {
+                            const subKey = key + ':' + variation.suffix;
+                            const baseItem = JSON.parse(JSON.stringify({
+                                ...translateNpcServerConfig(key, npcConfig),
+                                ...filestore.configStore.npcStore.getNpc(npcConfig.game_id)
+                            }));
 
-                        const subBaseItem = JSON.parse(JSON.stringify({ ...translateNpcConfig(subKey, variation),
-                            ...cache.npcDefinitions.get(variation.game_id) }));
-                        npcIds[variation.game_id] = subKey;
-                        npcs[subKey] = _.merge(baseItem,subBaseItem);
+                            const subBaseItem = JSON.parse(JSON.stringify({
+                                ...translateNpcServerConfig(subKey, variation),
+                                ...filestore.configStore.npcStore.getNpc(variation.game_id)
+                            }));
+                            npcIds[variation.game_id] = subKey;
+                            npcs[subKey] = _.merge(baseItem, subBaseItem);
+                        } catch(error) {
+                            logger.error(`Error registering npc variant ${key}_${variation.suffix}`);
+                            logger.error(error);
+                        }
                     }
                 }
             }

@@ -37,7 +37,8 @@
     bank: {
         depositBoxWidget: {
             widgetId: 11,
-            containerId: 61
+            containerId: 61,
+            titleText: 60
         },
         pinSettingsWidget: {
             widgetId: 14

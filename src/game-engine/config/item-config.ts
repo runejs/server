@@ -159,8 +159,8 @@ export class ItemDetails {
     groundOptions: string[] = [];
     inventoryOptions: string[] = [];
     teamId: number;
-    notedId: number;
-    noteTemplateId: number;
+    bankNoteId: number;
+    bankNoteTemplate: number;
     stackableIds: number[];
     stackableAmounts: number[];
 

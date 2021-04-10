@@ -1,9 +1,10 @@
 import { Item } from './item';
 import { Subject } from 'rxjs';
-import { cache } from '@engine/game-server';
+import { filestore } from '@engine/game-server';
 import { hasValueNotNull } from '@engine/util/data';
 import { findItem } from '@engine/config';
 import { logger } from '@runejs/core';
+
 
 export interface ContainerUpdateEvent {
     slot?: number;
@@ -128,9 +129,9 @@ export class ItemContainer {
     }
 
     public add(item: number | string | Item, fireEvent: boolean = true): { item: Item, slot: number } {
-        if(typeof item === 'number') {
+        if (typeof item === 'number') {
             item = { itemId: item, amount: 1 } as Item;
-        } else if(typeof item === 'string') {
+        } else if (typeof item === 'string') {
             const itemDetails = findItem(item);
             if(!itemDetails) {
                 logger.warn(`Item ${item} not configured on the server.`);
@@ -143,7 +144,7 @@ export class ItemContainer {
         const existingItemIndex = this.findItemIndex({ itemId: item.itemId, amount: 1 });
         const cacheItem = findItem(item.itemId);
 
-        if(existingItemIndex !== -1 && cacheItem.stackable) {
+        if (existingItemIndex !== -1 && (cacheItem.stackable || cacheItem.bankNoteId != null)) {
             const newItem = {
                 itemId: item.itemId,
                 amount: this._items[existingItemIndex].amount += item.amount
@@ -151,7 +152,7 @@ export class ItemContainer {
 
             this.set(existingItemIndex, newItem, false);
 
-            if(fireEvent) {
+            if (fireEvent) {
                 this._containerUpdated.next({ type: 'UPDATE_AMOUNT', slot: existingItemIndex, item });
             }
 
@@ -159,14 +160,14 @@ export class ItemContainer {
             return { item: newItem, slot: existingItemIndex };
         } else {
             const newItemIndex = this.getFirstOpenSlot();
-            if(newItemIndex === -1) {
+            if (newItemIndex === -1) {
                 // Not enough container space
                 return null;
             }
 
             this._items[newItemIndex] = item;
 
-            if(fireEvent) {
+            if (fireEvent) {
                 this._containerUpdated.next({ type: 'ADD', slot: newItemIndex, item });
             }
 
@@ -176,13 +177,13 @@ export class ItemContainer {
     }
 
     public addStacking(item: number | Item, fireEvent: boolean = true): { item: Item, slot: number } {
-        if(typeof item === 'number') {
+        if (typeof item === 'number') {
             item = { itemId: item, amount: 1 } as Item;
         }
 
         const existingItemIndex = this.findItemIndex({ itemId: item.itemId, amount: 1 });
 
-        if(existingItemIndex !== -1) {
+        if (existingItemIndex !== -1) {
             const newItem = {
                 itemId: item.itemId,
                 amount: this._items[existingItemIndex].amount += item.amount
@@ -190,7 +191,7 @@ export class ItemContainer {
 
             this.set(existingItemIndex, newItem, false);
 
-            if(fireEvent) {
+            if (fireEvent) {
                 this._containerUpdated.next({ type: 'UPDATE_AMOUNT', slot: existingItemIndex, item });
             }
 
@@ -205,7 +206,7 @@ export class ItemContainer {
 
             this._items[newItemIndex] = item;
 
-            if(fireEvent) {
+            if (fireEvent) {
                 this._containerUpdated.next({ type: 'ADD', slot: newItemIndex, item });
             }
 
@@ -303,7 +304,7 @@ export class ItemContainer {
     }
 
     public canFit(item: Item, everythingStacks: boolean = false): boolean {
-        const itemDefinition = cache.itemDefinitions.get(item.itemId);
+        const itemDefinition = filestore.configStore.itemStore.getItem(item.itemId);
         if(!itemDefinition) {
             throw new Error(`Item ID ${ item.itemId } not found!`);
         }

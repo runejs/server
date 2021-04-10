@@ -48,6 +48,12 @@ export interface WidgetInteractionAction {
  * @param optionId The widget context option chosen by the player.
  */
 const widgetActionPipe = (player: Player, widgetId: number, childId: number, optionId: number): void => {
+    const playerWidget = Object.values(player.interfaceState.widgetSlots).find((widget) => widget && widget.widgetId === widgetId);
+
+    if(playerWidget && playerWidget.fakeWidget != undefined) {
+        widgetId = playerWidget.fakeWidget;
+    }
+
     // Find all item on item action plugins that match this action
     let interactionActions = getActionHooks<WidgetInteractionActionHook>('widget_interaction').filter(plugin => {
         if(!questHookFilter(player, plugin)) {

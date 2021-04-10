@@ -4,12 +4,12 @@ import { Packet, PacketType } from '@engine/net/packet';
 import { ItemContainer } from '@engine/world/items/item-container';
 import { Item } from '@engine/world/items/item';
 import { Position } from '@engine/world/position';
-import { LocationObject } from '@runejs/cache-parser';
 import { Chunk, ChunkUpdateItem } from '@engine/world/map/chunk';
 import { WorldItem } from '@engine/world/items/world-item';
 import { ByteBuffer } from '@runejs/core';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { stringToLong } from '@engine/util/strings';
+import { LandscapeObject } from '@runejs/filestore';
 import { xteaRegions } from "@engine/config";
 
 /**
@@ -178,7 +178,7 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    public setLocationObject(locationObject: LocationObject, position: Position, offset: number = 0): void {
+    public setLocationObject(locationObject: LandscapeObject, position: Position, offset: number = 0): void {
         this.updateReferencePosition(position);
 
         const packet = new Packet(241);
@@ -189,7 +189,7 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    public removeLocationObject(locationObject: LocationObject, position: Position, offset: number = 0): void {
+    public removeLocationObject(locationObject: LandscapeObject, position: Position, offset: number = 0): void {
         this.updateReferencePosition(position);
 
         const packet = new Packet(143);

@@ -1,5 +1,5 @@
 import { commandActionHandler } from '@engine/world/action/player-command.action';
-import { cache } from '@engine/game-server';
+import { filestore } from '@engine/game-server';
 import { itemIds } from '@engine/world/config/item-ids';
 import { findItem, itemIdMap } from '@engine/config';
 
@@ -37,7 +37,7 @@ const action: commandActionHandler = (details) => {
         throw new Error(`Unable to give more than 2,000,000,000.`);
     }
 
-    const itemDefinition = cache.itemDefinitions.get(itemId);
+    const itemDefinition = findItem(itemId);
     if(!itemDefinition) {
         throw new Error(`Item ID ${itemId} not found!`);
     }

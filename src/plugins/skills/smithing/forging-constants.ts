@@ -1,5 +1,5 @@
-import { itemIds } from '@server/world/config/item-ids';
-import { Smithable } from '@server/plugins/skills/smithing/forging-types';
+import { itemIds } from '@engine/world/config/item-ids';
+import { Smithable } from '@plugins/skills/smithing/forging-types';
 
 export const anvilIds: number[] = [
     2782, 2783, 4306, 6150

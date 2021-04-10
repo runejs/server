@@ -15,10 +15,10 @@ export const action: objectInteractionActionHandler = (details) => {
     if (option === 'climb') {
         dialogueAction(player)
             .then(async d => d.options(
-                `Climb up or down the ${details.objectDefinition.name.toLowerCase()}?`,
+                `Climb up or down the ${details.objectConfig.name.toLowerCase()}?`,
                 [
-                    `Climb up the ${details.objectDefinition.name.toLowerCase()}.`,
-                    `Climb down the ${details.objectDefinition.name.toLowerCase()}.`
+                    `Climb up the ${details.objectConfig.name.toLowerCase()}.`,
+                    `Climb down the ${details.objectConfig.name.toLowerCase()}.`
                 ]))
             .then(d => {
                 d.close();
@@ -37,10 +37,10 @@ export const action: objectInteractionActionHandler = (details) => {
     const level = position.level + (up ? 1 : -1);
 
     if (!validate(level)) return;
-    if (!details.objectDefinition.name.startsWith('Stair')) {
+    if (!details.objectConfig.name.startsWith('Stair')) {
         player.playAnimation(up ? 828 : 827);
     }
-    player.sendMessage(`You climb ${option.slice(6)} the ${details.objectDefinition.name.toLowerCase()}.`);
+    player.sendMessage(`You climb ${option.slice(6)} the ${details.objectConfig.name.toLowerCase()}.`);
     setTimeout(() => {
         details.player.teleport(new Position(position.x, position.y, level));
     }, World.TICK_LENGTH);

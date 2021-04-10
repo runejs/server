@@ -1,5 +1,4 @@
 import { logger } from '@runejs/core';
-import { LocationObject } from '@runejs/cache-parser';
 import Quadtree from 'quadtree-lib';
 import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
@@ -17,6 +16,7 @@ import { WorldInstance } from '@engine/world/instances';
 import { Direction } from '@engine/world/direction';
 import { NpcSpawn } from '@engine/config/npc-spawn-config';
 import { loadActionFiles } from '@engine/world/action';
+import { LandscapeObject } from '@runejs/filestore';
 
 
 export interface QuadtreeKey {
@@ -38,7 +38,7 @@ export class World {
     public readonly npcList: Npc[] = new Array(World.MAX_NPCS).fill(null);
     public readonly chunkManager: ChunkManager = new ChunkManager();
     public readonly examine: ExamineCache = new ExamineCache();
-    public readonly scenerySpawns: LocationObject[];
+    public readonly scenerySpawns: LandscapeObject[];
     public readonly travelLocations: TravelLocations = new TravelLocations();
     public readonly playerTree: Quadtree<QuadtreeKey>;
     public readonly npcTree: Quadtree<QuadtreeKey>;
@@ -74,7 +74,8 @@ export class World {
      * @param objectId The game ID of the object.
      * @param objectPosition The game world position that the object is expected at.
      */
-    public findObjectAtLocation(player: Player, objectId: number, objectPosition: Position): { object: LocationObject, cacheOriginal: boolean } {
+    public findObjectAtLocation(player: Player, objectId: number,
+                                objectPosition: Position): { object: LandscapeObject, cacheOriginal: boolean } {
         const x = objectPosition.x;
         const y = objectPosition.y;
         const objectChunk = this.chunkManager.getChunkForWorldPosition(objectPosition);
@@ -83,17 +84,17 @@ export class World {
         const tileModifications = player.instance.getTileModifications(objectPosition);
         const personalTileModifications = player.personalInstance.getTileModifications(objectPosition);
 
-        let locationObject = objectChunk.getCacheObject(objectId, objectPosition);
-        if(!locationObject) {
+        let landscapeObject = objectChunk.getFilestoreLandscapeObject(objectId, objectPosition);
+        if(!landscapeObject) {
             const tileObjects = [ ...tileModifications.mods.spawnedObjects,
                 ...personalTileModifications.mods.spawnedObjects ];
 
-            locationObject = tileObjects.find(spawnedObject =>
+            landscapeObject = tileObjects.find(spawnedObject =>
                 spawnedObject.objectId === objectId && spawnedObject.x === x && spawnedObject.y === y) || null;
 
             cacheOriginal = false;
 
-            if(!locationObject) {
+            if(!landscapeObject) {
                 return { object: null, cacheOriginal: false };
             }
         }
@@ -107,7 +108,7 @@ export class World {
         }
 
         return {
-            object: locationObject,
+            object: landscapeObject,
             cacheOriginal
         };
     }

@@ -1,26 +1,25 @@
 import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
-import { cache } from '@engine/game-server';
 import { dialogueAction, DialogueEmote } from '@engine/world/actor/player/dialogue-action';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { itemIds } from '@engine/world/config/item-ids';
 import { objectIds } from '@engine/world/config/object-ids';
 import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
-import { LocationObjectDefinition } from '@runejs/cache-parser';
 import { Player } from '@engine/world/actor/player/player';
-import { findNpc } from '@engine/config';
+import { findItem, findNpc } from '@engine/config';
+import { ObjectConfig } from '@runejs/filestore';
 
 
-function milkCow(details: { objectDefinition: LocationObjectDefinition, player: Player }): void {
-    const { player, objectDefinition } = details;
-    const emptyBucketItem = cache.itemDefinitions.get(itemIds.bucket);
+function milkCow(details: { objectConfig: ObjectConfig, player: Player }): void {
+    const { player, objectConfig } = details;
+    const emptyBucketItem = findItem(itemIds.bucket);
 
     if (player.hasItemInInventory(itemIds.bucket)) {
         player.playAnimation(animationIds.milkCow);
         player.playSound(soundIds.milkCow, 7);
         player.removeFirstItem(itemIds.bucket);
         player.giveItem(itemIds.bucketOfMilk);
-        player.sendMessage(`You milk the ${objectDefinition.name} and receive some milk.`);
+        player.sendMessage(`You milk the ${objectConfig.name} and receive some milk.`);
     } else {
         const gillieId = findNpc('rs:gillie_groats').gameId;
         dialogueAction(player)
