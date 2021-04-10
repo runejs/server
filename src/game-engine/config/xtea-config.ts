@@ -1,20 +1,20 @@
 import { loadConfigurationFiles } from '@engine/config/index';
 
 export interface XTEARegionConfiguration {
-  region: number;
-  keys: [number, number, number, number];
+    region: number;
+    keys: [number, number, number, number];
 }
 
 
 export class XTEARegion {
 
-  public region: number;
-  public keys: [number,number,number,number];
+    public region: number;
+    public keys: [number,number,number,number];
 
-  public constructor(region: number, keys: [number,number,number,number]) {
-      this.region = region;
-      this.keys = keys;
-  }
+    public constructor(region: number, keys: [number,number,number,number]) {
+        this.region = region;
+        this.keys = keys;
+    }
 }
 
 export function translateXTEARegionConfig(config: XTEARegionConfiguration): XTEARegion {

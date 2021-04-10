@@ -10,7 +10,7 @@ import { ByteBuffer } from '@runejs/core';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { stringToLong } from '@engine/util/strings';
 import { LandscapeObject } from '@runejs/filestore';
-import { xteaRegions } from "@engine/config";
+import { xteaRegions } from '@engine/config';
 
 /**
  * A helper class for sending various network packets back to the game client.
