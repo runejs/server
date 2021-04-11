@@ -1,4 +1,4 @@
-import { runGameServer, world } from './game-engine/game-server';
+import { runGameServer, world } from '@engine/game-server';
 import 'source-map-support/register';
 import { initErrorHandling } from '@engine/util/error-handling';
 import { logger } from '@runejs/core';
