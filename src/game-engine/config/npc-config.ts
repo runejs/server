@@ -1,5 +1,5 @@
 import { DefensiveBonuses } from '@engine/config/item-config';
-import { loadConfigurationFiles } from '@engine/config/index';
+import { loadConfigurationFiles } from '@runejs/core/fs';
 import { filestore } from '@engine/game-server';
 import _ from 'lodash';
 import { NpcConfig } from '@runejs/filestore';

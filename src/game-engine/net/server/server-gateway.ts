@@ -1,5 +1,7 @@
-import { ByteBuffer, logger, parseServerConfig, SocketConnectionHandler } from '@runejs/core';
+import { logger } from '@runejs/core';
 import { LoginResponseCode } from '@runejs/login-server';
+import { ByteBuffer } from '@runejs/core/buffer';
+import { parseServerConfig, SocketConnectionHandler } from '@runejs/core/net';
 import { createConnection, Socket } from 'net';
 import { GameServerConnection } from '@engine/net/server/game-server';
 import { ServerConfig } from '@engine/config/server-config';
@@ -10,6 +12,7 @@ import { world } from '@engine/game-server';
 const serverConfig = parseServerConfig<ServerConfig>();
 
 export type ServerType = 'game_server' | 'login_server' | 'update_server';
+
 
 export class ServerGateway extends SocketConnectionHandler {
 

@@ -3,7 +3,6 @@ import { Position } from '../position';
 import { logger } from '@runejs/core';
 import { filestore } from '@engine/game-server';
 import { LandscapeFile, LandscapeObject, MapFile } from '@runejs/filestore';
-import { getTreeIds } from '@engine/world/config/harvestable-object';
 
 
 export class Tile {

@@ -7,11 +7,11 @@ import { PacketData } from '@engine/net/inbound-packets';
 
 const itemOnPlayerPacket = (player: Player, packet: PacketData) => {
     const { buffer } = packet;
-    const playerIndex = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN') - 1;
-    const itemWidgetId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const itemContainerId = buffer.get('SHORT');
-    const itemId = buffer.get('SHORT', 'UNSIGNED', 'BIG_ENDIAN');
-    const itemSlot = buffer.get('SHORT', 'UNSIGNED', 'BIG_ENDIAN');
+    const playerIndex = buffer.get('short', 'u', 'le') - 1;
+    const itemWidgetId = buffer.get('short', 's', 'le');
+    const itemContainerId = buffer.get('short');
+    const itemId = buffer.get('short', 'u');
+    const itemSlot = buffer.get('short', 'u');
 
 
     let usedItem;

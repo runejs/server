@@ -6,7 +6,7 @@ import { Item } from '@engine/world/items/item';
 import { Position } from '@engine/world/position';
 import { Chunk, ChunkUpdateItem } from '@engine/world/map/chunk';
 import { WorldItem } from '@engine/world/items/world-item';
-import { ByteBuffer } from '@runejs/core';
+import { ByteBuffer } from '@runejs/core/buffer';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { stringToLong } from '@engine/util/strings';
 import { LandscapeObject } from '@runejs/filestore';

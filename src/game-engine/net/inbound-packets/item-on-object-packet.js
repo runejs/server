@@ -5,13 +5,13 @@ import { widgets } from '../../config';
 
 const itemOnObjectPacket = (player, packet) => {
     const { buffer } = packet;
-    const objectY = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const itemId = buffer.get('SHORT', 'UNSIGNED');
-    const objectId = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const itemSlot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const itemWidgetId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const itemContainerId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const objectX = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const objectY = buffer.get('short', 'u', 'le');
+    const itemId = buffer.get('short', 'u');
+    const objectId = buffer.get('short', 'u', 'le');
+    const itemSlot = buffer.get('short', 'u', 'le');
+    const itemWidgetId = buffer.get('short', 's', 'le');
+    const itemContainerId = buffer.get('short', 's', 'le');
+    const objectX = buffer.get('short', 'u', 'le');
 
     let usedItem;
     if (itemWidgetId === widgets.inventory.widgetId && itemContainerId === widgets.inventory.containerId) {

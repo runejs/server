@@ -3,9 +3,8 @@ import { Position } from '@engine/world/position';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
 import { Item } from '@engine/world/items/item';
-import { Npc } from '@engine/world/actor/npc/npc';
 import { playerWalkTo } from '@engine/game-server';
-import { advancedNumberHookFilter, questHookFilter, stringHookFilter } from '@engine/world/action/hooks/hook-filters';
+import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
 import { ActionPipe } from '@engine/world/action/index';
 
 
