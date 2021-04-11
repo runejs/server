@@ -30,7 +30,7 @@
     "dependencies": {
         "@hapi/joi": "^16.1.8",
         "@runejs/core": "^1.2.0",
-        "@runejs/filestore": "^0.10.2",
+        "@runejs/filestore": "^0.12.0",
         "@runejs/login-server": "^1.0.0-beta.2",
         "@runejs/update-server": "^1.0.0-beta.0",
         "bcrypt": "^5.0.0",

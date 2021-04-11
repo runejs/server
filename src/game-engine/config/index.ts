@@ -21,6 +21,8 @@ import { Quest } from '@engine/world/actor/player/quest';
 import { ItemSpawn, loadItemSpawnConfigurations } from '@engine/config/item-spawn-config';
 import { loadSkillGuideConfigurations, SkillGuide } from '@engine/config/skill-guide-config';
 import { loadMusicRegionConfigurations, MusicTrack } from '@engine/config/music-regions-config';
+import { loadXTEARegionConfigurations, XTEARegion } from '@engine/config/xtea-config';
+
 require('json5/lib/register');
 
 
@@ -55,12 +57,16 @@ export let musicRegions: MusicTrack[] = [];
 export let itemSpawns: ItemSpawn[] = [];
 export let shopMap: { [key: string]: Shop };
 export let skillGuides: SkillGuide[] = [];
+export let xteaRegions: { [key: number]: XTEARegion };
 
 export const musicRegionMap = new Map<number, number>();
 export const widgets: { [key: string]: any } = require('../../../data/config/widgets.json5');
 
+export async function loadCoreConfigurations(): Promise<void> {
+    xteaRegions = await loadXTEARegionConfigurations('data/config/xteas');
+}
 
-export async function loadConfigurations(): Promise<void> {
+export async function loadGameConfigurations(): Promise<void> {
     logger.info(`Loading server configurations...`);
 
     const { items, itemIds, itemPresets } = await loadItemConfigurations('data/config/items');
@@ -80,7 +86,6 @@ export async function loadConfigurations(): Promise<void> {
 
     shopMap = await loadShopConfigurations('data/config/shops');
     skillGuides = await loadSkillGuideConfigurations('data/config/skill-guides');
-
     logger.info(`Loaded ${musicRegions.length} music regions, ${Object.keys(itemMap).length} items, ${itemSpawns.length} item spawns, ` +
         `${Object.keys(npcMap).length} npcs, ${npcSpawns.length} npc spawns, ${Object.keys(shopMap).length} shops and ${skillGuides.length} skill guides.`);
 }
