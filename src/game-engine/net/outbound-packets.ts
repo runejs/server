@@ -565,10 +565,10 @@ export class OutboundPackets {
         for(let xCalc = Math.floor(this.player.position.chunkX / 8); xCalc <= Math.floor((this.player.position.chunkX + 12) / 8); xCalc++) {
             for(let yCalc = Math.floor(this.player.position.chunkY / 8); yCalc <= Math.floor((this.player.position.chunkY + 12) / 8); yCalc++) {
                 const regionid = (xCalc << 8 | yCalc);
-                const xteaRegion = xteaRegions.get(regionid)
+                const xteaRegion = xteaRegions[regionid]
                 for(let seeds = 0; seeds < 4; seeds++) {
                     if(xteaRegion) {
-                        packet.put(xteaRegion.keys[seeds], 'INT');
+                        packet.put(xteaRegion.key[seeds], 'INT');
                     } else  {
                         packet.put(0, 'INT');
                     }

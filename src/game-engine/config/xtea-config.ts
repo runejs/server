@@ -1,33 +1,30 @@
 import { loadConfigurationFiles } from '@engine/config/index';
-
-export interface XTEARegionConfiguration {
-    region: number;
-    keys: [number, number, number, number];
-}
+import { XteaDefinition } from '@runejs/filestore';
 
 
-export class XTEARegion {
 
-    public region: number;
-    public keys: [number,number,number,number];
+export class XTEARegion implements XteaDefinition {
 
-    public constructor(region: number, keys: [number,number,number,number]) {
-        this.region = region;
-        this.keys = keys;
+    public mapsquare: number;
+    public key: [number,number,number,number];
+
+    public constructor(mapsquare: number, key: [number,number,number,number]) {
+        this.mapsquare = mapsquare;
+        this.key = key;
     }
 }
 
-export function translateXTEARegionConfig(config: XTEARegionConfiguration): XTEARegion {
-    return new XTEARegion(config.region, config.keys);
+export function translateXTEARegionConfig(config: XteaDefinition): XTEARegion {
+    return new XTEARegion(config.mapsquare, config.key);
 }
 
-export async function loadXTEARegionConfigurations(path: string): Promise< Map<number, XTEARegion>> {
-    const regions = new Map<number, XTEARegion>();
+export async function loadXTEARegionConfigurations(path: string): Promise<{ [key: number]: XTEARegion }> {
+    const regions = {};
     const files = await loadConfigurationFiles(path);
     for(const file of files) {
         for (const region of file) {
             const xteaRegion = translateXTEARegionConfig(region)
-            regions.set(xteaRegion.region, xteaRegion)
+            regions[xteaRegion.mapsquare] =  xteaRegion;
         }
     }
     return regions;
