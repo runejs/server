@@ -1,6 +1,6 @@
 import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
 import { World } from '@engine/world';
-import { LocationObject } from '@runejs/cache-parser';
+import { LandscapeObject } from '@runejs/filestore';
 
 
 export const action: objectInteractionActionHandler = (details) => {
@@ -17,7 +17,7 @@ export const action: objectInteractionActionHandler = (details) => {
             }
             details.player.metadata['flour'] += details.player.metadata['grain'];
             details.player.metadata['grain'] = 0;
-            const fullFlourBin: LocationObject = { objectId: 1782, x: 3166, y: 3306, orientation: 0, level: 0, type: 10 };
+            const fullFlourBin: LandscapeObject = { objectId: 1782, x: 3166, y: 3306, orientation: 0, level: 0, type: 10 };
             details.player.personalInstance.spawnGameObject(fullFlourBin);
         } else {
             details.player.sendMessage(`You operate the hopper. Nothing interesting happens.`);

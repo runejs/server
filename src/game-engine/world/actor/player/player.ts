@@ -4,7 +4,7 @@ import { Isaac } from '@engine/net/isaac';
 import { PlayerSyncTask } from './sync/player-sync-task';
 import { Actor } from '../actor';
 import { Position } from '@engine/world/position';
-import { cache, actionHookMap, serverConfig, world, questMap } from '@engine/game-server';
+import { filestore, actionHookMap, serverConfig, world, questMap } from '@engine/game-server';
 import { logger } from '@runejs/core';
 import uuidv4 from 'uuid/v4';
 import {
@@ -28,7 +28,6 @@ import { QuadtreeKey } from '@engine/world';
 import { daysSinceLastLogin } from '@engine/util/time';
 import { itemIds } from '@engine/world/config/item-ids';
 import { colors, hexToRgb, rgbTo16Bit } from '@engine/util/colors';
-import { ItemDefinition } from '@runejs/cache-parser';
 import { PlayerCommandActionHook } from '@engine/world/action/player-command.action';
 import { updateBonusStrings } from '@plugins/items/equipment/equipment-stats.plugin';
 import { findMusicTrack, findSongIdByRegionId, musicRegions } from '@engine/config/index';
@@ -491,7 +490,7 @@ export class Player extends Actor {
 
             if(questData.onComplete.questCompleteWidget.itemId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3,
-                    (cache.itemDefinitions.get(questData.onComplete.questCompleteWidget.itemId) as ItemDefinition).inventoryModelId);
+                    filestore.configStore.itemStore.getItem(questData.onComplete.questCompleteWidget.itemId)?.model2d?.widgetModel);
             } else if(questData.onComplete.questCompleteWidget.modelId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.onComplete.questCompleteWidget.modelId);
             }
@@ -527,7 +526,7 @@ export class Player extends Actor {
                 this.outgoingPackets.updateWidgetString(widgetId, childId, text);
             }
             if(hidden !== undefined) {
-                this.outgoingPackets.toggleWidgetVisibility(widgets.skillGuide, childId, hidden);
+                this.outgoingPackets.toggleWidgetVisibility(widgetId, childId, hidden);
             }
             if(textColor !== undefined) {
                 const { r, g, b } = hexToRgb(textColor);
@@ -643,7 +642,7 @@ export class Player extends Actor {
         this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, slot, null);
     }
 
-    public giveItem(item: number | Item): boolean {
+    public giveItem(item: number | Item | string): boolean {
         const addedItem = this.inventory.add(item);
         if(addedItem === null) {
             return false;
@@ -1002,9 +1001,17 @@ export class Player extends Actor {
         Object.keys(questMap).forEach(questKey => {
             const questData = questMap[questKey];
             const playerQuest = this.quests.find(quest => quest.questId === questData.id);
-            let color = colors.green;
-            if(playerQuest && !playerQuest.complete) {
-                color = playerQuest.progress === 0 ? colors.red : colors.yellow;
+            let color: number;
+
+            if (playerQuest?.complete) {
+                // Quest complete, regardless of progress
+                color = colors.green;
+            } else if (playerQuest?.progress > 0) {
+                // Quest in progress, not yet complete but progress is greater than 0
+                color = colors.yellow;
+            } else {
+                // Everything else failed, so quest hasn't been started yet
+                color = colors.red;
             }
 
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: color });

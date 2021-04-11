@@ -1,5 +1,4 @@
 import { itemOnItemActionHandler } from '@engine/world/action/item-on-item.action';
-import { LocationObject } from '@runejs/cache-parser';
 import { Player } from '@engine/world/actor/player/player';
 import { WorldItem } from '@engine/world/items/world-item';
 import { Position } from '@engine/world/position';
@@ -9,6 +8,7 @@ import { itemIds } from '@engine/world/config/item-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { loopingEvent } from '@engine/game-server';
+import { LandscapeObject } from '@runejs/filestore';
 
 
 const logs = [
@@ -39,7 +39,7 @@ const fireDuration = (): number => {
 
 const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, burnExp: number): void => {
     player.instance.despawnWorldItem(worldItemLog);
-    const fireObject: LocationObject = {
+    const fireObject: LandscapeObject = {
         objectId: objectIds.fire,
         x: position.x,
         y: position.y,

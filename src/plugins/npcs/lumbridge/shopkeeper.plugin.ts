@@ -2,9 +2,10 @@ import { npcInteractionActionHandler } from '@engine/world/action/npc-interactio
 import { findShop } from '@engine/config';
 
 
-const action: npcInteractionActionHandler = ({ player }) =>
+const action: npcInteractionActionHandler = ({ player }) => {
     findShop('rs:lumbridge_general_store')?.open(player);
 
+}
 export default {
     pluginId: 'rs:lumbridge_general_store',
     hooks: [

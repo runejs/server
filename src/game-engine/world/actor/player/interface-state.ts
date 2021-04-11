@@ -33,6 +33,8 @@ export interface WidgetOptions {
     queued?: boolean;
     containerId?: number;
     container?: ItemContainer;
+    fakeWidget?: number;
+    metadata?: { [key: string]: any };
 }
 
 
@@ -44,21 +46,25 @@ export class Widget {
     public queued: boolean = false;
     public containerId: number;
     public container: ItemContainer = null;
+    public fakeWidget?: number;
+    public metadata: { [key: string]: any };
 
     public constructor(interfaceId: number, options: WidgetOptions) {
-        const { slot, multi, queued, containerId, container } = options;
+        const { slot, multi, queued, containerId, container, fakeWidget, metadata } = options;
 
         this.widgetId = interfaceId;
+        this.fakeWidget = fakeWidget;
         this.slot = slot;
         this.multi = multi || false;
         this.queued = queued || false;
         this.containerId = containerId || -1;
         this.container = container || null;
+        this.metadata = { ...metadata }
     }
 
 }
 
-interface WidgetClosedEvent {
+export interface WidgetClosedEvent {
     widget: Widget;
     data?: number;
 }
@@ -129,7 +135,6 @@ export class InterfaceState {
     public closeWidget(slot: GameInterfaceSlot, data?: number): void;
     public closeWidget(i: GameInterfaceSlot | number, data?: number): void {
         let widget: Widget | null;
-
         if(typeof i === 'number') {
             widget = this.findWidget(i);
         } else {
@@ -144,7 +149,7 @@ export class InterfaceState {
         this.widgetSlots[widget.slot] = null;
     }
 
-    public openWidget(widgetId: number, options: WidgetOptions): void {
+    public openWidget(widgetId: number, options: WidgetOptions): Widget {
         // if(this.widgetOpen(options.slot, widgetId)) {
         //     return;
         // }
@@ -161,6 +166,7 @@ export class InterfaceState {
 
         this.widgetSlots[widget.slot] = widget;
         this.showWidget(widget);
+        return widget;
     }
 
     public setTab(type: TabType, widget: Widget | number | null): void {
