@@ -1,13 +1,15 @@
-import { Player } from '../player';
+import { ByteBuffer } from '@runejs/core/buffer';
+
 import { Task } from '@engine/world/task';
 import { UpdateFlags } from '@engine/world/actor/update-flags';
 import { Packet, PacketType } from '@engine/net/packet';
 import { world } from '@engine/game-server';
-import { appendMovement, registerNewActors, syncTrackedActors } from './actor-sync';
-import { ByteBuffer } from '@runejs/core';
 import { stringToLong } from '@engine/util/strings';
 import { findItem, findNpc } from '@engine/config';
 import { EquipmentSlot, ItemDetails } from '@engine/config/item-config';
+import { appendMovement, registerNewActors, syncTrackedActors } from './actor-sync';
+import { Player } from '../player';
+
 
 /**
  * Handles the chonky player synchronization packet.

@@ -2,15 +2,15 @@ const walkPacket = (player, packet) => {
     const { buffer, packetSize, packetId } = packet;
 
     let size = packetSize;
-    if(packetId == 236) {
+    if(packetId === 236) {
         size -= 14;
     }
 
     const totalSteps = Math.floor((size - 5) / 2);
 
-    const firstY = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const firstY = buffer.get('short', 'u', 'le');
     const runSteps = buffer.get() === 1; // @TODO forced running
-    const firstX = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const firstX = buffer.get('short', 'u', 'le');
 
     const walkingQueue = player.walkingQueue;
 

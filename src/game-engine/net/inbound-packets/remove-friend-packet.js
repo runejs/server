@@ -5,7 +5,7 @@ export default {
     opcode: 255,
     size: 8,
     handler: (player, packet) => {
-        const friendName = longToString(packet.buffer.get('LONG'));
+        const friendName = longToString(packet.buffer.get('long'));
         if(!friendName) {
             return;
         }

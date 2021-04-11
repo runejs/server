@@ -1,11 +1,13 @@
+import { ByteBuffer } from '@runejs/core/buffer';
+
 import { world } from '@engine/game-server';
 import { Packet } from '@engine/net/packet';
 import { Npc } from '@engine/world/actor/npc/npc';
-import { Player } from '../player';
 import { Position } from '@engine/world/position';
 import { QuadtreeKey } from '@engine/world';
 import { Actor } from '@engine/world/actor/actor';
-import { ByteBuffer } from '@runejs/core';
+import { Player } from '../player';
+
 
 /**
  * Handles the registration of nearby NPCs or Players for the specified player.

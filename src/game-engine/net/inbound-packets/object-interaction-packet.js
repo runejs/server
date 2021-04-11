@@ -4,25 +4,25 @@ import { logger } from '@runejs/core';
 
 const option1 = packet => {
     const { buffer } = packet;
-    const objectId = buffer.get('SHORT', 'UNSIGNED');
-    const y = buffer.get('SHORT', 'UNSIGNED');
-    const x = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const objectId = buffer.get('short', 'u');
+    const y = buffer.get('short', 'u');
+    const x = buffer.get('short', 'u', 'le');
     return { objectId, x, y };
 };
 
 const option2 = packet => {
     const { buffer } = packet;
-    const x = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const y = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const objectId = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const x = buffer.get('short', 'u', 'le');
+    const y = buffer.get('short', 'u', 'le');
+    const objectId = buffer.get('short', 'u', 'le');
     return { objectId, x, y };
 };
 
 const option3 = packet => {
     const { buffer } = packet;
-    const y = buffer.get('SHORT', 'UNSIGNED');
-    const objectId = buffer.get('SHORT', 'UNSIGNED');
-    const x = buffer.get('SHORT', 'UNSIGNED');
+    const y = buffer.get('short', 'u');
+    const objectId = buffer.get('short', 'u');
+    const x = buffer.get('short', 'u');
     return { objectId, x, y };
 };
 
