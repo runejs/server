@@ -1,7 +1,7 @@
 const buttonClickPacket = (player, packet) => {
     const { buffer } = packet;
-    const widgetId = buffer.get('SHORT');
-    const buttonId = buffer.get('SHORT');
+    const widgetId = buffer.get('short');
+    const buttonId = buffer.get('short');
 
     player.actionPipeline.call('button', player, widgetId, buttonId);
 };

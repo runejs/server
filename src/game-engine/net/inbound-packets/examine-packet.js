@@ -2,7 +2,7 @@ import { world } from '../../game-server';
 
 const examinePacket = (player, packet) => {
     const { packetId, buffer } = packet;
-    const id = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const id = buffer.get('short', 's', 'le');
 
     let message;
 

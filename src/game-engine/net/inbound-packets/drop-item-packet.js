@@ -1,9 +1,9 @@
 const dropItemPacket = (player, packet) => {
     const { buffer } = packet;
-    const widgetId = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const containerId = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const slot = buffer.get('SHORT', 'UNSIGNED');
-    const itemId = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const widgetId = buffer.get('short', 'u', 'le');
+    const containerId = buffer.get('short', 'u', 'le');
+    const slot = buffer.get('short', 'u');
+    const itemId = buffer.get('short', 'u', 'le');
 
     player.actionPipeline.call('item_interaction', player, itemId, slot, widgetId, containerId, 'drop');
 };

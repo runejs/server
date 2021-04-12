@@ -1,4 +1,4 @@
-import { loadConfigurationFiles } from '@engine/config/index';
+import { loadConfigurationFiles } from '@runejs/core/fs';
 import { SkillName } from '@engine/world/actor/skills';
 import _ from 'lodash';
 import { logger } from '@runejs/core';

@@ -6,8 +6,8 @@ import { logger } from '@runejs/core';
 const playerInteractionPacket = (player, packet) => {
     const { buffer, packetId } = packet;
     const args = {
-        68: [ 'SHORT', 'UNSIGNED', 'LITTLE_ENDIAN' ],
-        211: [ 'SHORT', 'UNSIGNED', 'LITTLE_ENDIAN' ]
+        68: [ 'short', 'u', 'le' ],
+        211: [ 'short', 'u', 'le' ]
     };
     const playerIndex = buffer.get(...args[packetId]) - 1;
 

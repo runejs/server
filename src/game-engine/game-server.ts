@@ -1,5 +1,6 @@
 import { World } from './world';
-import { logger, parseServerConfig } from '@runejs/core';
+import { logger } from '@runejs/core';
+import { parseServerConfig } from '@runejs/core/net';
 import { ServerConfig } from '@engine/config/server-config';
 
 import { loadPluginFiles } from '@engine/plugins/content-plugin';

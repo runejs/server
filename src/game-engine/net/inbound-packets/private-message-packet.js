@@ -7,8 +7,8 @@ export default {
     handler: (player, packet) => {
         const { buffer } = packet;
 
-        buffer.get('BYTE'); // junk
-        const nameLong = buffer.get('LONG');
+        buffer.get('byte'); // junk
+        const nameLong = buffer.get('long');
         const username = longToString(nameLong).toLowerCase();
         const messageLength = buffer.length - 9;
         const messageBytes = new Array(messageLength);

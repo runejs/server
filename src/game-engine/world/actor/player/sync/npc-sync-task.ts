@@ -1,10 +1,12 @@
+import { ByteBuffer } from '@runejs/core/buffer';
+
 import { Task } from '@engine/world/task';
-import { Player } from '../player';
 import { Packet, PacketType } from '@engine/net/packet';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { world } from '@engine/game-server';
 import { registerNewActors, syncTrackedActors } from './actor-sync';
-import { ByteBuffer } from '@runejs/core';
+import { Player } from '../player';
+
 
 /**
  * Handles the chonky npc synchronization packet for a specific player.

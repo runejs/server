@@ -1,5 +1,5 @@
 import { Position } from '@engine/world/position';
-import { loadConfigurationFiles } from '@engine/config/index';
+import { loadConfigurationFiles } from '@runejs/core/fs';
 import { Direction } from '@engine/world/direction';
 
 
