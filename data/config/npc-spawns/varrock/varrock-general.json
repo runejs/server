@@ -42,6 +42,12 @@
         "movement_radius": 4
     },
     {
+        "npc": "rs:father_lawrence",
+        "spawn_x": 3254,
+        "spawn_y": 3485,
+        "movement_radius": 3
+    },
+    {
         "npc": "rs:man",
         "spawn_x": 3153,
         "spawn_y": 3429,

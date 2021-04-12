@@ -8,6 +8,7 @@ import { phillipaDialogue } from './phillipa-dialogue';
 import { julietDialogue } from './juliet-dialogue';
 import { romeoDialogue } from './romeo-dialogue';
 import { draulLeptocDialogue } from './draul-leptoc-dialogue';
+import { fatherLawrenceDialogue } from './father-lawrence-dialogue';
 
 const journalHandler = {
     0: `I can start this quest by speaking to <col=800000>Romeo</col> in
@@ -87,6 +88,16 @@ export default <ContentPlugin>{
         walkTo: true,
         handler: draulLeptocDialogue[2]
     }, {
+        type: 'npc_interaction',
+        questRequirement: {
+            questId: 'rs:romeo_and_juliet',
+            stages: [0, 1, 2]
+        },
+        npcs: 'rs:father_lawrence',
+        options: 'talk-to',
+        walkTo: true,
+        handler: fatherLawrenceDialogue[0]
+    },{
         type: 'npc_interaction',
         questRequirement: {
             questId: 'rs:romeo_and_juliet',
