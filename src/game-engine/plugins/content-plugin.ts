@@ -1,5 +1,7 @@
-import { getFiles } from '@engine/util/files';
 import { logger } from '@runejs/core';
+import { getFiles } from '@runejs/core/fs';
+import { join } from 'path';
+
 import { ActionHook } from '@engine/world/action/hooks';
 import { Quest } from '@engine/world/actor/player/quest';
 
@@ -18,12 +20,12 @@ export class ContentPlugin {
  * Searches for and parses all plugin files within the /plugins directory.
  */
 export async function loadPluginFiles(): Promise<ContentPlugin[]> {
-    const pluginDir = './dist/plugins';
-    const relativeDir = '../../plugins';
+    const pluginDir = join('.', 'dist', 'plugins');
+    const relativeDir = join('..', '..', 'plugins');
     const plugins: ContentPlugin[] = [];
 
-    for await(const path of getFiles(pluginDir, ['.plugin.js'], true)) {
-        const location = relativeDir + path.substring(pluginDir.length).replace('.js', '');
+    for await(const path of getFiles(pluginDir, { type: 'whitelist', list: ['.plugin.js'] })) {
+        const location = join(relativeDir, path.substring(pluginDir.length).replace('.js', ''));
 
         try {
             let pluginFile = require(location);

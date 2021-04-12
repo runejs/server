@@ -5,11 +5,11 @@ import { widgets } from '../../config';
 
 const itemOnNpcPacket = (player, packet) => {
     const { buffer } = packet;
-    const npcIndex = buffer.get('SHORT', 'UNSIGNED');
-    const itemId = buffer.get('SHORT', 'UNSIGNED');
-    const itemSlot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const itemWidgetId = buffer.get('SHORT');
-    const itemContainerId = buffer.get('SHORT');
+    const npcIndex = buffer.get('short', 'u');
+    const itemId = buffer.get('short', 'u');
+    const itemSlot = buffer.get('short', 'u', 'le');
+    const itemWidgetId = buffer.get('short');
+    const itemContainerId = buffer.get('short');
 
     let usedItem;
     if(itemWidgetId === widgets.inventory.widgetId && itemContainerId === widgets.inventory.containerId) {

@@ -1,10 +1,10 @@
 const itemSwapPacket = (player, packet) => {
     const { buffer } = packet;
     const swapType = buffer.get();
-    const fromSlot = buffer.get('SHORT', 'UNSIGNED');
-    const toSlot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const containerId = buffer.get('SHORT');
-    const widgetId = buffer.get('SHORT');
+    const fromSlot = buffer.get('short', 'u');
+    const toSlot = buffer.get('short', 'u', 'le');
+    const containerId = buffer.get('short');
+    const widgetId = buffer.get('short');
 
     if(toSlot < 0 || fromSlot < 0) {
         return;

@@ -6,9 +6,9 @@ const npcInteractionPacket = (player, packet) => {
     const { buffer, packetId } = packet;
 
     const args = {
-        63: [ 'SHORT', 'UNSIGNED', 'LITTLE_ENDIAN' ],
-        116: [ 'SHORT', 'UNSIGNED', 'LITTLE_ENDIAN' ],
-        57: [ 'SHORT', 'UNSIGNED' ],
+        63: [ 'short', 'u', 'le' ],
+        116: [ 'short', 'u', 'le' ],
+        57: [ 'short', 'u' ],
         /*42: 'readUnsignedShortLE',
         8: 'readUnsignedShortLE'*/
     };

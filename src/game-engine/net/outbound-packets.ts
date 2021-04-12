@@ -6,10 +6,11 @@ import { Item } from '@engine/world/items/item';
 import { Position } from '@engine/world/position';
 import { Chunk, ChunkUpdateItem } from '@engine/world/map/chunk';
 import { WorldItem } from '@engine/world/items/world-item';
-import { ByteBuffer } from '@runejs/core';
+import { ByteBuffer } from '@runejs/core/buffer';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { stringToLong } from '@engine/util/strings';
 import { LandscapeObject } from '@runejs/filestore';
+import { xteaRegions } from '@engine/config';
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -563,8 +564,14 @@ export class OutboundPackets {
 
         for(let xCalc = Math.floor(this.player.position.chunkX / 8); xCalc <= Math.floor((this.player.position.chunkX + 12) / 8); xCalc++) {
             for(let yCalc = Math.floor(this.player.position.chunkY / 8); yCalc <= Math.floor((this.player.position.chunkY + 12) / 8); yCalc++) {
+                const regionid = (xCalc << 8 | yCalc);
+                const xteaRegion = xteaRegions[regionid]
                 for(let seeds = 0; seeds < 4; seeds++) {
-                    packet.put(0, 'INT');
+                    if(xteaRegion) {
+                        packet.put(xteaRegion.key[seeds], 'INT');
+                    } else  {
+                        packet.put(0, 'INT');
+                    }
                 }
             }
         }

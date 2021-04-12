@@ -1,5 +1,6 @@
 import { Player } from '../world/actor/player/player';
-import { ByteBuffer, logger } from '@runejs/core';
+import { logger } from '@runejs/core';
+import { ByteBuffer } from '@runejs/core/buffer';
 import { getFiles } from '../util/files';
 import { gameEngineDist } from '@engine/util/directories';
 

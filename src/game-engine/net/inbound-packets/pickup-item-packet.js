@@ -2,9 +2,9 @@ import { Position } from '../../world/position';
 
 const pickupItemPacket = (player, packet) => {
     const { buffer } = packet;
-    const y = buffer.get('SHORT', 'UNSIGNED');
-    const itemId = buffer.get('SHORT', 'UNSIGNED');
-    const x = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const y = buffer.get('short', 'u');
+    const itemId = buffer.get('short', 'u');
+    const x = buffer.get('short', 'u', 'le');
 
     const level = player.position.level;
     const worldItemPosition = new Position(x, y, level);

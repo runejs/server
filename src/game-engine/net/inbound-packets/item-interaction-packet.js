@@ -1,58 +1,58 @@
 import { getItemOption } from '../../world/items/item';
 
 const option1 = buffer => {
-    const itemId = buffer.get('SHORT', 'UNSIGNED');
-    const slot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const widgetId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const containerId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const itemId = buffer.get('short', 'u');
+    const slot = buffer.get('short', 'u', 'le');
+    const widgetId = buffer.get('short', 's', 'le');
+    const containerId = buffer.get('short', 's', 'le');
     return { widgetId, containerId, itemId, slot };
 };
 
 const option2 = buffer => {
-    const itemId = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const containerId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const widgetId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const slot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const itemId = buffer.get('short', 'u', 'le');
+    const containerId = buffer.get('short', 's', 'le');
+    const widgetId = buffer.get('short', 's', 'le');
+    const slot = buffer.get('short', 'u', 'le');
     return { widgetId, containerId, itemId, slot };
 };
 
 const option3 = buffer => {
-    const slot = buffer.get('SHORT', 'UNSIGNED');
-    const containerId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const widgetId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const itemId = buffer.get('SHORT', 'UNSIGNED');
+    const slot = buffer.get('short', 'u');
+    const containerId = buffer.get('short', 's', 'le');
+    const widgetId = buffer.get('short', 's', 'le');
+    const itemId = buffer.get('short', 'u');
     return { widgetId, containerId, itemId, slot };
 };
 
 const option4 = buffer => {
-    const itemId = buffer.get('SHORT', 'UNSIGNED');
-    const slot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const containerId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const widgetId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const itemId = buffer.get('short', 'u');
+    const slot = buffer.get('short', 'u', 'le');
+    const containerId = buffer.get('short', 's', 'le');
+    const widgetId = buffer.get('short', 's', 'le');
     return { widgetId, containerId, itemId, slot };
 };
 
 const option5 = buffer => {
-    const containerId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const widgetId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const slot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const itemId = buffer.get('SHORT', 'UNSIGNED');
+    const containerId = buffer.get('short', 's', 'le');
+    const widgetId = buffer.get('short', 's', 'le');
+    const slot = buffer.get('short', 'u', 'le');
+    const itemId = buffer.get('short', 'u');
     return { widgetId, containerId, itemId, slot };
 };
 
 const inventoryOption1 = buffer => {
-    const slot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const itemId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const containerId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const widgetId = buffer.get('SHORT', 'UNSIGNED');
+    const slot = buffer.get('short', 'u', 'le');
+    const itemId = buffer.get('short', 's', 'le');
+    const containerId = buffer.get('short', 's', 'le');
+    const widgetId = buffer.get('short', 'u');
     return { widgetId, containerId, itemId, slot };
 };
 
 const inventoryOption4 = buffer => {
-    const slot = buffer.get('SHORT', 'UNSIGNED');
-    const widgetId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const containerId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const itemId = buffer.get('SHORT', 'UNSIGNED');
+    const slot = buffer.get('short', 'u');
+    const widgetId = buffer.get('short', 's', 'le');
+    const containerId = buffer.get('short', 's', 'le');
+    const itemId = buffer.get('short', 'u');
     return { widgetId, containerId, itemId, slot };
 };
 
