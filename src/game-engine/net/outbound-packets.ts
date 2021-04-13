@@ -11,6 +11,7 @@ import { Npc } from '@engine/world/actor/npc/npc';
 import { stringToLong } from '@engine/util/strings';
 import { LandscapeObject } from '@runejs/filestore';
 import { xteaRegions } from '@engine/config';
+import { MinimapState } from '@engine/config/minimap-state';
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -44,6 +45,12 @@ export class OutboundPackets {
     public turnCameraTowards(position: Position, height: number, speed: number, acceleration: number): void {
         const packet = new Packet(234);
         this.putCameraPosition(packet, position, height, speed, acceleration);
+        this.queue(packet);
+    }
+
+    public setMinimapState(minimapState: MinimapState): void {
+        const packet = new Packet(235);
+        packet.put(minimapState);
         this.queue(packet);
     }
 
