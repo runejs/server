@@ -72,7 +72,7 @@ export function questHookFilter(player: Player, actionHook: ActionHook): boolean
     const playerQuest = player.quests.find(quest => quest.questId === questId);
     if (!playerQuest) {
         // @TODO quest requirements
-        return actionHook.questRequirement.stage === 0;
+        return actionHook.questRequirement.stage === 0 || actionHook.questRequirement.stages?.indexOf(0) !== -1;
     }
 
     if (actionHook.questRequirement.stage === 'complete') {
