@@ -603,6 +603,7 @@ export class Player extends Actor {
         const newChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
 
         this.walkingQueue.clear();
+        this.metadata['lastPosition'] = this.position;
         this.position = newPosition;
 
         this.updateFlags.mapRegionUpdateRequired = true;
