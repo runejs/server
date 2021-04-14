@@ -217,16 +217,6 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    // Text dialogs = 356, 359, 363, 368, 374
-    // Item dialogs = 519
-    // Statements (no click to continue) = 210, 211, 212, 213, 214
-    public showChatboxWidget(widgetId: number): void {
-        const packet = new Packet(208);
-        packet.put(widgetId, 'SHORT');
-
-        this.queue(packet);
-    }
-
     public setWidgetNpcHead(widgetId: number, childId: number, modelId: number): void {
         const packet = new Packet(160);
         packet.put(modelId, 'SHORT', 'LITTLE_ENDIAN');
@@ -462,7 +452,24 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    public showChatDialogue(widgetId: number): void {
+    /**
+     * Show or replace dialogue in the chatbox slot, resetting all the other slots client-side
+     * This widget will close when walking
+     * @param widgetId The widget ID
+     */
+    public showChatboxWidget(widgetId: number): void {
+        const packet = new Packet(208);
+        packet.put(widgetId, 'SHORT');
+
+        this.queue(packet);
+    }
+
+    /**
+     * Show permanent widget in the dialogue slot that preserves all widgets, even previously opened chatbox widgets
+     * This widget will NOT close when walking
+     * @param widgetId The widget ID
+     */
+    public showPermanentDialogueWidget(widgetId: number): void {
         const packet = new Packet(185);
         packet.put(widgetId, 'SHORT');
         this.queue(packet);

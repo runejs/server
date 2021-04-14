@@ -108,12 +108,12 @@ export class InterfaceState {
 
     public openChatOverlayWidget(widgetId: number): void {
         this._chatOverlayWidget = widgetId;
-        this.player.outgoingPackets.showChatDialogue(widgetId);
+        this.player.outgoingPackets.showPermanentDialogueWidget(widgetId);
     }
 
     public closeChatOverlayWidget(): void {
         this._chatOverlayWidget = null;
-        this.player.outgoingPackets.showChatDialogue(-1);
+        this.player.outgoingPackets.showPermanentDialogueWidget(-1);
     }
 
     public openScreenOverlayWidget(widgetId: number): void {
@@ -145,6 +145,7 @@ export class InterfaceState {
             return;
         }
 
+        // Permanent chatbox widgets must be closed like this, or else they show forever
         if (widget.slot === 'chatbox' && widget.multi) {
             this.closeChatOverlayWidget();
         }
@@ -250,7 +251,7 @@ export class InterfaceState {
         } else if(slot === 'chatbox') {
             if(multi) {
                 // Dialogue Widget
-                packets.showChatDialogue(widgetId);
+                packets.showPermanentDialogueWidget(widgetId);
             } else {
                 // Chatbox Widget
                 packets.showChatboxWidget(widgetId);
