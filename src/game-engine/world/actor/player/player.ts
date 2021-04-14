@@ -201,7 +201,7 @@ export class Player extends Actor {
                     multi: false
                 });
             }
-        } else if(serverConfig.showWelcome && this.savedMetadata.tutorialComplete) {
+        } else if(serverConfig.showWelcome && (!serverConfig.tutorialEnabled || this.savedMetadata.tutorialComplete)) {
             const daysSinceLogin = daysSinceLastLogin(this.loginDate);
             let loginDaysStr = '';
 
