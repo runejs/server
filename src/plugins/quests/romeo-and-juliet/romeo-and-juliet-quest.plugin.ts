@@ -6,9 +6,10 @@ import { findItem } from '@engine/config';
 // Dialogues
 import { phillipaDialogue } from './phillipa-dialogue';
 import { julietDialogue } from './juliet-dialogue';
-import { romeoDialogue } from './romeo-dialogue';
+import { romeoDialogueHandler } from './romeo-dialogue';
 import { draulLeptocDialogue } from './draul-leptoc-dialogue';
 import { fatherLawrenceDialogue } from './father-lawrence-dialogue';
+import { questDialogueActionFactory } from '@engine/config/quest-config';
 
 const journalHandler = {
     0: `I can start this quest by speaking to <col=800000>Romeo</col> in
@@ -49,14 +50,10 @@ export default <ContentPlugin>{
     hooks: <NpcInteractionActionHook[]>[{
         // TODO you can actually start the quest by talking to Juliet first
         type: 'npc_interaction',
-        questRequirement: {
-            questId: 'rs:romeo_and_juliet',
-            stage: 0
-        },
         npcs: 'rs:romeo',
         options: 'talk-to',
         walkTo: true,
-        handler: romeoDialogue[0]
+        handler: questDialogueActionFactory('rs:romeo_and_juliet', romeoDialogueHandler)
     }, {
         type: 'npc_interaction',
         questRequirement: {
@@ -97,26 +94,6 @@ export default <ContentPlugin>{
         options: 'talk-to',
         walkTo: true,
         handler: fatherLawrenceDialogue[0]
-    }, {
-        type: 'npc_interaction',
-        questRequirement: {
-            questId: 'rs:romeo_and_juliet',
-            stage: 1
-        },
-        npcs: 'rs:romeo',
-        options: 'talk-to',
-        walkTo: true,
-        handler: romeoDialogue[1]
-    }, {
-        type: 'npc_interaction',
-        questRequirement: {
-            questId: 'rs:romeo_and_juliet',
-            stage: 2
-        },
-        npcs: 'rs:romeo',
-        options: 'talk-to',
-        walkTo: true,
-        handler: romeoDialogue[2]
     }, {
         type: 'npc_interaction',
         questRequirement: {

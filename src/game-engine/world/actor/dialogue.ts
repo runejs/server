@@ -601,9 +601,6 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
         const permanent = additionalOptions?.permanent || false;
         const multi = additionalOptions?.multi == null ? false : additionalOptions?.multi;
 
-        // player.interfaceState.clearSlots();
-        // player.interfaceState.closeOthers('chatbox');
-
         if(permanent) {
             player.interfaceState.openChatOverlayWidget(widgetId);
         } else {
@@ -670,8 +667,7 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
 
     try {
         await run();
-        // TODO uncomment the next line
-        // player.interfaceState.closeAllSlots();
+        player.interfaceState.closeAllSlots();
         return true;
     } catch(error) {
         player.interfaceState.closeAllSlots();

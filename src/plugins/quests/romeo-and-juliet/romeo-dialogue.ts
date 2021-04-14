@@ -1,4 +1,3 @@
-import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { randomBetween } from '@engine/util/num';
 import { dialogue, Emote, execute, goto } from '@engine/world/actor/dialogue';
 import { widgets } from '@engine/config';
@@ -7,10 +6,46 @@ import { Position } from '@engine/world/position';
 import { MinimapState } from '@engine/config/minimap-state';
 import { WorldInstance } from '@engine/world/instances';
 import uuidv4 from 'uuid/v4';
+import { QuestDialogueHandler } from '@engine/config/quest-config';
+import { Player } from '@engine/world/actor/player/player';
+import { Npc } from '@engine/world/actor/npc/npc';
 
-export const romeoDialogue: npcInteractionActionHandler[] = [
-    async details => {
-        const { player, npc } = details;
+const moreInfo = () => {
+    return (options, tag_MORE_INFO) => [
+        `Where can I find Juliet?`, [
+            player => [Emote.WONDERING, `Where can I find Juliet?`],
+            romeo => [Emote.WONDERING, `Why do you ask?`],
+            player => [Emote.ANGRY, `So that I can try and find her for you!`],
+            romeo => [Emote.WONDERING, `Ah yes....quite right. Hmmm, let me think now.`],
+            romeo => [Emote.WONDERING, `She may still be locked away at her Father's house on the sest vide of Warrock.`],
+            romeo => [Emote.HAPPY, `Oh, I remember how she loved it when I would sing up to her balcony! She would reward me with her own personal items...`],
+            player => [Emote.WONDERING, `What, she just gave you her stuff?`],
+            romeo => [Emote.GENERIC, `Well, not exactly give...more like 'throw with considerable force'...she's always a kidder that Juliet!`],
+            goto('tag_MORE_INFO')
+        ],
+        `Is there anything else you can tell me about Juliet?`, [
+            player => [Emote.WONDERING, `Is there anything else you can tell me about Juliet?`],
+            romeo => [Emote.HAPPY, `Oh, there is so much to tell...she is my true love, we intend to spend together forever...I can tell you so much about her..`],
+            player => [Emote.GENERIC, `Great!`],
+            romeo => [Emote.WONDERING, `Ermmm.....`],
+            romeo => [Emote.WONDERING, `So much can I tell you...`],
+            player => [Emote.HAPPY, `Yes..`],
+            romeo => [Emote.WONDERING, `So much to tell...why, where do I start!`],
+            player => [Emote.GENERIC, `Yes..yes! Please go on...don't let me interrupt...`],
+            romeo => [Emote.WONDERING, `Ermmm.....`],
+            romeo => [Emote.WONDERING, `...`],
+            player => [Emote.WONDERING, `You can't remember can you?`],
+            romeo => [Emote.SAD, `Not a thing sorry....`],
+            goto('tag_MORE_INFO')
+        ],
+        `Ok, thanks.`, [
+            player => [Emote.GENERIC, `Ok, thanks.`]
+        ]
+    ];
+};
+
+export const romeoDialogueHandler: QuestDialogueHandler = {
+    0: async (player: Player, npc: Npc) => {
         const participants = [player, { npc, key: 'romeo' }];
 
         // Romeo starts with a random line
@@ -117,8 +152,8 @@ export const romeoDialogue: npcInteractionActionHandler[] = [
             ]
         ]);
     },
-    async details => {
-        const { player, npc } = details;
+
+    1: async (player: Player, npc: Npc) => {
         const participants = [player, { npc, key: 'romeo' }];
         await dialogue(participants, [
             player => [Emote.GENERIC, `Hello again, remember me?`],
@@ -131,9 +166,9 @@ export const romeoDialogue: npcInteractionActionHandler[] = [
             moreInfo()
         ]);
     },
-    async details => {
+
+    2: async (player: Player, npc: Npc) => {
         // Placeholder for the cutscene at the end, I was bored so I decided to skip to this one
-        const { player, npc } = details;
         const participants = [player, { npc, key: 'romeo' }];
         const cont = await dialogue(participants, [
             player => [Emote.HAPPY, `Romeo, it's all set. Juliet has drunk the potion and has been taken down into the Crypt...now you just need to pop along and collect her.`],
@@ -151,7 +186,7 @@ export const romeoDialogue: npcInteractionActionHandler[] = [
         const fadeOutAnimation = 3541;
         const fadeInAnimation = 2115;
 
-        player.outgoingPackets.playWidgetAnimation(widgets.fade, 0, fadeOutAnimation);
+        // player.outgoingPackets.playWidgetAnimation(widgets.fade, 0, fadeOutAnimation);
         player.interfaceState.openWidget(widgets.fade, { slot: 'screen' });
 
         await schedule(4);
@@ -161,13 +196,11 @@ export const romeoDialogue: npcInteractionActionHandler[] = [
         player.teleport(new Position(2332, 4645));
 
         await dialogue(participants, [
-            player => [Emote.WORRIED, `Oh , be quiet...`],
+            romeo => [Emote.WORRIED, `This is pretty scary...`],
         ], { multi: true });
 
-        await schedule(2);
-
         await dialogue(participants, [
-            romeo => [Emote.WORRIED, `This is pretty scary...`],
+            player => [Emote.WORRIED, `Oh , be quiet...`],
         ], { multi: true });
 
         // player.interfaceState.openWidget(241, {
@@ -182,7 +215,7 @@ export const romeoDialogue: npcInteractionActionHandler[] = [
 
         // player.interfaceState.closeWidget('chatbox');
 
-        player.outgoingPackets.playWidgetAnimation(widgets.blankScreen, 0, fadeInAnimation); // Fade in
+        player.outgoingPackets.playWidgetAnimation(widgets.fade, 0, fadeInAnimation); // Fade in
         player.outgoingPackets.setMinimapState(MinimapState.NORMAL); // TODO move this until after the cutscene
         player.instance = null;
 
@@ -201,38 +234,5 @@ export const romeoDialogue: npcInteractionActionHandler[] = [
         // player.interfaceState.openWidget(widgets.blankScreen, { slot: 'screen' });
         // await schedule(3);
         // player.outgoingPackets.playWidgetAnimation(widgets.blankScreen, 0, 2115); // Fade out
-    },
-];
-
-const moreInfo = () => {
-    return (options, tag_MORE_INFO) => [
-        `Where can I find Juliet?`, [
-            player => [Emote.WONDERING, `Where can I find Juliet?`],
-            romeo => [Emote.WONDERING, `Why do you ask?`],
-            player => [Emote.ANGRY, `So that I can try and find her for you!`],
-            romeo => [Emote.WONDERING, `Ah yes....quite right. Hmmm, let me think now.`],
-            romeo => [Emote.WONDERING, `She may still be locked away at her Father's house on the sest vide of Warrock.`],
-            romeo => [Emote.HAPPY, `Oh, I remember how she loved it when I would sing up to her balcony! She would reward me with her own personal items...`],
-            player => [Emote.WONDERING, `What, she just gave you her stuff?`],
-            romeo => [Emote.GENERIC, `Well, not exactly give...more like 'throw with considerable force'...she's always a kidder that Juliet!`],
-            goto('tag_MORE_INFO')
-        ],
-        `Is there anything else you can tell me about Juliet?`, [
-            player => [Emote.WONDERING, `Is there anything else you can tell me about Juliet?`],
-            romeo => [Emote.HAPPY, `Oh, there is so much to tell...she is my true love, we intend to spend together forever...I can tell you so much about her..`],
-            player => [Emote.GENERIC, `Great!`], romeo => [Emote.WONDERING, `Ermmm.....`],
-            romeo => [Emote.WONDERING, `So much can I tell you...`],
-            player => [Emote.HAPPY, `Yes..`],
-            romeo => [Emote.WONDERING, `So much to tell...why, where do I start!`],
-            player => [Emote.GENERIC, `Yes..yes! Please go on...don't let me interrupt...`],
-            romeo => [Emote.WONDERING, `Ermmm.....`],
-            romeo => [Emote.WONDERING, `...`],
-            player => [Emote.WONDERING, `You can't remember can you?`],
-            romeo => [Emote.SAD, `Not a thing sorry....`],
-            goto('tag_MORE_INFO')
-        ],
-        `Ok, thanks.`, [
-            player => [Emote.GENERIC, `Ok, thanks.`]
-        ]
-    ];
-};
+    }
+}

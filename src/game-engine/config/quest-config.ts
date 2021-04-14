@@ -2,7 +2,6 @@ import { Player } from '@engine/world/actor/player/player';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { logger } from '@runejs/core';
-import { handleTutorial } from '@plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy-quest.plugin';
 
 
 export type QuestKey = number | 'complete';
@@ -58,7 +57,8 @@ export function questDialogueActionFactory(questId: string, npcDialogueHandler: 
                 logger.error(e);
             }
 
-            await handleTutorial(player);
+            // TODO v this doesn't belong here!! v
+            // await handleTutorial(player);
         }
     };
 }
