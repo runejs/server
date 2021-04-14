@@ -40,9 +40,6 @@ export class Cutscene {
     public constructor(player: Player, options?: CameraOptions) {
         this.player = player;
 
-        // Hide the minimap when creating a cutscene
-        this.player.outgoingPackets.setMinimapState(MinimapState.BLACK);
-
         if(options) {
             this.setCamera(options);
         }
@@ -107,7 +104,6 @@ export class Cutscene {
      */
     public endCutscene(): void {
         this.player.outgoingPackets.resetCamera();
-        this.player.outgoingPackets.setMinimapState(MinimapState.NORMAL);
         this.player.cutscene = null;
     }
 

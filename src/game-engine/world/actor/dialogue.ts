@@ -164,6 +164,7 @@ export type DialogueTree = (Function | DialogueFunction | GoToAction)[];
 export interface AdditionalOptions {
     closeOnWalk?: boolean;
     permanent?: boolean;
+    multi?: boolean;
 }
 
 interface NpcParticipant {
@@ -598,13 +599,17 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 
     if(tag === undefined && widgetId) {
         const permanent = additionalOptions?.permanent || false;
+        const multi = additionalOptions?.multi == null ? false : additionalOptions?.multi;
+
+        // player.interfaceState.clearSlots();
+        // player.interfaceState.closeOthers('chatbox');
 
         if(permanent) {
             player.interfaceState.openChatOverlayWidget(widgetId);
         } else {
             player.interfaceState.openWidget(widgetId, {
                 slot: 'chatbox',
-                multi: false
+                multi
             });
 
             const widgetClosedEvent = await player.interfaceState.widgetClosed('chatbox');
@@ -665,11 +670,12 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
 
     try {
         await run();
-        player.interfaceState.closeAllSlots();
+        // TODO uncomment the next line
+        // player.interfaceState.closeAllSlots();
         return true;
     } catch(error) {
         player.interfaceState.closeAllSlots();
-        logger.warn(Object.keys(error.message));
+        logger.warn(error);
         return false;
     }
 }

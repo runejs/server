@@ -97,7 +97,7 @@ export default <ContentPlugin>{
         options: 'talk-to',
         walkTo: true,
         handler: fatherLawrenceDialogue[0]
-    },{
+    }, {
         type: 'npc_interaction',
         questRequirement: {
             questId: 'rs:romeo_and_juliet',
@@ -107,6 +107,16 @@ export default <ContentPlugin>{
         options: 'talk-to',
         walkTo: true,
         handler: romeoDialogue[1]
+    }, {
+        type: 'npc_interaction',
+        questRequirement: {
+            questId: 'rs:romeo_and_juliet',
+            stage: 2
+        },
+        npcs: 'rs:romeo',
+        options: 'talk-to',
+        walkTo: true,
+        handler: romeoDialogue[2]
     }, {
         type: 'npc_interaction',
         questRequirement: {

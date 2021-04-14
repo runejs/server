@@ -1,6 +1,12 @@
 import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { randomBetween } from '@engine/util/num';
 import { dialogue, Emote, execute, goto } from '@engine/world/actor/dialogue';
+import { widgets } from '@engine/config';
+import { schedule } from '@engine/world/task';
+import { Position } from '@engine/world/position';
+import { MinimapState } from '@engine/config/minimap-state';
+import { WorldInstance } from '@engine/world/instances';
+import uuidv4 from 'uuid/v4';
 
 export const romeoDialogue: npcInteractionActionHandler[] = [
     async details => {
@@ -124,7 +130,78 @@ export const romeoDialogue: npcInteractionActionHandler[] = [
             player => [Emote.WONDERING, `Nothing so far, but I need to ask a few questions? `],
             moreInfo()
         ]);
-    }
+    },
+    async details => {
+        // Placeholder for the cutscene at the end, I was bored so I decided to skip to this one
+        const { player, npc } = details;
+        const participants = [player, { npc, key: 'romeo' }];
+        const cont = await dialogue(participants, [
+            player => [Emote.HAPPY, `Romeo, it's all set. Juliet has drunk the potion and has been taken down into the Crypt...now you just need to pop along and collect her.`],
+            romeo => [Emote.HAPPY, `Ah, right, the potion! Great...`],
+            romeo => [Emote.WONDERING, `What potion would that be then?`],
+            player => [Emote.SHOCKED, `The Cadava potion...you know, the one which will make her appear dead! She's in the crypt, pop along and claim your true love.`],
+            romeo => [Emote.WORRIED, `But I'm scared...will you come with me?`],
+            player => [Emote.GENERIC, `Oh , ok...come on! I think I saw the entrance when I visited there last...`]
+        ]);
+
+        if (!cont) {
+            return;
+        }
+
+        const fadeOutAnimation = 3541;
+        const fadeInAnimation = 2115;
+
+        player.outgoingPackets.playWidgetAnimation(widgets.fade, 0, fadeOutAnimation);
+        player.interfaceState.openWidget(widgets.fade, { slot: 'screen' });
+
+        await schedule(4);
+
+        player.outgoingPackets.setMinimapState(MinimapState.BLACK);
+        player.instance = new WorldInstance(uuidv4());
+        player.teleport(new Position(2332, 4645));
+
+        await dialogue(participants, [
+            player => [Emote.WORRIED, `Oh , be quiet...`],
+        ], { multi: true });
+
+        await schedule(2);
+
+        await dialogue(participants, [
+            romeo => [Emote.WORRIED, `This is pretty scary...`],
+        ], { multi: true });
+
+        // player.interfaceState.openWidget(241, {
+        //     slot: 'chatbox',
+        //     multi: true
+        // });
+        // const widgetClosedEvent = await player.interfaceState.widgetClosed('chatbox');
+        //
+        // if(widgetClosedEvent.data === undefined) {
+        //     throw new Error('Dialogue Cancelled.');
+        // }
+
+        // player.interfaceState.closeWidget('chatbox');
+
+        player.outgoingPackets.playWidgetAnimation(widgets.blankScreen, 0, fadeInAnimation); // Fade in
+        player.outgoingPackets.setMinimapState(MinimapState.NORMAL); // TODO move this until after the cutscene
+        player.instance = null;
+
+
+        // await dialogue(participants, [
+        //     romeo => [Emote.WORRIED, `This is pretty scary...`]
+        // ], { multi: true });
+        //
+        // player.interfaceState.closeChatOverlayWidget();
+
+        // await dialogue(participants, [
+        //     player => [Emote.WORRIED, `Oh , be quiet...`]
+        // ], { multi: true });
+        //
+        // player.interfaceState.closeChatOverlayWidget();
+        // player.interfaceState.openWidget(widgets.blankScreen, { slot: 'screen' });
+        // await schedule(3);
+        // player.outgoingPackets.playWidgetAnimation(widgets.blankScreen, 0, 2115); // Fade out
+    },
 ];
 
 const moreInfo = () => {

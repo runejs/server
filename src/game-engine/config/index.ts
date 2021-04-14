@@ -39,7 +39,7 @@ export let skillGuides: SkillGuide[] = [];
 export let xteaRegions: { [key: number]: XteaRegion };
 
 export const musicRegionMap = new Map<number, number>();
-export const widgets: { [key: string]: any } = require('../../../data/config/widgets.json5');
+export const widgets = require('../../../data/config/widgets.json5');
 
 export async function loadCoreConfigurations(): Promise<void> {
     xteaRegions = await loadXteaRegionFiles('data/config/xteas');

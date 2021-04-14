@@ -145,6 +145,10 @@ export class InterfaceState {
             return;
         }
 
+        if (widget.slot === 'chatbox' && widget.multi) {
+            this.closeChatOverlayWidget();
+        }
+
         this.closed.next({ widget, data });
         this.widgetSlots[widget.slot] = null;
     }
