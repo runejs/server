@@ -29,7 +29,9 @@ export const draulDialogueHandler: QuestDialogueHandler = {
                     draul => [Emote.ANGRY, `If he threw a stone at the ground, he'd probably miss! He's totally invisible when it's raining because he's so wet!`],
                     draul => [Emote.ANGRY, `If you started with what's right with him, you'd have much less to consider!`],
                     player => [Emote.WONDERING, `Well, I admit, he's probably not the sharpest knife in the cutlery draw...`],
-                    draul => [Emote.ANGRY, `Sharp? I've seen keener wit in root vegetables. Anyway, stop changing the subject. Get out of here and don't think you can sneak up those stairs to see Juliet, because I'll catch you and then you'll be for it!`],
+                    // TODO next 2 lines are shown as 1 in the OSRS wiki transcript
+                    draul => [Emote.ANGRY, `Sharp? I've seen keener wit in root vegetables. Anyway, stop changing the subject.`],
+                    draul => [Emote.ANGRY, `Get out of here and don't think you can sneak up those stairs to see Juliet, because I'll catch you and then you'll be for it!`],
                     player => [Emote.WONDERING, `That seems a bit harsh....`],
                     draul => [Emote.ANGRY, `Harsh but fair I think you'll find...now get OUT!`]
                 ],
@@ -37,7 +39,9 @@ export const draulDialogueHandler: QuestDialogueHandler = {
                     player => [Emote.GENERIC, `I've just come to have a chat with Juliet.`],
                     draul => [Emote.ANGRY, `What on earth about? I hope you're not in cahoots with that good for nothing Romeo!`],
                     player => [Emote.WONDERING, `Err..no of course not....why would I be?`],
-                    draul => [Emote.SKEPTICAL, `He's been trying to wooo my daughter for an age. Up until now she's had the good sense to just ignore him. I just don't know what's gotten into her recently so that she would give him the time of day.`],
+                    // TODO next 2 lines are shown as 1 in the OSRS wiki transcript
+                    draul => [Emote.SKEPTICAL, `He's been trying to wooo my daughter for an age. Up until now she's had the good sense to just ignore him.`],
+                    draul => [Emote.SKEPTICAL, `I just don't know what's gotten into her recently so that she would give him the time of day.`],
                     player => [Emote.SHOCKED, `Well, love is mysterious! Perhaps one day someone may even learn to love you!`],
                     draul => [Emote.ANGRY, `What! Someone may fall in love with me...what are you trying to insinuate?`],
                     player => [Emote.WONDERING, `Err...Nothing....I guess I'd better be going now...`]
