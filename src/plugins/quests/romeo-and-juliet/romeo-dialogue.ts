@@ -185,13 +185,11 @@ export const romeoDialogueHandler: QuestDialogueHandler = {
         }
 
         await player.interfaceState.fadeOutScreen();
-        player.interfaceState.setMinimapState(MinimapState.BLACK);
         player.instance = new WorldInstance(uuidv4());
         player.teleport(new Position(2333, 4646));
+        player.cutscene = new Cutscene(player, { hideTabs: true, hideMinimap: true });
         const cutsceneRomeo = await world.spawnNpc('rs:romeo', new Position(2333, 4645), 'NORTH', 0, player.instance.instanceId);
         player.face(cutsceneRomeo, true, false, false);
-
-        player.cutscene = new Cutscene(player);
 
         await dialogue(participants, [
             romeo => [Emote.WORRIED, `This is pretty scary...`],
@@ -268,7 +266,6 @@ export const romeoDialogueHandler: QuestDialogueHandler = {
         player.cutscene.endCutscene();
         player.teleport(new Position(3212, 3424));
         player.instance = null;
-        player.interfaceState.setMinimapState(MinimapState.NORMAL);
         await player.interfaceState.fadeInScreen();
 
         player.setQuestProgress('rs:romeo_and_juliet', 'complete');

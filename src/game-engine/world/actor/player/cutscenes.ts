@@ -1,6 +1,7 @@
 import { defaultPlayerTabWidgets, Player } from '@engine/world/actor/player/player';
 import { Position } from '@engine/world/position';
 import { tabIndex } from '@engine/world/actor/player/interface-state';
+import { MinimapState } from '@engine/config/minimap-state';
 
 // Cutscene widgets
 export const cutsceneWidgets = [
@@ -25,6 +26,13 @@ export interface CameraOptions {
     lookAcceleration?: number;
 }
 
+/**
+ * Cutscene options.
+ */
+export interface CutsceneOptions {
+    hideMinimap?: boolean;
+    hideTabs?: boolean;
+}
 
 /**
  * Controls a game cutscene for a specific player.
@@ -41,41 +49,40 @@ export class Cutscene {
     private _lookHeight: number;
     private _lookMovementSpeed: number;
     private _lookAcceleration: number;
+    private cutsceneOptions: CutsceneOptions = {
+        hideTabs: false,
+        hideMinimap: false
+    }
 
-    public constructor(player: Player, options?: CameraOptions) {
+    public constructor(player: Player, cutsceneOptions: CutsceneOptions = {}, cameraOptions?: CameraOptions) {
         this.player = player;
+        this.setCutsceneOptions(cutsceneOptions);
 
-        // Disable tab area when initializing a cutscene
-        this.hideTabs();
-
-        if(options) {
-            this.setCamera(options);
+        if (cameraOptions) {
+            this.setCamera(cameraOptions);
         }
     }
 
-    hideTabs() {
-        Object.keys(tabIndex).forEach(tab => {
-            if (cutsceneWidgets.indexOf(tabIndex[tab]) === -1) {
-                this.player.outgoingPackets.sendTabWidget(tabIndex[tab], null);
-            }
-        });
-    }
+    setCutsceneOptions(cutsceneOptions: CutsceneOptions) {
+        this.cutsceneOptions = { ...this.cutsceneOptions, ...cutsceneOptions };
+        const { hideMinimap, hideTabs } = this.cutsceneOptions;
 
-    resetTabs() {
-        defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
-            if (widgetId !== -1) {
-                this.player.setSidebarWidget(tabIndex, widgetId);
-            }
-        });
+        if (hideMinimap) {
+            this.player.interfaceState.setMinimapState(MinimapState.BLACK);
+        }
+
+        if (hideTabs) {
+            this.hideTabs();
+        }
     }
 
     /**
      * Sets the cutscene camera to the specified options.
-     * @param options The camera options to use.
+     * @param cameraOptions The camera options to use.
      */
-    public setCamera(options: CameraOptions): void {
+    public setCamera(cameraOptions: CameraOptions): void {
         const { cameraX, cameraY, cameraHeight, cameraMovementSpeed, cameraAcceleration,
-            lookX, lookY, lookHeight, lookMovementSpeed, lookAcceleration } = options;
+            lookX, lookY, lookHeight, lookMovementSpeed, lookAcceleration } = cameraOptions;
 
         if(cameraX && cameraY) {
             this.snapCameraTo(cameraX, cameraY, cameraHeight || 400,
@@ -128,7 +135,15 @@ export class Cutscene {
      */
     public endCutscene(): void {
         this.player.outgoingPackets.resetCamera();
-        this.resetTabs();
+
+        if (this.cutsceneOptions.hideTabs) {
+            this.resetTabs();
+        }
+
+        if (this.cutsceneOptions.hideMinimap) {
+            this.player.interfaceState.setMinimapState(MinimapState.NORMAL);
+        }
+
         this.player.cutscene = null;
     }
 
@@ -171,5 +186,21 @@ export class Cutscene {
 
     public get lookAcceleration(): number {
         return this._lookAcceleration;
+    }
+
+    private hideTabs() {
+        Object.keys(tabIndex).forEach(tab => {
+            if (cutsceneWidgets.indexOf(tabIndex[tab]) === -1) {
+                this.player.outgoingPackets.sendTabWidget(tabIndex[tab], null);
+            }
+        });
+    }
+
+    private resetTabs() {
+        defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
+            if (widgetId !== -1) {
+                this.player.setSidebarWidget(tabIndex, widgetId);
+            }
+        });
     }
 }
