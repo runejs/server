@@ -242,11 +242,11 @@ export const romeoDialogueHandler: QuestDialogueHandler = {
         cutsceneRomeo.face(new Position(2322, 4642), false, false, true);
         await cutsceneRomeo.isIdle();
 
-        const cutscenePhillipa = await world.spawnNpc('rs:phillipa', new Position(2331, 4645), 'SOUTHWEST', 0, player.instance.instanceId);
+        const cutscenePhillipa = await world.spawnNpc('rs:phillipa', new Position(2333, 4645), 'SOUTHWEST', 0, player.instance.instanceId);
         cutscenePhillipa.walkingQueue.valid = true;
         cutscenePhillipa.walkingQueue.add(2327, 4645);
         cutscenePhillipa.walkingQueue.add(2325, 4644);
-        cutscenePhillipa.face(cutsceneRomeo, false, false, false);
+        cutscenePhillipa.face(cutsceneRomeo.position, false, false, true);
 
         const finalParticipants = [player, { npc, key: 'romeo' }, { npc: 'rs:phillipa', key: 'phillipa' }];
         await dialogue(finalParticipants, [
