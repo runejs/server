@@ -260,6 +260,7 @@ export class Player extends Actor {
         if(this.rights === Rights.ADMIN) {
             this.sendCommandList(actionHookMap.player_command as PlayerCommandActionHook[]);
         }
+        this.outgoingPackets.resetAllClientConfigs();
 
         await this.actionPipeline.call('player_init', { player: this });
 

@@ -2,6 +2,7 @@ import { logger } from '@runejs/core';
 import { Position } from '../../world/position';
 import { filestore, world } from '../../game-server';
 import { widgets } from '../../config';
+import { GetVarbitMorphIndex } from "../../util/objects";
 
 const itemOnObjectPacket = (player, packet) => {
     const { buffer } = packet;
@@ -39,7 +40,22 @@ const itemOnObjectPacket = (player, packet) => {
         return;
     }
 
-    const objectConfig = filestore.configStore.objectStore.getObject(objectId);
+    let objectConfig = filestore.configStore.objectStore.getObject(objectId);
+    if (objectConfig.configChangeDest) {
+        let morphIndex = -1;
+        if(objectConfig.varbitId === -1) {
+            if(objectConfig.configId !== -1) {
+                const configValue = player.metadata['configs'] && player.metadata['configs'][objectConfig.configId] ? player.metadata['configs'][objectConfig.configId] : 0;
+                morphIndex = configValue;
+
+            }
+        } else {
+            morphIndex = GetVarbitMorphIndex(objectConfig.varbitId, player.metadata['configs']);
+        }
+        if(morphIndex !== -1) {
+            objectConfig = filestore.configStore.objectStore.getObject(objectConfig.configChangeDest[morphIndex]);
+        }
+    }
 
     player.actionPipeline.call('item_on_object', player, locationObject, objectConfig, objectPosition, usedItem, itemWidgetId, itemContainerId, cacheOriginal);
 };

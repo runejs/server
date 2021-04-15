@@ -1,7 +1,7 @@
 import { Position } from '../../world/position';
 import { filestore, world } from '../../game-server';
 import { logger } from '@runejs/core';
-
+import { GetVarbitMorphIndex } from "../../util/objects";
 const option1 = packet => {
     const { buffer } = packet;
     const objectId = buffer.get('short', 'u');
@@ -27,23 +27,6 @@ const option3 = packet => {
 };
 
 
-/**
- * Returns the index to morph actor/object into, based on set config
- * @param varbitId
- * @return index to morph into
- */
-function GetVarbitMorphIndex(varbitId) {
-    const varbitDefinition = filestore.configStore.varbitStore.getVarbit(varbitId);
-    const mostSignificantBit = varbitDefinition.mostSignificantBit;
-    const configId = varbitDefinition.index;
-    const leastSignificantBit = varbitDefinition.leastSignificantBit;
-    // TODO: Unknown
-    const i_8_ = varbitMasks[mostSignificantBit - leastSignificantBit];
-    return GroundItemTile.varbitMasks[configId] >> leastSignificantBit & i_8_;
-}
-
-
-
 
 const objectInteractionPacket = (player, packet) => {
     const { packetId } = packet;
@@ -59,32 +42,27 @@ const objectInteractionPacket = (player, packet) => {
     const { objectId, x, y } = options[packetId].packetDef(packet);
     const level = player.position.level;
     const objectPosition = new Position(x, y, level);
-    console.log(objectId);
-    const { object: landscapeObject, cacheOriginal } = world.findObjectAtLocation(player, objectId, objectPosition);
-    const objectConfig = filestore.configStore.objectStore.getObject(objectId);
-    if(objectConfig.configChangeDest) {
-        let morphIndex = 0;
-        if(objectConfig.varbitId == -1) {
-            if(objectConfig.configId != -1) {
-                if(player.metadata['configs'] && player.metadata['configs'][objectConfig.configId] != undefined) {
-                    morphIndex = player.metadata['configs'][objectConfig.configId];
-
-                }
-            }
-        } else {
-            if(player.metadata['configs'] && player.metadata['configs'][objectConfig.configId] != undefined) {
-                morphIndex = GetVarbitMorphIndex(objectConfig.varbitId, player.metadata['configs'][objectConfig.configId]);
-            }
-        }
-    }
-
+    let { object: landscapeObject, cacheOriginal } = world.findObjectAtLocation(player, objectId, objectPosition);
     if(!landscapeObject) {
-        if(objectConfig.configChangeDest) {
-            console.log(objectConfig.varbitId);
-        }
         return;
     }
 
+    let objectConfig = filestore.configStore.objectStore.getObject(objectId);
+    if (objectConfig.configChangeDest) {
+        let morphIndex = -1;
+        if(objectConfig.varbitId === -1) {
+            if(objectConfig.configId !== -1) {
+                const configValue = player.metadata['configs'] && player.metadata['configs'][objectConfig.configId] ? player.metadata['configs'][objectConfig.configId] : 0;
+                morphIndex = configValue;
+
+            }
+        } else {
+            morphIndex = GetVarbitMorphIndex(objectConfig.varbitId, player.metadata['configs']);
+        }
+        if(morphIndex !== -1) {
+            objectConfig = filestore.configStore.objectStore.getObject(objectConfig.configChangeDest[morphIndex]);
+        }
+    }
 
     const actionIdx = options[packetId].index;
     let optionName = `action-${actionIdx + 1}`;

@@ -250,6 +250,11 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
+    public resetAllClientConfigs(): void {
+        const packet = new Packet(14);
+        this.queue(packet);
+    }
+
     public updateClientConfig(configId: number, value: number): void {
         let packet: Packet;
         const metadata = this.player.metadata;
