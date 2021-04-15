@@ -13,6 +13,7 @@ import { world } from '@engine/game-server';
 import { WorldInstance } from '@engine/world/instances';
 import { Player } from '@engine/world/actor/player/player';
 import { ActionCancelType, ActionPipeline } from '@engine/world/action';
+import { World } from '@engine/world';
 
 /**
  * Handles an actor within the game world.
@@ -104,6 +105,28 @@ export abstract class Actor {
         });
 
         return true;
+    }
+
+    /**
+     * Wait for actor movement to finish in a Promise-like fashion.
+     * @param timeoutInTicks How long to wait for in ticks before rejecting the promise
+     */
+    public async isIdle(timeoutInTicks = 100): Promise<void> {
+        return new Promise((resolve, reject) => {
+            let ticksChecked = 0;
+            const checkIsMoving = setInterval(() => {
+                ticksChecked++;
+                if (!this.walkingQueue.moving()) {
+                    resolve();
+                    clearInterval(checkIsMoving);
+                }
+
+                if (ticksChecked >= timeoutInTicks) {
+                    reject();
+                    clearInterval(checkIsMoving);
+                }
+            }, World.TICK_LENGTH)
+        });
     }
 
     public follow(target: Actor): void {

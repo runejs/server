@@ -1,7 +1,5 @@
 import { randomBetween } from '@engine/util/num';
 import { dialogue, Emote, execute, goto } from '@engine/world/actor/dialogue';
-import { widgets } from '@engine/config';
-import { schedule } from '@engine/world/task';
 import { Position } from '@engine/world/position';
 import { MinimapState } from '@engine/config/minimap-state';
 import { WorldInstance } from '@engine/world/instances';
@@ -9,6 +7,9 @@ import uuidv4 from 'uuid/v4';
 import { QuestDialogueHandler } from '@engine/config/quest-config';
 import { Player } from '@engine/world/actor/player/player';
 import { Npc } from '@engine/world/actor/npc/npc';
+import { Cutscene } from '@engine/world/actor/player/cutscenes';
+import { world } from '@engine/game-server';
+import { schedule } from '@engine/world/task';
 
 const moreInfo = () => {
     return (options, tag_MORE_INFO) => [
@@ -183,56 +184,93 @@ export const romeoDialogueHandler: QuestDialogueHandler = {
             return;
         }
 
-        const fadeOutAnimation = 3541;
-        const fadeInAnimation = 2115;
-
-        // player.outgoingPackets.playWidgetAnimation(widgets.fade, 0, fadeOutAnimation);
-        player.interfaceState.openWidget(widgets.fade, { slot: 'screen' });
-
-        await schedule(4);
-
-        player.outgoingPackets.setMinimapState(MinimapState.BLACK);
+        await player.interfaceState.fadeOutScreen();
+        player.interfaceState.setMinimapState(MinimapState.BLACK);
         player.instance = new WorldInstance(uuidv4());
-        player.teleport(new Position(2332, 4645));
+        player.teleport(new Position(2333, 4646));
+        const cutsceneRomeo = await world.spawnNpc('rs:romeo', new Position(2333, 4645), 'NORTH', 0, player.instance.instanceId);
+        player.face(cutsceneRomeo, true, false, false);
+
+        player.cutscene = new Cutscene(player);
 
         await dialogue(participants, [
             romeo => [Emote.WORRIED, `This is pretty scary...`],
-        ], { multi: true });
+            player => [Emote.WORRIED, `Oh , be quiet...`],
+        ], {
+            multi: true
+        });
+
+        await player.interfaceState.fadeInScreen();
+
+        player.cutscene.snapCameraTo(2330, 4641);
+        player.cutscene.lookAt(2333, 4645, 300);
+
+        await schedule(2);
 
         await dialogue(participants, [
-            player => [Emote.WORRIED, `Oh , be quiet...`],
-        ], { multi: true });
+            player => [Emote.HAPPY, `We're here. Look, Juliet is over there!`]
+        ]);
 
-        // player.interfaceState.openWidget(241, {
-        //     slot: 'chatbox',
-        //     multi: true
-        // });
-        // const widgetClosedEvent = await player.interfaceState.widgetClosed('chatbox');
-        //
-        // if(widgetClosedEvent.data === undefined) {
-        //     throw new Error('Dialogue Cancelled.');
-        // }
+        player.cutscene.snapCameraTo(2334, 4647, 375, 10, 0);
+        player.cutscene.lookAt(2322, 4639, 300, 10, 0);
 
-        // player.interfaceState.closeWidget('chatbox');
+        await schedule(6);
 
-        player.outgoingPackets.playWidgetAnimation(widgets.fade, 0, fadeInAnimation); // Fade in
-        player.outgoingPackets.setMinimapState(MinimapState.NORMAL); // TODO move this until after the cutscene
+        player.cutscene.snapCameraTo(2324, 4644, 250, 6, 0);
+        player.cutscene.lookAt(2321, 4640, 250, 6, 0);
+
+        await schedule(10);
+
+        player.cutscene.snapCameraTo(2330, 4641);
+        player.cutscene.lookAt(2333, 4645, 300);
+
+        await schedule(1);
+
+        await dialogue(participants, [
+            player => [Emote.HAPPY, `You go over to her...and I'll go and wait over here...`],
+            romeo => [Emote.WORRIED, `Ohhh, ok then...`],
+        ]);
+
+        player.cutscene.snapCameraTo(2322, 4639, 300);
+        player.cutscene.lookAt(2324, 4644, 300);
+
+        cutsceneRomeo.walkingQueue.valid = true;
+        cutsceneRomeo.walkingQueue.add(2329, 4645);
+        cutsceneRomeo.walkingQueue.add(2327, 4645);
+        cutsceneRomeo.walkingQueue.add(2325, 4644);
+        cutsceneRomeo.walkingQueue.add(2323, 4643);
+        cutsceneRomeo.face(new Position(2322, 4642), false, false, true);
+        await cutsceneRomeo.isIdle();
+
+        const cutscenePhillipa = await world.spawnNpc('rs:phillipa', new Position(2331, 4645), 'SOUTHWEST', 0, player.instance.instanceId);
+        cutscenePhillipa.walkingQueue.valid = true;
+        cutscenePhillipa.walkingQueue.add(2327, 4645);
+        cutscenePhillipa.walkingQueue.add(2325, 4644);
+        cutscenePhillipa.face(cutsceneRomeo, false, false, false);
+
+        const finalParticipants = [player, { npc, key: 'romeo' }, { npc: 'rs:phillipa', key: 'phillipa' }];
+        await dialogue(finalParticipants, [
+            romeo => [Emote.WORRIED, `Hey...Juliet...`],
+            romeo => [Emote.WORRIED, `Juliet...?`],
+            romeo => [Emote.SAD, `Oh dear...you seem to be dead.`],
+            phillipa => [Emote.HAPPY, `Hi Romeo...I'm Phillipa!`],
+        ]);
+
+        cutsceneRomeo.face(cutscenePhillipa, false, false, false);
+
+        await dialogue(finalParticipants, [
+            romeo => [Emote.HAPPY, `Wow! You're a fox!`],
+            phillipa => [Emote.HAPPY, `It's a shame about Juliet...but perhaps we can meet up later?`],
+            romeo => [Emote.HAPPY, `Who's Juliet?`],
+        ]);
+
+        await player.interfaceState.fadeOutScreen();
+        player.cutscene.endCutscene();
+        player.teleport(new Position(3212, 3424));
         player.instance = null;
+        player.interfaceState.setMinimapState(MinimapState.NORMAL);
+        await player.interfaceState.fadeInScreen();
 
-
-        // await dialogue(participants, [
-        //     romeo => [Emote.WORRIED, `This is pretty scary...`]
-        // ], { multi: true });
-        //
-        // player.interfaceState.closeChatOverlayWidget();
-
-        // await dialogue(participants, [
-        //     player => [Emote.WORRIED, `Oh , be quiet...`]
-        // ], { multi: true });
-        //
-        // player.interfaceState.closeChatOverlayWidget();
-        // player.interfaceState.openWidget(widgets.blankScreen, { slot: 'screen' });
-        // await schedule(3);
-        // player.outgoingPackets.playWidgetAnimation(widgets.blankScreen, 0, 2115); // Fade out
+        player.setQuestProgress('rs:romeo_and_juliet', 'complete');
     }
 }

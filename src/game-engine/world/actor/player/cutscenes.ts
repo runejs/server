@@ -1,7 +1,13 @@
-import { Player } from '@engine/world/actor/player/player';
+import { defaultPlayerTabWidgets, Player } from '@engine/world/actor/player/player';
 import { Position } from '@engine/world/position';
-import { MinimapState } from '@engine/config/minimap-state';
+import { tabIndex } from '@engine/world/actor/player/interface-state';
 
+// Cutscene widgets
+export const cutsceneWidgets = [
+    tabIndex['friends'],
+    tabIndex['ignores'],
+    tabIndex['logout']
+];
 
 /**
  * Various camera options for cutscenes.
@@ -24,7 +30,6 @@ export interface CameraOptions {
  * Controls a game cutscene for a specific player.
  */
 export class Cutscene {
-
     public readonly player: Player;
     private _cameraX: number;
     private _cameraY: number;
@@ -40,9 +45,28 @@ export class Cutscene {
     public constructor(player: Player, options?: CameraOptions) {
         this.player = player;
 
+        // Disable tab area when initializing a cutscene
+        this.hideTabs();
+
         if(options) {
             this.setCamera(options);
         }
+    }
+
+    hideTabs() {
+        Object.keys(tabIndex).forEach(tab => {
+            if (cutsceneWidgets.indexOf(tabIndex[tab]) === -1) {
+                this.player.outgoingPackets.sendTabWidget(tabIndex[tab], null);
+            }
+        });
+    }
+
+    resetTabs() {
+        defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
+            if (widgetId !== -1) {
+                this.player.setSidebarWidget(tabIndex, widgetId);
+            }
+        });
     }
 
     /**
@@ -104,6 +128,7 @@ export class Cutscene {
      */
     public endCutscene(): void {
         this.player.outgoingPackets.resetCamera();
+        this.resetTabs();
         this.player.cutscene = null;
     }
 

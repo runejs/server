@@ -38,11 +38,8 @@ export default <ContentPlugin>{
             journalHandler,
             onComplete: {
                 questCompleteWidget: {
-                    rewardText: ['5 Quest Points'],
-                    itemId: 1891,
-                    modelZoom: 240,
-                    modelRotationY: 180,
-                    modelRotationX: 180
+                    rewardText: [],
+                    itemId: 756
                 }
             }
         })

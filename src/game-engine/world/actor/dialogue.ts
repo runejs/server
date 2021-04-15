@@ -162,7 +162,6 @@ function parseDialogueFunctionArgs(func: Function): string[] {
 export type DialogueTree = (Function | DialogueFunction | GoToAction)[];
 
 export interface AdditionalOptions {
-    closeOnWalk?: boolean;
     permanent?: boolean;
     multi?: boolean;
 }
@@ -641,6 +640,7 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
 export async function dialogue(participants: (Player | NpcParticipant)[], dialogueTree: DialogueTree,
     additionalOptions?: AdditionalOptions): Promise<boolean> {
     const player = participants.find(p => p instanceof Player) as Player;
+    const multi = additionalOptions?.multi == null ? false : additionalOptions.multi;
 
     if(!player) {
         throw new Error('Player instance not provided to dialogue action.');
@@ -667,10 +667,14 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
 
     try {
         await run();
-        player.interfaceState.closeAllSlots();
+        if (!multi) {
+            player.interfaceState.closeAllSlots();
+        }
         return true;
     } catch(error) {
-        player.interfaceState.closeAllSlots();
+        if (!multi) {
+            player.interfaceState.closeAllSlots();
+        }
         logger.warn(error);
         return false;
     }

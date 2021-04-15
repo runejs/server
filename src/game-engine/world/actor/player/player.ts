@@ -53,6 +53,7 @@ import { PlayerQuest, QuestKey } from '@engine/config/quest-config';
 import { Quest } from '@engine/world/actor/player/quest';
 import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
 import { MusicPlayerMode } from '@plugins/music/music-tab.plugin';
+import { ItemConfig } from '@runejs/filestore';
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
@@ -489,16 +490,21 @@ export class Player extends Actor {
             }
 
             if(questData.onComplete.questCompleteWidget.itemId) {
-                this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3,
-                    filestore.configStore.itemStore.getItem(questData.onComplete.questCompleteWidget.itemId)?.model2d?.widgetModel);
+                const questCompleteItem = filestore.configStore.itemStore.getItem(questData.onComplete.questCompleteWidget.itemId);
+                if (questCompleteItem) {
+                    this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questCompleteItem.model2d?.widgetModel);
+                    this.outgoingPackets.setWidgetModelRotationAndZoom(widgets.questReward, 3,
+                        questCompleteItem.model2d?.rotationY || 0,
+                        questCompleteItem.model2d?.rotationX || 0,
+                        questCompleteItem.model2d?.zoom / 2 || 0);
+                }
             } else if(questData.onComplete.questCompleteWidget.modelId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.onComplete.questCompleteWidget.modelId);
+                this.outgoingPackets.setWidgetModelRotationAndZoom(widgets.questReward, 3,
+                    questData.onComplete.questCompleteWidget.modelRotationX || 0,
+                    questData.onComplete.questCompleteWidget.modelRotationY || 0,
+                    questData.onComplete.questCompleteWidget.modelZoom || 0);
             }
-
-            this.outgoingPackets.setWidgetModelRotationAndZoom(widgets.questReward, 3,
-                questData.onComplete.questCompleteWidget.modelRotationX || 0,
-                questData.onComplete.questCompleteWidget.modelRotationY || 0,
-                questData.onComplete.questCompleteWidget.modelZoom || 0);
 
             this.interfaceState.openWidget(widgets.questReward, {
                 slot: 'screen',

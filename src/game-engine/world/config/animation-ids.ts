@@ -25,5 +25,7 @@ export const animationIds = {
         stab: 412,
         slash: 451,
         armBlock: 424
-    }
+    },
+    fadeOut: 3541,
+    fadeIn: 2115
 };

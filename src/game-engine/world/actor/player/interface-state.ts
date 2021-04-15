@@ -2,6 +2,10 @@ import { Player } from '@engine/world/actor/player/player';
 import { ItemContainer } from '@engine/world/items/item-container';
 import { lastValueFrom, Subject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
+import { widgets } from '@engine/config';
+import { animationIds } from '@engine/world/config/animation-ids';
+import { schedule } from '@engine/world/task';
+import { MinimapState } from '@engine/config/minimap-state';
 
 
 export type TabType = 'combat' | 'skills' | 'quests' | 'inventory' | 'equipment' | 'prayers' |
@@ -73,7 +77,6 @@ export interface WidgetClosedEvent {
  * Control's a Player's Game Interface state.
  */
 export class InterfaceState {
-
     public readonly tabs: { [key: string]: Widget | null };
     public readonly widgetSlots: { [key: string]: Widget | null };
     public readonly closed: Subject<WidgetClosedEvent> = new Subject<WidgetClosedEvent>();
@@ -124,6 +127,35 @@ export class InterfaceState {
     public closeScreenOverlayWidget(): void {
         this._screenOverlayWidget = null;
         this.player.outgoingPackets.showScreenOverlayWidget(-1);
+    }
+
+    /**
+     * Fades out the screen and leaves it blank. Call fade in to return it to normal.
+     */
+    public async fadeOutScreen(): Promise<void> {
+        return new Promise(resolve => {
+            this.openWidget(widgets.fade, { slot: 'screen' });
+            schedule(3).then(() => {
+                resolve();
+            });
+        });
+    }
+
+    /**
+     * Fades in the screen. Only works if fade out was called previously
+     */
+    public async fadeInScreen(): Promise<void> {
+        return new Promise(resolve => {
+            this.player.outgoingPackets.playWidgetAnimation(widgets.fade, 0, animationIds.fadeIn);
+            schedule(2).then(() => {
+                this.closeAllSlots();
+                resolve();
+            });
+        });
+    }
+
+    public setMinimapState(minimapState: MinimapState) {
+        this.player.outgoingPackets.setMinimapState(minimapState);
     }
 
     public async widgetClosed(slot: GameInterfaceSlot): Promise<WidgetClosedEvent> {
