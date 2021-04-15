@@ -1,6 +1,5 @@
 import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
 import { World } from '@engine/world';
-import { LandscapeObject } from '@runejs/filestore';
 
 
 export const action: objectInteractionActionHandler = (details) => {
@@ -10,15 +9,14 @@ export const action: objectInteractionActionHandler = (details) => {
     details.player.personalInstance.replaceGameObject(2722, details.object, 1);
 
     setTimeout(() => {
-        if (details.player.metadata['grain'] && details.player.metadata['grain'] >= 1) {
+        if (details.player.savedMetadata['mill-grain'] && details.player.savedMetadata['mill-grain'] >= 1) {
             details.player.sendMessage(`You operate the hopper. The grain slide down the chute.`);
-            if (!details.player.metadata['flour']) {
-                details.player.metadata['flour'] = 0;
+            if (!details.player.savedMetadata['mill-flour']) {
+                details.player.savedMetadata['mill-flour'] = 0;
             }
-            details.player.metadata['flour'] += details.player.metadata['grain'];
-            details.player.metadata['grain'] = 0;
-            const fullFlourBin: LandscapeObject = { objectId: 1782, x: 3166, y: 3306, orientation: 0, level: 0, type: 10 };
-            details.player.personalInstance.spawnGameObject(fullFlourBin);
+            details.player.savedMetadata['mill-flour'] += details.player.savedMetadata['mill-grain'];
+            details.player.savedMetadata['mill-grain'] = 0;
+            details.player.outgoingPackets.updateClientConfig(695, 1);
         } else {
             details.player.sendMessage(`You operate the hopper. Nothing interesting happens.`);
         }
@@ -32,7 +30,7 @@ export default {
     hooks: [
         {
             type: 'object_interaction',
-            objectIds: [ 2718 ],
+            objectIds: [ 2718, 2721 ],
             options: [ 'operate' ],
             walkTo: true,
             handler: action
