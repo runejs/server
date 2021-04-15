@@ -252,6 +252,11 @@ export class OutboundPackets {
 
     public updateClientConfig(configId: number, value: number): void {
         let packet: Packet;
+        const metadata = this.player.metadata;
+        if(!metadata['configs']) {
+            metadata['configs'] = []
+        }
+        metadata.configs[configId] = value;
 
         if(value > 128) {
             packet = new Packet(2);
