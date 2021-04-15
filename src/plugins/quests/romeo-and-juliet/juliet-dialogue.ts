@@ -1,10 +1,13 @@
-import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { dialogue, Emote } from '@engine/world/actor/dialogue';
 import { questItems } from './romeo-and-juliet-quest.plugin';
+import { QuestDialogueHandler } from '@engine/config/quest-config';
+import { Player } from '@engine/world/actor/player/player';
+import { Npc } from '@engine/world/actor/npc/npc';
 
-export const julietDialogue: npcInteractionActionHandler[] = [
-    async details => {
-        const { player, npc } = details;
+export const julietDialogueHandler: QuestDialogueHandler = {
+    0: 0, // TODO you can actually start the quest by talking to juliet first
+
+    1: async (player: Player, npc: Npc) => {
         const participants = [player, { npc, key: 'juliet' }];
         await dialogue(participants, [
             player => [Emote.GENERIC, `Juliet, I come from Romeo. He begs me to tell you that he cares still.`],
@@ -28,8 +31,8 @@ export const julietDialogue: npcInteractionActionHandler[] = [
             ]);
         }
     },
-    async details => {
-        const { player, npc } = details;
+
+    2: async (player: Player, npc: Npc) => {
         const participants = [player, { npc, key: 'juliet' }];
 
         const hasLetter = player.hasItemInInventory(questItems.julietLetter.gameId) || player.hasItemInBank(questItems.julietLetter.gameId);
@@ -61,4 +64,4 @@ export const julietDialogue: npcInteractionActionHandler[] = [
             }
         }
     }
-];
+};

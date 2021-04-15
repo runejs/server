@@ -4,18 +4,18 @@ import { NpcInteractionActionHook } from '@engine/world/action/npc-interaction.a
 import { findItem } from '@engine/config';
 
 // Dialogues
-import { phillipaDialogue } from './phillipa-dialogue';
-import { julietDialogue } from './juliet-dialogue';
+import { phillipaDialogueHandler } from './phillipa-dialogue';
+import { julietDialogueHandler } from './juliet-dialogue';
 import { romeoDialogueHandler } from './romeo-dialogue';
-import { draulLeptocDialogue } from './draul-leptoc-dialogue';
-import { fatherLawrenceDialogue } from './father-lawrence-dialogue';
+import { draulDialogueHandler } from './draul-leptoc-dialogue';
+import { lawrenceDialogueHandler } from './father-lawrence-dialogue';
 import { questDialogueActionFactory } from '@engine/config/quest-config';
 
 const journalHandler = {
     0: `I can start this quest by speaking to <col=800000>Romeo</col> in
         <col=800000>Varrock</col> central square by the <col=800000>fountain.</col>`,
 
-    1: `<col=000000><str>I have agreed to find Juliet for Romeo and tell her how he feels.\nFor some reason he can't just do this by himself.</str></col>\n
+    1: `<col=000000><str>I have agreed to find Juliet for Romeo and tell her how he feels. For some reason he can't just do this by himself.</str></col>
         I should go and speak to <col=800000>Juliet</col>. I can find her <col=800000>west</col> of <col=800000>Varrock.</col>`,
 
     2: `<col=000000><str>I have agreed to find Juliet for Romeo and tell her how he feels. For some reason he can't just do this himself.
@@ -27,11 +27,13 @@ export const questItems = {
     julietLetter: findItem('rs:juliet_letter')
 }
 
+export const questKey = 'rs:romeo_and_juliet';
+
 export default <ContentPlugin>{
-    pluginId: 'rs:romeo_and_juliet',
+    pluginId: questKey,
     quests: [
         new Quest({
-            id: 'rs:romeo_and_juliet',
+            id: questKey,
             questTabId: 37,
             name: `Romeo & Juliet`,
             points: 5,
@@ -45,91 +47,34 @@ export default <ContentPlugin>{
         })
     ],
     hooks: <NpcInteractionActionHook[]>[{
-        // TODO you can actually start the quest by talking to Juliet first
         type: 'npc_interaction',
         npcs: 'rs:romeo',
         options: 'talk-to',
         walkTo: true,
-        handler: questDialogueActionFactory('rs:romeo_and_juliet', romeoDialogueHandler)
+        handler: questDialogueActionFactory(questKey, romeoDialogueHandler)
     }, {
         type: 'npc_interaction',
-        questRequirement: {
-            questId: 'rs:romeo_and_juliet',
-            stage: 0
-        },
+        npcs: 'rs:juliet',
+        options: 'talk-to',
+        walkTo: true,
+        handler: questDialogueActionFactory(questKey, julietDialogueHandler)
+    }, {
+        type: 'npc_interaction',
         npcs: 'rs:draul_leptoc',
         options: 'talk-to',
         walkTo: true,
-        handler: draulLeptocDialogue[0]
+        handler: questDialogueActionFactory(questKey, draulDialogueHandler)
     }, {
         type: 'npc_interaction',
-        questRequirement: {
-            questId: 'rs:romeo_and_juliet',
-            stage: 1
-        },
-        npcs: 'rs:draul_leptoc',
+        npcs: 'rs:phillipa',
         options: 'talk-to',
         walkTo: true,
-        handler: draulLeptocDialogue[1]
+        handler: questDialogueActionFactory(questKey, phillipaDialogueHandler)
     }, {
         type: 'npc_interaction',
-        questRequirement: {
-            questId: 'rs:romeo_and_juliet',
-            stage: 2
-        },
-        npcs: 'rs:draul_leptoc',
-        options: 'talk-to',
-        walkTo: true,
-        handler: draulLeptocDialogue[2]
-    }, {
-        type: 'npc_interaction',
-        questRequirement: {
-            questId: 'rs:romeo_and_juliet',
-            stages: [0, 1, 2]
-        },
         npcs: 'rs:father_lawrence',
         options: 'talk-to',
         walkTo: true,
-        handler: fatherLawrenceDialogue[0]
-    }, {
-        type: 'npc_interaction',
-        questRequirement: {
-            questId: 'rs:romeo_and_juliet',
-            stage: 1
-        },
-        npcs: 'rs:juliet',
-        options: 'talk-to',
-        walkTo: true,
-        handler: julietDialogue[0]
-    }, {
-        type: 'npc_interaction',
-        questRequirement: {
-            questId: 'rs:romeo_and_juliet',
-            stages: [0, 1]
-        },
-        npcs: 'rs:phillipa',
-        options: 'talk-to',
-        walkTo: true,
-        handler: phillipaDialogue[0]
-    }, {
-        type: 'npc_interaction',
-        questRequirement: {
-            questId: 'rs:romeo_and_juliet',
-            stage: 2
-        },
-        npcs: 'rs:phillipa',
-        options: 'talk-to',
-        walkTo: true,
-        handler: phillipaDialogue[1]
-    }, {
-        type: 'npc_interaction',
-        questRequirement: {
-            questId: 'rs:romeo_and_juliet',
-            stage: 2
-        },
-        npcs: 'rs:juliet',
-        options: 'talk-to',
-        walkTo: true,
-        handler: julietDialogue[1]
+        handler: questDialogueActionFactory(questKey, lawrenceDialogueHandler)
     }]
 };

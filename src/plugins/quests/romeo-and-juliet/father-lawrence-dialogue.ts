@@ -1,5 +1,7 @@
-import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { dialogue, Emote, goto } from '@engine/world/actor/dialogue';
+import { QuestDialogueHandler } from '@engine/config/quest-config';
+import { Player } from '@engine/world/actor/player/player';
+import { Npc } from '@engine/world/actor/npc/npc';
 
 export const lawrenceOptions = () => {
     return (options, tag_OPTIONS) => [
@@ -26,22 +28,16 @@ export const lawrenceOptions = () => {
             player => [Emote.GENERIC, `Ok, thanks`]
         ]
     ];
-}
+};
 
-export const fatherLawrenceDialogue: npcInteractionActionHandler[] = [
-    async (details) => {
-        const { player, npc } = details;
-        const participants = [player, { npc, key: 'father_lawrence' }];
+export const lawrenceDialogueHandler: QuestDialogueHandler = {
+    0: async (player: Player, npc: Npc) => {
+        const participants = [player, { npc, key: 'lawrence' }];
         await dialogue(participants, [
-            father_lawrence => [Emote.GENERIC, `Hello adventurer, do you seek a quest?`],
+            lawrence => [Emote.GENERIC, `Hello adventurer, do you seek a quest?`],
             lawrenceOptions()
         ]);
     },
-    async details => {
-        const { player, npc } = details;
-        const participants = [player, { npc, key: 'father_lawrence' }];
-        await dialogue(participants, [
-
-        ]);
-    }
-];
+    1: 0,
+    2: 0
+};

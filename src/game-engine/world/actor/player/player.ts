@@ -438,7 +438,7 @@ export class Player extends Actor {
      */
     public getQuest(questId: string): PlayerQuest {
         let playerQuest = this.quests.find(quest => quest.questId === questId);
-        if(!playerQuest) {
+        if (!playerQuest) {
             playerQuest = new PlayerQuest(questId);
             this.quests.push(playerQuest);
         }

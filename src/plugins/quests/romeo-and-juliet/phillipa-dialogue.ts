@@ -1,9 +1,10 @@
-import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { dialogue, Emote } from '@engine/world/actor/dialogue';
+import { QuestDialogueHandler } from '@engine/config/quest-config';
+import { Player } from '@engine/world/actor/player/player';
+import { Npc } from '@engine/world/actor/npc/npc';
 
-export const phillipaDialogue: npcInteractionActionHandler[] = [
-    async (details) => {
-        const { player, npc } = details;
+export const phillipaDialogueHandler: QuestDialogueHandler = {
+    0: async (player: Player, npc: Npc) => {
         const participants = [player, { npc, key: 'phillipa' }];
         await dialogue(participants, [
             player => [Emote.GENERIC, `Hello`],
@@ -11,8 +12,10 @@ export const phillipaDialogue: npcInteractionActionHandler[] = [
             phillipa => [Emote.GENERIC, `He'd do it you know... he's ever so dashing, and cavalier, in a wet blanket sort of way.`]
         ]);
     },
-    async details => {
-        const { player, npc } = details;
+
+    1: 0,
+
+    2: async (player: Player, npc: Npc) => {
         const participants = [player, { npc, key: 'phillipa' }];
         await dialogue(participants, [
             phillipa => [Emote.HAPPY, `Oh, hello. Juliet has told me what you're doing for her and Romeo, and I have to say I'm very grateful to you. Juliet deserves a bit of happiness in her life.`],
@@ -21,4 +24,4 @@ export const phillipaDialogue: npcInteractionActionHandler[] = [
             player => [Emote.GENERIC, `Oh, thanks. I like to do my cupid bit.`]
         ]);
     }
-];
+}
