@@ -39,12 +39,6 @@ const itemOnNpcPacket = (player, packet) => {
         return;
     }
 
-    let morphedNpcKey: string;
-    if (npc.childrenIds) {
-        const morphedNpc = player.getMorphedNpcDetails(npc);
-        morphedNpcKey = morphedNpc?.key;
-    }
-
     const position = npc.position;
     const distance = Math.floor(position.distanceBetween(player.position));
 
@@ -53,7 +47,7 @@ const itemOnNpcPacket = (player, packet) => {
         return;
     }
 
-    player.actionPipeline.call('item_on_npc', player, npc, position, usedItem, itemWidgetId, itemContainerId, morphedNpcKey)
+    player.actionPipeline.call('item_on_npc', player, npc, position, usedItem, itemWidgetId, itemContainerId)
 };
 
 export default {
