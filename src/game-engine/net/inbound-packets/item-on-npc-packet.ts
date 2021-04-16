@@ -1,7 +1,7 @@
 import { logger } from '@runejs/core';
-import { world } from '../../game-server';
-import { World } from '../../world';
-import { widgets } from '../../config';
+import { world } from '@engine/game-server';
+import { World } from '@engine/world';
+import { widgets } from '@engine/config';
 
 const itemOnNpcPacket = (player, packet) => {
     const { buffer } = packet;
@@ -12,7 +12,7 @@ const itemOnNpcPacket = (player, packet) => {
     const itemContainerId = buffer.get('short');
 
     let usedItem;
-    if(itemWidgetId === widgets.inventory.widgetId && itemContainerId === widgets.inventory.containerId) {
+    if (itemWidgetId === widgets.inventory.widgetId && itemContainerId === widgets.inventory.containerId) {
         if(itemSlot < 0 || itemSlot > 27) {
             return;
         }
@@ -30,12 +30,12 @@ const itemOnNpcPacket = (player, packet) => {
     }
 
 
-    if(npcIndex < 0 || npcIndex > World.MAX_NPCS - 1) {
+    if (npcIndex < 0 || npcIndex > World.MAX_NPCS - 1) {
         return;
     }
 
     const npc = world.npcList[npcIndex];
-    if(!npc) {
+    if (!npc) {
         return;
     }
 
@@ -43,7 +43,7 @@ const itemOnNpcPacket = (player, packet) => {
     const distance = Math.floor(position.distanceBetween(player.position));
 
     // Too far away
-    if(distance > 16) {
+    if (distance > 16) {
         return;
     }
 
