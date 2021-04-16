@@ -1,4 +1,8 @@
 import { filestore } from '@engine/game-server';
+import { findNpc } from '@engine/config';
+import { logger } from '@runejs/core';
+import { Npc } from '@engine/world/actor/npc/npc';
+import { Player } from '@engine/world/actor/player/player';
 
 const varbitMasks = [];
 
@@ -8,7 +12,7 @@ const varbitMasks = [];
  * @param playerConfig
  * @return index to morph into
  */
-export function GetVarbitMorphIndex(varbitId, playerConfig) {
+export function getVarbitMorphIndex(varbitId, playerConfig) {
     if(varbitMasks.length === 0) {
         let i = 2;
         for (let i_7_ = 0; i_7_ < 32; i_7_++) {

@@ -15,11 +15,14 @@ import { NpcSpawn } from '@engine/config/npc-spawn-config';
  * Represents a non-player character within the game world.
  */
 export class Npc extends Actor {
-
     public readonly uuid: string;
     public readonly options: string[];
     public readonly initialPosition: Position;
     public readonly key: string;
+    public readonly varbitId: number = -1;
+    public readonly settingId: number = -1;
+    public readonly childrenIds?: number[];
+    public parent?: Npc;
     public id: number;
     public animations: NpcCombatAnimations & {
         walk?: number;
@@ -77,6 +80,9 @@ export class Npc extends Actor {
             this._name = cacheDetails.name;
             this._combatLevel = cacheDetails.combatLevel;
             this.options = cacheDetails.options;
+            this.varbitId = cacheDetails.varbitId;
+            this.settingId = cacheDetails.settingId;
+            this.childrenIds = cacheDetails.childrenIds;
             this.animations = {
                 walk: cacheDetails.animations?.walk || undefined,
                 turnAround: cacheDetails.animations?.turnAround || undefined,

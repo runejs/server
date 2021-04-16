@@ -30,7 +30,7 @@ import { itemIds } from '@engine/world/config/item-ids';
 import { colors, hexToRgb, rgbTo16Bit } from '@engine/util/colors';
 import { PlayerCommandActionHook } from '@engine/world/action/player-command.action';
 import { updateBonusStrings } from '@plugins/items/equipment/equipment-stats.plugin';
-import { findMusicTrack, findSongIdByRegionId, musicRegions } from '@engine/config/index';
+import { findMusicTrack, findNpc, findSongIdByRegionId, musicRegions } from '@engine/config/index';
 
 import {
     DefensiveBonuses,
@@ -53,6 +53,7 @@ import { PlayerQuest, QuestKey } from '@engine/config/quest-config';
 import { Quest } from '@engine/world/actor/player/quest';
 import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
 import { MusicPlayerMode } from '@plugins/music/music-tab.plugin';
+import { getVarbitMorphIndex } from '@engine/util/varbits';
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
@@ -932,6 +933,35 @@ export class Player extends Actor {
 
         this.savedMetadata.npcTransformation = npc;
         this.updateFlags.appearanceUpdateRequired = true;
+    }
+
+    /**
+     * Returns the morphed NPC details for a specific player based on his client settings
+     * @param originalNpc
+     */
+    public getMorphedNpcDetails(originalNpc: Npc) {
+        if (!originalNpc.childrenIds) {
+            return null;
+        }
+
+        let morphIndex = -1;
+        if (originalNpc.varbitId === -1) {
+            if (originalNpc.settingId !== -1) {
+                morphIndex = this.metadata['configs'] && this.metadata['configs'][originalNpc.settingId] ? this.metadata['configs'][originalNpc.settingId] : 0;
+            }
+        } else {
+            morphIndex = getVarbitMorphIndex(originalNpc.varbitId, this.metadata['configs']);
+        }
+
+        if (morphIndex !== -1) {
+            const npcDetails = findNpc(originalNpc.childrenIds[morphIndex]);
+            if (!npcDetails.key) {
+                logger.warn(`Tried to fetch a morphed NPC, but the morphed NPC isn't registered on the server. Parent NPC: ${originalNpc.id}, Morphed NPC: ${npcDetails.gameId}`);
+            }
+            return npcDetails;
+        }
+
+        return null;
     }
 
     public equals(player: Player): boolean {

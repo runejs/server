@@ -52,10 +52,12 @@ const npcInteractionActionPipe = (player: Player, npc: Npc, position: Position, 
         return;
     }
 
+    const morphedNpc = player.getMorphedNpcDetails(npc);
+
     // Find all NPC action plugins that reference this NPC
     let interactionActions = getActionHooks<NpcInteractionActionHook>('npc_interaction')
         .filter(plugin => questHookFilter(player, plugin) &&
-            (!plugin.npcs || stringHookFilter(plugin.npcs, npc.key)) &&
+            (!plugin.npcs || stringHookFilter(plugin.npcs, morphedNpc?.key || npc.key)) &&
             (!plugin.options || stringHookFilter(plugin.options, option)));
     const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
 
@@ -64,8 +66,7 @@ const npcInteractionActionPipe = (player: Player, npc: Npc, position: Position, 
     }
 
     if(interactionActions.length === 0) {
-        logger.warn(`Unhandled NPC interaction: ${option} ${npc.key} (id-${npc.id}) @ ${position.x},${position.y},${position.level}`);
-        logger.warn(npc.id, npc.key, npc.name);
+        player.outgoingPackets.chatboxMessage(`Unhandled NPC interaction: ${option} ${morphedNpc?.key || npc.key} (id-${morphedNpc?.gameId || npc.id}) @ ${position.x},${position.y},${position.level}`);
         return;
     }
 
