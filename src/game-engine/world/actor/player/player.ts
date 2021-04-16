@@ -944,20 +944,19 @@ export class Player extends Actor {
             return null;
         }
 
-        let morphIndex = -1;
+        let morphIndex: number;
         if (originalNpc.varbitId !== -1) {
             morphIndex = getVarbitMorphIndex(originalNpc.varbitId, this.metadata['configs']);
         } else if (originalNpc.settingId !== -1) {
             morphIndex = this.metadata['configs'] && this.metadata['configs'][originalNpc.settingId] ? this.metadata['configs'][originalNpc.settingId] : 0;
-        }
-
-        if (morphIndex === -1) {
+        } else {
+            logger.warn(`Tried to fetch a child NPC index, but but no varbitId or settingId were found in the NPC details. NPC: ${originalNpc.id}, childrenIDs: ${originalNpc.childrenIds}`);
             return null;
         }
 
         const npcDetails = findNpc(originalNpc.childrenIds[morphIndex]);
         if (!npcDetails.key) {
-            logger.warn(`Tried to fetch a morphed NPC, but the morphed NPC isn't registered on the server. Parent NPC: ${originalNpc.id}, Morphed NPC: ${npcDetails.gameId}`);
+            logger.warn(`Fetched a morphed NPC, but it isn't yet registered on the server. (id-${originalNpc.id}) (morphedId-${npcDetails.gameId})`);
         }
         return npcDetails;
     }
