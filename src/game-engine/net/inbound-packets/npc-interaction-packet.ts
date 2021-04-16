@@ -51,6 +51,9 @@ const npcInteractionPacket = (player: Player, packet: PacketData) => {
             // Invalid action
             logger.info(npc);
             logger.error(`1: Invalid npc ${morphedNpc?.gameId || npc.id} option ${actionIdx + 1}, options: ${JSON.stringify(options)}`);
+            if (morphedNpc) {
+                logger.warn(`Note: (id-${morphedNpc.gameId}) is a morphed NPC. The parent NPC is (id-${npc.id}).`);
+            }
             return;
         }
 
@@ -58,6 +61,9 @@ const npcInteractionPacket = (player: Player, packet: PacketData) => {
     } else {
         // Invalid action
         logger.error(`2: Invalid npc ${morphedNpc?.gameId || npc.id} option ${actionIdx + 1}, options: ${JSON.stringify(options)}`);
+        if (morphedNpc) {
+            logger.warn(`Note: (id-${morphedNpc.gameId}) is a morphed NPC. The parent NPC is (id-${npc.id}).`);
+        }
         return;
     }
 
