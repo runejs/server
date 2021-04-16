@@ -77,6 +77,9 @@ const itemOnNpcActionPipe = (player: Player, npc: Npc, position: Position, item:
     if(interactionActions.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled item on npc interaction: ${ item.itemId } on ${ morphedNpc?.name || npc.name } ` +
             `(id-${ morphedNpc?.gameId || npc.id }) @ ${ position.x },${ position.y },${ position.level }`);
+        if (morphedNpc) {
+            player.outgoingPackets.chatboxMessage(`Note: (id-${morphedNpc.gameId}) is a morphed NPC. The parent NPC is (id-${npc.id}).`);
+        }
         return;
     }
 
