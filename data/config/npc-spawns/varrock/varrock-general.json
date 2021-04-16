@@ -61,7 +61,7 @@
         "movement_radius": 5
     },
     {
-        "npc": "rs:juliet",
+        "npc": "rs:juliet:0",
         "spawn_x": 3158,
         "spawn_y": 3425,
         "spawn_level": 1,
