@@ -1,8 +1,18 @@
 import { dialogue, Emote } from '@engine/world/actor/dialogue';
-import { questItems } from './romeo-and-juliet-quest.plugin';
+import { questItems, questKey } from './romeo-and-juliet-quest.plugin';
 import { QuestDialogueHandler } from '@engine/config/quest-config';
 import { Player } from '@engine/world/actor/player/player';
 import { Npc } from '@engine/world/actor/npc/npc';
+import { findNpc } from '@engine/config';
+import { getVarbitConfigId } from '@engine/util/varbits';
+
+export const calculateJulietVisibility = (player: Player) => {
+    const julietParentNpc = findNpc('rs:juliet:0');
+    const configId = getVarbitConfigId(julietParentNpc.varbitId);
+
+    const hideJulietForPlayer = player.getQuest(questKey).progress === 4 ? 1 : 0; // TODO fix this value
+    player.outgoingPackets.updateClientConfig(configId, hideJulietForPlayer);
+}
 
 export const julietDialogueHandler: QuestDialogueHandler = {
     0: 0, // TODO you can actually start the quest by talking to juliet first

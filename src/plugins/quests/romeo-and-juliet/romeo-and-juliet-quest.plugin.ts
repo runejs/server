@@ -2,14 +2,15 @@ import { Quest } from '@engine/world/actor/player/quest';
 import { ContentPlugin } from '@engine/plugins/content-plugin';
 import { NpcInteractionActionHook } from '@engine/world/action/npc-interaction.action';
 import { findItem } from '@engine/config';
+import { questDialogueActionFactory } from '@engine/config/quest-config';
+import { playerInitActionHandler, PlayerInitActionHook } from '@engine/world/action/player-init.action';
 
 // Dialogues
 import { phillipaDialogueHandler } from './phillipa-dialogue';
-import { julietDialogueHandler } from './juliet-dialogue';
+import { calculateJulietVisibility, julietDialogueHandler } from './juliet-dialogue';
 import { romeoDialogueHandler } from './romeo-dialogue';
 import { draulDialogueHandler } from './draul-leptoc-dialogue';
 import { lawrenceDialogueHandler } from './father-lawrence-dialogue';
-import { questDialogueActionFactory } from '@engine/config/quest-config';
 
 const journalHandler = {
     0: `I can start this quest by speaking to <col=800000>Romeo</col> in
@@ -29,6 +30,10 @@ export const questItems = {
 
 export const questKey = 'rs:romeo_and_juliet';
 
+const playerInitHook: playerInitActionHandler = details => {
+    calculateJulietVisibility(details.player);
+};
+
 export default <ContentPlugin>{
     pluginId: questKey,
     quests: [
@@ -46,7 +51,10 @@ export default <ContentPlugin>{
             }
         })
     ],
-    hooks: <NpcInteractionActionHook[]>[{
+    hooks: <NpcInteractionActionHook | PlayerInitActionHook[]>[{
+        type: 'player_init',
+        handler: playerInitHook
+    }, {
         type: 'npc_interaction',
         npcs: 'rs:romeo',
         options: 'talk-to',

@@ -946,6 +946,7 @@ export class Player extends Actor {
     /**
      * Returns the morphed NPC details for a specific player based on his client settings
      * @param originalNpc
+     * @returns the morphed NPC, or null if there is none
      */
     public getMorphedNpcDetails(originalNpc: Npc) {
         if (!originalNpc.childrenIds) {
