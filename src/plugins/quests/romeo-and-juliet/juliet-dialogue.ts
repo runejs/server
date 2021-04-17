@@ -15,7 +15,13 @@ export const calculateJulietVisibility = (player: Player) => {
 }
 
 export const julietDialogueHandler: QuestDialogueHandler = {
-    0: 0, // TODO you can actually start the quest by talking to juliet first
+    0: async (player: Player, npc: Npc) => {
+        const participants = [player, { npc, key: 'juliet' }];
+        await dialogue(participants, [
+            juliet => [Emote.SAD, `Romeo, Romeo, wherefore art thou Romeo?`],
+            text => `She seems to be lost in thought.`
+        ]);
+    },
 
     1: async (player: Player, npc: Npc) => {
         const participants = [player, { npc, key: 'juliet' }];

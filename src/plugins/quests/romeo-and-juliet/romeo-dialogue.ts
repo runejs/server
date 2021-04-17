@@ -54,37 +54,37 @@ export const romeoDialogueHandler: QuestDialogueHandler = {
         switch (randomDialog) {
             case 0:
                 await dialogue(participants, [
-                    romeo => [Emote.WORRIED, `Blub! Blub...where is my Juliet? Have you seen her?`]
+                    romeo => [Emote.SAD, `Blub! Blub...where is my Juliet? Have you seen her?`]
                 ]);
                 break;
 
             case 1:
                 await dialogue(participants, [
-                    romeo => [Emote.WORRIED, `Looking for a blonde girl, goes by the name of Juliet..quite pretty...haven't seen her have you?`]
+                    romeo => [Emote.SAD, `Looking for a blonde girl, goes by the name of Juliet..quite pretty...haven't seen her have you?`]
                 ]);
                 break;
 
             case 2:
                 await dialogue(participants, [
-                    romeo => [Emote.WORRIED, `Juliet, Juliet, wherefore art thou Juliet? Have you seen my Juliet?`]
+                    romeo => [Emote.SAD, `Juliet, Juliet, wherefore art thou Juliet? Have you seen my Juliet?`]
                 ]);
                 break;
 
             case 3:
                 await dialogue(participants, [
-                    romeo => [Emote.WORRIED, `Oh woe is me that I cannot find my Juliet! You haven't seen Juliet have you?`]
+                    romeo => [Emote.SAD, `Oh woe is me that I cannot find my Juliet! You haven't seen Juliet have you?`]
                 ]);
                 break;
 
             case 4:
                 await dialogue(participants, [
-                    romeo => [Emote.WORRIED, `Sadness surrounds me now that Juliet's father forbids us to meet. Have you seen my Juliet?`]
+                    romeo => [Emote.SAD, `Sadness surrounds me now that Juliet's father forbids us to meet. Have you seen my Juliet?`]
                 ]);
                 break;
 
             case 5:
                 await dialogue(participants, [
-                    romeo => [Emote.WORRIED, `What is to become of me and my darling Juliet, I cannot find her anywhere, have you seen her?`]
+                    romeo => [Emote.SAD, `What is to become of me and my darling Juliet, I cannot find her anywhere, have you seen her?`]
                 ]);
                 break;
         }
@@ -92,13 +92,13 @@ export const romeoDialogueHandler: QuestDialogueHandler = {
         await dialogue(participants, [
             options => [
                 `Yes, I have seen her actually!`, [
-                    player => [Emote.GENERIC, `Yes, I have seen her actually!`],
-                    player => [Emote.WONDERING, `At least, I think it was her... Blonde? A bit stressed?`],
-                    romeo => [Emote.SHOCKED, `Golly...yes, yes...you make her sound very interesting!`],
-                    romeo => [Emote.WONDERING, `And I'll bet she's a bit of a fox!`],
-                    player => [Emote.WONDERING, `Well, I guess she could be considered attractive...`],
-                    romeo => [Emote.HAPPY, `I'll bet she is! Wooooooooo!`],
-                    romeo => [Emote.GENERIC, `Sorry, all that jubilation has made me forget what we were talking about.`],
+                    player => [Emote.HAPPY, `Yes, I have seen her actually!`],
+                    player => [Emote.SKEPTICAL, `At least, I think it was her... Blonde? A bit stressed?`],
+                    romeo => [Emote.LAUGH, `Golly...yes, yes...you make her sound very interesting!`],
+                    romeo => [Emote.SKEPTICAL, `And I'll bet she's a bit of a fox!`],
+                    player => [Emote.SKEPTICAL, `Well, I guess she could be considered attractive...`],
+                    romeo => [Emote.LAUGH, `I'll bet she is! Wooooooooo!`],
+                    romeo => [Emote.POMPOUS, `Sorry, all that jubilation has made me forget what we were talking about.`],
                     player => [Emote.GENERIC, `You were asking me about Juliet? You seemed to know her?`],
                     romeo => [Emote.HAPPY, `Oh yes, Juliet!`],
                     romeo => [Emote.HAPPY, `The fox...could you tell her that she is the love of my long and that I life to be with her?`],
@@ -116,7 +116,7 @@ export const romeoDialogueHandler: QuestDialogueHandler = {
                     romeo => [Emote.HAPPY, `Oh yeah...what you said...tell her that, it sounds much better! Oh you're so good at this!`]
                 ],
                 `Perhaps I could help to find her for you? `, [
-                    player => [Emote.WONDERING, `Perhaps I can help find her for you? What does she look like?`],
+                    player => [Emote.HAPPY, `Perhaps I can help find her for you? What does she look like?`],
                     romeo => [Emote.HAPPY, `Oh would you? That would be great! She has this sort of hair...`],
                     player => [Emote.WONDERING, `Hair...check..`],
                     romeo => [Emote.HAPPY, `...and she these...great lips...`],

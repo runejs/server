@@ -8,10 +8,10 @@ export const draulDialogueHandler: QuestDialogueHandler = {
     0: async (player: Player, npc: Npc) => {
         const participants = [player, { npc, key: 'draul' }];
         await dialogue(participants, [
-            draul => [Emote.ANGRY, `What are you doing here? Snooping around...`],
-            player => [Emote.GENERIC, `Oh...just looking around...`],
-            draul => [Emote.ANGRY, `Just looking around! This is MY house! You might have at least 'ASKED' to view my considerably well appointed abode...but no, you've just burst in with all the elegance of a Troll at a tea party.`],
-            player => [Emote.GENERIC, `I can see that you're busy ranting so I'll just nip off and investigate a bit.`]
+            draul => [Emote.ANGRY, `What are you doing in my house...why the impertinence...the sheer cheek...how dare you violate my personal lodgings....`],
+            player => [Emote.GENERIC, `I..I was just looking around....`],
+            draul => [Emote.ANGRY, `Well get out! Get out....this is my house....and don't go near my daughter Juliet...she's grounded in her room to keep her away from that good for nothing Romeo.`],
+            player => [Emote.GENERIC, `Yes....sir....`]
         ]);
     },
 
