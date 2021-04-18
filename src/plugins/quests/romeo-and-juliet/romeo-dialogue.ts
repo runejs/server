@@ -276,7 +276,7 @@ export const romeoDialogueHandler: QuestDialogueHandler = {
         const participants = [player, { npc, key: 'romeo' }];
         await dialogue(participants, [
             player => [Emote.POMPOUS, `Hey again Romeo!`],
-            moreInfo()
+            findingFatherLawrence()
         ]);
     },
 

@@ -49,7 +49,7 @@
     },
     {
         "npc": "rs:martina_scorsby",
-        "spawn_x": 3257,
+        "spawn_x": 3256,
         "spawn_y": 3481,
         "movement_radius": 0,
         "face": "NORTH"

@@ -32,6 +32,7 @@ export interface CameraOptions {
 export interface CutsceneOptions {
     hideMinimap?: boolean;
     hideTabs?: boolean;
+    setBusy?: boolean;
 }
 
 /**
@@ -51,7 +52,8 @@ export class Cutscene {
     private _lookAcceleration: number;
     private cutsceneOptions: CutsceneOptions = {
         hideTabs: false,
-        hideMinimap: false
+        hideMinimap: false,
+        setBusy: true
     }
 
     public constructor(player: Player, cutsceneOptions: CutsceneOptions = {}, cameraOptions?: CameraOptions) {
@@ -65,7 +67,7 @@ export class Cutscene {
 
     setCutsceneOptions(cutsceneOptions: CutsceneOptions) {
         this.cutsceneOptions = { ...this.cutsceneOptions, ...cutsceneOptions };
-        const { hideMinimap, hideTabs } = this.cutsceneOptions;
+        const { hideMinimap, hideTabs, setBusy } = this.cutsceneOptions;
 
         if (hideMinimap) {
             this.player.interfaceState.setMinimapState(MinimapState.BLACK);
@@ -73,6 +75,10 @@ export class Cutscene {
 
         if (hideTabs) {
             this.hideTabs();
+        }
+
+        if (setBusy) {
+            this.player.busy = true;
         }
     }
 
@@ -142,6 +148,10 @@ export class Cutscene {
 
         if (this.cutsceneOptions.hideMinimap) {
             this.player.interfaceState.setMinimapState(MinimapState.NORMAL);
+        }
+
+        if (this.cutsceneOptions.setBusy) {
+            this.player.busy = false;
         }
 
         this.player.cutscene = null;

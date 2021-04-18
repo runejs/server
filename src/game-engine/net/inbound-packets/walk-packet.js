@@ -1,6 +1,11 @@
 const walkPacket = (player, packet) => {
     const { buffer, packetSize, packetId } = packet;
 
+    // Don't add to the walking queue if busy. If this poses problems, feel free to move it somewhere else.
+    if (player.busy) {
+        return;
+    }
+
     let size = packetSize;
     if(packetId === 236) {
         size -= 14;

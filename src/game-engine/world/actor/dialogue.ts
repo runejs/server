@@ -29,7 +29,8 @@ export enum Emote {
     BLANK_STARE = 'BLANK_STARE',
     SINGLE_WORD = 'SINGLE_WORD',
     EVIL_STARE = 'EVIL_STARE',
-    LAUGH_EVIL = 'LAUGH_EVIL'
+    LAUGH_EVIL = 'LAUGH_EVIL',
+    SLEEPING = 'SLEEPING',
 }
 
 // A big thanks to Dust R I P for all these emotes!
@@ -102,6 +103,7 @@ enum EmoteAnimation {
     EASTER_BUNNY_2LINE = 1825,
     EASTER_BUNNY_3LINE = 1826,
     EASTER_BUNNY_4LINE = 1827,
+    SLEEPING_1LINE = 3321,
 }
 
 const nonLineEmotes = [ Emote.BLANK_STARE, Emote.SINGLE_WORD, Emote.EVIL_STARE, Emote.LAUGH_EVIL ];
@@ -580,6 +582,7 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
             if(dialogueAction.type === 'NPC') {
                 widgetId = npcWidgetIds[lines.length - 1];
                 player.outgoingPackets.setWidgetNpcHead(widgetId, 0, npcId as number);
+                // TODO make a generic way to change the NPC name
                 player.outgoingPackets.updateWidgetString(widgetId, 1,
                     filestore.configStore.npcStore.getNpc(npcId as number).name);
             } else {

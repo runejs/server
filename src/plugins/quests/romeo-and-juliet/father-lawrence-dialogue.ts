@@ -2,6 +2,7 @@ import { dialogue, Emote, goto } from '@engine/world/actor/dialogue';
 import { QuestDialogueHandler } from '@engine/config/quest-config';
 import { Player } from '@engine/world/actor/player/player';
 import { Npc } from '@engine/world/actor/npc/npc';
+import { Cutscene } from '@engine/world/actor/player/cutscenes';
 
 export const lawrenceOptions = () => {
     return (options, tag_OPTIONS) => [
@@ -43,10 +44,29 @@ export const lawrenceDialogueHandler: QuestDialogueHandler = {
 
     3: async (player: Player, npc: Npc) => {
         const participants = [player, { npc, key: 'lawrence' }];
-        // TODO
         await dialogue(participants, [
-            lawrence => [Emote.GENERIC, `Hello adventurer, do you seek a quest?`],
-            lawrenceOptions()
+            lawrence => [Emote.HAPPY, `''...and let Saradomin light the way for you... '' Urgh!`],
+            lawrence => [Emote.ANGRY, `Can't you see that I'm in the middle of a Sermon?!`],
+            player => [Emote.ANGRY, `But Romeo sent me!`],
+            lawrence => [Emote.ANGRY, `But I'm busy delivering a sermon to my congregation!`],
         ]);
+
+        player.cutscene = new Cutscene(player, { hideTabs: false, hideMinimap: false });
+        player.cutscene.snapCameraTo(3254, 3486, 330);
+        player.cutscene.lookAt(3255, 3479, 300);
+
+        const congregation = [player, { npc: 'rs:jeremy_clerksin', key: 'congregation' }]
+        await dialogue(congregation, [
+            congregation => [Emote.SLEEPING, `Zzzzzzzzz`],
+            player => [Emote.ANGRY, `Yes, well, it certainly seems like you have a captive audience!`]
+        ]);
+
+        player.cutscene.endCutscene();
+
+        await dialogue(participants, [
+            lawrence => [Emote.HAPPY, `Ok, ok...what do you want so I can get rid of you and continue with my sermon?`]
+        ]);
+
+        // TODO
     },
 };
