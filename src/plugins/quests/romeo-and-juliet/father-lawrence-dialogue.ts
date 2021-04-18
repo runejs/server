@@ -39,5 +39,14 @@ export const lawrenceDialogueHandler: QuestDialogueHandler = {
         ]);
     },
     1: 0,
-    2: 0
+    2: 0,
+
+    3: async (player: Player, npc: Npc) => {
+        const participants = [player, { npc, key: 'lawrence' }];
+        // TODO
+        await dialogue(participants, [
+            lawrence => [Emote.GENERIC, `Hello adventurer, do you seek a quest?`],
+            lawrenceOptions()
+        ]);
+    },
 };

@@ -1,7 +1,6 @@
 import { randomBetween } from '@engine/util/num';
 import { dialogue, Emote, execute, goto } from '@engine/world/actor/dialogue';
 import { Position } from '@engine/world/position';
-import { MinimapState } from '@engine/config/minimap-state';
 import { WorldInstance } from '@engine/world/instances';
 import uuidv4 from 'uuid/v4';
 import { QuestDialogueHandler } from '@engine/config/quest-config';
@@ -10,6 +9,38 @@ import { Npc } from '@engine/world/actor/npc/npc';
 import { Cutscene } from '@engine/world/actor/player/cutscenes';
 import { world } from '@engine/game-server';
 import { schedule } from '@engine/world/task';
+import { questItems, questKey } from './romeo-and-juliet-quest.plugin';
+
+const findingFatherLawrence = () => {
+    return (options, tag_FATHER_LAWRENCE) => [
+        `How are you?`, [
+            player => [Emote.POMPOUS, `How are you?`],
+            romeo => [Emote.SAD, `Not so good my friend...I miss Judi..., Junie..., Joopie...`],
+            player => [Emote.POMPOUS, `Juliet?`],
+            romeo => [Emote.SKEPTICAL, `Juliet! I miss Juliet, terribly!`],
+            player => [Emote.SKEPTICAL, `Hmmm, so I see!`],
+            goto('tag_FATHER_LAWRENCE')
+        ],
+        `Where can I find Father Lawrence?`, [
+            player => [Emote.POMPOUS, `Where can I find Father Lawrence?`],
+            romeo => [Emote.HAPPY, `Lather Fawrence! Oh he's...`],
+            romeo => [Emote.SKEPTICAL, `You know he's not my 'real' Father don't you?`],
+            player => [Emote.VERY_SAD, `I think I suspected that he wasn't.`],
+            romeo => [Emote.HAPPY, `Well anyway...he tells these song, loring bermons...and keeps these here Carrockian vitizens snoring in his church to the East North.`],
+            goto('tag_FATHER_LAWRENCE')
+        ],
+        `Have you heard anything from Juliet?`, [
+            player => [Emote.POMPOUS, `Have you heard anything from Juliet?`],
+            romeo => [Emote.SAD, `Sadly not my friend! And what's worse, her Father has threatened to kill me if he sees me. I mean, that seems a bit harsh!`],
+            player => [Emote.POMPOUS, `Well, I shouldn't worry too much...you can always run away if you see him...`],
+            romeo => [Emote.SAD, `I just wish I could remember what he looks like! I live in fear of every man I see!`],
+            goto('tag_FATHER_LAWRENCE')
+        ],
+        `Ok, thanks.`, [
+            player => [Emote.GENERIC, `Ok, thanks.`]
+        ]
+    ];
+}
 
 const moreInfo = () => {
     return (options, tag_MORE_INFO) => [
@@ -169,6 +200,87 @@ export const romeoDialogueHandler: QuestDialogueHandler = {
     },
 
     2: async (player: Player, npc: Npc) => {
+        const participants = [player, { npc, key: 'romeo' }];
+
+        const hasLetterInInventory = player.hasItemInInventory(questItems.julietLetter.gameId);
+        if (!hasLetterInInventory) {
+            await dialogue(participants, [
+                player => [Emote.HAPPY, `Romeo...great news...I've been in touch with Juliet!`],
+                romeo => [Emote.HAPPY, `Oh great! That is great news! Well done...well done... what a total success!`],
+                player => [Emote.HAPPY, `Yes, and she gave me a message to give you...`],
+                romeo => [Emote.HAPPY, `Ohhh great! A message....wow!`],
+                player => [Emote.HAPPY, `Yes!`],
+                romeo => [Emote.HAPPY, `A message...oh, I can't wait to read what my dear Juliet has to say....`],
+                player => [Emote.HAPPY, `I know...it's exciting isn't it...?`],
+                romeo => [Emote.HAPPY, `Yes...yes...`],
+                romeo => [Emote.BLANK_STARE, `...`],
+                romeo => [Emote.SKEPTICAL, `You've lost the message haven't you?`],
+                player => [Emote.GENERIC, `Yep, haven't got a clue where it is.`]
+            ]);
+            return;
+        }
+
+        const completedDialogue = await dialogue(participants, [
+            player => [Emote.HAPPY, `Romeo...great news...I've been in touch with Juliet! She's written a message for you...`],
+            item => [questItems.julietLetter.gameId, `You hand over Juliet's message to Romeo.`],
+            romeo => [Emote.HAPPY, `Oh, a message! A message! I've never had a message before...`],
+            player => [Emote.POMPOUS, `Really?`],
+            romeo => [Emote.HAPPY, `No, no, not one!`],
+            romeo => [Emote.POMPOUS, `Oh, well, except for the occasional court summons.`],
+            romeo => [Emote.HAPPY, `But they're not really 'nice' messages. Not like this one! I'm sure that this message will be lovely.`],
+            player => [Emote.POMPOUS, `Well are you going to open it or not?`],
+            romeo => [Emote.HAPPY, `Oh yes, yes, of course! 'Dearest Romeo, I am very pleased that you sent ${player.username} to look for me and to tell me that you still hold affliction...', Affliction! She thinks I'm diseased?`],
+            player => [Emote.VERY_SAD, `'Affection?'`],
+            romeo => [Emote.SAD, `Ahh yes...'still hold affection for me. I still feel great affection for you, but unfortunately my Father opposes our marriage.'`],
+            player => [Emote.SAD, `Oh dear...that doesn't sound too good.`],
+            romeo => [Emote.HAPPY, `What? '...great affection for you. Father opposes our..'`],
+            romeo => [Emote.SAD, `'...marriage and will...`],
+            romeo => [Emote.SHOCKED, `...will kill you if he sees you again!'`],
+            player => [Emote.SKEPTICAL, `I have to be honest, it's not getting any better...`],
+            romeo => [Emote.SAD, `'Our only hope is that Father Lawrence, our long time confidant, can help us in some way.'`],
+            item => [questItems.julietLetter.gameId, `Romeo folds the message away.`],
+            romeo => [Emote.SAD, `Well, that's it then...we haven't got a chance...`],
+            player => [Emote.SAD, `What about Father Lawrence?`],
+            romeo => [Emote.SAD, `...our love is over...the great romance, the life of my love...`],
+            player => [Emote.POMPOUS, `...or you could speak to Father Lawrence!`],
+            romeo => [Emote.SAD, `Oh, my aching, breaking, heart...how useless the situation is now...we have no one to turn to...`],
+            player => [Emote.ANGRY, `FATHER LAWRENCE!`]
+        ]);
+
+        if (!completedDialogue) {
+            return;
+        }
+
+        const slotRemoved = player.removeFirstItem(questItems.julietLetter.gameId);
+        if (slotRemoved === -1) {
+            return;
+        }
+
+        player.setQuestProgress(questKey, 3);
+
+        await dialogue(participants, [
+            romeo => [Emote.SHOCKED, `Father Lawrence?`],
+            // TODO the next 2 lines should be 1 dialogue
+            romeo => [Emote.HAPPY, `Oh yes, Father Lawrence...he's our long time confidant, he might have a solution!`],
+            romeo => [Emote.HAPPY, `Yes, yes, you have to go and talk to Lather Fawrence for us and ask him if he's got any suggestions for our predicament?`],
+            player => [Emote.POMPOUS, `Where can I find Father Lawrence?`],
+            romeo => [Emote.HAPPY, `Lather Fawrence! Oh he's...`],
+            romeo => [Emote.SKEPTICAL, `You know he's not my 'real' Father don't you?`],
+            player => [Emote.VERY_SAD, `I think I suspected that he wasn't.`],
+            romeo => [Emote.HAPPY, `Well anyway...he tells these song, loring bermons...and keeps these here Carrockian vitizens snoring in his church to the East North.`],
+            findingFatherLawrence()
+        ]);
+    },
+
+    3: async (player: Player, npc: Npc) => {
+        const participants = [player, { npc, key: 'romeo' }];
+        await dialogue(participants, [
+            player => [Emote.POMPOUS, `Hey again Romeo!`],
+            moreInfo()
+        ]);
+    },
+
+    4: async (player: Player, npc: Npc) => {
         // Placeholder for the cutscene at the end, I was bored so I decided to skip to this one
         const participants = [player, { npc, key: 'romeo' }];
         const cont = await dialogue(participants, [

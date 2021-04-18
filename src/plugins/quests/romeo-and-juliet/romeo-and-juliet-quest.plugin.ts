@@ -22,7 +22,12 @@ const journalHandler = {
 
     2: `<col=000000><str>I have agreed to find Juliet for Romeo and tell her how he feels. For some reason he can't just do this himself.
         I found Juliet on the Western edge of Varrock, and told her about Romeo. She gave me a message to take back.</str></col>
-        I should take the <col=800000>message</col> from <col=800000>Juliet</col> to <col=800000>Romeo</col> in <col=800000>Varrock</col> central square.`
+        I should take the <col=800000>message</col> from <col=800000>Juliet</col> to <col=800000>Romeo</col> in <col=800000>Varrock</col> central square.`,
+
+    3: `<col=000000><str>I have agreed to find Juliet for Romeo and tell her how he feels. For some reason he can't just do this himself.
+        I found Juliet on the Western edge of Varrock, and told her about Romeo. She gave me a message to take back.
+        I delivered the message to Romeo, and he was sad to hear that Juliet's father opposed their marriage. However, he said that Father Lawrence, might be able to overcome this.</str></col>
+        I should find <col=800000>Father Lawrence</col> and see how we can help. I can find him in his <col=800000>church</col> in the north-east of <col=800000>Varrock.</col>`
 };
 
 export const questItems = {

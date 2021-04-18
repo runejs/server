@@ -79,5 +79,19 @@ export const julietDialogueHandler: QuestDialogueHandler = {
                 ]);
             }
         }
-    }
+    },
+
+    3: async (player: Player, npc: Npc) => {
+        const participants = [player, { npc, key: 'juliet' }];
+        await dialogue(participants, [
+            player => [Emote.HAPPY, `Hi Juliet, I have passed your message on to Romeo..he's scared half out of his wits at the news that your father wants to kill him.`],
+            juliet => [Emote.SAD, `Yes, unfortunately my father is quite the hunter, you may have seen some the animal head trophies on the wall. And it would be so awful to see Romeo's head up there with them!`],
+            player => [Emote.SAD, `I know what you mean...`],
+            player => [Emote.POMPOUS, `...his hair colour will clash terribly with the rest of the decoration.`],
+            juliet => [Emote.ANGRY, `That's not what I was suggesting at all...`],
+            player => [Emote.HAPPY, `I know, I know...I was just kidding.`],
+            player => [Emote.HAPPY, `Anyway, don't worry because I'm on the case. I'm going to get some help from Father Lawrence.`],
+            juliet => [Emote.HAPPY, `Oh yes, I'm sure that Father Lawrence will come up with a solution. I hope you find him soon.`],
+        ]);
+    },
 };

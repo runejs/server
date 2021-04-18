@@ -78,4 +78,11 @@ export const draulDialogueHandler: QuestDialogueHandler = {
             draul => [Emote.ANGRY, `Groceries!...at a time like this, does that girl know what she's putting me through!`]
         ]);
     },
+
+    3: async (player: Player, npc: Npc) => {
+        const participants = [player, { npc, key: 'draul' }];
+        await dialogue(participants, [
+            draul => [Emote.ANGRY, `Do you live here? If so, how's about a couple of hundred gold towards the rent eh? Pay your share I say...you don't want to be like that freeloading Romeo!`],
+        ]);
+    },
 };

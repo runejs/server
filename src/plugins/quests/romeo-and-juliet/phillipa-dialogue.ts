@@ -33,5 +33,6 @@ export const phillipaDialogueHandler: QuestDialogueHandler = {
             phillipa => [Emote.HAPPY, `He always brings a tear to my eyes - tears of happiness at his foolish antics!`],
             player => [Emote.GENERIC, `Oh, thanks. I like to do my cupid bit.`]
         ]);
-    }
+    },
+    3: 2
 }
