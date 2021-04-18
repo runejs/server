@@ -12,7 +12,7 @@ export type PlayerInitActionHook = ActionHook<playerInitActionHandler>;
 /**
  * The player init action hook handler function to be called when the hook's conditions are met.
  */
-export type playerInitActionHandler = (npcAction: PlayerInitAction) => void;
+export type playerInitActionHandler = (playerInitAction: PlayerInitAction) => void;
 
 
 /**
@@ -26,7 +26,7 @@ export interface PlayerInitAction {
 
 /**
  * The pipe that the game engine hands player init actions off to.
- * @param npc
+ * @param player
  */
 const playerInitActionPipe = ({ player }: PlayerInitAction): void => {
     const actionHooks = getActionHooks<PlayerInitActionHook>('player_init');

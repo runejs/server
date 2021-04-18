@@ -1,8 +1,10 @@
-import { world } from '../../game-server';
-import { World } from '../../world';
+import { world } from '@engine/game-server';
+import { World } from '@engine/world';
 import { logger } from '@runejs/core';
+import { Player } from '@engine/world/actor/player/player';
+import { PacketData } from '@engine/net/inbound-packets';
 
-const npcInteractionPacket = (player, packet) => {
+const npcInteractionPacket = (player: Player, packet: PacketData) => {
     const { buffer, packetId } = packet;
 
     const args = {
@@ -14,12 +16,12 @@ const npcInteractionPacket = (player, packet) => {
     };
     const npcIndex = buffer.get(...args[packetId]);
 
-    if(npcIndex < 0 || npcIndex > World.MAX_NPCS - 1) {
+    if (npcIndex < 0 || npcIndex > World.MAX_NPCS - 1) {
         return;
     }
 
     const npc = world.npcList[npcIndex];
-    if(!npc) {
+    if (!npc) {
         return;
     }
 
@@ -27,7 +29,7 @@ const npcInteractionPacket = (player, packet) => {
     const distance = Math.floor(position.distanceBetween(player.position));
 
     // Too far away
-    if(distance > 16) {
+    if (distance > 16) {
         return;
     }
 
@@ -39,20 +41,29 @@ const npcInteractionPacket = (player, packet) => {
         8: 4*/
     };
 
+    const morphedNpc = player.getMorphedNpcDetails(npc);
+    const options = morphedNpc?.options || npc.options;
+
     const actionIdx = actions[packetId];
     let optionName = `action-${actionIdx + 1}`;
-    if(npc.options && npc.options.length >= actionIdx) {
-        if(!npc.options[actionIdx] || npc.options[actionIdx].toLowerCase() === 'hidden') {
+    if(options && options.length >= actionIdx) {
+        if(!options[actionIdx] || options[actionIdx].toLowerCase() === 'hidden') {
             // Invalid action
             logger.info(npc);
-            logger.error(`1: Invalid npc ${npc.id} option ${actionIdx + 1}, options: ${JSON.stringify(npc.options)}`);
+            logger.error(`1: Invalid npc ${morphedNpc?.gameId || npc.id} option ${actionIdx + 1}, options: ${JSON.stringify(options)}`);
+            if (morphedNpc) {
+                logger.warn(`Note: (id-${morphedNpc.gameId}) is a morphed NPC. The parent NPC is (id-${npc.id}).`);
+            }
             return;
         }
 
-        optionName = npc.options[actionIdx];
+        optionName = options[actionIdx];
     } else {
         // Invalid action
-        logger.error(`2: Invalid npc ${npc.id} option ${actionIdx + 1}, options: ${JSON.stringify(npc.options)}`);
+        logger.error(`2: Invalid npc ${morphedNpc?.gameId || npc.id} option ${actionIdx + 1}, options: ${JSON.stringify(options)}`);
+        if (morphedNpc) {
+            logger.warn(`Note: (id-${morphedNpc.gameId}) is a morphed NPC. The parent NPC is (id-${npc.id}).`);
+        }
         return;
     }
 

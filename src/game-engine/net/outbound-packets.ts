@@ -250,8 +250,18 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
+    public resetAllClientConfigs(): void {
+        const packet = new Packet(14);
+        this.queue(packet);
+    }
+
     public updateClientConfig(configId: number, value: number): void {
         let packet: Packet;
+        const metadata = this.player.metadata;
+        if(!metadata['configs']) {
+            metadata['configs'] = []
+        }
+        metadata.configs[configId] = value;
 
         if(value > 128) {
             packet = new Packet(2);
@@ -556,22 +566,22 @@ export class OutboundPackets {
 
     public updateCurrentMapChunk(): void {
         const packet = new Packet(166, PacketType.DYNAMIC_LARGE);
-        packet.put(this.player.position.chunkLocalY, 'SHORT');
-        packet.put(this.player.position.chunkX + 6, 'SHORT', 'LITTLE_ENDIAN');
-        packet.put(this.player.position.chunkLocalX, 'SHORT');
-        packet.put(this.player.position.chunkY + 6, 'SHORT', 'LITTLE_ENDIAN');
+        packet.put(this.player.position.chunkLocalY, 'short');
+        packet.put(this.player.position.chunkX + 6, 'short', 'le');
+        packet.put(this.player.position.chunkLocalX, 'short');
+        packet.put(this.player.position.chunkY + 6, 'short', 'le');
         packet.put(this.player.position.level);
 
-        for(let xCalc = Math.floor(this.player.position.chunkX / 8); xCalc <= Math.floor((this.player.position.chunkX + 12) / 8); xCalc++) {
-            for(let yCalc = Math.floor(this.player.position.chunkY / 8); yCalc <= Math.floor((this.player.position.chunkY + 12) / 8); yCalc++) {
-                const regionid = (xCalc << 8 | yCalc);
-                const xteaRegion = xteaRegions[regionid]
+        const startX = Math.floor(this.player.position.chunkX / 8);
+        const endX = Math.floor((this.player.position.chunkX + 12) / 8);
+        const startY = Math.floor(this.player.position.chunkY / 8);
+        const endY = Math.floor((this.player.position.chunkY + 12) / 8);
+
+        for(let mapX = startX; mapX <= endX; mapX++) {
+            for(let mapY = startY; mapY <= endY; mapY++) {
+                const xteaRegion = xteaRegions[`l${mapX}_${mapY}`];
                 for(let seeds = 0; seeds < 4; seeds++) {
-                    if(xteaRegion) {
-                        packet.put(xteaRegion.key[seeds], 'INT');
-                    } else  {
-                        packet.put(0, 'INT');
-                    }
+                    packet.put(xteaRegion?.key[seeds] || 0, 'int');
                 }
             }
         }
