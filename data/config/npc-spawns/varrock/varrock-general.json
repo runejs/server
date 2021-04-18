@@ -48,6 +48,12 @@
         "movement_radius": 3
     },
     {
+        "npc": "rs:apothecary",
+        "spawn_x": 3196,
+        "spawn_y": 3404,
+        "movement_radius": 3
+    },
+    {
         "npc": "rs:man",
         "spawn_x": 3153,
         "spawn_y": 3429,

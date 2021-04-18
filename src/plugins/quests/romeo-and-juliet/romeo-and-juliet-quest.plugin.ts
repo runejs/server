@@ -11,6 +11,7 @@ import { calculateJulietVisibility, julietDialogueHandler } from './juliet-dialo
 import { romeoDialogueHandler } from './romeo-dialogue';
 import { draulDialogueHandler } from './draul-leptoc-dialogue';
 import { lawrenceDialogueHandler } from './father-lawrence-dialogue';
+import { apothecaryDialogueHandler } from './apothecary-dialogue';
 
 const journalHandler = {
     0: `I can start this quest by speaking to <col=800000>Romeo</col> in
@@ -84,5 +85,11 @@ export default <ContentPlugin>{
         options: 'talk-to',
         walkTo: true,
         handler: questDialogueActionFactory(questKey, lawrenceDialogueHandler)
+    }, {
+        type: 'npc_interaction',
+        npcs: 'rs:apothecary',
+        options: 'talk-to',
+        walkTo: true,
+        handler: questDialogueActionFactory(questKey, apothecaryDialogueHandler)
     }]
 };
