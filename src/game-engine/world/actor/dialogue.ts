@@ -107,8 +107,8 @@ enum EmoteAnimation {
 }
 
 const nonLineEmotes = [ Emote.BLANK_STARE, Emote.SINGLE_WORD, Emote.EVIL_STARE, Emote.LAUGH_EVIL ];
-export const playerWidgetIds = [ 64, 65, 66, 67 ];
-export const npcWidgetIds = [ 241, 242, 243, 244 ];
+export const playerWidgetIds = [ 64, 65, 66, 67 ]; // TODO: Non 'click here to continue' player widgets are missing!
+export const npcWidgetIds = [ 241, 242, 243, 244 ]; // TODO: Non 'click here to continue' npc widgets are missing!
 export const optionWidgetIds = [ 228, 230, 232, 234, 235 ];
 export const continuableTextWidgetIds = [ 210, 211, 212, 213, 214 ];
 export const textWidgetIds = [ 215, 216, 217, 218, 219 ];
@@ -198,6 +198,7 @@ class GoToAction implements DialogueAction {
 interface ActorDialogueAction extends DialogueAction {
     animation: number;
     lines: string[];
+    customName?: string;
 }
 
 interface NpcDialogueAction extends ActorDialogueAction {
@@ -346,7 +347,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
         } else {
             // Player or Npc dialogue.
 
-            let dialogueDetails: [ Emote, string ];
+            let dialogueDetails: [ Emote, string, string? ];
             let npc: Npc | number | string;
 
             if(dialogueType !== 'player') {
@@ -372,18 +373,19 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
 
             const emote = dialogueDetails[0] as Emote;
             const text = dialogueDetails[1] as string;
+            const customName = dialogueDetails[2] as string;
             const lines = wrapDialogueText(text, 'ACTOR');
             const animation = nonLineEmotes.indexOf(emote) !== -1 ? EmoteAnimation[emote] : EmoteAnimation[`${emote}_${lines.length}LINE`];
 
             if(dialogueType !== 'player') {
                 const npcDialogueAction: NpcDialogueAction = {
-                    npcId: npc as number, animation, lines, tag, type: 'NPC'
+                    npcId: npc as number, animation, lines, tag, type: 'NPC', customName
                 };
 
                 parsedDialogueTree.push(npcDialogueAction);
             } else {
                 const playerDialogueAction: PlayerDialogueAction = {
-                    player, animation, lines, tag, type: 'PLAYER'
+                    player, animation, lines, tag, type: 'PLAYER', customName
                 };
 
                 parsedDialogueTree.push(playerDialogueAction);
@@ -580,15 +582,15 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
             const animation = actorDialogueAction.animation;
 
             if(dialogueAction.type === 'NPC') {
+                const name = actorDialogueAction.customName || filestore.configStore.npcStore.getNpc(npcId as number).name;
                 widgetId = npcWidgetIds[lines.length - 1];
                 player.outgoingPackets.setWidgetNpcHead(widgetId, 0, npcId as number);
-                // TODO make a generic way to change the NPC name
-                player.outgoingPackets.updateWidgetString(widgetId, 1,
-                    filestore.configStore.npcStore.getNpc(npcId as number).name);
+                player.outgoingPackets.updateWidgetString(widgetId, 1, name);
             } else {
+                const name = actorDialogueAction.customName || player.username;
                 widgetId = playerWidgetIds[lines.length - 1];
                 player.outgoingPackets.setWidgetPlayerHead(widgetId, 0);
-                player.outgoingPackets.updateWidgetString(widgetId, 1, player.username);
+                player.outgoingPackets.updateWidgetString(widgetId, 1, name);
             }
 
             player.outgoingPackets.playWidgetAnimation(widgetId, 0, animation);
@@ -678,8 +680,7 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
         if (!multi) {
             player.interfaceState.closeAllSlots();
         }
-        logger.warn(error);
-        return false;
+        throw error;
     }
 }
 

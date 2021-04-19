@@ -57,7 +57,7 @@ export const lawrenceDialogueHandler: QuestDialogueHandler = {
 
         const congregation = [player, { npc: 'rs:jeremy_clerksin', key: 'congregation' }]
         await dialogue(congregation, [
-            congregation => [Emote.SLEEPING, `Zzzzzzzzz`],
+            congregation => [Emote.SLEEPING, `Zzzzzzzzz`, `Congregation`],
             player => [Emote.ANGRY, `Yes, well, it certainly seems like you have a captive audience!`]
         ]);
 
