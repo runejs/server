@@ -58,13 +58,13 @@ export const lawrenceDialogueHandler: QuestDialogueHandler = {
         const congregation = [player, { npc: 'rs:jeremy_clerksin', key: 'congregation' }]
         await dialogue(congregation, [
             congregation => [Emote.SLEEPING, `Zzzzzzzzz`, `Congregation`],
-            player => [Emote.ANGRY, `Yes, well, it certainly seems like you have a captive audience!`]
+            player => [Emote.VERY_SAD, `Yes, well, it certainly seems like you have a captive audience!`]
         ]);
 
         player.cutscene.endCutscene();
 
         await dialogue(participants, [
-            lawrence => [Emote.HAPPY, `Ok, ok...what do you want so I can get rid of you and continue with my sermon?`]
+            lawrence => [Emote.WONDERING, `Ok, ok...what do you want so I can get rid of you and continue with my sermon?`]
         ]);
 
         // TODO
