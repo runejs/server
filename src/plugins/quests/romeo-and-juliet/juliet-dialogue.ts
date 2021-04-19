@@ -7,7 +7,7 @@ import { findNpc } from '@engine/config';
 import { getVarbitConfigId } from '@engine/util/varbits';
 
 export const calculateJulietVisibility = (player: Player) => {
-    const julietParentNpc = findNpc('rs:juliet:0');
+    const julietParentNpc = findNpc('rs:juliet');
     const configId = getVarbitConfigId(julietParentNpc.varbitId);
 
     const hideJulietForPlayer = player.getQuest(questKey).progress === 4 ? 1 : 0; // TODO fix this value

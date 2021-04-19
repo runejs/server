@@ -68,7 +68,7 @@ export default <ContentPlugin>{
         handler: questDialogueActionFactory(questKey, romeoDialogueHandler)
     }, {
         type: 'npc_interaction',
-        npcs: 'rs:juliet',
+        npcs: 'rs:juliet:visible',
         options: 'talk-to',
         walkTo: true,
         handler: questDialogueActionFactory(questKey, julietDialogueHandler)

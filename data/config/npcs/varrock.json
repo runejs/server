@@ -36,11 +36,11 @@
         "game_id": 3325
     },
     "rs:juliet": {
-        "game_id": 637,
+        "game_id": 3323,
         "variations": [
             {
-                "suffix": "0",
-                "game_id": 3323
+                "suffix": "visible",
+                "game_id": 637
             }
         ]
     },
