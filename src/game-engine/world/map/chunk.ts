@@ -30,13 +30,11 @@ export class Chunk {
         this._npcs = [];
         this._collisionMap = new CollisionMap(position.x, position.y, position.level, { chunk: this });
         this._filestoreLandscapeObjects = new Map<string, LandscapeObject>();
-        this.registerMapRegion();
     }
 
     public registerMapRegion(): void {
-        const mapRegionX = Math.floor(this.position.x / 8);
-        const mapRegionY = Math.floor(this.position.y / 8);
-
+        const mapRegionX = Math.floor((this.position.x + 6) / 8);
+        const mapRegionY = Math.floor((this.position.y + 6) / 8);
         world.chunkManager.registerMapRegion(mapRegionX, mapRegionY);
     }
 

@@ -7,20 +7,20 @@ import { LandscapeFile, LandscapeObject, MapFile } from '@runejs/filestore';
 
 export class Tile {
 
-    public settings: number;
-    public nonWalkable: boolean;
-    public bridge: boolean;
+    public settings: number = 0;
+    public blocked: boolean = false;
+    public bridge: boolean = false;
 
     public constructor(public x: number, public y: number, public level: number, settings?: number) {
-        if(settings !== undefined) {
+        if(settings) {
             this.setSettings(settings);
         }
     }
 
     public setSettings(settings: number): void {
         this.settings = settings;
-        this.nonWalkable = (this.settings & 0x1) == 0x1;
-        this.bridge = (this.settings & 0x2) == 0x2;
+        this.blocked = (this.settings & 0x1) === 1;
+        this.bridge = (this.settings & 0x2) === 2;
     }
 
 }
@@ -28,6 +28,7 @@ export class Tile {
 export interface MapRegion {
     tiles: Tile[];
     objects: LandscapeObject[];
+    mapFile: MapFile;
 }
 
 
@@ -37,11 +38,44 @@ export interface MapRegion {
 export class ChunkManager {
 
     public readonly regionMap: Map<string, MapRegion> = new Map<string, MapRegion>();
-    public readonly tileMap: Map<string, Tile> = new Map<string, Tile>();
     private readonly chunkMap: Map<string, Chunk>;
 
     public constructor() {
         this.chunkMap = new Map<string, Chunk>();
+    }
+
+    public getTile(position: Position): Tile {
+        const chunkX = position.chunkX + 6;
+        const chunkY = position.chunkY + 6;
+        const mapRegionX = Math.floor(chunkX / 8);
+        const mapRegionY = Math.floor(chunkY / 8);
+        const mapWorldPositionX = (mapRegionX & 0xff) * 64;
+        const mapWorldPositionY = mapRegionY * 64;
+        const regionSettings = this.regionMap.get(`${mapRegionX},${mapRegionY}`)?.mapFile?.tileSettings;
+
+        this.registerMapRegion(mapRegionX, mapRegionY);
+
+        if(!regionSettings) {
+            return new Tile(position.x, position.y, position.level);
+        }
+
+        const tileX = position.x - mapWorldPositionX;
+        const tileY = position.y - mapWorldPositionY;
+        const tileLevel = position.level;
+        let tileSettings = regionSettings[tileLevel][tileX][tileY];
+
+        if(tileLevel < 3) {
+            // Check for a bridge tile above the active tile
+            const tileAboveSettings = regionSettings[tileLevel + 1][tileX][tileY];
+            if((tileAboveSettings & 0x2) === 2) {
+                // Set this tile as walkable if the tile above is a bridge -
+                // This is because the maps are stored with bridges being one level
+                // above where their collision maps need to be
+                tileSettings = 0;
+            }
+        }
+
+        return new Tile(position.x, position.y, tileLevel, tileSettings);
     }
 
     public registerMapRegion(mapRegionX: number, mapRegionY: number): void {
@@ -51,6 +85,7 @@ export class ChunkManager {
             // Map region already registered
             return;
         }
+        this.regionMap.set(key, null);
 
         let mapFile: MapFile;
         let landscapeFile: LandscapeFile;
@@ -66,52 +101,14 @@ export class ChunkManager {
             logger.error(`Error decoding landscape file ${mapRegionX},${mapRegionY}`);
         }
 
-        const region: MapRegion = { tiles: [],
+        const region: MapRegion = { mapFile, tiles: [],
             objects: landscapeFile?.landscapeObjects || [] };
 
-        // Parse map tiles for game engine use
-        for(let level = 0; level < 4; level++) {
-            for(let x = 0; x < 64; x++) {
-                for(let y = 0; y < 64; y++) {
-                    const tileSettings = mapFile?.tileSettings[level][x][y] || 0;
-                    region.tiles.push(new Tile(x, y, level, tileSettings));
-                }
-            }
-        }
-
         this.regionMap.set(key, region);
-        this.registerTiles(region.tiles);
-
-        const worldX = (mapRegionX & 0xff) * 64;
-        const worldY = mapRegionY * 64;
-        this.registerObjects(region.objects, worldX, worldY);
+        this.registerObjects(region.objects, region.tiles || []);
     }
 
-    public registerTiles(tiles: Tile[]): void {
-        if(!tiles || tiles.length === 0) {
-            return;
-        }
-
-        for(const tile of tiles) {
-            const key = `${tile.x},${tile.y},${tile.level}`;
-
-            if(tile.bridge) {
-                // Move this tile down one level if it's a bridge tile
-                const newTile = new Tile(tile.x, tile.y, tile.level - 1, 0);
-                this.tileMap.set(`${newTile.x},${newTile.y},${newTile.level}`, newTile);
-
-                // And also add the bridge tile itself, so that game objects know about it
-                this.tileMap.set(key, tile);
-            } else if(tile.nonWalkable) { // No need to know about walkable tiles for collision maps, only nonwalkable
-                if(!this.tileMap.has(key)) {
-                    // Otherwise add a new tile if it hasn't already been set (IE by a bridge tile above)
-                    this.tileMap.set(key, tile);
-                }
-            }
-        }
-    }
-
-    public registerObjects(objects: LandscapeObject[], mapRegionStartX: number, mapRegionStartY: number): void {
+    public registerObjects(objects: LandscapeObject[], tiles: Tile[]): void {
         if(!objects || objects.length === 0) {
             return;
         }
@@ -119,16 +116,10 @@ export class ChunkManager {
         for(const object of objects) {
             const position = new Position(object.x, object.y, object.level);
 
-            const tile = this.tileMap.get(position.key);
-            if(tile?.bridge) {
-                // Object is on a bridge tile, move it down a level to create proper collision maps
-                position.level -= 1;
-            }
-
-            const tileAbove = this.tileMap.get(`${object.x},${object.y},${object.level + 1}`);
-            if(tileAbove?.bridge) {
-                // Object is below a bridge tile, move it down a level to create proper collision maps
-                position.level -= 1;
+            if(tiles.some(tile => (tile?.settings & 0x2) === 2 &&
+                tile?.x === object.x && tile?.y === object.y && tile?.level >= object.level)) {
+                // Object is on or underneath a bridge tile and needs to move down one level
+                position.move(object.x, object.y, object.level - 1);
             }
 
             this.getChunkForWorldPosition(position).setFilestoreLandscapeObject(object);
@@ -175,6 +166,7 @@ export class ChunkManager {
         } else {
             const chunk = new Chunk(pos);
             this.chunkMap.set(pos.key, chunk);
+            chunk.registerMapRegion();
             return chunk;
         }
     }

@@ -22,10 +22,6 @@ const lookCameraAction: commandActionHandler = ({ player, args }) => {
         lookHeight as number, speed as number, acceleration as number);
 };
 
-const getRegionAction: commandActionHandler = ({ player }) => {
-    player.sendMessage(`${player.position.chunkLocalX},${player.position.chunkLocalY}`);
-};
-
 const lookTestAction: commandActionHandler = ({ player }) => {
     const cameraX = 3219;
     const cameraY = 3238;
@@ -143,10 +139,6 @@ export default {
                 }
             ],
             handler: turnCameraAction
-        }, {
-            type: 'player_command',
-            commands: [ 'region' ],
-            handler: getRegionAction
         }
     ]
 };
