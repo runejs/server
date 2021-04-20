@@ -26,7 +26,6 @@ export class Tile {
 }
 
 export interface MapRegion {
-    tiles: Tile[];
     objects: LandscapeObject[];
     mapFile: MapFile;
 }
@@ -101,25 +100,30 @@ export class ChunkManager {
             logger.error(`Error decoding landscape file ${mapRegionX},${mapRegionY}`);
         }
 
-        const region: MapRegion = { mapFile, tiles: [],
-            objects: landscapeFile?.landscapeObjects || [] };
+        const region: MapRegion = { mapFile, objects: landscapeFile?.landscapeObjects || [] };
 
         this.regionMap.set(key, region);
-        this.registerObjects(region.objects, region.tiles || []);
+        this.registerObjects(region.objects, mapFile);
     }
 
-    public registerObjects(objects: LandscapeObject[], tiles: Tile[]): void {
+    public registerObjects(objects: LandscapeObject[], mapFile: MapFile): void {
         if(!objects || objects.length === 0) {
             return;
         }
 
+        const mapWorldPositionX = (mapFile.regionX & 0xff) * 64;
+        const mapWorldPositionY = mapFile.regionY * 64;
+
         for(const object of objects) {
             const position = new Position(object.x, object.y, object.level);
+            const localX = object.x - mapWorldPositionX;
+            const localY = object.y - mapWorldPositionY;
 
-            if(tiles.some(tile => (tile?.settings & 0x2) === 2 &&
-                tile?.x === object.x && tile?.y === object.y && tile?.level >= object.level)) {
-                // Object is on or underneath a bridge tile and needs to move down one level
-                position.move(object.x, object.y, object.level - 1);
+            for(let level = 3; level >= 0; level--) {
+                if((mapFile.tileSettings[level][localX][localY] & 0x2) === 2) {
+                    // Object is on or underneath a bridge tile and needs to move down one level
+                    position.move(object.x, object.y, object.level - 1);
+                }
             }
 
             this.getChunkForWorldPosition(position).setFilestoreLandscapeObject(object);
