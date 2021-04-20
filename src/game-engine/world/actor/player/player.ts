@@ -599,6 +599,9 @@ export class Player extends Actor {
         let showInConsole = false;
         if(typeof options === 'boolean') {
             showDialogue = true;
+        } else {
+            showDialogue = options.dialogue || false;
+            showInConsole = options.console || false;
         }
 
         if(!showDialogue) {
