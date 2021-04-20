@@ -3,14 +3,14 @@ import { widgets } from '../../config';
 
 const itemOnItemPacket = (player, packet) => {
     const { buffer } = packet;
-    const usedWithItemId = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const usedWithSlot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const usedWithContainerId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const usedWithWidgetId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const usedContainerId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const usedWidgetId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const usedItemId = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const usedSlot = buffer.get('SHORT', 'UNSIGNED');
+    const usedWithItemId = buffer.get('short', 'u', 'le');
+    const usedWithSlot = buffer.get('short', 'u', 'le');
+    const usedWithContainerId = buffer.get('short', 's', 'le');
+    const usedWithWidgetId = buffer.get('short', 's', 'le');
+    const usedContainerId = buffer.get('short', 's', 'le');
+    const usedWidgetId = buffer.get('short', 's', 'le');
+    const usedItemId = buffer.get('short', 'u', 'le');
+    const usedSlot = buffer.get('short', 'u');
 
     if(usedWidgetId === widgets.inventory.widgetId && usedContainerId === widgets.inventory.containerId &&
         usedWithWidgetId === widgets.inventory.widgetId && usedWithContainerId === widgets.inventory.containerId) {

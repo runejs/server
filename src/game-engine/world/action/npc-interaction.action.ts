@@ -2,7 +2,6 @@ import { Player } from '@engine/world/actor/player/player';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { Position } from '@engine/world/position';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
-import { logger } from '@runejs/core';
 import { playerWalkTo } from '@engine/game-server';
 import { stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
 import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
@@ -54,10 +53,12 @@ const npcInteractionActionPipe = (player: Player, npc: Npc, position: Position, 
         return;
     }
 
+    const morphedNpc = player.getMorphedNpcDetails(npc);
+
     // Find all NPC action plugins that reference this NPC
     let matchingHooks = getActionHooks<NpcInteractionActionHook>('npc_interaction')
         .filter(plugin => questHookFilter(player, plugin) &&
-            (!plugin.npcs || stringHookFilter(plugin.npcs, npc.key)) &&
+            (!plugin.npcs || stringHookFilter(plugin.npcs, morphedNpc?.key || npc.key)) &&
             (!plugin.options || stringHookFilter(plugin.options, option)));
     const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
 
@@ -66,8 +67,10 @@ const npcInteractionActionPipe = (player: Player, npc: Npc, position: Position, 
     }
 
     if(matchingHooks.length === 0) {
-        logger.warn(`Unhandled NPC interaction: ${option} ${npc.key} (id-${npc.id}) @ ${position.x},${position.y},${position.level}`);
-        logger.warn(npc.id, npc.key, npc.name);
+        player.outgoingPackets.chatboxMessage(`Unhandled NPC interaction: ${option} ${morphedNpc?.key || npc.key} (id-${morphedNpc?.gameId || npc.id}) @ ${position.x},${position.y},${position.level}`);
+        if (morphedNpc) {
+            player.outgoingPackets.chatboxMessage(`Note: (id-${morphedNpc.gameId}) is a morphed NPC. The parent NPC is (id-${npc.id}).`);
+        }
         return null;
     }
 

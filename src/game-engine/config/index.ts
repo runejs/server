@@ -1,19 +1,17 @@
 import { logger } from '@runejs/core';
-import { readFileSync } from 'fs';
 import _ from 'lodash';
-import { getFiles } from '@engine/util/files';
 import {
     ItemDetails,
     ItemPresetConfiguration,
     loadItemConfigurations,
     translateItemConfig
 } from '@engine/config/item-config';
-import { cache, questMap } from '@engine/game-server';
+import { filestore, questMap } from '@engine/game-server';
 import {
     loadNpcConfigurations,
     NpcDetails,
     NpcPresetConfiguration,
-    translateNpcConfig
+    translateNpcServerConfig
 } from '@engine/config/npc-config';
 import { loadNpcSpawnConfigurations, NpcSpawn } from '@engine/config/npc-spawn-config';
 import { loadShopConfigurations, Shop } from '@engine/config/shop-config';
@@ -21,26 +19,10 @@ import { Quest } from '@engine/world/actor/player/quest';
 import { ItemSpawn, loadItemSpawnConfigurations } from '@engine/config/item-spawn-config';
 import { loadSkillGuideConfigurations, SkillGuide } from '@engine/config/skill-guide-config';
 import { loadMusicRegionConfigurations, MusicTrack } from '@engine/config/music-regions-config';
+import { loadXteaRegionFiles, XteaRegion } from '@runejs/filestore';
+
 require('json5/lib/register');
 
-export async function loadConfigurationFiles(configurationDir: string): Promise<any[]> {
-    const files = [];
-
-    for await(const path of getFiles(configurationDir, ['.json'], true)) {
-        try {
-            const configContent = JSON.parse(readFileSync(path, 'utf8'));
-
-            if(configContent) {
-                files.push(configContent);
-            }
-        } catch(error) {
-            logger.error(`Error loading configuration file at ${path}:`);
-            logger.error(error);
-        }
-    }
-
-    return files;
-}
 
 
 export let itemMap: { [key: string]: ItemDetails };
@@ -54,32 +36,35 @@ export let musicRegions: MusicTrack[] = [];
 export let itemSpawns: ItemSpawn[] = [];
 export let shopMap: { [key: string]: Shop };
 export let skillGuides: SkillGuide[] = [];
+export let xteaRegions: { [key: number]: XteaRegion };
 
 export const musicRegionMap = new Map<number, number>();
 export const widgets: { [key: string]: any } = require('../../../data/config/widgets.json5');
 
+export async function loadCoreConfigurations(): Promise<void> {
+    xteaRegions = await loadXteaRegionFiles('data/config/xteas');
+}
 
-export async function loadConfigurations(): Promise<void> {
+export async function loadGameConfigurations(): Promise<void> {
     logger.info(`Loading server configurations...`);
 
-    const { items, itemIds, itemPresets } = await loadItemConfigurations('data/config/items');
+    const { items, itemIds, itemPresets } = await loadItemConfigurations('data/config/items/');
     itemMap = items;
     itemIdMap = itemIds;
     itemPresetMap = itemPresets;
 
-    const { npcs, npcIds, npcPresets } = await loadNpcConfigurations('data/config/npcs');
+    const { npcs, npcIds, npcPresets } = await loadNpcConfigurations('data/config/npcs/');
     npcMap = npcs;
     npcIdMap = npcIds;
     npcPresetMap = npcPresets;
 
-    npcSpawns = await loadNpcSpawnConfigurations('data/config/npc-spawns');
+    npcSpawns = await loadNpcSpawnConfigurations('data/config/npc-spawns/');
     musicRegions = await loadMusicRegionConfigurations();
     musicRegions.forEach(song => song.regionIds.forEach(region => musicRegionMap.set(region, song.songId)));
-    itemSpawns = await loadItemSpawnConfigurations('data/config/item-spawns');
+    itemSpawns = await loadItemSpawnConfigurations('data/config/item-spawns/');
 
-    shopMap = await loadShopConfigurations('data/config/shops');
-    skillGuides = await loadSkillGuideConfigurations('data/config/skill-guides');
-
+    shopMap = await loadShopConfigurations('data/config/shops/');
+    skillGuides = await loadSkillGuideConfigurations('data/config/skill-guides/');
     logger.info(`Loaded ${musicRegions.length} music regions, ${Object.keys(itemMap).length} items, ${itemSpawns.length} item spawns, ` +
         `${Object.keys(npcMap).length} npcs, ${npcSpawns.length} npc spawns, ${Object.keys(shopMap).length} shops and ${skillGuides.length} skill guides.`);
 }
@@ -128,7 +113,7 @@ export const findItem = (itemKey: number | string): ItemDetails | null => {
     }
 
     if(gameId) {
-        const cacheItem = cache.itemDefinitions.get(gameId);
+        const cacheItem = filestore.configStore.itemStore.getItem(gameId);
         item = _.merge(item, cacheItem);
     }
 
@@ -146,7 +131,7 @@ export const findNpc = (npcKey: number | string): NpcDetails | null => {
         npcKey = npcIdMap[gameId];
 
         if(!npcKey) {
-            const cacheNpc = cache.npcDefinitions.get(gameId);
+            const cacheNpc = filestore.configStore.npcStore.getNpc(gameId);
             if(cacheNpc) {
                 return cacheNpc as any;
             } else {
@@ -176,7 +161,7 @@ export const findNpc = (npcKey: number | string): NpcDetails | null => {
         extensions.forEach(extKey => {
             const extensionNpc = npcPresetMap[extKey];
             if(extensionNpc) {
-                npc = _.merge(npc, translateNpcConfig(undefined, extensionNpc));
+                npc = _.merge(npc, translateNpcServerConfig(undefined, extensionNpc));
             }
         });
     }

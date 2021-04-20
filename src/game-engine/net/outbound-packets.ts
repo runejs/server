@@ -4,12 +4,13 @@ import { Packet, PacketType } from '@engine/net/packet';
 import { ItemContainer } from '@engine/world/items/item-container';
 import { Item } from '@engine/world/items/item';
 import { Position } from '@engine/world/position';
-import { LocationObject } from '@runejs/cache-parser';
 import { Chunk, ChunkUpdateItem } from '@engine/world/map/chunk';
 import { WorldItem } from '@engine/world/items/world-item';
-import { ByteBuffer } from '@runejs/core';
+import { ByteBuffer } from '@runejs/core/buffer';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { stringToLong } from '@engine/util/strings';
+import { LandscapeObject } from '@runejs/filestore';
+import { xteaRegions } from '@engine/config';
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -177,7 +178,7 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    public setLocationObject(locationObject: LocationObject, position: Position, offset: number = 0): void {
+    public setLocationObject(locationObject: LandscapeObject, position: Position, offset: number = 0): void {
         this.updateReferencePosition(position);
 
         const packet = new Packet(241);
@@ -188,7 +189,7 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    public removeLocationObject(locationObject: LocationObject, position: Position, offset: number = 0): void {
+    public removeLocationObject(locationObject: LandscapeObject, position: Position, offset: number = 0): void {
         this.updateReferencePosition(position);
 
         const packet = new Packet(143);
@@ -249,8 +250,18 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
+    public resetAllClientConfigs(): void {
+        const packet = new Packet(14);
+        this.queue(packet);
+    }
+
     public updateClientConfig(configId: number, value: number): void {
         let packet: Packet;
+        const metadata = this.player.metadata;
+        if(!metadata['configs']) {
+            metadata['configs'] = []
+        }
+        metadata.configs[configId] = value;
 
         if(value > 128) {
             packet = new Packet(2);
@@ -555,16 +566,22 @@ export class OutboundPackets {
 
     public updateCurrentMapChunk(): void {
         const packet = new Packet(166, PacketType.DYNAMIC_LARGE);
-        packet.put(this.player.position.chunkLocalY, 'SHORT');
-        packet.put(this.player.position.chunkX + 6, 'SHORT', 'LITTLE_ENDIAN');
-        packet.put(this.player.position.chunkLocalX, 'SHORT');
-        packet.put(this.player.position.chunkY + 6, 'SHORT', 'LITTLE_ENDIAN');
+        packet.put(this.player.position.chunkLocalY, 'short');
+        packet.put(this.player.position.chunkX + 6, 'short', 'le');
+        packet.put(this.player.position.chunkLocalX, 'short');
+        packet.put(this.player.position.chunkY + 6, 'short', 'le');
         packet.put(this.player.position.level);
 
-        for(let xCalc = Math.floor(this.player.position.chunkX / 8); xCalc <= Math.floor((this.player.position.chunkX + 12) / 8); xCalc++) {
-            for(let yCalc = Math.floor(this.player.position.chunkY / 8); yCalc <= Math.floor((this.player.position.chunkY + 12) / 8); yCalc++) {
+        const startX = Math.floor(this.player.position.chunkX / 8);
+        const endX = Math.floor((this.player.position.chunkX + 12) / 8);
+        const startY = Math.floor(this.player.position.chunkY / 8);
+        const endY = Math.floor((this.player.position.chunkY + 12) / 8);
+
+        for(let mapX = startX; mapX <= endX; mapX++) {
+            for(let mapY = startY; mapY <= endY; mapY++) {
+                const xteaRegion = xteaRegions[`l${mapX}_${mapY}`];
                 for(let seeds = 0; seeds < 4; seeds++) {
-                    packet.put(0, 'INT');
+                    packet.put(xteaRegion?.key[seeds] || 0, 'int');
                 }
             }
         }

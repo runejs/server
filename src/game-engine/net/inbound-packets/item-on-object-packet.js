@@ -1,17 +1,18 @@
 import { logger } from '@runejs/core';
 import { Position } from '../../world/position';
-import { cache, world } from '../../game-server';
+import { filestore, world } from '../../game-server';
 import { widgets } from '../../config';
+import { getVarbitMorphIndex } from "../../util/varbits";
 
 const itemOnObjectPacket = (player, packet) => {
     const { buffer } = packet;
-    const objectY = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const itemId = buffer.get('SHORT', 'UNSIGNED');
-    const objectId = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const itemSlot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const itemWidgetId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const itemContainerId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
-    const objectX = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
+    const objectY = buffer.get('short', 'u', 'le');
+    const itemId = buffer.get('short', 'u');
+    const objectId = buffer.get('short', 'u', 'le');
+    const itemSlot = buffer.get('short', 'u', 'le');
+    const itemWidgetId = buffer.get('short', 's', 'le');
+    const itemContainerId = buffer.get('short', 's', 'le');
+    const objectX = buffer.get('short', 'u', 'le');
 
     let usedItem;
     if (itemWidgetId === widgets.inventory.widgetId && itemContainerId === widgets.inventory.containerId) {
@@ -39,9 +40,24 @@ const itemOnObjectPacket = (player, packet) => {
         return;
     }
 
-    const locationObjectDefinition = cache.locationObjectDefinitions.get(objectId);
+    let objectConfig = filestore.configStore.objectStore.getObject(objectId);
+    if (objectConfig.configChangeDest) {
+        let morphIndex = -1;
+        if(objectConfig.varbitId === -1) {
+            if(objectConfig.configId !== -1) {
+                const configValue = player.metadata['configs'] && player.metadata['configs'][objectConfig.configId] ? player.metadata['configs'][objectConfig.configId] : 0;
+                morphIndex = configValue;
 
-    player.actionPipeline.call('item_on_object', player, locationObject, locationObjectDefinition, objectPosition, usedItem, itemWidgetId, itemContainerId, cacheOriginal);
+            }
+        } else {
+            morphIndex = getVarbitMorphIndex(objectConfig.varbitId, player.metadata['configs']);
+        }
+        if(morphIndex !== -1) {
+            objectConfig = filestore.configStore.objectStore.getObject(objectConfig.configChangeDest[morphIndex]);
+        }
+    }
+
+    player.actionPipeline.call('item_on_object', player, locationObject, objectConfig, objectPosition, usedItem, itemWidgetId, itemContainerId, cacheOriginal);
 };
 
 export default {

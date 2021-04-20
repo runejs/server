@@ -6,8 +6,8 @@ import { ActionHook } from '@engine/world/action/hooks';
 import { Position } from '@engine/world/position';
 import { Player } from '@engine/world/actor/player/player';
 import { TaskExecutor } from '@engine/world/action/hooks/task';
-import { LocationObject } from '@runejs/cache-parser';
 import { Subscription } from 'rxjs';
+import { LandscapeObject } from '@runejs/filestore';
 
 
 /**
@@ -31,6 +31,7 @@ export type ActionType =
     | 'item_interaction'
     | 'item_on_object'
     | 'item_on_npc'
+    | 'item_on_player'
     | 'item_on_item'
     | 'item_swap'
     | 'move_item'
@@ -155,7 +156,7 @@ export class ActionPipeline {
                 try {
                     const gameObject = runnableHooks.action['object'] || null;
                     await this.actor.waitForPathing(
-                        !gameObject ? runnableHooks.actionPosition : (gameObject as LocationObject));
+                        !gameObject ? runnableHooks.actionPosition : (gameObject as LandscapeObject));
                 } catch(error) {
                     logger.error(`Error pathing to hook target`, error);
                     return;

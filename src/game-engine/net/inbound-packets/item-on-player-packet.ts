@@ -2,14 +2,17 @@ import { logger } from '@runejs/core';
 import { world } from '../../game-server';
 import { World } from '../../world';
 import { widgets } from '../../config';
+import { Player } from '@engine/world/actor/player/player';
+import { PacketData } from '@engine/net/inbound-packets';
 
-const itemOnNpcPacket = (player, packet) => {
+const itemOnPlayerPacket = (player: Player, packet: PacketData) => {
     const { buffer } = packet;
-    const npcIndex = buffer.get('SHORT', 'UNSIGNED');
-    const itemId = buffer.get('SHORT', 'UNSIGNED');
-    const itemSlot = buffer.get('SHORT', 'UNSIGNED', 'LITTLE_ENDIAN');
-    const itemWidgetId = buffer.get('SHORT');
-    const itemContainerId = buffer.get('SHORT');
+    const playerIndex = buffer.get('short', 'u', 'le') - 1;
+    const itemWidgetId = buffer.get('short', 's', 'le');
+    const itemContainerId = buffer.get('short');
+    const itemId = buffer.get('short', 'u');
+    const itemSlot = buffer.get('short', 'u');
+
 
     let usedItem;
     if(itemWidgetId === widgets.inventory.widgetId && itemContainerId === widgets.inventory.containerId) {
@@ -30,28 +33,32 @@ const itemOnNpcPacket = (player, packet) => {
     }
 
 
-    if(npcIndex < 0 || npcIndex > World.MAX_NPCS - 1) {
+    if(playerIndex < 0 || playerIndex > World.MAX_PLAYERS - 1) {
         return;
     }
 
-    const npc = world.npcList[npcIndex];
-    if(!npc) {
+    const otherPlayer = world.playerList[playerIndex];
+    if(!otherPlayer) {
         return;
     }
 
-    const position = npc.position;
+
+    const position = otherPlayer.position;
     const distance = Math.floor(position.distanceBetween(player.position));
+
+
 
     // Too far away
     if(distance > 16) {
         return;
     }
 
-    player.actionPipeline.call('item_on_npc', player, npc, position, usedItem, itemWidgetId, itemContainerId)
+
+    player.actionPipeline.call('item_on_player', player, otherPlayer, position, usedItem, itemWidgetId, itemContainerId)
 };
 
 export default {
-    opcode: 208,
+    opcode: 110,
     size: 10,
-    handler: itemOnNpcPacket
+    handler: itemOnPlayerPacket
 };

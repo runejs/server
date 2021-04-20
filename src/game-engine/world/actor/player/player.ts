@@ -4,7 +4,7 @@ import { Isaac } from '@engine/net/isaac';
 import { PlayerSyncTask } from './sync/player-sync-task';
 import { Actor } from '../actor';
 import { Position } from '@engine/world/position';
-import { cache, actionHookMap, serverConfig, world, questMap } from '@engine/game-server';
+import { filestore, actionHookMap, serverConfig, world, questMap } from '@engine/game-server';
 import { logger } from '@runejs/core';
 import uuidv4 from 'uuid/v4';
 import {
@@ -28,10 +28,9 @@ import { QuadtreeKey } from '@engine/world';
 import { daysSinceLastLogin } from '@engine/util/time';
 import { itemIds } from '@engine/world/config/item-ids';
 import { colors, hexToRgb, rgbTo16Bit } from '@engine/util/colors';
-import { ItemDefinition } from '@runejs/cache-parser';
 import { PlayerCommandActionHook } from '@engine/world/action/player-command.action';
 import { updateBonusStrings } from '@plugins/items/equipment/equipment-stats.plugin';
-import { findMusicTrack, findSongIdByRegionId, musicRegions } from '@engine/config/index';
+import { findMusicTrack, findNpc, findSongIdByRegionId, musicRegions } from '@engine/config/index';
 
 import {
     DefensiveBonuses,
@@ -54,6 +53,8 @@ import { PlayerQuest, QuestKey } from '@engine/config/quest-config';
 import { Quest } from '@engine/world/actor/player/quest';
 import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
 import { MusicPlayerMode } from '@plugins/music/music-tab.plugin';
+import { getVarbitMorphIndex } from '@engine/util/varbits';
+import { SendMessageOptions } from '@engine/world/actor/player/model';
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
@@ -201,7 +202,7 @@ export class Player extends Actor {
                     multi: false
                 });
             }
-        } else if(serverConfig.showWelcome && this.savedMetadata.tutorialComplete) {
+        } else if(serverConfig.showWelcome && (!serverConfig.tutorialEnabled || this.savedMetadata.tutorialComplete)) {
             const daysSinceLogin = daysSinceLastLogin(this.loginDate);
             let loginDaysStr = '';
 
@@ -260,6 +261,7 @@ export class Player extends Actor {
         if(this.rights === Rights.ADMIN) {
             this.sendCommandList(actionHookMap.player_command as PlayerCommandActionHook[]);
         }
+        this.outgoingPackets.resetAllClientConfigs();
 
         await this.actionPipeline.call('player_init', { player: this });
 
@@ -492,7 +494,7 @@ export class Player extends Actor {
 
             if(questData.onComplete.questCompleteWidget.itemId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3,
-                    (cache.itemDefinitions.get(questData.onComplete.questCompleteWidget.itemId) as ItemDefinition).inventoryModelId);
+                    filestore.configStore.itemStore.getItem(questData.onComplete.questCompleteWidget.itemId)?.model2d?.widgetModel);
             } else if(questData.onComplete.questCompleteWidget.modelId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.onComplete.questCompleteWidget.modelId);
             }
@@ -528,7 +530,7 @@ export class Player extends Actor {
                 this.outgoingPackets.updateWidgetString(widgetId, childId, text);
             }
             if(hidden !== undefined) {
-                this.outgoingPackets.toggleWidgetVisibility(widgets.skillGuide, childId, hidden);
+                this.outgoingPackets.toggleWidgetVisibility(widgetId, childId, hidden);
             }
             if(textColor !== undefined) {
                 const { r, g, b } = hexToRgb(textColor);
@@ -571,15 +573,36 @@ export class Player extends Actor {
     }
 
     /**
-     * Sends a message to the player via the chatbox.
+     * Sends a message to the player via the chat-box.
      * @param messages The single message or array of lines to send to the player.
      * @param showDialogue Whether or not to show the message in a "Click to continue" dialogue.
      * @returns A Promise<void> that resolves when the player has clicked the "click to continue" button or
      * after their chat messages have been sent.
      */
-    public async sendMessage(messages: string | string[], showDialogue: boolean = false): Promise<boolean> {
+    public async sendMessage(messages: string | string[], showDialogue?: boolean): Promise<boolean>;
+
+    /**
+     * Sends a message to the player via the chat-box (and the debug console if specified).
+     * @param messages The single message or array of lines to send to the player.
+     * @param options A list of options to provide for sending the message - includes values for `dialogue` and `console`
+     * to enable sending the message as a dialogue message and/or adding the message to the debug console.
+     * @returns A Promise<void> that resolves when the player has clicked the "click to continue" button or
+     * after their chat messages have been sent.
+     */
+    public async sendMessage(messages: string | string[], options: SendMessageOptions): Promise<boolean>;
+
+    public async sendMessage(messages: string | string[], options: boolean | SendMessageOptions): Promise<boolean> {
         if(!Array.isArray(messages)) {
             messages = [ messages ];
+        }
+
+        let showDialogue = false;
+        let showInConsole = false;
+        if(typeof options === 'boolean') {
+            showDialogue = true;
+        } else {
+            showDialogue = options.dialogue || false;
+            showInConsole = options.console || false;
         }
 
         if(!showDialogue) {
@@ -593,6 +616,10 @@ export class Player extends Actor {
                 text => (messages as string[]).join(' ')
             ]);
         }
+
+        if(showInConsole) {
+            messages.forEach(message => this.outgoingPackets.consoleMessage(message));
+        }
     }
 
     /**
@@ -605,6 +632,7 @@ export class Player extends Actor {
         const newChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
 
         this.walkingQueue.clear();
+        this.metadata['lastPosition'] = this.position;
         this.position = newPosition;
 
         this.updateFlags.mapRegionUpdateRequired = true;
@@ -644,7 +672,7 @@ export class Player extends Actor {
         this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, slot, null);
     }
 
-    public giveItem(item: number | Item): boolean {
+    public giveItem(item: number | Item | string): boolean {
         const addedItem = this.inventory.add(item);
         if(addedItem === null) {
             return false;
@@ -932,6 +960,32 @@ export class Player extends Actor {
 
         this.savedMetadata.npcTransformation = npc;
         this.updateFlags.appearanceUpdateRequired = true;
+    }
+
+    /**
+     * Returns the morphed NPC details for a specific player based on his client settings
+     * @param originalNpc
+     */
+    public getMorphedNpcDetails(originalNpc: Npc) {
+        if (!originalNpc.childrenIds) {
+            return null;
+        }
+
+        let morphIndex: number;
+        if (originalNpc.varbitId !== -1) {
+            morphIndex = getVarbitMorphIndex(originalNpc.varbitId, this.metadata['configs']);
+        } else if (originalNpc.settingId !== -1) {
+            morphIndex = this.metadata['configs'] && this.metadata['configs'][originalNpc.settingId] ? this.metadata['configs'][originalNpc.settingId] : 0;
+        } else {
+            logger.warn(`Tried to fetch a child NPC index, but but no varbitId or settingId were found in the NPC details. NPC: ${originalNpc.id}, childrenIDs: ${originalNpc.childrenIds}`);
+            return null;
+        }
+
+        const npcDetails = findNpc(originalNpc.childrenIds[morphIndex]);
+        if (!npcDetails.key) {
+            logger.warn(`Fetched a morphed NPC, but it isn't yet registered on the server. (id-${originalNpc.id}) (morphedId-${npcDetails.gameId})`);
+        }
+        return npcDetails;
     }
 
     public equals(player: Player): boolean {

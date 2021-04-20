@@ -1,11 +1,10 @@
 import { Player } from '@engine/world/actor/player/player';
-import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@engine/world/position';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
-import { logger } from '@runejs/core';
 import { playerWalkTo } from '@engine/game-server';
 import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
 import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
+import { LandscapeObject, ObjectConfig } from '@runejs/filestore';
 
 
 /**
@@ -34,9 +33,9 @@ export interface ObjectInteractionAction {
     // The player performing the action.
     player: Player;
     // The object the action is being performed on.
-    object: LocationObject;
+    object: LandscapeObject;
     // Additional details about the object that the action is being performed on.
-    objectDefinition: LocationObjectDefinition;
+    objectConfig: ObjectConfig;
     // The position that the game object was at when the action was initiated.
     position: Position;
     // Whether or not this game object is an original map object or if it has been added/replaced.
@@ -49,21 +48,22 @@ export interface ObjectInteractionAction {
 /**
  * The pipe that the game engine hands object actions off to.
  * @param player
- * @param locationObject
- * @param locationObjectDefinition
+ * @param landscapeObject
+ * @param objectConfig
  * @param position
  * @param option
  * @param cacheOriginal
  */
-const objectInteractionActionPipe = (player: Player, locationObject: LocationObject, locationObjectDefinition: LocationObjectDefinition,
-    position: Position, option: string, cacheOriginal: boolean): RunnableHooks<ObjectInteractionAction> => {
+const objectInteractionActionPipe = (player: Player, landscapeObject: LandscapeObject, objectConfig: ObjectConfig,
+                                     position: Position, option: string, cacheOriginal: boolean): RunnableHooks<ObjectInteractionAction> => {
     if(player.metadata.blockObjectInteractions) {
-        return;
+        return null;
     }
 
     // Find all object action plugins that reference this location object
     let matchingHooks = getActionHooks<ObjectInteractionActionHook>('object_interaction')
-        .filter(plugin => questHookFilter(player, plugin) && advancedNumberHookFilter(plugin.objectIds, locationObject.objectId, plugin.options, option));
+        .filter(plugin => questHookFilter(player, plugin) &&
+            advancedNumberHookFilter(plugin.objectIds, landscapeObject.objectId, plugin.options, option));
     const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
@@ -71,8 +71,8 @@ const objectInteractionActionPipe = (player: Player, locationObject: LocationObj
     }
 
     if(matchingHooks.length === 0) {
-        player.outgoingPackets.chatboxMessage(`Unhandled object interaction: ${option} ${locationObjectDefinition.name} ` +
-            `(id-${locationObject.objectId}) @ ${position.x},${position.y},${position.level}`);
+        player.outgoingPackets.chatboxMessage(`Unhandled object interaction: ${option} ${objectConfig.name} ` +
+            `(id-${landscapeObject.objectId}) @ ${position.x},${position.y},${position.level}`);
         return null;
     }
 
@@ -81,8 +81,8 @@ const objectInteractionActionPipe = (player: Player, locationObject: LocationObj
         actionPosition: position,
         action: {
             player,
-            object: locationObject,
-            objectDefinition: locationObjectDefinition,
+            object: landscapeObject,
+            objectConfig,
             option,
             position,
             cacheOriginal

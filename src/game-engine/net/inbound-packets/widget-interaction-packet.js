@@ -1,8 +1,8 @@
 const widgetInteractionPacket = (player, packet) => {
     const { buffer } = packet;
-    const childId = buffer.get('SHORT');
-    const widgetId = buffer.get('SHORT');
-    const optionId = buffer.get('SHORT', 'SIGNED', 'LITTLE_ENDIAN');
+    const childId = buffer.get('short');
+    const widgetId = buffer.get('short');
+    const optionId = buffer.get('short', 's', 'le');
 
     player.actionPipeline.call('widget_interaction', player, widgetId, childId, optionId);
 };

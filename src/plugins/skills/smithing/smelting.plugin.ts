@@ -4,11 +4,11 @@ import { objectIds } from '@engine/world/config/object-ids';
 import { objectInteractionActionHandler, ObjectInteractionAction } from '@engine/world/action/object-interaction.action';
 import { buttonActionHandler, ButtonAction } from '@engine/world/action/button.action';
 import { Skill } from '@engine/world/actor/skills';
-import { cache, loopingEvent } from '@engine/game-server';
+import { filestore, loopingEvent } from '@engine/game-server';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { colors } from '@engine/util/colors';
-import { widgets } from '@engine/config';
+import { findItem, widgets } from '@engine/config';
 import { PlayerQuest } from '@engine/config/quest-config';
 import { widgetButtonIds, widgetItems } from '@plugins/skills/smithing/smelting-constants';
 import { Bar } from '@plugins/skills/smithing/smelting-types';
@@ -46,7 +46,7 @@ const hasIngredients = (details: ButtonAction, ingredients: Item[], inventory: I
     ingredients.forEach((item: Item) => {
         const itemIndex = inventory.findIndex(item);
         if (itemIndex === -1 || inventory.amountInStack(itemIndex) < item.amount) {
-            details.player.sendMessage(`You don't have enough ${cache.itemDefinitions.get(item.itemId).name.toLowerCase()}.`, true);
+            details.player.sendMessage(`You don't have enough ${findItem(item.itemId).name.toLowerCase()}.`, true);
             loop.cancel();
             return;
         }
@@ -67,7 +67,7 @@ const smeltProduct = (details: ButtonAction, bar: Bar, count: number) => {
 
     // Check if the player has the required smithing level.
     if (!canSmelt(details, bar)) {
-        details.player.sendMessage(`You need a smithing level of ${bar.requiredLevel} to smelt ${cache.itemDefinitions.get(bar.barId).name.toLowerCase()}s.`, true);
+        details.player.sendMessage(`You need a smithing level of ${bar.requiredLevel} to smelt ${findItem(bar.barId).name.toLowerCase()}s.`, true);
         return;
     }
 

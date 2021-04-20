@@ -1,12 +1,11 @@
 import { Player } from '@engine/world/actor/player/player';
-import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
 import { Position } from '@engine/world/position';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
-import { logger } from '@runejs/core';
 import { Item } from '@engine/world/items/item';
-import { playerWalkTo } from '@engine/game-server';
 import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
 import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
+import { LandscapeObject, ObjectConfig } from '@runejs/filestore';
+import { playerWalkTo } from '@engine/game-server';
 
 
 /**
@@ -35,9 +34,9 @@ export interface ItemOnObjectAction {
     // The player performing the action.
     player: Player;
     // The object the action is being performed on.
-    object: LocationObject;
+    object: LandscapeObject;
     // Additional details about the object that the action is being performed on.
-    objectDefinition: LocationObjectDefinition;
+    objectConfig: ObjectConfig;
     // The position that the game object was at when the action was initiated.
     position: Position;
     // The item being used.
@@ -54,22 +53,22 @@ export interface ItemOnObjectAction {
 /**
  * The pipe that the game engine hands item-on-object actions off to.
  * @param player
- * @param locationObject
- * @param locationObjectDefinition
+ * @param landscapeObject
+ * @param objectConfig
  * @param position
  * @param item
  * @param itemWidgetId
  * @param itemContainerId
  * @param cacheOriginal
  */
-const itemOnObjectActionPipe = (player: Player, locationObject: LocationObject,
-    locationObjectDefinition: LocationObjectDefinition, position: Position,
+const itemOnObjectActionPipe = (player: Player, landscapeObject: LandscapeObject,
+    objectConfig: ObjectConfig, position: Position,
     item: Item, itemWidgetId: number, itemContainerId: number,
     cacheOriginal: boolean): RunnableHooks<ItemOnObjectAction> => {
     // Find all item on object action plugins that reference this location object
     let matchingHooks = getActionHooks<ItemOnObjectActionHook>('item_on_object')
         .filter(plugin => questHookFilter(player, plugin) &&
-            advancedNumberHookFilter(plugin.objectIds, locationObject.objectId));
+            advancedNumberHookFilter(plugin.objectIds, landscapeObject.objectId));
     const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
@@ -82,8 +81,8 @@ const itemOnObjectActionPipe = (player: Player, locationObject: LocationObject,
     }
 
     if(matchingHooks.length === 0) {
-        player.outgoingPackets.chatboxMessage(`Unhandled item on object interaction: ${ item.itemId } on ${ locationObjectDefinition.name } ` +
-            `(id-${ locationObject.objectId }) @ ${ position.x },${ position.y },${ position.level }`);
+        player.outgoingPackets.chatboxMessage(`Unhandled item on object interaction: ${ item.itemId } on ${ objectConfig.name } ` +
+            `(id-${ landscapeObject.objectId }) @ ${ position.x },${ position.y },${ position.level }`);
         return null;
     }
 
@@ -92,8 +91,8 @@ const itemOnObjectActionPipe = (player: Player, locationObject: LocationObject,
         actionPosition: position,
         action: {
             player,
-            object: locationObject,
-            objectDefinition: locationObjectDefinition,
+            object: landscapeObject,
+            objectConfig,
             position,
             item,
             itemWidgetId,

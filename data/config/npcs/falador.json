@@ -1,0 +1,14 @@
+{
+  "rs:guard": {
+    "variations": [
+      {
+        "suffix": 0,
+        "game_id": 9
+      },
+      {
+        "suffix": 1,
+        "game_id": 10
+      }
+    ]
+  }
+}

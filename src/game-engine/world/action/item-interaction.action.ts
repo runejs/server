@@ -59,6 +59,12 @@ export interface ItemInteractionAction {
  */
 const itemInteractionActionPipe = (player: Player, itemId: number, slot: number, widgetId: number,
                                    containerId: number, option: string): RunnableHooks<ItemInteractionAction> => {
+    const playerWidget = Object.values(player.interfaceState.widgetSlots).find((widget) => widget && widget.widgetId === widgetId);
+
+    if(playerWidget && playerWidget.fakeWidget != undefined) {
+        widgetId = playerWidget.fakeWidget;
+    }
+
     // Find all object action plugins that reference this location object
     let matchingHooks = getActionHooks<ItemInteractionActionHook>('item_interaction', plugin => {
         if(!questHookFilter(player, plugin)) {

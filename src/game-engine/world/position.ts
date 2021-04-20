@@ -1,6 +1,7 @@
 import { Direction, directionData } from '@engine/world/direction';
-import { LocationObject } from '@runejs/cache-parser';
-import { cache } from '@engine/game-server';
+import { filestore } from '@engine/game-server';
+import { LandscapeObject } from '@runejs/filestore';
+
 
 const directionDeltaX = [-1, 0, 1, -1, 1, -1, 0, 1];
 const directionDeltaY = [1, 1, 1, 0, 0, -1, -1, -1];
@@ -43,18 +44,18 @@ export class Position {
         return new Position(this.x, this.y, this.level);
     }
 
-    public withinInteractionDistance(gameObject: LocationObject, minimumDistance?: number): boolean;
+    public withinInteractionDistance(gameObject: LandscapeObject, minimumDistance?: number): boolean;
     public withinInteractionDistance(position: Position, minimumDistance?: number): boolean;
-    public withinInteractionDistance(target: LocationObject | Position, minimumDistance?: number): boolean;
-    public withinInteractionDistance(target: LocationObject | Position, minimumDistance: number = 1): boolean {
+    public withinInteractionDistance(target: LandscapeObject | Position, minimumDistance?: number): boolean;
+    public withinInteractionDistance(target: LandscapeObject | Position, minimumDistance: number = 1): boolean {
         if(target instanceof Position) {
             return this.distanceBetween(target) <= minimumDistance;
         } else {
-            const definition = cache.locationObjectDefinitions.get(target.objectId);
+            const definition = filestore.configStore.objectStore.getObject(target.objectId);
             const occupantX = target.x;
             const occupantY = target.y;
-            let width = definition.sizeX;
-            let height = definition.sizeY;
+            let width = definition.rendering?.sizeX || 1;
+            let height = definition.rendering?.sizeY || 1;
 
             if(width === undefined || width === null || width < 1) {
                 width = 1;
@@ -100,7 +101,7 @@ export class Position {
         return offsetX < 16 && offsetY < 16 && offsetX > -16 && offsetY > -16;
     }
 
-    public move(x: number, y: number, level?: number): void {
+    public move(x: number, y: number, level?: number): Position {
         this._x = x;
         this._y = y;
 
@@ -109,6 +110,8 @@ export class Position {
         } else {
             this._level = level;
         }
+
+        return this;
     }
 
     public equalsIgnoreLevel(position: Position | { x: number, y: number }): boolean {
@@ -149,6 +152,33 @@ export class Position {
 
     public calculateChunkLocalY(position: Position): number {
         return this._y - 8 * position.chunkY;
+    }
+
+    /**
+     * Sets the value of X and returns the current Position instance for chaining.
+     * @param x The new value to set the current Position's X coordinate to.
+     */
+    public setX(x: number): Position {
+        this._x = x;
+        return this;
+    }
+
+    /**
+     * Sets the value of Y and returns the current Position instance for chaining.
+     * @param y The new value to set the current Position's Y coordinate to.
+     */
+    public setY(y: number): Position {
+        this._y = y;
+        return this;
+    }
+
+    /**
+     * Sets the value of Level and returns the current Position instance for chaining.
+     * @param level The new value to set the current Position's Elevation Level to.
+     */
+    public setLevel(level: number): Position {
+        this._level = level;
+        return this;
     }
 
     /**

@@ -16,7 +16,7 @@ The server runs on the 435 revision of the game, which was a game update made on
 ## Setup
 
 1. Download and install NodeJS **version 14 or higher**: https://nodejs.org/en/
-2. Clone the Github Repo: https://github.com/rune-js/server
+2. Clone the Github Repo: https://github.com/runejs/server
 3. Install dependencies by navigating to the project in your Terminal or command prompt and running the command npm install
 4. Copy the `data/config/server-config.example.yaml` and paste it into the same folder using the name `server-config.yaml`
 5. Go into your new `server-config.yaml` file and modify your RSA modulus and exponent with the ones matching your game client
@@ -27,7 +27,7 @@ The game server will spin up and be accessible via port 43594.
 
 ## Game Client
 
-The [RuneScape Java Client #435](https://github.com/rune-js/refactored-client-435) must be used to log into a RuneJS game server.
+The [RuneScape Java Client #435](https://github.com/runejs/refactored-client-435) must be used to log into a RuneJS game server.
 
 ## Additional Commands
 * `npm run start:game` Launches the game server by itself without building

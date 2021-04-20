@@ -10,7 +10,7 @@ import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
  */
 export interface ItemOnItemActionHook extends ActionHook<ItemOnItemAction, itemOnItemActionHandler> {
     // The item pairs being used. Each item can be used on the other, so item order does not matter.
-    items: { item1: number, item2: number }[];
+    items: { item1: number, item2?: number }[];
 }
 
 
@@ -61,7 +61,8 @@ const itemOnItemActionPipe = (player: Player, usedItem: Item, usedSlot: number, 
     let matchingHooks = getActionHooks<ItemOnItemActionHook>('item_on_item').filter(plugin =>
         questHookFilter(player, plugin) &&
         (plugin.items.findIndex(i => i.item1 === usedItem.itemId && i.item2 === usedWithItem.itemId) !== -1 ||
-        plugin.items.findIndex(i => i.item2 === usedItem.itemId && i.item1 === usedWithItem.itemId) !== -1));
+        plugin.items.findIndex(i => i.item2 === usedItem.itemId && i.item1 === usedWithItem.itemId) !== -1 ||
+        plugin.items.findIndex(i => i.item1 === usedItem.itemId && !i.item2 || i.item1 === usedWithItem.itemId && !i.item2 )  !== -1));
 
     const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
 

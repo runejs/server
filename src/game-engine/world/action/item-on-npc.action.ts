@@ -1,7 +1,6 @@
 import { Player } from '@engine/world/actor/player/player';
 import { Position } from '@engine/world/position';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
-import { logger } from '@runejs/core';
 import { Item } from '@engine/world/items/item';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { playerWalkTo } from '@engine/game-server';
@@ -58,10 +57,12 @@ export interface ItemOnNpcAction {
  */
 const itemOnNpcActionPipe = (player: Player, npc: Npc, position: Position, item: Item,
     itemWidgetId: number, itemContainerId: number): RunnableHooks<ItemOnNpcAction> => {
+    const morphedNpc = player.getMorphedNpcDetails(npc);
+
     // Find all item on npc action plugins that reference this npc and item
     let matchingHooks = getActionHooks<ItemOnNpcActionHook>('item_on_npc').filter(plugin =>
         questHookFilter(player, plugin) &&
-        stringHookFilter(plugin.npcs, npc.key) && advancedNumberHookFilter(plugin.itemIds, item.itemId));
+        stringHookFilter(plugin.npcs, morphedNpc?.key || npc.key) && advancedNumberHookFilter(plugin.itemIds, item.itemId));
     const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
@@ -69,8 +70,11 @@ const itemOnNpcActionPipe = (player: Player, npc: Npc, position: Position, item:
     }
 
     if(matchingHooks.length === 0) {
-        player.outgoingPackets.chatboxMessage(`Unhandled item on npc interaction: ${ item.itemId } on ${ npc.name } ` +
-            `(id-${ npc.id }) @ ${ position.x },${ position.y },${ position.level }`);
+        player.outgoingPackets.chatboxMessage(`Unhandled item on npc interaction: ${ item.itemId } on ${ morphedNpc?.name || npc.name } ` +
+            `(id-${ morphedNpc?.gameId || npc.id }) @ ${ position.x },${ position.y },${ position.level }`);
+        if (morphedNpc) {
+            player.outgoingPackets.chatboxMessage(`Note: (id-${morphedNpc.gameId}) is a morphed NPC. The parent NPC is (id-${npc.id}).`);
+        }
         return null;
     }
 

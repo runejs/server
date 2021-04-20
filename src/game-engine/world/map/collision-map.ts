@@ -1,7 +1,7 @@
 import { Chunk } from './chunk';
-import { cache, world } from '../../game-server';
-import { LocationObject, LocationObjectDefinition } from '@runejs/cache-parser';
+import { filestore, world } from '../../game-server';
 import { WorldInstance } from '@engine/world/instances';
+import { LandscapeObject } from '@runejs/filestore';
 
 /**
  * A map of collision masks for a chunk within the game world.
@@ -36,12 +36,12 @@ export class CollisionMap {
         this.reset();
     }
 
-    public markGameObject(locationObject: LocationObject, mark: boolean): void {
-        const x: number = locationObject.x;
-        const y: number = locationObject.y;
-        const objectType = locationObject.type;
-        const objectOrientation = locationObject.orientation;
-        const objectDetails: LocationObjectDefinition = cache.locationObjectDefinitions.get(locationObject.objectId);
+    public markGameObject(landscapeObject: LandscapeObject, mark: boolean): void {
+        const x: number = landscapeObject.x;
+        const y: number = landscapeObject.y;
+        const objectType = landscapeObject.type;
+        const objectOrientation = landscapeObject.orientation;
+        const objectDetails = filestore.configStore.objectStore.getObject(landscapeObject.objectId);
 
         if(objectDetails.solid) {
             if(objectType === 22) {
@@ -49,7 +49,8 @@ export class CollisionMap {
                     this.markBlocked(x, y, mark);
                 }
             } else if(objectType >= 9) {
-                this.markSolidOccupant(x, y, objectDetails.sizeX, objectDetails.sizeY, objectOrientation, objectDetails.nonWalkable, mark);
+                this.markSolidOccupant(x, y, objectDetails.rendering.sizeX, objectDetails.rendering.sizeY,
+                    objectOrientation, objectDetails.nonWalkable, mark);
             } else if(objectType >= 0 && objectType <= 3) {
                 if(mark) {
                     this.markWall(x, y, objectType, objectOrientation, objectDetails.nonWalkable);
