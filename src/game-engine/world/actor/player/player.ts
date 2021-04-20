@@ -600,7 +600,7 @@ export class Player extends Actor {
         let showInConsole = false;
         if(typeof options === 'boolean') {
             showDialogue = true;
-        } else {
+        } else if(options) {
             showDialogue = options.dialogue || false;
             showInConsole = options.console || false;
         }

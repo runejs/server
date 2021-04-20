@@ -9,10 +9,11 @@ import { randomBetween } from '@engine/util/num';
 import { colorText } from '@engine/util/strings';
 import { colors } from '@engine/util/colors';
 import { rollBirdsNestType } from '@engine/world/skill-util/harvest-roll';
-import { cache, world } from '@engine/game-server';
+import { world } from '@engine/game-server';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { Axe, getAxe, HarvestTool } from '@engine/world/config/harvest-tool';
 import { TaskExecutor } from '@engine/world/action';
+import { findItem } from '@engine/config';
 
 
 const canActivate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: number): boolean => {
@@ -77,7 +78,7 @@ const activate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: nu
 
         const percentNeeded = tree.baseChance + toolLevel + actor.skills.woodcutting.level;
         if(successChance <= percentNeeded) {
-            const targetName: string = cache.itemDefinitions.get(tree.itemId).name.toLowerCase();
+            const targetName: string = findItem(tree.itemId).name.toLowerCase();
 
             if(actor.inventory.hasSpace()) {
                 const itemToAdd = tree.itemId;
