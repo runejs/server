@@ -83,7 +83,12 @@ export class GameServerConnection implements SocketConnectionHandler {
             this.activeBuffer.copy(packetData, 0, this.activeBuffer.readerIndex, this.activeBuffer.readerIndex + this.activePacketSize);
             this.activeBuffer.readerIndex += this.activePacketSize;
         }
-        handlePacket(this.player, this.activePacketId, this.activePacketSize, packetData);
+
+        if(!handlePacket(this.player, this.activePacketId, this.activePacketSize, packetData)) {
+            logger.error(`Player packets out of sync for ${this.player.username}, resetting packet buffer...`);
+            logger.error(`If you're seeing this, there's a packet that needs fixing. :)`);
+            clearBuffer = true;
+        }
 
         if(clearBuffer) {
             this.activeBuffer = null;

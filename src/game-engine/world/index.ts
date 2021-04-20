@@ -364,6 +364,13 @@ export class World {
         return await this.registerNpc(npc);
     }
 
+    /**
+     * Returns the number of remaining open player slots before this world reaches maximum capacity.
+     */
+    public playerSlotsRemaining(): number {
+        return this.playerList.filter(player => !player).length;
+    }
+
     public findPlayer(playerUsername: string): Player {
         playerUsername = playerUsername.toLowerCase();
         return this.playerList?.find(p => p !== null && p.username.toLowerCase() === playerUsername) || null;
@@ -383,6 +390,11 @@ export class World {
         }
     }
 
+    /**
+     * Registers a new player to the game world.
+     * Returns false if the world is full, otherwise returns true when the player has been registered.
+     * @param player The player to register.
+     */
     public registerPlayer(player: Player): boolean {
         if(!player) {
             return false;
@@ -400,6 +412,10 @@ export class World {
         return true;
     }
 
+    /**
+     * Clears the given player's game world slot, signalling that they have disconnected fully.
+     * @param player The player to remove from the world list.
+     */
     public deregisterPlayer(player: Player): void {
         this.playerList[player.worldIndex] = null;
     }
