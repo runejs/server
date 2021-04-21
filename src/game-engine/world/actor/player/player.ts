@@ -54,6 +54,7 @@ import { Quest } from '@engine/world/actor/player/quest';
 import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
 import { MusicPlayerMode } from '@plugins/music/music-tab.plugin';
 import { getVarbitMorphIndex } from '@engine/util/varbits';
+import { SendMessageOptions } from '@engine/world/actor/player/model';
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
@@ -571,15 +572,36 @@ export class Player extends Actor {
     }
 
     /**
-     * Sends a message to the player via the chatbox.
+     * Sends a message to the player via the chat-box.
      * @param messages The single message or array of lines to send to the player.
      * @param showDialogue Whether or not to show the message in a "Click to continue" dialogue.
      * @returns A Promise<void> that resolves when the player has clicked the "click to continue" button or
      * after their chat messages have been sent.
      */
-    public async sendMessage(messages: string | string[], showDialogue: boolean = false): Promise<boolean> {
+    public async sendMessage(messages: string | string[], showDialogue?: boolean): Promise<boolean>;
+
+    /**
+     * Sends a message to the player via the chat-box (and the debug console if specified).
+     * @param messages The single message or array of lines to send to the player.
+     * @param options A list of options to provide for sending the message - includes values for `dialogue` and `console`
+     * to enable sending the message as a dialogue message and/or adding the message to the debug console.
+     * @returns A Promise<void> that resolves when the player has clicked the "click to continue" button or
+     * after their chat messages have been sent.
+     */
+    public async sendMessage(messages: string | string[], options: SendMessageOptions): Promise<boolean>;
+
+    public async sendMessage(messages: string | string[], options: boolean | SendMessageOptions): Promise<boolean> {
         if(!Array.isArray(messages)) {
             messages = [ messages ];
+        }
+
+        let showDialogue = false;
+        let showInConsole = false;
+        if(options && typeof options === 'boolean') {
+            showDialogue = true;
+        } else if(options) {
+            showDialogue = options.dialogue || false;
+            showInConsole = options.console || false;
         }
 
         if(!showDialogue) {
@@ -592,6 +614,10 @@ export class Player extends Actor {
             return await dialogue([ this ], [
                 text => (messages as string[]).join(' ')
             ]);
+        }
+
+        if(showInConsole) {
+            messages.forEach(message => this.outgoingPackets.consoleMessage(message));
         }
     }
 

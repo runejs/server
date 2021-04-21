@@ -94,7 +94,7 @@ export class Position {
         return offsetX < 16 && offsetY < 16 && offsetX > -16 && offsetY > -16;
     }
 
-    public move(x: number, y: number, level?: number): void {
+    public move(x: number, y: number, level?: number): Position {
         this._x = x;
         this._y = y;
 
@@ -103,6 +103,8 @@ export class Position {
         } else {
             this._level = level;
         }
+
+        return this;
     }
 
     public equalsIgnoreLevel(position: Position | { x: number, y: number }): boolean {
@@ -143,6 +145,33 @@ export class Position {
 
     public calculateChunkLocalY(position: Position): number {
         return this._y - 8 * position.chunkY;
+    }
+
+    /**
+     * Sets the value of X and returns the current Position instance for chaining.
+     * @param x The new value to set the current Position's X coordinate to.
+     */
+    public setX(x: number): Position {
+        this._x = x;
+        return this;
+    }
+
+    /**
+     * Sets the value of Y and returns the current Position instance for chaining.
+     * @param y The new value to set the current Position's Y coordinate to.
+     */
+    public setY(y: number): Position {
+        this._y = y;
+        return this;
+    }
+
+    /**
+     * Sets the value of Level and returns the current Position instance for chaining.
+     * @param level The new value to set the current Position's Elevation Level to.
+     */
+    public setLevel(level: number): Position {
+        this._level = level;
+        return this;
     }
 
     /**
