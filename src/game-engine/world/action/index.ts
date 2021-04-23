@@ -44,6 +44,12 @@ export type ActionType =
     | 'equipment_change';
 
 
+export const gentleActions: ActionType[] = [
+    'button', 'widget_interaction', 'player_init', 'npc_init',
+    'move_item', 'item_swap', 'player_command', 'region_change'
+];
+
+
 /**
  * Methods in which action hooks in progress may be cancelled.
  */
@@ -150,7 +156,10 @@ export class ActionPipeline {
                 continue;
             }
 
-            await this.cancelRunningTasks();
+            // Some actions are non-cancelling
+            if(gentleActions.indexOf(hook.type) === -1) {
+                await this.cancelRunningTasks();
+            }
 
             if(runnableHooks.actionPosition) {
                 try {

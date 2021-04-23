@@ -54,7 +54,7 @@ export class TaskExecutor<T> {
             const intervalMs = this.task.intervalMs !== undefined ? this.task.intervalMs :
                     (this.task.interval * World.TICK_LENGTH);
 
-            await new Promise(resolve => {
+            await new Promise<void>(resolve => {
                 this.intervalSubscription = timer(0, intervalMs).subscribe(
                     async() => {
                         if(!await this.execute()) {

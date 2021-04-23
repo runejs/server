@@ -66,6 +66,7 @@ export class Widget {
 
 export interface WidgetClosedEvent {
     widget: Widget;
+    widgetId?: number;
     data?: number;
 }
 
@@ -131,21 +132,14 @@ export class InterfaceState {
             filter(event => event.widget.slot === slot)).pipe(take(1)));
     }
 
-    public closeWidget(widgetId: number, data?: number): void;
-    public closeWidget(slot: GameInterfaceSlot, data?: number): void;
-    public closeWidget(i: GameInterfaceSlot | number, data?: number): void {
-        let widget: Widget | null;
-        if(typeof i === 'number') {
-            widget = this.findWidget(i);
-        } else {
-            widget = this.widgetSlots[i] || null;
-        }
+    public closeWidget(slot: GameInterfaceSlot, widgetId?: number, data?: number): void {
+        const widget: Widget | null = (slot ? this.widgetSlots[slot] : this.findWidget(widgetId)) || null;
 
         if(!widget) {
             return;
         }
 
-        this.closed.next({ widget, data });
+        this.closed.next({ widget, widgetId, data });
         this.widgetSlots[widget.slot] = null;
     }
 

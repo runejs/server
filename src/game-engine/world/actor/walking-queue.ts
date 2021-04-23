@@ -144,15 +144,6 @@ export class WalkingQueue {
 
         const walkPosition = this.queue.shift();
 
-        if(this.actor instanceof Player) {
-            this.actor.actionsCancelled.next('pathing-movement');
-            // if(activeWidget.disablePlayerMovement) {
-            //     this.resetDirections();
-            //     return;
-            // }
-            //this.actor.interfaceState.closeAllSlots();
-        }
-
         if(this.actor.metadata['faceActorClearedByWalking'] === undefined || this.actor.metadata['faceActorClearedByWalking']) {
             this.actor.clearFaceActor();
         }
