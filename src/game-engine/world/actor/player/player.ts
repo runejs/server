@@ -629,6 +629,7 @@ export class Player extends Actor {
      * @param newPosition The player's new position.
      */
     public teleport(newPosition: Position): void {
+        this.updateFlags.autoChunkUpdate = true;
         const originalPosition = this.position;
         const oldChunk = world.chunkManager.getChunkForWorldPosition(originalPosition);
         const newChunk = world.chunkManager.getChunkForWorldPosition(newPosition);

@@ -92,8 +92,8 @@ const roomTemplates: RoomTemplate[] = [
 
 
 const openHouse = (player: Player): void => {
-    player.updateFlags.autoChunkUpdate = false;
     player.teleport(homeLocation.clone());
+    player.updateFlags.autoChunkUpdate = false;
 
     const house = new House();
 
@@ -126,7 +126,6 @@ const openHouse = (player: Player): void => {
     }
 
     player.outgoingPackets.constructHouseMaps(house.getRoomData());
-    player.updateFlags.mapRegionUpdateRequired = true;
 };
 
 
