@@ -4,12 +4,13 @@ import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
 import { playerWalkTo } from '@engine/game-server';
 import { stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
+import { RunnableHooks } from '@engine/world/action/index';
 
 
 /**
  * Defines a player action hook.
  */
-export interface PlayerInteractionActionHook extends ActionHook<playerInteractionActionHandler> {
+export interface PlayerInteractionActionHook extends ActionHook<PlayerInteractionAction, playerInteractionActionHandler> {
     // A single option name or a list of option names that this action applies to.
     options: string | string[];
     // Whether or not the player needs to walk to the other player before performing the action.
@@ -43,44 +44,30 @@ export interface PlayerInteractionAction {
  * @param position
  * @param option
  */
-const playerInteractionActionPipe = (player: Player, otherPlayer: Player, position: Position, option: string): void => {
-    if(player.busy) {
-        return;
-    }
-
+const playerInteractionActionPipe = (player: Player, otherPlayer: Player, position: Position,
+                                     option: string): RunnableHooks<PlayerInteractionAction> => {
     // Find all player action plugins that reference this option
-    let interactionActions = getActionHooks<PlayerInteractionActionHook>('player_interaction')
+    let matchingHooks = getActionHooks<PlayerInteractionActionHook>('player_interaction')
         .filter(plugin => questHookFilter(player, plugin) && stringHookFilter(plugin.options, option));
-    const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
+    const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
-        interactionActions = questActions;
+        matchingHooks = questActions;
     }
 
-    if(interactionActions.length === 0) {
+    if(matchingHooks.length === 0) {
         player.sendMessage(`Unhandled Player interaction: ${option} @ ${position.x},${position.y},${position.level}`);
-        return;
+        return null;
     }
 
-    player.actionsCancelled.next(null);
-
-    // Separate out walk-to actions from immediate actions
-    const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);
-    const immediatePlugins = interactionActions.filter(plugin => !plugin.walkTo);
-
-    // Make sure we walk to the other player before running any of the walk-to plugins
-    if(walkToPlugins.length !== 0) {
-        playerWalkTo(player, position)
-            .then(() => {
-                player.face(otherPlayer);
-                walkToPlugins.forEach(plugin => plugin.handler({ player, otherPlayer, position }));
-            })
-            .catch(() => logger.warn(`Unable to complete walk-to action.`));
-    }
-
-    // Immediately run any non-walk-to plugins
-    if(immediatePlugins.length !== 0) {
-        immediatePlugins.forEach(plugin => plugin.handler({ player, otherPlayer, position }));
+    return {
+        hooks: matchingHooks,
+        actionPosition: position,
+        action: {
+            player,
+            otherPlayer,
+            position
+        }
     }
 };
 

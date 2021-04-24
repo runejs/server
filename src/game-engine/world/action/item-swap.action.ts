@@ -1,14 +1,13 @@
 import { Player } from '../actor/player/player';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
-import { logger } from '@runejs/core';
 import { numberHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe } from '@engine/world/action/index';
+import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
 
 
 /**
  * Defines a swap items action hook.
  */
-export interface ItemSwapActionHook extends ActionHook<itemSwapActionHandler> {
+export interface ItemSwapActionHook extends ActionHook<ItemSwapAction, itemSwapActionHandler> {
     widgetId?: number;
     widgetIds?: number[];
 }
@@ -44,27 +43,26 @@ export interface ItemSwapAction {
  * @param toSlot
  * @param widget
  */
-const itemSwapActionPipe = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }): Promise<void> => {
-    const swapItemsActions = getActionHooks<ItemSwapActionHook>('item_swap')
+const itemSwapActionPipe = async (player: Player, fromSlot: number, toSlot: number, widget: {
+    widgetId: number; containerId: number; }): Promise<RunnableHooks<ItemSwapAction>> => {
+    const matchingHooks = getActionHooks<ItemSwapActionHook>('item_swap')
         .filter(plugin => numberHookFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 
-    if(!swapItemsActions || swapItemsActions.length === 0) {
+    if(!matchingHooks || matchingHooks.length === 0) {
         await player.sendMessage(`Unhandled Swap Items action: widget[${widget.widgetId}] container[${widget.containerId}] fromSlot[${fromSlot} toSlot${toSlot}`);
-    } else {
-        try {
-            swapItemsActions.forEach(plugin =>
-                plugin.handler({
-                    player,
-                    widgetId: widget.widgetId,
-                    containerId: widget.containerId,
-                    fromSlot,
-                    toSlot
-                }));
-        } catch(error) {
-            logger.error(`Error handling Swap Items action.`);
-            logger.error(error);
-        }
+        return null;
     }
+
+    return {
+        hooks: matchingHooks,
+        action: {
+            player,
+            widgetId: widget.widgetId,
+            containerId: widget.containerId,
+            fromSlot,
+            toSlot
+        }
+    };
 };
 
 

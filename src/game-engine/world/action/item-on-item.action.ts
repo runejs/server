@@ -2,13 +2,13 @@ import { Player } from '@engine/world/actor/player/player';
 import { Item } from '@engine/world/items/item';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe } from '@engine/world/action/index';
+import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
 
 
 /**
  * Defines an item-on-item action hook.
  */
-export interface ItemOnItemActionHook extends ActionHook<itemOnItemActionHandler> {
+export interface ItemOnItemActionHook extends ActionHook<ItemOnItemAction, itemOnItemActionHandler> {
     // The item pairs being used. Each item can be used on the other, so item order does not matter.
     items: { item1: number, item2?: number }[];
 }
@@ -52,36 +52,36 @@ export interface ItemOnItemAction {
  * @param usedWithWidgetId
  */
 const itemOnItemActionPipe = (player: Player, usedItem: Item, usedSlot: number, usedWidgetId: number,
-    usedWithItem: Item, usedWithSlot: number, usedWithWidgetId: number): void => {
+    usedWithItem: Item, usedWithSlot: number, usedWithWidgetId: number): RunnableHooks<ItemOnItemAction> => {
     if(player.busy) {
         return;
     }
 
     // Find all item on item action plugins that match this action
-    let interactionActions = getActionHooks<ItemOnItemActionHook>('item_on_item').filter(plugin =>
+    let matchingHooks = getActionHooks<ItemOnItemActionHook>('item_on_item').filter(plugin =>
         questHookFilter(player, plugin) &&
         (plugin.items.findIndex(i => i.item1 === usedItem.itemId && i.item2 === usedWithItem.itemId) !== -1 ||
         plugin.items.findIndex(i => i.item2 === usedItem.itemId && i.item1 === usedWithItem.itemId) !== -1 ||
         plugin.items.findIndex(i => i.item1 === usedItem.itemId && !i.item2 || i.item1 === usedWithItem.itemId && !i.item2 )  !== -1));
 
-    const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
+    const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
-        interactionActions = questActions;
+        matchingHooks = questActions;
     }
 
-    if(interactionActions.length === 0) {
+    if(matchingHooks.length === 0) {
         player.outgoingPackets.chatboxMessage(
             `Unhandled item on item interaction: ${usedItem.itemId} on ${usedWithItem.itemId}`);
-        return;
+        return null;
     }
 
-    player.actionsCancelled.next(null);
-
-    // Immediately run the plugins
-    for(const plugin of interactionActions) {
-        plugin.handler({ player, usedItem, usedWithItem, usedSlot, usedWithSlot,
-            usedWidgetId: usedWidgetId, usedWithWidgetId: usedWithWidgetId });
+    return {
+        hooks: matchingHooks,
+        action: {
+            player, usedItem, usedWithItem, usedSlot, usedWithSlot,
+            usedWidgetId: usedWidgetId, usedWithWidgetId: usedWithWidgetId
+        }
     }
 };
 

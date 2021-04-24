@@ -141,7 +141,6 @@ export class Player extends Actor {
     private _bonuses: { offensive: OffensiveBonuses, defensive: DefensiveBonuses, skill: SkillBonuses };
     private _carryWeight: number;
     private _settings: PlayerSettings;
-    private _walkingTo: Position;
     private _nearbyChunks: Chunk[];
     private quadtreeKey: QuadtreeKey = null;
     private privateMessageIndex: number = 1;
@@ -282,7 +281,9 @@ export class Player extends Actor {
         this.save();
 
         this.actionsCancelled.complete();
-        this.movementEvent.complete();
+        this.walkingQueue.movementEvent.complete();
+        this.walkingQueue.movementQueued.complete();
+        this.actionPipeline.shutdown();
         this.outgoingPackets.logout();
         this.instance = null;
         world.chunkManager.getChunkForWorldPosition(this.position).removePlayer(this);
@@ -597,11 +598,13 @@ export class Player extends Actor {
 
         let showDialogue = false;
         let showInConsole = false;
-        if(options && typeof options === 'boolean') {
-            showDialogue = true;
-        } else if(options) {
-            showDialogue = options.dialogue || false;
-            showInConsole = options.console || false;
+        if(options) {
+            if(typeof options === 'boolean') {
+                showDialogue = true;
+            } else {
+                showDialogue = options.dialogue || false;
+                showInConsole = options.console || false;
+            }
         }
 
         if(!showDialogue) {
@@ -1267,14 +1270,6 @@ export class Player extends Actor {
 
     public get settings(): PlayerSettings {
         return this._settings;
-    }
-
-    public get walkingTo(): Position {
-        return this._walkingTo;
-    }
-
-    public set walkingTo(value: Position) {
-        this._walkingTo = value;
     }
 
     public get nearbyChunks(): Chunk[] {

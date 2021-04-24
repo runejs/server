@@ -1,13 +1,13 @@
 import { Player } from '@engine/world/actor/player/player';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe } from '@engine/world/action/index';
+import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
 
 
 /**
  * Defines a widget action hook.
  */
-export interface WidgetInteractionActionHook extends ActionHook<widgetInteractionActionHandler> {
+export interface WidgetInteractionActionHook extends ActionHook<WidgetInteractionAction, widgetInteractionActionHandler> {
     // A single UI widget ID or a list of widget IDs that this action applies to.
     widgetIds: number | number[];
     // A single UI widget child ID or a list of child IDs that this action applies to.
@@ -47,7 +47,7 @@ export interface WidgetInteractionAction {
  * @param childId The ID of the widget child being interacted with.
  * @param optionId The widget context option chosen by the player.
  */
-const widgetActionPipe = (player: Player, widgetId: number, childId: number, optionId: number): void => {
+const widgetActionPipe = (player: Player, widgetId: number, childId: number, optionId: number): RunnableHooks<WidgetInteractionAction> => {
     const playerWidget = Object.values(player.interfaceState.widgetSlots).find((widget) => widget && widget.widgetId === widgetId);
 
     if(playerWidget && playerWidget.fakeWidget != undefined) {
@@ -55,7 +55,7 @@ const widgetActionPipe = (player: Player, widgetId: number, childId: number, opt
     }
 
     // Find all item on item action plugins that match this action
-    let interactionActions = getActionHooks<WidgetInteractionActionHook>('widget_interaction').filter(plugin => {
+    let matchingHooks = getActionHooks<WidgetInteractionActionHook>('widget_interaction').filter(plugin => {
         if(!questHookFilter(player, plugin)) {
             return false;
         }
@@ -74,25 +74,22 @@ const widgetActionPipe = (player: Player, widgetId: number, childId: number, opt
 
         return true;
     });
-    const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
+
+    const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
-        interactionActions = questActions;
+        matchingHooks = questActions;
     }
 
-    if(interactionActions.length === 0) {
+    if(matchingHooks.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled widget option: ${widgetId}, ${childId}:${optionId}`);
-        return;
+        return null;
     }
 
-    // Immediately run the plugins
-    interactionActions.forEach(plugin => {
-        if(plugin.cancelActions) {
-            player.actionsCancelled.next('widget');
-        }
-
-        plugin.handler({ player, widgetId, childId, optionId });
-    });
+    return {
+        hooks: matchingHooks,
+        action: { player, widgetId, childId, optionId }
+    };
 };
 
 

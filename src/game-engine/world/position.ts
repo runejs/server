@@ -44,33 +44,40 @@ export class Position {
         return new Position(this.x, this.y, this.level);
     }
 
-    public withinInteractionDistance(locationObject: LandscapeObject): boolean {
-        const definition = filestore.configStore.objectStore.getObject(locationObject.objectId);
-        const occupantX = locationObject.x;
-        const occupantY = locationObject.y;
-        let width = definition.rendering?.sizeX || 1;
-        let height = definition.rendering?.sizeY || 1;
-
-        if(width === undefined || width === null || width < 1) {
-            width = 1;
-        }
-        if(height === undefined || height === null || height < 1) {
-            height = 1;
-        }
-
-        if(width === 1 && height === 1) {
-            return this.distanceBetween(new Position(occupantX, occupantY, locationObject.level)) <= 1;
+    public withinInteractionDistance(gameObject: LandscapeObject, minimumDistance?: number): boolean;
+    public withinInteractionDistance(position: Position, minimumDistance?: number): boolean;
+    public withinInteractionDistance(target: LandscapeObject | Position, minimumDistance?: number): boolean;
+    public withinInteractionDistance(target: LandscapeObject | Position, minimumDistance: number = 1): boolean {
+        if(target instanceof Position) {
+            return this.distanceBetween(target) <= minimumDistance;
         } else {
-            if(locationObject.orientation == 1 || locationObject.orientation == 3) {
-                const off = width;
-                width = height;
-                height = off;
+            const definition = filestore.configStore.objectStore.getObject(target.objectId);
+            const occupantX = target.x;
+            const occupantY = target.y;
+            let width = definition.rendering?.sizeX || 1;
+            let height = definition.rendering?.sizeY || 1;
+
+            if(width === undefined || width === null || width < 1) {
+                width = 1;
+            }
+            if(height === undefined || height === null || height < 1) {
+                height = 1;
             }
 
-            for(let x = occupantX; x < occupantX + width; x++) {
-                for(let y = occupantY; y < occupantY + height; y++) {
-                    if(this.distanceBetween(new Position(x, y, locationObject.level)) <= 1) {
-                        return true;
+            if(width === 1 && height === 1) {
+                return this.distanceBetween(new Position(occupantX, occupantY, target.level)) <= minimumDistance;
+            } else {
+                if(target.orientation === 1 || target.orientation === 3) {
+                    const off = width;
+                    width = height;
+                    height = off;
+                }
+
+                for(let x = occupantX; x < occupantX + width; x++) {
+                    for(let y = occupantY; y < occupantY + height; y++) {
+                        if(this.distanceBetween(new Position(x, y, target.level)) <= minimumDistance) {
+                            return true;
+                        }
                     }
                 }
             }

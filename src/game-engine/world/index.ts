@@ -70,24 +70,34 @@ export class World {
 
     /**
      * Searched for an object by ID at the given position in any of the player's active instances.
-     * @param player The player to find the object for.
+     * @param actor The actor to find the object for.
      * @param objectId The game ID of the object.
      * @param objectPosition The game world position that the object is expected at.
      */
-    public findObjectAtLocation(player: Player, objectId: number,
+    public findObjectAtLocation(actor: Actor, objectId: number,
                                 objectPosition: Position): { object: LandscapeObject, cacheOriginal: boolean } {
         const x = objectPosition.x;
         const y = objectPosition.y;
         const objectChunk = this.chunkManager.getChunkForWorldPosition(objectPosition);
         let cacheOriginal = true;
 
-        const tileModifications = player.instance.getTileModifications(objectPosition);
-        const personalTileModifications = player.personalInstance.getTileModifications(objectPosition);
+        let tileModifications;
+        let personalTileModifications;
+
+        if(actor.isPlayer) {
+            tileModifications = (actor as Player).instance.getTileModifications(objectPosition);
+            personalTileModifications = (actor as Player).personalInstance.getTileModifications(objectPosition);
+        } else {
+            tileModifications = this.globalInstance.getTileModifications(objectPosition);
+        }
 
         let landscapeObject = objectChunk.getFilestoreLandscapeObject(objectId, objectPosition);
         if(!landscapeObject) {
-            const tileObjects = [ ...tileModifications.mods.spawnedObjects,
-                ...personalTileModifications.mods.spawnedObjects ];
+            const tileObjects = [ ...tileModifications.mods.spawnedObjects ];
+
+            if(actor.isPlayer) {
+                tileObjects.push(...personalTileModifications.mods.spawnedObjects);
+            }
 
             landscapeObject = tileObjects.find(spawnedObject =>
                 spawnedObject.objectId === objectId && spawnedObject.x === x && spawnedObject.y === y) || null;
@@ -99,8 +109,11 @@ export class World {
             }
         }
 
-        const hiddenTileObjects = [ ...tileModifications.mods.hiddenObjects,
-            ...personalTileModifications.mods.hiddenObjects ];
+        const hiddenTileObjects = [ ...tileModifications.mods.hiddenObjects ];
+
+        if(actor.isPlayer) {
+            hiddenTileObjects.push(...personalTileModifications.mods.hiddenObjects);
+        }
 
         if(hiddenTileObjects.findIndex(spawnedObject =>
             spawnedObject.objectId === objectId && spawnedObject.x === x && spawnedObject.y === y) !== -1) {

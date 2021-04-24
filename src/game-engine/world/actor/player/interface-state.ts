@@ -66,6 +66,7 @@ export class Widget {
 
 export interface WidgetClosedEvent {
     widget: Widget;
+    widgetId?: number;
     data?: number;
 }
 
@@ -127,25 +128,18 @@ export class InterfaceState {
     }
 
     public async widgetClosed(slot: GameInterfaceSlot): Promise<WidgetClosedEvent> {
-        return await lastValueFrom(this.closed.pipe(
+        return await lastValueFrom(this.closed.asObservable().pipe(
             filter(event => event.widget.slot === slot)).pipe(take(1)));
     }
 
-    public closeWidget(widgetId: number, data?: number): void;
-    public closeWidget(slot: GameInterfaceSlot, data?: number): void;
-    public closeWidget(i: GameInterfaceSlot | number, data?: number): void {
-        let widget: Widget | null;
-        if(typeof i === 'number') {
-            widget = this.findWidget(i);
-        } else {
-            widget = this.widgetSlots[i] || null;
-        }
+    public closeWidget(slot: GameInterfaceSlot, widgetId?: number, data?: number): void {
+        const widget: Widget | null = (slot ? this.widgetSlots[slot] : this.findWidget(widgetId)) || null;
 
         if(!widget) {
             return;
         }
 
-        this.closed.next({ widget, data });
+        this.closed.next({ widget, widgetId, data });
         this.widgetSlots[widget.slot] = null;
     }
 
@@ -208,7 +202,12 @@ export class InterfaceState {
         return widget || null;
     }
 
-    public widgetOpen(slot: GameInterfaceSlot, widgetId?: number): boolean {
+    public widgetOpen(slot?: GameInterfaceSlot, widgetId?: number): boolean {
+        if(!slot) {
+            const slots: GameInterfaceSlot[] = Object.keys(this.widgetSlots) as GameInterfaceSlot[];
+            return slots.some(s => this.getWidget(s) !== null);
+        }
+
         if(widgetId === undefined) {
             return this.getWidget(slot) !== null;
         } else {

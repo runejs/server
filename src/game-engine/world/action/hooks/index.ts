@@ -1,6 +1,7 @@
 import { actionHookMap } from '@engine/game-server';
 import { QuestKey } from '@engine/config/quest-config';
-import { ActionType } from '@engine/world/action';
+import { ActionStrength, ActionType } from '@engine/world/action';
+import { HookTask } from '@engine/world/action/hooks/task';
 
 
 /**
@@ -16,15 +17,21 @@ export interface QuestRequirement {
 /**
  * Defines a generic extensible game content action hook.
  */
-export interface ActionHook<T = any> {
-    // The type of action to perform.
+export interface ActionHook<A = any, H = any> {
+    // The type of action to perform
     type: ActionType;
-    // The action's priority over other actions.
+    // Whether or not this hook will allow other hooks from the same action to queue after it
+    multi?: boolean;
+    // The action's priority over other actions
     priority?: number;
-    // [optional] Quest requirements that must be completed in order to run this hook.
+    // The strength of the action hook
+    strength?: ActionStrength;
+    // [optional] Quest requirements that must be completed in order to run this hook
     questRequirement?: QuestRequirement;
-    // The action function to be performed.
-    handler: T;
+    // [optional] The action function to be performed
+    handler?: H;
+    // [optional] The task to be performed
+    task?: HookTask<A>;
 }
 
 
@@ -51,3 +58,7 @@ export const getActionHooks = <T extends ActionHook>(actionType: ActionType, fil
 export function sortActionHooks<T = any>(actionHooks: ActionHook<T>[]): ActionHook<T>[] {
     return actionHooks.sort(actionHook => actionHook.questRequirement !== undefined ? -1 : 1);
 }
+
+
+export * from './hook-filters';
+export * from './task';

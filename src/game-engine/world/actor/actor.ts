@@ -13,46 +13,49 @@ import { world } from '@engine/game-server';
 import { WorldInstance } from '@engine/world/instances';
 import { Player } from '@engine/world/actor/player/player';
 import { ActionCancelType, ActionPipeline } from '@engine/world/action';
+import { LocationObject } from '@runejs/cache-parser';
 
 /**
  * Handles an actor within the game world.
  */
 export abstract class Actor {
 
+    public readonly updateFlags: UpdateFlags = new UpdateFlags();
+    public readonly skills: Skills = new Skills(this);
+    public readonly walkingQueue: WalkingQueue = new WalkingQueue(this);
+    public readonly inventory: ItemContainer = new ItemContainer(28);
+    public readonly bank: ItemContainer = new ItemContainer(376);
     public readonly actionPipeline = new ActionPipeline(this);
-    public readonly updateFlags: UpdateFlags;
-    public readonly skills: Skills;
     public readonly metadata: { [key: string]: any } = {};
-    public readonly actionsCancelled: Subject<ActionCancelType>;
-    public readonly movementEvent: Subject<Position>;
-    public pathfinding: Pathfinding;
+
+    /**
+     * @deprecated - use new action system instead
+     */
+    public readonly actionsCancelled: Subject<ActionCancelType> = new Subject<ActionCancelType>();
+
+    public pathfinding: Pathfinding = new Pathfinding(this);
     public lastMovementPosition: Position;
+
     protected randomMovementInterval;
-    private readonly _walkingQueue: WalkingQueue;
-    private readonly _inventory: ItemContainer;
-    private readonly _bank: ItemContainer;
+
     private _position: Position;
     private _lastMapRegionUpdatePosition: Position;
     private _worldIndex: number;
     private _walkDirection: number;
     private _runDirection: number;
     private _faceDirection: number;
-    private _busy: boolean;
     private _instance: WorldInstance = null;
 
+    /**
+     * @deprecated - use new action system instead
+     */
+    private _busy: boolean;
+
     protected constructor() {
-        this.updateFlags = new UpdateFlags();
-        this._walkingQueue = new WalkingQueue(this);
         this._walkDirection = -1;
         this._runDirection = -1;
         this._faceDirection = 6;
-        this._inventory = new ItemContainer(28);
-        this._bank = new ItemContainer(376);
-        this.skills = new Skills(this);
         this._busy = false;
-        this.pathfinding = new Pathfinding(this);
-        this.actionsCancelled = new Subject<ActionCancelType>();
-        this.movementEvent = new Subject<Position>();
     }
 
     public damage(amount: number, damageType: DamageType = DamageType.DAMAGE): 'alive' | 'dead' {
@@ -67,6 +70,63 @@ export abstract class Actor {
             remainingHitpoints, maximumHitpoints);
 
         return remainingHitpoints === 0 ? 'dead' : 'alive';
+    }
+
+    /**
+     * Waits for the actor to reach the specified position before resolving it's promise.
+     * The promise will be rejected if the actor's walking queue changes or their movement is otherwise canceled.
+     * @param position The position that the actor needs to reach for the promise to resolve.
+     */
+    public async waitForPathing(position: Position): Promise<void>;
+
+    /**
+     * Waits for the actor to reach the specified game object before resolving it's promise.
+     * The promise will be rejected if the actor's walking queue changes or their movement is otherwise canceled.
+     * @param gameObject The game object to wait for the actor to reach.
+     */
+    public async waitForPathing(gameObject: LocationObject): Promise<void>;
+
+    /**
+     * Waits for the actor to reach the specified game object before resolving it's promise.
+     * The promise will be rejected if the actor's walking queue changes or their movement is otherwise canceled.
+     * @param target The position or game object that the actor needs to reach for the promise to resolve.
+     */
+    public async waitForPathing(target: Position | LocationObject): Promise<void>;
+    public async waitForPathing(target: Position | LocationObject): Promise<void> {
+        if(this.position.withinInteractionDistance(target)) {
+            return;
+        }
+
+        await new Promise((resolve, reject) => {
+            this.metadata.walkingTo = target instanceof Position ? target : new Position(target.x, target.y, target.level);
+
+            const inter = setInterval(() => {
+                if(!this.metadata.walkingTo || !this.metadata.walkingTo.equals(target)) {
+                    reject();
+                    clearInterval(inter);
+                    return;
+                }
+
+                if(!this.walkingQueue.moving()) {
+                    if(target instanceof Position) {
+                        if(this.position.distanceBetween(target) > 1) {
+                            reject();
+                        } else {
+                            resolve();
+                        }
+                    } else {
+                        if(this.position.withinInteractionDistance(target)) {
+                            resolve();
+                        } else {
+                            reject();
+                        }
+                    }
+
+                    clearInterval(inter);
+                    this.metadata.walkingTo = null;
+                }
+            }, 100);
+        });
     }
 
     public async moveBehind(target: Actor): Promise<boolean> {
@@ -111,7 +171,7 @@ export abstract class Actor {
         this.metadata['following'] = target;
 
         this.moveBehind(target);
-        const subscription = target.movementEvent.subscribe(async () => this.moveBehind(target));
+        const subscription = target.walkingQueue.movementEvent.subscribe(async () => this.moveBehind(target));
 
         this.actionsCancelled.pipe(
             filter(type => type !== 'pathing-movement'),
@@ -123,8 +183,12 @@ export abstract class Actor {
         });
     }
 
-    public async walkTo(target: Actor): Promise<boolean> {
-        const distance = Math.floor(this.position.distanceBetween(target.position));
+    public async walkTo(target: Actor): Promise<boolean>;
+    public async walkTo(position: Position): Promise<boolean>;
+    public async walkTo(target: Actor | Position): Promise<boolean> {
+        const desiredPosition = target instanceof Position ? target : target.position;
+
+        const distance = Math.floor(this.position.distanceBetween(desiredPosition));
 
         if(distance <= 1) {
             return false;
@@ -135,8 +199,6 @@ export abstract class Actor {
             this.metadata.faceActorClearedByWalking = true;
             return false;
         }
-
-        const desiredPosition = target.position;
 
         await this.pathfinding.walkTo(desiredPosition, {
             pathingSearchRadius: distance + 2,
@@ -156,7 +218,7 @@ export abstract class Actor {
         this.metadata['tailing'] = target;
 
         this.moveTo(target);
-        const subscription = target.movementEvent.subscribe(async () => this.moveTo(target));
+        const subscription = target.walkingQueue.movementEvent.subscribe(async () => this.moveTo(target));
 
         this.actionsCancelled.pipe(
             filter(type => type !== 'pathing-movement'),
@@ -211,8 +273,7 @@ export abstract class Actor {
     }
 
     public stopAnimation(): void {
-        const animation = { id: -1, delay: 0 };
-        this.updateFlags.animation = animation;
+        this.updateFlags.animation = { id: -1, delay: 0 };
     }
 
     public playGraphics(graphics: number | Graphic): void {
@@ -224,30 +285,29 @@ export abstract class Actor {
     }
 
     public stopGraphics(): void {
-        const graphics = { id: -1, delay: 0, height: 120 };
-        this.updateFlags.graphics = graphics;
+        this.updateFlags.graphics = { id: -1, delay: 0, height: 120 };
     }
 
     public removeItem(slot: number): void {
-        this._inventory.remove(slot);
+        this.inventory.remove(slot);
     }
 
     public removeBankItem(slot: number): void {
-        this._bank.remove(slot);
+        this.bank.remove(slot);
     }
 
     public giveItem(item: number | Item): boolean {
-        return this._inventory.add(item) !== null;
+        return this.inventory.add(item) !== null;
     }
     public giveBankItem(item: number | Item): boolean {
-        return this._bank.add(item) !== null;
+        return this.bank.add(item) !== null;
     }
 
     public hasItemInInventory(item: number | Item): boolean {
-        return this._inventory.has(item);
+        return this.inventory.has(item);
     }
     public hasItemInBank(item: number | Item): boolean {
-        return this._bank.has(item);
+        return this.bank.has(item);
     }
 
     public hasItemOnPerson(item: number | Item): boolean {
@@ -409,10 +469,6 @@ export abstract class Actor {
         this._worldIndex = value;
     }
 
-    public get walkingQueue(): WalkingQueue {
-        return this._walkingQueue;
-    }
-
     public get walkDirection(): number {
         return this._walkDirection;
     }
@@ -435,13 +491,6 @@ export abstract class Actor {
 
     public set faceDirection(value: number) {
         this._faceDirection = value;
-    }
-
-    public get inventory(): ItemContainer {
-        return this._inventory;
-    }
-    public get bank(): ItemContainer {
-        return this._bank;
     }
 
     public get busy(): boolean {
@@ -470,4 +519,20 @@ export abstract class Actor {
 
         this._instance = value;
     }
+
+    public get isPlayer(): boolean {
+        return this instanceof Player;
+    }
+
+    public get isNpc(): boolean {
+        return this instanceof Npc;
+    }
+
+    public get type(): { player?: Player, npc?: Npc } {
+        return {
+            player: this.isPlayer ? this as unknown as Player : undefined,
+            npc: this.isNpc ? this as unknown as Npc : undefined
+        };
+    }
+
 }

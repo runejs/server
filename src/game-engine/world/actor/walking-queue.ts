@@ -4,12 +4,18 @@ import { Player } from './player/player';
 import { world } from '@engine/game-server';
 import { Npc } from './npc/npc';
 import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
+import { Subject } from 'rxjs';
 
 
 /**
  * Controls an actor's movement.
  */
 export class WalkingQueue {
+
+    public readonly movementQueued = new Subject<Position>();
+    public readonly movementEvent = new Subject<Position>();
+    public readonly movementQueued$ = this.movementQueued.asObservable();
+    public readonly movementEvent$ = this.movementEvent.asObservable();
 
     private queue: Position[];
     private _valid: boolean;
@@ -63,6 +69,7 @@ export class WalkingQueue {
                 lastPosition = newPosition;
                 newPosition.metadata = positionMetadata;
                 this.queue.push(newPosition);
+                this.movementQueued.next(newPosition);
             } else {
                 this.valid = false;
                 break;
@@ -75,6 +82,7 @@ export class WalkingQueue {
             if(this.actor.pathfinding.canMoveTo(lastPosition, newPosition)) {
                 newPosition.metadata = positionMetadata;
                 this.queue.push(newPosition);
+                this.movementQueued.next(newPosition);
             } else {
                 this.valid = false;
             }
@@ -136,15 +144,6 @@ export class WalkingQueue {
 
         const walkPosition = this.queue.shift();
 
-        if(this.actor instanceof Player) {
-            this.actor.actionsCancelled.next('pathing-movement');
-            // if(activeWidget.disablePlayerMovement) {
-            //     this.resetDirections();
-            //     return;
-            // }
-            //this.actor.interfaceState.closeAllSlots();
-        }
-
         if(this.actor.metadata['faceActorClearedByWalking'] === undefined || this.actor.metadata['faceActorClearedByWalking']) {
             this.actor.clearFaceActor();
         }
@@ -201,7 +200,7 @@ export class WalkingQueue {
 
             const newChunk = world.chunkManager.getChunkForWorldPosition(this.actor.position);
 
-            this.actor.movementEvent.next(this.actor.position);
+            this.movementEvent.next(this.actor.position);
 
             if(this.actor instanceof Player) {
                 const mapDiffX = this.actor.position.x - (lastMapRegionUpdatePosition.chunkX * 8);
