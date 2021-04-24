@@ -387,7 +387,7 @@ export class Player extends Actor {
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
 
-            if(this.updateFlags.mapRegionUpdateRequired) {
+            if(this.updateFlags.mapRegionUpdateRequired && this.updateFlags.autoChunkUpdate) {
                 this.outgoingPackets.updateCurrentMapChunk();
             }
 

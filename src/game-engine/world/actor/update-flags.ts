@@ -49,6 +49,8 @@ export interface Damage {
  */
 export class UpdateFlags {
 
+    public autoChunkUpdate: boolean = true;
+
     private _mapRegionUpdateRequired: boolean;
     private _appearanceUpdateRequired: boolean;
     private _chatMessages: ChatMessage[];

@@ -2,10 +2,9 @@ import { gameEngineDist } from '@engine/util/directories';
 import { getFiles } from '@engine/util/files';
 import { logger } from '@runejs/core';
 import { Actor } from '@engine/world/actor/actor';
-import { ActionHook } from '@engine/world/action/hooks';
+import { ActionHook, TaskExecutor } from '@engine/world/action/hooks';
 import { Position } from '@engine/world/position';
 import { Player } from '@engine/world/actor/player/player';
-import { TaskExecutor } from '@engine/world/action/hooks/task';
 import { Subscription } from 'rxjs';
 import { LandscapeObject } from '@runejs/filestore';
 

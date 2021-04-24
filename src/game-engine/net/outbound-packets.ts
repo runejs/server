@@ -564,6 +564,50 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
+    public constructHouseMaps(rooms: number[][][]): void {
+        const packet = new Packet(23, PacketType.DYNAMIC_LARGE);
+
+        const chunkX = this.player.position.chunkX + 6;
+        const chunkY = this.player.position.chunkY + 6;
+        const localX = this.player.position.chunkLocalX;
+        const localY = this.player.position.chunkLocalY;
+        const currentPlane = this.player.position.level;
+
+        packet.put(localY, 'short');
+        packet.put(localX, 'short', 'le');
+        packet.put(chunkX, 'short');
+        packet.put(currentPlane);
+        packet.put(chunkY, 'short');
+
+        packet.openBitBuffer();
+
+        for(let level = 0; level < 4; level++) {
+            for(let x = 0; x < 13; x++) {
+                for(let y = 0; y < 13; y++) {
+                    const roomData: number | null = rooms[level][x][y];
+                    packet.putBits(1, roomData === null ? 0 : 1);
+
+                    if(roomData !== null) {
+                        packet.putBits(26, roomData);
+                    }
+                }
+            }
+        }
+
+        packet.closeBitBuffer();
+
+        // Put the xtea keys for the two construction room template maps
+        // Map coords: 29,79 && 30,79
+        for(let mapX = 29; mapX <= 30; mapX++) {
+            const xteaRegion = xteaRegions[`l${mapX}_79`];
+            for(let seeds = 0; seeds < 4; seeds++) {
+                packet.put(xteaRegion?.key[seeds] || 0, 'int');
+            }
+        }
+
+        this.queue(packet);
+    }
+
     public updateCurrentMapChunk(): void {
         const packet = new Packet(166, PacketType.DYNAMIC_LARGE);
         packet.put(this.player.position.chunkLocalY, 'short');
