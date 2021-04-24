@@ -5,7 +5,7 @@ import { widgetInteractionActionHandler } from '@engine/world/action/widget-inte
  */
 export const action: widgetInteractionActionHandler = (details) => {
     const { player, widgetId, childId } = details;
-    player.interfaceState.closeWidget(widgetId, childId);
+    player.interfaceState.closeWidget('chatbox', widgetId, childId);
 };
 
 export default {
