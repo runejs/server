@@ -157,7 +157,6 @@ export class OutboundPackets {
     }
 
     public setWorldItem(worldItem: WorldItem, position: Position, offset: number = 0): void {
-
         this.updateReferencePosition(position);
 
         const packet = new Packet(175);
@@ -564,19 +563,19 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    public constructHouseMaps(rooms: number[][][]): void {
+    public constructHouseMaps(position: Position, rooms: number[][][]): void {
         const packet = new Packet(23, PacketType.DYNAMIC_LARGE);
 
-        const chunkX = this.player.position.chunkX + 6;
-        const chunkY = this.player.position.chunkY + 6;
-        const localX = this.player.position.chunkLocalX;
-        const localY = this.player.position.chunkLocalY;
-        const currentPlane = this.player.position.level;
+        const chunkX = position.chunkX + 6;
+        const chunkY = position.chunkY + 6;
+        const localX = position.chunkLocalX;
+        const localY = position.chunkLocalY;
+        const mapPlane = position.level;
 
         packet.put(localY, 'short');
         packet.put(localX, 'short', 'le');
         packet.put(chunkX, 'short');
-        packet.put(currentPlane);
+        packet.put(mapPlane);
         packet.put(chunkY, 'short');
 
         packet.openBitBuffer();

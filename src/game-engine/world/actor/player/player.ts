@@ -277,6 +277,10 @@ export class Player extends Actor {
             return;
         }
 
+        if(this.position.level > 3) {
+            this.position.level = 0;
+        }
+
         world.playerTree.remove(this.quadtreeKey);
         this.save();
 
@@ -387,7 +391,7 @@ export class Player extends Actor {
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
 
-            if(this.updateFlags.mapRegionUpdateRequired && this.updateFlags.autoChunkUpdate) {
+            if(this.updateFlags.mapRegionUpdateRequired && !this.metadata.customMap) {
                 this.outgoingPackets.updateCurrentMapChunk();
             }
 
@@ -415,6 +419,10 @@ export class Player extends Actor {
 
             if(this.metadata['teleporting']) {
                 this.metadata['teleporting'] = null;
+            }
+
+            if(this.metadata.customMap) {
+                delete this.metadata.customMap;
             }
 
             resolve();
@@ -629,7 +637,6 @@ export class Player extends Actor {
      * @param newPosition The player's new position.
      */
     public teleport(newPosition: Position): void {
-        this.updateFlags.autoChunkUpdate = true;
         const originalPosition = this.position;
         const oldChunk = world.chunkManager.getChunkForWorldPosition(originalPosition);
         const newChunk = world.chunkManager.getChunkForWorldPosition(newPosition);

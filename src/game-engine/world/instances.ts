@@ -7,6 +7,7 @@ import { World } from '@engine/world/index';
 import { schedule } from '@engine/world/task';
 import { CollisionMap } from '@engine/world/map/collision-map';
 import { LandscapeObject } from '@runejs/filestore';
+import { logger } from '@runejs/core';
 
 
 /**
@@ -124,14 +125,21 @@ export class WorldInstance {
 
         const { chunk: instancedChunk, mods } = this.getTileModifications(position);
 
-        mods.worldItems.push(worldItem);
-
-        instancedChunk.mods.set(position.key, mods);
-
         if(owner) {
             // If this world item is only visible to one player initially, we setup a timeout to spawn it for all other
             // players after 100 game cycles.
-            owner.outgoingPackets.setWorldItem(worldItem, worldItem.position);
+            try {
+                owner.outgoingPackets.setWorldItem(worldItem, worldItem.position);
+            } catch(error) {
+                logger.error(`Error spawning world item ${worldItem?.itemId} at ${worldItem?.position?.key}`, error);
+                return null;
+            }
+        }
+
+        mods.worldItems.push(worldItem);
+        instancedChunk.mods.set(position.key, mods);
+
+        if(owner) {
             setTimeout(() => {
                 if(worldItem.removed) {
                     return;
