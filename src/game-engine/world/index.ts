@@ -17,6 +17,8 @@ import { Direction } from '@engine/world/direction';
 import { NpcSpawn } from '@engine/config/npc-spawn-config';
 import { loadActionFiles } from '@engine/world/action';
 import { LandscapeObject } from '@runejs/filestore';
+import { lastValueFrom, Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 
 export interface QuadtreeKey {
@@ -43,6 +45,7 @@ export class World {
     public readonly playerTree: Quadtree<QuadtreeKey>;
     public readonly npcTree: Quadtree<QuadtreeKey>;
     public readonly globalInstance = new WorldInstance();
+    public readonly tickComplete: Subject<void> = new Subject<void>();
 
     private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
 
@@ -369,7 +372,16 @@ export class World {
         }
 
         setTimeout(async() => this.worldTick(), delay);
+        this.tickComplete.next();
         return Promise.resolve();
+    }
+
+    public async nextTick(): Promise<void> {
+        await lastValueFrom(this.tickComplete.asObservable().pipe(take(1)));
+    }
+
+    public async ticks(count: number): Promise<void> {
+        await lastValueFrom(this.tickComplete.asObservable().pipe(take(count)));
     }
 
     public async scheduleNpcRespawn(npc: Npc): Promise<boolean> {

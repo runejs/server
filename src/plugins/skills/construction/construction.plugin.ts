@@ -1,7 +1,7 @@
 import { Position } from '@engine/world/position';
 import { Player } from '@engine/world/actor/player/player';
 import { PlayerCommandAction } from '@engine/world/action/player-command.action';
-import { playerInitActionHandler } from '@engine/world/action/player-init.action';
+import { PlayerInitAction, playerInitActionHandler } from '@engine/world/action/player-init.action';
 import { World } from '@engine/world';
 import { world } from '@engine/game-server';
 import { schedule } from '@engine/world/task';
@@ -82,22 +82,26 @@ class House {
 }
 
 
-const pohCoords = new Position(2048, 6272);
+const instance1 = new Position(6296, 6296);
+const instance1PohSpawn = new Position(6296 + 52, 6296 + 52);
+const instance1Max = new Position(6296 + 104, 6296 + 104);
 
-const pohMin = new Position(2016, 6240);
-const pohMax = new Position(2079, 6303);
+const instance2 = new Position(6192, 6296);
+const instance2PohSpawn = new Position(6192 + 52, 6296 + 52);
+const instance2Max = new Position(6192 + 104, 6296 + 104);
 
 
 const openHouse = async (player: Player): Promise<void> => {
-    const syntheticPlane = Math.floor(Math.random() * 64) * 4;
-    const pohLocation = pohCoords.copy().setLevel(syntheticPlane);
-    // if(!player.position.within(pohMin, pohMax, false)) {
-        player.teleport(pohLocation.copy());
-    // } else {
-    //     player.teleport(player.position.copy().setLevel(syntheticPlane));
-    // }
+    if(player.position.within(instance1, instance1Max, false)) {
+        player.teleport(instance1PohSpawn);
+    } else if(player.position.within(instance2, instance2Max, false)) {
+        player.teleport(instance2PohSpawn);
+    } else {
+        player.teleport(instance1PohSpawn);
+    }
 
-    player.sendMessage(pohLocation.key);
+
+    player.sendMessage(player.position.key);
 
     const house = new House();
 
@@ -113,7 +117,7 @@ const openHouse = async (player: Player): Promise<void> => {
 
             if(x === 6 && y === 6) {
                 house.rooms[0][x][y] = gardenPortal;
-            } else if(x === 7 && y === 6) {
+            } else if((x === 7 && y === 6) || (x === 6 && y === 7) || (x === 5 && y === 6)) {
                 house.rooms[0][x][y] = firstParlor;
             } else {
                 house.rooms[0][x][y] = emptySpace;
@@ -121,17 +125,14 @@ const openHouse = async (player: Player): Promise<void> => {
         }
     }
 
-    player.outgoingPackets.constructHouseMaps(pohLocation, house.getRoomData());
-    player.metadata.customMap = true;
+    player.metadata.customMap = house.getRoomData();
+
+    player.sendMessage(`Welcome home.`);
 };
 
 
-const playerInitHomeCheck: playerInitActionHandler = ({ player }): void => {
-    if(player.position.within(pohMin, pohMax, false)) {
-        // @TODO TEMPORARY FOR TESTING!!!
-        setTimeout(() => openHouse(player), World.TICK_LENGTH);
-    }
-};
+const playerInitHomeCheck = async (player: Player): Promise<void> =>
+    await openHouse(player);
 
 
 export default {
@@ -141,12 +142,14 @@ export default {
             type: 'player_command',
             commands: [ 'con' ],
             handler: ({ player }: PlayerCommandAction): void => {
-                openHouse(player)
+                openHouse(player);
             }
         },
         {
             type: 'player_init',
-            handler: playerInitHomeCheck
+            handler: ({ player }: PlayerInitAction): void => {
+                playerInitHomeCheck(player);
+            }
         }
     ]
 };

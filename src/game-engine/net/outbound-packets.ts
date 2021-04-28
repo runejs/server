@@ -11,6 +11,7 @@ import { Npc } from '@engine/world/actor/npc/npc';
 import { stringToLong } from '@engine/util/strings';
 import { LandscapeObject } from '@runejs/filestore';
 import { xteaRegions } from '@engine/config';
+import { world } from '@engine/game-server';
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -563,14 +564,19 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    public constructHouseMaps(position: Position, rooms: number[][][]): void {
+    public constructHouseMaps(rooms: number[][][]): void {
         const packet = new Packet(23, PacketType.DYNAMIC_LARGE);
 
-        const chunkX = position.chunkX + 6;
-        const chunkY = position.chunkY + 6;
-        const localX = position.chunkLocalX;
-        const localY = position.chunkLocalY;
-        const mapPlane = position.level;
+        const chunk = world.chunkManager.getChunkForWorldPosition(this.player.position);
+
+        const chunkX = this.player.position.chunkX + 6;
+        const chunkY = this.player.position.chunkY + 6;
+        const regionX = Math.floor(chunkX / 8);
+        const regionY = Math.floor(chunkY / 8);
+
+        const localX = this.player.position.x - (regionX * 64);
+        const localY = this.player.position.y - (regionY * 64);
+        const mapPlane = this.player.position.level;
 
         packet.put(localY, 'short');
         packet.put(localX, 'short', 'le');

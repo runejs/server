@@ -222,6 +222,7 @@ export class ActionPipeline {
 export async function loadActionFiles(): Promise<void> {
     const ACTION_DIRECTORY = `${gameEngineDist}/world/action`;
     const blacklist = [];
+    const loadedActions: string[] = [];
 
     for await(const path of getFiles(ACTION_DIRECTORY, blacklist)) {
         if(!path.endsWith('.action.ts') && !path.endsWith('.action.js')) {
@@ -230,18 +231,19 @@ export async function loadActionFiles(): Promise<void> {
 
         const location = '.' + path.substring(ACTION_DIRECTORY.length).replace('.js', '');
 
-        logger.info(`Loading ${path.substring(path.indexOf('action') + 7).replace('.js', '')} file.`);
-
         try {
             const importedAction = (require(location)?.default || null) as ActionPipe | null;
             if(importedAction && Array.isArray(importedAction) && importedAction[0] && importedAction[1]) {
                 ActionPipeline.register(importedAction[0], importedAction[1]);
+                loadedActions.push(importedAction[0]);
             }
         } catch(error) {
             logger.error(`Error loading action file at ${location}:`);
             logger.error(error);
         }
     }
+
+    logger.info(`Loaded action pipes: ${loadedActions.join(', ')}.`);
 
     return Promise.resolve();
 }

@@ -391,7 +391,9 @@ export class Player extends Actor {
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
 
-            if(this.updateFlags.mapRegionUpdateRequired && !this.metadata.customMap) {
+            if(this.metadata.customMap) {
+                this.outgoingPackets.constructHouseMaps(this.metadata.customMap);
+            } else if(this.updateFlags.mapRegionUpdateRequired) {
                 this.outgoingPackets.updateCurrentMapChunk();
             }
 
@@ -635,25 +637,28 @@ export class Player extends Actor {
     /**
      * Instantly teleports the player to the specified location.
      * @param newPosition The player's new position.
+     * @param updateRegion Whether or not to update the player's map region in the game client.
      */
-    public teleport(newPosition: Position): void {
-        const originalPosition = this.position;
-        const oldChunk = world.chunkManager.getChunkForWorldPosition(originalPosition);
-        const newChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
-
+    public teleport(newPosition: Position, updateRegion: boolean = true): void {
         this.walkingQueue.clear();
         this.metadata['lastPosition'] = this.position;
         this.position = newPosition;
-
-        this.updateFlags.mapRegionUpdateRequired = true;
-        this.lastMapRegionUpdatePosition = newPosition;
         this.metadata['teleporting'] = true;
 
-        if(!oldChunk.equals(newChunk)) {
-            this.metadata['updateChunk'] = { newChunk, oldChunk };
+        if(updateRegion) {
+            this.updateFlags.mapRegionUpdateRequired = true;
+            this.lastMapRegionUpdatePosition = newPosition;
 
-            this.actionPipeline.call('region_change', regionChangeActionFactory(
-                this, originalPosition, newPosition, true));
+            const originalPosition = this.position;
+            const oldChunk = world.chunkManager.getChunkForWorldPosition(originalPosition);
+            const newChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
+
+            if(!oldChunk.equals(newChunk)) {
+                this.metadata['updateChunk'] = { newChunk, oldChunk };
+
+                this.actionPipeline.call('region_change', regionChangeActionFactory(
+                    this, originalPosition, newPosition, true));
+            }
         }
     }
 

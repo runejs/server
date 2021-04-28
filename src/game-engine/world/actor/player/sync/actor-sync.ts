@@ -144,6 +144,6 @@ export function appendMovement(actor: Actor, packet: ByteBuffer): void {
 
 export abstract class SyncTask<T> {
 
-    public abstract async execute(): Promise<T>;
+    public abstract execute(): Promise<T>;
 
 }
