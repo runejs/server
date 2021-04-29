@@ -266,7 +266,10 @@ export class Player extends Actor {
         await this.actionPipeline.call('player_init', { player: this });
 
         world.spawnWorldItems(this);
-        this.chunkChanged(playerChunk);
+
+        if(!this.metadata.customMap) {
+            this.chunkChanged(playerChunk);
+        }
 
         this.outgoingPackets.flushQueue();
         logger.info(`${this.username}:${this.worldIndex} has logged in.`);
@@ -391,10 +394,12 @@ export class Player extends Actor {
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
 
-            if(this.metadata.customMap) {
-                this.outgoingPackets.constructHouseMaps(this.metadata.customMap);
-            } else if(this.updateFlags.mapRegionUpdateRequired) {
-                this.outgoingPackets.updateCurrentMapChunk();
+            if(this.updateFlags.mapRegionUpdateRequired) {
+                if(this.metadata.customMap) {
+                    this.outgoingPackets.constructMapRegion(this.metadata.customMap);
+                } else {
+                    this.outgoingPackets.updateCurrentMapChunk();
+                }
             }
 
             resolve();
@@ -637,25 +642,25 @@ export class Player extends Actor {
     /**
      * Instantly teleports the player to the specified location.
      * @param newPosition The player's new position.
-     * @param updateRegion Whether or not to update the player's map region in the game client.
+     * @param updateRegion Whether or not to sync the player's map region with their client. Defaults to true.
      */
     public teleport(newPosition: Position, updateRegion: boolean = true): void {
         this.walkingQueue.clear();
-        this.metadata['lastPosition'] = this.position;
+        const originalPosition = this.position.copy();
+        this.metadata['lastPosition'] = originalPosition;
         this.position = newPosition;
         this.metadata['teleporting'] = true;
 
-        if(updateRegion) {
-            this.updateFlags.mapRegionUpdateRequired = true;
-            this.lastMapRegionUpdatePosition = newPosition;
+        this.updateFlags.mapRegionUpdateRequired = updateRegion;
+        this.lastMapRegionUpdatePosition = newPosition;
 
-            const originalPosition = this.position;
-            const oldChunk = world.chunkManager.getChunkForWorldPosition(originalPosition);
-            const newChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
+        const oldChunk = world.chunkManager.getChunkForWorldPosition(originalPosition);
+        const newChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
 
-            if(!oldChunk.equals(newChunk)) {
-                this.metadata['updateChunk'] = { newChunk, oldChunk };
+        if(!oldChunk.equals(newChunk)) {
+            this.metadata['updateChunk'] = { newChunk, oldChunk };
 
+            if(updateRegion) {
                 this.actionPipeline.call('region_change', regionChangeActionFactory(
                     this, originalPosition, newPosition, true));
             }

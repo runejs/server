@@ -12,6 +12,7 @@ import { stringToLong } from '@engine/util/strings';
 import { LandscapeObject } from '@runejs/filestore';
 import { xteaRegions } from '@engine/config';
 import { world } from '@engine/game-server';
+import { ConstructedMap } from '@engine/world/map/region';
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -564,36 +565,25 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    public constructHouseMaps(rooms: number[][][]): void {
+    public constructMapRegion(mapData: ConstructedMap): void {
         const packet = new Packet(23, PacketType.DYNAMIC_LARGE);
 
-        const chunk = world.chunkManager.getChunkForWorldPosition(this.player.position);
-
-        const chunkX = this.player.position.chunkX + 6;
-        const chunkY = this.player.position.chunkY + 6;
-        const regionX = Math.floor(chunkX / 8);
-        const regionY = Math.floor(chunkY / 8);
-
-        const localX = this.player.position.x - (regionX * 64);
-        const localY = this.player.position.y - (regionY * 64);
-        const mapPlane = this.player.position.level;
-
-        packet.put(localY, 'short');
-        packet.put(localX, 'short', 'le');
-        packet.put(chunkX, 'short');
-        packet.put(mapPlane);
-        packet.put(chunkY, 'short');
+        packet.put(this.player.position.chunkLocalY, 'short');
+        packet.put(this.player.position.chunkLocalX, 'short', 'le');
+        packet.put(this.player.position.chunkX + 6, 'short');
+        packet.put(this.player.position.level);
+        packet.put(this.player.position.chunkY + 6, 'short');
 
         packet.openBitBuffer();
 
         for(let level = 0; level < 4; level++) {
             for(let x = 0; x < 13; x++) {
                 for(let y = 0; y < 13; y++) {
-                    const roomData: number | null = rooms[level][x][y];
-                    packet.putBits(1, roomData === null ? 0 : 1);
+                    const tileData: number | null = mapData.tileData[level][x][y];
+                    packet.putBits(1, tileData === null ? 0 : 1);
 
-                    if(roomData !== null) {
-                        packet.putBits(26, roomData);
+                    if(tileData !== null) {
+                        packet.putBits(26, tileData);
                     }
                 }
             }

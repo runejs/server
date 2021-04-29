@@ -5,6 +5,7 @@ import { PlayerInitAction, playerInitActionHandler } from '@engine/world/action/
 import { World } from '@engine/world';
 import { world } from '@engine/game-server';
 import { schedule } from '@engine/world/task';
+import { ConstructedMap } from '@engine/world/map/region';
 
 
 const MAX_HOUSE_SIZE = 13;
@@ -82,26 +83,18 @@ class House {
 }
 
 
-const instance1 = new Position(6296, 6296);
-const instance1PohSpawn = new Position(6296 + 52, 6296 + 52);
-const instance1Max = new Position(6296 + 104, 6296 + 104);
+const instance1 = new Position(6400, 6400);
+const instance1PohSpawn = new Position(6432, 6432);
+const instance1Max = new Position(6464, 6464);
 
-const instance2 = new Position(6192, 6296);
-const instance2PohSpawn = new Position(6192 + 52, 6296 + 52);
-const instance2Max = new Position(6192 + 104, 6296 + 104);
+const instance2 = new Position(6464, 6400);
+const instance2PohSpawn = new Position(6496, 6432);
+const instance2Max = new Position(6528, 6464);
 
 
 const openHouse = async (player: Player): Promise<void> => {
-    if(player.position.within(instance1, instance1Max, false)) {
-        player.teleport(instance1PohSpawn);
-    } else if(player.position.within(instance2, instance2Max, false)) {
-        player.teleport(instance2PohSpawn);
-    } else {
-        player.teleport(instance1PohSpawn);
-    }
-
-
     player.sendMessage(player.position.key);
+    player.sendMessage(`${player.position.chunkLocalX},${player.position.chunkLocalY}`);
 
     const house = new House();
 
@@ -111,7 +104,7 @@ const openHouse = async (player: Player): Promise<void> => {
 
     for(let x = 0; x < MAX_HOUSE_SIZE; x++) {
         for(let y = 0; y < MAX_HOUSE_SIZE; y++) {
-            if(x <= 1 || y <= 1 || x >= 10 || y >= 10) {
+            if(x <= 1 || y <= 1 || x >= 11 || y >= 11) {
                 continue;
             }
 
@@ -125,7 +118,24 @@ const openHouse = async (player: Player): Promise<void> => {
         }
     }
 
-    player.metadata.customMap = house.getRoomData();
+    let pohPosition: Position = instance1PohSpawn;
+
+    if(player.position.within(instance1, instance1Max, false)) {
+        player.teleport(player.position.copy().setX(player.position.x + 64));
+        pohPosition = instance2PohSpawn;
+    } else if(player.position.within(instance2, instance2Max, false)) {
+        player.teleport(player.position.copy().setX(player.position.x - 64));
+    } else {
+        player.teleport(instance1PohSpawn);
+    }
+
+    player.sendMessage(player.position.key);
+    player.sendMessage(`${player.position.chunkLocalX},${player.position.chunkLocalY}`);
+
+    player.metadata.customMap = {
+        position: pohPosition,
+        tileData: house.getRoomData()
+    } as ConstructedMap;
 
     player.sendMessage(`Welcome home.`);
 };
@@ -143,6 +153,14 @@ export default {
             commands: [ 'con' ],
             handler: ({ player }: PlayerCommandAction): void => {
                 openHouse(player);
+            }
+        },
+        {
+            type: 'player_command',
+            commands: [ 'local' ],
+            handler: ({ player }: PlayerCommandAction): void => {
+                player.sendMessage(player.position.key);
+                player.sendMessage(`${player.position.chunkLocalX},${player.position.chunkLocalY}`);
             }
         },
         {
