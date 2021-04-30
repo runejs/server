@@ -25,5 +25,6 @@ export const regionSizes: RegionSizeMap = {
 
 export interface ConstructedMap {
     position: Position;
+    emptySpace?: number;
     tileData: number[][][];
 }

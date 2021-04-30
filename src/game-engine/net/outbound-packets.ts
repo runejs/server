@@ -13,6 +13,7 @@ import { LandscapeObject } from '@runejs/filestore';
 import { xteaRegions } from '@engine/config';
 import { world } from '@engine/game-server';
 import { ConstructedMap } from '@engine/world/map/region';
+import { map } from 'rxjs/operators';
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -576,14 +577,51 @@ export class OutboundPackets {
 
         packet.openBitBuffer();
 
+        // @TODO build around the player!
+        // House room offsets and junk no matter where they are within the instance
+
+        const mapWorldX = mapData.position.x;
+        const mapWorldY = mapData.position.y;
+
+        const topCornerMapChunk = world.chunkManager.getChunkForWorldPosition(new Position(mapWorldX, mapWorldY, this.player.position.level));
+        const playerChunk = world.chunkManager.getChunkForWorldPosition(this.player.position);
+
+        const offsetX = playerChunk.position.x - (topCornerMapChunk.position.x - 2);
+        const offsetY = playerChunk.position.y - (topCornerMapChunk.position.y - 2);
+
+        const centerChunkX = 6;
+        const centerChunkY = 6;
+
+        const centerOffsetX = offsetX - centerChunkX;
+        const centerOffsetY = offsetY - centerChunkY;
+
+        console.log(topCornerMapChunk.position.x, topCornerMapChunk.position.y);
+        console.log(playerChunk.position.x, playerChunk.position.y);
+
         for(let level = 0; level < 4; level++) {
             for(let x = 0; x < 13; x++) {
                 for(let y = 0; y < 13; y++) {
-                    const tileData: number | null = mapData.tileData[level][x][y];
-                    packet.putBits(1, tileData === null ? 0 : 1);
+                    let mapTileOffsetX = x + centerOffsetX;
+                    let mapTileOffsetY = y + centerOffsetY;
+                    if(mapTileOffsetX < 0) {
+                        mapTileOffsetX = 0;
+                    }
+                    if(mapTileOffsetX > 12) {
+                        mapTileOffsetX = 12;
+                    }
+                    if(mapTileOffsetY < 0) {
+                        mapTileOffsetY = 0;
+                    }
+                    if(mapTileOffsetY > 12) {
+                        mapTileOffsetY = 12;
+                    }
+                    const tileData: number | null = mapData.tileData[level][mapTileOffsetX][mapTileOffsetY];
+                    packet.putBits(1, tileData === null && !mapData.emptySpace ? 0 : 1);
 
                     if(tileData !== null) {
                         packet.putBits(26, tileData);
+                    } else if(mapData.emptySpace) {
+                        packet.putBits(26, mapData.emptySpace);
                     }
                 }
             }

@@ -84,12 +84,13 @@ class House {
 
 
 const instance1 = new Position(6400, 6400);
-const instance1PohSpawn = new Position(6432, 6432);
-const instance1Max = new Position(6464, 6464);
+const instance1PohSpawn = new Position(6400 + 36, 6400 + 36);
+const instance1Max = new Position(6400 + 64, 6400 + 64);
 
-const instance2 = new Position(6464, 6400);
-const instance2PohSpawn = new Position(6496, 6432);
-const instance2Max = new Position(6528, 6464);
+const instance2 = new Position(6400, 6464);
+const instance2PohSpawn = new Position(6400 + 36, 6464 + 36);
+const instance2Max = new Position(6400 + 64, 6464 + 64);
+
 
 
 const openHouse = async (player: Player): Promise<void> => {
@@ -104,38 +105,34 @@ const openHouse = async (player: Player): Promise<void> => {
 
     for(let x = 0; x < MAX_HOUSE_SIZE; x++) {
         for(let y = 0; y < MAX_HOUSE_SIZE; y++) {
-            if(x <= 1 || y <= 1 || x >= 11 || y >= 11) {
-                continue;
-            }
-
             if(x === 6 && y === 6) {
                 house.rooms[0][x][y] = gardenPortal;
             } else if((x === 7 && y === 6) || (x === 6 && y === 7) || (x === 5 && y === 6)) {
                 house.rooms[0][x][y] = firstParlor;
-            } else {
-                house.rooms[0][x][y] = emptySpace;
             }
         }
     }
 
-    let pohPosition: Position = instance1PohSpawn;
+    let pohPosition: Position = instance1;
+    let playerSpawn: Position = instance1PohSpawn;
 
     if(player.position.within(instance1, instance1Max, false)) {
-        player.teleport(player.position.copy().setX(player.position.x + 64));
-        pohPosition = instance2PohSpawn;
+        playerSpawn = player.position.copy().setY(player.position.y + 64);
+        pohPosition = instance2;
     } else if(player.position.within(instance2, instance2Max, false)) {
-        player.teleport(player.position.copy().setX(player.position.x - 64));
-    } else {
-        player.teleport(instance1PohSpawn);
+        playerSpawn = player.position.copy().setY(player.position.y - 64);
     }
 
-    player.sendMessage(player.position.key);
-    player.sendMessage(`${player.position.chunkLocalX},${player.position.chunkLocalY}`);
+    player.teleport(playerSpawn);
 
     player.metadata.customMap = {
         position: pohPosition,
+        emptySpace: emptySpace.roomData,
         tileData: house.getRoomData()
     } as ConstructedMap;
+
+    player.sendMessage(player.position.key);
+    player.sendMessage(`${player.position.chunkLocalX},${player.position.chunkLocalY}`);
 
     player.sendMessage(`Welcome home.`);
 };
