@@ -395,7 +395,7 @@ export class Player extends Actor {
             this.walkingQueue.process();
 
             if(this.updateFlags.mapRegionUpdateRequired) {
-                if(this.metadata.customMap) {
+                if(this.position.x >= 6400) { // Custom map drawing area is anywhere x >= 6400 on the map
                     this.outgoingPackets.constructMapRegion(this.metadata.customMap);
                 } else {
                     this.outgoingPackets.updateCurrentMapChunk();
@@ -426,10 +426,6 @@ export class Player extends Actor {
 
             if(this.metadata['teleporting']) {
                 this.metadata['teleporting'] = null;
-            }
-
-            if(this.metadata.customMap) {
-                delete this.metadata.customMap;
             }
 
             resolve();

@@ -577,9 +577,6 @@ export class OutboundPackets {
 
         packet.openBitBuffer();
 
-        // @TODO build around the player!
-        // House room offsets and junk no matter where they are within the instance
-
         const mapWorldX = mapData.position.x;
         const mapWorldY = mapData.position.y;
 
@@ -589,14 +586,8 @@ export class OutboundPackets {
         const offsetX = playerChunk.position.x - (topCornerMapChunk.position.x - 2);
         const offsetY = playerChunk.position.y - (topCornerMapChunk.position.y - 2);
 
-        const centerChunkX = 6;
-        const centerChunkY = 6;
-
-        const centerOffsetX = offsetX - centerChunkX;
-        const centerOffsetY = offsetY - centerChunkY;
-
-        console.log(topCornerMapChunk.position.x, topCornerMapChunk.position.y);
-        console.log(playerChunk.position.x, playerChunk.position.y);
+        const centerOffsetX = offsetX - 6; // 6 === center
+        const centerOffsetY = offsetY - 6; // 6 === center
 
         for(let level = 0; level < 4; level++) {
             for(let x = 0; x < 13; x++) {
@@ -615,6 +606,7 @@ export class OutboundPackets {
                     if(mapTileOffsetY > 12) {
                         mapTileOffsetY = 12;
                     }
+                    
                     const tileData: number | null = mapData.tileData[level][mapTileOffsetX][mapTileOffsetY];
                     packet.putBits(1, tileData === null && !mapData.emptySpace ? 0 : 1);
 
