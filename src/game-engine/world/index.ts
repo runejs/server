@@ -149,8 +149,13 @@ export class World {
      * @param objectPosition The position of the copied object to find the template of.
      */
     public findCustomMapObject(actor: Actor, objectId: number, objectPosition: Position): LandscapeObject | null {
+        const map = actor?.metadata?.customMap as ConstructedMap || null;
+
+        if(!map) {
+            return null;
+        }
+
         const objectChunk = this.chunkManager.getChunkForWorldPosition(objectPosition);
-        const map = actor.metadata.customMap as ConstructedMap;
         const mapChunk = world.chunkManager.getChunkForWorldPosition(map.position);
 
         const chunkIndexX = objectChunk.position.x - (mapChunk.position.x - 2);
