@@ -92,7 +92,7 @@ export class World {
                 return { object: templateMapObject, cacheOriginal: true };
             }
 
-            return null;
+            return { object: null, cacheOriginal: false };
         }
 
         let cacheOriginal = true;
@@ -161,10 +161,7 @@ export class World {
         const chunkIndexX = objectChunk.position.x - (mapChunk.position.x - 2);
         const chunkIndexY = objectChunk.position.y - (mapChunk.position.y - 2);
 
-        const centerOffsetX = map.centerOffsetX || 0;
-        const centerOffsetY = map.centerOffsetY || 0;
-
-        const objectTile = map.tileData[actor.position.level][chunkIndexX + centerOffsetX][chunkIndexY + centerOffsetY];
+        const objectTile = map.tileData[actor.position.level][chunkIndexX][chunkIndexY];
 
         const tileX = objectTile >> 14 & 0x3ff;
         const tileY = objectTile >> 3 & 0x7ff;

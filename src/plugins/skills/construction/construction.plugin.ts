@@ -13,14 +13,23 @@ const openHouse = (player: Player): void => {
 
     const gardenPortal = new Room('garden_1');
     const firstParlor = new Room('parlor');
+    const secondParlor = new Room('parlor', 1);
+    const thirdParlor = new Room('parlor', 2);
+    const fourthParlor = new Room('parlor', 3);
     const emptySpace = new Room('empty_grass');
 
     for(let x = 0; x < MAP_SIZE; x++) {
         for(let y = 0; y < MAP_SIZE; y++) {
             if(x === 6 && y === 6) {
                 house.rooms[0][x][y] = gardenPortal;
-            } else if((x === 7 && y === 6) || (x === 6 && y === 7) || (x === 5 && y === 6)) {
+            } else if(x === 5 && y === 6) {
                 house.rooms[0][x][y] = firstParlor;
+            } else if(x === 7 && y === 6) {
+                house.rooms[0][x][y] = secondParlor;
+            } else if(x === 6 && y === 5) {
+                house.rooms[0][x][y] = thirdParlor;
+            } else if(x === 6 && y === 7) {
+                house.rooms[0][x][y] = fourthParlor;
             }
         }
     }

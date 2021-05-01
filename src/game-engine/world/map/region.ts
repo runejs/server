@@ -33,29 +33,27 @@ export interface ConstructedMap {
 
 
 export const getRotatedObjectX = (orientation: number, localX: number, localY: number): number => {
-    orientation &= 0x3;
     if(orientation === 0) {
         return localX;
     }
     if(orientation === 1) {
-        return localY;
+        return 7 + -localY;
     }
     if(orientation === 2) {
         return -localX + 7;
     }
-    return 7 + -localY;
+    return localY;
 };
 
 export const getRotatedObjectY = (orientation: number, localX: number, localY: number): number => {
-    orientation &= 0x3;
     if(orientation === 0) {
         return localY;
     }
     if(orientation === 1) {
-        return 7 + -localX;
+        return localX;
     }
     if(orientation === 2) {
         return -localY + 7;
     }
-    return localX;
+    return 7 + -localX;
 };
