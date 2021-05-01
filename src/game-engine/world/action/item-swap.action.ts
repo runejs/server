@@ -43,13 +43,13 @@ export interface ItemSwapAction {
  * @param toSlot
  * @param widget
  */
-const itemSwapActionPipe = async (player: Player, fromSlot: number, toSlot: number, widget: {
-    widgetId: number; containerId: number; }): Promise<RunnableHooks<ItemSwapAction>> => {
+const itemSwapActionPipe = (player: Player, fromSlot: number, toSlot: number,
+                            widget: { widgetId: number; containerId: number; }): RunnableHooks<ItemSwapAction> => {
     const matchingHooks = getActionHooks<ItemSwapActionHook>('item_swap')
         .filter(plugin => numberHookFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 
     if(!matchingHooks || matchingHooks.length === 0) {
-        await player.sendMessage(`Unhandled Swap Items action: widget[${widget.widgetId}] container[${widget.containerId}] fromSlot[${fromSlot} toSlot${toSlot}`);
+        player.sendMessage(`Unhandled Swap Items action: widget[${widget.widgetId}] container[${widget.containerId}] fromSlot[${fromSlot} toSlot${toSlot}`);
         return null;
     }
 
