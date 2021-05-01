@@ -1,8 +1,22 @@
-import { Position } from '../../world/position';
-import { filestore, world } from '../../game-server';
 import { logger } from '@runejs/core';
-import { getVarbitMorphIndex } from "../../util/varbits";
-const option1 = packet => {
+
+import { filestore, world } from '@engine/game-server';
+import { Position } from '@engine/world/position';
+import { getVarbitMorphIndex } from '@engine/util/varbits';
+import { PacketData } from '@engine/net/inbound-packets';
+import { Player, Rights } from '@engine/world/actor/player/player';
+
+
+interface ObjectInteractionData {
+    objectId: number;
+    x: number;
+    y: number;
+}
+
+type objectInteractionPacket = (packet: PacketData) => ObjectInteractionData;
+
+
+const option1: objectInteractionPacket = packet => {
     const { buffer } = packet;
     const objectId = buffer.get('short', 'u');
     const y = buffer.get('short', 'u');
@@ -10,7 +24,7 @@ const option1 = packet => {
     return { objectId, x, y };
 };
 
-const option2 = packet => {
+const option2: objectInteractionPacket = packet => {
     const { buffer } = packet;
     const x = buffer.get('short', 'u', 'le');
     const y = buffer.get('short', 'u', 'le');
@@ -18,7 +32,7 @@ const option2 = packet => {
     return { objectId, x, y };
 };
 
-const option3 = packet => {
+const option3: objectInteractionPacket = packet => {
     const { buffer } = packet;
     const y = buffer.get('short', 'u');
     const objectId = buffer.get('short', 'u');
@@ -26,24 +40,43 @@ const option3 = packet => {
     return { objectId, x, y };
 };
 
+const option4: objectInteractionPacket = packet => {
+    const { buffer } = packet;
+    const x = buffer.get('short', 'u', 'le');
+    const objectId = buffer.get('short', 'u', 'le');
+    const y = buffer.get('short', 'u', 'le');
+    return { objectId, x, y };
+};
+
+const option5: objectInteractionPacket = packet => {
+    const { buffer } = packet;
+    const objectId = buffer.get('short', 'u');
+    const y = buffer.get('short', 'u', 'le');
+    const x = buffer.get('short', 'u', 'le');
+    return { objectId, x, y };
+};
 
 
-const objectInteractionPacket = (player, packet) => {
+const objectInteractionPackets: { [key: number]: { packetDef: objectInteractionPacket, index: number } } = {
+    30:  { packetDef: option1, index: 0 },
+    164: { packetDef: option2, index: 1 },
+    183: { packetDef: option3, index: 2 },
+    229: { packetDef: option4, index: 3 },
+    62:  { packetDef: option5, index: 4 },
+};
+
+
+const objectInteractionPacket = (player: Player, packet: PacketData) => {
     const { packetId } = packet;
 
-    const options = {
-        30: { packetDef: option1, index: 0 },
-        164: { packetDef: option2, index: 1 },
-        183: { packetDef: option3, index: 2 },
-        /*136: { packetDef: option4, index: 3 },
-        55:  { packetDef: option5, index: 4 },*/
-    };
-
-    const { objectId, x, y } = options[packetId].packetDef(packet);
+    const { objectId, x, y } = objectInteractionPackets[packetId].packetDef(packet);
     const level = player.position.level;
     const objectPosition = new Position(x, y, level);
     let { object: landscapeObject, cacheOriginal } = world.findObjectAtLocation(player, objectId, objectPosition);
     if(!landscapeObject) {
+        if(player.rights === Rights.ADMIN) {
+            player.sendMessage(`Custom object ${objectId} @[${objectPosition.key}]`);
+        }
         return;
     }
 
@@ -52,9 +85,8 @@ const objectInteractionPacket = (player, packet) => {
         let morphIndex = -1;
         if(objectConfig.varbitId === -1) {
             if(objectConfig.configId !== -1) {
-                const configValue = player.metadata['configs'] && player.metadata['configs'][objectConfig.configId] ? player.metadata['configs'][objectConfig.configId] : 0;
-                morphIndex = configValue;
-
+                morphIndex = player.metadata['configs'] && player.metadata['configs'][objectConfig.configId] ?
+                    player.metadata['configs'][objectConfig.configId] : 0;
             }
         } else {
             morphIndex = getVarbitMorphIndex(objectConfig.varbitId, player.metadata['configs']);
@@ -64,7 +96,7 @@ const objectInteractionPacket = (player, packet) => {
         }
     }
 
-    const actionIdx = options[packetId].index;
+    const actionIdx = objectInteractionPackets[packetId].index;
     let optionName = `action-${actionIdx + 1}`;
     if(objectConfig.options && objectConfig.options.length >= actionIdx) {
         if(!objectConfig.options[actionIdx]) {
@@ -83,16 +115,9 @@ const objectInteractionPacket = (player, packet) => {
     player.actionPipeline.call('object_interaction', player, landscapeObject, objectConfig, objectPosition, optionName.toLowerCase(), cacheOriginal);
 };
 
-export default [{
-    opcode: 30,
+
+export default Object.keys(objectInteractionPackets).map(opcode => ({
+    opcode: parseInt(opcode, 10),
     size: 6,
     handler: objectInteractionPacket
-}, {
-    opcode: 164,
-    size: 6,
-    handler: objectInteractionPacket
-}, {
-    opcode: 183,
-    size: 6,
-    handler: objectInteractionPacket
-}];
+}));

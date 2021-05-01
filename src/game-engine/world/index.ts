@@ -3,7 +3,7 @@ import Quadtree from 'quadtree-lib';
 import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { ExamineCache } from './config/examine-data';
-import { loadPlugins } from '@engine/game-server';
+import { loadPlugins, world } from '@engine/game-server';
 import { Position } from './position';
 import { Npc } from './actor/npc/npc';
 import TravelLocations from '@engine/world/config/travel-locations';
@@ -19,6 +19,8 @@ import { loadActionFiles } from '@engine/world/action';
 import { LandscapeObject } from '@runejs/filestore';
 import { lastValueFrom, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { ConstructedMap, getRotatedObjectX, getRotatedObjectY } from '@engine/world/map/region';
+import { Chunk } from '@engine/world/map/chunk';
 
 
 export interface QuadtreeKey {
@@ -81,7 +83,18 @@ export class World {
                                 objectPosition: Position): { object: LandscapeObject, cacheOriginal: boolean } {
         const x = objectPosition.x;
         const y = objectPosition.y;
+
         const objectChunk = this.chunkManager.getChunkForWorldPosition(objectPosition);
+
+        if(actor instanceof Player && actor.metadata.customMap) {
+            const templateMapObject = this.findCustomMapObject(actor, objectId, objectPosition);
+            if(templateMapObject) {
+                return { object: templateMapObject, cacheOriginal: true };
+            }
+
+            return null;
+        }
+
         let cacheOriginal = true;
 
         let tileModifications;
@@ -127,6 +140,43 @@ export class World {
             object: landscapeObject,
             cacheOriginal
         };
+    }
+
+    /**
+     * Locates a map template object from the actor's active custom map (if applicable).
+     * @param actor The actor to find the object for.
+     * @param objectId The ID of the object to find.
+     * @param objectPosition The position of the copied object to find the template of.
+     */
+    public findCustomMapObject(actor: Actor, objectId: number, objectPosition: Position): LandscapeObject | null {
+        const objectChunk = this.chunkManager.getChunkForWorldPosition(objectPosition);
+        const map = actor.metadata.customMap as ConstructedMap;
+        const mapChunk = world.chunkManager.getChunkForWorldPosition(map.position);
+
+        const chunkIndexX = objectChunk.position.x - (mapChunk.position.x - 2);
+        const chunkIndexY = objectChunk.position.y - (mapChunk.position.y - 2);
+
+        const centerOffsetX = map.centerOffsetX || 0;
+        const centerOffsetY = map.centerOffsetY || 0;
+
+        const objectTile = map.tileData[actor.position.level][chunkIndexX + centerOffsetX][chunkIndexY + centerOffsetY];
+
+        const tileX = objectTile >> 14 & 0x3ff;
+        const tileY = objectTile >> 3 & 0x7ff;
+        const tileOrientation = (0x6 & objectTile) >> 1;
+
+        const objectLocalX = objectPosition.x - (objectChunk.position.x + 6) * 8;
+        const objectLocalY = objectPosition.y - (objectChunk.position.y + 6) * 8;
+
+        const mapTemplateWorldX = tileX * 8;
+        const mapTemplateWorldY = tileY * 8;
+        const mapTemplateChunk = world.chunkManager.getChunkForWorldPosition(new Position(mapTemplateWorldX, mapTemplateWorldY, objectPosition.level));
+
+        const templateObjectPosition = new Position(mapTemplateWorldX + getRotatedObjectX(tileOrientation, objectLocalX, objectLocalY),
+            mapTemplateWorldY + getRotatedObjectY(tileOrientation, objectLocalX, objectLocalY), objectPosition.level);
+        const realObject = mapTemplateChunk.getFilestoreLandscapeObject(objectId, templateObjectPosition);
+
+        return realObject || null;
     }
 
     /**

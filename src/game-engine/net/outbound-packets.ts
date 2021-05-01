@@ -586,14 +586,14 @@ export class OutboundPackets {
         const offsetX = playerChunk.position.x - (topCornerMapChunk.position.x - 2);
         const offsetY = playerChunk.position.y - (topCornerMapChunk.position.y - 2);
 
-        const centerOffsetX = offsetX - 6; // 6 === center
-        const centerOffsetY = offsetY - 6; // 6 === center
+        mapData.centerOffsetX = offsetX - 6; // 6 === center
+        mapData.centerOffsetY = offsetY - 6; // 6 === center
 
         for(let level = 0; level < 4; level++) {
             for(let x = 0; x < 13; x++) {
                 for(let y = 0; y < 13; y++) {
-                    let mapTileOffsetX = x + centerOffsetX;
-                    let mapTileOffsetY = y + centerOffsetY;
+                    let mapTileOffsetX = x + mapData.centerOffsetX;
+                    let mapTileOffsetY = y + mapData.centerOffsetY;
                     if(mapTileOffsetX < 0) {
                         mapTileOffsetX = 0;
                     }
