@@ -143,7 +143,7 @@ export class ActionPipeline {
     }
 
     private async runActionHandler(actionHandler: any, ...args: any[]): Promise<void> {
-        const runnableHooks: RunnableHooks | null | undefined = actionHandler(...args);
+        const runnableHooks: RunnableHooks | null | undefined = await actionHandler(...args);
 
         if(!runnableHooks?.hooks || runnableHooks.hooks.length === 0) {
             return;
