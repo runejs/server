@@ -44,13 +44,13 @@ export interface MoveItemAction {
  * @param toSlot
  * @param widget
  */
-const moveItemActionPipe = async (player: Player, fromSlot: number, toSlot: number,
-                                  widget: { widgetId: number, containerId: number }): Promise<RunnableHooks<MoveItemAction>> => {
+const moveItemActionPipe = (player: Player, fromSlot: number, toSlot: number,
+                            widget: { widgetId: number, containerId: number }): RunnableHooks<MoveItemAction> => {
     const matchingHooks = getActionHooks<MoveItemActionHook>('move_item')
         .filter(plugin => numberHookFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 
     if(!matchingHooks || matchingHooks.length === 0) {
-        await player.sendMessage(`Unhandled Move Item action: widget[${widget.widgetId}] container[${widget.containerId}] fromSlot[${fromSlot} toSlot${toSlot}`);
+        player.sendMessage(`Unhandled Move Item action: widget[${widget.widgetId}] container[${widget.containerId}] fromSlot[${fromSlot} toSlot${toSlot}`);
         return null;
     }
 
