@@ -37,10 +37,18 @@ export const getRotatedObjectX = (orientation: number, localX: number, localY: n
         return localX;
     }
     if(orientation === 1) {
-        return 7 + -localY;
+        if(localX === 7) {
+            return localY;
+        } else {
+            return 7 - localY;
+        }
     }
     if(orientation === 2) {
-        return -localX + 7;
+        if(localY === 0) {
+            return localX;
+        } else {
+            return 7 - localX;
+        }
     }
     return localY;
 };
@@ -53,7 +61,7 @@ export const getRotatedObjectY = (orientation: number, localX: number, localY: n
         return localX;
     }
     if(orientation === 2) {
-        return -localY + 7;
+        return 7 - localY;
     }
-    return 7 + -localX;
+    return 7 - localX;
 };
