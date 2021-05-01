@@ -72,7 +72,7 @@ const objectInteractionPacket = (player: Player, packet: PacketData) => {
     const { objectId, x, y } = objectInteractionPackets[packetId].packetDef(packet);
     const level = player.position.level;
     const objectPosition = new Position(x, y, level);
-    let { object: landscapeObject, cacheOriginal } = world.findObjectAtLocation(player, objectId, objectPosition);
+    const { object: landscapeObject, cacheOriginal } = world.findObjectAtLocation(player, objectId, objectPosition);
     if(!landscapeObject) {
         if(player.rights === Rights.ADMIN) {
             player.sendMessage(`Custom object ${objectId} @[${objectPosition.key}]`);
