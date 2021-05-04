@@ -30,6 +30,8 @@ const openHouse = (player: Player): void => {
                 house.rooms[0][x][y] = thirdParlor;
             } else if(x === 6 && y === 7) {
                 house.rooms[0][x][y] = fourthParlor;
+            } else {
+                house.rooms[0][x][y] = emptySpace;
             }
         }
     }
@@ -48,8 +50,7 @@ const openHouse = (player: Player): void => {
 
     player.metadata.customMap = {
         position: pohPosition,
-        emptySpace: emptySpace.roomData,
-        tileData: house.getRoomData()
+        rooms: house.rooms
     } as ConstructedMap;
 
     player.sendMessage(`Welcome home.`);

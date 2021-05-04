@@ -14,6 +14,7 @@ import { xteaRegions } from '@engine/config';
 import { world } from '@engine/game-server';
 import { ConstructedMap } from '@engine/world/map/region';
 import { map } from 'rxjs/operators';
+import { Room } from '@plugins/skills/construction/con-house';
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -606,14 +607,15 @@ export class OutboundPackets {
                     if(mapTileOffsetY > 12) {
                         mapTileOffsetY = 12;
                     }
-                    
-                    const tileData: number | null = mapData.tileData[level][mapTileOffsetX][mapTileOffsetY];
-                    packet.putBits(1, tileData === null && !mapData.emptySpace ? 0 : 1);
 
-                    if(tileData !== null) {
-                        packet.putBits(26, tileData);
-                    } else if(mapData.emptySpace) {
-                        packet.putBits(26, mapData.emptySpace);
+                    const room: Room | null = mapData.rooms[level][x][y];
+                    packet.putBits(1, room === null ? 0 : 1)
+                    if (room !== null) {
+                        packet.putBits(2, room.position.level & 0x3)
+                        packet.putBits(10, room.position.x / 8)
+                        packet.putBits(11, room.position.y / 8)
+                        packet.putBits(2, room.rotation)
+                        packet.putBits(1, 0) //unused
                     }
                 }
             }
