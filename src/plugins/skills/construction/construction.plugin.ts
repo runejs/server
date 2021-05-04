@@ -2,7 +2,7 @@ import { Position } from '@engine/world/position';
 import { Player } from '@engine/world/actor/player/player';
 import { PlayerCommandAction } from '@engine/world/action/player-command.action';
 import { PlayerInitAction } from '@engine/world/action/player-init.action';
-import { ConstructedMap } from '@engine/world/map/region';
+import { ConstructedRegion } from '@engine/world/map/region';
 
 import { instance1, instance1Max, instance1PohSpawn, instance2, instance2Max, MAP_SIZE } from './con-constants';
 import { House, Room } from './con-house';
@@ -49,9 +49,9 @@ const openHouse = (player: Player): void => {
     player.teleport(playerSpawn);
 
     player.metadata.customMap = {
-        position: pohPosition,
-        rooms: house.rooms
-    } as ConstructedMap;
+        renderPosition: pohPosition,
+        chunks: house.rooms
+    } as ConstructedRegion;
 
     player.sendMessage(`Welcome home.`);
 };

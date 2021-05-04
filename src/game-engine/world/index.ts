@@ -19,7 +19,7 @@ import { loadActionFiles } from '@engine/world/action';
 import { LandscapeObject } from '@runejs/filestore';
 import { lastValueFrom, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { ConstructedMap, getRotatedObjectX, getRotatedObjectY } from '@engine/world/map/region';
+import { ConstructedRegion, getRotatedLocalX, getRotatedLocalY } from '@engine/world/map/region';
 import { Chunk } from '@engine/world/map/chunk';
 
 
@@ -149,33 +149,33 @@ export class World {
      * @param objectPosition The position of the copied object to find the template of.
      */
     public findCustomMapObject(actor: Actor, objectId: number, objectPosition: Position): LandscapeObject | null {
-        const map = actor?.metadata?.customMap as ConstructedMap || null;
+        const map = actor?.metadata?.customMap as ConstructedRegion || null;
 
         if(!map) {
             return null;
         }
 
         const objectChunk = this.chunkManager.getChunkForWorldPosition(objectPosition);
-        const mapChunk = world.chunkManager.getChunkForWorldPosition(map.position);
+        const mapChunk = world.chunkManager.getChunkForWorldPosition(map.renderPosition);
 
         const chunkIndexX = objectChunk.position.x - (mapChunk.position.x - 2);
         const chunkIndexY = objectChunk.position.y - (mapChunk.position.y - 2);
 
-        const objectTile = map.tileData[actor.position.level][chunkIndexX][chunkIndexY];
+        const objectTile = map.chunks[actor.position.level][chunkIndexX][chunkIndexY];
 
-        const tileX = objectTile >> 14 & 0x3ff;
-        const tileY = objectTile >> 3 & 0x7ff;
-        const tileOrientation = (0x6 & objectTile) >> 1;
+        const tileX = objectTile.templatePosition.x;
+        const tileY = objectTile.templatePosition.y;
+        const tileOrientation = objectTile.rotation;
 
         const objectLocalX = objectPosition.x - (objectChunk.position.x + 6) * 8;
         const objectLocalY = objectPosition.y - (objectChunk.position.y + 6) * 8;
 
-        const mapTemplateWorldX = tileX * 8;
-        const mapTemplateWorldY = tileY * 8;
+        const mapTemplateWorldX = tileX;
+        const mapTemplateWorldY = tileY;
         const mapTemplateChunk = world.chunkManager.getChunkForWorldPosition(new Position(mapTemplateWorldX, mapTemplateWorldY, objectPosition.level));
 
-        const templateObjectPosition = new Position(mapTemplateWorldX + getRotatedObjectX(tileOrientation, objectLocalX, objectLocalY),
-            mapTemplateWorldY + getRotatedObjectY(tileOrientation, objectLocalX, objectLocalY), objectPosition.level);
+        const templateObjectPosition = new Position(mapTemplateWorldX + getRotatedLocalX(tileOrientation, objectLocalX, objectLocalY),
+            mapTemplateWorldY + getRotatedLocalY(tileOrientation, objectLocalX, objectLocalY), objectPosition.level);
         const realObject = mapTemplateChunk.getFilestoreLandscapeObject(objectId, templateObjectPosition);
 
         return realObject || null;

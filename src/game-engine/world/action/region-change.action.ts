@@ -78,7 +78,7 @@ export const regionChangeActionFactory = (player: Player,
     };
 
     if(originalMapRegionId !== currentMapRegionId) {
-        regionTypes.push('map');
+        regionTypes.push('region');
     }
 
     if(!Coords.equals(originalChunkCoords, currentChunkCoords)) {

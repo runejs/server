@@ -6,7 +6,8 @@
 import { Position } from '@engine/world/position';
 import { Room } from '@plugins/skills/construction/con-house';
 
-export type RegionType = 'map' | 'chunk';
+
+export type RegionType = 'mapfile' | 'region' | 'chunk';
 
 /**
  * A type for defining region tile sizes.
@@ -19,20 +20,37 @@ export type RegionSizeMap = {
  * A map of region types to tile sizes.
  */
 export const regionSizes: RegionSizeMap = {
-    'map': 64,
+    'mapfile': 104,
+    'region': 64,
     'chunk': 8
 };
 
 
-export interface ConstructedMap {
-    position: Position;
-    rooms: Room[][][];
-    centerOffsetX?: number;
-    centerOffsetY?: number;
+export abstract class ConstructedChunk {
+
+    public rotation: number;
+
+    protected constructor(rotation: number = 0) {
+        this.rotation = rotation;
+    }
+
+    public abstract getTemplatePosition(): Position;
+
+    public get templatePosition(): Position {
+        return this.getTemplatePosition();
+    }
+
+}
+
+export interface ConstructedRegion {
+    renderPosition: Position;
+    chunks: ConstructedChunk[][][];
+    drawOffsetX?: number;
+    drawOffsetY?: number;
 }
 
 
-export const getRotatedObjectX = (orientation: number, localX: number, localY: number): number => {
+export const getRotatedLocalX = (orientation: number, localX: number, localY: number): number => {
     if(orientation === 0) {
         return localX;
     }
@@ -53,7 +71,7 @@ export const getRotatedObjectX = (orientation: number, localX: number, localY: n
     return localY;
 };
 
-export const getRotatedObjectY = (orientation: number, localX: number, localY: number): number => {
+export const getRotatedLocalY = (orientation: number, localX: number, localY: number): number => {
     if(orientation === 0) {
         return localY;
     }

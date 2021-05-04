@@ -12,9 +12,9 @@ import { stringToLong } from '@engine/util/strings';
 import { LandscapeObject } from '@runejs/filestore';
 import { xteaRegions } from '@engine/config';
 import { world } from '@engine/game-server';
-import { ConstructedMap } from '@engine/world/map/region';
-import { map } from 'rxjs/operators';
-import { Room } from '@plugins/skills/construction/con-house';
+import { ConstructedChunk, ConstructedRegion } from '@engine/world/map/region';
+
+
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -567,7 +567,7 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    public constructMapRegion(mapData: ConstructedMap): void {
+    public constructMapRegion(mapData: ConstructedRegion): void {
         const packet = new Packet(23, PacketType.DYNAMIC_LARGE);
 
         packet.put(this.player.position.chunkLocalY, 'short');
@@ -578,8 +578,8 @@ export class OutboundPackets {
 
         packet.openBitBuffer();
 
-        const mapWorldX = mapData.position.x;
-        const mapWorldY = mapData.position.y;
+        const mapWorldX = mapData.renderPosition.x;
+        const mapWorldY = mapData.renderPosition.y;
 
         const topCornerMapChunk = world.chunkManager.getChunkForWorldPosition(new Position(mapWorldX, mapWorldY, this.player.position.level));
         const playerChunk = world.chunkManager.getChunkForWorldPosition(this.player.position);
@@ -587,14 +587,14 @@ export class OutboundPackets {
         const offsetX = playerChunk.position.x - (topCornerMapChunk.position.x - 2);
         const offsetY = playerChunk.position.y - (topCornerMapChunk.position.y - 2);
 
-        mapData.centerOffsetX = offsetX - 6; // 6 === center
-        mapData.centerOffsetY = offsetY - 6; // 6 === center
+        mapData.drawOffsetX = offsetX - 6; // 6 === center
+        mapData.drawOffsetY = offsetY - 6; // 6 === center
 
         for(let level = 0; level < 4; level++) {
             for(let x = 0; x < 13; x++) {
                 for(let y = 0; y < 13; y++) {
-                    let mapTileOffsetX = x + mapData.centerOffsetX;
-                    let mapTileOffsetY = y + mapData.centerOffsetY;
+                    let mapTileOffsetX = x + mapData.drawOffsetX;
+                    let mapTileOffsetY = y + mapData.drawOffsetY;
                     if(mapTileOffsetX < 0) {
                         mapTileOffsetX = 0;
                     }
@@ -608,14 +608,15 @@ export class OutboundPackets {
                         mapTileOffsetY = 12;
                     }
 
-                    const room: Room | null = mapData.rooms[level][x][y];
-                    packet.putBits(1, room === null ? 0 : 1)
-                    if (room !== null) {
-                        packet.putBits(2, room.position.level & 0x3)
-                        packet.putBits(10, room.position.x / 8)
-                        packet.putBits(11, room.position.y / 8)
-                        packet.putBits(2, room.rotation)
-                        packet.putBits(1, 0) //unused
+                    const constructedChunk: ConstructedChunk | null = mapData.chunks[level][x][y];
+                    packet.putBits(1, constructedChunk === null ? 0 : 1)
+                    if (constructedChunk !== null) {
+                        const { templatePosition, rotation } = constructedChunk;
+                        packet.putBits(2, templatePosition?.level & 0x3);
+                        packet.putBits(10, templatePosition?.x / 8);
+                        packet.putBits(11, templatePosition?.y / 8);
+                        packet.putBits(2, rotation || 0);
+                        packet.putBits(1, 0); // unused
                     }
                 }
             }

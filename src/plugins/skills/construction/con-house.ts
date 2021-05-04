@@ -1,5 +1,6 @@
 import { MAP_SIZE, roomTemplates, RoomType } from '@plugins/skills/construction/con-constants';
 import { Position } from '@engine/world/position';
+import { ConstructedChunk } from '@engine/world/map/region';
 
 
 export class House {
@@ -23,18 +24,16 @@ export class House {
 }
 
 
-export class Room {
+export class Room extends ConstructedChunk {
 
     public readonly type: RoomType;
 
-    public rotation: number;
-
-    public constructor(type: RoomType, orientation: number = 0) {
+    public constructor(type: RoomType, rotation: number = 0) {
+        super(rotation);
         this.type = type;
-        this.rotation = orientation;
     }
 
-    public get position(): Position {
+    public getTemplatePosition(): Position {
         return roomTemplates[this.type];
     }
 
