@@ -4,6 +4,7 @@
  * chunk: 8x8 tile chunk within a map.
  */
 import { Position } from '@engine/world/position';
+import { Room } from '@plugins/skills/construction/con-house';
 
 export type RegionType = 'map' | 'chunk';
 
@@ -25,8 +26,7 @@ export const regionSizes: RegionSizeMap = {
 
 export interface ConstructedMap {
     position: Position;
-    emptySpace?: number;
-    tileData: number[][][];
+    rooms: Room[][][];
     centerOffsetX?: number;
     centerOffsetY?: number;
 }
