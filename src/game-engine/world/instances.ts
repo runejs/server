@@ -324,11 +324,17 @@ export class WorldInstance {
     /**
      * Spawn a new game object into the instance.
      * @param object The game object to spawn.
+     * @param reference Whether or not the object being spawned is a reference to an existing object or if it should
+     * be sent to the game client for forced rendering. Defaults to false for forced rendering.
      */
-    public spawnGameObject(object: LandscapeObject): void {
+    public spawnGameObject(object: LandscapeObject, reference: boolean = false): void {
         const position = new Position(object.x, object.y, object.level);
 
         const { chunk: instancedChunk, mods } = this.getTileModifications(position);
+
+        if(mods.spawnedObjects.find(o => o.x === object.x && o.y === object.y && o.level === object.level && o.type === object.type)) {
+            return;
+        }
 
         mods.spawnedObjects.push(object);
         instancedChunk.mods.set(position.key, mods);

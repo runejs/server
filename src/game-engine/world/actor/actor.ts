@@ -93,6 +93,7 @@ export abstract class Actor {
      */
     public async waitForPathing(target: Position | LandscapeObject): Promise<void>;
     public async waitForPathing(target: Position | LandscapeObject): Promise<void> {
+        console.log(target);
         if(this.position.withinInteractionDistance(target)) {
             return;
         }

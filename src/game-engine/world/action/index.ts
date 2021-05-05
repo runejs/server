@@ -166,7 +166,8 @@ export class ActionPipeline {
                     await this.actor.waitForPathing(
                         !gameObject ? runnableHooks.actionPosition : (gameObject as LandscapeObject));
                 } catch(error) {
-                    logger.error(`Error pathing to hook target`, error);
+                    logger.error(`Error pathing to hook target`);
+                    logger.error(error);
                     return;
                 }
             }

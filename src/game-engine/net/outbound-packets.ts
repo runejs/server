@@ -126,7 +126,7 @@ export class OutboundPackets {
 
         chunkUpdates.forEach(update => {
             if(update.type === 'ADD') {
-                if(update.object) {
+                if(update.object && !update.object.reference) {
                     const offset = this.getChunkPositionOffset(update.object.x, update.object.y, chunk);
                     packet.put(241, 'BYTE');
                     packet.put((update.object.type << 2) + (update.object.orientation & 3));

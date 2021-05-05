@@ -19,7 +19,7 @@ import { loadActionFiles } from '@engine/world/action';
 import { LandscapeObject } from '@runejs/filestore';
 import { lastValueFrom, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { ConstructedRegion, getRotatedLocalX, getRotatedLocalY } from '@engine/world/map/region';
+import { ConstructedRegion, getTemplateLocalX, getTemplateLocalY } from '@engine/world/map/region';
 import { Chunk } from '@engine/world/map/chunk';
 
 
@@ -174,9 +174,22 @@ export class World {
         const mapTemplateWorldY = tileY;
         const mapTemplateChunk = world.chunkManager.getChunkForWorldPosition(new Position(mapTemplateWorldX, mapTemplateWorldY, objectPosition.level));
 
-        const templateObjectPosition = new Position(mapTemplateWorldX + getRotatedLocalX(tileOrientation, objectLocalX, objectLocalY),
-            mapTemplateWorldY + getRotatedLocalY(tileOrientation, objectLocalX, objectLocalY), objectPosition.level);
+        const templateObjectPosition = new Position(mapTemplateWorldX + getTemplateLocalX(tileOrientation, objectLocalX, objectLocalY),
+            mapTemplateWorldY + getTemplateLocalY(tileOrientation, objectLocalX, objectLocalY), objectPosition.level);
         const realObject = mapTemplateChunk.getFilestoreLandscapeObject(objectId, templateObjectPosition);
+
+        realObject.x = objectPosition.x;
+        realObject.y = objectPosition.y;
+        realObject.level = objectPosition.level;
+
+        let rotation = realObject.orientation + objectTile.rotation;
+        if(rotation > 3) {
+            rotation -= 4;
+        }
+
+        console.log(realObject.orientation, rotation);
+
+        realObject.orientation = rotation;
 
         return realObject || null;
     }

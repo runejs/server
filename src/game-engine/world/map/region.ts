@@ -50,7 +50,8 @@ export interface ConstructedRegion {
 }
 
 
-export const getRotatedLocalX = (orientation: number, localX: number, localY: number): number => {
+
+export const getTemplateRotatedX = (orientation: number, localX: number, localY: number): number => {
     if(orientation === 0) {
         return localX;
     }
@@ -71,7 +72,42 @@ export const getRotatedLocalX = (orientation: number, localX: number, localY: nu
     return localY;
 };
 
-export const getRotatedLocalY = (orientation: number, localX: number, localY: number): number => {
+export const getTemplateRotatedY = (orientation: number, localX: number, localY: number): number => {
+    if(orientation === 0) {
+        return localY;
+    }
+    if(orientation === 1) {
+        return localX;
+    }
+    if(orientation === 2) {
+        return 7 - localY;
+    }
+    return 7 - localX;
+};
+
+
+export const getTemplateLocalX = (orientation: number, localX: number, localY: number): number => {
+    if(orientation === 0) {
+        return localX;
+    }
+    if(orientation === 1) {
+        if(localX === 7) {
+            return localY;
+        } else {
+            return 7 - localY;
+        }
+    }
+    if(orientation === 2) {
+        if(localY === 0) {
+            return localX;
+        } else {
+            return 7 - localX;
+        }
+    }
+    return localY;
+};
+
+export const getTemplateLocalY = (orientation: number, localX: number, localY: number): number => {
     if(orientation === 0) {
         return localY;
     }

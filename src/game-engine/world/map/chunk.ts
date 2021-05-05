@@ -7,8 +7,12 @@ import { WorldItem } from '@engine/world/items/world-item';
 import { LandscapeObject } from '@runejs/filestore';
 
 
+interface CustomLandscapeObject {
+    reference?: boolean;
+}
+
 export interface ChunkUpdateItem {
-    object?: LandscapeObject;
+    object?: LandscapeObject & CustomLandscapeObject;
     worldItem?: WorldItem;
     type: 'ADD' | 'REMOVE';
 }

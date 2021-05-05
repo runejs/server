@@ -17,10 +17,6 @@ export class House {
         }
     }
 
-    public getRoom(position: Position): Room {
-        return this.rooms[position.level][position.x][position.y];
-    }
-
 }
 
 
