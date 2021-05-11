@@ -180,7 +180,7 @@ export abstract class Actor {
         this.metadata['following'] = target;
 
         this.moveBehind(target);
-        const subscription = target.walkingQueue.movementEvent.subscribe(async () => {
+        const subscription = target.walkingQueue.movementEvent.subscribe(() => {
             if(!this.moveBehind(target)) {
                 this.actionsCancelled.next(null);
             }

@@ -642,6 +642,8 @@ export class Player extends Actor {
         this.metadata['teleporting'] = true;
 
         if(!oldChunk.equals(newChunk)) {
+            oldChunk.removePlayer(this);
+            newChunk.addPlayer(this);
             this.metadata['updateChunk'] = { newChunk, oldChunk };
 
             this.actionPipeline.call('region_change', regionChangeActionFactory(
