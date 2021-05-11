@@ -13,7 +13,8 @@ import { world } from '@engine/game-server';
 import { WorldInstance } from '@engine/world/instances';
 import { Player } from '@engine/world/actor/player/player';
 import { ActionCancelType, ActionPipeline } from '@engine/world/action';
-import { LocationObject } from '@runejs/cache-parser';
+import { LandscapeObject } from '@runejs/filestore';
+
 
 /**
  * Handles an actor within the game world.
@@ -84,20 +85,20 @@ export abstract class Actor {
      * The promise will be rejected if the actor's walking queue changes or their movement is otherwise canceled.
      * @param gameObject The game object to wait for the actor to reach.
      */
-    public async waitForPathing(gameObject: LocationObject): Promise<void>;
+    public async waitForPathing(gameObject: LandscapeObject): Promise<void>;
 
     /**
      * Waits for the actor to reach the specified game object before resolving it's promise.
      * The promise will be rejected if the actor's walking queue changes or their movement is otherwise canceled.
      * @param target The position or game object that the actor needs to reach for the promise to resolve.
      */
-    public async waitForPathing(target: Position | LocationObject): Promise<void>;
-    public async waitForPathing(target: Position | LocationObject): Promise<void> {
+    public async waitForPathing(target: Position | LandscapeObject): Promise<void>;
+    public async waitForPathing(target: Position | LandscapeObject): Promise<void> {
         if(this.position.withinInteractionDistance(target)) {
             return;
         }
 
-        await new Promise((resolve, reject) => {
+        await new Promise<void>((resolve, reject) => {
             this.metadata.walkingTo = target instanceof Position ? target : new Position(target.x, target.y, target.level);
 
             const inter = setInterval(() => {
@@ -130,6 +131,10 @@ export abstract class Actor {
     }
 
     public async moveBehind(target: Actor): Promise<boolean> {
+        if(this.position.level !== target.position.level) {
+            return false;
+        }
+
         const distance = Math.floor(this.position.distanceBetween(target.position));
         if(distance > 16) {
             this.clearFaceActor();
@@ -152,6 +157,10 @@ export abstract class Actor {
     }
 
     public async moveTo(target: Actor): Promise<boolean> {
+        if(this.position.level !== target.position.level) {
+            return false;
+        }
+
         const distance = Math.floor(this.position.distanceBetween(target.position));
         if(distance > 16) {
             this.clearFaceActor();
@@ -171,7 +180,11 @@ export abstract class Actor {
         this.metadata['following'] = target;
 
         this.moveBehind(target);
-        const subscription = target.walkingQueue.movementEvent.subscribe(async () => this.moveBehind(target));
+        const subscription = target.walkingQueue.movementEvent.subscribe(async () => {
+            if(!this.moveBehind(target)) {
+                this.actionsCancelled.next(null);
+            }
+        });
 
         this.actionsCancelled.pipe(
             filter(type => type !== 'pathing-movement'),
