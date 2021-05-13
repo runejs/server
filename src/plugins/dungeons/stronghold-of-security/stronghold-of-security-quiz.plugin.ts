@@ -1,6 +1,5 @@
 import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 import { readFileSync } from 'fs';
-import { LandscapeObject } from '@runejs/filestore';
 import { logger } from '@runejs/core';
 
 export interface StrongholdOfSecurityQuiz {
@@ -27,8 +26,6 @@ export function loadStrongholdOfSecurityQuizData(path: string): StrongholdOfSecu
         if(!quiz) {
             throw new Error('Unable to read stronghold of security quiz data.');
         }
-
-        logger.info(`Loaded stronghold of security quiz data! Total questions: ` + quiz.questions.length)
         return quiz;
     } catch(error) {
         logger.error('Error parsing stronghold of security quiz data: ' + error);

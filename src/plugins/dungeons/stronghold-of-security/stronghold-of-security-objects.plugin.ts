@@ -1,7 +1,7 @@
 import { ObjectInteractionAction, ObjectInteractionActionHook } from '@engine/world/action/object-interaction.action';
 import { TaskExecutor } from '@engine/world/action';
 import { schedule } from '@engine/world/task';
-import { dialogue, execute } from '@engine/world/actor/dialogue';
+import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
 import { Position } from '@engine/world/position';
 import { objectIds } from '@engine/world/config/object-ids';
 import { animationIds } from '@engine/world/config/animation-ids';
@@ -26,9 +26,7 @@ const activateDescendingLadders = async (task: TaskExecutor<ObjectInteractionAct
                 })
             ],
             `No thanks, I don't want to die!`, [
-                execute(() => {
-                    player.sendMessage(`Hey2!`)
-                })
+                player => [Emote.SHOCKED, `No thanks, I don't want to die!`]
             ]
         ],
     ],
