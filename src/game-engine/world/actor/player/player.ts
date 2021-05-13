@@ -56,7 +56,6 @@ import { MusicPlayerMode } from '@plugins/music/music-tab.plugin';
 import { getVarbitMorphIndex } from '@engine/util/varbits';
 import { SendMessageOptions } from '@engine/world/actor/player/model';
 
-
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
         option: 'Yeet',

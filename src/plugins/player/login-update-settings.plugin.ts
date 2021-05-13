@@ -13,6 +13,7 @@ export const handler: playerInitActionHandler = ({ player }) => {
     player.outgoingPackets.updateClientConfig(widgetScripts.chatEffects, settings.chatEffectsEnabled ? 0 : 1);
     player.outgoingPackets.updateClientConfig(widgetScripts.acceptAid, settings.acceptAidEnabled ? 1 : 0);
     player.outgoingPackets.updateClientConfig(widgetScripts.musicVolume, settings.musicVolume);
+    player.outgoingPackets.updateClientConfig(widgetScripts.musicPlayerAutoManual, settings.musicPlayerMode);
     player.outgoingPackets.updateClientConfig(widgetScripts.soundEffectVolume, settings.soundEffectVolume);
     player.outgoingPackets.updateClientConfig(widgetScripts.areaEffectVolume, settings.areaEffectVolume);
     player.outgoingPackets.updateClientConfig(widgetScripts.runMode, settings.runEnabled ? 1 : 0);

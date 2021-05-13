@@ -20,6 +20,11 @@ import { ItemSpawn, loadItemSpawnConfigurations } from '@engine/config/item-spaw
 import { loadSkillGuideConfigurations, SkillGuide } from '@engine/config/skill-guide-config';
 import { loadMusicRegionConfigurations, MusicTrack } from '@engine/config/music-regions-config';
 import { loadXteaRegionFiles, XteaRegion } from '@runejs/filestore';
+import {
+    loadStrongholdOfSecurityQuizData,
+    StrongholdOfSecurityQuestion,
+    StrongholdOfSecurityQuiz
+} from '@plugins/dungeons/stronghold-of-security/stronghold-of-security-quiz.plugin';
 
 require('json5/lib/register');
 
@@ -37,6 +42,7 @@ export let itemSpawns: ItemSpawn[] = [];
 export let shopMap: { [key: string]: Shop };
 export let skillGuides: SkillGuide[] = [];
 export let xteaRegions: { [key: number]: XteaRegion };
+export let strongholdOfSecurityQuizData: StrongholdOfSecurityQuiz;
 
 export const musicRegionMap = new Map<number, number>();
 export const widgets: { [key: string]: any } = require('../../../data/config/widgets.json5');
@@ -58,6 +64,7 @@ export async function loadGameConfigurations(): Promise<void> {
     npcIdMap = npcIds;
     npcPresetMap = npcPresets;
 
+    strongholdOfSecurityQuizData = await loadStrongholdOfSecurityQuizData(`data/config/stronghold-of-security-quiz.json5`);
     npcSpawns = await loadNpcSpawnConfigurations('data/config/npc-spawns/');
     musicRegions = await loadMusicRegionConfigurations();
     musicRegions.forEach(song => song.regionIds.forEach(region => musicRegionMap.set(region, song.songId)));
@@ -65,6 +72,7 @@ export async function loadGameConfigurations(): Promise<void> {
 
     shopMap = await loadShopConfigurations('data/config/shops/');
     skillGuides = await loadSkillGuideConfigurations('data/config/skill-guides/');
+    logger.info(`Loaded ${strongholdOfSecurityQuizData} Stronghold of Security questions.`);
     logger.info(`Loaded ${musicRegions.length} music regions, ${Object.keys(itemMap).length} items, ${itemSpawns.length} item spawns, ` +
         `${Object.keys(npcMap).length} npcs, ${npcSpawns.length} npc spawns, ${Object.keys(shopMap).length} shops and ${skillGuides.length} skill guides.`);
 }
@@ -194,3 +202,8 @@ export const findMusicTrackByButtonId = (buttonId: number): MusicTrack | null =>
 export const findSongIdByRegionId = (regionId: number): number | null => {
     return musicRegionMap.has(regionId) ? musicRegionMap.get(regionId) : null;
 };
+
+export function getRandomStrongholdOfSecurityQuestion(): StrongholdOfSecurityQuestion | null {
+    const randomIndex = Math.floor(Math.random() * strongholdOfSecurityQuizData.questions.length);
+    return strongholdOfSecurityQuizData.questions[randomIndex];
+}

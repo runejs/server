@@ -1,0 +1,26 @@
+[
+    {"npc":"rs:Shade","spawn_level":0,"spawn_x":2356,"spawn_y":5216,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade","spawn_level":0,"spawn_x":2357,"spawn_y":5213,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade","spawn_level":0,"spawn_x":2363,"spawn_y":5212,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade","spawn_level":0,"spawn_x":2365,"spawn_y":5216,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_1","spawn_level":0,"spawn_x":2356,"spawn_y":5216,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_1","spawn_level":0,"spawn_x":2357,"spawn_y":5213,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_1","spawn_level":0,"spawn_x":2363,"spawn_y":5212,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_1","spawn_level":0,"spawn_x":2365,"spawn_y":5216,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_2","spawn_level":0,"spawn_x":2356,"spawn_y":5216,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_2","spawn_level":0,"spawn_x":2357,"spawn_y":5213,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_2","spawn_level":0,"spawn_x":2363,"spawn_y":5212,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_2","spawn_level":0,"spawn_x":2365,"spawn_y":5216,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_3","spawn_level":0,"spawn_x":2356,"spawn_y":5216,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_3","spawn_level":0,"spawn_x":2357,"spawn_y":5213,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_3","spawn_level":0,"spawn_x":2363,"spawn_y":5212,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_3","spawn_level":0,"spawn_x":2365,"spawn_y":5216,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_4","spawn_level":0,"spawn_x":2356,"spawn_y":5216,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_4","spawn_level":0,"spawn_x":2357,"spawn_y":5213,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_4","spawn_level":0,"spawn_x":2363,"spawn_y":5212,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_4","spawn_level":0,"spawn_x":2365,"spawn_y":5216,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_5","spawn_level":0,"spawn_x":2356,"spawn_y":5216,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_5","spawn_level":0,"spawn_x":2357,"spawn_y":5213,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_5","spawn_level":0,"spawn_x":2363,"spawn_y":5212,"movement_radius":6,"face":"WEST"}
+,{"npc":"rs:Shade_5","spawn_level":0,"spawn_x":2365,"spawn_y":5216,"movement_radius":6,"face":"WEST"}
+]

@@ -8,9 +8,78 @@ export const objectIds = {
     shortCuts: {
         stile: 12982
     },
+    strongholdOfSecurity: {
+        rewardObjects: {
+            giftOfPeace: 16135,
+            grainOfPlenty: 16077,
+            boxOfHealth: 16118,
+            cradleOfLife: 16047
+        },
+
+        escapeRopes: {
+            spikeyChain: 16146,
+            catacombRope: 16078,
+            gooCoveredVine: 16112,
+            boneChain: 16048
+        },
+
+        portals: {
+            levelOnePortal: 16150,
+            levelTwoPortal: 16082,
+            levelThreePortal: 16116,
+            levelFourPortal: 16050
+        },
+
+        ascendingLadders: {
+            vaultOfWarLadder: 16148,
+            catacombLadder: 16080,
+            drippingVine: 16114,
+            boneyLadder: 16049
+        },
+
+        descendingLadders: {
+            vaultOfWarLadder: 16149,
+            catacombLadder: 16081,
+            drippingVine: 16115
+        },
+
+        gates: {
+            gateOfWarLeft: 16123,
+            gateOfWarRight: 16124,
+            ricketyDoorLeft: 16065,
+            ricketyDoorRight: 16066,
+            oozingBarrierLeft: 16090,
+            oozingBarrierRight: 16089,
+            thePortalOfDeathLeft: 16044,
+            thePortalOfDeathRight: 16043
+        },
+
+        miscellaneous: {
+            deadExplorer: 16152
+        }
+    },
+
+    draynorManor: {
+        wardrobeClosed: 388,
+        fountain: 153,
+        skeletonWardrobeOpened: 390,
+        nonSkeletonWardrobeOpened: 389
+    },
+
     ladders: {
         taverlyDungeonOverworld: 1759,
         taverlyDungeonUnderground: 1755,
+        draynorManorOverworld: 133,
+        draynorManorUnderground: 132,
+    },
+
+    staircases: {
+        taverlyDungeonOverworld: 1759,
+        taverlyDungeonUnderground: 1755,
+        draynorManorGroundLevelStaircaseUp: 11498,
+        draynorManorGroundLevelStaircaseDown: 11499,
+        draynorManorSpiralUp: 11511,
+        draynorManorSpiralDown: 9584
     },
     brokenCart: 306,
     brokenCartWheel: 327,

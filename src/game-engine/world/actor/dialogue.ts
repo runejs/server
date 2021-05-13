@@ -5,6 +5,7 @@ import { logger } from '@runejs/core';
 import _ from 'lodash';
 import { wrapText } from '@engine/util/strings';
 import { findNpc } from '@engine/config';
+import { ParentWidget, TextWidget } from '@runejs/filestore';
 
 
 export enum Emote {
@@ -111,8 +112,29 @@ const continuableTextWidgetIds = [ 210, 211, 212, 213, 214 ];
 const textWidgetIds = [ 215, 216, 217, 218, 219 ];
 const titledTextWidgetId = 372;
 
+/**
+ * Wraps dialogue text into multiple lines.
+ * @param text - The text to wrap.
+ * @param type - 'ACTOR' if the widget has a chat-head or an item sprite on the left, 'TEXT' if the dialogue is text only
+ */
 function wrapDialogueText(text: string, type: 'ACTOR' | 'TEXT'): string[] {
-    return wrapText(text, type === 'ACTOR' ? 340 : 430);
+    let widget: TextWidget;
+    let width = 0;
+
+    switch (type) {
+        case 'ACTOR':
+            widget = (filestore.widgetStore.decodeWidget(playerWidgetIds[0]) as ParentWidget).children[2] as TextWidget;
+            width = widget.width;
+            break;
+        case 'TEXT':
+            widget = filestore.widgetStore.decodeWidget(textWidgetIds[0]) as TextWidget;
+            width = widget.width;
+            break;
+        default:
+            throw new Error(`Unhandled widget type: ${type}`);
+    }
+
+    return wrapText(text, width, widget.fontId);
 }
 
 function parseDialogueFunctionArgs(func: Function): string[] {
@@ -141,6 +163,7 @@ export type DialogueTree = (Function | DialogueFunction | GoToAction)[];
 export interface AdditionalOptions {
     closeOnWalk?: boolean;
     permanent?: boolean;
+    title?: string;
 }
 
 interface NpcParticipant {
@@ -205,53 +228,55 @@ interface SubDialogueTreeAction extends DialogueAction {
 function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], dialogueTree: DialogueTree): ParsedDialogueTree {
     const parsedDialogueTree: ParsedDialogueTree = [];
 
-    for(let i = 0; i < dialogueTree.length; i++) {
+    let carryoverDialogue = [];
+    for (let i = 0; i < dialogueTree.length; i++) {
         const dialogueAction = dialogueTree[i];
 
-        if(dialogueAction instanceof DialogueFunction) {
+        if (dialogueAction instanceof DialogueFunction) {
             // Code execution dialogue.
             parsedDialogueTree.push(dialogueAction as DialogueFunction);
             continue;
         }
 
-        if(dialogueAction instanceof GoToAction) {
+        if (dialogueAction instanceof GoToAction) {
             parsedDialogueTree.push(dialogueAction);
             continue;
         }
 
         let args = parseDialogueFunctionArgs(dialogueAction);
-        if(args === null) {
+        if (args === null) {
             args = ['()'];
         }
+
         const dialogueType = args[0];
         let tag: string = null;
 
-        if(args.length === 2 && typeof args[1] === 'string') {
+        if (args.length === 2 && typeof args[1] === 'string') {
             player.metadata.dialogueIndices[args[1]] = i;
             tag = args[1];
         }
 
-        if(!dialogueType) {
+        if (!dialogueType) {
             logger.error('No arguments passed to dialogue function.');
             continue;
         }
 
         let isOptions = false;
 
-        if(dialogueType === 'options' || dialogueType === '()') {
+        if (dialogueType === 'options' || dialogueType === '()') {
             // Options or custom function dialogue.
 
             let result = dialogueAction();
 
-            if(dialogueType === '()') {
+            if (dialogueType === '()') {
                 const funcResult = result();
 
-                if(!Array.isArray(funcResult) || funcResult.length === 0) {
+                if (!Array.isArray(funcResult) || funcResult.length === 0) {
                     logger.error('Invalid dialogue function response type.');
                     continue;
                 }
 
-                if(typeof funcResult[0] === 'function') {
+                if (typeof funcResult[0] === 'function') {
                     // given function returned a dialogue tree
                     parsedDialogueTree.push(...parseDialogueTree(player, npcParticipants, funcResult));
                 } else {
@@ -263,7 +288,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
                 isOptions = true;
             }
 
-            if(isOptions) {
+            if (isOptions) {
                 const options = (result as any[]).filter((option, index) => index % 2 === 0);
                 const trees = (result as any[]).filter((option, index) => index % 2 !== 0);
                 const optionsDialogueAction: OptionsDialogueAction = {
@@ -271,7 +296,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
                     tag, type: 'OPTIONS'
                 };
 
-                for(let j = 0; j < options.length; j++) {
+                for (let j = 0; j < options.length; j++) {
                     const option = options[j];
                     const tree = parseDialogueTree(player, npcParticipants, trees[j]);
                     optionsDialogueAction.options[option] = tree;
@@ -279,30 +304,30 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
 
                 parsedDialogueTree.push(optionsDialogueAction);
             }
-        } else if(dialogueType === 'text') {
+        } else if (dialogueType === 'text') {
             // Text-only dialogue (with the option to click continue).
 
             const text: string = dialogueAction();
             const lines = wrapDialogueText(text, 'TEXT');
             parsedDialogueTree.push({ lines, tag, type: 'TEXT', canContinue: true } as TextDialogueAction);
-        } else if(dialogueType === 'overlay') {
+        } else if (dialogueType === 'overlay') {
             // Text-only dialogue (no option to continue).
 
             const text: string = dialogueAction();
             const lines = wrapDialogueText(text, 'TEXT');
             parsedDialogueTree.push({ lines, tag, type: 'TEXT', canContinue: false } as TextDialogueAction);
-        } else if(dialogueType === 'titled') {
+        } else if (dialogueType === 'titled') {
             // Text-only dialogue (no option to continue).
 
-            const [ title, text ] = dialogueAction();
+            const [title, text] = dialogueAction();
             const lines = wrapDialogueText(text, 'TEXT');
 
-            while(lines.length < 4) {
+            while (lines.length < 4) {
                 lines.push('');
             }
 
             parsedDialogueTree.push({ lines, title, tag, type: 'TITLED' } as TitledTextDialogueAction);
-        } else if(dialogueType === 'subtree') {
+        } else if (dialogueType === 'subtree') {
             // Dialogue sub-tree.
 
             const subTree: DialogueTree = dialogueAction();
@@ -310,19 +335,19 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
         } else {
             // Player or Npc dialogue.
 
-            let dialogueDetails: [ Emote, string ];
+            let dialogueDetails: [Emote, string];
             let npc: Npc | number | string;
 
-            if(dialogueType !== 'player') {
+            if (dialogueType !== 'player') {
                 const participant = npcParticipants.find(p => p.key === dialogueType) as NpcParticipant;
-                if(!participant || !participant.npc) {
+                if (!participant || !participant.npc) {
                     logger.error('No matching npc found for npc dialogue action.');
                     continue;
                 }
 
                 npc = participant.npc;
-                if(typeof npc !== 'number') {
-                    if(typeof npc === 'string') {
+                if (typeof npc !== 'number') {
+                    if (typeof npc === 'string') {
                         npc = findNpc(npc)?.gameId || 0;
                     } else {
                         npc = npc.id;
@@ -334,17 +359,46 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
                 dialogueDetails = dialogueAction(player);
             }
 
+
             const emote = dialogueDetails[0] as Emote;
-            const text = dialogueDetails[1] as string;
-            const lines = wrapDialogueText(text, 'ACTOR');
+            const text = carryoverDialogue.join(' ') + dialogueDetails[1] as string;
+            carryoverDialogue = [];
+
+            let lines = wrapDialogueText(text, 'ACTOR');
+            // logger.info('length = ' + lines.length + ' - lines equals this: ' + lines);
+
             const animation = nonLineEmotes.indexOf(emote) !== -1 ? EmoteAnimation[emote] : EmoteAnimation[`${emote}_${lines.length}LINE`];
 
-            if(dialogueType !== 'player') {
-                const npcDialogueAction: NpcDialogueAction = {
-                    npcId: npc as number, animation, lines, tag, type: 'NPC'
-                };
+            if (dialogueType !== 'player') {
+                if (lines.length > 4) {
+                    while (lines.length > 4) {
+                        const copyOfLines = lines.slice(0, lines.length);
+                        lines = lines.slice(0, 4);
 
-                parsedDialogueTree.push(npcDialogueAction);
+                        const npcDialogueAction: NpcDialogueAction = {
+                            npcId: npc as number, animation, lines, tag, type: 'NPC'
+                        };
+                        parsedDialogueTree.push(npcDialogueAction);
+
+                        lines = copyOfLines.slice(0, copyOfLines.length);
+                        carryoverDialogue = lines.slice(4, lines.length) as string[];
+                        lines = carryoverDialogue;
+
+                        if(i === dialogueTree.length - 1 && lines.length <= 4) {
+                            const npcDialogueAction: NpcDialogueAction = {
+                                npcId: npc as number, animation, lines, tag, type: 'NPC'
+                            };
+
+                            parsedDialogueTree.push(npcDialogueAction);
+                        }
+                    }
+                } else {
+                    const npcDialogueAction: NpcDialogueAction = {
+                        npcId: npc as number, animation, lines, tag, type: 'NPC'
+                    };
+
+                    parsedDialogueTree.push(npcDialogueAction);
+                }
             } else {
                 const playerDialogueAction: PlayerDialogueAction = {
                     player, animation, lines, tag, type: 'PLAYER'
@@ -389,7 +443,6 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
         isOptions = true;
         const options = Object.keys(optionsAction.options);
         const trees = options.map(option => optionsAction.options[option]);
-
         if(tag === undefined || dialogueAction.tag === tag) {
             tag = undefined;
 
@@ -530,7 +583,6 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
             });
 
             const widgetClosedEvent = await player.interfaceState.widgetClosed('chatbox');
-
             if(widgetClosedEvent.data !== undefined) {
                 if(isOptions && typeof widgetClosedEvent.data === 'number') {
                     const optionsAction = dialogueAction as OptionsDialogueAction;

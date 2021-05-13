@@ -1034,6 +1034,22 @@
   x: 2329
   y: 5097
   z: 0
+- name: Vault of War
+  x: 1859
+  y: 5243
+  z: 0
+- name: Catacomb of Famine
+  x: 2042
+  y: 5245
+  z: 0
+- name: Pit of Pestilence
+  x: 2123
+  y: 5251
+  z: 0
+- name: Sepulchre of Death
+  x: 2358
+  y: 5215
+  z: 0
 - name: Wizards' Guild
   x: 2583
   y: 3078
