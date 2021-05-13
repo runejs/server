@@ -1,4 +1,8 @@
-const characterDesignPacket = (player, packet) => {
+import { Player } from '@engine/world/actor/player/player';
+import { PacketData } from '@engine/net/inbound-packets';
+
+
+const characterDesignPacket = (player: Player, packet: PacketData) => {
     const { buffer } = packet;
 
     // @TODO verify validity of selections
@@ -32,7 +36,7 @@ const characterDesignPacket = (player, packet) => {
     };
 
     player.updateFlags.appearanceUpdateRequired = true;
-    player.player.interfaceState.closeAllSlots();
+    player.interfaceState.closeAllSlots();
 };
 
 export default {
