@@ -1,8 +1,8 @@
 {
-    "rs:Fancy boots": {
+    "rs:Fancy_boots": {
         "game_id": 9005
     },
-    "rs:Fighting boots": {
+    "rs:Fighting_boots": {
         "game_id": 9006
     }
 }

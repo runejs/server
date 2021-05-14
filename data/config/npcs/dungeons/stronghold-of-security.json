@@ -1,14 +1,14 @@
 {
-    "rs:Gate of War": {
+    "rs:Gate_of_War": {
         "game_id": 4377
     },
-    "rs:Ricketty door": {
+    "rs:Ricketty_door": {
         "game_id": 4378
     },
-    "rs:Oozing barrier": {
+    "rs:Oozing_barrier": {
         "game_id": 4379
     },
-    "rs:Portal of Death": {
+    "rs:Portal_of_Death": {
         "game_id": 4380
     },
     "rs:Ankou": {

@@ -48,19 +48,19 @@ export const getNpcKeyFromObjectId = (objectId: number): string => {
     switch (objectId) {
         case objectIds.strongholdOfSecurity.gates.gateOfWarLeft:
         case objectIds.strongholdOfSecurity.gates.gateOfWarRight:
-            return `rs:Gate of War`;
+            return `rs:Gate_of_War`;
 
         case objectIds.strongholdOfSecurity.gates.ricketyDoorLeft:
         case objectIds.strongholdOfSecurity.gates.ricketyDoorRight:
-            return `rs:Ricketty door`;
+            return `rs:Ricketty_door`;
 
         case objectIds.strongholdOfSecurity.gates.oozingBarrierLeft:
         case objectIds.strongholdOfSecurity.gates.oozingBarrierRight:
-            return `rs:Oozing barrier`;
+            return `rs:Oozing_barrier`;
 
         case objectIds.strongholdOfSecurity.gates.thePortalOfDeathLeft:
         case objectIds.strongholdOfSecurity.gates.thePortalOfDeathRight:
-            return `rs:Portal of Death`;
+            return `rs:Portal_of_Death`;
     }
 }
 
@@ -113,8 +113,8 @@ const activate = async (task: TaskExecutor<ObjectInteractionAction>, taskIterati
     const completedSepulchre = player.savedMetadata[`strongholdOfSecurityState`].floorCompletion.sepulchreOfDeath;
 
     if (object.objectId === objectIds.strongholdOfSecurity.rewardObjects.cradleOfLife) {
-        const fancyBoots = findItem(`rs:Fancy boots`);
-        const fightingBoots = findItem(`rs:Fighting boots`);
+        const fancyBoots = findItem(`rs:Fancy_boots`);
+        const fightingBoots = findItem(`rs:Fighting_boots`);
 
         const lostBoots = player.savedMetadata[`strongholdOfSecurityState`].floorCompletion.sepulchreOfDeath &&
             !(player.hasItemOnPerson(fancyBoots.gameId) || player.hasItemOnPerson(fightingBoots.gameId))
@@ -131,13 +131,13 @@ const activate = async (task: TaskExecutor<ObjectInteractionAction>, taskIterati
                     options => [
                         `I'll take the colourful ones!`, [
                             execute(() => {
-                                player.giveItem(findItem(`rs:Fancy boots`).gameId);
+                                player.giveItem(findItem(`rs:Fancy_boots`).gameId);
                             })
                         ],
 
                         `I'll take the fighting ones!`, [
                             execute(() => {
-                                player.giveItem(findItem(`rs:Fighting boots`).gameId);
+                                player.giveItem(findItem(`rs:Fighting_boots`).gameId);
                             })
                         ]
                     ],
@@ -183,7 +183,7 @@ const activate = async (task: TaskExecutor<ObjectInteractionAction>, taskIterati
                 options => [
                     `I'll take the colourful ones!`, [
                         execute(() => {
-                            player.giveItem(findItem(`rs:Fancy boots`).gameId);
+                            player.giveItem(findItem(`rs:Fancy_boots`).gameId);
                             unlockEmote(player, `STAMP`);
                             player.savedMetadata[`strongholdOfSecurityState`].floorCompletion.sepulchreOfDeath = true;
                         })
@@ -191,7 +191,7 @@ const activate = async (task: TaskExecutor<ObjectInteractionAction>, taskIterati
 
                     `I'll take the fighting ones!`, [
                         execute(() => {
-                            player.giveItem(findItem(`rs:Fighting boots`).gameId);
+                            player.giveItem(findItem(`rs:Fighting_boots`).gameId);
                             unlockEmote(player, `STAMP`);
                             player.savedMetadata[`strongholdOfSecurityState`].floorCompletion.sepulchreOfDeath = true;
                         })
