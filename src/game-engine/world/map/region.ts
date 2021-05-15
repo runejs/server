@@ -51,28 +51,35 @@ export interface ConstructedRegion {
 
 
 
-export const getTemplateRotatedX = (orientation: number, localX: number, localY: number): number => {
+
+export const getTemplateRotatedX = (orientation: number, localX: number, localY: number,
+                                    sizeX: number = 1, sizeY: number = 1): number => {
+    if(orientation === 1 || orientation === 3) {
+        const i = sizeX;
+        sizeX = sizeY;
+        sizeY = i;
+    }
+
     if(orientation === 0) {
         return localX;
     }
     if(orientation === 1) {
-        if(localX === 7) {
-            return localY;
-        } else {
-            return 7 - localY;
-        }
+        return 7 - (localY - sizeY + 1);
     }
     if(orientation === 2) {
-        if(localY === 0) {
-            return localX;
-        } else {
-            return 7 - localX;
-        }
+        return 7 - (localX + sizeX + 1);
     }
     return localY;
 };
 
-export const getTemplateRotatedY = (orientation: number, localX: number, localY: number): number => {
+export const getTemplateRotatedY = (orientation: number, localX: number, localY: number,
+                                    sizeX: number = 1, sizeY: number = 1): number => {
+    if(orientation === 1 || orientation === 3) {
+        const i = sizeX;
+        sizeX = sizeY;
+        sizeY = i;
+    }
+
     if(orientation === 0) {
         return localY;
     }
@@ -80,42 +87,51 @@ export const getTemplateRotatedY = (orientation: number, localX: number, localY:
         return localX;
     }
     if(orientation === 2) {
-        return 7 - localY;
+        return 7 - (localY + sizeY + 1);
     }
-    return 7 - localX;
+    return 7 - (localX - sizeX + 1);
 };
 
 
-export const getTemplateLocalX = (orientation: number, localX: number, localY: number): number => {
+
+
+
+
+
+export const getTemplateLocalX = (orientation: number, localX: number, localY: number,
+                                  sizeX: number = 1, sizeY: number = 1): number => {
+    if(orientation === 2) {
+        const i = sizeX;
+        sizeX = sizeY;
+        sizeY = i;
+    }
+
     if(orientation === 0) {
         return localX;
-    }
-    if(orientation === 1) {
-        if(localX === 7) {
-            return localY;
-        } else {
-            return 7 - localY;
-        }
-    }
-    if(orientation === 2) {
-        if(localY === 0) {
-            return localX;
-        } else {
-            return 7 - localX;
-        }
-    }
-    return localY;
-};
-
-export const getTemplateLocalY = (orientation: number, localX: number, localY: number): number => {
-    if(orientation === 0) {
+    } else if(orientation === 1) {
+        return 7 - (localY + sizeY) + 1;
+    } else if(orientation === 2) {
+        return 7 - (localX + sizeX) + 1;
+    } else { // 3
         return localY;
     }
-    if(orientation === 1) {
-        return localX;
-    }
+};
+
+export const getTemplateLocalY = (orientation: number, localX: number, localY: number,
+                                  sizeX: number = 1, sizeY: number = 1): number => {
     if(orientation === 2) {
-        return 7 - localY;
+        const i = sizeX;
+        sizeX = sizeY;
+        sizeY = i;
     }
-    return 7 - localX;
+
+    if(orientation === 0) {
+        return localY;
+    } else if(orientation === 1) {
+        return localX;
+    } else if(orientation === 2) {
+        return 7 - (localY + sizeY) + 1;
+    } else { // 3
+        return 7 - (localX + sizeX) + 1;
+    }
 };

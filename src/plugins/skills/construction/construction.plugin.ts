@@ -14,10 +14,10 @@ const openHouse = (player: Player): void => {
     const house = new House();
 
     const gardenPortal = new Room('garden_1');
-    const firstParlor = new Room('parlor');
-    const secondParlor = new Room('parlor', 1);
-    const thirdParlor = new Room('parlor', 2);
-    const fourthParlor = new Room('parlor', 3);
+    const parlor0 = new Room('parlor');
+    const parlor90 = new Room('parlor', 1);
+    const parlor180 = new Room('parlor', 2);
+    const parlor270 = new Room('parlor', 3);
     const emptySpace = new Room('empty_grass');
 
     for(let x = 0; x < MAP_SIZE; x++) {
@@ -25,13 +25,13 @@ const openHouse = (player: Player): void => {
             if(x === 6 && y === 6) {
                 house.rooms[0][x][y] = gardenPortal;
             } else if(x === 5 && y === 6) {
-                house.rooms[0][x][y] = firstParlor;
-            } else if(x === 7 && y === 6) {
-                house.rooms[0][x][y] = secondParlor;
-            } else if(x === 6 && y === 5) {
-                house.rooms[0][x][y] = thirdParlor;
+                house.rooms[0][x][y] = parlor0;
             } else if(x === 6 && y === 7) {
-                house.rooms[0][x][y] = fourthParlor;
+                house.rooms[0][x][y] = parlor90;
+            } else if(x === 7 && y === 6) {
+                house.rooms[0][x][y] = parlor180;
+            } else if(x === 6 && y === 5) {
+                house.rooms[0][x][y] = parlor270;
             } else {
                 house.rooms[0][x][y] = emptySpace;
             }
@@ -82,9 +82,6 @@ const doorHotspot = async (objectInteraction: ObjectInteractionAction): Promise<
         return;
     }
 
-    const objectLocalX = position.x % 8;
-    const objectLocalY = position.y % 8;
-
     // Standard home outer door ids: closed[13100, 13101], open[13102, 13103]
 
     player.personalInstance.spawnGameObject({
@@ -92,13 +89,9 @@ const doorHotspot = async (objectInteraction: ObjectInteractionAction): Promise<
         y: position.y,
         level: position.level,
         orientation: object.orientation,
-        objectId: 13103,
+        objectId: 13100,
         type: object.type
     });
-
-    player.sendMessage(`Template Local = ${getTemplateRotatedX(object.orientation, objectLocalX, objectLocalY)},${getTemplateRotatedY(object.orientation, objectLocalX, objectLocalY)}`);
-
-    player.sendMessage(`Object Local ${objectLocalX},${objectLocalY} - rotation ${object.orientation}`);
 };
 
 

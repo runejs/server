@@ -10,7 +10,7 @@ import TravelLocations from '@engine/world/config/travel-locations';
 import { Actor } from '@engine/world/actor/actor';
 import { schedule } from '@engine/world/task';
 import { parseScenerySpawns } from '@engine/world/config/scenery-spawns';
-import { findItem, findNpc, itemSpawns, npcSpawns } from '@engine/config';
+import { findItem, findNpc, findObject, itemSpawns, npcSpawns } from '@engine/config';
 import { NpcDetails } from '@engine/config/npc-config';
 import { WorldInstance } from '@engine/world/instances';
 import { Direction } from '@engine/world/direction';
@@ -155,6 +155,12 @@ export class World {
             return null;
         }
 
+        const objectConfig = findObject(objectId);
+
+        if(!objectConfig) {
+            return null;
+        }
+
         const objectChunk = this.chunkManager.getChunkForWorldPosition(objectPosition);
         const mapChunk = world.chunkManager.getChunkForWorldPosition(map.renderPosition);
 
@@ -174,12 +180,10 @@ export class World {
         const mapTemplateWorldY = tileY;
         const mapTemplateChunk = world.chunkManager.getChunkForWorldPosition(new Position(mapTemplateWorldX, mapTemplateWorldY, objectPosition.level));
 
-        const templateLocalX = getTemplateLocalX(tileOrientation, objectLocalX, objectLocalY);
-        const templateLocalY = getTemplateLocalY(tileOrientation, objectLocalX, objectLocalY);
-
-        if(actor instanceof Player) {
-            actor.sendMessage(`Tile Orientation ${tileOrientation}, Local ${templateLocalX},${templateLocalY}`);
-        }
+        const templateLocalX = getTemplateLocalX(tileOrientation, objectLocalX, objectLocalY,
+            objectConfig?.rendering?.sizeX || 1, objectConfig?.rendering?.sizeY || 1);
+        const templateLocalY = getTemplateLocalY(tileOrientation, objectLocalX, objectLocalY,
+            objectConfig?.rendering?.sizeX || 1, objectConfig?.rendering?.sizeY || 1);
 
         const templateObjectPosition = new Position(mapTemplateWorldX + templateLocalX,
             mapTemplateWorldY + templateLocalY, objectPosition.level);
@@ -197,8 +201,6 @@ export class World {
         if(rotation > 3) {
             rotation -= 4;
         }
-
-        console.log(realObject.orientation, rotation);
 
         realObject.orientation = rotation;
 
