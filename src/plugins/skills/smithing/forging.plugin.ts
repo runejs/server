@@ -1,13 +1,16 @@
-import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
+import { itemOnObjectActionHandler, ItemOnObjectActionHook } from '@engine/world/action/item-on-object.action';
 import { widgets } from '@engine/config';
 import { Skill } from '@engine/world/actor/skills';
-import { bars, smithables, widgetItems } from '@plugins/skills/smithing/forging-constants';
+import { anvilIds, bars, smithables, widgetItems } from '@plugins/skills/smithing/forging-constants';
 import { itemIds } from '@engine/world/config/item-ids';
 import { Smithable } from '@plugins/skills/smithing/forging-types';
-import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
-import { loopingEvent } from '@engine/game-server';
+import {
+    ItemInteractionAction,
+    ItemInteractionActionHook
+} from '@engine/world/action/item-interaction.action';
 import { Player } from '@engine/world/actor/player/player';
 import { findItem } from '@engine/config';
+import { TaskExecutor } from '@engine/world/action';
 
 const mapWidgetItemsToFlatArray = (input) => {
     const result = [];
@@ -35,75 +38,84 @@ const findSmithableByItemId = (itemId) : Smithable => {
     });
 };
 
-const smithItem: itemInteractionActionHandler = (details) => {
-    const { player, option, itemDetails } = details;
+const canActivate = (task: TaskExecutor<ItemInteractionAction>): boolean => {
+    const { actor, player, actionData, session } = task.getDetails();
 
-    const smithable = findSmithableByItemId(itemDetails.gameId);
+    const itemId = actionData.itemId;
+
+    const smithable = findSmithableByItemId(itemId);
 
 
     // In case the smithable doesn't exist.
     if (!smithable) {
-        return;
+        return false;
     }
 
     // Check if the player has the level required.
     if (smithable.level > player.skills.getLevel(Skill.SMITHING)) {
         const item = findItem(smithable.item.itemId);
         player.sendMessage(`You have to be at least level ${smithable.level} to smith ${item.name}s.`, true);
-        return;
+        return false;
     }
 
     const amountInInventory = player.inventory.findAll(smithable.ingredient.itemId).length;
+    // @todo: Forging: Make a check for sufficient bars in the inventory.
 
-    // Close the forging interface.
-    player.interfaceState.closeAllSlots();
+    if (!hasIngredients(player, smithable)) {
+        player.interfaceState.closeAllSlots();
+        const bar = findItem(smithable.ingredient.itemId);
+        player.sendMessage(`You don't have enough ${bar.name}s.`, true);
+        return false;
+    }
 
-    const loop = loopingEvent({ player: details.player });
-    let elapsedTicks = 0;
-    let wantedAmount = 0;
-    let forgedAmount = 0;
+    return true;
+};
+
+let wantedAmount = 0;
+let forgedAmount = 0;
+
+const activate = (task: TaskExecutor<ItemInteractionAction>, taskIteration: number): boolean => {
+    const { player, actionData } = task.getDetails();
+
+    const itemId = actionData.itemId;
+
+    const smithable = findSmithableByItemId(itemId);
 
     // How many? Quick and dirty.
-    switch (option) {
+    switch (actionData.option) {
         case 'make'     : wantedAmount = 1; break;
         case 'make-5'   : wantedAmount = 5; break;
         case 'make-10'  : wantedAmount = 10; break;
     }
 
-    if (!hasIngredients(details.player, smithable)) {
-        player.interfaceState.closeAllSlots();
-        const bar = findItem(smithable.ingredient.itemId);
-        player.sendMessage(`You don't have enough ${bar.name}s.`, true);
+    player.interfaceState.closeAllSlots();
+    player.playAnimation(898);
+
+    if(taskIteration % 4 === 0 && taskIteration != 0) {
+        if (!hasIngredients(player, smithable) || wantedAmount === forgedAmount) {
+            return false;
+        }
+
+        // Remove ingredients
+        for (let i=0; i<smithable.ingredient.amount; i++) {
+            player.inventory.removeFirst(smithable.ingredient.itemId);
+            player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
+        }
+
+        // Add item to inventory
+        for (let i=0; i<smithable.item.amount; i++) {
+            player.inventory.add(smithable.item.itemId);
+        }
+
+        // Give the experience
+        player.skills.addExp(Skill.SMITHING, smithable.experience);
+
+        forgedAmount++;
     }
+};
 
-    loop.event.subscribe(() => {
-        if (!hasIngredients(details.player, smithable) || wantedAmount === forgedAmount) {
-            loop.cancel();
-            return;
-        }
-
-        if (elapsedTicks % 5 === 0) {
-            player.playAnimation(898);
-
-            // Remove ingredients
-            for (let i=0; i<smithable.ingredient.amount; i++) {
-                player.inventory.removeFirst(smithable.ingredient.itemId);
-                details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, details.player.inventory);
-            }
-
-            // Add item to inventory
-            for (let i=0; i<smithable.item.amount; i++) {
-                player.inventory.add(smithable.item.itemId);
-            }
-
-            // Give the experience
-            player.skills.addExp(Skill.SMITHING, smithable.experience);
-
-            forgedAmount++;
-        }
-
-        elapsedTicks++;
-    });
+const onComplete = (task: TaskExecutor<ItemInteractionAction>): void => {
+    task.actor.stopAnimation();
 };
 
 const hasIngredients = (player: Player, smithable: Smithable) => {
@@ -143,17 +155,28 @@ const openForgingInterface: itemOnObjectActionHandler = (details) => {
     });
 };
 
-export default [
-    {
-        type: 'item_on_object',
-        itemIds: [...bars.keys()],
-        objectIds: [2783],
-        options: ['use'],
-        action:  openForgingInterface
-    },
-    {
-        type: 'item_action',
-        itemIds: [...mapWidgetItemsToFlatArray(widgetItems)],
-        action: smithItem
-    }
-];
+export default {
+    pluginId: 'rs:forging',
+    hooks: [
+        {
+            type: 'item_on_object',
+            itemIds: [...bars.keys()],
+            objectIds: anvilIds,
+            walkTo: true,
+            cancelOtherActions: true,
+            handler: openForgingInterface
+        } as ItemOnObjectActionHook,
+        {
+            type: 'item_interaction',
+            itemIds: [...mapWidgetItemsToFlatArray(smithables)],
+            options: ['make', 'make-5', 'make-10'],
+            cancelOtherActions: true,
+            task: {
+                canActivate,
+                activate,
+                onComplete,
+                interval: 1
+            }
+        } as ItemInteractionActionHook
+    ]
+};
