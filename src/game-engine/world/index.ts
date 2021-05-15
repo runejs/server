@@ -86,13 +86,13 @@ export class World {
 
         const objectChunk = this.chunkManager.getChunkForWorldPosition(objectPosition);
 
+        let customMap = false;
         if(actor instanceof Player && actor.metadata.customMap) {
+            customMap = true;
             const templateMapObject = this.findCustomMapObject(actor, objectId, objectPosition);
             if(templateMapObject) {
                 return { object: templateMapObject, cacheOriginal: true };
             }
-
-            return { object: null, cacheOriginal: false };
         }
 
         let cacheOriginal = true;
@@ -107,7 +107,7 @@ export class World {
             tileModifications = this.globalInstance.getTileModifications(objectPosition);
         }
 
-        let landscapeObject = objectChunk.getFilestoreLandscapeObject(objectId, objectPosition);
+        let landscapeObject = customMap ? null : objectChunk.getFilestoreLandscapeObject(objectId, objectPosition);
         if(!landscapeObject) {
             const tileObjects = [ ...tileModifications.mods.spawnedObjects ];
 
@@ -174,9 +174,20 @@ export class World {
         const mapTemplateWorldY = tileY;
         const mapTemplateChunk = world.chunkManager.getChunkForWorldPosition(new Position(mapTemplateWorldX, mapTemplateWorldY, objectPosition.level));
 
-        const templateObjectPosition = new Position(mapTemplateWorldX + getTemplateLocalX(tileOrientation, objectLocalX, objectLocalY),
-            mapTemplateWorldY + getTemplateLocalY(tileOrientation, objectLocalX, objectLocalY), objectPosition.level);
+        const templateLocalX = getTemplateLocalX(tileOrientation, objectLocalX, objectLocalY);
+        const templateLocalY = getTemplateLocalY(tileOrientation, objectLocalX, objectLocalY);
+
+        if(actor instanceof Player) {
+            actor.sendMessage(`Tile Orientation ${tileOrientation}, Local ${templateLocalX},${templateLocalY}`);
+        }
+
+        const templateObjectPosition = new Position(mapTemplateWorldX + templateLocalX,
+            mapTemplateWorldY + templateLocalY, objectPosition.level);
         const realObject = mapTemplateChunk.getFilestoreLandscapeObject(objectId, templateObjectPosition);
+
+        if(!realObject) {
+            return null;
+        }
 
         realObject.x = objectPosition.x;
         realObject.y = objectPosition.y;

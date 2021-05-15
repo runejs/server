@@ -608,7 +608,7 @@ export class OutboundPackets {
                         mapTileOffsetY = 12;
                     }
 
-                    const constructedChunk: ConstructedChunk | null = mapData.chunks[level][x][y];
+                    const constructedChunk: ConstructedChunk | null = mapData.chunks[level][mapTileOffsetX][mapTileOffsetY];
                     packet.putBits(1, constructedChunk === null ? 0 : 1)
                     if (constructedChunk !== null) {
                         const { templatePosition, rotation } = constructedChunk;

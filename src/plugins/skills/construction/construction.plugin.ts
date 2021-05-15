@@ -59,9 +59,12 @@ const openHouse = (player: Player): void => {
         for(let chunkX = 0; chunkX < 13; chunkX++) {
             for(let chunkY = 0; chunkY < 13; chunkY++) {
                 const room = house.rooms[plane][chunkX][chunkY];
+                if(!room) {
+                    continue;
+                }
                 const templatePosition = room.templatePosition;
                 const templateChunk = world.chunkManager.getChunk(templatePosition);
-
+                // ??? think this is just loading the template chunks into memory
             }
         }
     }
