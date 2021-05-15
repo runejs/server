@@ -2,10 +2,9 @@ import { gameEngineDist } from '@engine/util/directories';
 import { getFiles } from '@engine/util/files';
 import { logger } from '@runejs/core';
 import { Actor } from '@engine/world/actor/actor';
-import { ActionHook } from '@engine/world/action/hooks';
+import { ActionHook, TaskExecutor } from '@engine/world/action/hooks';
 import { Position } from '@engine/world/position';
 import { Player } from '@engine/world/actor/player/player';
-import { TaskExecutor } from '@engine/world/action/hooks/task';
 import { Subscription } from 'rxjs';
 import { LandscapeObject } from '@runejs/filestore';
 
@@ -167,7 +166,8 @@ export class ActionPipeline {
                     await this.actor.waitForPathing(
                         !gameObject ? runnableHooks.actionPosition : (gameObject as LandscapeObject));
                 } catch(error) {
-                    logger.error(`Error pathing to hook target`, error);
+                    logger.error(`Error pathing to hook target`);
+                    logger.error(error);
                     return;
                 }
             }
@@ -223,6 +223,7 @@ export class ActionPipeline {
 export async function loadActionFiles(): Promise<void> {
     const ACTION_DIRECTORY = `${gameEngineDist}/world/action`;
     const blacklist = [];
+    const loadedActions: string[] = [];
 
     for await(const path of getFiles(ACTION_DIRECTORY, blacklist)) {
         if(!path.endsWith('.action.ts') && !path.endsWith('.action.js')) {
@@ -231,18 +232,19 @@ export async function loadActionFiles(): Promise<void> {
 
         const location = '.' + path.substring(ACTION_DIRECTORY.length).replace('.js', '');
 
-        logger.info(`Loading ${path.substring(path.indexOf('action') + 7).replace('.js', '')} file.`);
-
         try {
             const importedAction = (require(location)?.default || null) as ActionPipe | null;
             if(importedAction && Array.isArray(importedAction) && importedAction[0] && importedAction[1]) {
                 ActionPipeline.register(importedAction[0], importedAction[1]);
+                loadedActions.push(importedAction[0]);
             }
         } catch(error) {
             logger.error(`Error loading action file at ${location}:`);
             logger.error(error);
         }
     }
+
+    logger.info(`Loaded action pipes: ${loadedActions.join(', ')}.`);
 
     return Promise.resolve();
 }

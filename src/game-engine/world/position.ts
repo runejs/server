@@ -101,6 +101,20 @@ export class Position {
         return offsetX < 16 && offsetY < 16 && offsetX > -16 && offsetY > -16;
     }
 
+    /**
+     * Checks to see if this position is within the two given boundaries of min and max.
+     * @param min The minimum coordinate to check within.
+     * @param max The maximum coordinate to check within.
+     * @param checkPlane Whether or not to check if the position is within the same plane. Defaults to true.
+     */
+    public within(min: Position, max: Position, checkPlane: boolean = true): boolean {
+        if(checkPlane && (min.level !== max.level || max.level !== this.level)) {
+            return false;
+        }
+
+        return this.x >= min.x && this.x <= max.x && this.y >= min.y && this.y <= max.y;
+    }
+
     public move(x: number, y: number, level?: number): Position {
         this._x = x;
         this._y = y;
@@ -174,10 +188,10 @@ export class Position {
 
     /**
      * Sets the value of Level and returns the current Position instance for chaining.
-     * @param level The new value to set the current Position's Elevation Level to.
+     * @param plane The new value to set the current Position's plane to.
      */
-    public setLevel(level: number): Position {
-        this._level = level;
+    public setLevel(plane: number): Position {
+        this._level = plane;
         return this;
     }
 
