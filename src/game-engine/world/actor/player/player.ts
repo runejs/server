@@ -654,6 +654,8 @@ export class Player extends Actor {
         const newChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
 
         if(!oldChunk.equals(newChunk)) {
+            oldChunk.removePlayer(this);
+            newChunk.addPlayer(this);
             this.metadata['updateChunk'] = { newChunk, oldChunk };
 
             if(updateRegion) {

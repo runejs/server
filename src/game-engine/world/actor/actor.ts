@@ -15,6 +15,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { ActionCancelType, ActionPipeline } from '@engine/world/action';
 import { LandscapeObject } from '@runejs/filestore';
 
+
 /**
  * Handles an actor within the game world.
  */
@@ -93,7 +94,6 @@ export abstract class Actor {
      */
     public async waitForPathing(target: Position | LandscapeObject): Promise<void>;
     public async waitForPathing(target: Position | LandscapeObject): Promise<void> {
-        console.log(target);
         if(this.position.withinInteractionDistance(target)) {
             return;
         }
@@ -131,6 +131,10 @@ export abstract class Actor {
     }
 
     public async moveBehind(target: Actor): Promise<boolean> {
+        if(this.position.level !== target.position.level) {
+            return false;
+        }
+
         const distance = Math.floor(this.position.distanceBetween(target.position));
         if(distance > 16) {
             this.clearFaceActor();
@@ -153,6 +157,10 @@ export abstract class Actor {
     }
 
     public async moveTo(target: Actor): Promise<boolean> {
+        if(this.position.level !== target.position.level) {
+            return false;
+        }
+
         const distance = Math.floor(this.position.distanceBetween(target.position));
         if(distance > 16) {
             this.clearFaceActor();
@@ -172,7 +180,11 @@ export abstract class Actor {
         this.metadata['following'] = target;
 
         this.moveBehind(target);
-        const subscription = target.walkingQueue.movementEvent.subscribe(async () => this.moveBehind(target));
+        const subscription = target.walkingQueue.movementEvent.subscribe(() => {
+            if(!this.moveBehind(target)) {
+                this.actionsCancelled.next(null);
+            }
+        });
 
         this.actionsCancelled.pipe(
             filter(type => type !== 'pathing-movement'),

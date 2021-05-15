@@ -131,7 +131,9 @@ export class TaskExecutor<T> {
         this.running = false;
         this.intervalSubscription?.unsubscribe();
 
-        await this.task?.onComplete(this, this.iteration);
+        if(this.task?.onComplete) {
+            await this.task.onComplete(this, this.iteration);
+        }
 
         this.session = null;
     }

@@ -97,7 +97,8 @@ export function syncTrackedActors(packet: Packet, playerPosition: Position, appe
         }
 
         if(exists && nearbyActors.findIndex(m => m.actor.equals(trackedActor)) !== -1
-                && trackedActor.position.withinViewDistance(playerPosition)) {
+                && trackedActor.position.withinViewDistance(playerPosition)
+                && !trackedActor.metadata['teleporting']) {
             appendMovement(trackedActor, packet);
             appendUpdateMaskData(trackedActor);
             existingTrackedActors.push(trackedActor);
