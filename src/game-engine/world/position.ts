@@ -222,6 +222,14 @@ export class Position {
         return this._y - 8 * this.chunkY;
     }
 
+    public get localX(): number {
+        return this._x - 8 * (this.chunkX + 6);
+    }
+
+    public get localY(): number {
+        return this._y - 8 * (this.chunkY + 6);
+    }
+
     public get x(): number {
         return this._x;
     }

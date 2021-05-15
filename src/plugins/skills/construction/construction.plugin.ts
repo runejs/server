@@ -11,33 +11,6 @@ import { world } from '@engine/game-server';
 
 
 const openHouse = (player: Player): void => {
-    const house = new House();
-
-    const gardenPortal = new Room('garden_1');
-    const parlor0 = new Room('parlor');
-    const parlor90 = new Room('parlor', 1);
-    const parlor180 = new Room('parlor', 2);
-    const parlor270 = new Room('parlor', 3);
-    const emptySpace = new Room('empty_grass');
-
-    for(let x = 0; x < MAP_SIZE; x++) {
-        for(let y = 0; y < MAP_SIZE; y++) {
-            if(x === 6 && y === 6) {
-                house.rooms[0][x][y] = gardenPortal;
-            } else if(x === 5 && y === 6) {
-                house.rooms[0][x][y] = parlor0;
-            } else if(x === 6 && y === 7) {
-                house.rooms[0][x][y] = parlor90;
-            } else if(x === 7 && y === 6) {
-                house.rooms[0][x][y] = parlor180;
-            } else if(x === 6 && y === 5) {
-                house.rooms[0][x][y] = parlor270;
-            } else {
-                house.rooms[0][x][y] = emptySpace;
-            }
-        }
-    }
-
     let pohPosition: Position = instance1;
     let playerSpawn: Position = instance1PohSpawn;
 
@@ -50,15 +23,46 @@ const openHouse = (player: Player): void => {
 
     player.teleport(playerSpawn);
 
-    player.metadata.customMap = {
-        renderPosition: pohPosition,
-        chunks: house.rooms
-    } as ConstructedRegion;
+    if(!player.metadata.customMap) {
+        const house = new House();
+
+        const gardenPortal = new Room('garden_1');
+        const parlor0 = new Room('parlor');
+        const parlor90 = new Room('parlor', 1);
+        const parlor180 = new Room('parlor', 2);
+        const parlor270 = new Room('parlor', 3);
+        const emptySpace = new Room('empty_grass');
+
+        for(let x = 0; x < MAP_SIZE; x++) {
+            for(let y = 0; y < MAP_SIZE; y++) {
+                if(x === 6 && y === 6) {
+                    house.rooms[0][x][y] = gardenPortal;
+                } else if(x === 5 && y === 6) {
+                    house.rooms[0][x][y] = parlor0;
+                } else if(x === 6 && y === 7) {
+                    house.rooms[0][x][y] = parlor90;
+                } else if(x === 7 && y === 6) {
+                    house.rooms[0][x][y] = parlor180;
+                } else if(x === 6 && y === 5) {
+                    house.rooms[0][x][y] = parlor270;
+                } else {
+                    house.rooms[0][x][y] = emptySpace;
+                }
+            }
+        }
+
+        player.metadata.customMap = {
+            renderPosition: pohPosition,
+            chunks: house.rooms
+        } as ConstructedRegion;
+    } else {
+        player.metadata.customMap.renderPosition = pohPosition;
+    }
 
     for(let plane = 0; plane < 3; plane++) {
         for(let chunkX = 0; chunkX < 13; chunkX++) {
             for(let chunkY = 0; chunkY < 13; chunkY++) {
-                const room = house.rooms[plane][chunkX][chunkY];
+                const room = player.metadata.customMap.chunks[plane][chunkX][chunkY];
                 if(!room) {
                     continue;
                 }
@@ -76,22 +80,81 @@ const openHouse = (player: Player): void => {
 const doorHotspot = (objectInteraction: ObjectInteractionAction): void => {
     const { player, object, position } = objectInteraction;
 
-    const customMap: ConstructedRegion = player?.metadata?.customMap;
+    const customMap: ConstructedRegion = player.metadata?.customMap;
 
     if(!customMap) {
         return;
     }
 
+    const mapWorldX = customMap.renderPosition.x;
+    const mapWorldY = customMap.renderPosition.y;
+
+    const topCornerMapChunk = world.chunkManager.getChunkForWorldPosition(new Position(mapWorldX, mapWorldY, player.position.level));
+    const playerChunk = world.chunkManager.getChunkForWorldPosition(player.position);
+
+    const currentRoomX = playerChunk.position.x - (topCornerMapChunk.position.x - 2);
+    const currentRoomY = playerChunk.position.y - (topCornerMapChunk.position.y - 2);
+
+    const rooms = customMap.chunks as Room[][][];
+    const currentRoom = rooms[player.position.level][currentRoomX][currentRoomY];
+
+    const playerLocalRoomX = player.position.localX;
+    const playerLocalRoomY = player.position.localY;
+
     // Standard home outer door ids: closed[13100, 13101], open[13102, 13103]
 
-    player.personalInstance.spawnGameObject({
+    /*player.personalInstance.spawnGameObject({
         x: position.x,
         y: position.y,
         level: position.level,
         orientation: object.orientation,
         objectId: 13100,
         type: object.type
-    });
+    });*/
+
+    let buildX: number = currentRoomX;
+    let buildY: number = currentRoomY;
+
+    if(playerLocalRoomX === 7) {
+        // build east
+        if(currentRoomX < MAP_SIZE - 3) {
+            buildX = currentRoomX + 1;
+        }
+    } else if(playerLocalRoomX === 0) {
+        // build west
+        if(currentRoomX > 2) {
+            buildX = currentRoomX - 1;
+        }
+    } else if(playerLocalRoomY === 7) {
+        // build north
+        if(currentRoomY < MAP_SIZE - 3) {
+            buildY = currentRoomY + 1;
+        }
+    } else if(playerLocalRoomY === 0) {
+        // build south
+        if(currentRoomY > 2) {
+            buildY = currentRoomY - 1;
+        }
+    }
+
+    if(buildX === currentRoomX && buildY === currentRoomY) {
+        player.sendMessage(`You can not build there.`);
+        return;
+    }
+
+    const existingRoom = rooms[player.position.level][buildX][buildY];
+
+    if(existingRoom && existingRoom.type !== 'empty_grass' && existingRoom.type !== 'empty') {
+        player.sendMessage(`${existingRoom.type} already exists there`); // @TODO
+        return;
+    }
+
+    customMap.chunks[player.position.level][buildX][buildY] = new Room('parlor');
+
+    openHouse(player);
+
+    // player.sendMessage(`player ${playerLocalRoomX},${playerLocalRoomY}`);
+    // player.sendMessage(`within house ${currentRoomX},${currentRoomY}`);
 };
 
 
