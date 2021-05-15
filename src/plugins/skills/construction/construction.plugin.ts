@@ -73,7 +73,7 @@ const openHouse = (player: Player): void => {
 };
 
 
-const doorHotspot = async (objectInteraction: ObjectInteractionAction): Promise<void> => {
+const doorHotspot = (objectInteraction: ObjectInteractionAction): void => {
     const { player, object, position } = objectInteraction;
 
     const customMap: ConstructedRegion = player?.metadata?.customMap;
