@@ -12,3 +12,5 @@ import { colors } from '@engine/util/colors';
 import { findItem, widgets } from '@engine/config';
 import { Fletchable } from '@plugins/skills/fletching/fletching-types';
 import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+
+//fletching stuff goes below this! lets do it!
