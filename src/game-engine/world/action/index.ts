@@ -62,9 +62,14 @@ export type ActionCancelType =
 
 
 /**
+ * The definition for the actual action pipe handler function.
+ */
+export type ActionPipeHandler = (...args: any[]) => RunnableHooks | void;
+
+/**
  * Basic definition of a game engine action file (.action.ts exports).
  */
-export type ActionPipe = [ ActionType, (...args: any[]) => void ];
+export type ActionPipe = [ ActionType, ActionPipeHandler ];
 
 
 /**
@@ -86,7 +91,7 @@ export interface RunnableHooks<T = any> {
  */
 export class ActionPipeline {
 
-    private static pipes = new Map<string, any>();
+    private static pipes = new Map<string, ActionPipeHandler>();
 
     private runningTasks: TaskExecutor<any>[] = [];
     private canceling: boolean = false;
@@ -97,12 +102,12 @@ export class ActionPipeline {
             .subscribe(async () => this.cancelRunningTasks());
     }
 
-    public static getPipe(action: ActionType): Map<string, any> {
+    public static getPipe(action: ActionType): ActionPipeHandler {
         return ActionPipeline.pipes.get(action);
     }
 
-    public static register(action: ActionType, actionPipe: (...args: any[]) => void): void {
-        ActionPipeline.pipes.set(action.toString(), actionPipe);
+    public static register(action: ActionType, actionPipeHandlerFn: ActionPipeHandler): void {
+        ActionPipeline.pipes.set(action.toString(), actionPipeHandlerFn);
     }
 
     public shutdown(): void {
@@ -113,7 +118,7 @@ export class ActionPipeline {
         const actionHandler = ActionPipeline.pipes.get(action.toString());
         if(actionHandler) {
             try {
-                await this.runActionHandler(actionHandler, ...args);
+                await this.runActionHandler(actionHandler, args);
             } catch(error) {
                 if(error) {
                     logger.error(`Error handling action ${action.toString()}`);
@@ -141,7 +146,7 @@ export class ActionPipeline {
         this.canceling = false;
     }
 
-    private async runActionHandler(actionHandler: any, ...args: any[]): Promise<void> {
+    private async runActionHandler(actionHandler: any, args: any[]): Promise<void> {
         const runnableHooks: RunnableHooks | null | undefined = await actionHandler(...args);
 
         if(!runnableHooks?.hooks || runnableHooks.hooks.length === 0) {
@@ -150,7 +155,6 @@ export class ActionPipeline {
 
         for(let i = 0; i < runnableHooks.hooks.length; i++) {
             const hook = runnableHooks.hooks[i];
-
             if(!hook) {
                 continue;
             }
