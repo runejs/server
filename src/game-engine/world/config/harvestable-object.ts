@@ -1,4 +1,5 @@
 import { objectIds } from '@engine/world/config/object-ids';
+import { itemIds } from './item-ids';
 
 export interface IHarvestable {
     objects: Map<number, number>;
@@ -128,7 +129,7 @@ export enum Tree {
 const Ores: IHarvestable[] = [
     {
         objects: CLAY_OBJECTS,
-        itemId: 434,
+        itemId: itemIds.ores.clay,
         level: 1,
         experience: 5.0,
         respawnLow: 5,
@@ -138,7 +139,7 @@ const Ores: IHarvestable[] = [
     },
     {
         objects: COPPER_OBJECTS,
-        itemId: 436,
+        itemId: itemIds.ores.copper,
         level: 1,
         experience: 17.5,
         respawnLow: 10,
@@ -148,7 +149,7 @@ const Ores: IHarvestable[] = [
     },
     {
         objects: TIN_OBJECTS,
-        itemId: 438,
+        itemId: itemIds.ores.tin,
         level: 1,
         experience: 17.5,
         respawnLow: 10,
@@ -158,7 +159,7 @@ const Ores: IHarvestable[] = [
     },
     {
         objects: IRON_OBJECTS,
-        itemId: 440,
+        itemId: itemIds.ores.iron,
         level: 15,
         experience: 35.0,
         respawnLow: 9,
@@ -168,7 +169,7 @@ const Ores: IHarvestable[] = [
     },
     {
         objects: COAL_OBJECTS,
-        itemId: 453,
+        itemId: itemIds.ores.coal,
         level: 30,
         experience: 50.0,
         respawnLow: 20,
@@ -178,7 +179,7 @@ const Ores: IHarvestable[] = [
     },
     {
         objects: SILVER_OBJECTS,
-        itemId: 442,
+        itemId: itemIds.ores.silver,
         level: 20,
         experience: 40.0,
         respawnLow: 30,
@@ -188,7 +189,7 @@ const Ores: IHarvestable[] = [
     },
     {
         objects: GOLD_OBJECTS,
-        itemId: 444,
+        itemId: itemIds.ores.gold,
         level: 40,
         experience: 65.0,
         respawnLow: 50,
@@ -198,7 +199,7 @@ const Ores: IHarvestable[] = [
     },
     {
         objects: MITHRIL_OBJECTS,
-        itemId: 447,
+        itemId: itemIds.ores.mithril,
         level: 55,
         experience: 65.0,
         respawnLow: 90,
@@ -208,7 +209,7 @@ const Ores: IHarvestable[] = [
     },
     {
         objects: ADAMANT_OBJECTS,
-        itemId: 449,
+        itemId: itemIds.ores.adamantite,
         level: 70,
         experience: 95.0,
         respawnLow: 200,
@@ -218,7 +219,7 @@ const Ores: IHarvestable[] = [
     },
     {
         objects: RUNITE_OBJECTS,
-        itemId: 451,
+        itemId: itemIds.ores.runite,
         level: 85,
         experience: 125.0,
         respawnLow: 1200,
@@ -241,7 +242,7 @@ const Ores: IHarvestable[] = [
 const Trees: IHarvestable[] = [
     {
         objects: NORMAL_OBJECTS,
-        itemId: 1511,
+        itemId: itemIds.logs.normal,
         level: 1,
         experience: 25,
         respawnLow: 10,
@@ -251,7 +252,7 @@ const Trees: IHarvestable[] = [
     },
     {
         objects: ACHEY_OBJECTS,
-        itemId: 2862,
+        itemId: itemIds.logs.achey,
         level: 1,
         experience: 25,
         respawnLow: 10,
@@ -261,7 +262,7 @@ const Trees: IHarvestable[] = [
     },
     {
         objects: OAK_OBJECTS,
-        itemId: 1521,
+        itemId: itemIds.logs.oak,
         level: 15,
         experience: 37.5,
         respawnLow: 20,
@@ -271,7 +272,7 @@ const Trees: IHarvestable[] = [
     },
     {
         objects: WILLOW_OBJECTS,
-        itemId: 1519,
+        itemId: itemIds.logs.willow,
         level: 30,
         experience: 67.5,
         respawnLow: 40,
@@ -281,7 +282,7 @@ const Trees: IHarvestable[] = [
     },
     {
         objects: TEAK_OBJECTS,
-        itemId: 6333,
+        itemId: itemIds.logs.teak,
         level: 35,
         experience: 85,
         respawnLow: 50,
@@ -291,7 +292,7 @@ const Trees: IHarvestable[] = [
     },
     {
         objects: MAPLE_OBJECTS,
-        itemId: 1517,
+        itemId: itemIds.logs.maple,
         level: 45,
         experience: 100,
         respawnLow: 100,
@@ -301,7 +302,7 @@ const Trees: IHarvestable[] = [
     },
     {
         objects: MAHOGANY_OBJECTS,
-        itemId: 6332,
+        itemId: itemIds.logs.mahogany,
         level: 50,
         experience: 125,
         respawnLow: 200,
@@ -311,7 +312,7 @@ const Trees: IHarvestable[] = [
     },
     {
         objects: YEW_OBJECTS,
-        itemId: 1515,
+        itemId: itemIds.logs.yew,
         level: 60,
         experience: 175,
         respawnLow: 300,
@@ -321,7 +322,7 @@ const Trees: IHarvestable[] = [
     },
     {
         objects: MAGIC_OBJECTS,
-        itemId: 1513,
+        itemId: itemIds.logs.magic,
         level: 75,
         experience: 250,
         respawnLow: 800,
