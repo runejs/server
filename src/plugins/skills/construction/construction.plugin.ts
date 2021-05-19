@@ -96,7 +96,7 @@ const doorHotspot = (objectInteraction: ObjectInteractionAction): void => {
     const currentRoomY = playerChunk.position.y - (topCornerMapChunk.position.y - 2);
 
     const rooms = customMap.chunks as Room[][][];
-    const currentRoom = rooms[player.position.level][currentRoomX][currentRoomY];
+    // const currentRoom = rooms[player.position.level][currentRoomX][currentRoomY];
 
     const playerLocalRoomX = player.position.localX;
     const playerLocalRoomY = player.position.localY;
@@ -149,9 +149,11 @@ const doorHotspot = (objectInteraction: ObjectInteractionAction): void => {
         return;
     }
 
-    customMap.chunks[player.position.level][buildX][buildY] = new Room('parlor');
+    player.interfaceState.openWidget(402, { slot: 'screen' });
 
-    openHouse(player);
+    /*customMap.chunks[player.position.level][buildX][buildY] = new Room('parlor');
+
+    openHouse(player);*/
 
     // player.sendMessage(`player ${playerLocalRoomX},${playerLocalRoomY}`);
     // player.sendMessage(`within house ${currentRoomX},${currentRoomY}`);
