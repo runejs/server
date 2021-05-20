@@ -9,8 +9,8 @@ export const action: objectInteractionActionHandler = (details) => {
     details.player.busy = true;
     details.player.playAnimation(827);
     
-    let random = Math.floor(Math.random() * 3);  
-    let pickedItem = findItem(veggies[random]);
+    const random = Math.floor(Math.random() * 3);  
+    const pickedItem = findItem(veggies[random]);
     
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, details.player.inventory);
 
