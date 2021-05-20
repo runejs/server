@@ -17,10 +17,7 @@ export const action: objectInteractionActionHandler = (details) => {
     setTimeout(() => {
         details.player.sendMessage(`You found a ${pickedItem.name.toLowerCase()} chest!.`);
         details.player.playSound(2581, 7);
-        
         details.player.instance.hideGameObjectTemporarily(details.object, 60);
-        
-
         details.player.giveItem(pickedItem.gameId);
         details.player.busy = false;
     }, World.TICK_LENGTH);
