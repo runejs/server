@@ -5,11 +5,13 @@ import { itemIds } from '@engine/world/config/item-ids';
 import { LandscapeObject } from '@runejs/filestore';
 
 export const action: objectInteractionActionHandler = (details) => {
+    const veggies = [itemIds.onion, itemIds.grain, itemIds.cabbage];
     details.player.busy = true;
     details.player.playAnimation(827);
-    var random = Math.floor(Math.random() * 3);  
-    var veggies = [itemIds.onion, itemIds.grain, itemIds.cabbage];
-    var pickedItem = findItem(veggies[random]);
+    
+    let random = Math.floor(Math.random() * 3);  
+    let pickedItem = findItem(veggies[random]);
+    
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, details.player.inventory);
 
     setTimeout(() => {
