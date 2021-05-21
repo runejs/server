@@ -12,7 +12,7 @@ const magicAttackPacket = (player: Player, packet: PacketData) => {
     const widgetChildId = buffer.get(); // unsigned short LE
 
     const npc = world.npcList[npcWorldIndex];
-    //console.log(`actual spell being cast is ${widgetChildId}`);
+
     player.actionPipeline.call('magic_on_npc', npc, player, widgetId, widgetChildId);
 };
 
