@@ -39,14 +39,19 @@ export async function loadPackets(): Promise<Map<number, InboundPacket>> {
 export function handlePacket(player: Player, packetId: number, packetSize: number, buffer: ByteBuffer): boolean {
     const incomingPacket = incomingPackets.get(packetId);
 
-    if (!incomingPacket) {
+    if(!incomingPacket) {
         logger.info(`Unknown packet ${packetId} with size ${packetSize} received.`);
         return false;
     }
 
     new Promise<void>(resolve => {
-        incomingPacket.handler(player, { packetId, packetSize, buffer });
+        try {
+            incomingPacket.handler(player, { packetId, packetSize, buffer });
+        } catch(error) {
+            logger.error(`Error handling inbound packet ${packetId} with size ${packetSize}`);
+            logger.error(error);
+        }
         resolve();
-    }).catch(error => logger.error(`Error handling inbound packet ${packetId} with size ${packetSize}: ${error}`));
+    });
     return true;
 }

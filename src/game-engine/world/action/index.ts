@@ -2,10 +2,9 @@ import { gameEngineDist } from '@engine/util/directories';
 import { getFiles } from '@engine/util/files';
 import { logger } from '@runejs/core';
 import { Actor } from '@engine/world/actor/actor';
-import { ActionHook } from '@engine/world/action/hooks';
+import { ActionHook, TaskExecutor } from '@engine/world/action/hooks';
 import { Position } from '@engine/world/position';
 import { Player } from '@engine/world/actor/player/player';
-import { TaskExecutor } from '@engine/world/action/hooks/task';
 import { Subscription } from 'rxjs';
 import { LandscapeObject } from '@runejs/filestore';
 
@@ -63,9 +62,14 @@ export type ActionCancelType =
 
 
 /**
+ * The definition for the actual action pipe handler function.
+ */
+export type ActionPipeHandler = (...args: any[]) => RunnableHooks | void;
+
+/**
  * Basic definition of a game engine action file (.action.ts exports).
  */
-export type ActionPipe = [ ActionType, (...args: any[]) => void ];
+export type ActionPipe = [ ActionType, ActionPipeHandler ];
 
 
 /**
@@ -87,7 +91,7 @@ export interface RunnableHooks<T = any> {
  */
 export class ActionPipeline {
 
-    private static pipes = new Map<string, any>();
+    private static pipes = new Map<string, ActionPipeHandler>();
 
     private runningTasks: TaskExecutor<any>[] = [];
     private canceling: boolean = false;
@@ -98,12 +102,12 @@ export class ActionPipeline {
             .subscribe(async () => this.cancelRunningTasks());
     }
 
-    public static getPipe(action: ActionType): Map<string, any> {
+    public static getPipe(action: ActionType): ActionPipeHandler {
         return ActionPipeline.pipes.get(action);
     }
 
-    public static register(action: ActionType, actionPipe: (...args: any[]) => void): void {
-        ActionPipeline.pipes.set(action.toString(), actionPipe);
+    public static register(action: ActionType, actionPipeHandlerFn: ActionPipeHandler): void {
+        ActionPipeline.pipes.set(action.toString(), actionPipeHandlerFn);
     }
 
     public shutdown(): void {
@@ -114,7 +118,7 @@ export class ActionPipeline {
         const actionHandler = ActionPipeline.pipes.get(action.toString());
         if(actionHandler) {
             try {
-                await this.runActionHandler(actionHandler, ...args);
+                await this.runActionHandler(actionHandler, args);
             } catch(error) {
                 if(error) {
                     logger.error(`Error handling action ${action.toString()}`);
@@ -142,7 +146,7 @@ export class ActionPipeline {
         this.canceling = false;
     }
 
-    private async runActionHandler(actionHandler: any, ...args: any[]): Promise<void> {
+    private async runActionHandler(actionHandler: any, args: any[]): Promise<void> {
         const runnableHooks: RunnableHooks | null | undefined = await actionHandler(...args);
 
         if(!runnableHooks?.hooks || runnableHooks.hooks.length === 0) {
@@ -151,7 +155,6 @@ export class ActionPipeline {
 
         for(let i = 0; i < runnableHooks.hooks.length; i++) {
             const hook = runnableHooks.hooks[i];
-
             if(!hook) {
                 continue;
             }
@@ -167,7 +170,8 @@ export class ActionPipeline {
                     await this.actor.waitForPathing(
                         !gameObject ? runnableHooks.actionPosition : (gameObject as LandscapeObject));
                 } catch(error) {
-                    logger.error(`Error pathing to hook target`, error);
+                    logger.error(`Error pathing to hook target`);
+                    logger.error(error);
                     return;
                 }
             }
@@ -223,6 +227,7 @@ export class ActionPipeline {
 export async function loadActionFiles(): Promise<void> {
     const ACTION_DIRECTORY = `${gameEngineDist}/world/action`;
     const blacklist = [];
+    const loadedActions: string[] = [];
 
     for await(const path of getFiles(ACTION_DIRECTORY, blacklist)) {
         if(!path.endsWith('.action.ts') && !path.endsWith('.action.js')) {
@@ -231,18 +236,19 @@ export async function loadActionFiles(): Promise<void> {
 
         const location = '.' + path.substring(ACTION_DIRECTORY.length).replace('.js', '');
 
-        logger.info(`Loading ${path.substring(path.indexOf('action') + 7).replace('.js', '')} file.`);
-
         try {
             const importedAction = (require(location)?.default || null) as ActionPipe | null;
             if(importedAction && Array.isArray(importedAction) && importedAction[0] && importedAction[1]) {
                 ActionPipeline.register(importedAction[0], importedAction[1]);
+                loadedActions.push(importedAction[0]);
             }
         } catch(error) {
             logger.error(`Error loading action file at ${location}:`);
             logger.error(error);
         }
     }
+
+    logger.info(`Loaded action pipes: ${loadedActions.join(', ')}.`);
 
     return Promise.resolve();
 }

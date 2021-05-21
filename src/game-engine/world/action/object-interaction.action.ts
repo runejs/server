@@ -27,7 +27,7 @@ export type objectInteractionActionHandler = (objectInteractionAction: ObjectInt
 
 
 /**
- * Details about an npc action being performed.
+ * Details about an object action being performed.
  */
 export interface ObjectInteractionAction {
     // The player performing the action.

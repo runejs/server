@@ -40,7 +40,7 @@ export default {
     pluginId: 'rs:music_regions',
     hooks: [{
         type: 'region_change',
-        regionType: 'map',
+        regionType: 'region',
         handler: regionChangedHandler
     }, {
         type: 'player_init',

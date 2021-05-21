@@ -48,9 +48,10 @@ export interface WidgetInteractionAction {
  * @param optionId The widget context option chosen by the player.
  */
 const widgetActionPipe = (player: Player, widgetId: number, childId: number, optionId: number): RunnableHooks<WidgetInteractionAction> => {
-    const playerWidget = Object.values(player.interfaceState.widgetSlots).find((widget) => widget && widget.widgetId === widgetId);
+    const playerWidget = Object.values(player.interfaceState.widgetSlots)
+        .find((widget) => widget && widget.widgetId === widgetId);
 
-    if(playerWidget && playerWidget.fakeWidget != undefined) {
+    if(playerWidget?.fakeWidget) {
         widgetId = playerWidget.fakeWidget;
     }
 
@@ -86,9 +87,11 @@ const widgetActionPipe = (player: Player, widgetId: number, childId: number, opt
         return null;
     }
 
+    const action: WidgetInteractionAction = { player, widgetId, childId, optionId };
+
     return {
         hooks: matchingHooks,
-        action: { player, widgetId, childId, optionId }
+        action
     };
 };
 

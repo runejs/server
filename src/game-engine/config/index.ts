@@ -19,19 +19,21 @@ import { Quest } from '@engine/world/actor/player/quest';
 import { ItemSpawn, loadItemSpawnConfigurations } from '@engine/config/item-spawn-config';
 import { loadSkillGuideConfigurations, SkillGuide } from '@engine/config/skill-guide-config';
 import { loadMusicRegionConfigurations, MusicTrack } from '@engine/config/music-regions-config';
-import { loadXteaRegionFiles, XteaRegion } from '@runejs/filestore';
+
 import {
     loadStrongholdOfSecurityQuizData,
     StrongholdOfSecurityQuiz,
     StrongholdOfSecurityQuizQuestion
 } from '@engine/config/stronghold-of-security-quiz-config';
 import { BookData, loadStrongholdOfSecurityBookData } from '@engine/config/sectioned-book-config';
+import { LandscapeObject, loadXteaRegionFiles, ObjectConfig, XteaRegion } from '@runejs/filestore';
 
 require('json5/lib/register');
 
 
 export let itemMap: { [key: string]: ItemDetails };
 export let itemIdMap: { [key: number]: string };
+export let objectMap: { [key: number]: ObjectConfig };
 export let itemPresetMap: ItemPresetConfiguration;
 export let npcMap: { [key: string]: NpcDetails };
 export let npcIdMap: { [key: number]: string };
@@ -75,6 +77,8 @@ export async function loadGameConfigurations(): Promise<void> {
     shopMap = await loadShopConfigurations('data/config/shops/');
     skillGuides = await loadSkillGuideConfigurations('data/config/skill-guides/');
     logger.info(`Loaded ${strongholdOfSecurityQuizData.questions.length} Stronghold of Security questions.`);
+
+    objectMap = {};
     logger.info(`Loaded ${musicRegions.length} music regions, ${Object.keys(itemMap).length} items, ${itemSpawns.length} item spawns, ` +
         `${Object.keys(npcMap).length} npcs, ${npcSpawns.length} npc spawns, ${Object.keys(shopMap).length} shops and ${skillGuides.length} skill guides.`);
 }
@@ -177,6 +181,21 @@ export const findNpc = (npcKey: number | string): NpcDetails | null => {
     }
 
     return npc;
+};
+
+
+export const findObject = (objectId: number): ObjectConfig | null => {
+    if(!objectMap[objectId]) {
+        const object = filestore.objectStore.getObject(objectId);
+        if(!object) {
+            return null;
+        }
+
+        objectMap[objectId] = object;
+        return object;
+    } else {
+        return objectMap[objectId];
+    }
 };
 
 

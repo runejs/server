@@ -119,7 +119,7 @@ export function savePlayerData(player: Player): boolean {
         position: {
             x: player.position.x,
             y: player.position.y,
-            level: player.position.level
+            level: player.position.level > 3 ? 0 : player.position.level
         },
         lastLogin: {
             date: player.loginDate,
@@ -172,7 +172,11 @@ export function loadPlayerSave(username: string): PlayerSave {
     }
 
     try {
-        return JSON.parse(fileData) as PlayerSave;
+        const playerSave = JSON.parse(fileData) as PlayerSave;
+        if(playerSave?.position?.level > 3) {
+            playerSave.position.level = 0;
+        }
+        return playerSave;
     } catch(error) {
         logger.error(`Malformed player save data for ${username}.`);
         return null;
