@@ -1,0 +1,35 @@
+{
+    bookId: 9004,
+    bookTitle: "Stronghold Notes",
+    showTableOfContents: true,
+    bookSections: [
+        {
+            header: "Description",
+            text: "This stronghold was unearthed by a miner prospecting for new ores around the Barbarian Village. After gathering some equipment he ventured into the maze of tunnels and was missing for a long time. He finally emerged along with copious notes regarding the new beasts and strange experiences which had befallen him. He also mentioned that there was treasure to be had, but no one has been able to wring a word from him about this, he simply flapped his arms and slapped his head. This book details his notes and my diary of exploration. I am exploring to see if I can find out more..."
+        },
+        {
+            header: "Level 1",
+            text: "As well as goblins, creatures like a man but also like a cow infest this place! I have never seen anything like this before. The area itself is reminiscent of frontline castles, with many walls, doors, and skeletons of dead enemies. I'm sure I hear voices in my head each time I pass through the gates. I have dubbed this level War as it seems like an eternal battleground. I found only one small peaceful area here."
+        },
+        {
+            header: "Level 2",
+            text: "My supplies are running low and I find myself in barren passages with seemingly endless malnourished beasts attacking me, ravenous for food. Nothing appears to be able to grow, many adventurers have died through lack of food and the very air appears to such vitality from me. I've come to call this place famine.",
+        },
+        {
+            header: "Level 3",
+            text: "Just breathing in this place makes me shudder at the thought of what foul disease I may contract. The walls and floor ooze and pulsate like something pox ridden. There is a very strange beast whom I narrowly escaped from. At first I thought it to be a cross between a cow and a sheep, something domesticated... but when it looked up at me I was overcome with weakness and barely got away with my life! Luckily I found a small place where I could heal myself and rest a while. I have named this area pestilence for it reeks with decay."
+        },
+        {
+            header: "Level 4",
+            text: "On my first escapade into this place, I was utterly shocked. The adventurers who had come before me must have made up a tiny proportion of the skeletons of the dead. Nothing truly alive exists here, even those beings who do wander the halls are not alive as such, but they do know that I am and I get the distinct impression that were they to have their way, I would not be for long! Death is everywhere and thus I shall name this place. There is one small place of life, which was gladdening to find and very worth my while!"
+        },
+        {
+            header: "Navigation",
+            text: "After getting lost several times I finally worked out the key to all the ladders and chains around this death infested place. All ropes and chains will take you to the start of the level that you are on. However most ladders will simply take you to the level above. The one exception is the ladder in the bottom level treasure room, which appears to lead through several extremely twisty passages and eventually takes you out of the dungeon completely. The portals may be used if you are of sufficient level or have already claimed your reward from the treasure room."
+        },
+        {
+            header: "Diary",
+            text: "Day 1\nToday I set out to find out more about this place. From my research I knew about the strange creatures, so I have prepared with some good armour.\n\nDay 2\nI have fought my way through the fearsome beasts on the first level and am preparing myself to journey deeper. I hope that things are not too difficult further on as I am already sick of bread and cheese for dinner.\n\nDay 3\nI ventured down into the famine level today... I was wounded and have returned to the relative safety of the level above. I am going to try to make my way out through the goblins and mancow things... I hope I can make it..."
+        }
+    ]
+}

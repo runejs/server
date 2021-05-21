@@ -1,7 +1,7 @@
 [
     {
         "npc": "rs:Flesh Crawler_2",
-        "movement_radius": 6,
+        "movement_radius": 10,
         "face": "WEST",
         "id": 2500,
         "spawn_level": 0,
@@ -10,7 +10,7 @@
     },
     {
         "npc": "rs:Flesh Crawler_2",
-        "movement_radius": 6,
+        "movement_radius": 10,
         "face": "WEST",
         "id": 2500,
         "spawn_level": 0,
@@ -19,7 +19,7 @@
     },
     {
         "npc": "rs:Flesh Crawler_2",
-        "movement_radius": 6,
+        "movement_radius": 10,
         "face": "WEST",
         "id": 2500,
         "spawn_level": 0,
@@ -28,7 +28,7 @@
     },
     {
         "npc": "rs:Flesh Crawler_2",
-        "movement_radius": 6,
+        "movement_radius": 10,
         "face": "WEST",
         "id": 2500,
         "spawn_level": 0,
@@ -37,7 +37,7 @@
     },
     {
         "npc": "rs:Flesh Crawler_2",
-        "movement_radius": 6,
+        "movement_radius": 10,
         "face": "WEST",
         "id": 2500,
         "spawn_level": 0,
@@ -46,7 +46,7 @@
     },
     {
         "npc": "rs:Flesh Crawler_2",
-        "movement_radius": 6,
+        "movement_radius": 10,
         "face": "WEST",
         "id": 2500,
         "spawn_level": 0,
@@ -55,7 +55,7 @@
     },
     {
         "npc": "rs:Flesh Crawler_2",
-        "movement_radius": 6,
+        "movement_radius": 10,
         "face": "WEST",
         "id": 2500,
         "spawn_level": 0,
@@ -64,7 +64,7 @@
     },
     {
         "npc": "rs:Flesh Crawler_2",
-        "movement_radius": 6,
+        "movement_radius": 10,
         "face": "WEST",
         "id": 2500,
         "spawn_level": 0,
@@ -73,7 +73,7 @@
     },
     {
         "npc": "rs:Flesh Crawler_2",
-        "movement_radius": 6,
+        "movement_radius": 10,
         "face": "WEST",
         "id": 2500,
         "spawn_level": 0,
@@ -82,7 +82,7 @@
     },
     {
         "npc": "rs:Flesh Crawler_2",
-        "movement_radius": 6,
+        "movement_radius": 10,
         "face": "WEST",
         "id": 2500,
         "spawn_level": 0,
@@ -91,7 +91,7 @@
     },
     {
         "npc": "rs:Flesh Crawler_2",
-        "movement_radius": 6,
+        "movement_radius": 10,
         "face": "WEST",
         "id": 2500,
         "spawn_level": 0,
@@ -100,7 +100,7 @@
     },
     {
         "npc": "rs:Flesh Crawler_2",
-        "movement_radius": 6,
+        "movement_radius": 10,
         "face": "WEST",
         "id": 2500,
         "spawn_level": 0,
@@ -109,7 +109,7 @@
     },
     {
         "npc": "rs:Flesh Crawler_2",
-        "movement_radius": 6,
+        "movement_radius": 10,
         "face": "WEST",
         "id": 2500,
         "spawn_level": 0,
@@ -122,7 +122,7 @@
         "spawn_y": 5193,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Flesh Crawler_1",
@@ -130,7 +130,7 @@
         "spawn_y": 5187,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Flesh Crawler_1",
@@ -138,7 +138,7 @@
         "spawn_y": 5186,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Flesh Crawler_1",
@@ -146,7 +146,7 @@
         "spawn_y": 5190,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Flesh Crawler_1",
@@ -154,7 +154,7 @@
         "spawn_y": 5192,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Flesh Crawler_1",
@@ -162,7 +162,7 @@
         "spawn_y": 5186,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Flesh Crawler_1",
@@ -170,7 +170,7 @@
         "spawn_y": 5189,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Flesh Crawler_1",
@@ -178,7 +178,7 @@
         "spawn_y": 5193,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Flesh Crawler",
@@ -186,7 +186,7 @@
         "spawn_y": 5237,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
    },
     {
         "npc": "rs:Flesh Crawler",
@@ -194,7 +194,7 @@
         "spawn_y": 5237,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
    },
     {
         "npc": "rs:Flesh Crawler",
@@ -202,7 +202,7 @@
         "spawn_y": 5231,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
    },
     {
         "npc": "rs:Flesh Crawler",
@@ -210,7 +210,7 @@
         "spawn_y": 5231,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
    },
     {
         "npc": "rs:Flesh Crawler",
@@ -218,7 +218,7 @@
         "spawn_y": 5233,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
    },
     {
         "npc": "rs:Giant rat_7",
@@ -226,7 +226,7 @@
         "spawn_y": 5189,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Giant rat_7",
@@ -234,7 +234,7 @@
         "spawn_y": 5192,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
 
     {
@@ -243,7 +243,7 @@
         "spawn_y": 5236,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
 
     {
@@ -252,7 +252,7 @@
         "spawn_y": 5211,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Giant rat_7",
@@ -260,7 +260,7 @@
         "spawn_y": 5190,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Giant rat_7",
@@ -268,7 +268,7 @@
         "spawn_y": 5188,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Giant rat_7",
@@ -276,7 +276,7 @@
         "spawn_y": 5235,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Giant rat_7",
@@ -284,7 +284,7 @@
         "spawn_y": 5215,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Giant rat_7",
@@ -292,7 +292,7 @@
         "spawn_y": 5190,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Giant rat_7",
@@ -300,7 +300,7 @@
         "spawn_y": 5238,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -308,7 +308,7 @@
         "spawn_y": 5202,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -316,7 +316,7 @@
         "spawn_y": 5200,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -324,7 +324,7 @@
         "spawn_y": 5205,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -332,7 +332,7 @@
         "spawn_y": 5223,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -340,7 +340,7 @@
         "spawn_y": 5226,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -348,7 +348,7 @@
         "spawn_y": 5236,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -356,7 +356,7 @@
         "spawn_y": 5228,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -364,7 +364,7 @@
         "spawn_y": 5237,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -372,7 +372,7 @@
         "spawn_y": 5233,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -380,7 +380,7 @@
         "spawn_y": 5200,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -388,7 +388,7 @@
         "spawn_y": 5242,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -396,7 +396,7 @@
         "spawn_y": 5191,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -404,7 +404,7 @@
         "spawn_y": 5199,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -412,7 +412,7 @@
         "spawn_y": 5235,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -420,7 +420,7 @@
         "spawn_y": 5207,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -428,7 +428,7 @@
         "spawn_y": 5211,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -436,7 +436,7 @@
         "spawn_y": 5218,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -444,7 +444,7 @@
         "spawn_y": 5214,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -452,7 +452,7 @@
         "spawn_y": 5239,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -460,7 +460,7 @@
         "spawn_y": 5187,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -468,7 +468,7 @@
         "spawn_y": 5186,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -476,7 +476,7 @@
         "spawn_y": 5189,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -484,7 +484,7 @@
         "spawn_y": 5204,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -492,7 +492,7 @@
         "spawn_y": 5207,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -500,7 +500,7 @@
         "spawn_y": 5190,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -508,7 +508,7 @@
         "spawn_y": 5203,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -516,7 +516,7 @@
         "spawn_y": 5187,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -524,7 +524,7 @@
         "spawn_y": 5194,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -532,7 +532,7 @@
         "spawn_y": 5236,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -540,7 +540,7 @@
         "spawn_y": 5190,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -548,7 +548,7 @@
         "spawn_y": 5192,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -556,7 +556,7 @@
         "spawn_y": 5186,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -564,7 +564,7 @@
         "spawn_y": 5192,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -572,7 +572,7 @@
         "spawn_y": 5190,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -580,7 +580,7 @@
         "spawn_y": 5238,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -588,7 +588,7 @@
         "spawn_y": 5188,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -596,7 +596,7 @@
         "spawn_y": 5193,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -604,7 +604,7 @@
         "spawn_y": 5188,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -612,7 +612,7 @@
         "spawn_y": 5192,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -620,7 +620,7 @@
         "spawn_y": 5232,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -628,7 +628,7 @@
         "spawn_y": 5185,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -636,7 +636,7 @@
         "spawn_y": 5235,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -644,7 +644,7 @@
         "spawn_y": 5244,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -652,7 +652,7 @@
         "spawn_y": 5191,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -660,7 +660,7 @@
         "spawn_y": 5243,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -668,7 +668,7 @@
         "spawn_y": 5230,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -676,7 +676,7 @@
         "spawn_y": 5242,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -684,7 +684,7 @@
         "spawn_y": 5242,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -692,7 +692,7 @@
         "spawn_y": 5246,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -700,7 +700,7 @@
         "spawn_y": 5234,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -708,7 +708,7 @@
         "spawn_y": 5244,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -716,7 +716,7 @@
         "spawn_y": 5202,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -724,7 +724,7 @@
         "spawn_y": 5207,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -732,7 +732,7 @@
         "spawn_y": 5190,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -740,7 +740,7 @@
         "spawn_y": 5186,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -748,7 +748,7 @@
         "spawn_y": 5200,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -756,7 +756,7 @@
         "spawn_y": 5204,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -764,7 +764,7 @@
         "spawn_y": 5190,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -772,7 +772,7 @@
         "spawn_y": 5193,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Rat_16",
@@ -780,7 +780,7 @@
         "spawn_y": 5201,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_18",
@@ -788,7 +788,7 @@
         "spawn_y": 5236,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_18",
@@ -796,7 +796,7 @@
         "spawn_y": 5230,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_18",
@@ -804,7 +804,7 @@
         "spawn_y": 5235,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_18",
@@ -812,7 +812,7 @@
         "spawn_y": 5234,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_18",
@@ -820,7 +820,7 @@
         "spawn_y": 5233,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_19",
@@ -828,7 +828,7 @@
         "spawn_y": 5192,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_19",
@@ -836,7 +836,7 @@
         "spawn_y": 5188,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_19",
@@ -844,7 +844,7 @@
         "spawn_y": 5190,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_19",
@@ -852,7 +852,7 @@
         "spawn_y": 5200,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_19",
@@ -860,7 +860,7 @@
         "spawn_y": 5201,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_19",
@@ -868,7 +868,7 @@
         "spawn_y": 5209,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_19",
@@ -876,7 +876,7 @@
         "spawn_y": 5212,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_19",
@@ -884,7 +884,7 @@
         "spawn_y": 5215,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_19",
@@ -892,7 +892,7 @@
         "spawn_y": 5218,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_19",
@@ -900,7 +900,7 @@
         "spawn_y": 5213,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_19",
@@ -908,7 +908,7 @@
         "spawn_y": 5218,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_19",
@@ -916,7 +916,7 @@
         "spawn_y": 5213,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_19",
@@ -924,7 +924,7 @@
         "spawn_y": 5215,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_19",
@@ -932,7 +932,7 @@
         "spawn_y": 5215,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_19",
@@ -940,7 +940,7 @@
         "spawn_y": 5217,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_20",
@@ -948,7 +948,7 @@
         "spawn_y": 5242,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_20",
@@ -956,7 +956,7 @@
         "spawn_y": 5234,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_20",
@@ -964,7 +964,7 @@
         "spawn_y": 5238,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_20",
@@ -972,7 +972,7 @@
         "spawn_y": 5190,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_20",
@@ -980,7 +980,7 @@
         "spawn_y": 5187,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_20",
@@ -988,7 +988,7 @@
         "spawn_y": 5193,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_20",
@@ -996,7 +996,7 @@
         "spawn_y": 5189,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_20",
@@ -1004,7 +1004,7 @@
         "spawn_y": 5237,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_20",
@@ -1012,7 +1012,7 @@
         "spawn_y": 5186,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_20",
@@ -1020,7 +1020,7 @@
         "spawn_y": 5186,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     },
     {
         "npc": "rs:Zombie_20",
@@ -1028,6 +1028,6 @@
         "spawn_y": 5191,
         "spawn_level": 0,
         "face": "WEST",
-        "movement_radius": 6
+        "movement_radius": 10
     }
 ]

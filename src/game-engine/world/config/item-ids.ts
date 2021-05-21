@@ -408,5 +408,10 @@ export const itemIds = {
     },
     grappleTips: {
         mithril: 9415
+    },
+    dungeons: {
+        strongholdOfSecurity: {
+            strongholdNotes: 9004,
+        }
     }
 };

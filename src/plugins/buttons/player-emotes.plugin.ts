@@ -173,7 +173,7 @@ export const handler: buttonActionHandler = (details) => {
                 return;
             }
         }
-
+        player.interfaceState.closeAllSlots();
         player.playAnimation(emote.animationId);
 
         if(emote.graphicId !== undefined) {

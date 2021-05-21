@@ -1,17 +1,29 @@
+import { loadConfigurationFiles } from '@runejs/core/fs';
+import { itemMap } from '@engine/config/index';
+import { ItemDetails } from '@engine/config/item-config';
 import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 import { readFileSync } from 'fs';
 import { logger } from '@runejs/core';
 
+/**
+ * Stronghold of Security quiz configuration
+ */
 export interface StrongholdOfSecurityQuiz {
     prefix: string;
-    questions: StrongholdOfSecurityQuestion[];
+    questions: StrongholdOfSecurityQuizQuestion[];
 }
 
-export interface StrongholdOfSecurityQuestion {
+/**
+ * Stronghold of Security question
+ */
+export interface StrongholdOfSecurityQuizQuestion {
     questionText: string;
     options: StrongholdQuizOption[];
 }
 
+/**
+ * Stronghold of Security quiz option
+ */
 export interface StrongholdQuizOption {
     optionText: string;
     passable: boolean;
@@ -31,6 +43,3 @@ export function loadStrongholdOfSecurityQuizData(path: string): StrongholdOfSecu
         logger.error('Error parsing stronghold of security quiz data: ' + error);
     }
 }
-export default {
-    pluginId: 'rs:stronghold_of_security_quiz',
-};

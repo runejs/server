@@ -4,15 +4,15 @@ import { directionNameFromIndex, WNES } from '@engine/world/direction';
 import { schedule } from '@engine/world/task';
 import { dialogue, DialogueTree, Emote, execute } from '@engine/world/actor/dialogue';
 import { Position } from '@engine/world/position';
-import { getRandomStrongholdOfSecurityQuestion, strongholdOfSecurityQuizData } from '@engine/config';
+import { getRandomStrongholdOfSecurityQuizQuestion, strongholdOfSecurityQuizData } from '@engine/config';
 import { Player } from '@engine/world/actor/player/player';
-import { StrongholdOfSecurityQuestion } from '@plugins/dungeons/stronghold-of-security/stronghold-of-security-quiz.plugin';
 import { objectIds } from '@engine/world/config/object-ids';
 import {
     getFloorCompletionFromObjectId,
     getNpcKeyFromObjectId
 } from '@plugins/dungeons/stronghold-of-security/stronghold-of-security-rewards.plugin';
 import { animationIds } from '@engine/world/config/animation-ids';
+import { StrongholdOfSecurityQuizQuestion } from '@engine/config/stronghold-of-security-quiz-config';
 
 const canActivate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: number): boolean => {
     const { actor, actionData: { position, object } } = task;
@@ -118,7 +118,7 @@ async function promptPlayerWithSecurityQuestion(player: Player, questionAttempt:
         await dialogue([player, {
             npc: npcKey,
             key: 'gate'
-        }], generateStrongholdQuizDialogue(player, getRandomStrongholdOfSecurityQuestion()));
+        }], generateStrongholdQuizDialogue(player, getRandomStrongholdOfSecurityQuizQuestion()));
 
         if (player.sessionMetadata[`correctAnswer`]) {
             return true;
@@ -139,7 +139,7 @@ const isWelcomeDoor = (objectPosition: Position): boolean => {
     return (objectPosition.equals(leftWelcomeDoor) || objectPosition.equals(rightWelcomeDoor));
 };
 
-function generateStrongholdQuizDialogue(player: Player, strongholdQuestion: StrongholdOfSecurityQuestion): DialogueTree {
+function generateStrongholdQuizDialogue(player: Player, strongholdQuestion: StrongholdOfSecurityQuizQuestion): DialogueTree {
     const questionText = strongholdOfSecurityQuizData.prefix + strongholdQuestion.questionText;
     player.sessionMetadata[`strongholdDialogueComplete`] = false;
     //TODO: Learn how to create option DialogueTrees, and make this more efficient.
