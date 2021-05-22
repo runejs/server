@@ -31,7 +31,7 @@ export type magic_on_npcActionHandler = (buttonAction: Magic_On_NPCAction) => vo
  */
 export interface Magic_On_NPCAction {
     // The npc world id that was clicked on after choosing the spell
-    npc: Npc,
+    npc: Npc;
     // The player performing the action.
     player: Player;
     // The ID of the UI widget that the button is on.
