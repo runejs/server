@@ -1,6 +1,9 @@
-import { buttonActionHandler } from '@engine/world/action/button.action';
+import { buttonActionHandler, ButtonActionHook } from '@engine/world/action/button.action';
 import { Player } from '@engine/world/actor/player/player';
-import { widgetInteractionActionHandler } from '@engine/world/action/widget-interaction.action';
+import {
+    widgetInteractionActionHandler,
+    WidgetInteractionActionHook
+} from '@engine/world/action/widget-interaction.action';
 import { skillGuides, widgets } from '@engine/config';
 import { SkillGuide, SkillSubGuide } from '@engine/config/skill-guide-config';
 
@@ -94,13 +97,13 @@ export default {
             widgetId: widgets.skillsTab,
             buttonIds,
             handler: guideHandler
-        },
+        } as ButtonActionHook,
         {
             type: 'widget_interaction',
             widgetIds: widgets.skillGuide,
             childIds: sidebarTextIds,
             optionId: 0,
             handler: subGuideHandler
-        }
+        } as WidgetInteractionActionHook
     ]
 };
