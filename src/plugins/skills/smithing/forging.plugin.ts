@@ -11,6 +11,17 @@ import {
 import { Player } from '@engine/world/actor/player/player';
 import { findItem } from '@engine/config';
 import { TaskExecutor } from '@engine/world/action';
+import { Position } from '@engine/world/position';
+
+/**
+ * The amount of items the player wants to forge.
+ */
+let wantedAmount = 0;
+
+/**
+ * The amount of items already forged.
+ */
+let forgedAmount = 0;
 
 const mapWidgetItemsToFlatArray = (input) => {
     const result = [];
@@ -32,19 +43,24 @@ const mapToFlatArray = (input) => {
     return results;
 };
 
+/**
+ * Lookup a smithable from just an item id.
+ * @param itemId
+ */
 const findSmithableByItemId = (itemId) : Smithable => {
     return mapToFlatArray(smithables).find((smithable) => {
         return smithable.item.itemId === itemId;
     });
 };
 
+/**
+ * Check if the player is able to perform the action.
+ * @param task
+ */
 const canActivate = (task: TaskExecutor<ItemInteractionAction>): boolean => {
-    const { actor, player, actionData, session } = task.getDetails();
-
+    const { actor, player, actionData } = task.getDetails();
     const itemId = actionData.itemId;
-
     const smithable = findSmithableByItemId(itemId);
-
 
     // In case the smithable doesn't exist.
     if (!smithable) {
@@ -58,27 +74,26 @@ const canActivate = (task: TaskExecutor<ItemInteractionAction>): boolean => {
         return false;
     }
 
-    const amountInInventory = player.inventory.findAll(smithable.ingredient.itemId).length;
-    // @todo: Forging: Make a check for sufficient bars in the inventory.
-
-    if (!hasIngredients(player, smithable)) {
-        player.interfaceState.closeAllSlots();
+    // Check if the player has sufficient materials.
+    if (!hasMaterials(player, smithable)) {
         const bar = findItem(smithable.ingredient.itemId);
         player.sendMessage(`You don't have enough ${bar.name}s.`, true);
         return false;
     }
 
+    player.interfaceState.closeAllSlots();
+
     return true;
 };
 
-let wantedAmount = 0;
-let forgedAmount = 0;
-
+/**
+ * The actual forging loop.
+ * @param task
+ * @param taskIteration
+ */
 const activate = (task: TaskExecutor<ItemInteractionAction>, taskIteration: number): boolean => {
     const { player, actionData } = task.getDetails();
-
     const itemId = actionData.itemId;
-
     const smithable = findSmithableByItemId(itemId);
 
     // How many? Quick and dirty.
@@ -88,43 +103,57 @@ const activate = (task: TaskExecutor<ItemInteractionAction>, taskIteration: numb
         case 'make-10'  : wantedAmount = 10; break;
     }
 
-    player.interfaceState.closeAllSlots();
-    player.playAnimation(898);
+    for(let m=0; m<wantedAmount; m++) {
+        player.playAnimation(898);
+        if(taskIteration % 4 === 0) {
+            if (!hasMaterials(player, smithable) || wantedAmount === forgedAmount) {
+                return false;
+            }
 
-    if(taskIteration % 4 === 0 && taskIteration != 0) {
-        if (!hasIngredients(player, smithable) || wantedAmount === forgedAmount) {
-            return false;
-        }
+            // Remove ingredients
+            for (let i=0; i<smithable.ingredient.amount; i++) {
+                player.inventory.removeFirst(smithable.ingredient.itemId);
+            }
 
-        // Remove ingredients
-        for (let i=0; i<smithable.ingredient.amount; i++) {
-            player.inventory.removeFirst(smithable.ingredient.itemId);
+            // Add item to inventory
+            player.inventory.add({
+                itemId: smithable.item.itemId, amount: smithable.item.amount
+            });
+
             player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
+            player.skills.addExp(Skill.SMITHING, smithable.experience);
+
+            forgedAmount++;
+            return true;
         }
+    }
 
-        // Add item to inventory
-        for (let i=0; i<smithable.item.amount; i++) {
-            player.inventory.add(smithable.item.itemId);
-        }
-
-        // Give the experience
-        player.skills.addExp(Skill.SMITHING, smithable.experience);
-
-        forgedAmount++;
+    // Reset the properties, and strap in for the next batch.
+    if (forgedAmount === wantedAmount) {
+        forgedAmount = 0;
+        wantedAmount = 0;
+        return false;
     }
 };
 
-const onComplete = (task: TaskExecutor<ItemInteractionAction>): void => {
-    task.actor.stopAnimation();
-};
-
-const hasIngredients = (player: Player, smithable: Smithable) => {
+/**
+ * Checks if the player has enough materials
+ * @param player
+ * @param smithable
+ */
+const hasMaterials = (player: Player, smithable: Smithable) => {
     return smithable.ingredient.amount <= player.inventory.findAll(smithable.ingredient.itemId).length;
 };
 
+/**
+ * Opens the forging interface, and loads the items.
+ * @param details
+ */
 const openForgingInterface: itemOnObjectActionHandler = (details) => {
-    const { player, item } = details;
+    const { player, item, object } = details;
     const amountInInventory = player.inventory.findAll(item).length;
+
+    player.face(new Position(object.x, object.y));
 
     // The player does not have a hammer.
     if (!player.inventory.has(itemIds.hammer)) {
@@ -163,6 +192,7 @@ export default {
             itemIds: [...bars.keys()],
             objectIds: anvilIds,
             walkTo: true,
+
             cancelOtherActions: true,
             handler: openForgingInterface
         } as ItemOnObjectActionHook,
@@ -174,7 +204,6 @@ export default {
             task: {
                 canActivate,
                 activate,
-                onComplete,
                 interval: 1
             }
         } as ItemInteractionActionHook
