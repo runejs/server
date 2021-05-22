@@ -9,9 +9,9 @@ import { Player } from '../player/player';
 import { Npc } from '../npc/npc';
 
 export class MeleeCombatBehavior extends Behavior {
-    private _combatPulse;
+
     Type = BehaviorType.Combat;
-    Name = "basic-melee-combat";
+    Name = 'basic-melee-combat';
     //seconds
     private _CoolDown: number = 4;
     private _lastAttack = new Date();
@@ -20,7 +20,7 @@ export class MeleeCombatBehavior extends Behavior {
     public async init(me: Actor, them: Actor): Promise<void> {
         this.Me = me;
         this.Them = them;
-        super.init(me, them);
+        await super.init(me, them);
     }
     
     public async tick() {
@@ -54,7 +54,7 @@ export class MeleeCombatBehavior extends Behavior {
                 if (!this.Me.isDead) super.tick();
                 resolve();
             }
-
+            
             
         });
     }
@@ -63,7 +63,7 @@ export class MeleeCombatBehavior extends Behavior {
             //do attack stuff
             this.Me.playAnimation(this.Me.getAttackAnimation());
 
-            let _damage = this.Me.skills.strength.level;
+            const _damage = this.Me.skills.strength.level;
             console.log(`${(this.Me as Npc).name} attacks ${(this.Them as Player).username} for ${_damage} damage! (after the CD)`);
             (this.Me as Npc).npcEvents.emit('damage', _damage);
             this.Them.damage(_damage);

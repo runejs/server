@@ -41,6 +41,25 @@ export abstract class Actor {
 
     public pathfinding: Pathfinding = new Pathfinding(this);
     public lastMovementPosition: Position;
+    // #region Behaviors and Combat flags/checks
+    public inCombat: boolean = false;
+    public meleeDistance: number = 1;
+    public Behaviors: Behavior[] = [];
+    public isDead: boolean = false;
+    public combatTargets: Actor[] = [];
+    public hitPoints = this.skills.hitpoints.level * 4;
+    public maxHitPoints = this.skills.hitpoints.level * 4;
+    public get highestCombatSkill(): Skill {
+        const attack = this.skills.getLevel('attack');
+        const magic = this.skills.getLevel('magic');
+        const ranged = this.skills.getLevel('ranged');
+
+        if (ranged > magic && ranged > ranged) return ranged;
+        else if (magic > attack && magic > ranged) return magic;
+        else return attack;
+    }
+
+    // #endregion  
 
     protected randomMovementInterval;
 
@@ -65,9 +84,9 @@ export abstract class Actor {
     }
 
     public damage(amount: number, damageType: DamageType = DamageType.DAMAGE) {
-        let armorReduction = 0;
-        let spellDamageReduction = 0;
-        let poisonReistance = 0;
+        const armorReduction = 0;
+        const spellDamageReduction = 0;
+        const poisonReistance = 0;
         amount -= armorReduction;
         this.hitPoints -= amount;
         this.skills.setHitpoints(this.hitPoints);
@@ -77,6 +96,8 @@ export abstract class Actor {
         world.playLocationSound(this.position, soundIds.npc.human.noArmorHitPlayer,5)
         this.playAnimation(this.getBlockAnimation());
     }
+
+
 
     //public damage(amount: number, damageType: DamageType = DamageType.DAMAGE): 'alive' | 'dead' {
     //    let remainingHitpoints: number = this.skills.hitpoints.level - amount;
@@ -567,23 +588,5 @@ export abstract class Actor {
         };
     }
 
-    // #region Behaviors and Combat flags/checks
-    public inCombat: boolean = false;
-    public meleeDistance: number = 1;
-    public Behaviors: Behavior[] = new Array();
-    public isDead: boolean = false;
-    public combatTargets: Actor[] = new Array();
-    public hitPoints = this.skills.hitpoints.level * 4;
-    public maxHitPoints = this.skills.hitpoints.level * 4;
-    public get highestCombatSkill(): Skill {
-        let attack = this.skills.getLevel('attack');
-        let magic = this.skills.getLevel('magic');
-        let ranged = this.skills.getLevel('ranged');
 
-        if (ranged > magic && ranged > ranged) return ranged;
-        else if (magic > attack && magic > ranged) return magic;
-        else return attack;
-    }
-
-    // #endregion  
 }

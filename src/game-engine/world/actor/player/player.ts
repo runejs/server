@@ -127,6 +127,8 @@ export class Player extends Actor {
     public friendsList: string[] = [];
     public ignoreList: string[] = [];
     public cutscene: Cutscene = null;
+    public playerEvents: EventEmitter = new EventEmitter();
+
 
     private readonly _socket: Socket;
     private readonly _inCipher: Isaac;
@@ -400,7 +402,7 @@ export class Player extends Actor {
     }
 
     public async tick(): Promise<void> {
-        for (var i = 0; i < this.Behaviors.length; i++) {
+        for (let i = 0; i < this.Behaviors.length; i++) {
             this.Behaviors[i].tick();
         }
         return new Promise<void>(resolve => {
@@ -991,7 +993,6 @@ export class Player extends Actor {
         this.savedMetadata.npcTransformation = npc;
         this.updateFlags.appearanceUpdateRequired = true;
     }
-    public playerEvents: EventEmitter = new EventEmitter();
 
     /**
      * Returns the morphed NPC details for a specific player based on his client settings

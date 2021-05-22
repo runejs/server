@@ -9,13 +9,15 @@ import { Npc } from '../npc/npc';
 import { Player } from '../player/player';
 
 export class AutoAttackBehavior extends Behavior {
-    private _combatPulse;
+    
     Type = BehaviorType.Combat;
-    Name = "auto-attack-combat";
-    //seconds
+    Name = 'auto-attack-combat';
+
+    private _combatPulse;
     private _CoolDown: number = 3;
     private _lastAttack = new Date();
     private _player: Player;
+
     //this should be called when combat starts
     public async init(me: Actor, them: Actor): Promise<void> {
         this.Me = me;
@@ -23,7 +25,7 @@ export class AutoAttackBehavior extends Behavior {
         this._player = (me as Player);
         console.log('all set to auto attack!');
         (this.Them as Npc).npcEvents.on('death', (npc) => this._player.onNpcKill);
-        super.init(me, them);
+        await super.init(me, them);
     }
 
     public async tick() {
@@ -61,7 +63,7 @@ export class AutoAttackBehavior extends Behavior {
     public async doAttack(): Promise<void> {
         return new Promise<void>(resolve => {
             //do attack stuff
-            let _damage = this.Me.skills.strength.level;
+            const _damage = this.Me.skills.strength.level;
             console.log(`you attack ${(this.Them as Npc).name} for ${_damage} damage! (after the CD)`);
             this.Them.damage(_damage);
             if (this.Them.hitPoints <= 0) {

@@ -32,7 +32,7 @@ export const activate = async (task: TaskExecutor<NpcInteractionAction>, elapsed
         await combatBehavior.init(player, npc);
         player.inCombat = true;
     });
-    task.stop();
+    await task.stop();
 };
 
 

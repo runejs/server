@@ -40,6 +40,10 @@ export class Npc extends Actor {
         stand?: number;
     };
     public instanceId: string = null;
+    //ToDo: this should either be calculated by the level or from a config
+    public experienceValue: number = 10;
+    public npcEvents: EventEmitter = new EventEmitter();
+
 
     private _name: string;
     private _combatLevel: number;
@@ -49,8 +53,7 @@ export class Npc extends Actor {
     private npcSpawn: NpcSpawn;
     private _initialized: boolean = false;
 
-    //ToDo: this should either be calcualted by teh level or from a config
-    public experienceValue: number = 10;
+
 
     public constructor(npcDetails: NpcDetails | number, npcSpawn: NpcSpawn, instanceId: string = null) {
         super();
@@ -122,27 +125,27 @@ export class Npc extends Actor {
     }
 
     //This is useful so that we can tie into things like "spell casts" or events, or traps, etc to finish quests or whatever
-    public npcEvents: EventEmitter = new EventEmitter();
+
     public async processDeath(assailant: Actor): Promise<void> {
-        const deathPosition = this.position;
+        return new Promise<void>(resolve => {
+            const deathPosition = this.position;
 
-        let deathAnim: number = animationIds.death;
-        deathAnim = findNpc(this.id)?.combatAnimations?.death || animationIds.death
-        
+            let deathAnim: number = animationIds.death;
+            deathAnim = findNpc(this.id)?.combatAnimations?.death || animationIds.death
 
-        //ToDo: all this is broken
-        try {
-            
-            this.playAnimation(deathAnim);
-            world.playLocationSound(deathPosition, soundIds.npc.human.maleDeath, 5);
-            let instance = world.globalInstance;
-            instance.spawnWorldItem(itemIds.bones, deathPosition,
-                { owner: assailant instanceof Player ? assailant : undefined, expires: 300 });
-        }
-        catch (err) {
-            logger.debug(err);
-        }
 
+            //ToDo: all this is broken
+            try {
+
+                this.playAnimation(deathAnim);
+                world.playLocationSound(deathPosition, soundIds.npc.human.maleDeath, 5);
+                world.globalInstance.spawnWorldItem(itemIds.bones, deathPosition,
+                    { owner: assailant instanceof Player ? assailant : undefined, expires: 300 });
+            }
+            catch (err) {
+                logger.debug(err);
+            }
+        });
 
     }
     public getAttackAnimation(): number {
@@ -172,7 +175,7 @@ export class Npc extends Actor {
     }
 
     public async tick(): Promise<void> {
-        for (var i = 0; i < this.Behaviors.length; i++) {
+        for (let i = 0; i < this.Behaviors.length; i++) {
             this.Behaviors[i].tick();
         }
         return new Promise<void>(resolve => {
