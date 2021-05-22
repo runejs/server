@@ -31,7 +31,7 @@ export type magic_on_npcActionHandler = (buttonAction: Magic_On_NPCAction) => vo
  */
 export interface Magic_On_NPCAction {
     // The npc world id that was clicked on after choosing the spell
-    npc: Npc,
+    npc: Npc;
     // The player performing the action.
     player: Player;
     // The ID of the UI widget that the button is on.
@@ -48,11 +48,11 @@ export interface Magic_On_NPCAction {
  * @param widgetId
  * @param buttonId
  */
-const buttonActionPipe = (npc:Npc, player: Player, widgetId: number, buttonId: number): RunnableHooks<Magic_on_NPCAction> => {
+const buttonActionPipe = (npc:Npc, player: Player, widgetId: number, buttonId: number): RunnableHooks<Magic_On_NPCAction> => {
     //console.info(`pew pew you use magic on ${npc.name}!`);
 
     // Find all object action plugins that reference this location object
-    let matchingHooks = getActionHooks<Magic_On_NPCActionHook>('magic_on_npc');
+    const matchingHooks = getActionHooks<Magic_On_NPCActionHook>('magic_on_npc');
       
 
     return {

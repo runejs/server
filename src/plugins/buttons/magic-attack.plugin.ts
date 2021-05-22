@@ -15,11 +15,11 @@ const buttonIds: number[] = [
 ];
 
 function attack_target(player: Player, elapsedTicks: number): boolean {
-    logger.info("attacking?");
+    logger.info('attacking?');
     return true;
 }
 
-const spells = ["Wind Strike","Confuse", "Water Strike","unknown?", "Earth Strike"];
+const spells = ['Wind Strike','Confuse', 'Water Strike','unknown?', 'Earth Strike'];
 export const activate = (task: TaskExecutor<Magic_On_NPCAction>, elapsedTicks: number = 0) => {
     const {
         npc,

@@ -2,7 +2,7 @@ import { WalkingQueue } from './walking-queue';
 import { ItemContainer } from '../items/item-container';
 import { Animation, DamageType, Graphic, UpdateFlags } from './update-flags';
 import { Npc } from './npc/npc';
-import { Skills } from '@engine/world/actor/skills';
+import { Skill, Skills } from '@engine/world/actor/skills';
 import { Item } from '@engine/world/items/item';
 import { Position } from '@engine/world/position';
 import { DirectionData, directionFromIndex } from '@engine/world/direction';
@@ -14,6 +14,11 @@ import { WorldInstance } from '@engine/world/instances';
 import { Player } from '@engine/world/actor/player/player';
 import { ActionCancelType, ActionPipeline } from '@engine/world/action';
 import { LandscapeObject } from '@runejs/filestore';
+import { Behavior } from './behaviors/behavior';
+import { soundIds } from '../config/sound-ids';
+import { animationIds } from '../config/animation-ids';
+import { findNpc } from '../../config';
+import { itemIds } from '../config/item-ids';
 
 
 /**
@@ -59,19 +64,33 @@ export abstract class Actor {
         this._busy = false;
     }
 
-    public damage(amount: number, damageType: DamageType = DamageType.DAMAGE): 'alive' | 'dead' {
-        let remainingHitpoints: number = this.skills.hitpoints.level - amount;
-        const maximumHitpoints: number = this.skills.hitpoints.levelForExp;
-        if(remainingHitpoints < 0) {
-            remainingHitpoints = 0;
-        }
-
-        this.skills.setHitpoints(remainingHitpoints);
+    public damage(amount: number, damageType: DamageType = DamageType.DAMAGE) {
+        let armorReduction = 0;
+        let spellDamageReduction = 0;
+        let poisonReistance = 0;
+        amount -= armorReduction;
+        this.hitPoints -= amount;
+        this.skills.setHitpoints(this.hitPoints);
         this.updateFlags.addDamage(amount, amount === 0 ? DamageType.NO_DAMAGE : damageType,
-            remainingHitpoints, maximumHitpoints);
-
-        return remainingHitpoints === 0 ? 'dead' : 'alive';
+            this.hitPoints, this.maxHitPoints);
+        //this actor should respond when hit
+        world.playLocationSound(this.position, soundIds.npc.human.noArmorHitPlayer,5)
+        this.playAnimation(this.getBlockAnimation());
     }
+
+    //public damage(amount: number, damageType: DamageType = DamageType.DAMAGE): 'alive' | 'dead' {
+    //    let remainingHitpoints: number = this.skills.hitpoints.level - amount;
+    //    const maximumHitpoints: number = this.skills.hitpoints.levelForExp;
+    //    if(remainingHitpoints < 0) {
+    //        remainingHitpoints = 0;
+    //    }
+
+    //    this.skills.setHitpoints(remainingHitpoints);
+    //    this.updateFlags.addDamage(amount, amount === 0 ? DamageType.NO_DAMAGE : damageType,
+    //        remainingHitpoints, maximumHitpoints);
+
+    //    return remainingHitpoints === 0 ? 'dead' : 'alive';
+    //}
 
     /**
      * Waits for the actor to reach the specified position before resolving it's promise.
@@ -548,4 +567,23 @@ export abstract class Actor {
         };
     }
 
+    // #region Behaviors and Combat flags/checks
+    public inCombat: boolean = false;
+    public meleeDistance: number = 1;
+    public Behaviors: Behavior[] = new Array();
+    public isDead: boolean = false;
+    public combatTargets: Actor[] = new Array();
+    public hitPoints = this.skills.hitpoints.level * 4;
+    public maxHitPoints = this.skills.hitpoints.level * 4;
+    public get highestCombatSkill(): Skill {
+        let attack = this.skills.getLevel('attack');
+        let magic = this.skills.getLevel('magic');
+        let ranged = this.skills.getLevel('ranged');
+
+        if (ranged > magic && ranged > ranged) return ranged;
+        else if (magic > attack && magic > ranged) return magic;
+        else return attack;
+    }
+
+    // #endregion  
 }
