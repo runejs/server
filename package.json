@@ -12,6 +12,7 @@
         "start:infra": "concurrently \"npm run start:update\" \"npm run start:login\"",
         "start:standalone": "concurrently \"npm run start:infra\" \"npm run start:game\"",
         "lint": "eslint -c .eslintrc.js --ext .ts src",
+        "lint-fix": "eslint -c .eslintrc.js --ext .ts src --fix",
         "fake-players": "concurrently \"npm run build:watch\" \"node --max-old-space-size=4096 dist/index.js -fakePlayers\"",
         "fake-players-tick": "concurrently \"npm run build:watch\" \"node --max-old-space-size=4096 dist/index.js -fakePlayers -tickTime\"",
         "build:watch": "babel ./src --out-dir dist --extensions \".ts,.tsx,.js\" --source-maps --watch",
