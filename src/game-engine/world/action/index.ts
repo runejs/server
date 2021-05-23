@@ -36,6 +36,10 @@ export type ActionType =
     | 'move_item'
     | 'spawned_item_interaction'
 
+    | 'magic_on_item'
+    | 'magic_on_player'
+    | 'magic_on_npc'
+
     | 'player_init'
     | 'player_command'
     | 'player_interaction'
