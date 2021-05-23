@@ -48,7 +48,7 @@ export interface MagicOnNPCAction {
  * @param widgetId
  * @param buttonId
  */
-const buttonActionPipe = (npc:Npc, player: Player, widgetId: number, buttonId: number): RunnableHooks<MagicOnNPCAction> => {
+const magicOnNpcActionPipe = (npc:Npc, player: Player, widgetId: number, buttonId: number): RunnableHooks<MagicOnNPCAction> => {
     //console.info(`pew pew you use magic on ${npc.name}!`);
 
     // Find all object action plugins that reference this location object
@@ -73,4 +73,4 @@ const buttonActionPipe = (npc:Npc, player: Player, widgetId: number, buttonId: n
 /**
  * Button action pipe definition.
  */
-export default [ 'magic_on_npc', buttonActionPipe ] as ActionPipe;
+export default [ 'magic_on_npc', magicOnNpcActionPipe ] as ActionPipe;
