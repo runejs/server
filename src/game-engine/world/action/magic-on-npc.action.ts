@@ -8,7 +8,7 @@ import { Npc } from '../actor/npc/npc';
 /**
  * Defines a button action hook.
  */
-export interface Magic_On_NPCActionHook extends ActionHook<Magic_On_NPCAction, magic_on_npcActionHandler> {
+export interface MagicOnNPCActionHook extends ActionHook<MagicOnNPCAction, magiconnpcActionHandler> {
     // The npc world id that was clicked on after choosing the spell
     npcworldId?: number;
     // The IDs of the UI widgets that the buttons are on.
@@ -23,13 +23,13 @@ export interface Magic_On_NPCActionHook extends ActionHook<Magic_On_NPCAction, m
 /**
  * The button action hook handler function to be called when the hook's conditions are met.
  */
-export type magic_on_npcActionHandler = (buttonAction: Magic_On_NPCAction) => void | Promise<void>;
+export type magiconnpcActionHandler = (buttonAction: MagicOnNPCAction) => void | Promise<void>;
 
 
 /**
  * Details about a button action being performed.
  */
-export interface Magic_On_NPCAction {
+export interface MagicOnNPCAction {
     // The npc world id that was clicked on after choosing the spell
     npc: Npc;
     // The player performing the action.
@@ -48,11 +48,11 @@ export interface Magic_On_NPCAction {
  * @param widgetId
  * @param buttonId
  */
-const buttonActionPipe = (npc:Npc, player: Player, widgetId: number, buttonId: number): RunnableHooks<Magic_On_NPCAction> => {
+const buttonActionPipe = (npc:Npc, player: Player, widgetId: number, buttonId: number): RunnableHooks<MagicOnNPCAction> => {
     //console.info(`pew pew you use magic on ${npc.name}!`);
 
     // Find all object action plugins that reference this location object
-    const matchingHooks = getActionHooks<Magic_On_NPCActionHook>('magic_on_npc');
+    const matchingHooks = getActionHooks<MagicOnNPCActionHook>('magic_on_npc');
       
 
     return {
