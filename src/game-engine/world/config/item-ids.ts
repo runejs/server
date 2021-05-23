@@ -4,9 +4,7 @@ export const itemIds = {
     bucketOfMilk: 1927,
     bucketOfWater: 1929,
     ashes: 592,
-    bones: 526,
     tinderbox: 590,
-    logs: 1511,
     jug: 1935,
     jugOfWater: 1937,
     pot: 1931,
@@ -18,115 +16,86 @@ export const itemIds = {
     cabbage: 1965,
     flax: 1779,
     bowstring: 1777,
-    oakRoots: 6043,
-    willowRoots: 6045,
-    mapleRoots: 6047,
-    yewRoots: 6049,
-    magicRoots: 6051,
     potato: 1942,
     onion: 1957,
     shears: 1735,
     magicString: 6038,
     crossbowString: 9438,
     sinew: 9436,
+    knife: 946,
+    feather: 314,
     recruitmentDrive: {
         shears: 5603,
     },
     kebab: 1971,
     beer: 1917,
     hammer: 2347,
-    skillCapes: {
-        attack: {
-            untrimmed: 9747,
-            trimmed: 9748,
+    arrows: {
+        shaft: 52,
+        headless: 53,
+        broken: 687,
+        bronze: 882,
+        bronze_p: 883,
+        bronze_pp: 5616,
+        bronze_s: 5622,
+        bronze_fire_u: 598,
+        bronze_fire_l: 942,
+        iron: 884,
+        iron_p: 885,
+        iron_pp: 5617,
+        iron_s: 5623,
+        iron_fire_u: 2532,
+        iron_fire_l: 2533,
+        steel: 886,
+        steel_p: 887,
+        steel_pp: 5618,
+        steel_s: 5624,
+        steel_fire_u: 2534,
+        steel_fire_l: 2535,
+        mithril: 888,
+        mithril_p: 889,
+        mithril_pp: 5619,
+        mithril_s: 5625,
+        mithril_fire_u: 2536,
+        mithril_fire_l: 2537,
+        adamant: 890,
+        adamant_p: 891,
+        adamant_pp: 5620,
+        adamant_s: 5626,
+        adamant_fire_u: 2538,
+        adamant_fire_l: 2539,
+        rune: 892,
+        rune_p: 893,
+        rune_pp: 5621,
+        rune_s: 5627,
+        rune_fire_u: 2540,
+        rune_fire_l: 2541
+    },
+    bones: {
+        normal: 526,
+        burnt: 528,
+        wolf: 2859,
+        bat: 530,
+        big: 532,
+        dagannoth: 6729,
+        babydragon: 534,
+        dragon: 536,
+        wyvern: 6812,
+        monkey: {
+            normal: 3183,
+            small_zombie: 3185,
+            large_zombie: 3186,
+            gorilla: 3181,
+            bearded_gorilla: 3182,
+            small_ninja: 3179,
+            medium_ninja: 3180,
+            skeleton_gorilla: 3187
         },
-        strength: {
-            untrimmed: 9750,
-            trimmed: 9751,
-        },
-        defence: {
-            untrimmed: 9753,
-            trimmed: 9754,
-        },
-        ranged: {
-            untrimmed: 9756,
-            trimmed: 9757,
-        },
-        prayer: {
-            untrimmed: 9759,
-            trimmed: 9760,
-        },
-        magic: {
-            untrimmed: 9762,
-            trimmed: 9763,
-        },
-        runecrafting: {
-            untrimmed: 9765,
-            trimmed: 9766,
-        },
-        constitution: {
-            untrimmed: 9768,
-            trimmed: 9769,
-        },
-        agility: {
-            untrimmed: 9771,
-            trimmed: 9772,
-        },
-        herblore: {
-            untrimmed: 9774,
-            trimmed: 9775,
-        },
-        thieving: {
-            untrimmed: 9777,
-            trimmed: 9775,
-        },
-        crafting: {
-            untrimmed: 9780,
-            trimmed: 9781,
-        },
-        fletching: {
-            untrimmed: 9783,
-            trimmed: 9784,
-        },
-        slayer: {
-            untrimmed: 9786,
-            trimmed: 9786,
-        },
-        construction: {
-            untrimmed: 9789,
-            trimmed: 9790,
-        },
-        mining: {
-            untrimmed: 9792,
-            trimmed: 9793,
-        },
-        smithing: {
-            untrimmed: 9795,
-            trimmed: 9796,
-        },
-        fishing: {
-            untrimmed: 9798,
-            trimmed: 9799,
-        },
-        cooking: {
-            untrimmed: 9801,
-            trimmed: 9802,
-        },
-        firemaking: {
-            untrimmed: 9804,
-            trimmed: 9805,
-        },
-        woodcutting: {
-            untrimmed: 9807,
-            trimmed: 9808,
-        },
-        farming: {
-            untrimmed: 9810,
-            trimmed: 9811,
-        },
-        questpoint: {
-            untrimmed: 9813,
-        },
+        jogre: 3152,
+        zogre: 4812,
+        fayrg: 4830,
+        raurg: 4832,
+        ourg: 4834
     },
     essence: {
         pure: 7936,
@@ -189,6 +158,7 @@ export const itemIds = {
         runite: 2363
     },
     ores: {
+        clay: 434,
         coal: 453,
         tin: 438,
         copper: 436,
@@ -408,5 +378,146 @@ export const itemIds = {
     },
     grappleTips: {
         mithril: 9415
-    }
+    },
+    roots: {
+        oak: 6043,
+        willow: 6047,
+        maple: 6047,
+        yew: 6049,
+        magic: 6051
+    },
+    logs: {
+        normal: 1511,
+        achey: 2862,
+        oak: 1521,
+        willow: 1519,
+        teak: 6333,
+        maple: 1517,
+        mahogany: 6332,
+        yew: 1515,
+        magic: 1513
+    },
+    bowunstrung: {
+        woodshort: 50,
+        woodlong: 48,
+        oakshort: 54,
+        oaklong: 56,
+        compogre: 4825,
+        willowshort: 60,
+        willowlong: 58,
+        mapleshort: 64,
+        maplelong: 62,
+        yewshort: 68,
+        yewlong: 66,
+        magicshort: 72,
+        magiclong: 70
+    },
+    bowstrung: {
+        woodshort: 841,
+        woodlong: 839,
+        oakshort: 843,
+        oaklong: 845,
+        compogre: 4827,
+        willowshort: 849,
+        willowlong: 847,
+        mapleshort: 853,
+        maplelong: 851,
+        yewshort: 857,
+        yewlong: 855,
+        magicshort: 861,
+        magiclong: 859
+    },
+    skillCapes: {
+        attack: {
+            untrimmed: 9747,
+            trimmed: 9748,
+        },
+        strength: {
+            untrimmed: 9750,
+            trimmed: 9751,
+        },
+        defence: {
+            untrimmed: 9753,
+            trimmed: 9754,
+        },
+        ranged: {
+            untrimmed: 9756,
+            trimmed: 9757,
+        },
+        prayer: {
+            untrimmed: 9759,
+            trimmed: 9760,
+        },
+        magic: {
+            untrimmed: 9762,
+            trimmed: 9763,
+        },
+        runecrafting: {
+            untrimmed: 9765,
+            trimmed: 9766,
+        },
+        constitution: {
+            untrimmed: 9768,
+            trimmed: 9769,
+        },
+        agility: {
+            untrimmed: 9771,
+            trimmed: 9772,
+        },
+        herblore: {
+            untrimmed: 9774,
+            trimmed: 9775,
+        },
+        thieving: {
+            untrimmed: 9777,
+            trimmed: 9775,
+        },
+        crafting: {
+            untrimmed: 9780,
+            trimmed: 9781,
+        },
+        fletching: {
+            untrimmed: 9783,
+            trimmed: 9784,
+        },
+        slayer: {
+            untrimmed: 9786,
+            trimmed: 9786,
+        },
+        construction: {
+            untrimmed: 9789,
+            trimmed: 9790,
+        },
+        mining: {
+            untrimmed: 9792,
+            trimmed: 9793,
+        },
+        smithing: {
+            untrimmed: 9795,
+            trimmed: 9796,
+        },
+        fishing: {
+            untrimmed: 9798,
+            trimmed: 9799,
+        },
+        cooking: {
+            untrimmed: 9801,
+            trimmed: 9802,
+        },
+        firemaking: {
+            untrimmed: 9804,
+            trimmed: 9805,
+        },
+        woodcutting: {
+            untrimmed: 9807,
+            trimmed: 9808,
+        },
+        farming: {
+            untrimmed: 9810,
+            trimmed: 9811,
+        },
+        questpoint: {
+            untrimmed: 9813,
+        },
+    },
 };
