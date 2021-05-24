@@ -4,6 +4,8 @@ import { logger } from '@runejs/core';
 import { filestore } from '@engine/game-server';
 import { TextWidget } from '@runejs/filestore';
 import { wrapText } from '@engine/util/strings';
+import { loadConfigurationFiles } from '@runejs/core/fs';
+import * as fs from 'fs';
 
 
 export interface BookData {
@@ -36,113 +38,82 @@ export interface BookSections {
 export interface BookPage {
     header?: string;
     lines: string[];
+    pageNumber: number;
 }
 
+/**
+ * Returns a boolean for whether or not the specified section header exists in the book.
+ * @param bookContents The book to find the header in.
+ * @param bookSectionHeader The header to search for.
+ */
 export function bookSectionHeaderExists(bookContents: BookContents, bookSectionHeader: string): boolean {
-    for (const bookSection of bookContents.bookSections) {
-        if (bookSection.header === bookSectionHeader) {
-            return true;
-        }
-    }
-    return false;
+    return bookContents.bookSections.some(section => section.header === bookSectionHeader);
 }
 
-function getPageDataFromPageNumber(bookContents: BookContents, page: number): BookPage {
+function getBookDataForBookContents(bookContents: BookContents): BookData {
     const textWidget = filestore.widgetStore.decodeWidget(215) as TextWidget;
 
     const output = [];
-    if (page === 1 && bookContents.showTableOfContents) {
+    let pageNumber = 1;
+
+    const bookPages: { [key: number]: BookPage } = {};
+    if (bookContents.showTableOfContents) {
         output.push(``);
         bookContents.bookSections.forEach(section => output.push(section.header));
-        return { header: `Chapters`, lines: output };
+        bookPages[pageNumber] = { header: `Chapters`, lines: output, pageNumber: pageNumber };
+        pageNumber++;
     }
 
-    const outputPages: BookPage[] = [];
+    const sectionLocations: { [key: string]: number } = {};
+
     bookContents.bookSections.forEach(section => {
         const wrappedText = wrapText(section.text, 202, textWidget.fontId);
-        let pageLineAmount = 14;
+        const pageLineAmount = 14;
 
-        for (let line = 0; line < wrappedText.length; line += pageLineAmount) {
-            if ((pageLineAmount + line) > (wrappedText.length - line)) {
-                pageLineAmount = wrappedText.length - line;
+        let pageContainsHeader = true;
+        while (wrappedText.length) {
+            const pageLines = wrappedText.splice(0, pageLineAmount);
+            bookPages[pageNumber] = {
+                header: (pageContainsHeader ? section.header : undefined),
+                lines: pageLines,
+                pageNumber: pageNumber
+            };
+            if (pageContainsHeader) {
+                sectionLocations[section.header] = pageNumber;
             }
-            if (line === 0) {
-                outputPages.push({ header: section.header, lines: wrappedText.slice(line, line + pageLineAmount) });
-            } else {
-                outputPages.push({ lines: wrappedText.slice(line, line + pageLineAmount) });
-            }
+            pageContainsHeader = false;
+            pageNumber++;
         }
     });
 
-    if(outputPages[page - 2] === undefined) {
-        return undefined;
-    }
-    return outputPages[page - 2];
+    logger.info(`Book: ` + bookContents.bookTitle + ` has ` + Object.keys(sectionLocations).length + ` sections.`)
+    return { sectionLocations: sectionLocations, bookPages: bookPages, bookContents: bookContents };
 }
 
-export const pageExists = (book: BookContents, page: number): boolean => {
-    return book.bookSections[page - 1] !== undefined;
-}
-function getBookPagesFromBookContents(bookContents: BookContents): { [key: number]: BookPage } {
-    const bookPages: { [key: number]: BookPage } = {};
-
-    let pageNumber = 1;
-    let bookPage = getPageDataFromPageNumber(bookContents, pageNumber);
-    while (bookPage !== undefined) {
-        bookPages[pageNumber] = bookPage;
-        pageNumber++;
-        bookPage = getPageDataFromPageNumber(bookContents, pageNumber);
-    }
-    return bookPages;
+/**
+ * An enum that represents either the left, or the right page in a book.
+ */
+export enum PageSide {
+    LEFT_SIDE = 'LEFT',
+    RIGHT_SIDE = 'RIGHT'
 }
 
-
-function getSectionLocationsFromBookContents(bookContents: BookContents): { [key: string]: number } {
-    const sectionLocations: { [key: string]: number } = {};
-    // const bookPages: { [key: number]: BookPage } = {};
-    let pageNumber = 1;
-    let leftPageData = getPageDataFromPageNumber(bookContents, (2 * pageNumber) - 1);
-    let rightPageData = getPageDataFromPageNumber(bookContents, (2 * pageNumber));
-
-    while (leftPageData.lines !== undefined && rightPageData.lines !== undefined) {
-
-        const leftBookPage = (2 * pageNumber) - 1;
-        const rightBookPage = (2 * pageNumber) - 1;
-        leftPageData = getPageDataFromPageNumber(bookContents, leftBookPage);
-        rightPageData = getPageDataFromPageNumber(bookContents, rightBookPage);
-
-        if(leftPageData === undefined) {
-            return;
-        }
-        if(rightPageData === undefined) {
-            return;
-        }
-        if (leftPageData.header) {
-            sectionLocations[leftPageData.header] = leftBookPage;
-        }
-        if (rightPageData.header) {
-            sectionLocations[rightPageData.header] = rightBookPage;
-        }
-        pageNumber += 1;
-
-
-    }
-    return sectionLocations;
+export const pageExists = (book: BookData, page: number): boolean => {
+    return (book.bookPages[page] !== undefined);
 }
 
-export function loadStrongholdOfSecurityBookData(path: string): BookData | null {
-    try {
-        const book = safeLoad(readFileSync(path, 'utf8'),
-            { schema: JSON_SCHEMA }) as BookContents;
+export function loadBookData(path: string): BookData[] | null {
+    const books: BookData[] = [];
 
-        if (!book) {
-            throw new Error('Unable to read book data!');
-        }
-
-        const sectionLocations = getSectionLocationsFromBookContents(book);
-        const bookPages = getBookPagesFromBookContents(book);
-        return { bookPages: bookPages, bookContents: book, sectionLocations: sectionLocations };
-    } catch (error) {
-        logger.error('Error parsing book data: ' + error);
-    }
+    fs.readdir(path, function(error, filenames) {
+        filenames.forEach(function(filename) {
+            const bookContents = safeLoad(readFileSync(path + filename, 'utf8'),
+                { schema: JSON_SCHEMA }) as BookContents;
+            const bookData = getBookDataForBookContents(bookContents);
+            books.push(bookData);
+        });
+    });
+    return books;
 }
+
+

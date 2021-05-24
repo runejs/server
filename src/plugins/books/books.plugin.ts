@@ -1,10 +1,20 @@
 import { ItemInteractionAction, itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
-import { strongholdOfSecurityBookData, widgets } from '@engine/config';
+import {
+    getBookFromId,
+    widgets
+} from '@engine/config';
 import { TaskExecutor } from '@engine/world/action';
 import { widgetInteractionActionHandler } from '@engine/world/action/widget-interaction.action';
 import { Player } from '@engine/world/actor/player/player';
-import { BookData, bookSectionHeaderExists, BookSections, pageExists } from '@engine/config/sectioned-book-config';
+import {
+    BookData,
+    BookPage,
+    bookSectionHeaderExists,
+    BookSections,
+    pageExists, PageSide
+} from '@engine/config/sectioned-book-config';
 import { Widget, WidgetClosedEvent } from '@engine/world/actor/player/interface-state';
+import { logger } from '@runejs/core';
 
 /**
  * Open the book interface and read the specified book.
@@ -12,8 +22,17 @@ import { Widget, WidgetClosedEvent } from '@engine/world/actor/player/interface-
  * @param details Information about the action.
  */
 export const activate: itemInteractionActionHandler = (details) => {
+    const itemId = details.itemId;
+    const book = getBookFromId(itemId);
+    if(!book) {
+        details.player.sendMessage(`Book data not found for item: ` + itemId + `.`);
+        return;
+    }
+
+    details.player.sessionMetadata[`bookIdBeingRead`] = itemId;
     details.player.playAnimation(1350);
-    openBook(details.player, strongholdOfSecurityBookData, 1);
+
+    openBook(details.player, book, 1);
     details.player.metadata['readingBook'] = details.player.interfaceState.closed.subscribe((whatClosed: WidgetClosedEvent) => {
         if (whatClosed && whatClosed.widget && whatClosed.widget.widgetId === widgets.book) {
             details.player.stopGraphics();
@@ -28,25 +47,7 @@ export const activate: itemInteractionActionHandler = (details) => {
  * @param bookSectionHeader The name of the section to find the page of.
  */
 function getPageNumberForBookSection(bookData: BookData, bookSectionHeader: string): number {
-    let pageNumber = 1;
-    let leftPageNumber = (2 * pageNumber) - 1;
-    let rightPageNumber = 2 * pageNumber;
-
-    let leftPageData = bookData.bookPages[leftPageNumber];
-    let rightPageData = bookData.bookPages[rightPageNumber];
-    while (leftPageData.lines !== undefined && rightPageData.lines !== undefined) {
-        if (leftPageData.header === bookSectionHeader) {
-            return pageNumber;
-        } else if (rightPageData.header === bookSectionHeader) {
-            return pageNumber;
-        }
-        pageNumber += 1;
-        leftPageNumber = (2 * pageNumber) - 1;
-        rightPageNumber = (2 * pageNumber);
-        leftPageData = bookData.bookPages[leftPageNumber];
-        rightPageData = bookData.bookPages[rightPageNumber];
-    }
-    return 1;
+    return bookData.sectionLocations[bookSectionHeader];
 }
 
 /**
@@ -62,7 +63,7 @@ function getPageNumberForBookSection(bookData: BookData, bookSectionHeader: stri
  */
 function toggleVisibilityOfLeftPageClickableWidgets(player: Player, widget: Widget, hidden: boolean, fromLine?: number, toLine?: number) {
     if (toLine === undefined) {
-        toLine = 15;
+        toLine = 14;
     }
 
     if (fromLine === undefined) {
@@ -118,34 +119,35 @@ function clearBookInterface(player: Player, widget: Widget) {
  * @param page The page-set that will be viewed. (This number accounts for two pages at a time. Page 1 and 2 would be 1.
  * Pages 3 and 4 would be 2, etc.)
  */
-export function openBook(player: Player, bookData: BookData, page: number): void {
+export function openBook(player: Player, bookData: BookData, leftPageNumber: number): void {
     const widget = player.interfaceState.openWidget(widgets.book, {
         slot: 'screen',
         fakeWidget: 3100003,
         metadata: {
-            page: page
+            page: leftPageNumber
         }
     });
 
     clearBookInterface(player, widget);
 
+    addBookTitleToBookWidget(player, widget, bookData);
+
     toggleVisibilityOfLeftPageClickableWidgets(player, widget, true);
 
-    const leftPageNumber = (2 * page) - 1;
     const leftPage = bookData.bookPages[leftPageNumber];
-    if (!leftPage) {
+    if (leftPage) {
+        addBookTextToWidget(player, widget, bookData, leftPageNumber, PageSide.LEFT_SIDE);
+    } else {
         return;
     }
 
-    addBookTextToWidget(player, widget, bookData, leftPageNumber, PageSide.LEFT_SIDE);
-
-    const rightPageNumber = (2 * page);
+    const rightPageNumber = leftPageNumber + 1;
     const rightPage = bookData.bookPages[rightPageNumber];
     if (rightPage) {
         addBookTextToWidget(player, widget, bookData, rightPageNumber, PageSide.RIGHT_SIDE);
     }
 
-    addPageNumberToBookWidget(player, widget);
+    addPageNumbersToBookWidget(player, widget);
 }
 
 /**
@@ -153,17 +155,32 @@ export function openBook(player: Player, bookData: BookData, page: number): void
  * @param player The player who's widget is being modified.
  * @param widget The widget to modify with new page numbers.
  */
-function addPageNumberToBookWidget(player: Player, widget: Widget) {
+function addPageNumbersToBookWidget(player: Player, widget: Widget) {
     player.modifyWidget(widget.widgetId, {
         childId: widgets.bookChildren.rightPage.pageNumber,
-        text: `Page ${widget.metadata.page * 2}`
+        text: `Page ${widget.metadata.page + 1}`
     });
     player.modifyWidget(widget.widgetId, {
         childId: widgets.bookChildren.leftPage.pageNumber,
-        text: `Page ${widget.metadata.page * 2 - 1}`
+        text: `Page ${widget.metadata.page}`
     });
 }
 
+function addBookTitleToBookWidget(player: Player, bookWidget: Widget, bookData: BookData) {
+    player.modifyWidget(bookWidget.widgetId, {
+        childId: widgets.bookChildren.title,
+        text: bookData.bookContents.bookTitle
+    });
+}
+
+/**
+ * Return the appropriate BookPage, given a particular page number in a book.
+ * @param bookData
+ * @param page
+ */
+function getBookPageFromPageNumber(bookData: BookData, page: number): BookPage {
+    return bookData.bookPages[page];
+}
 
 /**
  * Given a BookData object, and information about where the book data should be applied to, add the appropriate book text
@@ -175,7 +192,10 @@ function addPageNumberToBookWidget(player: Player, widget: Widget) {
  * @param side Whether or not the page is on the left or right side.
  */
 function addBookTextToWidget(player: Player, widget: Widget, book: BookData, pageNumber: number, side: PageSide) {
-    const page = book.bookPages[pageNumber];
+    const page = getBookPageFromPageNumber(book, pageNumber);
+    if(!page) {
+        logger.info(`Page number not found.`)
+    }
     const clickable = (book.bookContents.showTableOfContents && pageNumber === 1);
     const totalPageLines = widgets.bookChildren.totalPageLineAmount;
 
@@ -253,24 +273,21 @@ function getLineChildId(pageSide: PageSide, clickable: boolean, lineNumber: numb
 }
 
 /**
- * An enum that represents either the left, or the right page in a book.
- */
-enum PageSide {
-    LEFT_SIDE = 'LEFT',
-    RIGHT_SIDE = 'RIGHT'
-}
-
-/**
  * Handles interactions with the book interface itself, such as using the left and right buttons
  * @param details
  */
-export const strongholdBookInteract: widgetInteractionActionHandler = (details) => {
+export const bookInteract: widgetInteractionActionHandler = (details) => {
     const playerWidget = details.player.interfaceState.findWidget(27);
 
     if (!playerWidget || !playerWidget.metadata.page || playerWidget.fakeWidget !== 3100003) {
         return;
     }
-    const bookData: BookData = strongholdOfSecurityBookData;
+
+    if(!details.player.sessionMetadata[`bookIdBeingRead`]) {
+        details.player.sendMessage(`Session metadata not found for book interface`);
+    }
+
+    const bookData: BookData = getBookFromId(details.player.sessionMetadata[`bookIdBeingRead`]);
 
 
     let pageNumber = playerWidget.metadata.page;
@@ -279,8 +296,8 @@ export const strongholdBookInteract: widgetInteractionActionHandler = (details) 
             openBook(details.player, bookData, 1);
             return;
         case 94:
-            pageNumber--;
-            if (pageExists(bookData.bookContents, pageNumber)) {
+            pageNumber -= 2;
+            if (pageExists(bookData, pageNumber)) {
                 details.player.playAnimation(3141);
                 openBook(details.player, bookData, pageNumber);
             } else {
@@ -288,8 +305,8 @@ export const strongholdBookInteract: widgetInteractionActionHandler = (details) 
             }
             return;
         case 96:
-            pageNumber++;
-            if (pageExists(bookData.bookContents, pageNumber)) {
+            pageNumber += 2;
+            if (pageExists(bookData, pageNumber)) {
                 details.player.playAnimation(3140);
                 openBook(details.player, bookData, pageNumber);
             } else {
@@ -311,14 +328,21 @@ export const strongholdBookInteract: widgetInteractionActionHandler = (details) 
 
         if (bookSectionHeaderExists(bookData.bookContents, bookSection.header)) {
             const sectionName = bookSection.header;
-            const selectedPage = getPageNumberForBookSection(bookData, sectionName);
+            let selectedPage = getPageNumberForBookSection(bookData, sectionName);
+            details.player.sendMessage(`Selected page number: ` + selectedPage)
+            details.player.sendMessage(`Header: ` + sectionName)
+            if(selectedPage % 2 === 0) {
+                selectedPage--;
+            }
+            details.player.sendMessage(`Book section header exists.`)
+
             openBook(details.player, bookData, selectedPage);
         } else {
+            details.player.sendMessage(`Book section header doesn't exist.`)
             openBook(details.player, bookData, pageNumber);
         }
     }
 }
-
 
 const canActivate = (task: TaskExecutor<ItemInteractionAction>, taskIteration: number): boolean => {
     return true;
@@ -330,7 +354,7 @@ const onComplete = (task: TaskExecutor<ItemInteractionAction>): void => {
 }
 
 export default {
-    pluginId: 'rs:stronghold_of_security_book',
+    pluginId: 'rs:books',
     hooks: [
         {
             type: 'item_interaction',
@@ -342,7 +366,7 @@ export default {
         {
             type: 'widget_interaction',
             widgetId: 3100003,
-            handler: strongholdBookInteract
+            handler: bookInteract
         }
     ]
 };

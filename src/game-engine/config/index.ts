@@ -25,8 +25,8 @@ import {
     StrongholdOfSecurityQuiz,
     StrongholdOfSecurityQuizQuestion
 } from '@engine/config/stronghold-of-security-quiz-config';
-import { BookData, loadStrongholdOfSecurityBookData } from '@engine/config/sectioned-book-config';
-import { LandscapeObject, loadXteaRegionFiles, ObjectConfig, XteaRegion } from '@runejs/filestore';
+import { BookData, loadBookData } from '@engine/config/sectioned-book-config';
+import { loadXteaRegionFiles, ObjectConfig, XteaRegion } from '@runejs/filestore';
 
 require('json5/lib/register');
 
@@ -45,7 +45,7 @@ export let shopMap: { [key: string]: Shop };
 export let skillGuides: SkillGuide[] = [];
 export let xteaRegions: { [key: number]: XteaRegion };
 export let strongholdOfSecurityQuizData: StrongholdOfSecurityQuiz;
-export let strongholdOfSecurityBookData: BookData;
+export let bookData: BookData[];
 
 export const musicRegionMap = new Map<number, number>();
 export const widgets: { [key: string]: any } = require('../../../data/config/widgets.json5');
@@ -68,7 +68,7 @@ export async function loadGameConfigurations(): Promise<void> {
     npcPresetMap = npcPresets;
 
     strongholdOfSecurityQuizData = await loadStrongholdOfSecurityQuizData(`data/config/stronghold-of-security-quiz.json5`);
-    strongholdOfSecurityBookData = await loadStrongholdOfSecurityBookData(`data/config/books/security-book.json5`);
+    bookData = await loadBookData(`data/config/books/`);
     npcSpawns = await loadNpcSpawnConfigurations('data/config/npc-spawns/');
     musicRegions = await loadMusicRegionConfigurations();
     musicRegions.forEach(song => song.regionIds.forEach(region => musicRegionMap.set(region, song.songId)));
@@ -82,7 +82,6 @@ export async function loadGameConfigurations(): Promise<void> {
     logger.info(`Loaded ${musicRegions.length} music regions, ${Object.keys(itemMap).length} items, ${itemSpawns.length} item spawns, ` +
         `${Object.keys(npcMap).length} npcs, ${npcSpawns.length} npc spawns, ${Object.keys(shopMap).length} shops and ${skillGuides.length} skill guides.`);
 }
-
 
 export const findItem = (itemKey: number | string): ItemDetails | null => {
     if (!itemKey) {
@@ -227,4 +226,17 @@ export const findSongIdByRegionId = (regionId: number): number | null => {
 export function getRandomStrongholdOfSecurityQuizQuestion(): StrongholdOfSecurityQuizQuestion | null {
     const randomIndex = Math.floor(Math.random() * strongholdOfSecurityQuizData.questions.length);
     return strongholdOfSecurityQuizData.questions[randomIndex];
+}
+
+export function getBookFromId(bookId: number): BookData | null {
+    const bookExists = bookData.some(book => book.bookContents.bookId === bookId);
+    if(bookExists) {
+        for (const book of bookData) {
+            if(book.bookContents.bookId === bookId) {
+                return book;
+            }
+        }
+    } else {
+        return null;
+    }
 }
