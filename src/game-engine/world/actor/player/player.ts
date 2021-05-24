@@ -55,6 +55,8 @@ import { regionChangeActionFactory } from '@engine/world/action/region-change.ac
 import { MusicPlayerMode } from '@plugins/music/music-tab.plugin';
 import { getVarbitMorphIndex } from '@engine/util/varbits';
 import { SendMessageOptions } from '@engine/world/actor/player/model';
+import { AutoAttackBehavior } from '../behaviors/auto-attack.behavior';
+import { EventEmitter } from 'events';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -124,6 +126,8 @@ export class Player extends Actor {
     public friendsList: string[] = [];
     public ignoreList: string[] = [];
     public cutscene: Cutscene = null;
+    public playerEvents: EventEmitter = new EventEmitter();
+
 
     private readonly _socket: Socket;
     private readonly _inCipher: Isaac;
@@ -143,6 +147,7 @@ export class Player extends Actor {
     private _nearbyChunks: Chunk[];
     private quadtreeKey: QuadtreeKey = null;
     private privateMessageIndex: number = 1;
+    
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -237,7 +242,9 @@ export class Player extends Actor {
         this.updateMusicTab();
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
-
+        this.playerEvents.on('exp', (amt) => {
+            logger.info(`Player should have been awarded ${amt} exp if this was hooked up.`);
+        });
         this.actionsCancelled.subscribe(type => {
             let closeWidget: boolean;
 
@@ -269,6 +276,8 @@ export class Player extends Actor {
         if(!this.metadata.customMap) {
             this.chunkChanged(playerChunk);
         }
+
+        this.Behaviors.push(new AutoAttackBehavior());
 
         this.outgoingPackets.flushQueue();
         logger.info(`${this.username}:${this.worldIndex} has logged in.`);
@@ -371,7 +380,9 @@ export class Player extends Actor {
         this.ignoreList.splice(index, 1);
         return true;
     }
-
+    public onNpcKill(npc: Npc) {
+        console.log('killed npc');
+    }
     /**
      * Should be fired whenever the player's chunk changes. This will fire off chunk updates for all chunks not
      * already tracked by the player - all the new chunks that are coming into view.
@@ -390,6 +401,9 @@ export class Player extends Actor {
     }
 
     public async tick(): Promise<void> {
+        for (let i = 0; i < this.Behaviors.length; i++) {
+            this.Behaviors[i].tick();
+        }
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
 
@@ -1294,4 +1308,5 @@ export class Player extends Actor {
     public get bonuses(): { offensive: OffensiveBonuses, defensive: DefensiveBonuses, skill: SkillBonuses } {
         return this._bonuses;
     }
+
 }
