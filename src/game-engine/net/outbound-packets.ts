@@ -68,6 +68,8 @@ export class OutboundPackets {
         packet.putBytes(Buffer.from(message));
         this.queue(packet);
     }
+    //packet - 129 - freezes client?
+    //packet - 202 - directly to login screen
 
     public sendProjectile(position: Position, offsetX: number, offsetY: number, id: number, startHeight: number, endHeight: number, speed: number, lockon: number, delay: number) {
         this.updateReferencePosition(position);
