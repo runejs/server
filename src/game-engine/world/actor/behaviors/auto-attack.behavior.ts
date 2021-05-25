@@ -67,7 +67,7 @@ export class AutoAttackBehavior extends Behavior {
             console.log(`you attack ${(this.Them as Npc).name} for ${_damage} damage! (after the CD)`);
             this.Them.damage(_damage);
             if (this.Them.hitPoints <= 0) {
-                (this.Them as Npc).npcEvents.emit('death', this.Me);
+                (this.Them as Npc).npcEvents.emit('death', this.Me, this.Them);
             }
                 
         });

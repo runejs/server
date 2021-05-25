@@ -53,7 +53,6 @@ const magicOnNpcActionPipe = (npc:Npc, player: Player, widgetId: number, buttonI
 
     // Find all object action plugins that reference this location object
     const matchingHooks = getActionHooks<MagicOnNPCActionHook>('magic_on_npc');
-      
 
     return {
         hooks: matchingHooks,

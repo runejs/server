@@ -68,7 +68,44 @@ export class OutboundPackets {
         packet.putBytes(Buffer.from(message));
         this.queue(packet);
     }
+    //packet - 129 - freezes client?
+    //packet - 202 - directly to login screen
 
+    public shootMagic(offset, endx, endy, entityIndex, graphicsid, startHeight, endheight, delay, speed, startslope, startdistance) {
+        const packet = new Packet(1);
+        //packet.put(0);
+        packet.put(offset, 'BYTE');
+        packet.put(endx, 'SHORT');
+        packet.put(endy, 'SHORT');
+        packet.put(entityIndex, 'INT24');
+        packet.put(graphicsid, 'SHORT');
+        packet.put(startHeight, 'BYTE');
+        packet.put(endheight, 'BYTE');
+        packet.put(delay, 'SHORT');
+        packet.put(speed, 'SHORT');
+        //packet.put(startslope, 'SHORT');
+        //packet.put(startdistance, 'SHORT');
+
+        this.queue(packet);
+    }
+
+    public sendProjectile(position: Position, offsetX: number, offsetY: number, id: number, startHeight: number, endHeight: number, speed: number, lockon: number, delay: number) {
+        this.updateReferencePosition(position);
+        
+        const packet = new Packet(1);
+        packet.put(0);
+        packet.put(offsetY, 'byte');
+        packet.put(offsetX, 'byte');
+        packet.put(lockon, 'SHORT', 'BIG_ENDIAN');
+        packet.put(id, 'SHORT', 'BIG_ENDIAN');
+        packet.put(startHeight);
+        packet.put(endHeight);
+        packet.put(delay, 'SHORT', 'BIG_ENDIAN');
+        packet.put(speed, 'SHORT', 'BIG_ENDIAN');
+        packet.put(16);
+        packet.put(64);
+        this.queue(packet);
+    } 
     public updateFriendStatus(friendName: string, worldId: number): void {
         const packet = new Packet(156);
         packet.put(stringToLong(friendName.toLowerCase()), 'LONG');

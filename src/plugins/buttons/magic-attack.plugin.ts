@@ -28,6 +28,19 @@ export const activate = (task: TaskExecutor<MagicOnNPCAction>, elapsedTicks: num
         buttonId
     } = task.actionData;
 
+    const attackerX = player.position.x;
+    const attackerY = player.position.y
+    const victimX = npc.position.x
+    const victimY = npc.position.y;
+    const offsetX = ((victimY - attackerY));
+    const offsetY = ((victimX - attackerX));
+
+    //https://oldschool.runescape.wiki/w/Attack_range#:~:text=All%20combat%20magic%20spells%20have,also%20allow%20longrange%20attack%20style
+    // range should be within 10 tiles for magic
+    // range should be within 7 for magic staff
+
+    //npc world index would be -1 for players
+    player.outgoingPackets.sendProjectile(player.position, offsetX, offsetY, 250, 40, 36, 100, npc.worldIndex + 1, 1); 
     console.info(`${player.username} smites ${npc.name} with ${spells[buttonId]}`);
 };
 
