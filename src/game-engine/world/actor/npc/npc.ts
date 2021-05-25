@@ -126,25 +126,18 @@ export class Npc extends Actor {
 
     //This is useful so that we can tie into things like "spell casts" or events, or traps, etc to finish quests or whatever
 
-    public async processDeath(assailant: Actor): Promise<void> {
+    public async processDeath(assailant: Actor, defender:Actor): Promise<void> {
+        
         return new Promise<void>(resolve => {
-            const deathPosition = this.position;
+            const deathPosition = defender.position;
 
             let deathAnim: number = animationIds.death;
-            deathAnim = findNpc(this.id)?.combatAnimations?.death || animationIds.death
+            deathAnim = findNpc((defender as Npc).id)?.combatAnimations?.death || animationIds.death
 
+            defender.playAnimation(deathAnim);
+            world.playLocationSound(deathPosition, soundIds.npc.human.maleDeath, 5);
+            world.globalInstance.spawnWorldItem(itemIds.bones, deathPosition, { owner: assailant instanceof Player ? assailant : undefined, expires: 300 });
 
-            //ToDo: all this is broken
-            try {
-
-                this.playAnimation(deathAnim);
-                world.playLocationSound(deathPosition, soundIds.npc.human.maleDeath, 5);
-                world.globalInstance.spawnWorldItem(itemIds.bones, deathPosition,
-                    { owner: assailant instanceof Player ? assailant : undefined, expires: 300 });
-            }
-            catch (err) {
-                logger.debug(err);
-            }
         });
 
     }
