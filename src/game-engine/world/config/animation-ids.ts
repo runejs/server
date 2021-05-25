@@ -11,7 +11,7 @@ export const animationIds = {
     spinSpinningWheel: 894,
     cry: 860,
     climbLadder: 828,
-    smelting: 833,
+    smelting: 899,
     death: 2304,
     eat: 829,
     buryBones: 827,
@@ -25,5 +25,7 @@ export const animationIds = {
         stab: 412,
         slash: 451,
         armBlock: 424
-    }
+    },
+    fadeOut: 3541,
+    fadeIn: 2115
 };
