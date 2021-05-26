@@ -42,7 +42,7 @@ export default {
         {
             type: 'npc_interaction',
             options: 'attack',
-            walkTo: true,
+            walkTo: false,
             task: {
                 activate,
             }
