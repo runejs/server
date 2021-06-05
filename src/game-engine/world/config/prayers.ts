@@ -1,10 +1,10 @@
-import { EffectType } from "../actor/effect";
-import { Prayer } from "../actor/prayer";
-import { soundIds } from "./sound-ids";
+import { EffectType } from '../actor/effect';
+import { Prayer } from '../actor/prayer';
+import { soundIds } from './sound-ids';
 
 export const prayers: Prayer[] = [
     {
-        Name: "Thick Skin",
+        Name: 'Thick Skin',
         EffectType: EffectType.BoostDefense,
         AnimationId: 645,
         EffectId: 0, //graphic id

@@ -1,4 +1,4 @@
-import { Effect, EffectType } from "./effect";
+import { Effect, EffectType } from './effect';
 
 export class Prayer extends Effect {
     AnimationId: number;
