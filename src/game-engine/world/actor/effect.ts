@@ -2,7 +2,7 @@
 export abstract class Effect {
     public Name: string;
     public EffectType: EffectType;
-    public EffectID: number;
+    public EffectId: number;
     public Modifier: number =0;
 
 }
@@ -15,5 +15,5 @@ export enum EffectType {
     Curse,
     Poison,
     Fire,
-    Environment
+    EnvironmentDamage
 }

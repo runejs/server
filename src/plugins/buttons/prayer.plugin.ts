@@ -8,49 +8,45 @@ import { TaskExecutor } from '@engine/world/action';
 import { widgetButtonIds } from '../skills/smithing/smelting-constants';
 import { magiconnpcActionHandler, MagicOnNPCActionHook, MagicOnNPCAction } from '../../game-engine/world/action/magic-on-npc.action';
 import { logger } from '@runejs/core';
-
+import { PrayerActionHook } from '../../game-engine/world/action/prayer.action';
+import { widgets } from '../../game-engine/config';
+import { Prayer } from '../../game-engine/world/actor/prayer';
+import { EffectType } from '../../game-engine/world/actor/effect';
+import { prayers } from '../../game-engine/world/config/prayers'; 
 const buttonIds: number[] = [
     0, // Home Teleport
+    1,
+    2
 ];
 
-function attack_target(player: Player, elapsedTicks: number): boolean {
-    logger.info('attacking?');
-    return true;
-}
 
-const spells = ['Wind Strike','Confuse', 'Water Strike','unknown?', 'Earth Strike'];
 export const activate = (task: TaskExecutor<MagicOnNPCAction>, elapsedTicks: number = 0) => {
     const {
-        npc,
         player,
         widgetId,
         buttonId
     } = task.actionData;
 
-    const attackerX = player.position.x;
-    const attackerY = player.position.y
-    const victimX = npc.position.x
-    const victimY = npc.position.y;
-    const offsetX = ((victimY - attackerY));
-    const offsetY = ((victimX - attackerX));
+    prayers.filter(a => a.ButtonId == buttonId).forEach((prayer) => {
+        player.playAnimation(prayer.AnimationId);
+        player.playSound(prayer.SoundId);
+        player.effects.push(prayer);
+    });
 
-    player.walkingQueue.clear();
+    console.log(`${player.username} casts ${prayers[buttonId]}`);
 
-    //npc world index would be -1 for players
-    player.outgoingPackets.sendProjectile(player.position, offsetX, offsetY, 250, 40, 36, 100, npc.worldIndex + 1, 1); 
-    console.info(`${player.username} smites ${npc.name} with ${spells[buttonId]}`);
 };
 
 export default {
-    pluginId: 'rs:magic',
-    hooks: 
+    pluginId: 'rs:prayer',
+    hooks:
         {
-            type: 'magic_on_npc',
-            widgetId: 192,
+            type: 'button',
+            widgetId: widgets.prayerTab,
             buttonIds: buttonIds,
             task: {
                 activate,
                 interval: 0
             }
-        } as MagicOnNPCActionHook
+        } as PrayerActionHook
 };
