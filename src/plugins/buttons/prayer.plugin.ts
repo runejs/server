@@ -16,7 +16,10 @@ import { prayers } from '../../game-engine/world/config/prayers';
 const buttonIds: number[] = [
     0, // Home Teleport
     1,
-    2
+    2,
+    36,
+    38,
+    3
 ];
 
 

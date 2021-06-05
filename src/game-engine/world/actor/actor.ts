@@ -52,7 +52,13 @@ export abstract class Actor {
     public combatTargets: Actor[] = [];
     public hitPoints = this.skills.hitpoints.level * 4;
     public maxHitPoints = this.skills.hitpoints.level * 4;
-    public damageType = AttackDamageType.Crush;
+
+    public get damageType() {
+        return this._damageType;
+    }
+    public set damageType(value) {
+        this._damageType = value;
+    }
     public effects: Effect[] = []; //spells, effects, prayers, etc
 
     protected randomMovementInterval;
@@ -67,7 +73,7 @@ export abstract class Actor {
     private _runDirection: number;
     private _faceDirection: number;
     private _instance: WorldInstance = null;
-
+    private _damageType = AttackDamageType.Crush;
 
     protected constructor() {
         this._walkDirection = -1;
@@ -146,7 +152,7 @@ export abstract class Actor {
         let effectiveAttackLevel = attackLevel;
 
         //Prayer/Effect bonus - calculate ALL the good and bad effects at once! (prayers, and magic effects, etc.)
-        this.effects.filter(a => a.EffectType === EffectType.BoostOffense || a.EffectType === EffectType.LowerOffense).forEach((effect) => {
+        this.effects.filter(a => a.EffectType === EffectType.Attack).forEach((effect) => {
             effectiveAttackLevel += (attackLevel * effect.Modifier);
         });
         effectiveAttackLevel = Math.round(effectiveAttackLevel) + stanceModifier;

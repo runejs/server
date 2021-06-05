@@ -58,6 +58,7 @@ import { SendMessageOptions } from '@engine/world/actor/player/model';
 import { AutoAttackBehavior } from '../behaviors/auto-attack.behavior';
 import { EventEmitter } from 'events';
 import { AttackDamageType } from './attack';
+import { EffectType } from '../effect';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -791,6 +792,10 @@ export class Player extends Actor {
 
             this.addBonuses(item);
         }
+        //prayers and other effects that effect strength
+        this.effects.filter(a => a.EffectType === EffectType.Strength).forEach((effect) => {
+            this._bonuses.skill['strength'] += this.skills.strength.level * effect.Modifier;
+        });
     }
 
     public sendLogMessage(message: string, isConsole: boolean): void {
@@ -1312,13 +1317,13 @@ export class Player extends Actor {
         return this._bonuses;
     }
 
-    public get damageType(): DamageType {
-        if (this._bonuses.offensive.crush > 0) return DamageType.Crush;
-        if (this._bonuses.offensive.magic > 0) return DamageType.Magic;
-        if (this._bonuses.offensive.ranged > 0) return DamageType.Range;
-        if (this._bonuses.offensive.slash > 0) return DamageType.Slash;
-        if (this._bonuses.offensive.stab > 0) return DamageType.Stab;
-        return DamageType.None;
+    public get damageType(): AttackDamageType {
+        if (this._bonuses.offensive.crush > 0) return AttackDamageType.Crush;
+        if (this._bonuses.offensive.magic > 0) return AttackDamageType.Magic;
+        if (this._bonuses.offensive.ranged > 0) return AttackDamageType.Range;
+        if (this._bonuses.offensive.slash > 0) return AttackDamageType.Slash;
+        if (this._bonuses.offensive.stab > 0) return AttackDamageType.Stab;
+        return AttackDamageType.Crush;
     }
     
 }

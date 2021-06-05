@@ -8,10 +8,11 @@ export abstract class Effect {
 }
 
 export enum EffectType {
-    BoostDefense,
-    BoostOffense,
-    LowerDefense,
-    LowerOffense,
+    Strength,
+    Defense,
+    Attack,
+    Magic,
+    Ranged,
     Curse,
     Poison,
     Fire,
