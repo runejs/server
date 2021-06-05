@@ -54,12 +54,6 @@ export abstract class Actor {
     public maxHitPoints = this.skills.hitpoints.level * 4;
     public damageType = AttackDamageType.Crush;
     public effects: Effect[] = []; //spells, effects, prayers, etc
-    public get highestCombatSkill(): Skill {
-        const attack = this.skills.getLevel('attack');
-        const magic = this.skills.getLevel('magic');
-        const ranged = this.skills.getLevel('ranged');
-    public damageType = AttackDamageType.Crush;
-    public effects: Effect[] = []; //spells, effects, prayers, etc
 
     protected randomMovementInterval;
     /**
