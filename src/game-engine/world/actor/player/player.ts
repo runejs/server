@@ -57,7 +57,7 @@ import { getVarbitMorphIndex } from '@engine/util/varbits';
 import { SendMessageOptions } from '@engine/world/actor/player/model';
 import { AutoAttackBehavior } from '../behaviors/auto-attack.behavior';
 import { EventEmitter } from 'events';
-
+import { AttackDamageType } from './attack';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -128,6 +128,7 @@ export class Player extends Actor {
     public ignoreList: string[] = [];
     public cutscene: Cutscene = null;
     public playerEvents: EventEmitter = new EventEmitter();
+    
 
 
     private readonly _socket: Socket;
@@ -246,6 +247,7 @@ export class Player extends Actor {
         this.playerEvents.on('exp', (amt) => {
             logger.info(`Player should have been awarded ${amt} exp if this was hooked up.`);
         });
+
         this.actionsCancelled.subscribe(type => {
             let closeWidget: boolean;
 
@@ -1310,4 +1312,13 @@ export class Player extends Actor {
         return this._bonuses;
     }
 
+    public get damageType(): DamageType {
+        if (this._bonuses.offensive.crush > 0) return DamageType.Crush;
+        if (this._bonuses.offensive.magic > 0) return DamageType.Magic;
+        if (this._bonuses.offensive.ranged > 0) return DamageType.Range;
+        if (this._bonuses.offensive.slash > 0) return DamageType.Slash;
+        if (this._bonuses.offensive.stab > 0) return DamageType.Stab;
+        return DamageType.None;
+    }
+    
 }

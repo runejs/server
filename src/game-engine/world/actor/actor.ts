@@ -19,12 +19,15 @@ import { soundIds } from '../config/sound-ids';
 import { animationIds } from '../config/animation-ids';
 import { findNpc } from '../../config';
 import { itemIds } from '../config/item-ids';
-
+import { Attack, AttackDamageType } from './player/attack';
+import { Effect, EffectType } from './effect';
 
 /**
  * Handles an actor within the game world.
  */
 export abstract class Actor {
+
+
 
     public readonly updateFlags: UpdateFlags = new UpdateFlags();
     public readonly skills: Skills = new Skills(this);
@@ -49,6 +52,30 @@ export abstract class Actor {
     public combatTargets: Actor[] = [];
     public hitPoints = this.skills.hitpoints.level * 4;
     public maxHitPoints = this.skills.hitpoints.level * 4;
+    public damageType = AttackDamageType.Crush;
+    public effects: Effect[] = []; //spells, effects, prayers, etc
+
+    protected randomMovementInterval;
+    /**
+     * @deprecated - use new action system instead
+     */
+    private _busy: boolean;
+    private _position: Position;
+    private _lastMapRegionUpdatePosition: Position;
+    private _worldIndex: number;
+    private _walkDirection: number;
+    private _runDirection: number;
+    private _faceDirection: number;
+    private _instance: WorldInstance = null;
+
+
+    protected constructor() {
+        this._walkDirection = -1;
+        this._runDirection = -1;
+        this._faceDirection = 6;
+        this._busy = false;
+    }
+
     public get highestCombatSkill(): Skill {
         const attack = this.skills.getLevel('attack');
         const magic = this.skills.getLevel('magic');
@@ -59,29 +86,125 @@ export abstract class Actor {
         else return attack;
     }
 
+    //https://oldschool.runescape.wiki/w/Attack_range#:~:text=All%20combat%20magic%20spells%20have,also%20allow%20longrange%20attack%20style
+    // range should be within 10 tiles for magic
+    // range should be within 7 for magic staff
+    // https://www.theoatrix.net/post/how-defence-works-in-osrs
+    // https://oldschool.runescape.wiki/w/Damage_per_second/Magic
+    // https://oldschool.runescape.wiki/w/Successful_hit
+    // https://oldschool.runescape.wiki/w/Combat_level#:~:text=Calculating%20combat%20level,-Simply&text=Add%20your%20Strength%20and%20Attack,have%20your%20melee%20combat%20level.&text=Multiply%20this%20by%200.325%20and,have%20your%20magic%20combat%20level
+    // https://oldschool.runescape.wiki/w/Damage_per_second/Melee#:~:text=1%20Step%20one%3A%20Calculate%20the%20effective%20strength%20level%3B,1.7%20Step%20seven%3A%20Calculate%20the%20melee%20damage%20output
+    public getAttackRoll(defender): Attack {
+        
+        //the amount of damage is random from 0 to Max
+        //stance modifiers
+        const _stance_defense = 3;
+        const _stance_accurate = 0;
+        const _stance_controlled = 1;
+        
+        // base level
+        // ToDo: calculate prayer effects
+        // round decimal result calulcation up
+        // add 8
+        // ToDo: add void bonues (effects)
+        // round result down
+        let equipmentBonus = 0;
+        if (this.isPlayer) {
+            const player = (this as unknown as Player);
+            equipmentBonus = player.bonuses.offensive.crush;
+        }
+        if (equipmentBonus == 0) equipmentBonus = 1;
+        /*
+         * To calculate your maximum hit:
+
+            Effective strength level
+            Multiply by(Equipment Melee Strength + 64)
+            Add 320 
+            Divide by 640
+            Round down to nearest integer
+            Multiply by gear bonus
+            Round down to nearest integer
+        */
+        const stanceModifier = _stance_accurate;
+        const strengthLevel = (this.skills.attack.level + stanceModifier + 8);
+        let attackCalc = strengthLevel * (equipmentBonus + 64) + 320;
+        attackCalc = Math.round(attackCalc / 640);
+        //console.log(`strengthLevel = ${strengthLevel} \r\n attackCalc = ${attackCalc} \r\n equipmentBonus = ${equipmentBonus}`);
+        const maximumHit = Math.round(attackCalc * equipmentBonus);
+
+        /*
+            To calculate your effective attack level:
+
+            (Attack level + Attack level boost) * prayer bonus
+            Round down to nearest integer
+            + 3 if using the accurate attack style, +1 if using controlled
+                + 8
+            Multiply by 1.1 if wearing void
+            Round down to nearest integer
+        */
+        const attackLevel = this.skills.attack.level;
+        let effectiveAttackLevel = attackLevel;
+
+        //Prayer/Effect bonus - calculate ALL the good and bad effects at once! (prayers, and magic effects, etc.)
+        this.effects.filter(a => a.EffectType === EffectType.BoostOffense || a.EffectType === EffectType.LowerOffense).forEach((effect) => {
+            effectiveAttackLevel += (attackLevel * effect.Modifier);
+        });
+        effectiveAttackLevel = Math.round(effectiveAttackLevel) + stanceModifier;
+
+        /*
+         * Calculate the Attack roll
+            Effective attack level * (Equipment Attack bonus + 64)
+            Multiply by gear bonus
+            Round down to nearest integer
+         * */
+        let attack = new Attack();
+        attack.damageType = this.damageType ?? AttackDamageType.Crush;
+        attack.attackRoll = Math.round(effectiveAttackLevel * (equipmentBonus + 64));
+        attack = defender.getDefenseRoll(attack);
+        attack.maximumHit = maximumHit;
+        if (attack.attackRoll >= attack.defenseRoll) attack.hitChance = 1 - ((attack.defenseRoll + 2) / (2 * (attack.attackRoll + 1)))
+        if (attack.attackRoll < attack.defenseRoll) attack.hitChance = attack.attackRoll / (2 * attack.defenseRoll + 1);
+
+        attack.damage = Math.round((maximumHit * attack.hitChance) / 2);
+        return attack;
+    }
+    public getDefenseRoll(attack: Attack): Attack {
+        //attack need to know the damage roll, which is the item bonuses the weapon damage type etc.
+
+
+        //stance modifiers
+        const _stance_defense = 3;
+        const _stance_accurate = 0;
+        const _stance_controlled = 1;
+
+        // base level
+        // calculate prayer effects
+        // round decimal result calulcation up
+        // add 8
+        // ToDo: add void bonues (effects)
+        // round result down
+
+        const equipmentBonus: number = this.isPlayer ? (this as unknown as Player).bonuses.defensive.crush : 0; //object prototyping to find property by name (JS style =/)
+
+        const stanceModifier: number = _stance_accurate;
+
+
+        attack.defenseRoll = (this.skills.defence.level + stanceModifier + 8) * (equipmentBonus + 64);
+        //Prayer/Effect bonus - calculate ALL the good and bad effects at once! (prayers, and magic effects, etc.)
+        this.effects.filter(a => a.EffectType === EffectType.BoostDefense || a.EffectType === EffectType.LowerDefense).forEach((effect) => {
+            attack.defenseRoll += (this.skills.defence.level * effect.Modifier);
+        });
+        attack.defenseRoll = Math.round(attack.defenseRoll);
+        return attack;
+        //+ stance modifier
+    }
     // #endregion  
 
-    protected randomMovementInterval;
 
-    private _position: Position;
-    private _lastMapRegionUpdatePosition: Position;
-    private _worldIndex: number;
-    private _walkDirection: number;
-    private _runDirection: number;
-    private _faceDirection: number;
-    private _instance: WorldInstance = null;
 
-    /**
-     * @deprecated - use new action system instead
-     */
-    private _busy: boolean;
 
-    protected constructor() {
-        this._walkDirection = -1;
-        this._runDirection = -1;
-        this._faceDirection = 6;
-        this._busy = false;
-    }
+
+
 
     public damage(amount: number, damageType: DamageType = DamageType.DAMAGE) {
         const armorReduction = 0;

@@ -8,6 +8,7 @@ import { timestamp } from 'rxjs/dist/types/operators';
 import { Player } from '../player/player';
 import { Npc } from '../npc/npc';
 
+//This is exclusively for NPCs - use Auto-attack for players
 export class MeleeCombatBehavior extends Behavior {
 
     Type = BehaviorType.Combat;
@@ -62,8 +63,7 @@ export class MeleeCombatBehavior extends Behavior {
         return new Promise<void>(resolve => {
             //do attack stuff
             this.Me.playAnimation(this.Me.getAttackAnimation());
-
-            const _damage = this.Me.skills.strength.level;
+            const _damage = this.Me.getAttackRoll(this.Them).damage;
             console.log(`${(this.Me as Npc).name} attacks ${(this.Them as Player).username} for ${_damage} damage! (after the CD)`);
             (this.Me as Npc).npcEvents.emit('damage', _damage);
             this.Them.damage(_damage);
