@@ -206,12 +206,6 @@ export abstract class Actor {
     }
     // #endregion  
 
-
-
-
-
-
-
     public damage(amount: number, damageType: DamageType = DamageType.DAMAGE) {
         const armorReduction = 0;
         const spellDamageReduction = 0;

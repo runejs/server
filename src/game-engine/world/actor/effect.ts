@@ -13,6 +13,8 @@ export enum EffectType {
     Attack,
     Magic,
     Ranged,
+    RecoverStats,
+    HPRestoreRate,
     Curse,
     Poison,
     Fire,

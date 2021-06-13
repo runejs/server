@@ -14,6 +14,5 @@ export enum AttackDamageType {
     Slash,
     Crush,
     Magic,
-    Range,
-    None
+    Range
 }

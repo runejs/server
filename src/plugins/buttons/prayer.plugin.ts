@@ -6,9 +6,8 @@ import { gfxIds } from '@engine/world/config/gfx-ids';
 import { loopingEvent } from '@engine/game-server';
 import { TaskExecutor } from '@engine/world/action';
 import { widgetButtonIds } from '../skills/smithing/smelting-constants';
-import { magiconnpcActionHandler, MagicOnNPCActionHook, MagicOnNPCAction } from '../../game-engine/world/action/magic-on-npc.action';
 import { logger } from '@runejs/core';
-import { PrayerActionHook } from '../../game-engine/world/action/prayer.action';
+import { PrayerAction, PrayerActionHook } from '../../game-engine/world/action/prayer.action';
 import { widgets } from '../../game-engine/config';
 import { Prayer } from '../../game-engine/world/actor/prayer';
 import { EffectType } from '../../game-engine/world/actor/effect';
@@ -23,7 +22,7 @@ const buttonIds: number[] = [
 ];
 
 
-export const activate = (task: TaskExecutor<MagicOnNPCAction>, elapsedTicks: number = 0) => {
+export const activate = (task: TaskExecutor<PrayerAction>, elapsedTicks: number = 0) => {
     const {
         player,
         widgetId,

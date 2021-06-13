@@ -65,5 +65,32 @@ export const prayers: Prayer[] = [
         SoundId: soundIds.prayer.superhuman_strength,
         Modifier: 0.1, //ie 5% = 0.05
         ButtonId: 4
+    },
+    {
+        Name: 'Improved Reflexes',
+        EffectType: EffectType.Attack,
+        AnimationId: 645,
+        EffectId: 0, //graphic id
+        SoundId: soundIds.prayer.improved_reflexes,
+        Modifier: 0.1, //ie 5% = 0.05
+        ButtonId: 5
+    },
+    { //This is not going to work - recover stats? what does that even mean?
+        Name: 'Rapid Restore',
+        EffectType: EffectType.RecoverStats,
+        AnimationId: 645,
+        EffectId: 0, //graphic id
+        SoundId: soundIds.prayer.rapid_restore,
+        Modifier: 0.1, //ie 5% = 0.05
+        ButtonId: 6
+    },
+    {
+        Name: 'Rapid Heal',
+        EffectType: EffectType.HPRestoreRate,
+        AnimationId: 645,
+        EffectId: 0, //graphic id
+        SoundId: soundIds.prayer.rapid_restore,
+        Modifier: 1, //ie 5% = 0.05
+        ButtonId: 7
     }
 ];
