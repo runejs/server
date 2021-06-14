@@ -72,4 +72,4 @@ const PrayerActionPipe = (npc:Npc, player: Player, widgetId: number, buttonId: n
 /**
  * Button action pipe definition.
  */
-export default [ 'magic_on_npc', PrayerActionPipe ] as ActionPipe;
+export default [ 'prayer', PrayerActionPipe ] as ActionPipe;
