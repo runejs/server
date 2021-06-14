@@ -9,6 +9,14 @@ import { animationIds } from '@engine/world/config/animation-ids';
 import { NpcCombatAnimations, NpcDetails } from '@engine/config/npc-config';
 import { SkillName } from '@engine/world/actor/skills';
 import { NpcSpawn } from '@engine/config/npc-spawn-config';
+import { MeleeCombatBehavior } from '../behaviors/melee-combat.behavior';
+import { forEach } from 'lodash';
+import { Behavior } from '../behaviors/behavior';
+import EventEmitter from 'events';
+import { soundIds } from '../../config/sound-ids';
+import { Player } from '../player/player';
+import { itemIds } from '../../config/item-ids';
+import { logger } from '@runejs/core';
 
 
 /**
@@ -32,6 +40,10 @@ export class Npc extends Actor {
         stand?: number;
     };
     public instanceId: string = null;
+    //ToDo: this should either be calculated by the level or from a config
+    public experienceValue: number = 10;
+    public npcEvents: EventEmitter = new EventEmitter();
+
 
     private _name: string;
     private _combatLevel: number;
@@ -40,6 +52,8 @@ export class Npc extends Actor {
     private _exists: boolean = true;
     private npcSpawn: NpcSpawn;
     private _initialized: boolean = false;
+
+
 
     public constructor(npcDetails: NpcDetails | number, npcSpawn: NpcSpawn, instanceId: string = null) {
         super();
@@ -93,6 +107,9 @@ export class Npc extends Actor {
         } else {
             this._name = 'Unknown';
         }
+        // ToDo: this should be config based and not always melee (obviously)
+        this.Behaviors.push(new MeleeCombatBehavior());
+        this.npcEvents.on('death', this.processDeath);
     }
 
     public async init(): Promise<void> {
@@ -107,6 +124,23 @@ export class Npc extends Actor {
         this._initialized = true;
     }
 
+    //This is useful so that we can tie into things like "spell casts" or events, or traps, etc to finish quests or whatever
+
+    public async processDeath(assailant: Actor, defender:Actor): Promise<void> {
+        
+        return new Promise<void>(resolve => {
+            const deathPosition = defender.position;
+
+            let deathAnim: number = animationIds.death;
+            deathAnim = findNpc((defender as Npc).id)?.combatAnimations?.death || animationIds.death
+
+            defender.playAnimation(deathAnim);
+            world.playLocationSound(deathPosition, soundIds.npc.human.maleDeath, 5);
+            world.globalInstance.spawnWorldItem(itemIds.bones, deathPosition, { owner: assailant instanceof Player ? assailant : undefined, expires: 300 });
+
+        });
+
+    }
     public getAttackAnimation(): number {
         let attackAnim = findNpc(this.id)?.combatAnimations?.attack || animationIds.combat.punch;
         if(Array.isArray(attackAnim)) {
@@ -123,6 +157,7 @@ export class Npc extends Actor {
     }
 
     public kill(respawn: boolean = true): void {
+        
         world.chunkManager.getChunkForWorldPosition(this.position).removeNpc(this);
         clearInterval(this.randomMovementInterval);
         world.deregisterNpc(this);
@@ -133,6 +168,9 @@ export class Npc extends Actor {
     }
 
     public async tick(): Promise<void> {
+        for (let i = 0; i < this.Behaviors.length; i++) {
+            this.Behaviors[i].tick();
+        }
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
             resolve();
