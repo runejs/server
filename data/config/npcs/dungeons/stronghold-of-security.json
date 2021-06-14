@@ -1,0 +1,137 @@
+{
+    "rs:Gate_of_War": {
+        "game_id": 4377
+    },
+    "rs:Ricketty_door": {
+        "game_id": 4378
+    },
+    "rs:Oozing_barrier": {
+        "game_id": 4379
+    },
+    "rs:Portal_of_Death": {
+        "game_id": 4380
+    },
+    "rs:Ankou": {
+        "game_id": 4381
+    },
+    "rs:Ankou_1": {
+        "game_id": 4382
+    },
+    "rs:Ankou_2": {
+        "game_id": 4383
+    },
+    "rs:Skeleton_16": {
+        "game_id": 4384
+    },
+    "rs:Skeleton_17": {
+        "game_id": 4385
+    },
+    "rs:Skeleton_18": {
+        "game_id": 4386
+    },
+    "rs:Ghost_8": {
+        "game_id": 4387
+    },
+    "rs:Ghost_9": {
+        "game_id": 4388
+    },
+    "rs:Flesh Crawler": {
+        "game_id": 4389
+    },
+    "rs:Flesh Crawler_1": {
+        "game_id": 4390
+    },
+    "rs:Flesh Crawler_2": {
+        "game_id": 4391
+    },
+    "rs:Zombie_18": {
+        "game_id": 4392
+    },
+    "rs:Zombie_19": {
+        "game_id": 4393
+    },
+    "rs:Zombie_20": {
+        "game_id": 4394
+    },
+    "rs:Giant rat_7": {
+        "game_id": 4395
+    },
+    "rs:Rat_16": {
+        "game_id": 4396
+    },
+    "rs:Catablepon": {
+        "game_id": 4397
+    },
+    "rs:Catablepon_1": {
+        "game_id": 4398
+    },
+    "rs:Catablepon_2": {
+        "game_id": 4399
+    },
+    "rs:Giant spider_2": {
+        "game_id": 4400
+    },
+    "rs:Spider_5": {
+        "game_id": 4401
+    },
+    "rs:Scorpion_2": {
+        "game_id": 4402
+    },
+    "rs:Scorpion_3": {
+        "game_id": 4403
+    },
+    "rs:Minotaur": {
+        "game_id": 4404
+    },
+    "rs:Minotaur_1": {
+        "game_id": 4405
+    },
+    "rs:Minotaur_2": {
+        "game_id": 4406
+    },
+    "rs:Goblin_47": {
+        "game_id": 4407
+    },
+    "rs:Goblin_48": {
+        "game_id": 4408
+    },
+    "rs:Goblin_49": {
+        "game_id": 4409
+    },
+    "rs:Goblin_50": {
+        "game_id": 4410
+    },
+    "rs:Goblin_51": {
+        "game_id": 4411
+    },
+    "rs:Goblin_52": {
+        "game_id": 4412
+    },
+    "rs:Wolf_3": {
+        "game_id": 4413
+    },
+    "rs:Wolf_4": {
+        "game_id": 4414
+    },
+    "rs:Rat_17": {
+        "game_id": 4415
+    },
+    "rs:Shade": {
+        "game_id": 425
+    },
+    "rs:Shade_1": {
+        "game_id": 426
+    },
+    "rs:Shade_2": {
+        "game_id": 427
+    },
+    "rs:Shade_3": {
+        "game_id": 428
+    },
+    "rs:Shade_4": {
+        "game_id": 429
+    },
+    "rs:Shade_5": {
+        "game_id": 430
+    }
+}

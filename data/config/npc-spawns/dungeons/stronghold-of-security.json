@@ -1,0 +1,323 @@
+[
+  {"npc":"rs:Ankou","spawn_level":0,"spawn_x":2355,"spawn_y":5241,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou","spawn_level":0,"spawn_x":2357,"spawn_y":5240,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou","spawn_level":0,"spawn_x":2358,"spawn_y":5243,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou","spawn_level":0,"spawn_x":2358,"spawn_y":5245,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou","spawn_level":0,"spawn_x":2359,"spawn_y":5239,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou","spawn_level":0,"spawn_x":2359,"spawn_y":5241,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou","spawn_level":0,"spawn_x":2361,"spawn_y":5240,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou","spawn_level":0,"spawn_x":2361,"spawn_y":5242,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou","spawn_level":0,"spawn_x":2363,"spawn_y":5240,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_1","spawn_level":0,"spawn_x":2324,"spawn_y":5198,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_1","spawn_level":0,"spawn_x":2325,"spawn_y":5197,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_1","spawn_level":0,"spawn_x":2326,"spawn_y":5201,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_1","spawn_level":0,"spawn_x":2326,"spawn_y":5205,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_1","spawn_level":0,"spawn_x":2326,"spawn_y":5206,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_1","spawn_level":0,"spawn_x":2327,"spawn_y":5199,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_1","spawn_level":0,"spawn_x":2327,"spawn_y":5202,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_1","spawn_level":0,"spawn_x":2328,"spawn_y":5197,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_1","spawn_level":0,"spawn_x":2329,"spawn_y":5203,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_1","spawn_level":0,"spawn_x":2330,"spawn_y":5195,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_1","spawn_level":0,"spawn_x":2331,"spawn_y":5202,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_2","spawn_level":0,"spawn_x":2315,"spawn_y":5229,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_2","spawn_level":0,"spawn_x":2317,"spawn_y":5226,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_2","spawn_level":0,"spawn_x":2318,"spawn_y":5230,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_2","spawn_level":0,"spawn_x":2320,"spawn_y":5224,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_2","spawn_level":0,"spawn_x":2321,"spawn_y":5232,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_2","spawn_level":0,"spawn_x":2322,"spawn_y":5222,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_2","spawn_level":0,"spawn_x":2322,"spawn_y":5227,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_2","spawn_level":0,"spawn_x":2322,"spawn_y":5229,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_2","spawn_level":0,"spawn_x":2323,"spawn_y":5224,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_2","spawn_level":0,"spawn_x":2324,"spawn_y":5230,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_2","spawn_level":0,"spawn_x":2324,"spawn_y":5236,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ankou_2","spawn_level":0,"spawn_x":2327,"spawn_y":5227,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Skeleton_16","spawn_level":0,"spawn_x":2326,"spawn_y":5199,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Skeleton_16","spawn_level":0,"spawn_x":2326,"spawn_y":5208,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Skeleton_16","spawn_level":0,"spawn_x":2332,"spawn_y":5202,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Skeleton_16","spawn_level":0,"spawn_x":2350,"spawn_y":5200,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Skeleton_16","spawn_level":0,"spawn_x":2352,"spawn_y":5195,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Skeleton_16","spawn_level":0,"spawn_x":2353,"spawn_y":5192,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Skeleton_16","spawn_level":0,"spawn_x":2355,"spawn_y":5198,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Skeleton_17","spawn_level":0,"spawn_x":2328,"spawn_y":5205,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Skeleton_17","spawn_level":0,"spawn_x":2329,"spawn_y":5200,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Skeleton_17","spawn_level":0,"spawn_x":2348,"spawn_y":5197,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Skeleton_17","spawn_level":0,"spawn_x":2353,"spawn_y":5203,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Skeleton_17","spawn_level":0,"spawn_x":2354,"spawn_y":5191,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Skeleton_18","spawn_level":0,"spawn_x":2311,"spawn_y":5187,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Skeleton_18","spawn_level":0,"spawn_x":2311,"spawn_y":5193,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_8","spawn_level":0,"spawn_x":2352,"spawn_y":5189,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_8","spawn_level":0,"spawn_x":2353,"spawn_y":5197,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_8","spawn_level":0,"spawn_x":2356,"spawn_y":5204,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_8","spawn_level":0,"spawn_x":2357,"spawn_y":5194,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_9","spawn_level":0,"spawn_x":2305,"spawn_y":5233,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_9","spawn_level":0,"spawn_x":2305,"spawn_y":5241,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_9","spawn_level":0,"spawn_x":2306,"spawn_y":5229,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_9","spawn_level":0,"spawn_x":2306,"spawn_y":5243,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_9","spawn_level":0,"spawn_x":2309,"spawn_y":5246,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_9","spawn_level":0,"spawn_x":2311,"spawn_y":5237,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_9","spawn_level":0,"spawn_x":2314,"spawn_y":5237,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_9","spawn_level":0,"spawn_x":2314,"spawn_y":5244,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_9","spawn_level":0,"spawn_x":2315,"spawn_y":5236,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_9","spawn_level":0,"spawn_x":2316,"spawn_y":5227,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_9","spawn_level":0,"spawn_x":2322,"spawn_y":5235,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Ghost_9","spawn_level":0,"spawn_x":2325,"spawn_y":5228,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1859,"spawn_y":5193,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1859,"spawn_y":5203,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1861,"spawn_y":5192,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1861,"spawn_y":5200,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1861,"spawn_y":5229,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1861,"spawn_y":5231,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1862,"spawn_y":5188,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1862,"spawn_y":5204,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1863,"spawn_y":5227,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1864,"spawn_y":5202,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1865,"spawn_y":5188,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1866,"spawn_y":5204,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1868,"spawn_y":5189,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1869,"spawn_y":5226,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1870,"spawn_y":5192,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1871,"spawn_y":5232,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1872,"spawn_y":5190,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1872,"spawn_y":5218,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1872,"spawn_y":5239,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1873,"spawn_y":5188,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1874,"spawn_y":5200,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1874,"spawn_y":5210,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1876,"spawn_y":5189,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1876,"spawn_y":5216,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1877,"spawn_y":5220,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1879,"spawn_y":5198,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1879,"spawn_y":5230,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1879,"spawn_y":5234,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1880,"spawn_y":5200,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1880,"spawn_y":5239,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1880,"spawn_y":5243,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1881,"spawn_y":5232,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1881,"spawn_y":5241,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1882,"spawn_y":5199,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1882,"spawn_y":5201,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1882,"spawn_y":5243,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1883,"spawn_y":5206,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1883,"spawn_y":5234,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1884,"spawn_y":5230,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1884,"spawn_y":5232,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1885,"spawn_y":5205,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1886,"spawn_y":5231,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1887,"spawn_y":5203,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1889,"spawn_y":5206,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1890,"spawn_y":5242,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1895,"spawn_y":5242,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1898,"spawn_y":5241,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1900,"spawn_y":5240,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1900,"spawn_y":5244,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1904,"spawn_y":5235,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1908,"spawn_y":5203,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1909,"spawn_y":5243,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1910,"spawn_y":5202,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1911,"spawn_y":5205,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1912,"spawn_y":5238,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Rat_16","spawn_level":0,"spawn_x":1913,"spawn_y":5235,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon","spawn_level":0,"spawn_x":2142,"spawn_y":5252,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon","spawn_level":0,"spawn_x":2145,"spawn_y":5252,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon","spawn_level":0,"spawn_x":2145,"spawn_y":5256,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon","spawn_level":0,"spawn_x":2148,"spawn_y":5253,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon","spawn_level":0,"spawn_x":2149,"spawn_y":5255,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon","spawn_level":0,"spawn_x":2152,"spawn_y":5251,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon","spawn_level":0,"spawn_x":2153,"spawn_y":5254,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon","spawn_level":0,"spawn_x":2155,"spawn_y":5252,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_1","spawn_level":0,"spawn_x":2158,"spawn_y":5282,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_1","spawn_level":0,"spawn_x":2161,"spawn_y":5281,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_1","spawn_level":0,"spawn_x":2162,"spawn_y":5284,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_1","spawn_level":0,"spawn_x":2164,"spawn_y":5280,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_2","spawn_level":0,"spawn_x":2119,"spawn_y":5296,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_2","spawn_level":0,"spawn_x":2120,"spawn_y":5292,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_2","spawn_level":0,"spawn_x":2120,"spawn_y":5299,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_2","spawn_level":0,"spawn_x":2122,"spawn_y":5291,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_2","spawn_level":0,"spawn_x":2123,"spawn_y":5302,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_2","spawn_level":0,"spawn_x":2127,"spawn_y":5305,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_2","spawn_level":0,"spawn_x":2129,"spawn_y":5302,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_2","spawn_level":0,"spawn_x":2130,"spawn_y":5298,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_2","spawn_level":0,"spawn_x":2163,"spawn_y":5301,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_2","spawn_level":0,"spawn_x":2166,"spawn_y":5303,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_2","spawn_level":0,"spawn_x":2166,"spawn_y":5306,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_2","spawn_level":0,"spawn_x":2167,"spawn_y":5300,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_2","spawn_level":0,"spawn_x":2169,"spawn_y":5303,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Catablepon_2","spawn_level":0,"spawn_x":2170,"spawn_y":5306,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2120,"spawn_y":5275,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2121,"spawn_y":5273,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2123,"spawn_y":5270,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2123,"spawn_y":5275,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2124,"spawn_y":5272,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2124,"spawn_y":5274,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2125,"spawn_y":5270,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2126,"spawn_y":5274,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2127,"spawn_y":5272,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2129,"spawn_y":5268,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2129,"spawn_y":5270,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2130,"spawn_y":5272,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2131,"spawn_y":5267,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2142,"spawn_y":5256,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2143,"spawn_y":5251,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2145,"spawn_y":5253,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2145,"spawn_y":5306,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2146,"spawn_y":5259,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2146,"spawn_y":5306,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2147,"spawn_y":5255,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2147,"spawn_y":5305,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2147,"spawn_y":5307,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2149,"spawn_y":5304,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2149,"spawn_y":5305,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2149,"spawn_y":5306,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2150,"spawn_y":5307,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2150,"spawn_y":5308,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2151,"spawn_y":5268,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2151,"spawn_y":5305,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2151,"spawn_y":5308,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2152,"spawn_y":5268,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2152,"spawn_y":5306,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2153,"spawn_y":5270,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2153,"spawn_y":5305,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2153,"spawn_y":5306,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2153,"spawn_y":5307,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2154,"spawn_y":5269,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2154,"spawn_y":5271,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2154,"spawn_y":5273,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2154,"spawn_y":5305,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2155,"spawn_y":5254,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2155,"spawn_y":5305,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2157,"spawn_y":5271,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2157,"spawn_y":5273,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Giant spider_2","spawn_level":0,"spawn_x":2157,"spawn_y":5274,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2119,"spawn_y":5274,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2120,"spawn_y":5277,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2121,"spawn_y":5276,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2122,"spawn_y":5271,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2124,"spawn_y":5269,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2124,"spawn_y":5273,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2126,"spawn_y":5270,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2126,"spawn_y":5272,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2127,"spawn_y":5269,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2127,"spawn_y":5273,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2128,"spawn_y":5271,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2129,"spawn_y":5267,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2129,"spawn_y":5273,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2150,"spawn_y":5267,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2152,"spawn_y":5270,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2155,"spawn_y":5270,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2155,"spawn_y":5271,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2156,"spawn_y":5273,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2156,"spawn_y":5274,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2165,"spawn_y":5255,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2166,"spawn_y":5256,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2167,"spawn_y":5251,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2167,"spawn_y":5253,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2167,"spawn_y":5255,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2168,"spawn_y":5253,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2168,"spawn_y":5256,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2168,"spawn_y":5257,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2169,"spawn_y":5250,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2169,"spawn_y":5254,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2169,"spawn_y":5255,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2170,"spawn_y":5252,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2170,"spawn_y":5254,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2170,"spawn_y":5256,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2171,"spawn_y":5253,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Spider_5","spawn_level":0,"spawn_x":2172,"spawn_y":5254,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Scorpion_2","spawn_level":0,"spawn_x":2169,"spawn_y":5290,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Scorpion_2","spawn_level":0,"spawn_x":2170,"spawn_y":5285,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Scorpion_2","spawn_level":0,"spawn_x":2171,"spawn_y":5280,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Scorpion_2","spawn_level":0,"spawn_x":2172,"spawn_y":5274,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Scorpion_3","spawn_level":0,"spawn_x":2170,"spawn_y":5277,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Scorpion_3","spawn_level":0,"spawn_x":2170,"spawn_y":5288,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Scorpion_3","spawn_level":0,"spawn_x":2172,"spawn_y":5283,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Scorpion_3","spawn_level":0,"spawn_x":2173,"spawn_y":5272,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1862,"spawn_y":5190,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1863,"spawn_y":5189,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1867,"spawn_y":5188,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1870,"spawn_y":5235,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1871,"spawn_y":5191,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1871,"spawn_y":5242,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1872,"spawn_y":5227,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1873,"spawn_y":5212,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1873,"spawn_y":5238,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1874,"spawn_y":5216,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1875,"spawn_y":5214,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1875,"spawn_y":5218,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1878,"spawn_y":5216,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1879,"spawn_y":5218,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1880,"spawn_y":5217,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur","spawn_level":0,"spawn_x":1880,"spawn_y":5220,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1890,"spawn_y":5195,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1890,"spawn_y":5243,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1893,"spawn_y":5189,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1893,"spawn_y":5198,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1893,"spawn_y":5238,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1893,"spawn_y":5241,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1894,"spawn_y":5243,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1897,"spawn_y":5196,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1897,"spawn_y":5244,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1899,"spawn_y":5198,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1899,"spawn_y":5242,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1900,"spawn_y":5208,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1900,"spawn_y":5210,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1901,"spawn_y":5191,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1901,"spawn_y":5197,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1901,"spawn_y":5201,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1901,"spawn_y":5206,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1902,"spawn_y":5193,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1902,"spawn_y":5199,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1902,"spawn_y":5204,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1902,"spawn_y":5207,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1902,"spawn_y":5242,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Minotaur_2","spawn_level":0,"spawn_x":1904,"spawn_y":5191,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_47","spawn_level":0,"spawn_x":1860,"spawn_y":5205,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_47","spawn_level":0,"spawn_x":1860,"spawn_y":5222,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_47","spawn_level":0,"spawn_x":1860,"spawn_y":5226,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_47","spawn_level":0,"spawn_x":1862,"spawn_y":5201,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_48","spawn_level":0,"spawn_x":1859,"spawn_y":5201,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_48","spawn_level":0,"spawn_x":1860,"spawn_y":5215,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_48","spawn_level":0,"spawn_x":1862,"spawn_y":5220,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_48","spawn_level":0,"spawn_x":1863,"spawn_y":5215,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_48","spawn_level":0,"spawn_x":1863,"spawn_y":5217,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_48","spawn_level":0,"spawn_x":1864,"spawn_y":5218,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_49","spawn_level":0,"spawn_x":1859,"spawn_y":5219,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_49","spawn_level":0,"spawn_x":1861,"spawn_y":5224,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_49","spawn_level":0,"spawn_x":1862,"spawn_y":5228,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_49","spawn_level":0,"spawn_x":1864,"spawn_y":5204,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_50","spawn_level":0,"spawn_x":1884,"spawn_y":5207,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_50","spawn_level":0,"spawn_x":1885,"spawn_y":5203,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_50","spawn_level":0,"spawn_x":1891,"spawn_y":5236,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_50","spawn_level":0,"spawn_x":1894,"spawn_y":5229,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_50","spawn_level":0,"spawn_x":1910,"spawn_y":5236,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_50","spawn_level":0,"spawn_x":1913,"spawn_y":5239,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_51","spawn_level":0,"spawn_x":1876,"spawn_y":5198,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_51","spawn_level":0,"spawn_x":1884,"spawn_y":5201,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_51","spawn_level":0,"spawn_x":1887,"spawn_y":5205,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_51","spawn_level":0,"spawn_x":1893,"spawn_y":5235,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_51","spawn_level":0,"spawn_x":1895,"spawn_y":5228,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_51","spawn_level":0,"spawn_x":1896,"spawn_y":5232,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_51","spawn_level":0,"spawn_x":1911,"spawn_y":5240,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_51","spawn_level":0,"spawn_x":1912,"spawn_y":5244,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_51","spawn_level":0,"spawn_x":1913,"spawn_y":5236,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_52","spawn_level":0,"spawn_x":1877,"spawn_y":5199,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_52","spawn_level":0,"spawn_x":1892,"spawn_y":5226,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_52","spawn_level":0,"spawn_x":1894,"spawn_y":5233,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_52","spawn_level":0,"spawn_x":1905,"spawn_y":5235,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Goblin_52","spawn_level":0,"spawn_x":1912,"spawn_y":5242,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_3","spawn_level":0,"spawn_x":1870,"spawn_y":5226,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_3","spawn_level":0,"spawn_x":1871,"spawn_y":5229,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_3","spawn_level":0,"spawn_x":1871,"spawn_y":5236,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_3","spawn_level":0,"spawn_x":1872,"spawn_y":5233,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_3","spawn_level":0,"spawn_x":1873,"spawn_y":5239,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_4","spawn_level":0,"spawn_x":1886,"spawn_y":5188,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_4","spawn_level":0,"spawn_x":1887,"spawn_y":5221,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_4","spawn_level":0,"spawn_x":1889,"spawn_y":5187,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_4","spawn_level":0,"spawn_x":1889,"spawn_y":5191,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_4","spawn_level":0,"spawn_x":1889,"spawn_y":5214,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_4","spawn_level":0,"spawn_x":1889,"spawn_y":5217,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_4","spawn_level":0,"spawn_x":1890,"spawn_y":5224,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_4","spawn_level":0,"spawn_x":1892,"spawn_y":5217,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_4","spawn_level":0,"spawn_x":1892,"spawn_y":5220,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_4","spawn_level":0,"spawn_x":1894,"spawn_y":5193,"movement_radius": 10,"face":"WEST"}
+,{"npc":"rs:Wolf_4","spawn_level":0,"spawn_x":1897,"spawn_y":5189,"movement_radius": 10,"face":"WEST"}
+]

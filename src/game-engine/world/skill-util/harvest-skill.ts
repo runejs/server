@@ -16,7 +16,7 @@ export function canInitiateHarvest(player: Player, target: IHarvestable, skill: 
     if (!target) {
         switch (skill) {
             case Skill.MINING:
-                player.sendMessage('There is current no ore available in this rock.');
+                player.sendMessage('There is currently no ore available in this rock.');
                 break;
             default:
                 player.sendMessage(colorText('HARVEST SKILL ERROR, PLEASE CONTACT DEVELOPERS', colors.red));

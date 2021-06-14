@@ -3,9 +3,10 @@ import { world } from '@engine/game-server';
 import {
     widgetInteractionActionHandler
 } from '@engine/world/action/widget-interaction.action';
+import { widgets } from '@engine/config';
 
 export function openTravel(player: Player, page: number) {
-    const widget = player.interfaceState.openWidget(27, {
+    const widget = player.interfaceState.openWidget(widgets.book, {
         slot: 'screen',
         fakeWidget: 3100002,
         metadata: {

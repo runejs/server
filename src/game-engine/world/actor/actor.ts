@@ -131,10 +131,11 @@ export abstract class Actor {
      * Waits for the actor to reach the specified game object before resolving it's promise.
      * The promise will be rejected if the actor's walking queue changes or their movement is otherwise canceled.
      * @param target The position or game object that the actor needs to reach for the promise to resolve.
+     * @param ignoreInteractionDistanceRequirement Whether or not to disregard the fact that the actor is within interaction distance.
      */
-    public async waitForPathing(target: Position | LandscapeObject): Promise<void>;
-    public async waitForPathing(target: Position | LandscapeObject): Promise<void> {
-        if(this.position.withinInteractionDistance(target)) {
+    public async waitForPathing(target: Position | LandscapeObject, ignoreInteractionDistanceRequirement?: boolean): Promise<void>;
+    public async waitForPathing(target: Position | LandscapeObject, ignoreInteractionDistanceRequirement?: boolean): Promise<void> {
+        if(this.position.withinInteractionDistance(target) && !ignoreInteractionDistanceRequirement) {
             return;
         }
 
@@ -246,7 +247,7 @@ export abstract class Actor {
         if(distance <= 1) {
             return false;
         }
-        
+
         if(distance > 16) {
             this.clearFaceActor();
             this.metadata.faceActorClearedByWalking = true;

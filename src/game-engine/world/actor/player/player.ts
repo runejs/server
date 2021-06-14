@@ -58,7 +58,6 @@ import { SendMessageOptions } from '@engine/world/actor/player/model';
 import { AutoAttackBehavior } from '../behaviors/auto-attack.behavior';
 import { EventEmitter } from 'events';
 
-
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
         option: 'Yeet',

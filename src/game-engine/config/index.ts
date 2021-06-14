@@ -19,10 +19,16 @@ import { Quest } from '@engine/world/actor/player/quest';
 import { ItemSpawn, loadItemSpawnConfigurations } from '@engine/config/item-spawn-config';
 import { loadSkillGuideConfigurations, SkillGuide } from '@engine/config/skill-guide-config';
 import { loadMusicRegionConfigurations, MusicTrack } from '@engine/config/music-regions-config';
-import { LandscapeObject, loadXteaRegionFiles, ObjectConfig, XteaRegion } from '@runejs/filestore';
+
+import {
+    loadStrongholdOfSecurityQuizData,
+    StrongholdOfSecurityQuiz,
+    StrongholdOfSecurityQuizQuestion
+} from '@engine/config/stronghold-of-security-quiz-config';
+import { BookData, loadBookData } from '@engine/config/sectioned-book-config';
+import { loadXteaRegionFiles, ObjectConfig, XteaRegion } from '@runejs/filestore';
 
 require('json5/lib/register');
-
 
 
 export let itemMap: { [key: string]: ItemDetails };
@@ -38,6 +44,8 @@ export let itemSpawns: ItemSpawn[] = [];
 export let shopMap: { [key: string]: Shop };
 export let skillGuides: SkillGuide[] = [];
 export let xteaRegions: { [key: number]: XteaRegion };
+export let strongholdOfSecurityQuizData: StrongholdOfSecurityQuiz;
+export let bookData: BookData[];
 
 export const musicRegionMap = new Map<number, number>();
 export const widgets: { [key: string]: any } = require('../../../data/config/widgets.json5');
@@ -59,6 +67,8 @@ export async function loadGameConfigurations(): Promise<void> {
     npcIdMap = npcIds;
     npcPresetMap = npcPresets;
 
+    strongholdOfSecurityQuizData = await loadStrongholdOfSecurityQuizData(`data/config/stronghold-of-security-quiz.json5`);
+    bookData = await loadBookData(`data/config/books/`);
     npcSpawns = await loadNpcSpawnConfigurations('data/config/npc-spawns/');
     musicRegions = await loadMusicRegionConfigurations();
     musicRegions.forEach(song => song.regionIds.forEach(region => musicRegionMap.set(region, song.songId)));
@@ -66,57 +76,56 @@ export async function loadGameConfigurations(): Promise<void> {
 
     shopMap = await loadShopConfigurations('data/config/shops/');
     skillGuides = await loadSkillGuideConfigurations('data/config/skill-guides/');
+    logger.info(`Loaded ${strongholdOfSecurityQuizData.questions.length} Stronghold of Security questions.`);
 
     objectMap = {};
-
     logger.info(`Loaded ${musicRegions.length} music regions, ${Object.keys(itemMap).length} items, ${itemSpawns.length} item spawns, ` +
         `${Object.keys(npcMap).length} npcs, ${npcSpawns.length} npc spawns, ${Object.keys(shopMap).length} shops and ${skillGuides.length} skill guides.`);
 }
 
-
 export const findItem = (itemKey: number | string): ItemDetails | null => {
-    if(!itemKey) {
+    if (!itemKey) {
         return null;
     }
 
     let gameId: number;
-    if(typeof itemKey === 'number') {
+    if (typeof itemKey === 'number') {
         gameId = itemKey;
         itemKey = itemIdMap[gameId];
 
-        if(!itemKey) {
+        if (!itemKey) {
             logger.warn(`Item ${gameId} is not yet registered on the server.`);
         }
     }
 
     let item;
 
-    if(itemKey) {
+    if (itemKey) {
         item = itemMap[itemKey];
-        if(!item) {
+        if (!item) {
             // Try fetching variation with suffix 0
             item = itemMap[`${itemKey}:0`]
         }
-        if(item?.gameId) {
+        if (item?.gameId) {
             gameId = item.gameId;
         }
 
-        if(item?.extends) {
+        if (item?.extends) {
             let extensions = item.extends;
-            if(typeof extensions === 'string') {
-                extensions = [ extensions ];
+            if (typeof extensions === 'string') {
+                extensions = [extensions];
             }
 
             extensions.forEach(extKey => {
                 const extensionItem = itemPresetMap[extKey];
-                if(extensionItem) {
+                if (extensionItem) {
                     item = _.merge(item, translateItemConfig(undefined, extensionItem));
                 }
             });
         }
     }
 
-    if(gameId) {
+    if (gameId) {
         const cacheItem = filestore.configStore.itemStore.getItem(gameId);
         item = _.merge(item, cacheItem);
     }
@@ -126,17 +135,17 @@ export const findItem = (itemKey: number | string): ItemDetails | null => {
 
 
 export const findNpc = (npcKey: number | string): NpcDetails | null => {
-    if(!npcKey) {
+    if (!npcKey) {
         return null;
     }
 
-    if(typeof npcKey === 'number') {
+    if (typeof npcKey === 'number') {
         const gameId = npcKey;
         npcKey = npcIdMap[gameId];
 
-        if(!npcKey) {
+        if (!npcKey) {
             const cacheNpc = filestore.configStore.npcStore.getNpc(gameId);
-            if(cacheNpc) {
+            if (cacheNpc) {
                 return cacheNpc as any;
             } else {
                 logger.warn(`NPC ${gameId} is not yet configured on the server and a matching cache NPC was not found.`);
@@ -146,25 +155,25 @@ export const findNpc = (npcKey: number | string): NpcDetails | null => {
     }
 
     let npc = npcMap[npcKey];
-    if(!npc) {
+    if (!npc) {
         // Try fetching variation with suffix 0
         npc = npcMap[`${npc}:0`]
     }
 
-    if(!npc) {
+    if (!npc) {
         logger.warn(`NPC ${npcKey} is not yet configured on the server and a matching cache NPC was not provided.`);
         return null;
     }
 
-    if(npc.extends) {
+    if (npc.extends) {
         let extensions = npc.extends;
-        if(typeof extensions === 'string') {
-            extensions = [ extensions ];
+        if (typeof extensions === 'string') {
+            extensions = [extensions];
         }
 
         extensions.forEach(extKey => {
             const extensionNpc = npcPresetMap[extKey];
-            if(extensionNpc) {
+            if (extensionNpc) {
                 npc = _.merge(npc, translateNpcServerConfig(undefined, extensionNpc));
             }
         });
@@ -190,7 +199,7 @@ export const findObject = (objectId: number): ObjectConfig | null => {
 
 
 export const findShop = (shopKey: string): Shop | null => {
-    if(!shopKey) {
+    if (!shopKey) {
         return null;
     }
 
@@ -213,3 +222,21 @@ export const findMusicTrackByButtonId = (buttonId: number): MusicTrack | null =>
 export const findSongIdByRegionId = (regionId: number): number | null => {
     return musicRegionMap.has(regionId) ? musicRegionMap.get(regionId) : null;
 };
+
+export function getRandomStrongholdOfSecurityQuizQuestion(): StrongholdOfSecurityQuizQuestion | null {
+    const randomIndex = Math.floor(Math.random() * strongholdOfSecurityQuizData.questions.length);
+    return strongholdOfSecurityQuizData.questions[randomIndex];
+}
+
+export function getBookFromId(bookId: number): BookData | null {
+    const bookExists = bookData.some(book => book.bookContents.bookId === bookId);
+    if(bookExists) {
+        for (const book of bookData) {
+            if(book.bookContents.bookId === bookId) {
+                return book;
+            }
+        }
+    } else {
+        return null;
+    }
+}

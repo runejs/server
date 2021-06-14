@@ -1,4 +1,9 @@
 export const animationIds = {
+    openWardrobe: 545,
+    searchObject: 881,
+    touchStrongholdOfSecurityDoor: 4282,
+    lookAroundAfterStrongholdTeleportation: 4283,
+    closeWardrobe: 535,
     milkCow: 2305,
     lightingFire: 733,
     homeTeleportDraw: 4847,

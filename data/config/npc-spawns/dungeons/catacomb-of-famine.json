@@ -1,0 +1,1033 @@
+[
+    {
+        "npc": "rs:Flesh Crawler_2",
+        "movement_radius": 10,
+        "face": "WEST",
+        "id": 2500,
+        "spawn_level": 0,
+        "spawn_x": 1988,
+        "spawn_y": 5235
+    },
+    {
+        "npc": "rs:Flesh Crawler_2",
+        "movement_radius": 10,
+        "face": "WEST",
+        "id": 2500,
+        "spawn_level": 0,
+        "spawn_x": 1989,
+        "spawn_y": 5239
+    },
+    {
+        "npc": "rs:Flesh Crawler_2",
+        "movement_radius": 10,
+        "face": "WEST",
+        "id": 2500,
+        "spawn_level": 0,
+        "spawn_x": 1991,
+        "spawn_y": 5242
+    },
+    {
+        "npc": "rs:Flesh Crawler_2",
+        "movement_radius": 10,
+        "face": "WEST",
+        "id": 2500,
+        "spawn_level": 0,
+        "spawn_x": 1992,
+        "spawn_y": 5235
+    },
+    {
+        "npc": "rs:Flesh Crawler_2",
+        "movement_radius": 10,
+        "face": "WEST",
+        "id": 2500,
+        "spawn_level": 0,
+        "spawn_x": 1994,
+        "spawn_y": 5239
+    },
+    {
+        "npc": "rs:Flesh Crawler_2",
+        "movement_radius": 10,
+        "face": "WEST",
+        "id": 2500,
+        "spawn_level": 0,
+        "spawn_x": 1994,
+        "spawn_y": 5241
+    },
+    {
+        "npc": "rs:Flesh Crawler_2",
+        "movement_radius": 10,
+        "face": "WEST",
+        "id": 2500,
+        "spawn_level": 0,
+        "spawn_x": 2003,
+        "spawn_y": 5202
+    },
+    {
+        "npc": "rs:Flesh Crawler_2",
+        "movement_radius": 10,
+        "face": "WEST",
+        "id": 2500,
+        "spawn_level": 0,
+        "spawn_x": 2003,
+        "spawn_y": 5205
+    },
+    {
+        "npc": "rs:Flesh Crawler_2",
+        "movement_radius": 10,
+        "face": "WEST",
+        "id": 2500,
+        "spawn_level": 0,
+        "spawn_x": 2005,
+        "spawn_y": 5199
+    },
+    {
+        "npc": "rs:Flesh Crawler_2",
+        "movement_radius": 10,
+        "face": "WEST",
+        "id": 2500,
+        "spawn_level": 0,
+        "spawn_x": 2006,
+        "spawn_y": 5202
+    },
+    {
+        "npc": "rs:Flesh Crawler_2",
+        "movement_radius": 10,
+        "face": "WEST",
+        "id": 2500,
+        "spawn_level": 0,
+        "spawn_x": 2006,
+        "spawn_y": 5205
+    },
+    {
+        "npc": "rs:Flesh Crawler_2",
+        "movement_radius": 10,
+        "face": "WEST",
+        "id": 2500,
+        "spawn_level": 0,
+        "spawn_x": 2008,
+        "spawn_y": 5201
+    },
+    {
+        "npc": "rs:Flesh Crawler_2",
+        "movement_radius": 10,
+        "face": "WEST",
+        "id": 2500,
+        "spawn_level": 0,
+        "spawn_x": 2008,
+        "spawn_y": 5204
+    },
+    {
+        "npc": "rs:Flesh Crawler_1",
+        "spawn_x": 2037,
+        "spawn_y": 5193,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Flesh Crawler_1",
+        "spawn_x": 2038,
+        "spawn_y": 5187,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Flesh Crawler_1",
+        "spawn_x": 2040,
+        "spawn_y": 5186,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Flesh Crawler_1",
+        "spawn_x": 2041,
+        "spawn_y": 5190,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Flesh Crawler_1",
+        "spawn_x": 2042,
+        "spawn_y": 5192,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Flesh Crawler_1",
+        "spawn_x": 2043,
+        "spawn_y": 5186,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Flesh Crawler_1",
+        "spawn_x": 2044,
+        "spawn_y": 5189,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Flesh Crawler_1",
+        "spawn_x": 2045,
+        "spawn_y": 5193,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Flesh Crawler",
+        "spawn_x": 2013,
+        "spawn_y": 5237,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+   },
+    {
+        "npc": "rs:Flesh Crawler",
+        "spawn_x": 2021,
+        "spawn_y": 5237,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+   },
+    {
+        "npc": "rs:Flesh Crawler",
+        "spawn_x": 2032,
+        "spawn_y": 5231,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+   },
+    {
+        "npc": "rs:Flesh Crawler",
+        "spawn_x": 2040,
+        "spawn_y": 5231,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+   },
+    {
+        "npc": "rs:Flesh Crawler",
+        "spawn_x": 2045,
+        "spawn_y": 5233,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+   },
+    {
+        "npc": "rs:Giant rat_7",
+        "spawn_x": 1988,
+        "spawn_y": 5189,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Giant rat_7",
+        "spawn_x": 1989,
+        "spawn_y": 5192,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+
+    {
+        "npc": "rs:Giant rat_7",
+        "spawn_x": 2015,
+        "spawn_y": 5236,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+
+    {
+        "npc": "rs:Giant rat_7",
+        "spawn_x": 2037,
+        "spawn_y": 5211,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Giant rat_7",
+        "spawn_x": 1990,
+        "spawn_y": 5190,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Giant rat_7",
+        "spawn_x": 1992,
+        "spawn_y": 5188,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Giant rat_7",
+        "spawn_x": 2019,
+        "spawn_y": 5235,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Giant rat_7",
+        "spawn_x": 2040,
+        "spawn_y": 5215,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Giant rat_7",
+        "spawn_x": 1995,
+        "spawn_y": 5190,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Giant rat_7",
+        "spawn_x": 2019,
+        "spawn_y": 5238,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1987,
+        "spawn_y": 5202,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1988,
+        "spawn_y": 5200,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1988,
+        "spawn_y": 5205,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1989,
+        "spawn_y": 5223,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1989,
+        "spawn_y": 5226,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1989,
+        "spawn_y": 5236,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1990,
+        "spawn_y": 5228,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1990,
+        "spawn_y": 5237,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1991,
+        "spawn_y": 5233,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1992,
+        "spawn_y": 5200,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1992,
+        "spawn_y": 5242,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1993,
+        "spawn_y": 5191,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1993,
+        "spawn_y": 5199,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1993,
+        "spawn_y": 5235,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1994,
+        "spawn_y": 5207,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1994,
+        "spawn_y": 5211,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1994,
+        "spawn_y": 5218,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1995,
+        "spawn_y": 5214,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 1995,
+        "spawn_y": 5239,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2000,
+        "spawn_y": 5187,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2004,
+        "spawn_y": 5186,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2004,
+        "spawn_y": 5189,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2004,
+        "spawn_y": 5204,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2004,
+        "spawn_y": 5207,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2005,
+        "spawn_y": 5190,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2007,
+        "spawn_y": 5203,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2009,
+        "spawn_y": 5187,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2012,
+        "spawn_y": 5194,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2013,
+        "spawn_y": 5236,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2014,
+        "spawn_y": 5190,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2014,
+        "spawn_y": 5192,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2015,
+        "spawn_y": 5186,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2017,
+        "spawn_y": 5192,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2018,
+        "spawn_y": 5190,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2018,
+        "spawn_y": 5238,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2022,
+        "spawn_y": 5188,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2024,
+        "spawn_y": 5193,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2027,
+        "spawn_y": 5188,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2027,
+        "spawn_y": 5192,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2028,
+        "spawn_y": 5232,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2029,
+        "spawn_y": 5185,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2030,
+        "spawn_y": 5235,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2030,
+        "spawn_y": 5244,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2031,
+        "spawn_y": 5191,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2031,
+        "spawn_y": 5243,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2032,
+        "spawn_y": 5230,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2032,
+        "spawn_y": 5242,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2033,
+        "spawn_y": 5242,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2033,
+        "spawn_y": 5246,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2034,
+        "spawn_y": 5234,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2034,
+        "spawn_y": 5244,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2036,
+        "spawn_y": 5202,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2038,
+        "spawn_y": 5207,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2040,
+        "spawn_y": 5190,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2041,
+        "spawn_y": 5186,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2042,
+        "spawn_y": 5200,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2042,
+        "spawn_y": 5204,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2044,
+        "spawn_y": 5190,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2044,
+        "spawn_y": 5193,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Rat_16",
+        "spawn_x": 2046,
+        "spawn_y": 5201,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_18",
+        "spawn_x": 2029,
+        "spawn_y": 5236,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_18",
+        "spawn_x": 2031,
+        "spawn_y": 5230,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_18",
+        "spawn_x": 2031,
+        "spawn_y": 5235,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_18",
+        "spawn_x": 2026,
+        "spawn_y": 5234,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_18",
+        "spawn_x": 2031,
+        "spawn_y": 5233,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_19",
+        "spawn_x": 1988,
+        "spawn_y": 5192,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_19",
+        "spawn_x": 1990,
+        "spawn_y": 5188,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_19",
+        "spawn_x": 1993,
+        "spawn_y": 5190,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_19",
+        "spawn_x": 2003,
+        "spawn_y": 5200,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_19",
+        "spawn_x": 2005,
+        "spawn_y": 5201,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_19",
+        "spawn_x": 2007,
+        "spawn_y": 5209,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_19",
+        "spawn_x": 2039,
+        "spawn_y": 5212,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_19",
+        "spawn_x": 2039,
+        "spawn_y": 5215,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_19",
+        "spawn_x": 2039,
+        "spawn_y": 5218,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_19",
+        "spawn_x": 2040,
+        "spawn_y": 5213,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_19",
+        "spawn_x": 2041,
+        "spawn_y": 5218,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_19",
+        "spawn_x": 2042,
+        "spawn_y": 5213,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_19",
+        "spawn_x": 2042,
+        "spawn_y": 5215,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_19",
+        "spawn_x": 2043,
+        "spawn_y": 5215,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_19",
+        "spawn_x": 2043,
+        "spawn_y": 5217,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_20",
+        "spawn_x": 1988,
+        "spawn_y": 5242,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_20",
+        "spawn_x": 1990,
+        "spawn_y": 5234,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_20",
+        "spawn_x": 1992,
+        "spawn_y": 5238,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_20",
+        "spawn_x": 2008,
+        "spawn_y": 5190,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_20",
+        "spawn_x": 2014,
+        "spawn_y": 5187,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_20",
+        "spawn_x": 2023,
+        "spawn_y": 5193,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_20",
+        "spawn_x": 2025,
+        "spawn_y": 5189,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_20",
+        "spawn_x": 1988,
+        "spawn_y": 5237,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_20",
+        "spawn_x": 2018,
+        "spawn_y": 5186,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_20",
+        "spawn_x": 2027,
+        "spawn_y": 5186,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    },
+    {
+        "npc": "rs:Zombie_20",
+        "spawn_x": 2029,
+        "spawn_y": 5191,
+        "spawn_level": 0,
+        "face": "WEST",
+        "movement_radius": 10
+    }
+]

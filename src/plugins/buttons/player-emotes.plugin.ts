@@ -74,7 +74,7 @@ export const emotes: { [key: number]: Emote } = {
     32: { animationId: 4276, name: 'IDEA', unlockable: true, graphicId: 712 },
     30: { animationId: 4278, name: 'STAMP', unlockable: true },
     31: { animationId: 4280, name: 'FLAP', unlockable: true },
-    29: { animationId: 4275, name: 'FACEPALM', unlockable: true },
+    29: { animationId: 4275, name: 'SLAP HEAD', unlockable: true },
     33: { animationId: 3544, name: 'ZOMBIE WALK', unlockable: true },
     34: { animationId: 3543, name: 'ZOMBIE DANCE', unlockable: true },
     35: { animationId: 2836, name: 'SCARED', unlockable: true },
@@ -115,7 +115,7 @@ export function unlockEmotes(player: Player): void {
             goblinConfig += 7;
         if(name === 'FLAP')
             sosConfig += 1;
-        if(name === 'FACEPALM')
+        if(name === 'SLAP HEAD')
             sosConfig += 2;
         if(name === 'IDEA')
             sosConfig += 4;
@@ -153,7 +153,7 @@ export const handler: buttonActionHandler = (details) => {
     const { player, buttonId } = details;
 
     const emote = emotes[buttonId];
-    
+
     if(emote.name === 'SKILLCAPE') {
         if (player.getEquippedItem('back')) {
             if (skillCapeEmotes.some(item => item.itemIds.includes(player.getEquippedItem('back')?.itemId))) {
@@ -173,7 +173,7 @@ export const handler: buttonActionHandler = (details) => {
                 return;
             }
         }
-
+        player.interfaceState.closeAllSlots();
         player.playAnimation(emote.animationId);
 
         if(emote.graphicId !== undefined) {

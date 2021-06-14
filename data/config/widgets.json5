@@ -76,6 +76,7 @@
     questJournal: 275,
     questReward: 277,
     welcomeScreen: 378,
+    welcomeScreenConstruction: 405,
     welcomeScreenChildren: {
         cogs: 16,
         question: 17,
@@ -87,5 +88,38 @@
         christmas: 23,
         killcount: 24
     },
-    whatWouldYouLikeToSpin: 459
+    whatWouldYouLikeToSpin: 459,
+    book: 27,
+    bookChildren: {
+        title: 3,
+        totalPageLineAmount: 14,
+        leftPage: {
+            pageTurnButton: 95,
+            clickableLines: {
+                firstLineId: 101,
+                incrementAmount: 2,
+                lastLine: 129
+            },
+            nonClickableLines: {
+                firstLineId: 33,
+                incrementAmount: 1,
+                lastLine: 47
+            },
+            pageNumber: 98
+        },
+        rightPage: {
+            pageTurnButton: 97,
+            clickableLines: {
+                firstLineId: 130,
+                incrementAmount: 2,
+                lastLine: 160
+            },
+            nonClickableLines: {
+                firstLineId: 48,
+                incrementAmount: 1,
+                lastLine: 62
+            },
+            pageNumber: 99
+        }
+    }
 }

@@ -1,0 +1,470 @@
+{
+    prefix: "To pass you must answer me this: ",
+    questions: [
+        {
+            questionText: "How often should you change your recovery questions?",
+            options: [
+                {
+                    optionText: "Never",
+                    passable: false,
+                    doorResponse: "Correct! This is the ideal, every few months change your questions, but make sure you can remember the answers! Don't use personal details for your recoveries."
+                },
+                {
+                    optionText: "Every day",
+                    passable: false,
+                    doorResponse: "Normally recovery questions will take 14 days to become active, so there's no point in changing them everyday! Don't use personal details for your recoveries."
+                },
+                {
+                    optionText: "Every couple of months",
+                    passable: true,
+                    doorResponse: "Correct! This is the ideal, every few months change your questions, but make sure you can remember the answers! Don't use personal details for your recoveries."
+                }
+            ]
+        },
+        {
+            questionText: "What do I do if a moderator asks me for my account details?",
+            options: [
+                {
+                    optionText: "Tell them whatever they want to know.",
+                    passable: false,
+                    doorResponse: "Wrong! Never give your account details to anyone! This includes things like account creation details, contact details and passwords. Never use personal details for passwords or bank PINs!"
+                },
+                {
+                    optionText: "Politely tell them no.",
+                    passable: true,
+                    doorResponse: "Ok! Don't tell them the details. But reporting the incident to Jagex would help. Use the Report Abuse button. Never use personal details for passwords or bank PINs!"
+                },
+                {
+                    optionText: "Politely tell them no then use the report abuse button.",
+                    passable: true,
+                    doorResponse: "Correct! Report any attempt to gain your account details as it is a very serious breach of RuneScape's rules. Never use personal details for security answers or bank PINs!"
+                }
+            ]
+        },
+        {
+            questionText: "Who can I give my password to?",
+            options: [
+                {
+                    optionText: "My friends.",
+                    passable: false,
+                    doorResponse: "Wrong! Your password should be kept secret from everyone. You should *never* give it out under any circumstances."
+                },
+                {
+                    optionText: "My brother or sister.",
+                    passable: false,
+                    doorResponse: "Wrong! Your password should be kept secret from everyone. You should *never* give it out under any circumstances."
+                },
+                {
+                    optionText: "Nobody.",
+                    passable: true,
+                    doorResponse: "Correct! Your password should be kept secret from everyone. You should *never* give it out under any circumstances."
+                }
+            ]
+        },
+        {
+            questionText: "How do I set a bank PIN?",
+            options: [
+                {
+                    optionText: "Use the account management section on the website.",
+                    passable: false,
+                    doorResponse: "Wrong! Your password can be changed from the account management section, but you must talk to a banker to set a bank PIN. Never use personal details for passwords or bank PINs!"
+                },
+                {
+                    optionText: "Talk to any banker.",
+                    passable: true,
+                    doorResponse: "Correct! Simply talking to a banker will give you the option to set a bank PIN. Never use personal details for passwords or bank PINs!"
+                }
+            ]
+        },
+        {
+            questionText: "Who is it ok to share my account with?",
+            options: [
+                {
+                    optionText: "My friends.",
+                    passable: false,
+                    doorResponse: "Wrong! Your account may only be used by you."
+                },
+                {
+                    optionText: "My relatives.",
+                    passable: false,
+                    doorResponse: "Wrong! Your account may only be used by you."
+                },
+                {
+                    optionText: "Nobody.",
+                    passable: true,
+                    doorResponse: "Correct! Your account may only be used by you."
+                }
+            ]
+        },
+        {
+            questionText: "My friend asks me for my password so that he can do a difficult quest for me. Do I give it to him?",
+            options: [
+                {
+                    optionText: "Yes. He is my best friend and I already spent ages trying this quest.",
+                    passable: false,
+                    doorResponse: "Wrong! Don't give your password to anyone otherwise you can lose everything you have worked so hard for."
+                },
+                {
+                    optionText: "Don't give him my passwoord.",
+                    passable: true,
+                    doorResponse: "Correct! You can make it alone and the success will taste even better. Don't forget you can ask people for advice too!"
+                },
+                {
+                    optionText: "Let him do the quest but in the same room the whole time.",
+                    passable: false,
+                    doorResponse: "Wrong! Never let anyone use your account for any reason. It only takes a few seconds to change your password."
+                }
+            ]
+        },
+        {
+            questionText: "Will Jagex block me from saying my PIN in game?",
+            options: [
+                {
+                    optionText: "Yes.",
+                    passable: false,
+                    doorResponse: "Wrong! Jagex does NOT block your PIN so don't type it! Never use personal details for recoveries or bank PINs!"
+                },
+                {
+                    optionText: "No.",
+                    passable: true,
+                    doorResponse: "Correct! Jagex will not block your PIN so don't type it! Never use personal details for recoveries or bank PINs!"
+                }
+            ]
+        },
+        {
+            questionText: "What do I do if I think I have a keylogger or a virus?",
+            options: [
+                {
+                    optionText: "Virus scan my computer then change my password and recoveries.",
+                    passable: true,
+                    doorResponse: "Correct! Removing the keylogger must be the priority, otherwise anything you type can be given away. Remember to change your password and bank PIN afterwards."
+                },
+                {
+                    optionText: "Change my password then virus scan my computer.",
+                    passable: false,
+                    doorResponse: "Wrong! If you change your password while you still have the keylogger, it will still be insecure. Remove the keylogger first. Never use personal details for passwords or bank PINs!"
+                },
+                {
+                    optionText: "Nothing. It will go away on its own.",
+                    passable: false,
+                    doorResponse: "Wrong! This could mean your account may be accessed by someone else. Remove the keylogger then change your password. Never use personal details for security answers or bank PINs!"
+                }
+            ]
+        },
+        {
+            questionText: "A website says I can become a player moderator by giving them my password, what do I do?",
+            options: [
+                {
+                    optionText: "Nothing.",
+                    passable: false,
+                    doorResponse: "Quite good. But we should try to stop scammers. So please reoport any attempt to gain your account details as it is a very serious breach of RuneScape's rules. Never use personal details for passwords or bank PINs!"
+                },
+                {
+                    optionText: "Give them my password.",
+                    passable: false,
+                    doorResponse: "Wrong! This will almost certainly lead to your account being hijacked. No website can make you a moderator as they are hand picked by Jagex."
+                },
+                {
+                    optionText: "Don't tell them anything and imform Jagex through the game website.",
+                    passable: true,
+                    doorResponse: "Correct! By informing us we can have the site taken down so other people will not have their accounts hijacked by this scam. Remember that moderators are hand picked by Jagex."
+                }
+            ]
+        },
+        {
+            questionText: "What do you do if someone asks you for your password or recoveries to make you a member for free?",
+            options: [
+                {
+                    optionText: "Give them the information they asked for.",
+                    passable: false,
+                    doorResponse: "Wrong! Never give your account details to anyone! This includes things like account creation details, contact details and passwords. Never use personal details for passwords or bank PINs!"
+                },
+                {
+                    optionText: "Don't tell them anything and ignore them.",
+                    passable: true,
+                    doorResponse: "Quite good. But we should try to stop scammers. So please report them using the 'Report Abuse' button."
+                },
+                {
+                    optionText: "Don't tell them anything and click the 'Report Abuse' button.",
+                    passable: true,
+                    doorResponse: "Correct! Press the 'Report Abuse' button and fill in the offending player's name and the correct category."
+                }
+            ]
+        },
+        {
+            questionText: "Where should I enter my RuneScape password?",
+            options: [
+                {
+                    optionText: "On RuneScape and all fansites.",
+                    passable: false,
+                    doorResponse: "Wrong! Always use a unique password purely for your RuneScape account."
+                },
+                {
+                    optionText: "Only on the RuneScape website.",
+                    passable: true,
+                    doorResponse: "Correct! Always make sure you are entering password only on the RuneScape website as other sites may try to steal it."
+                },
+                {
+                    optionText: "On all websites I visit.",
+                    passable: false,
+                    doorResponse: "Wrong! This is very insecure and will may lead to your account being stolen.!"
+                }
+            ]
+        },
+        {
+            questionText: "Where can I find cheats for RuneScape?",
+            options: [
+                {
+                    optionText: "On the RuneScape website.",
+                    passable: false,
+                    doorResponse: "Wrong! There are NO RuneScape cheats coded into the game. Any sites claiming to have cheats are fakes and may lead to your account being stolen if you given them your password."
+                },
+                {
+                    optionText: "By searching the internet.",
+                    passable: false,
+                    doorResponse: "Wrong! There are NO RuneScape cheats coded into the game. Any sites claiming to have cheats are fakes and may lead to your account being stolen if you given them your password."
+                },
+                {
+                    optionText: "Nowhere.",
+                    passable: true,
+                    doorResponse: "Correct! There are NO RuneScape cheats coded into the game. Any sites claiming to have cheats are fakes and may lead to your account being stolen if you given them your password."
+                }
+            ]
+        },
+        {
+            questionText: "What do you do if someone asks you for your password or recoveries to make you a player moderator?",
+            options: [
+                {
+                    optionText: "Don't give them the information and send a 'Abuse report'.",
+                    passable: true,
+                    doorResponse: "Correct! Use the 'Report Abuse' button and fill in the offending player's name and the correct category."
+                },
+                {
+                    optionText: "Don't tell them anything and ignore them.",
+                    passable: true,
+                    doorResponse: "Quite good. But we should try to stop scammers. So please report them using the 'Report Abuse' button."
+                },
+                {
+                    optionText: "Give them the information they asked for.",
+                    passable: false,
+                    doorResponse: "Wrong! Jagex never ask for your account information - especially to become a player moderator. Press the 'Report Abuse' button and fill in the offending player's name and the correct category."
+                }
+            ]
+        },
+        {
+            questionText: "Why do I need to type in recovery questions?",
+            options: [
+                {
+                    optionText: "To help me recover my password if I forget it or it is stolen.",
+                    passable: true,
+                    doorResponse: "Correct! Your recovery questions will help Jagex staff protect and return your account if it is stolen. Never use personal details for recoveries or bank PINs!"
+                },
+                {
+                    optionText: "To let Jagex know more about its players.",
+                    passable: false,
+                    doorResponse: "INCORRECTRESPONSE"
+                },
+                {
+                    optionText: "To see if I can type in random letters on my keyboard.",
+                    passable: false,
+                    doorResponse: "Incorrect! You should always remember this info so your account is as safe as possible."
+                }
+            ]
+        },
+        {
+            questionText: "What should I do if I think someone knows my recovery answers?",
+            options: [
+                {
+                    optionText: "Tell them never to use them.",
+                    passable: false,
+                    doorResponse: "Wrong! Never give your account details to anyone! This includes things like account creation details, contact details and passwords. Never use personal details for passwords or bank PINs"
+                },
+                {
+                    optionText: "Use the Account Management section on the RuneScape website.",
+                    passable: false,
+                    doorResponse: "Wrong! If you use the Account Management section to change your recovery questions, it will take 14 days to come into effect, someone may have access to your account in this time."
+                },
+                {
+                    optionText: "Use the 'Recover a Lost Password' section on the RuneScape website.",
+                    passable: true,
+                    doorResponse: "Correct! If you provide all the correct information this will reset your questions within 24 hours and make your account secure again."
+                }
+            ]
+        },
+        {
+            questionText: "Recovery answers should be...",
+            options: [
+                {
+                    optionText: "Memorable.",
+                    passable: true,
+                    doorResponse: "Correct! A good recovery answer that not many people will know, you won't forget, will stay the same and that you won't accidentally give away. Remember: don't use personal details for your recoveries."
+                },
+                {
+                    optionText: "Easy to guess.",
+                    passable: false,
+                    doorResponse: "This is a bad idea as anyone who knows you could guess them. Remember: Don't use personal details for your recoveries."
+                },
+                {
+                    optionText: "Random gibberish.",
+                    passable: false,
+                    doorResponse: "Wrong! A good recovery answer that not many people will know, you won't forget, will stay the same and that you won't accidentally give away. Remember: don't use personal details for your recoveries."
+                }
+            ]
+        },
+        {
+            questionText: "What is an example of a good bank PIN?",
+            options: [
+                {
+                    optionText: "Your real life bank PIN.",
+                    passable: false,
+                    doorResponse: "This is a bad idea as if someone happen to find out your bank PIN on RuneScape, they then have your real life bank PIN! Never use personal details for security answers or bank PINs!"
+                },
+                {
+                    optionText: "Your birthday.",
+                    passable: false,
+                    doorResponse: "Not a good idea because you know how many presents you get for your birthday. So you can imagine how many people know this date. Never use personal details for recoveries or bank PINs!."
+                },
+                {
+                    optionText: "The birthday of a famous person or event.",
+                    passable: true,
+                    doorResponse: "Well done! Unless you tell someone, they are unlikely to guess who or what you have chosen, and you can always look it up. Never use personal details for recoveries or bank PINs!"
+                }
+            ]
+        },
+        {
+            questionText: "How will Jagex contact me if I have been chosen to be a moderator?",
+            options: [
+                {
+                    optionText: "Email.",
+                    passable: false,
+                    doorResponse: "Incorrect. Jagex will never email you asking you to become a Moderator. We will contact you through your Message Inbox available on our website."
+                },
+                {
+                    optionText: "Website popup.",
+                    passable: false,
+                    doorResponse: "Incorrect, we will only contact our players via the game Inbox which you can access from our RuneScape website."
+                },
+                {
+                    optionText: "Game inbox on the RuneScape website.",
+                    passable: true,
+                    doorResponse: "Correct! We only contact our players via the game Inbox which you can access from our RuneScape website."
+                }
+            ]
+        },
+        {
+            questionText: "What should you do if your real-life friend asks for your password so he can check your stats?",
+            options: [
+                {
+                    optionText: "Give them your password since they're a friend in real life.",
+                    passable: false,
+                    doorResponse: "Incorrect! Don't trust anybody with your account login details!"
+                },
+                {
+                    optionText: "Don't give out your password to anyone. Not even close friends.",
+                    passable: true,
+                    doorResponse: "Correct! Doing so could result in losing your items and gold and puts your account at risk."
+                },
+                {
+                    optionText: "Log in for your friend and let them play.",
+                    passable: false,
+                    doorResponse: "Incorrect! Never allow anybody else to access your account."
+                }
+            ]
+        },
+        {
+            questionText: "Can I leave my account logged in while I'm out of the room?",
+            options: [
+                {
+                    optionText: "If I'm going to be quick.",
+                    passable: false,
+                    doorResponse: "Wrong! You should logout in case you are attacked or receive a random event. Leaving your character logged in can also allow someone to steal your items or entire account!"
+                },
+                {
+                    optionText: "Yes.",
+                    passable: false,
+                    doorResponse: "Wrong! You should logout in case you are attacked or receive a random event. Leaving your character logged in can also allow someone to steal your items or entire account!"
+                },
+                {
+                    optionText: "No.",
+                    passable: true,
+                    doorResponse: "Correct! This is the safest, both in terms of security and keeping your items! Leaving your character logged in can also allow someone to steal your items or entire account!"
+                }
+            ]
+        },
+        {
+            questionText: "Does Jagex really hide your password if you accidentally say it in game?",
+            options: [
+                {
+                    optionText: "Yes - Jagex blocks your password.",
+                    passable: false,
+                    doorResponse: "Wrong! Jagex does NOT block your password so don't type it! Never use personal details for passwords or bank PINs!"
+                },
+                {
+                    optionText: "No - Jagex does not block your password.",
+                    passable: true,
+                    doorResponse: "Correct! We do not block your password. Do not say it in game as someone may steal your account!"
+                }
+            ]
+        },
+        {
+            questionText: "My friend uses this great add-on program he got from a website, should I?",
+            options: [
+                {
+                    optionText: "No, it might steal my password.",
+                    passable: true,
+                    doorResponse: "Correct! The only safe add-on for RuneScape is the Windows client available from our RuneScape website."
+                },
+                {
+                    optionText: "I'll give it a try and see if I like it.",
+                    passable: false,
+                    doorResponse: "Wrong! The program may steal your password and is against the rules to use."
+                },
+                {
+                    optionText: "Sure, he's used it a lot, so can I.",
+                    passable: false,
+                    doorResponse: "Wrong! The program may steal your password and is against the rules to use."
+                }
+            ]
+        },
+        {
+            questionText: "What do you do if someone tells you that you have won the RuneScape Lottery and asks you for your password or recoveries to award your prize?",
+            options: [
+                {
+                    optionText: "Give them the information they asked for.",
+                    passable: false,
+                    doorResponse: "Wrong! Never give your account details to anyone! This includes things like account creation details, contact details and passwords. Never use personal details for passwords or bank PINs!"
+                },
+                {
+                    optionText: "Don't tell them anything and ignore them.",
+                    passable: true,
+                    doorResponse: "Quite good. But we should try to stop scammers. So please report them using the 'Report Abuse' button."
+                },
+                {
+                    optionText: "Don't tell them anything and click the 'Report Abuse' button.",
+                    passable: true,
+                    doorResponse: "Correct! Press the 'Report Abuse' button and fill in the offending player's name and the correct category."
+                }
+            ]
+        },
+        {
+            questionText: "What are recovery questions used for?",
+            options: [
+                {
+                    optionText: "Recovering your account if it is stolen.",
+                    passable: true,
+                    doorResponse: "Correct! If you set recovery questions that you can remember, you can use them to set a new password on your account if you forget the current one. Don't use personal details for your recoveries."
+                },
+                {
+                    optionText: "Recovering your account if you forget your password.",
+                    passable: true,
+                    doorResponse: "Correct! If you set recovery questions that you can remember, you can use them to set a new password on your account if you forget the current one. Don't use personal details for your recoveries."
+                },
+                {
+                    optionText: "Recovering your billing details.",
+                    passable: false,
+                    doorResponse: "INCORRECTRESPONSE"
+                }
+            ]
+        }
+    ]
+}

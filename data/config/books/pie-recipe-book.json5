@@ -1,0 +1,43 @@
+{
+    bookId: 7162,
+    bookTitle: "Pie recipe book",
+    showTableOfContents: true,
+    bookSections: [
+        {
+            header: "Redberry pie",
+            text: "Pour a hand full of Redberries into an empty Pie Shell, bake until the berries are soft and serve warm."
+        },
+        {
+            header: "Meat pie",
+            text: "Line a fresh Pie Shell with Cooked Meat and heat until the pastry starts to bronze, serve with a selection of sauces."
+        },
+        {
+            header: "Mud pie",
+            text: "Start with a Pie Shell and add a Bucket of Compost, then pour in a Bucket of Water to keep the consistency gooey. To finish, cover with Clay and bake until a good shell forms. Serve at maximum speed a good over-arm throw!"
+        },
+        {
+            header: "Apple pie",
+            text: "Take a Pie Shell and layer in Apple, cook until the juices start to bubble and leave to cool before serving."
+        },
+        {
+            header: "Garden pie",
+            text: "Fill a Pie Shell with Tomato, then add Onion and top with Cabbage. Bake golden brown and serve with a steak."
+        },
+        {
+            header: "Fish pie",
+            text: "Take one Pie Shell and fill with trout, add a Cod for flavour, and then top with Potato for texture. Cook well until the potato turns golden and serve."
+        },
+        {
+            header: "Admiral pie",
+            text: "For a more upperclass fish pie, fill your Pie Shell with Salmon and then add Tuna for colour. Top with Potato and cook until golden."
+        },
+        {
+            header: "Wild pie",
+            text: "Line a Pie Shell with raw Bear Meat, then add Raw Chompy for substance, and top with fresh Rabbit Meat. Bake until the juices start to bubble and serve."
+        },
+        {
+            header: "Summer pie",
+            text: "Into a Pie Shell, put Strawberry, then a layer of Watermelon, and top with Apple. Cook well and leave to cool before serving."
+        }
+    ]
+}
