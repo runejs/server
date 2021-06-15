@@ -14,3 +14,8 @@ import { Fletchable } from '@plugins/skills/fletching/fletching-types';
 import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
 
 //fletching stuff goes below this! lets do it!
+
+export default {
+    pluginId: 'rs:fletching',
+   
+};

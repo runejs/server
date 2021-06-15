@@ -15,7 +15,7 @@ const buryBonesHandler = async ({ player, itemSlot }) => {
 };
 
 module.exports = {
-    pluginId: 'rs:prayer',
+    pluginId: 'rs:prayer_bury',
     hooks: [
         {
             type: 'item_interaction',
