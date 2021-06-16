@@ -1,26 +1,46 @@
 {
-    "rs:arrow_shaft": {
-        "game_id": 52
-    },
-    "rs:bronze_arrow": {
-        "game_id": 882
-    },
-    "rs:iron_arrow": {
-        "game_id": 884
+  "rs:arrow_shaft": {
+    "game_id": 52
+  },
+  "rs:bronze_arrow": {
+    "game_id": 882
+  },
+  "rs:iron_arrow": {
+    "game_id": 884,
+    "tradable": true,
+    "weight": 0,
+    "equippable": true,
+    "equipment_data": {
+      "equipment_slot": "quiver",
+      "offensive_bonuses": {
+        "speed": 0,
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defensive_bonuses": {
+        "ranged": 0
+      },
+      "skill_bonuses": {
+        "strength": 10
+      }
     },
     "rs:steel_arrow": {
-        "game_id": 886
+      "game_id": 886
     },
     "rs:mithril_arrow": {
-        "game_id": 888
+      "game_id": 888
     },
     "rs:broad_arrow": {
-        "game_id": 4150
+      "game_id": 4150
     },
     "rs:adamant_arrow": {
-        "game_id": 890
+      "game_id": 890
     },
     "rs:rune_arrow": {
-        "game_id": 892
+      "game_id": 892
     }
+  }
 }
