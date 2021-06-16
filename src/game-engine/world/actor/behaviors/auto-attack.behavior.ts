@@ -46,6 +46,7 @@ export class AutoAttackBehavior extends Behavior {
                     console.log('target too far away - ending combat');
                     resolve();
                 }
+                this._player.face(this.Them);
 
 
                 if (this.getAttackType() == AttackType.Melee && this.Distance <= this.Me.meleeDistance && this.coolDownElapsed) {
@@ -54,7 +55,7 @@ export class AutoAttackBehavior extends Behavior {
                     if (this.coolDownElapsed) this.doAttack();
                 }
                 if (this.getAttackType() == AttackType.Ranged) {
-                    
+                    this._player.walkingQueue.clear();
                     if (this.coolDownElapsed) {
                         console.log("doing ranged attack");
                         this.doRangedattack();
@@ -93,7 +94,9 @@ export class AutoAttackBehavior extends Behavior {
             const offsetY = ((victimX - attackerX));
 
             this._player.playAnimation(426);
-            this._player.outgoingPackets.sendProjectile(this._player.position, offsetX, offsetY, 250, 40, 36, 100, this.Them.worldIndex + 1, 1);
+            //graphic ids - these are correct 
+            //http://rspscodes.synthasite.com/gfx-list.php
+            this._player.outgoingPackets.sendProjectile(this._player.position, offsetX, offsetY, 10, 40, 36, 100, this.Them.worldIndex + 1, 1);
 
             this.Them.damage(this.Me.getAttackRoll(this.Them).damage);
         });
