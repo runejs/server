@@ -123,22 +123,28 @@ export const roomBuilderWidgetHandler: buttonActionHandler = async ({ player, bu
 
     await dialogue([ player ], [
         (options, tag_Home) => [
-            'Rotate Counter-Clockwise', [
-                execute(() => {
-                    createdRoom.orientation = createdRoom.orientation > 0 ? createdRoom.orientation - 1 : 3;
-                    openHouse(player);
-                }),
-                goto('tag_Home')
-            ],
-            'Rotate Clockwise', [
+            'Rotate clockwise.', [
                 execute(() => {
                     createdRoom.orientation = createdRoom.orientation < 3 ? createdRoom.orientation + 1 : 0;
                     openHouse(player);
                 }),
                 goto('tag_Home')
             ],
-            'Accept', [
+            'Rotate anticlockwise.', [
+                execute(() => {
+                    createdRoom.orientation = createdRoom.orientation > 0 ? createdRoom.orientation - 1 : 3;
+                    openHouse(player);
+                }),
+                goto('tag_Home')
+            ],
+            'Build.', [
                 execute(() => {})
+            ],
+            'Cancel.', [
+                execute(() => {
+                    player.metadata.customMap.chunks[newRoomCoords.level][newRoomCoords.x][newRoomCoords.y] = new Room('empty_grass', 0);
+                    openHouse(player);
+                })
             ]
         ]
     ]);
