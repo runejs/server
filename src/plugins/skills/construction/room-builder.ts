@@ -125,14 +125,14 @@ export const roomBuilderWidgetHandler: buttonActionHandler = async ({ player, bu
         (options, tag_Home) => [
             'Rotate Counter-Clockwise', [
                 execute(() => {
-                    createdRoom.rotation = createdRoom.rotation > 0 ? createdRoom.rotation - 1 : 3;
+                    createdRoom.orientation = createdRoom.orientation > 0 ? createdRoom.orientation - 1 : 3;
                     openHouse(player);
                 }),
                 goto('tag_Home')
             ],
             'Rotate Clockwise', [
                 execute(() => {
-                    createdRoom.rotation = createdRoom.rotation < 3 ? createdRoom.rotation + 1 : 0;
+                    createdRoom.orientation = createdRoom.orientation < 3 ? createdRoom.orientation + 1 : 0;
                     openHouse(player);
                 }),
                 goto('tag_Home')

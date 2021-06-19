@@ -28,10 +28,10 @@ export const regionSizes: RegionSizeMap = {
 
 export abstract class ConstructedChunk {
 
-    public rotation: number;
+    public orientation: number;
 
     protected constructor(rotation: number = 0) {
-        this.rotation = rotation;
+        this.orientation = rotation;
     }
 
     public abstract getTemplatePosition(): Position;

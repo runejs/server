@@ -3,6 +3,7 @@ import { PlayerInitAction } from '@engine/world/action/player-init.action';
 import { instance1, instance1Max, instance2, instance2Max, roomBuilderButtonMap } from './con-constants';
 import { doorHotspotHandler, roomBuilderWidgetHandler } from '@plugins/skills/construction/room-builder';
 import { openHouse } from '@plugins/skills/construction/house';
+import { saveHouse } from '@plugins/skills/construction/home-saver';
 
 
 export default {
@@ -25,6 +26,14 @@ export default {
             type: 'player_command',
             commands: [ 'con', 'poh', 'house' ],
             handler: ({ player }: PlayerCommandAction): void => openHouse(player)
+        },
+        {
+            type: 'player_command',
+            commands: [ 'savepoh', 'savehouse' ],
+            handler: ({ player }: PlayerCommandAction): void => {
+                player.sendMessage(`Saving house data...`);
+                saveHouse(player);
+            }
         },
         {
             type: 'player_init',

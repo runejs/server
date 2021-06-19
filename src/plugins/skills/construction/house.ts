@@ -7,6 +7,7 @@ import { Position } from '@engine/world/position';
 import { ConstructedChunk, ConstructedRegion } from '@engine/world/map/region';
 import { Player } from '@engine/world/actor/player/player';
 import { world } from '@engine/game-server';
+import { loadHouse } from '@plugins/skills/construction/home-saver';
 
 
 export const openHouse = (player: Player): void => {
@@ -18,6 +19,15 @@ export const openHouse = (player: Player): void => {
         pohPosition = instance2;
     } else if(player.position.within(instance2, instance2Max, false)) {
         playerSpawn = player.position.copy().setY(player.position.y - 64);
+    }
+
+    const playerHouse = loadHouse(player);
+
+    if(playerHouse) {
+        player.metadata.customMap = {
+            renderPosition: pohPosition,
+            chunks: playerHouse.rooms
+        } as ConstructedRegion;
     }
 
     player.teleport(playerSpawn);
@@ -56,7 +66,7 @@ export const openHouse = (player: Player): void => {
 
 export class House {
 
-    public readonly rooms: Room[][][];
+    public rooms: Room[][][];
 
     public constructor() {
         this.rooms = new Array(4);
@@ -74,6 +84,17 @@ export class House {
         }
     }
 
+    public copyRooms(rooms: Room[][][]): void {
+        for(let level = 0; level < 4; level++) {
+            for(let x = 0; x < MAP_SIZE; x++) {
+                for(let y = 0; y < MAP_SIZE; y++) {
+                    const existingRoom = rooms[level][x][y] ?? null;
+                    this.rooms[level][x][y] = existingRoom ? new Room(existingRoom.type, existingRoom.orientation) : null;
+                }
+            }
+        }
+    }
+
 }
 
 
@@ -81,8 +102,8 @@ export class Room extends ConstructedChunk {
 
     public readonly type: RoomType;
 
-    public constructor(type: RoomType, rotation: number = 0) {
-        super(rotation);
+    public constructor(type: RoomType, orientation: number = 0) {
+        super(orientation);
         this.type = type;
     }
 
