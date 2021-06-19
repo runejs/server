@@ -24,7 +24,7 @@ export async function loadPluginFiles(): Promise<ContentPlugin[]> {
     const relativeDir = join('..', '..', 'plugins');
     const plugins: ContentPlugin[] = [];
 
-    for await(const path of getFiles(pluginDir, { type: 'whitelist', list: ['.plugin.js'] })) {
+    for await(const path of getFiles(pluginDir, { type: 'whitelist', list: ['.plugin.js', 'index.js'] })) {
         const location = join(relativeDir, path.substring(pluginDir.length).replace('.js', ''));
 
         try {
