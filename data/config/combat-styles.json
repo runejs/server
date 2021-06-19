@@ -45,30 +45,51 @@
             "button_id": 3
         }
     ],
-    "dagger": [
-        {
-            "type": "stab",
-            "exp": "attack",
-            "anim": "stab",
-            "button_id": 2
-        },
-        {
-            "type": "stab",
-            "exp": "strength",
-            "anim": "stab",
-            "button_id": 3
-        },
-        {
-            "type": "slash",
-            "exp": "strength",
-            "anim": "slash",
-            "button_id": 4
-        },
-        {
-            "type": "stab",
-            "exp": "defence",
-            "anim": "stab",
-            "button_id": 5
-        }
-    ]
+  "dagger": [
+    {
+      "type": "stab",
+      "exp": "attack",
+      "anim": "stab",
+      "button_id": 2
+    },
+    {
+      "type": "stab",
+      "exp": "strength",
+      "anim": "stab",
+      "button_id": 3
+    },
+    {
+      "type": "slash",
+      "exp": "strength",
+      "anim": "slash",
+      "button_id": 4
+    },
+    {
+      "type": "stab",
+      "exp": "defence",
+      "anim": "stab",
+      "button_id": 5
+    }
+  ],
+  "bow": [
+    {
+      "type": "accurate",
+      "exp": "ranged",
+      "anim": "ranged",
+      "button_id": 2
+    },
+    {
+      "type": "rapid",
+      "exp": "ranged",
+      "anim": "ranged",
+      "button_id": 3
+    },
+    {
+      "type": "longrange",
+      "exp": "ranged",
+      "anim": "ranged",
+      "button_id": 4
+    }
+  ]
+
 }
