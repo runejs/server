@@ -114,7 +114,7 @@ export const roomBuilderWidgetHandler: buttonActionHandler = async ({ player, bu
         return;
     }
 
-    let createdRoom = new Room(chosenRoomType, newRoomOriention(player));
+    const createdRoom = new Room(chosenRoomType, newRoomOriention(player));
     player.metadata.customMap.chunks[newRoomCoords.level][newRoomCoords.x][newRoomCoords.y] = createdRoom;
 
     player.interfaceState.closeAllSlots();
