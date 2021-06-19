@@ -171,7 +171,7 @@ export class World {
 
         const tileX = objectTile.templatePosition.x;
         const tileY = objectTile.templatePosition.y;
-        const tileOrientation = objectTile.rotation;
+        const tileOrientation = objectTile.orientation;
 
         const objectLocalX = objectPosition.x - (objectChunk.position.x + 6) * 8;
         const objectLocalY = objectPosition.y - (objectChunk.position.y + 6) * 8;
@@ -197,7 +197,7 @@ export class World {
         realObject.y = objectPosition.y;
         realObject.level = objectPosition.level;
 
-        let rotation = realObject.orientation + objectTile.rotation;
+        let rotation = realObject.orientation + objectTile.orientation;
         if(rotation > 3) {
             rotation -= 4;
         }

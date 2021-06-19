@@ -4,7 +4,7 @@
  * chunk: 8x8 tile chunk within a map.
  */
 import { Position } from '@engine/world/position';
-import { Room } from '@plugins/skills/construction/con-house';
+import { Room } from '@plugins/skills/construction/house';
 
 
 export type RegionType = 'mapfile' | 'region' | 'chunk';
@@ -28,10 +28,10 @@ export const regionSizes: RegionSizeMap = {
 
 export abstract class ConstructedChunk {
 
-    public rotation: number;
+    public orientation: number;
 
     protected constructor(rotation: number = 0) {
-        this.rotation = rotation;
+        this.orientation = rotation;
     }
 
     public abstract getTemplatePosition(): Position;

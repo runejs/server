@@ -2,6 +2,7 @@ node_modules
 .DS_Store
 /dist
 /data/dump
+/data/houses
 /data/saves/*.json
 /data/config/server-config.yaml
 
