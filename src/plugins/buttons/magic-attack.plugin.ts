@@ -1,4 +1,3 @@
-
 import { Player } from '@engine/world/actor/player/player';
 import { Position } from '@engine/world/position';
 import { animationIds } from '@engine/world/config/animation-ids';
@@ -35,9 +34,7 @@ export const activate = (task: TaskExecutor<MagicOnNPCAction>, elapsedTicks: num
     const offsetX = ((victimY - attackerY));
     const offsetY = ((victimX - attackerX));
 
-    //https://oldschool.runescape.wiki/w/Attack_range#:~:text=All%20combat%20magic%20spells%20have,also%20allow%20longrange%20attack%20style
-    // range should be within 10 tiles for magic
-    // range should be within 7 for magic staff
+    player.walkingQueue.clear();
 
     //npc world index would be -1 for players
     player.outgoingPackets.sendProjectile(player.position, offsetX, offsetY, 250, 40, 36, 100, npc.worldIndex + 1, 1); 
@@ -56,5 +53,4 @@ export default {
                 interval: 0
             }
         } as MagicOnNPCActionHook
-    
 };

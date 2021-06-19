@@ -35,6 +35,7 @@ export class AutoAttackBehavior extends Behavior {
             //only use boolean checks in behaviors never calculated values if you can help it (performance)
             if (this.Me.inCombat) {
                 if (this.Them.isDead) {
+                    //ToDo: this is the last one on the stack not neccessarily your current target.
                     this.Me.combatTargets.pop();
                     resolve();
                     return;
@@ -63,9 +64,9 @@ export class AutoAttackBehavior extends Behavior {
     public async doAttack(): Promise<void> {
         return new Promise<void>(resolve => {
             //do attack stuff
-            const _damage = this.Me.skills.strength.level;
-            console.log(`you attack ${(this.Them as Npc).name} for ${_damage} damage! (after the CD)`);
-            this.Them.damage(_damage);
+            const attack = this.Me.getAttackRoll(this.Them);
+            console.log(`you attack ${(this.Them as Npc).name} for ${attack.damage} damage! (after the CD)`);
+            this.Them.damage(attack.damage);
             if (this.Them.hitPoints <= 0) {
                 (this.Them as Npc).npcEvents.emit('death', this.Me, this.Them);
             }
