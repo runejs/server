@@ -2,13 +2,13 @@ import { Player } from '@engine/world/actor/player/player';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
 import { numberHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe } from '@engine/world/action/index';
+import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
 
 
 /**
  * Defines a move item action hook.
  */
-export interface MoveItemActionHook extends ActionHook<moveItemActionHandler> {
+export interface MoveItemActionHook extends ActionHook<MoveItemAction, moveItemActionHandler> {
     widgetId?: number;
     widgetIds?: number[];
 }
@@ -44,27 +44,26 @@ export interface MoveItemAction {
  * @param toSlot
  * @param widget
  */
-const moveItemActionPipe = async (player: Player, fromSlot: number, toSlot: number, widget: { widgetId: number, containerId: number }): Promise<void> => {
-    const moveItemActions = getActionHooks<MoveItemActionHook>('move_item')
+const moveItemActionPipe = (player: Player, fromSlot: number, toSlot: number,
+                            widget: { widgetId: number, containerId: number }): RunnableHooks<MoveItemAction> => {
+    const matchingHooks = getActionHooks<MoveItemActionHook>('move_item')
         .filter(plugin => numberHookFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 
-    if(!moveItemActions || moveItemActions.length === 0) {
-        await player.sendMessage(`Unhandled Move Item action: widget[${widget.widgetId}] container[${widget.containerId}] fromSlot[${fromSlot} toSlot${toSlot}`);
-    } else {
-        try {
-            moveItemActions.forEach(actionHook =>
-                actionHook.handler({
-                    player,
-                    widgetId: widget.widgetId,
-                    containerId: widget.containerId,
-                    fromSlot,
-                    toSlot
-                }));
-        } catch(error) {
-            logger.error(`Error handling Move Item action.`);
-            logger.error(error);
-        }
+    if(!matchingHooks || matchingHooks.length === 0) {
+        player.sendMessage(`Unhandled Move Item action: widget[${widget.widgetId}] container[${widget.containerId}] fromSlot[${fromSlot} toSlot${toSlot}`);
+        return null;
     }
+
+    return {
+        hooks: matchingHooks,
+        action: {
+            player,
+            widgetId: widget.widgetId,
+            containerId: widget.containerId,
+            fromSlot,
+            toSlot
+        }
+    };
 };
 
 

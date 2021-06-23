@@ -7,7 +7,7 @@ import { ActionPipe } from '@engine/world/action/index';
 /**
  * Defines an npc init action hook.
  */
-export interface NpcInitActionHook extends ActionHook<npcInitActionHandler> {
+export interface NpcInitActionHook extends ActionHook<NpcInitAction, npcInitActionHandler> {
     // A single NPC key or a list of NPC keys that this action applies to.
     npcs?: string | string[];
 }

@@ -1,10 +1,9 @@
 import { Player } from '@engine/world/actor/player/player';
 import { Position } from '@engine/world/position';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
-import { logger } from '@runejs/core';
 import { Item } from '@engine/world/items/item';
 import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe } from '@engine/world/action/index';
+import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
 import { LandscapeObject, ObjectConfig } from '@runejs/filestore';
 import { playerWalkTo } from '@engine/game-server';
 
@@ -12,7 +11,7 @@ import { playerWalkTo } from '@engine/game-server';
 /**
  * Defines an item-on-object action hook.
  */
-export interface ItemOnObjectActionHook extends ActionHook<itemOnObjectActionHandler> {
+export interface ItemOnObjectActionHook extends ActionHook<ItemOnObjectAction, itemOnObjectActionHandler> {
     // A single game object ID or a list of object IDs that this action applies to.
     objectIds: number | number[];
     // A single game item ID or a list of item IDs that this action applies to.
@@ -65,71 +64,41 @@ export interface ItemOnObjectAction {
 const itemOnObjectActionPipe = (player: Player, landscapeObject: LandscapeObject,
     objectConfig: ObjectConfig, position: Position,
     item: Item, itemWidgetId: number, itemContainerId: number,
-    cacheOriginal: boolean): void => {
-    if(player.busy) {
-        return;
-    }
-
+    cacheOriginal: boolean): RunnableHooks<ItemOnObjectAction> => {
     // Find all item on object action plugins that reference this location object
-    let interactionActions = getActionHooks<ItemOnObjectActionHook>('item_on_object')
-        .filter(plugin => questHookFilter(player, plugin) && advancedNumberHookFilter(plugin.objectIds, landscapeObject.objectId));
-    const questActions = interactionActions.filter(plugin => plugin.questRequirement !== undefined);
+    let matchingHooks = getActionHooks<ItemOnObjectActionHook>('item_on_object')
+        .filter(plugin => questHookFilter(player, plugin) &&
+            advancedNumberHookFilter(plugin.objectIds, landscapeObject.objectId));
+    const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
 
     if(questActions.length !== 0) {
-        interactionActions = questActions;
+        matchingHooks = questActions;
     }
 
     // Find all item on object action plugins that reference this item
-    if(interactionActions.length !== 0) {
-        interactionActions = interactionActions.filter(plugin => advancedNumberHookFilter(plugin.itemIds, item.itemId));
+    if(matchingHooks.length !== 0) {
+        matchingHooks = matchingHooks.filter(plugin => advancedNumberHookFilter(plugin.itemIds, item.itemId));
     }
 
-    if(interactionActions.length === 0) {
+    if(matchingHooks.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled item on object interaction: ${ item.itemId } on ${ objectConfig.name } ` +
             `(id-${ landscapeObject.objectId }) @ ${ position.x },${ position.y },${ position.level }`);
-        return;
+        return null;
     }
 
-    player.actionsCancelled.next(null);
-
-    // Separate out walk-to actions from immediate actions
-    const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);
-    const immediatePlugins = interactionActions.filter(plugin => !plugin.walkTo);
-
-    // Make sure we walk to the object before running any of the walk-to plugins
-    if(walkToPlugins.length !== 0) {
-        playerWalkTo(player, position, { interactingObject: landscapeObject })
-            .then(() => {
-                player.face(position);
-
-                walkToPlugins.forEach(plugin =>
-                    plugin.handler({
-                        player,
-                        object: landscapeObject,
-                        objectConfig,
-                        position,
-                        item,
-                        itemWidgetId,
-                        itemContainerId,
-                        cacheOriginal
-                    }));
-            })
-            .catch(() => logger.warn(`Unable to complete walk-to action.`));
-    }
-
-    // Immediately run any non-walk-to plugins
-    if(immediatePlugins.length !== 0) {
-        immediatePlugins.forEach(plugin =>
-            plugin.handler({
-                player,
-                object: landscapeObject,
-                objectConfig,
-                position,
-                item,
-                itemWidgetId,
-                itemContainerId,
-                cacheOriginal
-            }));
+    return {
+        hooks: matchingHooks,
+        actionPosition: position,
+        action: {
+            player,
+            object: landscapeObject,
+            objectConfig,
+            position,
+            item,
+            itemWidgetId,
+            itemContainerId,
+            cacheOriginal
+        }
     }
 };
 

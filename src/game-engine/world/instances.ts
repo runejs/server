@@ -7,6 +7,7 @@ import { World } from '@engine/world/index';
 import { schedule } from '@engine/world/task';
 import { CollisionMap } from '@engine/world/map/collision-map';
 import { LandscapeObject } from '@runejs/filestore';
+import { logger } from '@runejs/core';
 
 
 /**
@@ -124,14 +125,21 @@ export class WorldInstance {
 
         const { chunk: instancedChunk, mods } = this.getTileModifications(position);
 
-        mods.worldItems.push(worldItem);
-
-        instancedChunk.mods.set(position.key, mods);
-
         if(owner) {
             // If this world item is only visible to one player initially, we setup a timeout to spawn it for all other
             // players after 100 game cycles.
-            owner.outgoingPackets.setWorldItem(worldItem, worldItem.position);
+            try {
+                owner.outgoingPackets.setWorldItem(worldItem, worldItem.position);
+            } catch(error) {
+                logger.error(`Error spawning world item ${worldItem?.itemId} at ${worldItem?.position?.key}`, error);
+                return null;
+            }
+        }
+
+        mods.worldItems.push(worldItem);
+        instancedChunk.mods.set(position.key, mods);
+
+        if(owner) {
             setTimeout(() => {
                 if(worldItem.removed) {
                     return;
@@ -316,11 +324,17 @@ export class WorldInstance {
     /**
      * Spawn a new game object into the instance.
      * @param object The game object to spawn.
+     * @param reference Whether or not the object being spawned is a reference to an existing object or if it should
+     * be sent to the game client for forced rendering. Defaults to false for forced rendering.
      */
-    public spawnGameObject(object: LandscapeObject): void {
+    public spawnGameObject(object: LandscapeObject, reference: boolean = false): void {
         const position = new Position(object.x, object.y, object.level);
 
         const { chunk: instancedChunk, mods } = this.getTileModifications(position);
+
+        if(mods.spawnedObjects.find(o => o.x === object.x && o.y === object.y && o.level === object.level && o.type === object.type)) {
+            return;
+        }
 
         mods.spawnedObjects.push(object);
         instancedChunk.mods.set(position.key, mods);

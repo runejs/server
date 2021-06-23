@@ -55,7 +55,10 @@ import { regionChangeActionFactory } from '@engine/world/action/region-change.ac
 import { MusicPlayerMode } from '@plugins/music/music-tab.plugin';
 import { getVarbitMorphIndex } from '@engine/util/varbits';
 import { SendMessageOptions } from '@engine/world/actor/player/model';
-
+import { AutoAttackBehavior } from '../behaviors/auto-attack.behavior';
+import { EventEmitter } from 'events';
+import { AttackDamageType } from './attack';
+import { EffectType } from '../effect';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -125,6 +128,9 @@ export class Player extends Actor {
     public friendsList: string[] = [];
     public ignoreList: string[] = [];
     public cutscene: Cutscene = null;
+    public playerEvents: EventEmitter = new EventEmitter();
+    
+
 
     private readonly _socket: Socket;
     private readonly _inCipher: Isaac;
@@ -141,10 +147,10 @@ export class Player extends Actor {
     private _bonuses: { offensive: OffensiveBonuses, defensive: DefensiveBonuses, skill: SkillBonuses };
     private _carryWeight: number;
     private _settings: PlayerSettings;
-    private _walkingTo: Position;
     private _nearbyChunks: Chunk[];
     private quadtreeKey: QuadtreeKey = null;
     private privateMessageIndex: number = 1;
+    
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -239,6 +245,9 @@ export class Player extends Actor {
         this.updateMusicTab();
 
         this.inventory.containerUpdated.subscribe(event => this.inventoryUpdated(event));
+        this.playerEvents.on('exp', (amt) => {
+            logger.info(`Player should have been awarded ${amt} exp if this was hooked up.`);
+        });
 
         this.actionsCancelled.subscribe(type => {
             let closeWidget: boolean;
@@ -267,7 +276,12 @@ export class Player extends Actor {
         await this.actionPipeline.call('player_init', { player: this });
 
         world.spawnWorldItems(this);
-        this.chunkChanged(playerChunk);
+
+        if(!this.metadata.customMap) {
+            this.chunkChanged(playerChunk);
+        }
+
+        this.Behaviors.push(new AutoAttackBehavior());
 
         this.outgoingPackets.flushQueue();
         logger.info(`${this.username}:${this.worldIndex} has logged in.`);
@@ -278,11 +292,17 @@ export class Player extends Actor {
             return;
         }
 
+        if(this.position.level > 3) {
+            this.position.level = 0;
+        }
+
         world.playerTree.remove(this.quadtreeKey);
         this.save();
 
         this.actionsCancelled.complete();
-        this.movementEvent.complete();
+        this.walkingQueue.movementEvent.complete();
+        this.walkingQueue.movementQueued.complete();
+        this.actionPipeline.shutdown();
         this.outgoingPackets.logout();
         this.instance = null;
         world.chunkManager.getChunkForWorldPosition(this.position).removePlayer(this);
@@ -364,7 +384,9 @@ export class Player extends Actor {
         this.ignoreList.splice(index, 1);
         return true;
     }
-
+    public onNpcKill(npc: Npc) {
+        console.log('killed npc');
+    }
     /**
      * Should be fired whenever the player's chunk changes. This will fire off chunk updates for all chunks not
      * already tracked by the player - all the new chunks that are coming into view.
@@ -383,11 +405,18 @@ export class Player extends Actor {
     }
 
     public async tick(): Promise<void> {
+        for (let i = 0; i < this.Behaviors.length; i++) {
+            this.Behaviors[i].tick();
+        }
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
 
             if(this.updateFlags.mapRegionUpdateRequired) {
-                this.outgoingPackets.updateCurrentMapChunk();
+                if(this.position.x >= 6400) { // Custom map drawing area is anywhere x >= 6400 on the map
+                    this.outgoingPackets.constructMapRegion(this.metadata.customMap);
+                } else {
+                    this.outgoingPackets.updateCurrentMapChunk();
+                }
             }
 
             resolve();
@@ -604,11 +633,13 @@ export class Player extends Actor {
 
         let showDialogue = false;
         let showInConsole = false;
-        if(options && typeof options === 'boolean') {
-            showDialogue = true;
-        } else if(options) {
-            showDialogue = options.dialogue || false;
-            showInConsole = options.console || false;
+        if(options) {
+            if(typeof options === 'boolean') {
+                showDialogue = true;
+            } else {
+                showDialogue = options.dialogue || false;
+                showInConsole = options.console || false;
+            }
         }
 
         if(!showDialogue) {
@@ -631,25 +662,30 @@ export class Player extends Actor {
     /**
      * Instantly teleports the player to the specified location.
      * @param newPosition The player's new position.
+     * @param updateRegion Whether or not to sync the player's map region with their client. Defaults to true.
      */
-    public teleport(newPosition: Position): void {
-        const originalPosition = this.position;
+    public teleport(newPosition: Position, updateRegion: boolean = true): void {
+        this.walkingQueue.clear();
+        const originalPosition = this.position.copy();
+        this.metadata['lastPosition'] = originalPosition;
+        this.position = newPosition;
+        this.metadata['teleporting'] = true;
+
+        this.updateFlags.mapRegionUpdateRequired = updateRegion;
+        this.lastMapRegionUpdatePosition = newPosition;
+
         const oldChunk = world.chunkManager.getChunkForWorldPosition(originalPosition);
         const newChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
 
-        this.walkingQueue.clear();
-        this.metadata['lastPosition'] = this.position;
-        this.position = newPosition;
-
-        this.updateFlags.mapRegionUpdateRequired = true;
-        this.lastMapRegionUpdatePosition = newPosition;
-        this.metadata['teleporting'] = true;
-
         if(!oldChunk.equals(newChunk)) {
+            oldChunk.removePlayer(this);
+            newChunk.addPlayer(this);
             this.metadata['updateChunk'] = { newChunk, oldChunk };
 
-            this.actionPipeline.call('region_change', regionChangeActionFactory(
-                this, originalPosition, newPosition, true));
+            if(updateRegion) {
+                this.actionPipeline.call('region_change', regionChangeActionFactory(
+                    this, originalPosition, newPosition, true));
+            }
         }
     }
 
@@ -763,6 +799,10 @@ export class Player extends Actor {
 
             this.addBonuses(item);
         }
+        //prayers and other effects that effect strength
+        this.effects.filter(a => a.EffectType === EffectType.Strength).forEach((effect) => {
+            this._bonuses.skill['strength'] += this.skills.strength.level * effect.Modifier;
+        });
     }
 
     public sendLogMessage(message: string, isConsole: boolean): void {
@@ -1277,14 +1317,6 @@ export class Player extends Actor {
         return this._settings;
     }
 
-    public get walkingTo(): Position {
-        return this._walkingTo;
-    }
-
-    public set walkingTo(value: Position) {
-        this._walkingTo = value;
-    }
-
     public get nearbyChunks(): Chunk[] {
         return this._nearbyChunks;
     }
@@ -1292,4 +1324,14 @@ export class Player extends Actor {
     public get bonuses(): { offensive: OffensiveBonuses, defensive: DefensiveBonuses, skill: SkillBonuses } {
         return this._bonuses;
     }
+
+    public get damageType(): AttackDamageType {
+        if (this._bonuses.offensive.crush > 0) return AttackDamageType.Crush;
+        if (this._bonuses.offensive.magic > 0) return AttackDamageType.Magic;
+        if (this._bonuses.offensive.ranged > 0) return AttackDamageType.Range;
+        if (this._bonuses.offensive.slash > 0) return AttackDamageType.Slash;
+        if (this._bonuses.offensive.stab > 0) return AttackDamageType.Stab;
+        return AttackDamageType.Crush;
+    }
+    
 }

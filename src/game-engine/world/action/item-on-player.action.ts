@@ -44,6 +44,7 @@ export interface ItemOnPlayerAction {
 }
 
 
+// @TODO update
 /**
  * The pipe that the game engine hands item-on-player actions off to.
  * @param player
@@ -73,8 +74,6 @@ const itemOnPlayerActionPipe = (player: Player, otherPlayer: Player, position: P
             `@ ${ position.x },${ position.y },${ position.level }`);
         return;
     }
-
-    player.actionsCancelled.next(null);
 
     // Separate out walk-to actions from immediate actions
     const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);

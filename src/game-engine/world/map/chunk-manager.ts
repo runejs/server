@@ -164,7 +164,6 @@ export class ChunkManager {
         }
 
         const pos = (position as Position);
-
         if(this.chunkMap.has(pos.key)) {
             return this.chunkMap.get(pos.key);
         } else {

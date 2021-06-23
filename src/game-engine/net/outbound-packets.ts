@@ -12,6 +12,10 @@ import { stringToLong } from '@engine/util/strings';
 import { LandscapeObject } from '@runejs/filestore';
 import { xteaRegions } from '@engine/config';
 import { MinimapState } from '@engine/config/minimap-state';
+import { world } from '@engine/game-server';
+import { ConstructedChunk, ConstructedRegion } from '@engine/world/map/region';
+
+
 
 /**
  * A helper class for sending various network packets back to the game client.
@@ -71,7 +75,26 @@ export class OutboundPackets {
         packet.putBytes(Buffer.from(message));
         this.queue(packet);
     }
+    //packet - 129 - freezes client?
+    //packet - 202 - directly to login screen
 
+    public sendProjectile(position: Position, offsetX: number, offsetY: number, id: number, startHeight: number, endHeight: number, speed: number, lockon: number, delay: number) {
+        this.updateReferencePosition(position);
+        
+        const packet = new Packet(1);
+        packet.put(0);
+        packet.put(offsetY, 'byte');
+        packet.put(offsetX, 'byte');
+        packet.put(lockon, 'SHORT', 'BIG_ENDIAN');
+        packet.put(id, 'SHORT', 'BIG_ENDIAN');
+        packet.put(startHeight);
+        packet.put(endHeight);
+        packet.put(delay, 'SHORT', 'BIG_ENDIAN');
+        packet.put(speed, 'SHORT', 'BIG_ENDIAN');
+        packet.put(16);
+        packet.put(64);
+        this.queue(packet);
+    } 
     public updateFriendStatus(friendName: string, worldId: number): void {
         const packet = new Packet(156);
         packet.put(stringToLong(friendName.toLowerCase()), 'LONG');
@@ -129,7 +152,7 @@ export class OutboundPackets {
 
         chunkUpdates.forEach(update => {
             if(update.type === 'ADD') {
-                if(update.object) {
+                if(update.object && !update.object.reference) {
                     const offset = this.getChunkPositionOffset(update.object.x, update.object.y, chunk);
                     packet.put(241, 'BYTE');
                     packet.put((update.object.type << 2) + (update.object.orientation & 3));
@@ -164,7 +187,6 @@ export class OutboundPackets {
     }
 
     public setWorldItem(worldItem: WorldItem, position: Position, offset: number = 0): void {
-
         this.updateReferencePosition(position);
 
         const packet = new Packet(175);
@@ -574,6 +596,75 @@ export class OutboundPackets {
         packet.put(level);
         packet.put(skillId);
         packet.put(exp, 'INT', 'LITTLE_ENDIAN');
+
+        this.queue(packet);
+    }
+
+    public constructMapRegion(mapData: ConstructedRegion): void {
+        const packet = new Packet(23, PacketType.DYNAMIC_LARGE);
+
+        packet.put(this.player.position.chunkLocalY, 'short');
+        packet.put(this.player.position.chunkLocalX, 'short', 'le');
+        packet.put(this.player.position.chunkX + 6, 'short');
+        packet.put(this.player.position.level);
+        packet.put(this.player.position.chunkY + 6, 'short');
+
+        packet.openBitBuffer();
+
+        const mapWorldX = mapData.renderPosition.x;
+        const mapWorldY = mapData.renderPosition.y;
+
+        const topCornerMapChunk = world.chunkManager.getChunkForWorldPosition(new Position(mapWorldX, mapWorldY, this.player.position.level));
+        const playerChunk = world.chunkManager.getChunkForWorldPosition(this.player.position);
+
+        const offsetX = playerChunk.position.x - (topCornerMapChunk.position.x - 2);
+        const offsetY = playerChunk.position.y - (topCornerMapChunk.position.y - 2);
+
+        mapData.drawOffsetX = offsetX - 6; // 6 === center
+        mapData.drawOffsetY = offsetY - 6; // 6 === center
+
+        for(let level = 0; level < 4; level++) {
+            for(let x = 0; x < 13; x++) {
+                for(let y = 0; y < 13; y++) {
+                    let mapTileOffsetX = x + mapData.drawOffsetX;
+                    let mapTileOffsetY = y + mapData.drawOffsetY;
+                    if(mapTileOffsetX < 0) {
+                        mapTileOffsetX = 0;
+                    }
+                    if(mapTileOffsetX > 12) {
+                        mapTileOffsetX = 12;
+                    }
+                    if(mapTileOffsetY < 0) {
+                        mapTileOffsetY = 0;
+                    }
+                    if(mapTileOffsetY > 12) {
+                        mapTileOffsetY = 12;
+                    }
+
+                    const constructedChunk: ConstructedChunk | null = mapData.chunks[level][mapTileOffsetX][mapTileOffsetY];
+                    packet.putBits(1, constructedChunk === null ? 0 : 1)
+                    if (constructedChunk !== null) {
+                        const { templatePosition, orientation } = constructedChunk;
+                        packet.putBits(2, templatePosition?.level & 0x3);
+                        packet.putBits(10, templatePosition?.x / 8);
+                        packet.putBits(11, templatePosition?.y / 8);
+                        packet.putBits(2, orientation || 0);
+                        packet.putBits(1, 0); // unused
+                    }
+                }
+            }
+        }
+
+        packet.closeBitBuffer();
+
+        // Put the xtea keys for the two construction room template maps
+        // Map coords: 29,79 && 30,79
+        for(let mapX = 29; mapX <= 30; mapX++) {
+            const xteaRegion = xteaRegions[`l${mapX}_79`];
+            for(let seeds = 0; seeds < 4; seeds++) {
+                packet.put(xteaRegion?.key[seeds] || 0, 'int');
+            }
+        }
 
         this.queue(packet);
     }

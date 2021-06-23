@@ -3,20 +3,24 @@ import Quadtree from 'quadtree-lib';
 import { Player } from './actor/player/player';
 import { ChunkManager } from './map/chunk-manager';
 import { ExamineCache } from './config/examine-data';
-import { loadPlugins } from '@engine/game-server';
+import { loadPlugins, world } from '@engine/game-server';
 import { Position } from './position';
 import { Npc } from './actor/npc/npc';
 import TravelLocations from '@engine/world/config/travel-locations';
 import { Actor } from '@engine/world/actor/actor';
 import { schedule } from '@engine/world/task';
 import { parseScenerySpawns } from '@engine/world/config/scenery-spawns';
-import { findItem, findNpc, itemSpawns, npcSpawns } from '@engine/config';
+import { findItem, findNpc, findObject, itemSpawns, npcSpawns } from '@engine/config';
 import { NpcDetails } from '@engine/config/npc-config';
 import { WorldInstance } from '@engine/world/instances';
 import { Direction } from '@engine/world/direction';
 import { NpcSpawn } from '@engine/config/npc-spawn-config';
 import { loadActionFiles } from '@engine/world/action';
 import { LandscapeObject } from '@runejs/filestore';
+import { lastValueFrom, Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { ConstructedRegion, getTemplateLocalX, getTemplateLocalY } from '@engine/world/map/region';
+import { Chunk } from '@engine/world/map/chunk';
 
 
 export interface QuadtreeKey {
@@ -43,6 +47,7 @@ export class World {
     public readonly playerTree: Quadtree<QuadtreeKey>;
     public readonly npcTree: Quadtree<QuadtreeKey>;
     public readonly globalInstance = new WorldInstance();
+    public readonly tickComplete: Subject<void> = new Subject<void>();
 
     private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
 
@@ -70,24 +75,45 @@ export class World {
 
     /**
      * Searched for an object by ID at the given position in any of the player's active instances.
-     * @param player The player to find the object for.
+     * @param actor The actor to find the object for.
      * @param objectId The game ID of the object.
      * @param objectPosition The game world position that the object is expected at.
      */
-    public findObjectAtLocation(player: Player, objectId: number,
+    public findObjectAtLocation(actor: Actor, objectId: number,
                                 objectPosition: Position): { object: LandscapeObject, cacheOriginal: boolean } {
         const x = objectPosition.x;
         const y = objectPosition.y;
+
         const objectChunk = this.chunkManager.getChunkForWorldPosition(objectPosition);
+
+        let customMap = false;
+        if(actor instanceof Player && actor.metadata.customMap) {
+            customMap = true;
+            const templateMapObject = this.findCustomMapObject(actor, objectId, objectPosition);
+            if(templateMapObject) {
+                return { object: templateMapObject, cacheOriginal: true };
+            }
+        }
+
         let cacheOriginal = true;
 
-        const tileModifications = player.instance.getTileModifications(objectPosition);
-        const personalTileModifications = player.personalInstance.getTileModifications(objectPosition);
+        let tileModifications;
+        let personalTileModifications;
 
-        let landscapeObject = objectChunk.getFilestoreLandscapeObject(objectId, objectPosition);
+        if(actor.isPlayer) {
+            tileModifications = (actor as Player).instance.getTileModifications(objectPosition);
+            personalTileModifications = (actor as Player).personalInstance.getTileModifications(objectPosition);
+        } else {
+            tileModifications = this.globalInstance.getTileModifications(objectPosition);
+        }
+
+        let landscapeObject = customMap ? null : objectChunk.getFilestoreLandscapeObject(objectId, objectPosition);
         if(!landscapeObject) {
-            const tileObjects = [ ...tileModifications.mods.spawnedObjects,
-                ...personalTileModifications.mods.spawnedObjects ];
+            const tileObjects = [ ...tileModifications.mods.spawnedObjects ];
+
+            if(actor.isPlayer) {
+                tileObjects.push(...personalTileModifications.mods.spawnedObjects);
+            }
 
             landscapeObject = tileObjects.find(spawnedObject =>
                 spawnedObject.objectId === objectId && spawnedObject.x === x && spawnedObject.y === y) || null;
@@ -99,8 +125,11 @@ export class World {
             }
         }
 
-        const hiddenTileObjects = [ ...tileModifications.mods.hiddenObjects,
-            ...personalTileModifications.mods.hiddenObjects ];
+        const hiddenTileObjects = [ ...tileModifications.mods.hiddenObjects ];
+
+        if(actor.isPlayer) {
+            hiddenTileObjects.push(...personalTileModifications.mods.hiddenObjects);
+        }
 
         if(hiddenTileObjects.findIndex(spawnedObject =>
             spawnedObject.objectId === objectId && spawnedObject.x === x && spawnedObject.y === y) !== -1) {
@@ -111,6 +140,71 @@ export class World {
             object: landscapeObject,
             cacheOriginal
         };
+    }
+
+    /**
+     * Locates a map template object from the actor's active custom map (if applicable).
+     * @param actor The actor to find the object for.
+     * @param objectId The ID of the object to find.
+     * @param objectPosition The position of the copied object to find the template of.
+     */
+    public findCustomMapObject(actor: Actor, objectId: number, objectPosition: Position): LandscapeObject | null {
+        const map = actor?.metadata?.customMap as ConstructedRegion || null;
+
+        if(!map) {
+            return null;
+        }
+
+        const objectConfig = findObject(objectId);
+
+        if(!objectConfig) {
+            return null;
+        }
+
+        const objectChunk = this.chunkManager.getChunkForWorldPosition(objectPosition);
+        const mapChunk = world.chunkManager.getChunkForWorldPosition(map.renderPosition);
+
+        const chunkIndexX = objectChunk.position.x - (mapChunk.position.x - 2);
+        const chunkIndexY = objectChunk.position.y - (mapChunk.position.y - 2);
+
+        const objectTile = map.chunks[actor.position.level][chunkIndexX][chunkIndexY];
+
+        const tileX = objectTile.templatePosition.x;
+        const tileY = objectTile.templatePosition.y;
+        const tileOrientation = objectTile.orientation;
+
+        const objectLocalX = objectPosition.x - (objectChunk.position.x + 6) * 8;
+        const objectLocalY = objectPosition.y - (objectChunk.position.y + 6) * 8;
+
+        const mapTemplateWorldX = tileX;
+        const mapTemplateWorldY = tileY;
+        const mapTemplateChunk = world.chunkManager.getChunkForWorldPosition(new Position(mapTemplateWorldX, mapTemplateWorldY, objectPosition.level));
+
+        const templateLocalX = getTemplateLocalX(tileOrientation, objectLocalX, objectLocalY,
+            objectConfig?.rendering?.sizeX || 1, objectConfig?.rendering?.sizeY || 1);
+        const templateLocalY = getTemplateLocalY(tileOrientation, objectLocalX, objectLocalY,
+            objectConfig?.rendering?.sizeX || 1, objectConfig?.rendering?.sizeY || 1);
+
+        const templateObjectPosition = new Position(mapTemplateWorldX + templateLocalX,
+            mapTemplateWorldY + templateLocalY, objectPosition.level);
+        const realObject = mapTemplateChunk.getFilestoreLandscapeObject(objectId, templateObjectPosition);
+
+        if(!realObject) {
+            return null;
+        }
+
+        realObject.x = objectPosition.x;
+        realObject.y = objectPosition.y;
+        realObject.level = objectPosition.level;
+
+        let rotation = realObject.orientation + objectTile.orientation;
+        if(rotation > 3) {
+            rotation -= 4;
+        }
+
+        realObject.orientation = rotation;
+
+        return realObject || null;
     }
 
     /**
@@ -357,7 +451,16 @@ export class World {
         }
 
         setTimeout(async() => this.worldTick(), delay);
+        this.tickComplete.next();
         return Promise.resolve();
+    }
+
+    public async nextTick(): Promise<void> {
+        await lastValueFrom(this.tickComplete.asObservable().pipe(take(1)));
+    }
+
+    public async ticks(count: number): Promise<void> {
+        await lastValueFrom(this.tickComplete.asObservable().pipe(take(count)));
     }
 
     public async scheduleNpcRespawn(npc: Npc): Promise<boolean> {

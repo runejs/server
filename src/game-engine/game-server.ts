@@ -1,10 +1,10 @@
 import { World } from './world';
 import { logger } from '@runejs/core';
 import { parseServerConfig } from '@runejs/core/net';
+import { Filestore, LandscapeObject } from '@runejs/filestore';
+
 import { ServerConfig } from '@engine/config/server-config';
-
 import { loadPluginFiles } from '@engine/plugins/content-plugin';
-
 import { loadPackets } from '@engine/net/inbound-packets';
 import { watchForChanges, watchSource } from '@engine/util/files';
 import { openGameServer } from '@engine/net/server/game-server';
@@ -16,7 +16,6 @@ import { Subject, timer } from 'rxjs';
 import { Position } from '@engine/world/position';
 import { ActionHook, sortActionHooks } from '@engine/world/action/hooks';
 import { ActionType } from '@engine/world/action';
-import { Filestore, LandscapeObject } from '@runejs/filestore';
 
 
 /**
@@ -219,10 +218,10 @@ export const playerWalkTo = async (player: Player, position: Position, interacti
     interactingObject?: LandscapeObject;
 }): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
-        player.walkingTo = position;
+        player.metadata.walkingTo = position;
 
         const inter = setInterval(() => {
-            if(!player.walkingTo || !player.walkingTo.equals(position)) {
+            if(!player.metadata.walkingTo || !player.metadata.walkingTo.equals(position)) {
                 reject();
                 clearInterval(inter);
                 return;
@@ -247,7 +246,7 @@ export const playerWalkTo = async (player: Player, position: Position, interacti
                 }
 
                 clearInterval(inter);
-                player.walkingTo = null;
+                player.metadata.walkingTo = null;
             }
         }, 100);
     });

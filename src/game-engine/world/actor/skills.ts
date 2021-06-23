@@ -3,6 +3,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { startsWithVowel } from '@engine/util/strings';
 import { serverConfig } from '@engine/game-server';
 import { gfxIds } from '@engine/world/config/gfx-ids';
+import equipmentStatsPlugin from '../../../plugins/items/equipment/equipment-stats.plugin';
 
 export enum Skill {
     ATTACK,
@@ -186,6 +187,7 @@ export class Skills extends SkillShortcuts {
         const mage = this.magic.level * 0.4875;
         return combatLevel + Math.max(melee, Math.max(ranger, mage));
     }
+
 
     public getLevel(skill: number | SkillName, ignoreLevelModifications: boolean = false): number {
         const s = this.get(skill);

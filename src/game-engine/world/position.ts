@@ -44,33 +44,40 @@ export class Position {
         return new Position(this.x, this.y, this.level);
     }
 
-    public withinInteractionDistance(locationObject: LandscapeObject): boolean {
-        const definition = filestore.configStore.objectStore.getObject(locationObject.objectId);
-        const occupantX = locationObject.x;
-        const occupantY = locationObject.y;
-        let width = definition.rendering?.sizeX || 1;
-        let height = definition.rendering?.sizeY || 1;
-
-        if(width === undefined || width === null || width < 1) {
-            width = 1;
-        }
-        if(height === undefined || height === null || height < 1) {
-            height = 1;
-        }
-
-        if(width === 1 && height === 1) {
-            return this.distanceBetween(new Position(occupantX, occupantY, locationObject.level)) <= 1;
+    public withinInteractionDistance(gameObject: LandscapeObject, minimumDistance?: number): boolean;
+    public withinInteractionDistance(position: Position, minimumDistance?: number): boolean;
+    public withinInteractionDistance(target: LandscapeObject | Position, minimumDistance?: number): boolean;
+    public withinInteractionDistance(target: LandscapeObject | Position, minimumDistance: number = 1): boolean {
+        if(target instanceof Position) {
+            return this.distanceBetween(target) <= minimumDistance;
         } else {
-            if(locationObject.orientation == 1 || locationObject.orientation == 3) {
-                const off = width;
-                width = height;
-                height = off;
+            const definition = filestore.configStore.objectStore.getObject(target.objectId);
+            const occupantX = target.x;
+            const occupantY = target.y;
+            let width = definition.rendering?.sizeX || 1;
+            let height = definition.rendering?.sizeY || 1;
+
+            if(width === undefined || width === null || width < 1) {
+                width = 1;
+            }
+            if(height === undefined || height === null || height < 1) {
+                height = 1;
             }
 
-            for(let x = occupantX; x < occupantX + width; x++) {
-                for(let y = occupantY; y < occupantY + height; y++) {
-                    if(this.distanceBetween(new Position(x, y, locationObject.level)) <= 1) {
-                        return true;
+            if(width === 1 && height === 1) {
+                return this.distanceBetween(new Position(occupantX, occupantY, target.level)) <= minimumDistance;
+            } else {
+                if(target.orientation === 1 || target.orientation === 3) {
+                    const off = width;
+                    width = height;
+                    height = off;
+                }
+
+                for(let x = occupantX; x < occupantX + width; x++) {
+                    for(let y = occupantY; y < occupantY + height; y++) {
+                        if(this.distanceBetween(new Position(x, y, target.level)) <= minimumDistance) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -92,6 +99,20 @@ export class Position {
         const offsetY = this.y - position.y;
 
         return offsetX < 16 && offsetY < 16 && offsetX > -16 && offsetY > -16;
+    }
+
+    /**
+     * Checks to see if this position is within the two given boundaries of min and max.
+     * @param min The minimum coordinate to check within.
+     * @param max The maximum coordinate to check within.
+     * @param checkPlane Whether or not to check if the position is within the same plane. Defaults to true.
+     */
+    public within(min: Position, max: Position, checkPlane: boolean = true): boolean {
+        if(checkPlane && (min.level !== max.level || max.level !== this.level)) {
+            return false;
+        }
+
+        return this.x >= min.x && this.x <= max.x && this.y >= min.y && this.y <= max.y;
     }
 
     public move(x: number, y: number, level?: number): Position {
@@ -167,10 +188,10 @@ export class Position {
 
     /**
      * Sets the value of Level and returns the current Position instance for chaining.
-     * @param level The new value to set the current Position's Elevation Level to.
+     * @param plane The new value to set the current Position's plane to.
      */
-    public setLevel(level: number): Position {
-        this._level = level;
+    public setLevel(plane: number): Position {
+        this._level = plane;
         return this;
     }
 
@@ -199,6 +220,14 @@ export class Position {
 
     public get chunkLocalY(): number {
         return this._y - 8 * this.chunkY;
+    }
+
+    public get localX(): number {
+        return this._x - 8 * (this.chunkX + 6);
+    }
+
+    public get localY(): number {
+        return this._y - 8 * (this.chunkY + 6);
     }
 
     public get x(): number {
