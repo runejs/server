@@ -2,7 +2,6 @@ import { Player } from '@engine/world/actor/player/player';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { logger } from '@runejs/core';
-import { handleTutorial } from '@plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy-quest.plugin';
 
 
 export type QuestKey = number | 'complete';
@@ -12,7 +11,7 @@ export type QuestStageHandler = {
 };
 
 export type QuestDialogueHandler = {
-    [key in QuestKey]?: (player: Player, npc: Npc) => void | Promise<void>;
+    [key in QuestKey]?: ((player: Player, npc: Npc) => void | Promise<void>) | number;
 };
 
 export type QuestJournalHandler = {
@@ -45,20 +44,19 @@ export class PlayerQuest {
 export function questDialogueActionFactory(questId: string, npcDialogueHandler: QuestDialogueHandler): npcInteractionActionHandler {
     return async({ player, npc }) => {
         const quest = player.getQuest(questId);
-        if(!quest) {
-            return;
+        const progress = quest.progress;
+
+        let dialogueHandler = npcDialogueHandler[progress];
+        if (dialogueHandler != null && typeof dialogueHandler === 'number') {
+            dialogueHandler = npcDialogueHandler[dialogueHandler]
         }
 
-        const progress = quest.progress;
-        const dialogueHandler = npcDialogueHandler[progress];
-        if(dialogueHandler) {
+        if (dialogueHandler != null && typeof dialogueHandler === 'function') {
             try {
                 await dialogueHandler(player, npc);
             } catch(e) {
                 logger.error(e);
             }
-
-            await handleTutorial(player);
         }
     };
 }

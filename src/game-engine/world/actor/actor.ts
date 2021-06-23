@@ -13,14 +13,15 @@ import { world } from '@engine/game-server';
 import { WorldInstance } from '@engine/world/instances';
 import { Player } from '@engine/world/actor/player/player';
 import { ActionCancelType, ActionPipeline } from '@engine/world/action';
+import { World } from '@engine/world';
 import { LandscapeObject } from '@runejs/filestore';
-import { Behavior } from './behaviors/behavior';
-import { soundIds } from '../config/sound-ids';
-import { animationIds } from '../config/animation-ids';
-import { findNpc } from '../../config';
-import { itemIds } from '../config/item-ids';
-import { Attack, AttackDamageType } from './player/attack';
-import { Effect, EffectType } from './effect';
+import { Behavior } from './behaviors/behavior';
+import { soundIds } from '../config/sound-ids';
+import { animationIds } from '../config/animation-ids';
+import { findNpc } from '../../config';
+import { itemIds } from '../config/item-ids';
+import { Attack, AttackDamageType } from './player/attack';
+import { Effect, EffectType } from './effect';
 
 /**
  * Handles an actor within the game world.
@@ -53,14 +54,14 @@ export abstract class Actor {
     public hitPoints = this.skills.hitpoints.level * 4;
     public maxHitPoints = this.skills.hitpoints.level * 4;
 
-    public get damageType() {
-        return this._damageType;
-    }
-    public set damageType(value) {
-        this._damageType = value;
-    }
+    public get damageType() {
+        return this._damageType;
+    }
+    public set damageType(value) {
+        this._damageType = value;
+    }
     public effects: Effect[] = []; //spells, effects, prayers, etc
-
+
     protected randomMovementInterval;
     /**
      * @deprecated - use new action system instead
@@ -83,13 +84,13 @@ export abstract class Actor {
     }
 
     public get highestCombatSkill(): Skill {
-        const attack = this.skills.getLevel('attack');
-        const magic = this.skills.getLevel('magic');
-        const ranged = this.skills.getLevel('ranged');
-
-        if (ranged > magic && ranged > ranged) return ranged;
-        else if (magic > attack && magic > ranged) return magic;
-        else return attack;
+        const attack = this.skills.getLevel('attack');
+        const magic = this.skills.getLevel('magic');
+        const ranged = this.skills.getLevel('ranged');
+
+        if (ranged > magic && ranged > ranged) return ranged;
+        else if (magic > attack && magic > ranged) return magic;
+        else return attack;
     }
 
     //https://oldschool.runescape.wiki/w/Attack_range#:~:text=All%20combat%20magic%20spells%20have,also%20allow%20longrange%20attack%20style
@@ -102,7 +103,7 @@ export abstract class Actor {
     // https://oldschool.runescape.wiki/w/Damage_per_second/Melee#:~:text=1%20Step%20one%3A%20Calculate%20the%20effective%20strength%20level%3B,1.7%20Step%20seven%3A%20Calculate%20the%20melee%20damage%20output
     public getAttackRoll(defender): Attack {
         
-        //the amount of damage is random from 0 to Max
+        //the amount of damage is random from 0 to Max
         //stance modifiers
         const _stance_defense = 3;
         const _stance_accurate = 0;
@@ -119,16 +120,16 @@ export abstract class Actor {
             const player = (this as unknown as Player);
             equipmentBonus = player.bonuses.offensive.crush;
         }
-        if (equipmentBonus == 0) equipmentBonus = 1;
-        /*
-         * To calculate your maximum hit:
-
-            Effective strength level
-            Multiply by(Equipment Melee Strength + 64)
-            Add 320 
-            Divide by 640
-            Round down to nearest integer
-            Multiply by gear bonus
+        if (equipmentBonus == 0) equipmentBonus = 1;
+        /*
+         * To calculate your maximum hit:
+
+            Effective strength level
+            Multiply by(Equipment Melee Strength + 64)
+            Add 320 
+            Divide by 640
+            Round down to nearest integer
+            Multiply by gear bonus
             Round down to nearest integer
         */
         const stanceModifier = _stance_accurate;
@@ -139,13 +140,13 @@ export abstract class Actor {
         const maximumHit = Math.round(attackCalc * equipmentBonus);
 
         /*
-            To calculate your effective attack level:
-
-            (Attack level + Attack level boost) * prayer bonus
-            Round down to nearest integer
-            + 3 if using the accurate attack style, +1 if using controlled
-                + 8
-            Multiply by 1.1 if wearing void
+            To calculate your effective attack level:
+
+            (Attack level + Attack level boost) * prayer bonus
+            Round down to nearest integer
+            + 3 if using the accurate attack style, +1 if using controlled
+                + 8
+            Multiply by 1.1 if wearing void
             Round down to nearest integer
         */
         const attackLevel = this.skills.attack.level;
@@ -158,9 +159,9 @@ export abstract class Actor {
         effectiveAttackLevel = Math.round(effectiveAttackLevel) + stanceModifier;
 
         /*
-         * Calculate the Attack roll
-            Effective attack level * (Equipment Attack bonus + 64)
-            Multiply by gear bonus
+         * Calculate the Attack roll
+            Effective attack level * (Equipment Attack bonus + 64)
+            Multiply by gear bonus
             Round down to nearest integer
          * */
         let attack = new Attack();
@@ -168,11 +169,11 @@ export abstract class Actor {
         attack.attackRoll = Math.round(effectiveAttackLevel * (equipmentBonus + 64));
         attack = defender.getDefenseRoll(attack);
         attack.maximumHit = maximumHit;
-        if (attack.attackRoll >= attack.defenseRoll) attack.hitChance = 1 - ((attack.defenseRoll + 2) / (2 * (attack.attackRoll + 1)))
+        if (attack.attackRoll >= attack.defenseRoll) attack.hitChance = 1 - ((attack.defenseRoll + 2) / (2 * (attack.attackRoll + 1)))
         if (attack.attackRoll < attack.defenseRoll) attack.hitChance = attack.attackRoll / (2 * attack.defenseRoll + 1);
 
         attack.damage = Math.round((maximumHit * attack.hitChance) / 2);
-        return attack;
+        return attack;
     }
     public getDefenseRoll(attack: Attack): Attack {
         //attack need to know the damage roll, which is the item bonuses the weapon damage type etc.
@@ -201,23 +202,23 @@ export abstract class Actor {
             attack.defenseRoll += (this.skills.defence.level * effect.Modifier);
         });
         attack.defenseRoll = Math.round(attack.defenseRoll);
-        return attack;
-        //+ stance modifier
+        return attack;
+        //+ stance modifier
     }
     // #endregion  
 
     public damage(amount: number, damageType: DamageType = DamageType.DAMAGE) {
-        const armorReduction = 0;
-        const spellDamageReduction = 0;
-        const poisonReistance = 0;
-        amount -= armorReduction;
-        this.hitPoints -= amount;
+        const armorReduction = 0;
+        const spellDamageReduction = 0;
+        const poisonReistance = 0;
+        amount -= armorReduction;
+        this.hitPoints -= amount;
         this.skills.setHitpoints(this.hitPoints);
         this.updateFlags.addDamage(amount, amount === 0 ? DamageType.NO_DAMAGE : damageType,
-            this.hitPoints, this.maxHitPoints);
-        //this actor should respond when hit
+            this.hitPoints, this.maxHitPoints);
+        //this actor should respond when hit
         world.playLocationSound(this.position, soundIds.npc.human.noArmorHitPlayer,5)
-        this.playAnimation(this.getBlockAnimation());
+        this.playAnimation(this.getBlockAnimation());
     }
 
 
@@ -336,6 +337,28 @@ export abstract class Actor {
         });
 
         return true;
+    }
+
+    /**
+     * Wait for actor movement to finish in a Promise-like fashion.
+     * @param timeoutInTicks How long to wait for in ticks before rejecting the promise
+     */
+    public async isIdle(timeoutInTicks = 100): Promise<void> {
+        return new Promise((resolve, reject) => {
+            let ticksChecked = 0;
+            const checkIsMoving = setInterval(() => {
+                ticksChecked++;
+                if (!this.walkingQueue.moving()) {
+                    resolve();
+                    clearInterval(checkIsMoving);
+                }
+
+                if (ticksChecked >= timeoutInTicks) {
+                    reject();
+                    clearInterval(checkIsMoving);
+                }
+            }, World.TICK_LENGTH)
+        });
     }
 
     public follow(target: Actor): void {

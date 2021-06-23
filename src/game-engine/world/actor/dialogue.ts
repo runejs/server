@@ -4,7 +4,8 @@ import { filestore } from '@engine/game-server';
 import { logger } from '@runejs/core';
 import _ from 'lodash';
 import { wrapText } from '@engine/util/strings';
-import { findNpc } from '@engine/config';
+import { findItem, findNpc } from '@engine/config';
+import { FontName, ParentWidget, TextWidget } from '@runejs/filestore';
 
 
 export enum Emote {
@@ -28,7 +29,8 @@ export enum Emote {
     BLANK_STARE = 'BLANK_STARE',
     SINGLE_WORD = 'SINGLE_WORD',
     EVIL_STARE = 'EVIL_STARE',
-    LAUGH_EVIL = 'LAUGH_EVIL'
+    LAUGH_EVIL = 'LAUGH_EVIL',
+    SLEEPING = 'SLEEPING',
 }
 
 // A big thanks to Dust R I P for all these emotes!
@@ -101,18 +103,41 @@ enum EmoteAnimation {
     EASTER_BUNNY_2LINE = 1825,
     EASTER_BUNNY_3LINE = 1826,
     EASTER_BUNNY_4LINE = 1827,
+    SLEEPING_1LINE = 3321,
 }
 
 const nonLineEmotes = [ Emote.BLANK_STARE, Emote.SINGLE_WORD, Emote.EVIL_STARE, Emote.LAUGH_EVIL ];
-const playerWidgetIds = [ 64, 65, 66, 67 ];
-const npcWidgetIds = [ 241, 242, 243, 244 ];
-const optionWidgetIds = [ 228, 230, 232, 234, 235 ];
-const continuableTextWidgetIds = [ 210, 211, 212, 213, 214 ];
-const textWidgetIds = [ 215, 216, 217, 218, 219 ];
-const titledTextWidgetId = 372;
+export const playerWidgetIds = [ 64, 65, 66, 67 ]; // TODO: Non 'click here to continue' player widgets are missing!
+export const npcWidgetIds = [ 241, 242, 243, 244 ]; // TODO: Non 'click here to continue' npc widgets are missing!
+export const optionWidgetIds = [ 228, 230, 232, 234, 235 ];
+export const continuableTextWidgetIds = [ 210, 211, 212, 213, 214 ];
+export const textWidgetIds = [ 215, 216, 217, 218, 219 ];
+export const itemWidgetIds = [ 101, 102, 103, 104 ];
+export const titledTextWidgetId = 372;
 
+/**
+ * Wraps dialogue text into multiple lines.
+ * @param text - The text to wrap.
+ * @param type - 'ACTOR' if the widget has a chat-head or an item sprite on the left, 'TEXT' if the dialogue is text only
+ */
 function wrapDialogueText(text: string, type: 'ACTOR' | 'TEXT'): string[] {
-    return wrapText(text, type === 'ACTOR' ? 340 : 430);
+    let widget: TextWidget;
+    let width = 0;
+
+    switch (type) {
+        case 'ACTOR':
+            widget = (filestore.widgetStore.decodeWidget(playerWidgetIds[0]) as ParentWidget).children[2] as TextWidget;
+            width = widget.width;
+            break;
+        case 'TEXT':
+            widget = filestore.widgetStore.decodeWidget(textWidgetIds[0]) as TextWidget;
+            width = widget.width;
+            break;
+        default:
+            throw new Error(`Unhandled widget type: ${type}`);
+    }
+
+    return wrapText(text, width, widget.fontId);
 }
 
 function parseDialogueFunctionArgs(func: Function): string[] {
@@ -139,8 +164,8 @@ function parseDialogueFunctionArgs(func: Function): string[] {
 export type DialogueTree = (Function | DialogueFunction | GoToAction)[];
 
 export interface AdditionalOptions {
-    closeOnWalk?: boolean;
     permanent?: boolean;
+    multi?: boolean;
 }
 
 interface NpcParticipant {
@@ -173,6 +198,7 @@ class GoToAction implements DialogueAction {
 interface ActorDialogueAction extends DialogueAction {
     animation: number;
     lines: string[];
+    customName?: string;
 }
 
 interface NpcDialogueAction extends ActorDialogueAction {
@@ -186,6 +212,11 @@ interface PlayerDialogueAction extends ActorDialogueAction {
 interface TextDialogueAction extends DialogueAction {
     lines: string[];
     canContinue: boolean;
+}
+
+interface ItemDialogueAction extends DialogueAction {
+    lines: string[];
+    itemId: number | string;
 }
 
 interface TitledTextDialogueAction extends DialogueAction {
@@ -285,6 +316,12 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
             const text: string = dialogueAction();
             const lines = wrapDialogueText(text, 'TEXT');
             parsedDialogueTree.push({ lines, tag, type: 'TEXT', canContinue: true } as TextDialogueAction);
+        } else if(dialogueType === 'item') {
+            // Dialogue with an item on the left
+
+            const [ itemId, text ] = dialogueAction();
+            const lines = wrapDialogueText(text, 'ACTOR');
+            parsedDialogueTree.push({ lines, tag, itemId, type: 'ITEM' } as ItemDialogueAction);
         } else if(dialogueType === 'overlay') {
             // Text-only dialogue (no option to continue).
 
@@ -310,7 +347,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
         } else {
             // Player or Npc dialogue.
 
-            let dialogueDetails: [ Emote, string ];
+            let dialogueDetails: [ Emote, string, string? ];
             let npc: Npc | number | string;
 
             if(dialogueType !== 'player') {
@@ -336,18 +373,19 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
 
             const emote = dialogueDetails[0] as Emote;
             const text = dialogueDetails[1] as string;
+            const customName = dialogueDetails[2] as string;
             const lines = wrapDialogueText(text, 'ACTOR');
             const animation = nonLineEmotes.indexOf(emote) !== -1 ? EmoteAnimation[emote] : EmoteAnimation[`${emote}_${lines.length}LINE`];
 
             if(dialogueType !== 'player') {
                 const npcDialogueAction: NpcDialogueAction = {
-                    npcId: npc as number, animation, lines, tag, type: 'NPC'
+                    npcId: npc as number, animation, lines, tag, type: 'NPC', customName
                 };
 
                 parsedDialogueTree.push(npcDialogueAction);
             } else {
                 const playerDialogueAction: PlayerDialogueAction = {
-                    player, animation, lines, tag, type: 'PLAYER'
+                    player, animation, lines, tag, type: 'PLAYER', customName
                 };
 
                 parsedDialogueTree.push(playerDialogueAction);
@@ -427,6 +465,50 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
                 player.outgoingPackets.updateWidgetString(widgetId, i, lines[i]);
             }
         }
+    } else if(dialogueAction.type === 'ITEM') {
+        // Dialogue with an item on the left.
+
+        if(tag === undefined || dialogueAction.tag === tag) {
+            tag = undefined;
+
+            const itemDialogueAction = dialogueAction as ItemDialogueAction;
+            const lines = itemDialogueAction.lines;
+
+            if(lines.length > 5) {
+                throw new Error(`Too many lines for item dialogue! Dialogue has ${lines.length} lines but ` +
+                    `the maximum is 4: ${JSON.stringify(lines)}`);
+            }
+
+            widgetId = itemWidgetIds[lines.length - 1];
+            let itemId: number;
+
+            if (typeof itemDialogueAction.itemId === 'number') {
+                itemId = itemDialogueAction.itemId;
+            } else if (typeof itemDialogueAction.itemId === 'string') {
+                const itemDetails = findItem(itemDialogueAction.itemId);
+                if (!itemDetails) {
+                    throw new Error(`The item ${itemDialogueAction.itemId} is not configured in the server!`);
+                }
+                itemId = itemDetails.gameId;
+            } else {
+                throw new Error(`Invalid item ID provided: ${itemDialogueAction.itemId}`);
+            }
+
+            const model = filestore.configStore.itemStore.getItem(itemId)?.model2d;
+
+            if (!model) {
+                throw new Error(`The model for item ${itemDialogueAction.itemId} was not found in the filestore!`);
+            }
+
+            player.outgoingPackets.updateWidgetModel1(widgetId, 0, model.widgetModel);
+            player.outgoingPackets.setWidgetModelRotationAndZoom(widgetId, 0,
+                model.rotationY || 0,
+                model.rotationX || 0,
+                model.zoom / 2 || 0);
+            for(let i = 0; i < lines.length; i++) {
+                player.outgoingPackets.updateWidgetString(widgetId, i + 1, lines[i]);
+            }
+        }
     } else if(dialogueAction.type === 'TITLED') {
         // Text-only dialogue.
 
@@ -500,14 +582,15 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
             const animation = actorDialogueAction.animation;
 
             if(dialogueAction.type === 'NPC') {
+                const name = actorDialogueAction.customName || filestore.configStore.npcStore.getNpc(npcId as number).name;
                 widgetId = npcWidgetIds[lines.length - 1];
                 player.outgoingPackets.setWidgetNpcHead(widgetId, 0, npcId as number);
-                player.outgoingPackets.updateWidgetString(widgetId, 1,
-                    filestore.configStore.npcStore.getNpc(npcId as number).name);
+                player.outgoingPackets.updateWidgetString(widgetId, 1, name);
             } else {
+                const name = actorDialogueAction.customName || player.username;
                 widgetId = playerWidgetIds[lines.length - 1];
                 player.outgoingPackets.setWidgetPlayerHead(widgetId, 0);
-                player.outgoingPackets.updateWidgetString(widgetId, 1, player.username);
+                player.outgoingPackets.updateWidgetString(widgetId, 1, name);
             }
 
             player.outgoingPackets.playWidgetAnimation(widgetId, 0, animation);
@@ -520,13 +603,14 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 
     if(tag === undefined && widgetId) {
         const permanent = additionalOptions?.permanent || false;
+        const multi = additionalOptions?.multi == null ? false : additionalOptions?.multi;
 
         if(permanent) {
             player.interfaceState.openChatOverlayWidget(widgetId);
         } else {
             player.interfaceState.openWidget(widgetId, {
                 slot: 'chatbox',
-                multi: false
+                multi
             });
 
             const widgetClosedEvent = await player.interfaceState.widgetClosed('chatbox');
@@ -565,6 +649,7 @@ async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTre
 export async function dialogue(participants: (Player | NpcParticipant)[], dialogueTree: DialogueTree,
     additionalOptions?: AdditionalOptions): Promise<boolean> {
     const player = participants.find(p => p instanceof Player) as Player;
+    const multi = additionalOptions?.multi == null ? false : additionalOptions.multi;
 
     if(!player) {
         throw new Error('Player instance not provided to dialogue action.');

@@ -1,10 +1,18 @@
 import { widgetInteractionActionHandler } from '@engine/world/action/widget-interaction.action';
+import {
+    continuableTextWidgetIds,
+    itemWidgetIds,
+    npcWidgetIds,
+    optionWidgetIds,
+    playerWidgetIds
+} from '@engine/world/actor/dialogue';
 
 const dialogueIds = [
-    64, 65, 66, 67, 241,
-    242, 243, 244, 228, 230,
-    232, 234,
-    210, 211, 212, 213, 214,
+    ...playerWidgetIds,
+    ...npcWidgetIds,
+    ...optionWidgetIds,
+    ...continuableTextWidgetIds,
+    ...itemWidgetIds
 ];
 
 /**

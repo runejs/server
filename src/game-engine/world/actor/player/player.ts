@@ -469,7 +469,7 @@ export class Player extends Actor {
      */
     public getQuest(questId: string): PlayerQuest {
         let playerQuest = this.quests.find(quest => quest.questId === questId);
-        if(!playerQuest) {
+        if (!playerQuest) {
             playerQuest = new PlayerQuest(questId);
             this.quests.push(playerQuest);
         }
@@ -491,15 +491,15 @@ export class Player extends Actor {
         }
 
         let playerQuest = this.quests.find(quest => quest.questId === questId);
-        if(!playerQuest) {
+        if (!playerQuest) {
             playerQuest = new PlayerQuest(questId);
             this.quests.push(playerQuest);
         }
 
-        if(playerQuest.progress === 0 && !playerQuest.complete) {
+        if (typeof progress === 'number' && progress > 0) {
             playerQuest.progress = progress;
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
-        } else if(!playerQuest.complete && progress === 'complete') {
+        } else if (progress === 'complete') {
             playerQuest.complete = true;
             playerQuest.progress = 'complete';
             this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, questData.points + this.getQuestPoints());
@@ -521,16 +521,21 @@ export class Player extends Actor {
             }
 
             if(questData.onComplete.questCompleteWidget.itemId) {
-                this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3,
-                    filestore.configStore.itemStore.getItem(questData.onComplete.questCompleteWidget.itemId)?.model2d?.widgetModel);
+                const questCompleteItem = filestore.configStore.itemStore.getItem(questData.onComplete.questCompleteWidget.itemId);
+                if (questCompleteItem) {
+                    this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questCompleteItem.model2d?.widgetModel);
+                    this.outgoingPackets.setWidgetModelRotationAndZoom(widgets.questReward, 3,
+                        questCompleteItem.model2d?.rotationY || 0,
+                        questCompleteItem.model2d?.rotationX || 0,
+                        questCompleteItem.model2d?.zoom / 2 || 0);
+                }
             } else if(questData.onComplete.questCompleteWidget.modelId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.onComplete.questCompleteWidget.modelId);
+                this.outgoingPackets.setWidgetModelRotationAndZoom(widgets.questReward, 3,
+                    questData.onComplete.questCompleteWidget.modelRotationX || 0,
+                    questData.onComplete.questCompleteWidget.modelRotationY || 0,
+                    questData.onComplete.questCompleteWidget.modelZoom || 0);
             }
-
-            this.outgoingPackets.setWidgetModelRotationAndZoom(widgets.questReward, 3,
-                questData.onComplete.questCompleteWidget.modelRotationX || 0,
-                questData.onComplete.questCompleteWidget.modelRotationY || 0,
-                questData.onComplete.questCompleteWidget.modelZoom || 0);
 
             this.interfaceState.openWidget(widgets.questReward, {
                 slot: 'screen',
@@ -542,6 +547,8 @@ export class Player extends Actor {
             if(questData.onComplete.giveRewards) {
                 questData.onComplete.giveRewards(this);
             }
+        } else {
+            throw new Error('Unhandled progress value: ' + progress);
         }
     }
 
@@ -1004,6 +1011,7 @@ export class Player extends Actor {
     /**
      * Returns the morphed NPC details for a specific player based on his client settings
      * @param originalNpc
+     * @returns the morphed NPC, or null if there is none
      */
     public getMorphedNpcDetails(originalNpc: Npc) {
         if (!originalNpc.childrenIds) {

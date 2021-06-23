@@ -225,8 +225,8 @@ export default {
                     rewardText: [ 'A training sword & shield' ],
                     itemId: 9703,
                     modelZoom: 200,
-                    modelRotationX: 0,
-                    modelRotationY: 180
+                    modelRotationY: 0,
+                    modelRotationX: 180
                 }
             }
         })

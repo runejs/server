@@ -29,6 +29,33 @@
     "rs:romeo": {
         "game_id": 639
     },
+    "rs:draul_leptoc": {
+        "game_id": 3324
+    },
+    "rs:phillipa": {
+        "game_id": 3325
+    },
+    "rs:juliet": {
+        "game_id": 3323,
+        "variations": [
+            {
+                "suffix": "visible",
+                "game_id": 637
+            }
+        ]
+    },
+    "rs:apothecary": {
+        "game_id": 638
+    },
+    "rs:father_lawrence": {
+        "game_id": 640
+    },
+    "rs:martina_scorsby": {
+        "game_id": 3326
+    },
+    "rs:jeremy_clerksin": {
+        "game_id": 3327
+    },
     "rs:varrock_shop_keeper": {
         "game_id": 520
     },

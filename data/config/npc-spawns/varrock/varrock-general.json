@@ -36,6 +36,58 @@
         "movement_radius": 4
     },
     {
+        "npc": "rs:draul_leptoc",
+        "spawn_x": 3162,
+        "spawn_y": 3435,
+        "movement_radius": 4
+    },
+    {
+        "npc": "rs:father_lawrence",
+        "spawn_x": 3254,
+        "spawn_y": 3485,
+        "movement_radius": 2
+    },
+    {
+        "npc": "rs:martina_scorsby",
+        "spawn_x": 3256,
+        "spawn_y": 3481,
+        "movement_radius": 0,
+        "face": "NORTH"
+    },
+    {
+        "npc": "rs:jeremy_clerksin",
+        "spawn_x": 3253,
+        "spawn_y": 3477,
+        "movement_radius": 0,
+        "face": "NORTH"
+    },
+    {
+        "npc": "rs:apothecary",
+        "spawn_x": 3196,
+        "spawn_y": 3404,
+        "movement_radius": 3
+    },
+    {
+        "npc": "rs:man",
+        "spawn_x": 3153,
+        "spawn_y": 3429,
+        "movement_radius": 4
+    },
+    {
+        "npc": "rs:phillipa",
+        "spawn_x": 3163,
+        "spawn_y": 3430,
+        "spawn_level": 1,
+        "movement_radius": 5
+    },
+    {
+        "npc": "rs:juliet",
+        "spawn_x": 3158,
+        "spawn_y": 3425,
+        "spawn_level": 1,
+        "movement_radius": 1
+    },
+    {
         "npc": "rs:varrock_shop_keeper",
         "spawn_x": 3214,
         "spawn_y": 3417,

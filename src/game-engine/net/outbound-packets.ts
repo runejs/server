@@ -11,6 +11,7 @@ import { Npc } from '@engine/world/actor/npc/npc';
 import { stringToLong } from '@engine/util/strings';
 import { LandscapeObject } from '@runejs/filestore';
 import { xteaRegions } from '@engine/config';
+import { MinimapState } from '@engine/config/minimap-state';
 import { world } from '@engine/game-server';
 import { ConstructedChunk, ConstructedRegion } from '@engine/world/map/region';
 
@@ -48,6 +49,12 @@ export class OutboundPackets {
     public turnCameraTowards(position: Position, height: number, speed: number, acceleration: number): void {
         const packet = new Packet(234);
         this.putCameraPosition(packet, position, height, speed, acceleration);
+        this.queue(packet);
+    }
+
+    public setMinimapState(minimapState: MinimapState): void {
+        const packet = new Packet(235);
+        packet.put(minimapState);
         this.queue(packet);
     }
 
@@ -232,16 +239,6 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    // Text dialogs = 356, 359, 363, 368, 374
-    // Item dialogs = 519
-    // Statements (no click to continue) = 210, 211, 212, 213, 214
-    public showChatboxWidget(widgetId: number): void {
-        const packet = new Packet(208);
-        packet.put(widgetId, 'SHORT');
-
-        this.queue(packet);
-    }
-
     public setWidgetNpcHead(widgetId: number, childId: number, modelId: number): void {
         const packet = new Packet(160);
         packet.put(modelId, 'SHORT', 'LITTLE_ENDIAN');
@@ -298,11 +295,11 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    public setWidgetModelRotationAndZoom(widgetId: number, childId: number, rotationX: number, rotationY: number, zoom: number): void {
+    public setWidgetModelRotationAndZoom(widgetId: number, childId: number, rotationY: number, rotationX: number, zoom: number): void {
         const packet = new Packet(142);
-        packet.put(rotationX, 'SHORT');
-        packet.put(zoom, 'SHORT', 'LITTLE_ENDIAN');
         packet.put(rotationY, 'SHORT');
+        packet.put(zoom, 'SHORT', 'LITTLE_ENDIAN');
+        packet.put(rotationX, 'SHORT');
         packet.put(widgetId << 16 | childId, 'INT', 'LITTLE_ENDIAN');
 
         this.queue(packet);
@@ -487,7 +484,24 @@ export class OutboundPackets {
         this.queue(packet);
     }
 
-    public showChatDialogue(widgetId: number): void {
+    /**
+     * Show or replace dialogue in the chatbox slot, resetting all the other slots client-side
+     * This widget will close when walking
+     * @param widgetId The widget ID
+     */
+    public showChatboxWidget(widgetId: number): void {
+        const packet = new Packet(208);
+        packet.put(widgetId, 'SHORT');
+
+        this.queue(packet);
+    }
+
+    /**
+     * Show permanent widget in the dialogue slot that preserves all widgets, even previously opened chatbox widgets
+     * This widget will NOT close when walking
+     * @param widgetId The widget ID
+     */
+    public showPermanentDialogueWidget(widgetId: number): void {
         const packet = new Packet(185);
         packet.put(widgetId, 'SHORT');
         this.queue(packet);

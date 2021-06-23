@@ -379,6 +379,7 @@ export class World {
                 position, movementRadius, face), instanceId);
 
         await this.registerNpc(npc);
+        await schedule(1);
 
         return npc;
     }

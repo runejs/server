@@ -1,0 +1,8 @@
+{
+    "rs:juliet_letter": {
+        "game_id": 755,
+        "tradable": false,
+        "examine": "A message from Juliet to Romeo.",
+        "weight": 0.02
+    }
+}
