@@ -107,7 +107,6 @@ export enum Rights {
  * A player character within the game world.
  */
 export class Player extends Actor {
-
     public readonly clientUuid: number;
     public readonly username: string;
     public readonly passwordHash: string;
@@ -129,7 +128,7 @@ export class Player extends Actor {
     public ignoreList: string[] = [];
     public cutscene: Cutscene = null;
     public playerEvents: EventEmitter = new EventEmitter();
-    
+
 
 
     private readonly _socket: Socket;
@@ -150,7 +149,7 @@ export class Player extends Actor {
     private _nearbyChunks: Chunk[];
     private quadtreeKey: QuadtreeKey = null;
     private privateMessageIndex: number = 1;
-    
+
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super();
@@ -400,7 +399,6 @@ export class Player extends Actor {
             const newChunks = nearbyChunks.filter(c1 => this._nearbyChunks.findIndex(c2 => c1.equals(c2)) === -1);
             this.sendChunkUpdates(newChunks);
         }
-
         this._nearbyChunks = nearbyChunks;
     }
 
@@ -542,6 +540,8 @@ export class Player extends Actor {
             if(questData.onComplete.giveRewards) {
                 questData.onComplete.giveRewards(this);
             }
+        } else {
+            playerQuest.progress = progress;
         }
     }
 
@@ -1325,5 +1325,5 @@ export class Player extends Actor {
         if (this._bonuses.offensive.stab > 0) return AttackDamageType.Stab;
         return AttackDamageType.Crush;
     }
-    
+
 }

@@ -57,6 +57,10 @@ const widgetActionPipe = (player: Player, widgetId: number, childId: number, opt
 
     // Find all item on item action plugins that match this action
     let matchingHooks = getActionHooks<WidgetInteractionActionHook>('widget_interaction').filter(plugin => {
+        if(!plugin.widgetIds) {
+            return false;
+        }
+
         if(!questHookFilter(player, plugin)) {
             return false;
         }
@@ -72,7 +76,6 @@ const widgetActionPipe = (player: Player, widgetId: number, childId: number, opt
         if(plugin.childIds !== undefined) {
             return advancedNumberHookFilter(plugin.childIds, childId);
         }
-
         return true;
     });
 

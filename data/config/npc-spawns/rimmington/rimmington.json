@@ -1,0 +1,42 @@
+[
+    {
+        "npc": "rs:hetty",
+        "spawn_x": 2968,
+        "spawn_y": 3205,
+        "spawn_level": 0,
+        "movement_radius": 4,
+        "face": "SOUTH"
+    },
+    {
+        "npc": "rs:rat",
+        "spawn_x": 2953,
+        "spawn_y": 3204,
+        "spawn_level": 0,
+        "movement_radius": 4,
+        "face": "EAST"
+    },
+    {
+        "npc": "rs:rat",
+        "spawn_x": 2955,
+        "spawn_y": 3202,
+        "spawn_level": 0,
+        "movement_radius": 4,
+        "face": "NORTH"
+    },
+    {
+        "npc": "rs:rat",
+        "spawn_x": 2959,
+        "spawn_y": 3204,
+        "spawn_level": 0,
+        "movement_radius": 4,
+        "face": "SOUTH"
+    },
+    {
+        "npc": "rs:rat",
+        "spawn_x": 2958,
+        "spawn_y": 3202,
+        "spawn_level": 0,
+        "movement_radius": 4,
+        "face": "WEST"
+    }
+]
