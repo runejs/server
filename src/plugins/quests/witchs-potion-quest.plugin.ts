@@ -153,8 +153,6 @@ const dialogueIngredientQuestions: npcInteractionActionHandler = (details) => {
 
 
     dialogue([player, { npc, key: 'hetty' }], [
-        player => [Emote.HAPPY, `I've been looking for those ingredients.`],
-        hetty => [Emote.HAPPY, `So what have you found so far?`],
         goto(() => {
             const count = [hasRatsTail, hasEyeOfNewt, hasOnion, hasBurntMeat]
                 .filter(value => value === true).length;
@@ -167,7 +165,8 @@ const dialogueIngredientQuestions: npcInteractionActionHandler = (details) => {
             }
         }),
         (subtree, tag_ALL_INGREDIENTS) => [
-            player => [Emote.HAPPY, `In fact, I have everything!`],
+            hetty => [Emote.HAPPY, `So have you found the things for the potion?`],
+            player => [Emote.HAPPY, `Yes I have everything!`],
             hetty => [Emote.HAPPY, `Excellent, can I have them then?`],
             (text, tag_has_ingredients) => (`You pass the ingredients to Hetty and she puts them all into her cauldron. Hetty closes her eyes and begins to chant. The cauldron bubbles mysteriously.`),
             player => [Emote.GENERIC, `Well, is it ready?`],
@@ -181,13 +180,14 @@ const dialogueIngredientQuestions: npcInteractionActionHandler = (details) => {
             hetty => [Emote.HAPPY, `Ok, now drink from the cauldron.`],
         ],
         (subtree, tag_NO_INGREDIENTS) => [
-            execute(() => {
-                player.sendMessage(`Here`)
-            }),
+            player => [Emote.HAPPY, `I've been looking for those ingredients.`],
+            hetty => [Emote.HAPPY, `So what have you found so far?`],
             player => [Emote.GENERIC, `I'm afraid I don't have any of them yet.`],
             hetty => [Emote.SAD, `Well I can't make the potion without them! Remember... You need an eye of newt, a rat's tail, an onion, and a piece of burnt meat. Off you go dear!`],
         ],
         (subtree, tag_SOME_INGREDIENTS) => [
+            player => [Emote.HAPPY, `I've been looking for those ingredients.`],
+            hetty => [Emote.HAPPY, `So what have you found so far?`],
             player => [Emote.GENERIC, requirementsDialogue],
             hetty => [Emote.GENERIC, `Great, but I'll need the other ingredients as well.`],
         ]

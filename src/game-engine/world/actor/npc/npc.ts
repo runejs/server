@@ -125,8 +125,6 @@ export class Npc extends Actor {
     }
 
     //This is useful so that we can tie into things like "spell casts" or events, or traps, etc to finish quests or whatever
-
-
     public async processDeath(assailant: Actor, defender:Actor): Promise<void> {
 
         return new Promise<void>(resolve => {
@@ -140,14 +138,11 @@ export class Npc extends Actor {
             const npcDetails = findNpc((defender as Npc).id);
 
             if(!npcDetails.dropTable) {
-                console.log(`Drops is undefined.`)
+                return;
             }
 
             if(assailant instanceof Player) {
                 const itemDrops = calculateNpcDrops(assailant, npcDetails);
-                if(itemDrops === undefined) {
-                    assailant.sendMessage(`Undefined!`)
-                }
                 itemDrops.forEach(drop => {
                     world.globalInstance.spawnWorldItem({ itemId: findItem(drop.itemKey).gameId, amount: drop.amount },
                         deathPosition, { owner: assailant instanceof Player ? assailant : undefined, expires: 300 });
@@ -291,6 +286,16 @@ export class Npc extends Actor {
         return this._initialized;
     }
 }
+
+/**
+ * A basic attempt at handling the odds of receiving an item from an NPCs DropTable.
+ *
+ * This method gets the odds defined in the DropTable, and rolls a random number to see if the odds are met.
+ * Also checks whether or not the drop has a quest requirement, and accounts for that.
+ *
+ * @param player The player receiving the drop.
+ * @param npcDetails The NpcDetails of the NPC that contains the DropTable data.
+ */
 export function calculateNpcDrops(player: Player, npcDetails: NpcDetails): { itemKey: string, amount?: number }[] {
     const itemDrops: { itemKey: string, amount?: number }[] = [];
     const npcDropTable = npcDetails.dropTable;
@@ -322,6 +327,12 @@ export function calculateNpcDrops(player: Player, npcDetails: NpcDetails): { ite
 
     return itemDrops;
 }
+
+/**
+ * Generates a random integer between a maximum and minimum value.
+ * @param max The largest value to generate to.
+ * @param min The smallest value to generate from.
+ */
 
 function getRandomInt(max, min = 1): number {
     return Math.floor(Math.random() * max) + min;
