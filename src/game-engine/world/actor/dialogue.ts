@@ -603,7 +603,7 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 }
 
 async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTree, tag?: string | undefined | false,
-                                 additionalOptions?: AdditionalOptions): Promise<boolean> {
+    additionalOptions?: AdditionalOptions): Promise<boolean> {
     for(let i = 0; i < dialogueTree.length; i++) {
         tag = await runDialogueAction(player, dialogueTree[i], tag, additionalOptions);
         if(tag === false) {
