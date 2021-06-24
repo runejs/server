@@ -10,8 +10,8 @@ import { Position } from '@engine/world/position';
 
 const journalHandler: QuestJournalHandler = {
 
-    0: `<col=000080>I can start this quest by speaking to <col=800000>Hetty<col=000080> in her house in <col=800000>Rimmington<col=000080>, West of <col=800000>Port Sarim`,
-
+    0: `<col=000080>I can start this quest by speaking to <col=800000>Hetty<col=000080> in her house in
+<col=800000>Rimmington<col=000080>, West of <col=800000>Port Sarim`,
 
     50: player => {
         let questLog = `<str><col=000000>I spoke to Hetty in her house at Rimmington. Hetty told me</str>
