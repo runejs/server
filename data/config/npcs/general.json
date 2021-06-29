@@ -1,0 +1,18 @@
+{
+    "rs:rat": {
+        "game_id": 47,
+        "drop_table": [
+            { "itemKey": "rs:rats_tail",           "frequency": "always",   "amount": 1,
+                "amountMax": 1,
+                "questRequirement": {
+                    "questId": "rs:witchs_potion",
+                    "stage": 50
+                }
+            },
+            { "itemKey": "rs:bones", "frequency": "always", "amount": 1 }
+        ],
+        "skills": {
+            "hitpoints": 1
+        }
+    }
+}

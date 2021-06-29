@@ -1,0 +1,19 @@
+{
+    "rs:betty": {
+        "game_id": 583
+    },
+    "rs:Giant_rat": {
+        "game_id": 86,
+        "drop_table": [
+            { "itemKey": "rs:bones", "frequency": "always", "amount": 1 },
+            { "itemKey": "rs:raw_rat_meat", "frequency": "always", "amount": 1 }
+        ]
+    },
+    "rs:Giant_rat_2": {
+        "game_id": 4924,
+        "drop_table": [
+            { "itemKey": "rs:bones", "frequency": "always", "amount": 1 },
+            { "itemKey": "rs:raw_rat_meat", "frequency": "always", "amount": 1 }
+        ]
+    }
+}

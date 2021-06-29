@@ -1,4 +1,10 @@
 export const itemIds = {
+    witchesPotion: {
+        ratsTail: 300,
+        burntMeat: 2146,
+        eyeOfNewt: 221,
+        onion: 1957
+    },
     coins: 995,
     bucket: 1925,
     bucketOfMilk: 1927,

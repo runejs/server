@@ -4,9 +4,9 @@ import { Position } from '@engine/world/position';
 import { filestore, world } from '@engine/game-server';
 import { directionData } from '@engine/world/direction';
 import { QuadtreeKey } from '@engine/world';
-import { findNpc } from '@engine/config';
+import { findItem, findNpc } from '@engine/config';
 import { animationIds } from '@engine/world/config/animation-ids';
-import { NpcCombatAnimations, NpcDetails } from '@engine/config/npc-config';
+import { DropTable, NpcCombatAnimations, NpcDetails } from '@engine/config/npc-config';
 import { SkillName } from '@engine/world/actor/skills';
 import { NpcSpawn } from '@engine/config/npc-spawn-config';
 import { MeleeCombatBehavior } from '../behaviors/melee-combat.behavior';
@@ -125,9 +125,8 @@ export class Npc extends Actor {
     }
 
     //This is useful so that we can tie into things like "spell casts" or events, or traps, etc to finish quests or whatever
-
     public async processDeath(assailant: Actor, defender:Actor): Promise<void> {
-        
+
         return new Promise<void>(resolve => {
             const deathPosition = defender.position;
 
@@ -136,8 +135,19 @@ export class Npc extends Actor {
 
             defender.playAnimation(deathAnim);
             world.playLocationSound(deathPosition, soundIds.npc.human.maleDeath, 5);
-            world.globalInstance.spawnWorldItem(itemIds.bones, deathPosition, { owner: assailant instanceof Player ? assailant : undefined, expires: 300 });
+            const npcDetails = findNpc((defender as Npc).id);
 
+            if(!npcDetails.dropTable) {
+                return;
+            }
+
+            if(assailant instanceof Player) {
+                const itemDrops = calculateNpcDrops(assailant, npcDetails);
+                itemDrops.forEach(drop => {
+                    world.globalInstance.spawnWorldItem({ itemId: findItem(drop.itemKey).gameId, amount: drop.amount },
+                        deathPosition, { owner: assailant instanceof Player ? assailant : undefined, expires: 300 });
+                })
+            }
         });
 
     }
@@ -157,7 +167,7 @@ export class Npc extends Actor {
     }
 
     public kill(respawn: boolean = true): void {
-        
+
         world.chunkManager.getChunkForWorldPosition(this.position).removeNpc(this);
         clearInterval(this.randomMovementInterval);
         world.deregisterNpc(this);
@@ -275,4 +285,55 @@ export class Npc extends Actor {
     public get initialized(): boolean {
         return this._initialized;
     }
+}
+
+/**
+ * A basic attempt at handling the odds of receiving an item from an NPCs DropTable.
+ *
+ * This method gets the odds defined in the DropTable, and rolls a random number to see if the odds are met.
+ * Also checks whether or not the drop has a quest requirement, and accounts for that.
+ *
+ * @param player The player receiving the drop.
+ * @param npcDetails The NpcDetails of the NPC that contains the DropTable data.
+ */
+export function calculateNpcDrops(player: Player, npcDetails: NpcDetails): { itemKey: string, amount?: number }[] {
+    const itemDrops: { itemKey: string, amount?: number }[] = [];
+    const npcDropTable = npcDetails.dropTable;
+    if(!npcDropTable) {
+        return itemDrops;
+    }
+
+    npcDropTable.forEach(drop => {
+        let meetsQuestRequirements = true;
+        if(drop.questRequirement) {
+            meetsQuestRequirements = (player.getQuest(drop.questRequirement.questId).progress === drop.questRequirement.stage);
+        }
+        drop.amount = drop.amount || 1;
+        drop.amountMax = drop.amountMax || 1;
+
+        let odds: { numerator: number, denominator: number };
+        if(drop.frequency === 'always') {
+            odds = { numerator: 1, denominator: 1 };
+        } else {
+            const dividedFrequency = drop.frequency.split('/');
+            odds = { numerator: Number(dividedFrequency[0]), denominator: Number(dividedFrequency[1]) };
+        }
+        const randomNumber = getRandomInt(odds.denominator);
+        if(randomNumber === 1 && meetsQuestRequirements) {
+            const randomNumberOfItems = getRandomInt(drop.amountMax, drop.amount);
+            itemDrops.push({ itemKey: drop.itemKey, amount: randomNumberOfItems })
+        }
+    });
+
+    return itemDrops;
+}
+
+/**
+ * Generates a random integer between a maximum and minimum value.
+ * @param max The largest value to generate to.
+ * @param min The smallest value to generate from.
+ */
+
+function getRandomInt(max, min = 1): number {
+    return Math.floor(Math.random() * max) + min;
 }

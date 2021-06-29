@@ -1,0 +1,26 @@
+{
+    "rs:wizard_hat_(blue)": {
+        "game_id": 579,
+        "weight": 0.453,
+        "equipment_data": {
+            "offensive_bonuses": {
+                "magic": 2
+            },
+            "skill_bonuses": {
+                "magic": 2
+            }
+        }
+    },
+    "rs:wizard_hat_(black)": {
+        "game_id": 1017,
+        "weight": 0.453,
+        "equipment_data": {
+            "offensive_bonuses": {
+                "magic": 2
+            },
+            "skill_bonuses": {
+                "magic": 2
+            }
+        }
+    }
+}

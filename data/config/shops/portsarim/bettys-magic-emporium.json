@@ -1,0 +1,20 @@
+{
+    "rs:bettys_magic_emporium": {
+        "name": "Betty's Magic Emporium",
+        "shop_buy_rate": 0.60,
+        "rate_modifier": 0.01,
+        "stock": [
+            [ "rs:air_rune", 5000 ],
+            [ "rs:earth_rune", 5000 ],
+            [ "rs:fire_rune", 5000 ],
+            [ "rs:water_rune", 5000 ],
+            [ "rs:body_rune", 5000 ],
+            [ "rs:mind_rune", 5000 ],
+            [ "rs:eye_of_newt", 300 ],
+            [ "rs:death_rune", 250 ],
+            [ "rs:chaos_rune", 250 ],
+            [ "rs:wizard_hat_(black)", 1 ],
+            [ "rs:wizard_hat_(blue)", 1 ]
+        ]
+    }
+}

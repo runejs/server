@@ -1,0 +1,11 @@
+{
+    "rs:raw_rat_meat": {
+        "game_id": 2134
+    },
+    "rs:cooked_meat": {
+        "game_id": 2142
+    },
+    "rs:burnt_meat": {
+        "game_id": 2146
+    }
+}

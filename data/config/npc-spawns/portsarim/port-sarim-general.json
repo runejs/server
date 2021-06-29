@@ -1,0 +1,24 @@
+[
+    {
+        "npc": "rs:betty",
+        "spawn_x": 3012,
+        "spawn_y": 3259,
+        "movement_radius": 5
+    },
+    {
+        "npc": "rs:Giant_rat",
+        "spawn_level": 0,
+        "spawn_x": 2995,
+        "spawn_y": 3191,
+        "movement_radius": 6,
+        "face": "WEST"
+    },
+    {
+        "npc": "rs:Giant_rat_2",
+        "spawn_level": 0,
+        "spawn_x": 2999,
+        "spawn_y": 3194,
+        "movement_radius": 6,
+        "face": "WEST"
+    }
+]

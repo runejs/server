@@ -4,6 +4,7 @@ import { filestore } from '@engine/game-server';
 import _ from 'lodash';
 import { NpcConfig } from '@runejs/filestore';
 import { logger } from '@runejs/core';
+import { QuestRequirement } from '@engine/world/action';
 
 
 export interface NpcSkills {
@@ -26,7 +27,13 @@ export interface NpcCombatAnimations {
     death?: number;
 }
 
-export type DropTable = [ [ string, string, number, number? ] ];
+export interface DropTable {
+    itemKey: string;
+    frequency: string;
+    amount?: number;
+    amountMax?: number;
+    questRequirement?: QuestRequirement;
+}
 
 export interface NpcPresetConfiguration {
     [key: string]: NpcServerConfig;
@@ -52,7 +59,7 @@ export interface NpcServerConfig {
         suffix: string;
     } & NpcServerConfig];
     animations?: NpcCombatAnimations;
-    drop_table?: DropTable;
+    drop_table?: DropTable[];
     metadata: { [key: string]: unknown };
 }
 
@@ -69,7 +76,7 @@ export class NpcDetails extends NpcConfig {
     offensiveStats?: OffensiveStats;
     defensiveStats?: DefensiveBonuses;
     combatAnimations?: NpcCombatAnimations;
-    dropTable?: DropTable;
+    dropTable?: DropTable[] = [];
     metadata: { [key: string]: unknown } = {};
 
     public constructor(defaultValues: { [key: string]: any }) {
@@ -102,8 +109,10 @@ export function translateNpcServerConfig(npcKey: string, config: NpcServerConfig
     });
 }
 
-export async function loadNpcConfigurations(path: string): Promise<{ npcs: { [key: string]: NpcDetails };
-    npcIds: { [key: number]: string }; npcPresets: NpcPresetConfiguration; }> {
+export async function loadNpcConfigurations(path: string): Promise<{
+    npcs: { [key: string]: NpcDetails };
+    npcIds: { [key: number]: string }; npcPresets: NpcPresetConfiguration;
+}> {
     const npcIds: { [key: number]: string } = {};
     const npcs: { [key: string]: NpcDetails } = {};
     let npcPresets: NpcPresetConfiguration = {};
@@ -113,19 +122,19 @@ export async function loadNpcConfigurations(path: string): Promise<{ npcs: { [ke
     files.forEach(npcConfigs => {
         const npcKeys = Object.keys(npcConfigs);
         npcKeys.forEach(key => {
-            if(key === 'presets') {
+            if (key === 'presets') {
                 npcPresets = { ...npcPresets, ...npcConfigs[key] };
             } else {
                 const npcConfig = npcConfigs[key] as NpcServerConfig;
-                if(!isNaN(npcConfig.game_id)) {
+                if (!isNaN(npcConfig.game_id)) {
                     npcIds[npcConfig.game_id] = key;
                     npcs[key] = {
                         ...translateNpcServerConfig(key, npcConfig),
                         ...filestore.configStore.npcStore.getNpc(npcConfig.game_id)
                     };
                 }
-                if(npcConfig.variations) {
-                    for(const variation of npcConfig.variations) {
+                if (npcConfig.variations) {
+                    for (const variation of npcConfig.variations) {
                         try {
                             const subKey = key + ':' + variation.suffix;
                             const baseItem = JSON.parse(JSON.stringify({
@@ -139,7 +148,7 @@ export async function loadNpcConfigurations(path: string): Promise<{ npcs: { [ke
                             }));
                             npcIds[variation.game_id] = subKey;
                             npcs[subKey] = _.merge(baseItem, subBaseItem);
-                        } catch(error) {
+                        } catch (error) {
                             logger.error(`Error registering npc variant ${key}_${variation.suffix}`);
                             logger.error(error);
                         }
