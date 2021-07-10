@@ -140,8 +140,7 @@ export class DialogueAction {
             this.p.interfaceState.openWidget(widgetId, {
                 slot: 'chatbox'
             })
-
-            const sub = this.p.dialogueInteractionEvent.subscribe(action => {
+            const sub = this.p.interfaceState.closed.subscribe(action => {
                 sub.unsubscribe();
                 this._action = action;
                 resolve(this);
