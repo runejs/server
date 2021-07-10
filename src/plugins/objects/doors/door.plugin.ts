@@ -41,9 +41,9 @@ const doors = [
         hinge: 'RIGHT'
     },
     {
-      closed: 13001,
-      open: 13002,
-      hinge: 'RIGHT'
+        closed: 13001,
+        open: 13002,
+        hinge: 'RIGHT'
     }
 ];
 
