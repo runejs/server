@@ -11,7 +11,6 @@ const validate: (level: number) => boolean = (level) => {
 
 export const action: objectInteractionActionHandler = (details) => {
     const { player, option } = details;
-
     if (option === 'climb') {
         dialogueAction(player)
             .then(async d => d.options(
@@ -22,20 +21,18 @@ export const action: objectInteractionActionHandler = (details) => {
                 ]))
             .then(d => {
                 d.close();
-                switch (d.action) {
+                switch (d._action.data) {
                     case 1:
                     case 2:
-                        action({ ...details, option: `climb-${(d.action === 1 ? 'up' : 'down')}` });
+                        action({ ...details, option: `climb-${(d._action.data === 1 ? 'up' : 'down')}` });
                         return;
                 }
             });
         return;
     }
-
     const up = option === 'climb-up';
     const { position } = player;
     const level = position.level + (up ? 1 : -1);
-
     if (!validate(level)) return;
     if (!details.objectConfig.name.startsWith('Stair')) {
         player.playAnimation(up ? 828 : 827);
