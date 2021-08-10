@@ -39,6 +39,11 @@ const doors = [
         closed: 11993,
         open: 11994,
         hinge: 'RIGHT'
+    },
+    {
+        closed: 13001,
+        open: 13002,
+        hinge: 'RIGHT'
     }
 ];
 
@@ -98,7 +103,7 @@ export default {
         {
             type: 'object_interaction',
             objectIds: [ 1530, 4465, 4467, 3014, 3017, 3018,
-                3019, 1536, 1537, 1533, 1531, 1534, 12348, 11993, 11994 ],
+                3019, 1536, 1537, 1533, 1531, 1534, 12348, 11993, 11994, 13001, 13002 ],
             options: [ 'open', 'close' ],
             walkTo: true,
             handler: action
