@@ -45,7 +45,6 @@ export const action: objectInteractionActionHandler = (details) => {
             newPosition.x--;
         }
     }
-    console.log(newPosition);
     if (!validate(newPosition.level)) return;
     if (!details.objectConfig.name.startsWith('Stair')) {
         player.playAnimation(up ? 828 : 827);
