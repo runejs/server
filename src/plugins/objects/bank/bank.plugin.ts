@@ -170,9 +170,7 @@ export const withdrawItem: itemInteractionActionHandler = (details) => {
         amount: removeFromContainer(playerBank, details.itemId, countToRemove)
     };
 
-    for (let i = 0; i < itemToAdd.amount; i++) {
-        playerInventory.add({ itemId: itemIdToAdd, amount: 1 });
-    }
+    playerInventory.add({ itemId: itemToAdd.itemId, amount: itemToAdd.amount });
 
     updateBankingInterface(details.player);
 };
