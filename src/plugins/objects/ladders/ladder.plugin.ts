@@ -32,15 +32,26 @@ export const action: objectInteractionActionHandler = (details) => {
     }
     const up = option === 'climb-up';
     const { position } = player;
-    const level = position.level + (up ? 1 : -1);
-    if (!validate(level)) return;
+    const newPosition = new Position(position.x, position.y, position.level);
+    newPosition.level = position.level + (up ? 1 : -1);
+    if(position.level === 0) {
+        if(newPosition.level === 1 && position.y >= 6400) {
+            newPosition.level = 0;
+            newPosition.y -= 6414;
+            newPosition.x++;
+        } else if(newPosition.level === -1) {
+            newPosition.level = 0;
+            newPosition.y += 6414;
+            newPosition.x--;
+        }
+    }
+    console.log(newPosition);
+    if (!validate(newPosition.level)) return;
     if (!details.objectConfig.name.startsWith('Stair')) {
         player.playAnimation(up ? 828 : 827);
     }
     player.sendMessage(`You climb ${option.slice(6)} the ${details.objectConfig.name.toLowerCase()}.`);
-    setTimeout(() => {
-        details.player.teleport(new Position(position.x, position.y, level));
-    }, World.TICK_LENGTH);
+    setTimeout(() => details.player.teleport(newPosition), World.TICK_LENGTH);
 
 };
 
@@ -49,7 +60,7 @@ export default {
     hooks: [
         {
             type: 'object_interaction',
-            objectIds: [ 1738, 1739, 1740, 1746, 1747, 1748, 12964, 12965, 12966 ],
+            objectIds: [ 1738, 1739, 1740, 1746, 1747, 1748, 2147, 2148, 12964, 12965, 12966 ],
             options: [ 'climb', 'climb-up', 'climb-down' ],
             walkTo: true,
             handler: action
