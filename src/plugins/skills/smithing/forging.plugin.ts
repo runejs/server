@@ -192,7 +192,6 @@ export default {
             itemIds: [...bars.keys()],
             objectIds: anvilIds,
             walkTo: true,
-
             cancelOtherActions: true,
             handler: openForgingInterface
         } as ItemOnObjectActionHook,

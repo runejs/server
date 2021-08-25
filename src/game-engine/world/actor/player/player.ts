@@ -62,7 +62,7 @@ import { EffectType } from '../effect';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
-        option: 'Yeet',
+        option: 'Trade',
         index: 1,
         placement: 'TOP'
     },

@@ -14,6 +14,18 @@
             slot8: { modelId: 12, titleId: 48 }
         }
     },
+    trading: {
+        firstStage: {
+            widgetId: 335,
+            titleId: 93,
+            source: {
+                containerId: 91
+            },
+            target: {
+                containerId: 92
+            }
+        }
+    },
     anvil: {
         widgetId: 312,
     },
