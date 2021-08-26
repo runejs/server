@@ -24,6 +24,13 @@
             target: {
                 containerId: 92
             }
+        },
+        finalStage: {
+            widgetId: 334,
+        },
+        tabarea: {
+            widgetId: 336,
+            containerId: 0
         }
     },
     anvil: {
