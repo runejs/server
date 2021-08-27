@@ -11,8 +11,8 @@
         "start:update": "node --max-old-space-size=1024 dist/game-engine/update-server.js",
         "start:infra": "concurrently \"npm run start:update\" \"npm run start:login\"",
         "start:standalone": "concurrently \"npm run start:infra\" \"npm run start:game\"",
-        "lint": "eslint -c .eslintrc.js --ext .ts src",
-        "lint:fix": "eslint -c .eslintrc.js --ext .ts src --fix",
+        "lint": "eslint --ext .ts src",
+        "lint:fix": "eslint --ext .ts src --fix",
         "build:watch": "babel ./src --out-dir dist --extensions \".ts,.tsx,.js\" --source-maps --watch",
         "build": "rimraf dist && babel ./src --out-dir dist --extensions \".ts,.tsx,.js\" --source-maps"
     },
@@ -75,5 +75,13 @@
         "ts-node": "^9.1.1",
         "tsconfig-paths": "^3.9.0",
         "typescript": "^4.2.3"
+    },
+    "eslintConfig": {
+        "extends": [
+            "@runejs/eslint-config"
+        ],
+        "parserOptions": {
+            "project": "./tsconfig.json"
+        }
     }
 }
