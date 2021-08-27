@@ -1,5 +1,11 @@
 module.exports = {
-    "root": true,
+    "extends": [
+        "@runejs/eslint-config"
+    ],
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    }
+    /*"root": true,
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "project": "tsconfig.json",
@@ -81,5 +87,5 @@ module.exports = {
         "@typescript-eslint/ban-types": 0,
         "@typescript-eslint/no-unused-vars": 0,
         "@typescript-eslint/no-var-requires": 0
-    }
+    }*/
 }
