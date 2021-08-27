@@ -2,10 +2,16 @@ import { join } from 'path';
 import { writeFileSync } from 'fs';
 import { filestore } from '@engine/game-server';
 import { logger } from '@runejs/core';
-import { ItemConfig, NpcConfig, ObjectConfig } from '@runejs/filestore';
+import { ItemConfig, NpcConfig, ObjectConfig, WidgetBase } from '@runejs/filestore';
 
 
-function dump<T>(fileName: string, definitions: T[]): boolean {
+export interface DataDumpResult {
+    successful: boolean;
+    filePath: string;
+}
+
+
+function dump<T>(fileName: string, definitions: T[]): DataDumpResult {
     const filePath = join('data/dump', fileName);
 
     const arr = [];
@@ -15,21 +21,31 @@ function dump<T>(fileName: string, definitions: T[]): boolean {
 
     try {
         writeFileSync(filePath, JSON.stringify(arr, null, 4));
-        return true;
+        return {
+            successful: true,
+            filePath
+        };
     } catch(error) {
         logger.error(`Error dumping ${fileName}`);
-        return false;
+        return {
+            successful: false,
+            filePath
+        };
     }
 }
 
-export function dumpNpcs(): boolean {
+export const dumpNpcs = (): DataDumpResult => {
     return dump<NpcConfig>('npcs.json', filestore.configStore.npcStore.decodeNpcStore());
-}
+};
 
-export function dumpItems(): boolean {
+export const dumpItems = (): DataDumpResult => {
     return dump<ItemConfig>('items.json', filestore.configStore.itemStore.decodeItemStore());
-}
+};
 
-export function dumpObjects(): boolean {
+export const dumpObjects = (): DataDumpResult => {
     return dump<ObjectConfig>('objects.json', filestore.configStore.objectStore.decodeObjectStore());
-}
+};
+
+export const dumpWidgets = (): DataDumpResult => {
+    return dump<WidgetBase>('widgets.json', filestore.widgetStore.decodeWidgetStore());
+};

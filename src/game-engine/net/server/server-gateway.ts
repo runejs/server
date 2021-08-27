@@ -141,8 +141,11 @@ export class ServerGateway extends SocketConnectionHandler {
             this.updateServerSocket = createConnection({ host: serverConfig.updateServerHost, port: serverConfig.updateServerPort });
             this.updateServerSocket.on('data', data => this.clientSocket.write(data));
             this.updateServerSocket.on('end', () => {
-                // @TODO
+                logger.info(`Update server connection closed.`);
             });
+            this.updateServerSocket.on('error', () => {
+                logger.error(`Update server error.`);
+            })
             this.updateServerSocket.setNoDelay(true);
             this.updateServerSocket.setKeepAlive(true);
             this.updateServerSocket.setTimeout(30000);
