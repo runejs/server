@@ -4,7 +4,8 @@ node_modules
 /data/dump
 /data/houses
 /data/saves/*.json
-/data/config/server-config.yaml
+/config/server-config.json
+server-config.yaml
 
 # local env files
 .env.local

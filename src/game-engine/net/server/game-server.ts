@@ -1,5 +1,5 @@
 import { logger } from '@runejs/core';
-import { openServer, SocketConnectionHandler } from '@runejs/core/net';
+import { ConnectionStatus, SocketServer } from '@runejs/core/net';
 import { ByteBuffer } from '@runejs/core/buffer';
 import { Socket } from 'net';
 import { ServerGateway } from '@engine/net/server/server-gateway';
@@ -7,16 +7,17 @@ import { handlePacket, incomingPackets } from '@engine/net/inbound-packets';
 import { Player } from '@engine/world/actor/player/player';
 
 
-export class GameServerConnection implements SocketConnectionHandler {
+export class GameServerConnection {
 
     private activePacketId: number = null;
     private activePacketSize: number = null;
     private activeBuffer: ByteBuffer;
 
-    public constructor(private readonly clientSocket: Socket, private readonly player: Player) {
+    public constructor(private readonly clientSocket: Socket,
+                       private readonly player: Player) {
     }
 
-    public async dataReceived(buffer?: ByteBuffer): Promise<void> {
+    public decodeMessage(buffer?: ByteBuffer): void | Promise<void> {
         if(!this.activeBuffer) {
             this.activeBuffer = buffer;
         } else if(buffer) {
@@ -98,10 +99,8 @@ export class GameServerConnection implements SocketConnectionHandler {
         this.activePacketSize = null;
 
         if(this.activeBuffer !== null && this.activeBuffer.readable > 0) {
-            await this.dataReceived();
+            this.decodeMessage();
         }
-
-        return Promise.resolve();
     }
 
     public connectionDestroyed(): void {
@@ -116,5 +115,6 @@ export class GameServerConnection implements SocketConnectionHandler {
 }
 
 export const openGameServer = (host: string, port: number): void =>
-    openServer<ServerGateway>('Game Server', host, port,
-        socket => new ServerGateway(socket));
+    SocketServer.launch<ServerGateway>(
+        'Game Server',
+        host, port, socket => new ServerGateway(socket));
