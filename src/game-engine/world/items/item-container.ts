@@ -160,8 +160,8 @@ export class ItemContainer {
             return { item: newItem, slot: existingItemIndex };
         } else {
             const newItemIndex = this.getFirstOpenSlot();
-            if (newItemIndex === -1) {
-                // Not enough container space
+            if (newItemIndex === -1 || item.amount === 0) {
+                // Not enough container space, or the amount of item being added is 0.
                 return null;
             }
 
