@@ -4,6 +4,7 @@ import { ItemContainer } from '@engine/world/items/item-container';
 import { Player } from '@engine/world/actor/player/player';
 import { ItemInteractionAction, itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
 import { buttonActionHandler } from '@engine/world/action/button.action';
+import { TradeSession } from '@plugins/player/trading/TradeSession';
 
 // Holds the items that is currently being traded in.
 let sourceTradeContainer : ItemContainer;
@@ -21,58 +22,51 @@ let targetPlayer : Player;
     Trading tab area        336
  */
 export const trade : playerInteractionActionHandler = ({ player, otherPlayer }) => {
-    sourcePlayer = player;
-    sourceTradeContainer = new ItemContainer(28);
-    sourceTradeableItemsContainer = player.inventory;
 
-    targetPlayer = otherPlayer;
-    targetTradeContainer = new ItemContainer(28);
-    targetTradeableItemsContainer = otherPlayer.inventory;
+    const currentTime = Date.now();
 
-    openTradeWidget();
+    if(otherPlayer.metadata["currentTrade"]) {
+        player.sendMessage("Other player is busy at the moment. (trading atm)")
+        otherPlayer.metadata["currentTrade"] = null;
+        return;
+    }
+    if(otherPlayer.interfaceState.screenWidget) {
+        player.sendMessage("Other player is busy at the moment.")
+        return;
+    }
+
+    if(player.metadata["tradeRequests"]) {
+        const playerRequests = player.metadata["tradeRequests"];
+        if(playerRequests[otherPlayer.username] && playerRequests[otherPlayer.username] + 10000 > currentTime) {
+            player.sendMessage("starting trade");
+            otherPlayer.sendMessage("starting trade");
+            // Both parties have agreed to start a trade session;
+            new TradeSession(player, otherPlayer);
+            return;
+        }
+    }
+
+
+
+
+    if(!otherPlayer.metadata["tradeRequests"]) {
+        otherPlayer.metadata["tradeRequests"] = {};
+    }
+
+    otherPlayer.metadata["tradeRequests"][player.username] = Date.now();
+    otherPlayer.sendMessage(`${player.username}:tradereq:`)
+    player.sendMessage(`Sending trade request...`)
+
+    // sourcePlayer = player;
+    // sourceTradeContainer = new ItemContainer(28);
+    // sourceTradeableItemsContainer = player.inventory;
+    //
+    // targetPlayer = otherPlayer;
+    // targetTradeContainer = new ItemContainer(28);
+    // targetTradeableItemsContainer = otherPlayer.inventory;
+    //
+    // openTradeWidget();
 };
-
-export const openTradeWidget = () => {
-
-
-    // Open trading interface on target players screen.
-    targetPlayer.interfaceState.openWidget(335, {
-        slot: 'screen',
-        multi: true
-    });
-
-    targetPlayer.interfaceState.openWidget(336, {
-        slot: 'tabarea',
-        multi: true
-    });
-
-    targetPlayer.modifyWidget(widgets.trading.firstStage.widgetId, {
-        childId: widgets.trading.firstStage.titleId,
-        text: 'Trading With: ' + sourcePlayer.username
-    });
-
-    targetPlayer.interfaceState.openWidget(336, {
-        slot: 'tabarea',
-        multi: true
-    });
-
-    // Open trading interface on source player screen.
-    sourcePlayer.interfaceState.openWidget(335, {
-        slot: 'screen',
-        multi: true,
-    });
-    sourcePlayer.modifyWidget(widgets.trading.firstStage.widgetId, {
-        childId: widgets.trading.firstStage.titleId,
-        text: 'Trading With: ' + targetPlayer.username
-    });
-    sourcePlayer.interfaceState.openWidget(336, {
-        slot: 'tabarea',
-        multi: true
-    });
-
-    reloadPlayerWidgets();
-
-}
 
 export const reloadPlayerWidgets = () => {
     sourcePlayer.outgoingPackets.sendUpdateAllWidgetItems(widgets.trading.tabarea, sourceTradeableItemsContainer);
@@ -100,12 +94,24 @@ export const reloadPlayerWidgets = () => {
 }
 
 export const offerItemToTrade : itemInteractionActionHandler = (itemInteractionAction) => {
+
+
     console.log('Offering item to trade: ');
     console.log('Username: ', itemInteractionAction.player.username);
     console.log('Item: ', itemInteractionAction.itemDetails.name);
     console.log('Option: ', itemInteractionAction.option);
 
     const { option, player, itemDetails } = itemInteractionAction;
+
+    const tradingSession = player.metadata["currentTrade"];
+    if(!tradingSession) {
+        return;
+    }
+
+
+
+    tradingSession.addItem(player, itemToTrade, theAmount);
+
 
     if (player.username === sourcePlayer.username) {
         sourceTradeContainer.add(itemDetails.gameId);
@@ -129,15 +135,20 @@ export const removeItemFromTrade : itemInteractionActionHandler = (itemInteracti
 
 export const abort : buttonActionHandler = (buttonAction) => {
     console.log('Close all widgets.');
-    sourcePlayer.outgoingPackets.closeActiveWidgets();
-    targetPlayer.outgoingPackets.closeActiveWidgets();
+    sourcePlayer.interfaceState.closeAllSlots();
+    targetPlayer.interfaceState.closeAllSlots()
 }
 
 export default {
     pluginId: 'rs:trading',
     hooks: [
         {
-            options: 'trade',
+            options: 'trade with',
+            type: 'player_interaction',
+            handler: trade
+        },
+        {
+            options: 'request_response',
             type: 'player_interaction',
             handler: trade
         },
