@@ -1,10 +1,8 @@
 import { Player } from '@engine/world/actor/player/player';
 import { ItemContainer } from '@engine/world/items/item-container';
 import { widgets } from '@engine/config';
-import { Item } from '@engine/world/items/item';
-import { potatoManipulatePlayerInventory } from '@plugins/items/rotten-potato/hooks/rotten-potato-item-on-player';
-import { itemIds } from '@engine/world/config/item-ids';
 import { WidgetClosedEvent } from '@engine/world/actor/player/interface-state';
+import { ItemInteractionAction } from '@engine/world/action/item-interaction.action';
 
 enum TradingStage {
     Initializing,
@@ -74,22 +72,22 @@ export class TradeSession {
     /**
      * Add an item to the trade offer.
      * @param player
-     * @param itemId
+     * @param itemInteractionAction
      * @param amount
      * @private
      */
-    public addItem(player: Player, itemId: number, amount: number) {
+    public addItem(player: Player, itemInteractionAction: ItemInteractionAction, amount: number) {
         const tradingSession = player.metadata['currentTrade'];
 
         if(player.username === this.player1.username) {
-            this.player1Offer.add({ itemId: itemId, amount: amount });
-            this.player1.inventory.removeFirst(itemId);
+            this.player1Offer.add({ itemId: itemInteractionAction.itemId, amount: amount });
+            this.player1.inventory.remove(itemInteractionAction.itemSlot);
             tradingSession.reloadPlayerWidgets();
         }
 
         if(player.username === this.player2.username) {
-            this.player2Offer.add({ itemId: itemId, amount: amount });
-            this.player2.inventory.removeFirst(itemId);
+            this.player2Offer.add({ itemId: itemInteractionAction.itemId, amount: amount });
+            this.player2.inventory.remove(itemInteractionAction.itemSlot);
             tradingSession.reloadPlayerWidgets();
         }
     }
@@ -97,22 +95,22 @@ export class TradeSession {
     /**
      * Remove an item from the trade offer.
      * @param player
-     * @param itemId
+     * @param itemInteractionAction
      * @param amount
      * @private
      */
-    public removeItem(player: Player, itemId: number, amount: number) {
+    public removeItem(player: Player, itemInteractionAction: ItemInteractionAction, amount: number) {
         const tradingSession = player.metadata['currentTrade'];
 
         if(player.username === this.player1.username) {
-            this.player1Offer.removeFirst({ itemId: itemId, amount: amount });
-            this.player1.inventory.removeFirst({ itemId: itemId, amount: amount });
+            this.player1Offer.remove(itemInteractionAction.itemSlot);
+            this.player1.inventory.add({ itemId: itemInteractionAction.itemId, amount: amount });
             tradingSession.reloadPlayerWidgets();
         }
 
         if(player.username === this.player2.username) {
-            this.player2Offer.removeFirst({ itemId: itemId, amount: amount });
-            this.player2.inventory.add({ itemId: itemId, amount: amount });
+            this.player2Offer.remove(itemInteractionAction.itemSlot);
+            this.player2.inventory.add({ itemId: itemInteractionAction.itemId, amount: amount });
             tradingSession.reloadPlayerWidgets();
         }
     }
@@ -168,16 +166,12 @@ export class TradeSession {
         this.player2ActiveWidget.unsubscribe();
 
         // @todo: Put the items back into the right inventories.
-        /*if (this.player1Offer.size !== 0) {
-            for(let i1 = 0; i1 < this.player1Offer.size; i1++) {
-                this.player1.inventory.add(this.player1Offer[i1]);
-            }
+        /* for(let i1 = 0; i1 < this.player1Offer.size; i1++) {
+            this.player1.inventory.add(this.player1Offer[i1]);
         }
-        if (this.player2Offer.size !== 0) {
-            for (let i2 = 0; i2 < this.player2Offer.size; i2++) {
-                this.player2.inventory.add(this.player2Offer[i2]);
-            }
-        }*/
+        for (let i2 = 0; i2 < this.player2Offer.size; i2++) {
+            this.player2.inventory.add(this.player2Offer[i2]);
+        } */
 
         // Close all widgets.
         this.player1.interfaceState.closeAllSlots();

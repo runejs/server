@@ -1,6 +1,6 @@
 import { playerInteractionActionHandler } from '@engine/world/action/player-interaction.action';
 import { widgets } from '@engine/config';
-import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { ItemInteractionAction, itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
 import { buttonActionHandler } from '@engine/world/action/button.action';
 import { TradeSession } from '@plugins/player/trading/TradeSession';
 import { Player } from '@engine/world/actor/player/player';
@@ -45,20 +45,20 @@ export const trade : playerInteractionActionHandler = ({ player, otherPlayer }) 
     player.sendMessage(`Sending trade request...`);
 };
 
-export const offerItemToTrade : itemInteractionActionHandler = (itemInteractionAction) => {
+export const offerItemToTrade : itemInteractionActionHandler = (itemInteractionAction: ItemInteractionAction) => {
     console.log('Offering item to trade: ');
     console.log('Username: ', itemInteractionAction.player.username);
     console.log('Item: ', itemInteractionAction.itemDetails.name);
     console.log('Option: ', itemInteractionAction.option);
 
-    const { option, player, itemDetails } = itemInteractionAction;
+    const { player } = itemInteractionAction;
 
     const tradingSession = player.metadata['currentTrade'];
     if(!tradingSession) {
         return;
     }
 
-    tradingSession.addItem(player, itemDetails.gameId, 1);
+    tradingSession.addItem(player, itemInteractionAction, 1);
 }
 
 
@@ -68,10 +68,10 @@ const removeItemFromTrade : itemInteractionActionHandler = (itemInteractionActio
     console.log('Item: ', itemInteractionAction.itemDetails.name);
     console.log('Option: ', itemInteractionAction.option);
 
-    const { player, itemId } = itemInteractionAction;
+    const { player } = itemInteractionAction;
     const tradingSession = player.metadata['currentTrade'];
 
-    tradingSession.removeItem(player, itemId, 1);
+    tradingSession.removeItem(player, itemInteractionAction, 1);
 
 }
 
