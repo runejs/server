@@ -4,6 +4,7 @@ import { widgets } from '@engine/config';
 import { Item } from '@engine/world/items/item';
 import { potatoManipulatePlayerInventory } from '@plugins/items/rotten-potato/hooks/rotten-potato-item-on-player';
 import { itemIds } from '@engine/world/config/item-ids';
+import { WidgetClosedEvent } from '@engine/world/actor/player/interface-state';
 
 enum TradingStage {
     Initializing,
@@ -15,6 +16,9 @@ export class TradeSession {
 
     private player1: Player;
     private player2: Player;
+
+    private player1ActiveWidget;
+    private player2ActiveWidget;
 
     private player1Offer: ItemContainer = new ItemContainer(28);
     private player2Offer: ItemContainer = new ItemContainer(28);
@@ -28,6 +32,18 @@ export class TradeSession {
         player2.metadata['currentTrade'] = this;
         this.openWidgets();
         this.tradingStage = TradingStage.Offer;
+
+        this.player1ActiveWidget = player1.interfaceState.closed.subscribe((whatClosed: WidgetClosedEvent) => {
+            if (whatClosed.widget.widgetId === 335 || whatClosed.widget.widgetId === 334) {
+                this.abort();
+            }
+        });
+
+        this.player2ActiveWidget = player2.interfaceState.closed.subscribe((whatClosed: WidgetClosedEvent) => {
+            if (whatClosed.widget.widgetId === 335 || whatClosed.widget.widgetId === 334) {
+                this.abort();
+            }
+        });
     }
 
     public reloadPlayerWidgets() {
@@ -147,6 +163,22 @@ export class TradeSession {
     }
 
     public abort() {
+        // Unsubscribe active widgets.
+        this.player1ActiveWidget.unsubscribe();
+        this.player2ActiveWidget.unsubscribe();
+
+        // @todo: Put the items back into the right inventories.
+        /*if (this.player1Offer.size !== 0) {
+            for(let i1 = 0; i1 < this.player1Offer.size; i1++) {
+                this.player1.inventory.add(this.player1Offer[i1]);
+            }
+        }
+        if (this.player2Offer.size !== 0) {
+            for (let i2 = 0; i2 < this.player2Offer.size; i2++) {
+                this.player2.inventory.add(this.player2Offer[i2]);
+            }
+        }*/
+
         // Close all widgets.
         this.player1.interfaceState.closeAllSlots();
         this.player2.interfaceState.closeAllSlots();
@@ -154,9 +186,6 @@ export class TradeSession {
         // Reset the 'current trade' metadata.
         this.player1.metadata['currentTrade'] = null;
         this.player2.metadata['currentTrade'] = null;
-
-        this.player1.metadata['tradeCloseListener'] = null;
-        this.player2.metadata['tradeCloseListener'] = null;
     }
 
 }

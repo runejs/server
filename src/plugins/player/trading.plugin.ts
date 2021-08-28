@@ -31,7 +31,7 @@ export const trade : playerInteractionActionHandler = ({ player, otherPlayer }) 
             player.sendMessage('starting trade');
             otherPlayer.sendMessage('starting trade');
             // Both parties have agreed to start a trade session;
-            const ts = new TradeSession(player, otherPlayer);
+            new TradeSession(player, otherPlayer);
             return;
         }
     }
@@ -73,11 +73,6 @@ const removeItemFromTrade : itemInteractionActionHandler = (itemInteractionActio
 
     tradingSession.removeItem(player, itemId, 1);
 
-}
-
-const abort = (player: Player) => {
-    const tradingSession = player.metadata['currentTrade'];
-    tradingSession.abort();
 }
 
 export default {
