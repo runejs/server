@@ -1,7 +1,6 @@
 import { Player } from '@engine/world/actor/player/player';
 import { PacketData } from '@engine/net/inbound-packets';
 
-
 const widgetInteractionPacket = (player: Player, packet: PacketData) => {
     const { buffer } = packet;
     const childId = buffer.get('short');
