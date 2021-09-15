@@ -24,6 +24,17 @@ The server runs on the 435 revision of the game, which was a game update made on
 
 The game server will spin up and be accessible via port 43594.
 
+### Setup using docker
+
+1. Download and install Docker and Docker Compose: first https://docs.docker.com/get-docker/ then https://docs.docker.com/compose/install/ 
+2. Copy the `config/server-config.example.yaml` and paste it into the same folder using the name `server-config.yaml`
+3. Go into your new `server-config.yaml` file and modify your RSA modulus and exponent with the ones matching your game client
+  - You may also modify the server's port and host address from this configuration file
+4. Build the docker image with `docker-compose build`
+5. Run the game server with `docker-compose up'
+
+The game server will spin up and be accessible via port 43594.
+
 ## Game Client
 
 The [RuneScape Java Client #435](https://github.com/runejs/refactored-client-435) must be used to log into a RuneJS game server.
