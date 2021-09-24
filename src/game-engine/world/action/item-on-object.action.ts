@@ -82,7 +82,7 @@ const itemOnObjectActionPipe = (player: Player, landscapeObject: LandscapeObject
 
     if(matchingHooks.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled item on object interaction: ${ item.itemId } on ${ objectConfig.name } ` +
-            `(id-${ landscapeObject.objectId }) @ ${ position.x },${ position.y },${ position.level }`);
+            `(id: ${ landscapeObject.objectId }) @ ${ position.x },${ position.y },${ position.level }`);
         return null;
     }
 

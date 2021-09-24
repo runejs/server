@@ -1022,7 +1022,7 @@ export class Player extends Actor {
 
         const npcDetails = findNpc(originalNpc.childrenIds[morphIndex]);
         if (!npcDetails.key) {
-            logger.warn(`Fetched a morphed NPC, but it isn't yet registered on the server. (id-${originalNpc.id}) (morphedId-${npcDetails.gameId})`);
+            logger.warn(`Fetched a morphed NPC, but it isn't yet registered on the server. (id: ${originalNpc.id}) (morphedId-${npcDetails.gameId})`);
         }
         return npcDetails;
     }
