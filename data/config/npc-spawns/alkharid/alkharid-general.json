@@ -28,5 +28,11 @@
         "spawn_x": 3272,
         "spawn_y": 3182,
         "movement_radius": 2
+    },
+    {
+        "npc": "rs:tanner_ellis",
+        "spawn_x": 3274,
+        "spawn_y": 3191,
+        "movement_radius": 3
     }
 ]
