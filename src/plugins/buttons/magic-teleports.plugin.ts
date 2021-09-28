@@ -5,7 +5,7 @@ import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { gfxIds } from '@engine/world/config/gfx-ids';
 import { loopingEvent } from '@engine/game-server';
-import { TaskExecutor } from '@engine/world/action';
+import { TaskExecutor } from '@engine/world/action/action-pipeline';
 
 enum Teleports {
     Home = 591,

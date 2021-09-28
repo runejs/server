@@ -4,7 +4,7 @@ import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { Item } from '@engine/world/items/item';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { advancedNumberHookFilter, questHookFilter, stringHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
+import { ActionPipe, RunnableHooks } from '@engine/world/action/action-pipeline';
 
 
 /**

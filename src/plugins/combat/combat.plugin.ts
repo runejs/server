@@ -12,7 +12,7 @@ import { soundIds } from '@engine/world/config/sound-ids';
 import { findNpc } from '@engine/config';
 import EventEmitter from 'events';
 import { logger } from '@runejs/core';
-import { TaskExecutor } from '../../game-engine/world/action';
+import { TaskExecutor } from '@engine/world/action/action-pipeline';
 import { wait } from '../../game-engine/world/task';
 import { Behavior, BehaviorType } from '../../game-engine/world/actor/behaviors/behavior';
 

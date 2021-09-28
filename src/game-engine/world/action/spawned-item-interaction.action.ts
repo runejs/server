@@ -6,7 +6,7 @@ import { ItemDetails } from '@engine/config/item-config';
 import { findItem } from '@engine/config';
 import { playerWalkTo } from '@engine/game-server';
 import { numberHookFilter, stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
+import { ActionPipe, RunnableHooks } from '@engine/world/action/action-pipeline';
 
 
 /**

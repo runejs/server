@@ -4,7 +4,7 @@ import { Position } from '@engine/world/position';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { playerWalkTo } from '@engine/game-server';
 import { stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
+import { ActionPipe, RunnableHooks } from '@engine/world/action/action-pipeline';
 
 
 /**

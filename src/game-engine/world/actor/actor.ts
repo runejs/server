@@ -12,7 +12,7 @@ import { filter, take } from 'rxjs/operators';
 import { world } from '@engine/game-server';
 import { WorldInstance } from '@engine/world/instances';
 import { Player } from '@engine/world/actor/player/player';
-import { ActionCancelType, ActionPipeline } from '@engine/world/action';
+import { ActionCancelType, ActionPipeline } from '@engine/world/action/action-pipeline';
 import { LandscapeObject } from '@runejs/filestore';
 import { Behavior } from './behaviors/behavior';
 import { soundIds } from '../config/sound-ids';

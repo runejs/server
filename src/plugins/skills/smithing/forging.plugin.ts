@@ -10,7 +10,7 @@ import {
 } from '@engine/world/action/item-interaction.action';
 import { Player } from '@engine/world/actor/player/player';
 import { findItem } from '@engine/config';
-import { TaskExecutor } from '@engine/world/action';
+import { TaskExecutor } from '@engine/world/action/action-pipeline';
 import { Position } from '@engine/world/position';
 
 /**

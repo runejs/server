@@ -4,7 +4,7 @@ import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { gfxIds } from '@engine/world/config/gfx-ids';
 import { loopingEvent } from '@engine/game-server';
-import { TaskExecutor } from '@engine/world/action';
+import { TaskExecutor } from '@engine/world/action/action-pipeline';
 import { widgetButtonIds } from '../skills/smithing/smelting-constants';
 import { logger } from '@runejs/core';
 import { PrayerAction, PrayerActionHook } from '../../game-engine/world/action/prayer.action';

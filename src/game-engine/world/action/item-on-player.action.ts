@@ -5,7 +5,7 @@ import { logger } from '@runejs/core';
 import { Item } from '@engine/world/items/item';
 import { playerWalkTo } from '@engine/game-server';
 import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe } from '@engine/world/action/index';
+import { ActionPipe } from '@engine/world/action/action-pipeline';
 
 
 /**

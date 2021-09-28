@@ -15,7 +15,7 @@ import { NpcDetails } from '@engine/config/npc-config';
 import { WorldInstance } from '@engine/world/instances';
 import { Direction } from '@engine/world/direction';
 import { NpcSpawn } from '@engine/config/npc-spawn-config';
-import { loadActionFiles } from '@engine/world/action';
+import { loadActionFiles } from '@engine/world/action/action-pipeline';
 import { LandscapeObject } from '@runejs/filestore';
 import { lastValueFrom, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';

@@ -1,7 +1,7 @@
 import { Npc } from '@engine/world/actor/npc/npc';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { stringHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe } from '@engine/world/action/index';
+import { ActionPipe } from '@engine/world/action/action-pipeline';
 
 
 /**

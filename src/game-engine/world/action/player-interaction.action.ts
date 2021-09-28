@@ -4,7 +4,7 @@ import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
 import { playerWalkTo } from '@engine/game-server';
 import { stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { RunnableHooks } from '@engine/world/action/index';
+import { RunnableHooks } from '@engine/world/action/action-pipeline';
 
 
 /**

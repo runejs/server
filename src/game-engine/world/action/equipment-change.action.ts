@@ -3,7 +3,7 @@ import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { findItem } from '@engine/config';
 import { EquipmentSlot, ItemDetails } from '@engine/config/item-config';
 import { numberHookFilter, stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
+import { ActionPipe, RunnableHooks } from '@engine/world/action/action-pipeline';
 
 
 /**
