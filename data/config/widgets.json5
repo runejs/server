@@ -87,5 +87,6 @@
         christmas: 23,
         killcount: 24
     },
-    whatWouldYouLikeToSpin: 459
+    whatWouldYouLikeToSpin: 459,
+    tanningHidesInterface: 324
 }
