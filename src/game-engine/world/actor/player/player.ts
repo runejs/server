@@ -697,9 +697,10 @@ export class Player extends Actor {
         return slot;
     }
 
-    public hasCoins(amount: number): number {
+    public hasCoins(amount: number): boolean {
         return this.inventory.items
-            .findIndex(item => item !== null && item.itemId === itemIds.coins && item.amount >= amount);
+            .filter(item => item != null && item.itemId === itemIds.coins && item.amount >= amount).length !== 0;
+    }
     }
 
     public removeItem(slot: number): void {
