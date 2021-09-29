@@ -526,4 +526,22 @@ export const itemIds = {
             untrimmed: 9813,
         },
     },
+    hides: {
+        cowhide: 1739,
+        black_dragonhide: 1747,
+        red_dragonhide: 1749,
+        blue_dragonhide: 1751,
+        green_dragonhide: 1753,
+        snake_hide: 7801,
+        snake_hide_temple_trekking: 7801
+    },
+    leather: {
+        leather: 1741,
+        hard_leather: 1743,
+        green_d_leather: 1745,
+        blue_d_leather: 2505,
+        red_d_leather: 2507,
+        black_d_leather: 2509,
+        snakeskin: 6289
+    }
 };
