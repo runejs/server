@@ -1,4 +1,4 @@
-import { World } from '@engine/world';
+import { World } from '@engine/world/world';
 import { itemIds } from '@engine/world/config/item-ids';
 import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
 

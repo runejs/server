@@ -3,7 +3,7 @@ import { SkillName } from '@engine/world/actor/skills';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { randomBetween } from '@engine/util/num';
-import { World } from '@engine/world';
+import { World } from '@engine/world/world';
 import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
 
 

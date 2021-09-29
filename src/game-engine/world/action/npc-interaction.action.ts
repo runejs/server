@@ -1,5 +1,5 @@
 import { Player } from '@engine/world/actor/player/player';
-import { Npc } from '@engine/world/actor/npc/npc';
+import { Npc } from '@engine/world/actor/npc';
 import { Position } from '@engine/world/position';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { playerWalkTo } from '@engine/game-server';

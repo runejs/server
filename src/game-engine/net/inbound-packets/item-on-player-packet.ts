@@ -1,6 +1,6 @@
 import { logger } from '@runejs/core';
 import { world } from '../../game-server';
-import { World } from '../../world';
+import { World } from '../../world/world';
 import { widgets } from '../../config/config-handler';
 import { Player } from '@engine/world/actor/player/player';
 import { PacketData } from '@engine/net/inbound-packet-handler';

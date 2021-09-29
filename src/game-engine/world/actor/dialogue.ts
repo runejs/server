@@ -1,4 +1,4 @@
-import { Npc } from '@engine/world/actor/npc/npc';
+import { Npc } from '@engine/world/actor/npc';
 import { Player } from '@engine/world/actor/player/player';
 import { filestore } from '@engine/game-server';
 import { logger } from '@runejs/core';

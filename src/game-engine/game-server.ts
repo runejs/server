@@ -1,4 +1,4 @@
-import { World } from './world';
+import { World } from './world/world';
 import { logger } from '@runejs/core';
 import { parseServerConfig } from '@runejs/core/net';
 import { Filestore, LandscapeObject } from '@runejs/filestore';
@@ -10,7 +10,7 @@ import { watchForChanges, watchSource } from '@engine/util/files';
 import { openGameServer } from '@engine/net/server/game-server';
 import { loadCoreConfigurations, loadGameConfigurations, xteaRegions } from '@engine/config/config-handler';
 import { Quest } from '@engine/world/actor/player/quest';
-import { Npc } from '@engine/world/actor/npc/npc';
+import { Npc } from '@engine/world/actor/npc';
 import { Player } from '@engine/world/actor/player/player';
 import { Subject, timer } from 'rxjs';
 import { Position } from '@engine/world/position';

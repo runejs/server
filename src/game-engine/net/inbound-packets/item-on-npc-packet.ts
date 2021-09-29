@@ -1,6 +1,6 @@
 import { logger } from '@runejs/core';
 import { world } from '@engine/game-server';
-import { World } from '@engine/world';
+import { World } from '@engine/world/world';
 import { widgets } from '@engine/config/config-handler';
 
 const itemOnNpcPacket = (player, packet) => {

@@ -20,11 +20,11 @@ import {
 import { PlayerWidget, widgetScripts } from '../../config/widget';
 import { ContainerUpdateEvent, getItemFromContainer, ItemContainer } from '../../items/item-container';
 import { Item } from '../../items/item';
-import { Npc } from '../npc/npc';
+import { Npc } from '../npc';
 import { NpcSyncTask } from './sync/npc-sync-task';
 import { Subject } from 'rxjs';
 import { Chunk, ChunkUpdateItem } from '@engine/world/map/chunk';
-import { QuadtreeKey } from '@engine/world';
+import { QuadtreeKey } from '@engine/world/world';
 import { daysSinceLastLogin } from '@engine/util/time';
 import { itemIds } from '@engine/world/config/item-ids';
 import { colors, hexToRgb, rgbTo16Bit } from '@engine/util/colors';

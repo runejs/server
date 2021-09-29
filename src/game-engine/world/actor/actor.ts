@@ -1,7 +1,7 @@
 import { WalkingQueue } from './walking-queue';
 import { ItemContainer } from '../items/item-container';
 import { Animation, DamageType, Graphic, UpdateFlags } from './update-flags';
-import { Npc } from './npc/npc';
+import { Npc } from './npc';
 import { Skill, Skills } from '@engine/world/actor/skills';
 import { Item } from '@engine/world/items/item';
 import { Position } from '@engine/world/position';

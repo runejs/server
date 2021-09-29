@@ -2,7 +2,7 @@ import { Position } from '../position';
 import { Player } from '../actor/player/player';
 import { CollisionMap } from './collision-map';
 import { world } from '../../game-server';
-import { Npc } from '../actor/npc/npc';
+import { Npc } from '../actor/npc';
 import { WorldItem } from '@engine/world/items/world-item';
 import { LandscapeObject } from '@runejs/filestore';
 

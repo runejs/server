@@ -1,6 +1,6 @@
 import { Player } from '@engine/world/actor/player/player';
 import { filestore } from '@engine/game-server';
-import { Npc } from '@engine/world/actor/npc/npc';
+import { Npc } from '@engine/world/actor/npc';
 
 export const dialogueWidgetIds = {
     PLAYER: [ 64, 65, 66, 67 ],
@@ -142,7 +142,7 @@ export class DialogueAction {
             })
             const sub = this.p.interfaceState.closed.subscribe(action => {
                 sub.unsubscribe();
-                this._action = action;
+                this._action = action?.data ?? null;
                 resolve(this);
             });
         });

@@ -1,6 +1,6 @@
 import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
 import { dialogueAction } from '@engine/world/actor/player/dialogue-action';
-import { World } from '@engine/world';
+import { World } from '@engine/world/world';
 import { Position } from '@engine/world/position';
 
 
