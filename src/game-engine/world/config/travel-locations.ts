@@ -27,7 +27,7 @@ const readLocations = (): TravelLocation[] => {
     }) as TravelLocation[];
 };
 
-export default class TravelLocations {
+export class TravelLocations {
     public readonly locations: TravelLocation[];
 
     public constructor () {

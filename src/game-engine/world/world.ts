@@ -1,8 +1,8 @@
-import { logger } from '@runejs/core';
 import Quadtree from 'quadtree-lib';
 import { lastValueFrom, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
+import { logger } from '@runejs/core';
 import { LandscapeObject } from '@runejs/filestore';
 
 import { loadPlugins, world } from '@engine/game-server';
@@ -11,9 +11,7 @@ import { findItem, findNpc, findObject, itemSpawns, npcSpawns, NpcDetails, NpcSp
 import { Player, Npc, Actor } from '@engine/world/actor';
 import { loadActionFiles } from '@engine/world/action';
 import { ChunkManager, ConstructedRegion, getTemplateLocalX, getTemplateLocalY } from '@engine/world/map';
-import TravelLocations from '@engine/world/config/travel-locations';
-import { parseScenerySpawns } from '@engine/world/config/scenery-spawns';
-import { ExamineCache } from '@engine/world/config/examine-data';
+import { TravelLocations, ExamineCache, parseScenerySpawns } from '@engine/world/config';
 
 
 export interface QuadtreeKey {
