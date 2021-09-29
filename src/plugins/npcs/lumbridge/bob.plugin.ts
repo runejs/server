@@ -8,7 +8,7 @@ const bobHook: NpcInteractionActionHook = {
     npcs: 'rs:lumbridge_bob',
     options: 'trade',
     walkTo: true,
-    handler: ({ player }) => findShop('rs:lumbridge_bobs_axes')?.open(player);
+    handler: ({ player }) => findShop('rs:lumbridge_bobs_axes')?.open(player)
 };
 
 const bobPlugin: ContentPlugin = {
