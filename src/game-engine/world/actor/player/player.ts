@@ -701,6 +701,13 @@ export class Player extends Actor {
         return this.inventory.items
             .filter(item => item != null && item.itemId === itemIds.coins && item.amount >= amount).length !== 0;
     }
+
+    public removeCoins(buyCost: number): void {
+        const coinsIndex = this.inventory.items.findIndex(item => item != null && item.itemId === itemIds.coins && item.amount >= buyCost);
+        const coins = this.inventory.items[coinsIndex];
+        const amountAfterRemoval = coins.amount - buyCost;
+        this.inventory.set(coinsIndex, { itemId: itemIds.coins, amount: amountAfterRemoval });
+        this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, coinsIndex, { itemId: itemIds.coins, amount: amountAfterRemoval });
     }
 
     public removeItem(slot: number): void {
