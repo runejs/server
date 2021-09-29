@@ -1,7 +1,7 @@
 import { logger } from '@runejs/core';
 import { LoginResponseCode } from '@runejs/login-server';
 import { ByteBuffer } from '@runejs/core/buffer';
-import { parseServerConfig, SocketConnectionHandler } from '@runejs/core/net';
+import { parseServerConfig, SocketServer } from '@runejs/core/net';
 import { createConnection, Socket } from 'net';
 import { GameServerConnection } from '@engine/net/server/game-server';
 import { ServerConfig } from '@engine/config/server-config';
@@ -14,7 +14,7 @@ const serverConfig = parseServerConfig<ServerConfig>();
 export type ServerType = 'game_server' | 'login_server' | 'update_server';
 
 
-export class ServerGateway extends SocketConnectionHandler {
+export class ServerGateway extends SocketServer {
 
     private serverType: ServerType;
     private gameServerConnection: GameServerConnection;
@@ -23,58 +23,98 @@ export class ServerGateway extends SocketConnectionHandler {
     private serverKey: bigint;
 
     public constructor(private readonly clientSocket: Socket) {
-        super();
+        super(clientSocket);
     }
 
-    public async dataReceived(buffer: ByteBuffer): Promise<void> {
-        if(!this.serverType) {
-            buffer = this.parseInitialClientHandshake(buffer);
+    public initialHandshake(buffer: ByteBuffer): boolean {
+        if(this.serverType) {
+            this.decodeMessage(buffer);
+            return true;
         }
 
-        switch(this.serverType) {
-            case 'login_server':
-                // Pass request data through to the login server
-                this.loginServerSocket.write(buffer);
-                break;
-            case 'update_server':
-                // Pass request data through to the update server
-                this.updateServerSocket.write(buffer);
-                break;
-            default:
-                if(this.gameServerConnection) {
-                    // Use existing socket for game packets
-                    await this.gameServerConnection.dataReceived(buffer);
-                    break;
-                }
+        // First communication from the game client to the server gateway
+        // Here we find out what kind of connection the client is making - game, or update server?
+        // If game - they'll need to pass through the login server to authenticate first!
+
+        const packetId = buffer.get('BYTE', 'UNSIGNED');
+
+        if(packetId === 15) {
+            this.serverType = 'update_server';
+            this.updateServerSocket = createConnection({
+                host: serverConfig.updateServerHost,
+                port: serverConfig.updateServerPort
+            });
+            this.updateServerSocket.on('data', data => this.clientSocket.write(data));
+            this.updateServerSocket.on('end', () => {
+                logger.info(`Update server connection closed.`);
+            });
+            this.updateServerSocket.on('error', () => {
+                logger.error(`Update server error.`);
+            })
+            this.updateServerSocket.setNoDelay(true);
+            this.updateServerSocket.setKeepAlive(true);
+            this.updateServerSocket.setTimeout(30000);
+        } else if(packetId === 14) {
+            this.serverType = 'login_server';
+            this.loginServerSocket = createConnection({
+                host: serverConfig.loginServerHost,
+                port: serverConfig.loginServerPort
+            });
+            this.loginServerSocket.on('data', data => this.parseLoginServerResponse(new ByteBuffer(data)));
+            this.loginServerSocket.on('end', () => {
+                logger.error(`Login server error.`);
+            });
+            this.loginServerSocket.setNoDelay(true);
+            this.loginServerSocket.setKeepAlive(true);
+            this.loginServerSocket.setTimeout(30000);
+        } else {
+            logger.error(`Invalid initial client handshake packet id.`);
+            return false;
         }
 
-        return Promise.resolve();
+        const data = buffer.getSlice(1, buffer.length);
+        const socket = this.serverType === 'login_server' ? this.loginServerSocket : this.updateServerSocket;
+        socket.write(data);
+
+        return true;
+    }
+
+    public decodeMessage(buffer: ByteBuffer): void | Promise<void> {
+        if(this.serverType === 'login_server') {
+            this.loginServerSocket.write(buffer);
+        } else if(this.serverType === 'update_server') {
+            this.updateServerSocket.write(buffer);
+        } else {
+            this.gameServerConnection?.decodeMessage(buffer);
+        }
     }
 
     public connectionDestroyed(): void {
+        this.loginServerSocket?.destroy();
+        this.updateServerSocket?.destroy();
         this.gameServerConnection?.connectionDestroyed();
     }
 
     private parseLoginServerResponse(buffer: ByteBuffer): void {
         if(!this.serverKey) {
             // Login handshake response
-            const handshakeResponseCode = buffer.get();
+            const handshakeResponseCode = buffer.get('byte');
 
             if(handshakeResponseCode === 0) {
-                this.serverKey = BigInt(buffer.get('LONG'));
+                this.serverKey = BigInt(buffer.get('long'));
             }
         } else {
             // Login response
-            const loginResponseCode = buffer.get();
+            const loginResponseCode = buffer.get('byte');
 
             if(loginResponseCode === LoginResponseCode.SUCCESS) {
                 try {
-                    const clientKey1 = buffer.get('INT');
-                    const clientKey2 = buffer.get('INT');
-                    const gameClientId = buffer.get('INT');
+                    const clientKey1 = buffer.get('int');
+                    const clientKey2 = buffer.get('int');
+                    const gameClientId = buffer.get('int');
                     const username = buffer.getString();
                     const passwordHash = buffer.getString();
-                    const lowDetail = buffer.get() === 1;
+                    const lowDetail = buffer.get('byte') === 1;
 
                     if(world.playerOnline(username)) {
                         // Player is already logged in!
@@ -82,15 +122,13 @@ export class ServerGateway extends SocketConnectionHandler {
                         buffer = new ByteBuffer(1);
                         buffer.put(LoginResponseCode.ALREADY_LOGGED_IN);
                     } else {
-                        this.createPlayer([ clientKey1, clientKey2 ], gameClientId, username, passwordHash, lowDetail ? 'low' : 'high');
                         this.serverType = 'game_server';
+                        this.createPlayer([ clientKey1, clientKey2 ], gameClientId, username, passwordHash, lowDetail ? 'low' : 'high');
                         return;
                     }
                 } catch(e) {
                     logger.error(e);
-                    if(this.gameServerConnection) {
-                        this.gameServerConnection.closeSocket();
-                    }
+                    this.gameServerConnection?.closeSocket();
                 }
             }
         }
@@ -99,7 +137,11 @@ export class ServerGateway extends SocketConnectionHandler {
         this.clientSocket.write(buffer);
     }
 
-    private createPlayer(clientKeys: [ number, number ], gameClientId: number, username: string, passwordHash: string, detail: 'high' | 'low'): void {
+    private async createPlayer(clientKeys: [ number, number ],
+                               gameClientId: number,
+                               username: string,
+                               passwordHash: string,
+                               detail: 'high' | 'low'): Promise<void> {
         const sessionKey: number[] = [
             Number(clientKeys[0]), Number(clientKeys[1]), Number(this.serverKey >> BigInt(32)), Number(this.serverKey)
         ];
@@ -119,48 +161,15 @@ export class ServerGateway extends SocketConnectionHandler {
         world.registerPlayer(player);
 
         const outputBuffer = new ByteBuffer(6);
-        outputBuffer.put(LoginResponseCode.SUCCESS, 'BYTE');
-        outputBuffer.put(player.rights.valueOf(), 'BYTE');
-        outputBuffer.put(0, 'BYTE'); // ???
-        outputBuffer.put(player.worldIndex + 1, 'SHORT');
-        outputBuffer.put(0, 'BYTE'); // ???
+
+        outputBuffer.put(LoginResponseCode.SUCCESS, 'byte');
+        outputBuffer.put(player.rights.valueOf(), 'byte');
+        outputBuffer.put(0, 'byte'); // ???
+        outputBuffer.put(player.worldIndex + 1, 'short');
+        outputBuffer.put(0, 'byte'); // ???
         this.clientSocket.write(outputBuffer);
 
-        player.init();
-    }
-
-    private parseInitialClientHandshake(buffer: ByteBuffer): ByteBuffer {
-        // First communication from the game client to the server gateway
-        // Here we find out what kind of connection the client is making - game, or update server?
-        // If game - they'll need to pass through the login server to authenticate first!
-
-        const packetId = buffer.get('BYTE', 'UNSIGNED');
-
-        if(packetId === 15) {
-            this.serverType = 'update_server';
-            this.updateServerSocket = createConnection({ host: serverConfig.updateServerHost, port: serverConfig.updateServerPort });
-            this.updateServerSocket.on('data', data => this.clientSocket.write(data));
-            this.updateServerSocket.on('end', () => {
-                // @TODO
-            });
-            this.updateServerSocket.setNoDelay(true);
-            this.updateServerSocket.setKeepAlive(true);
-            this.updateServerSocket.setTimeout(30000);
-        } else if(packetId === 14) {
-            this.serverType = 'login_server';
-            this.loginServerSocket = createConnection({ host: serverConfig.loginServerHost, port: serverConfig.loginServerPort });
-            this.loginServerSocket.on('data', data => this.parseLoginServerResponse(new ByteBuffer(data)));
-            this.loginServerSocket.on('end', () => {
-                // @TODO
-            });
-            this.loginServerSocket.setNoDelay(true);
-            this.loginServerSocket.setKeepAlive(true);
-            this.loginServerSocket.setTimeout(30000);
-        } else {
-            throw new Error(`Invalid initial client handshake packet id.`);
-        }
-
-        return buffer.getSlice(1, buffer.length);
+        await player.init();
     }
 
 }
