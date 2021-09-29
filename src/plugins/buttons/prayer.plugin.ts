@@ -8,7 +8,7 @@ import { TaskExecutor } from '@engine/world/action/action-pipeline';
 import { widgetButtonIds } from '../skills/smithing/smelting-constants';
 import { logger } from '@runejs/core';
 import { PrayerAction, PrayerActionHook } from '../../game-engine/world/action/prayer.action';
-import { widgets } from '../../game-engine/config';
+import { widgets } from '@engine/config/config-handler';
 import { Prayer } from '../../game-engine/world/actor/prayer';
 import { EffectType } from '../../game-engine/world/actor/effect';
 import { prayers } from '../../game-engine/world/config/prayers'; 

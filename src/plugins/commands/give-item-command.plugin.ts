@@ -1,7 +1,7 @@
 import { commandActionHandler } from '@engine/world/action/player-command.action';
 import { filestore } from '@engine/game-server';
 import { itemIds } from '@engine/world/config/item-ids';
-import { findItem, itemIdMap } from '@engine/config';
+import { findItem, itemIdMap } from '@engine/config/config-handler';
 
 const action: commandActionHandler = (details) => {
     const { player, args } = details;

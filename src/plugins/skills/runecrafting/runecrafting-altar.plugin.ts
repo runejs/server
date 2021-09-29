@@ -15,7 +15,7 @@ import { RunecraftingAltar, RunecraftingRune } from '@plugins/skills/runecraftin
 import { itemIds } from '@engine/world/config/item-ids';
 import { Player } from '@engine/world/actor/player/player';
 import { Item } from '@engine/world/items/item';
-import { findItem } from '@engine/config';
+import { findItem } from '@engine/config/config-handler';
 
 
 const enterAltar: itemOnObjectActionHandler = (details: ItemOnObjectAction) => {

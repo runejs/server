@@ -2,7 +2,7 @@ import { Item } from './item';
 import { Subject } from 'rxjs';
 import { filestore } from '@engine/game-server';
 import { hasValueNotNull } from '@engine/util/data';
-import { findItem } from '@engine/config';
+import { findItem } from '@engine/config/config-handler';
 import { logger } from '@runejs/core';
 
 

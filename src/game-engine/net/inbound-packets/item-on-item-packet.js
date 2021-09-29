@@ -1,5 +1,5 @@
 import { logger } from '@runejs/core';
-import { widgets } from '../../config';
+import { widgets } from '../../config/config-handler';
 
 const itemOnItemPacket = (player, packet) => {
     const { buffer } = packet;

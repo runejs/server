@@ -1,5 +1,5 @@
 import { filestore } from '@engine/game-server';
-import { findNpc } from '@engine/config';
+import { findNpc } from '@engine/config/config-handler';
 import { logger } from '@runejs/core';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { Player } from '@engine/world/actor/player/player';

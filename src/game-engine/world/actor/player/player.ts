@@ -30,7 +30,7 @@ import { itemIds } from '@engine/world/config/item-ids';
 import { colors, hexToRgb, rgbTo16Bit } from '@engine/util/colors';
 import { PlayerCommandActionHook } from '@engine/world/action/player-command.action';
 import { updateBonusStrings } from '@plugins/items/equipment/equipment-stats.plugin';
-import { findMusicTrack, findNpc, findSongIdByRegionId, musicRegions } from '@engine/config/index';
+import { findMusicTrack, findNpc, findSongIdByRegionId, musicRegions } from '@engine/config/config-handler';
 
 import {
     DefensiveBonuses,
@@ -41,7 +41,7 @@ import {
     OffensiveBonuses,
     SkillBonuses
 } from '@engine/config/item-config';
-import { findItem, findQuest, npcIdMap, widgets } from '@engine/config';
+import { findItem, findQuest, npcIdMap, widgets } from '@engine/config/config-handler';
 import { NpcDetails } from '@engine/config/npc-config';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { combatStyles } from '@engine/world/actor/combat';

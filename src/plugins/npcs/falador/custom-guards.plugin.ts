@@ -2,7 +2,7 @@ import { npcInitActionHandler } from '@engine/world/action/npc-init.action';
 import { World } from '@engine/world';
 import { Position } from '@engine/world/position';
 import { world } from '@engine/game-server';
-import { findNpc } from '@engine/config';
+import { findNpc } from '@engine/config/config-handler';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { randomBetween } from '@engine/util/num';
 const npcs = ['rs:guard:0', 'rs:guard:1']

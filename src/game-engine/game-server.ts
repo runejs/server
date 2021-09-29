@@ -8,7 +8,7 @@ import { loadPluginFiles } from '@engine/plugins/content-plugin';
 import { loadPackets } from '@engine/net/inbound-packets';
 import { watchForChanges, watchSource } from '@engine/util/files';
 import { openGameServer } from '@engine/net/server/game-server';
-import { loadCoreConfigurations, loadGameConfigurations, xteaRegions } from '@engine/config';
+import { loadCoreConfigurations, loadGameConfigurations, xteaRegions } from '@engine/config/config-handler';
 import { Quest } from '@engine/world/actor/player/quest';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { Player } from '@engine/world/actor/player/player';

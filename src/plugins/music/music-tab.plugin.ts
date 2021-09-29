@@ -1,5 +1,5 @@
 import { buttonActionHandler } from '@engine/world/action/button.action';
-import { widgets, findMusicTrackByButtonId, findSongIdByRegionId } from '@engine/config';
+import { widgets, findMusicTrackByButtonId, findSongIdByRegionId } from '@engine/config/config-handler';
 import { widgetScripts } from '@engine/world/config/widget';
 import { world } from '@engine/game-server';
 

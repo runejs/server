@@ -3,7 +3,7 @@ import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { logger } from '@runejs/core';
 import { WorldItem } from '@engine/world/items/world-item';
 import { ItemDetails } from '@engine/config/item-config';
-import { findItem } from '@engine/config';
+import { findItem } from '@engine/config/config-handler';
 import { playerWalkTo } from '@engine/game-server';
 import { numberHookFilter, stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
 import { ActionPipe, RunnableHooks } from '@engine/world/action/action-pipeline';

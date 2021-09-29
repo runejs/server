@@ -8,7 +8,7 @@ import { filestore, loopingEvent } from '@engine/game-server';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { colors } from '@engine/util/colors';
-import { findItem, widgets } from '@engine/config';
+import { findItem, widgets } from '@engine/config/config-handler';
 import { PlayerQuest } from '@engine/config/quest-config';
 import { widgetButtonIds, widgetItems } from '@plugins/skills/smithing/smelting-constants';
 import { Bar } from '@plugins/skills/smithing/smelting-types';

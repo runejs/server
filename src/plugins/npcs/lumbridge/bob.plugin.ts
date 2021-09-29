@@ -1,6 +1,6 @@
 import { ContentPlugin } from '@engine/plugins';
 import { NpcInteractionActionHook } from '@engine/world/action';
-import { findShop } from '@engine/config';
+import { findShop } from '@engine/config/config-handler';
 
 
 const bobHook: NpcInteractionActionHook = {

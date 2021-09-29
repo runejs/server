@@ -9,7 +9,7 @@ import { Npc } from '@engine/world/actor/npc/npc';
 import { world } from '@engine/game-server';
 import { itemIds } from '@engine/world/config/item-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
-import { findNpc } from '@engine/config';
+import { findNpc } from '@engine/config/config-handler';
 import EventEmitter from 'events';
 import { logger } from '@runejs/core';
 import { TaskExecutor } from '@engine/world/action/action-pipeline';

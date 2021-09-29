@@ -17,7 +17,7 @@ import { LandscapeObject } from '@runejs/filestore';
 import { Behavior } from './behaviors/behavior';
 import { soundIds } from '../config/sound-ids';
 import { animationIds } from '../config/animation-ids';
-import { findNpc } from '../../config';
+import { findNpc } from '../../config/config-handler';
 import { itemIds } from '../config/item-ids';
 import { Attack, AttackDamageType } from './player/attack';
 import { Effect, EffectType } from './effect';

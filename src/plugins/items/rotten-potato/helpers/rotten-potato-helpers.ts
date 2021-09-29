@@ -1,4 +1,4 @@
-import { findItem, widgets } from '@engine/config';
+import { findItem, widgets } from '@engine/config/config-handler';
 import { ItemDetails } from '@engine/config/item-config';
 import { Rights } from '@engine/world/actor/player/player';
 import { ItemOnItemAction } from '@engine/world/action/item-on-item.action';

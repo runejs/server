@@ -1,6 +1,6 @@
 import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { dialogue, Emote } from '@engine/world/actor/dialogue';
-import { findNpc } from '@engine/config';
+import { findNpc } from '@engine/config/config-handler';
 
 
 const talkTo : npcInteractionActionHandler = (details) => {

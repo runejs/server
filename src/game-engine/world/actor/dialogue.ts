@@ -4,7 +4,7 @@ import { filestore } from '@engine/game-server';
 import { logger } from '@runejs/core';
 import _ from 'lodash';
 import { wrapText } from '@engine/util/strings';
-import { findNpc } from '@engine/config';
+import { findNpc } from '@engine/config/config-handler';
 import { ParentWidget, TextWidget } from '@runejs/filestore';
 
 

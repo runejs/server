@@ -1,7 +1,7 @@
 import { logger } from '@runejs/core';
 import { Position } from '../../world/position';
 import { filestore, world } from '../../game-server';
-import { widgets } from '../../config';
+import { widgets } from '../../config/config-handler';
 import { getVarbitMorphIndex } from "../../util/varbits";
 
 const itemOnObjectPacket = (player, packet) => {

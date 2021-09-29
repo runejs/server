@@ -4,7 +4,7 @@ import { UpdateFlags } from '@engine/world/actor/update-flags';
 import { Packet, PacketType } from '@engine/net/packet';
 import { world } from '@engine/game-server';
 import { stringToLong } from '@engine/util/strings';
-import { findItem, findNpc } from '@engine/config';
+import { findItem, findNpc } from '@engine/config/config-handler';
 import { EquipmentSlot, ItemDetails } from '@engine/config/item-config';
 import { appendMovement, registerNewActors, SyncTask, syncTrackedActors } from './actor-sync';
 import { Player } from '../player';

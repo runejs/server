@@ -10,7 +10,7 @@ import { ByteBuffer } from '@runejs/core/buffer';
 import { Npc } from '@engine/world/actor/npc/npc';
 import { stringToLong } from '@engine/util/strings';
 import { LandscapeObject } from '@runejs/filestore';
-import { xteaRegions } from '@engine/config';
+import { xteaRegions } from '@engine/config/config-handler';
 import { world } from '@engine/game-server';
 import { ConstructedChunk, ConstructedRegion } from '@engine/world/map/region';
 

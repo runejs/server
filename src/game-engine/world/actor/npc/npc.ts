@@ -4,7 +4,7 @@ import { Position } from '@engine/world/position';
 import { filestore, world } from '@engine/game-server';
 import { directionData } from '@engine/world/direction';
 import { QuadtreeKey } from '@engine/world';
-import { findItem, findNpc } from '@engine/config';
+import { findItem, findNpc } from '@engine/config/config-handler';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { DropTable, NpcCombatAnimations, NpcDetails } from '@engine/config/npc-config';
 import { SkillName } from '@engine/world/actor/skills';

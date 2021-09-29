@@ -1,4 +1,4 @@
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 import spawnPotato from '@plugins/items/rotten-potato/hooks/rotten-potato-command-hook';
 import itemOnPotato from '@plugins/items/rotten-potato/hooks/rotten-potato-item-on-item';
 import { ExecuteIfAdmin, RottenPotatoItem } from '@plugins/items/rotten-potato/helpers/rotten-potato-helpers';

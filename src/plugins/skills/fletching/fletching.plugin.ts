@@ -9,7 +9,7 @@ import { Skill } from '@engine/world/actor/skills';
 import { widgetButtonIds, widgetItems } from '@plugins/skills/smithing/smelting-constants';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { colors } from '@engine/util/colors';
-import { findItem, widgets } from '@engine/config';
+import { findItem, widgets } from '@engine/config/config-handler';
 import { Fletchable } from '@plugins/skills/fletching/fletching-types';
 import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
 

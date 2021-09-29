@@ -10,7 +10,7 @@ import TravelLocations from '@engine/world/config/travel-locations';
 import { Actor } from '@engine/world/actor/actor';
 import { schedule } from '@engine/world/task';
 import { parseScenerySpawns } from '@engine/world/config/scenery-spawns';
-import { findItem, findNpc, findObject, itemSpawns, npcSpawns } from '@engine/config';
+import { findItem, findNpc, findObject, itemSpawns, npcSpawns } from '@engine/config/config-handler';
 import { NpcDetails } from '@engine/config/npc-config';
 import { WorldInstance } from '@engine/world/instances';
 import { Direction } from '@engine/world/direction';
