@@ -2,7 +2,7 @@ import { Player, playerOptions } from '../../world/actor/player/player';
 import { world } from '../../game-server';
 import { World } from '../../world';
 import { logger } from '@runejs/core';
-import { PacketData } from '../inbound-packets';
+import { PacketData } from '../inbound-packet-handler';
 
 
 const magicAttackPacket = (player: Player, packet: PacketData) => {

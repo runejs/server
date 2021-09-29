@@ -3,7 +3,7 @@ import { ConnectionStatus, SocketServer } from '@runejs/core/net';
 import { ByteBuffer } from '@runejs/core/buffer';
 import { Socket } from 'net';
 import { ServerGateway } from '@engine/net/server/server-gateway';
-import { handlePacket, incomingPackets } from '@engine/net/inbound-packets';
+import { handlePacket, incomingPackets } from '@engine/net/inbound-packet-handler';
 import { Player } from '@engine/world/actor/player/player';
 
 

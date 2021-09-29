@@ -19,7 +19,7 @@ import { ConstructedChunk, ConstructedRegion } from '@engine/world/map/region';
 /**
  * A helper class for sending various network packets back to the game client.
  */
-export class OutboundPackets {
+export class OutboundPacketHandler {
 
     private static privateMessageCounter: number = Math.floor(Math.random() * 100000000);
 
@@ -63,7 +63,7 @@ export class OutboundPackets {
         const packet = new Packet(51, PacketType.DYNAMIC_SMALL);
         packet.put(stringToLong(sender.username.toLowerCase()), 'LONG');
         packet.put(32767, 'SHORT');
-        packet.put(OutboundPackets.privateMessageCounter++, 'INT24');
+        packet.put(OutboundPacketHandler.privateMessageCounter++, 'INT24');
         packet.put(sender.rights);
         packet.putBytes(Buffer.from(message));
         this.queue(packet);

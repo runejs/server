@@ -5,7 +5,7 @@ import { Filestore, LandscapeObject } from '@runejs/filestore';
 
 import { ServerConfig } from '@engine/config/server-config';
 import { loadPluginFiles } from '@engine/plugins/content-plugin';
-import { loadPackets } from '@engine/net/inbound-packets';
+import { loadPackets } from '@engine/net/inbound-packet-handler';
 import { watchForChanges, watchSource } from '@engine/util/files';
 import { openGameServer } from '@engine/net/server/game-server';
 import { loadCoreConfigurations, loadGameConfigurations, xteaRegions } from '@engine/config/config-handler';

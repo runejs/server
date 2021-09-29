@@ -3,7 +3,7 @@ import { world } from '../../game-server';
 import { World } from '../../world';
 import { widgets } from '../../config/config-handler';
 import { Player } from '@engine/world/actor/player/player';
-import { PacketData } from '@engine/net/inbound-packets';
+import { PacketData } from '@engine/net/inbound-packet-handler';
 
 const itemOnPlayerPacket = (player: Player, packet: PacketData) => {
     const { buffer } = packet;

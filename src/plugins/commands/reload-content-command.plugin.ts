@@ -1,6 +1,6 @@
 import { commandActionHandler } from '@engine/world/action/player-command.action';
 import { loadPlugins } from '@engine/game-server';
-import { loadPackets } from '@engine/net/inbound-packets';
+import { loadPackets } from '@engine/net/inbound-packet-handler';
 import { loadGameConfigurations } from '@engine/config/config-handler';
 import { logger } from '@runejs/core';
 

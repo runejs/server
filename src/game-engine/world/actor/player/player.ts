@@ -1,5 +1,5 @@
 import { AddressInfo, Socket } from 'net';
-import { OutboundPackets } from '@engine/net/outbound-packets';
+import { OutboundPacketHandler } from '@engine/net/outbound-packet-handler';
 import { Isaac } from '@engine/net/isaac';
 import { PlayerSyncTask } from './sync/player-sync-task';
 import { Actor } from '../actor';
@@ -134,7 +134,7 @@ export class Player extends Actor {
     private readonly _socket: Socket;
     private readonly _inCipher: Isaac;
     private readonly _outCipher: Isaac;
-    private readonly _outgoingPackets: OutboundPackets;
+    private readonly _outgoingPackets: OutboundPacketHandler;
     private readonly _equipment: ItemContainer;
     private _rights: Rights;
     private loggedIn: boolean;
@@ -162,7 +162,7 @@ export class Player extends Actor {
         this.passwordHash = password;
         this._rights = Rights.ADMIN;
         this.isLowDetail = isLowDetail;
-        this._outgoingPackets = new OutboundPackets(this);
+        this._outgoingPackets = new OutboundPacketHandler(this);
         this.playerUpdateTask = new PlayerSyncTask(this);
         this.npcUpdateTask = new NpcSyncTask(this);
         this.trackedPlayers = [];
@@ -1272,7 +1272,7 @@ export class Player extends Actor {
         return this._outCipher;
     }
 
-    public get outgoingPackets(): OutboundPackets {
+    public get outgoingPackets(): OutboundPacketHandler {
         return this._outgoingPackets;
     }
 
