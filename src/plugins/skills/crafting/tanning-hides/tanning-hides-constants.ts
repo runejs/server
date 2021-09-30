@@ -2,7 +2,7 @@ import { Item } from '@engine/world/items/item';
 import { widgets } from '@engine/config';
 import { itemIds } from '@engine/world/config/item-ids';
 
-interface TanableHide {
+export interface TanableHide {
     hideId: number;
     requiredLevel: number;
     ingredients: Item;
@@ -101,33 +101,33 @@ export const widgetButtonIds: Map<number, TanButton> = new Map<number, TanButton
     [148, { shouldTakeInput: false, count: 1, hide: COWHIDE_LEATHER }],
     [140, { shouldTakeInput: false, count: 5, hide: COWHIDE_LEATHER }],
     [132, { shouldTakeInput: true, count: 0, hide: COWHIDE_LEATHER }],
-    [124, { shouldTakeInput: false, count: 0, hide: COWHIDE_LEATHER }],
+    [124, { shouldTakeInput: false, count: -1, hide: COWHIDE_LEATHER }],
     [149, { shouldTakeInput: false, count: 1, hide: COWHIDE_HARDLEATHER }],
     [141, { shouldTakeInput: false, count: 5, hide: COWHIDE_HARDLEATHER }],
     [133, { shouldTakeInput: true, count: 0, hide: COWHIDE_HARDLEATHER }],
-    [125, { shouldTakeInput: false, count: 0, hide: COWHIDE_HARDLEATHER }],
+    [125, { shouldTakeInput: false, count: -1, hide: COWHIDE_HARDLEATHER }],
     [150, { shouldTakeInput: false, count: 1, hide: SNAKEHIDE }],
     [142, { shouldTakeInput: false, count: 5, hide: SNAKEHIDE }],
     [134, { shouldTakeInput: true, count: 0, hide: SNAKEHIDE }],
-    [126, { shouldTakeInput: false, count: 0, hide: SNAKEHIDE }],
+    [126, { shouldTakeInput: false, count: -1, hide: SNAKEHIDE }],
     [151, { shouldTakeInput: false, count: 1, hide: SNAKEHIDE_TEMPLE_TREKKING }],
     [143, { shouldTakeInput: false, count: 5, hide: SNAKEHIDE_TEMPLE_TREKKING }],
     [135, { shouldTakeInput: true, count: 0, hide: SNAKEHIDE_TEMPLE_TREKKING }],
-    [127, { shouldTakeInput: false, count: 0, hide: SNAKEHIDE_TEMPLE_TREKKING }],
+    [127, { shouldTakeInput: false, count: -1, hide: SNAKEHIDE_TEMPLE_TREKKING }],
     [152, { shouldTakeInput: false, count: 1, hide: GREEN_D_HIDE }],
     [144, { shouldTakeInput: false, count: 5, hide: GREEN_D_HIDE }],
     [136, { shouldTakeInput: true, count: 0, hide: GREEN_D_HIDE }],
-    [128, { shouldTakeInput: false, count: 0, hide: GREEN_D_HIDE }],
+    [128, { shouldTakeInput: false, count: -1, hide: GREEN_D_HIDE }],
     [153, { shouldTakeInput: false, count: 1, hide: BLUE_D_HIDE }],
     [145, { shouldTakeInput: false, count: 5, hide: BLUE_D_HIDE }],
     [137, { shouldTakeInput: true, count: 0, hide: BLUE_D_HIDE }],
-    [129, { shouldTakeInput: false, count: 0, hide: BLUE_D_HIDE }],
+    [129, { shouldTakeInput: false, count: -1, hide: BLUE_D_HIDE }],
     [154, { shouldTakeInput: false, count: 1, hide: RED_D_HIDE }],
     [146, { shouldTakeInput: false, count: 5, hide: RED_D_HIDE }],
     [138, { shouldTakeInput: true, count: 0, hide: RED_D_HIDE }],
-    [130, { shouldTakeInput: false, count: 0, hide: RED_D_HIDE }],
+    [130, { shouldTakeInput: false, count: -1, hide: RED_D_HIDE }],
     [155, { shouldTakeInput: false, count: 1, hide: BLACK_D_HIDE }],
     [147, { shouldTakeInput: false, count: 5, hide: BLACK_D_HIDE }],
     [139, { shouldTakeInput: true, count: 0, hide: BLACK_D_HIDE }],
-    [131, { shouldTakeInput: false, count: 0, hide: BLACK_D_HIDE }],
+    [131, { shouldTakeInput: false, count: -1, hide: BLACK_D_HIDE }],
 ]);
