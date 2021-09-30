@@ -698,12 +698,7 @@ export class Player extends Actor {
     }
 
     public hasEnoughCoins(amount: number): boolean {
-        const isEnough = this.inventory.items.filter(item => item != null && item.itemId === itemIds.coins && item.amount >= amount).length !== 0;
-        if (!isEnough) {
-            this.sendMessage(`You don't have enough coins.`);
-            return false
-        }
-        return true;
+        return this.inventory.items.filter(item => item != null && item.itemId === itemIds.coins && item.amount >= amount).length !== 0;
     }
 
     public removeCoins(buyCost: number): void {
