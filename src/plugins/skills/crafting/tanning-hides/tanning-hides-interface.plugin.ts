@@ -2,11 +2,9 @@
 import { NpcInteractionAction, NpcInteractionActionHook } from '@engine/world/action/npc-interaction.action';
 import { ButtonAction, buttonActionHandler, ButtonActionHook } from '@engine/world/action/button.action';
 import { widgets } from '@engine/config';
-import { Skill } from '@engine/world/actor/skills';
 import { TaskExecutor } from '@engine/world/action';
 import { colors } from '@engine/util/colors';
 import { findItem } from '@engine/config';
-import { Item } from '@engine/world/items/item';
 import { Player } from '@engine/world/actor/player/player';
 
 import { widgetButtonIds, widgetModelSlots } from './tanning-hides-constants';
