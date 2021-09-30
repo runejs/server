@@ -2,7 +2,7 @@ name: Lint & Build Project
 
 on:
     pull_request:
-        branches: [ master, develop ]
+        branches: [ master, develop, feature/** ]
     push:
         branches: [ master, develop ]
 
