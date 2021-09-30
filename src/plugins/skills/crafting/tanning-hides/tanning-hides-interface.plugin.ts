@@ -31,16 +31,16 @@ const loadTanHidesInterface = (player: Player) => {
 
         // Use the custom label or use the cache label for the item
         const hideName: string = modelSlot.item.output.label || findItem(modelSlot.item.output.itemId).name;
-        player.outgoingPackets.setItemOnWidget(widgets.tanningHidesInterface, modelSlot.slotId, modelSlot.item.hideId, 250)
+        player.outgoingPackets.setItemOnWidget(widgets.tanningHidesInterface, modelSlot.slotId, modelSlot.item.hideId, 250);
 
         // Set all label colors to red
-        player.modifyWidget(widgets.tanningHidesInterface, { childId: modelSlot.titleLabel, text: hideName, textColor: colors.red })
-        player.modifyWidget(widgets.tanningHidesInterface, { childId: modelSlot.costLabel, text: `${modelSlot.item.cost} coins`, textColor: colors.red })
+        player.modifyWidget(widgets.tanningHidesInterface, { childId: modelSlot.titleLabel, text: hideName, textColor: colors.red });
+        player.modifyWidget(widgets.tanningHidesInterface, { childId: modelSlot.costLabel, text: `${modelSlot.item.cost} coins`, textColor: colors.red });
 
         // Check & set the correct colors when requirements are met
         if (player.hasItemInInventory(modelSlot.item.ingredients) && player.hasEnoughCoins(modelSlot.item.cost)) {
-            player.modifyWidget(widgets.tanningHidesInterface, { childId: modelSlot.titleLabel, textColor: colors.cyan })
-            player.modifyWidget(widgets.tanningHidesInterface, { childId: modelSlot.costLabel, textColor: colors.cyan })
+            player.modifyWidget(widgets.tanningHidesInterface, { childId: modelSlot.titleLabel, textColor: colors.cyan });
+            player.modifyWidget(widgets.tanningHidesInterface, { childId: modelSlot.costLabel, textColor: colors.cyan });
         }
     })
 };
@@ -80,9 +80,9 @@ const activate = (task: TaskExecutor<ButtonAction>): void => {
     if (!hideToTan.shouldTakeInput) {
         for (let i = 0; i < hideToTan.count; i++) {
             if (!player.hasItemInInventory(hideToTan.hide.hideId)) break;
-            player.removeFirstItem(hideToTan.hide.hideId)
-            player.removeCoins(hideToTan.hide.cost)
-            player.giveItem(hideToTan.hide.output.itemId)
+            player.removeFirstItem(hideToTan.hide.hideId);
+            player.removeCoins(hideToTan.hide.cost);
+            player.giveItem(hideToTan.hide.output.itemId);
         }
     }
 
