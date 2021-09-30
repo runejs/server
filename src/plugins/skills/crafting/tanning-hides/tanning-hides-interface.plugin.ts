@@ -38,7 +38,7 @@ const loadTanHidesInterface = (player: Player) => {
         player.modifyWidget(widgets.tanningHidesInterface, { childId: modelSlot.costLabel, text: `${modelSlot.item.cost} coins`, textColor: colors.red })
 
         // Check & set the correct colors when requirements are met
-        if (player.hasItemInInventory(modelSlot.item.ingredients) && player.hasCoins(modelSlot.item.cost)) {
+        if (player.hasItemInInventory(modelSlot.item.ingredients) && player.hasEnoughCoins(modelSlot.item.cost)) {
             player.modifyWidget(widgets.tanningHidesInterface, { childId: modelSlot.titleLabel, textColor: colors.cyan })
             player.modifyWidget(widgets.tanningHidesInterface, { childId: modelSlot.costLabel, textColor: colors.cyan })
         }
