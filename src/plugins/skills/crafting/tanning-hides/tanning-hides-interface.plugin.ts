@@ -7,7 +7,7 @@ import { colors } from '@engine/util/colors';
 import { findItem } from '@engine/config';
 import { Player } from '@engine/world/actor/player/player';
 
-import { widgetButtonIds, widgetModelSlots } from './tanning-hides-constants';
+import { widgetButtonIds, widgetModelSlots, TanableHide } from './tanning-hides-constants';
 
 /**
  * Opens the "Tan Hides" interface
@@ -78,16 +78,35 @@ const activate = (task: TaskExecutor<ButtonAction>): void => {
     const hideToTan = widgetButtonIds.get(buttonId);
 
     if (!hideToTan.shouldTakeInput) {
-        for (let i = 0; i < hideToTan.count; i++) {
-            if (!player.hasItemInInventory(hideToTan.hide.hideId)) break;
-            player.removeFirstItem(hideToTan.hide.hideId);
-            player.removeCoins(hideToTan.hide.cost);
-            player.giveItem(hideToTan.hide.output.itemId);
-        }
+        tanHide(player, hideToTan.hide, hideToTan.count);
+    } else {
+        const numericInput = player.numericInputEvent.subscribe((amount) => {
+            numericInput?.unsubscribe();
+            tanHide(player, hideToTan.hide, amount);
+        });
+
+        player.outgoingPackets.showNumberInputDialogue();
     }
 
     player.sendMessage(`The tanner tans your ${findItem(hideToTan.hide.hideId).name.toLowerCase()}.`);
 }
+
+const tanHide = (player: Player, hide: TanableHide, amount: number): void => {
+    let trueAmount = 0;
+
+    if (amount === -1) {
+        trueAmount = player.inventory.findAll(hide.hideId).length;
+    } else {
+        trueAmount = amount; 
+    }
+
+    for (let i = 0; i < trueAmount; i++) {
+        if (!player.hasItemInInventory(hide.hideId)) break;
+        player.removeFirstItem(hide.hideId);
+        player.removeCoins(hide.cost);
+        player.giveItem(hide.output.itemId);
+    }
+};
 
 export default {
     pluginId: 'rs:tanning-hides-interface',
