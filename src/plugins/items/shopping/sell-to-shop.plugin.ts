@@ -70,7 +70,7 @@ export const handler: itemInteractionActionHandler = (details) => {
 
     const sellPrice = sellAmount * itemValue; // @TODO scale price per item, not per sale
     if(sellPrice > 0) {
-        let coinsIndex = player.hasCoins(1);
+        let coinsIndex = player.hasEnoughCoins(1);
 
         if(coinsIndex === -1) {
             coinsIndex = inventory.getFirstOpenSlot();

@@ -50,7 +50,7 @@ export const handler: itemInteractionActionHandler = (details) => {
     const buyItem = findItem(itemId);
     const buyItemValue = buyItem.value || 0;
     let buyCost = buyAmount * buyItemValue;
-    const coinsIndex = player.hasCoins(buyCost);
+    const coinsIndex = player.hasEnoughCoins(buyCost);
 
     if(coinsIndex === -1) {
         player.sendMessage(`You don't have enough coins.`);
