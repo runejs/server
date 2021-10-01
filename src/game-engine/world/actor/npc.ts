@@ -1,23 +1,15 @@
-import { Actor } from '@engine/world/actor/actor';
 import uuidv4 from 'uuid/v4';
-import { Position } from '@engine/world/position';
-import { filestore, world } from '@engine/game-server';
-import { directionData } from '@engine/world/direction';
-import { QuadtreeKey } from '@engine/world/world';
-import { findItem, findNpc } from '@engine/config/config-handler';
-import { animationIds } from '@engine/world/config/animation-ids';
-import { DropTable, NpcCombatAnimations, NpcDetails } from '@engine/config/npc-config';
-import { SkillName } from '@engine/world/actor/skills';
-import { NpcSpawn } from '@engine/config/npc-spawn-config';
-import { MeleeCombatBehavior } from './behaviors/melee-combat.behavior';
-import { forEach } from 'lodash';
-import { Behavior } from './behaviors/behavior';
 import EventEmitter from 'events';
-import { soundIds } from '../config/sound-ids';
-import { Player } from './player/player';
-import { itemIds } from '../config/item-ids';
-import { logger } from '@runejs/core';
 
+import { filestore, world } from '@engine/game-server';
+import { Position, directionData, QuadtreeKey } from '@engine/world';
+import { findItem, findNpc, NpcCombatAnimations, NpcDetails, NpcSpawn } from '@engine/config';
+import { MeleeCombatBehavior } from './behaviors/melee-combat.behavior';
+import { soundIds, animationIds } from '@engine/world/config';
+
+import { Actor } from './actor';
+import { SkillName } from './skills';
+import { Player } from './player';
 
 /**
  * Represents a non-player character within the game world.
