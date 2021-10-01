@@ -1,8 +1,8 @@
 import { Player } from '@engine/world/actor/player/player';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
-import { Npc } from '../actor/npc/npc';
+import { ActionPipe, RunnableHooks } from '@engine/world/action/action-pipeline';
+import { Npc } from '../actor/npc';
 
 
 /**

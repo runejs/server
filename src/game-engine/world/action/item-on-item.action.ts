@@ -2,7 +2,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { Item } from '@engine/world/items/item';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe, RunnableHooks } from '@engine/world/action/index';
+import { ActionPipe, RunnableHooks } from '@engine/world/action/action-pipeline';
 
 
 /**

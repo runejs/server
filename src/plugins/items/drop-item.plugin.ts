@@ -3,7 +3,7 @@ import { soundIds } from '@engine/world/config/sound-ids';
 import { getItemFromContainer } from '@engine/world/items/item-container';
 import { serverConfig } from '@engine/game-server';
 import { Rights } from '@engine/world/actor/player/player';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 import { dialogue, execute } from '@engine/world/actor/dialogue';
 
 

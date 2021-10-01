@@ -1,21 +1,21 @@
-import { World } from './world';
+import { World } from './world/world';
 import { logger } from '@runejs/core';
 import { parseServerConfig } from '@runejs/core/net';
 import { Filestore, LandscapeObject } from '@runejs/filestore';
 
 import { ServerConfig } from '@engine/config/server-config';
 import { loadPluginFiles } from '@engine/plugins/content-plugin';
-import { loadPackets } from '@engine/net/inbound-packets';
+import { loadPackets } from '@engine/net/inbound-packet-handler';
 import { watchForChanges, watchSource } from '@engine/util/files';
 import { openGameServer } from '@engine/net/server/game-server';
-import { loadCoreConfigurations, loadGameConfigurations, xteaRegions } from '@engine/config';
+import { loadCoreConfigurations, loadGameConfigurations, xteaRegions } from '@engine/config/config-handler';
 import { Quest } from '@engine/world/actor/player/quest';
-import { Npc } from '@engine/world/actor/npc/npc';
+import { Npc } from '@engine/world/actor/npc';
 import { Player } from '@engine/world/actor/player/player';
 import { Subject, timer } from 'rxjs';
 import { Position } from '@engine/world/position';
 import { ActionHook, sortActionHooks } from '@engine/world/action/hooks';
-import { ActionType } from '@engine/world/action';
+import { ActionType } from '@engine/world/action/action-pipeline';
 
 
 /**

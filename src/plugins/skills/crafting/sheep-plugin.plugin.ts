@@ -1,4 +1,4 @@
-import { World } from '@engine/world';
+import { World } from '@engine/world/world';
 import { itemOnNpcActionHandler } from '@engine/world/action/item-on-npc.action';
 import { itemIds } from '@engine/world/config/item-ids';
 import { soundIds } from '@engine/world/config/sound-ids';

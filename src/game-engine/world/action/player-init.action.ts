@@ -1,6 +1,6 @@
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { Player } from '@engine/world/actor/player/player';
-import { ActionPipe } from '@engine/world/action/index';
+import { ActionPipe } from '@engine/world/action/action-pipeline';
 
 
 /**

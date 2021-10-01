@@ -3,7 +3,7 @@ import { world } from '@engine/game-server';
 import { WorldItem } from '@engine/world/items/world-item';
 import { Item } from '@engine/world/items/item';
 import { Player } from '@engine/world/actor/player/player';
-import { World } from '@engine/world/index';
+import { World } from '@engine/world/world';
 import { schedule } from '@engine/world/task';
 import { CollisionMap } from '@engine/world/map/collision-map';
 import { LandscapeObject } from '@runejs/filestore';

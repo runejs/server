@@ -4,7 +4,7 @@ import { filestore } from '@engine/game-server';
 import _ from 'lodash';
 import { NpcConfig } from '@runejs/filestore';
 import { logger } from '@runejs/core';
-import { QuestRequirement } from '@engine/world/action';
+import { QuestRequirement } from '@engine/world/action/action-pipeline';
 
 
 export interface NpcSkills {

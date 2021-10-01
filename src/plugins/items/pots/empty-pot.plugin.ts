@@ -2,7 +2,7 @@ import { itemInteractionActionHandler } from '@engine/world/action/item-interact
 import { soundIds } from '@engine/world/config/sound-ids';
 import { itemIds } from '@engine/world/config/item-ids';
 import { getItemFromContainer } from '@engine/world/items/item-container';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 
 export const action: itemInteractionActionHandler = (details) => {
     const { player, itemId, itemSlot } = details;

@@ -3,7 +3,7 @@ import { objectInteractionActionHandler } from '@engine/world/action/object-inte
 import { ItemContainer } from '@engine/world/items/item-container';
 import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
 import { fromNote, Item } from '@engine/world/items/item';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 
 export const openDepositBoxInterface: objectInteractionActionHandler = ({ player }) => {
 

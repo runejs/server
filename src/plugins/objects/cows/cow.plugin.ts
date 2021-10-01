@@ -6,7 +6,7 @@ import { itemIds } from '@engine/world/config/item-ids';
 import { objectIds } from '@engine/world/config/object-ids';
 import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
 import { Player } from '@engine/world/actor/player/player';
-import { findItem, findNpc } from '@engine/config';
+import { findItem, findNpc } from '@engine/config/config-handler';
 import { ObjectConfig } from '@runejs/filestore';
 
 

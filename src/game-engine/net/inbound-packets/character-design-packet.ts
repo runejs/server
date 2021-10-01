@@ -1,5 +1,5 @@
 import { Player } from '@engine/world/actor/player/player';
-import { PacketData } from '@engine/net/inbound-packets';
+import { PacketData } from '@engine/net/inbound-packet-handler';
 
 
 const characterDesignPacket = (player: Player, packet: PacketData) => {

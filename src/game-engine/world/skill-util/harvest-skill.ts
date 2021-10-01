@@ -10,7 +10,7 @@ import { colors } from '@engine/util/colors';
 import { checkForGemBoost } from '@engine/world/skill-util/glory-boost';
 import { colorText } from '@engine/util/strings';
 import { rollBirdsNestType, rollGemRockResult, rollGemType } from '@engine/world/skill-util/harvest-roll';
-import { findItem } from '@engine/config';
+import { findItem } from '@engine/config/config-handler';
 
 export function canInitiateHarvest(player: Player, target: IHarvestable, skill: Skill): undefined | HarvestTool {
     if (!target) {

@@ -1,6 +1,6 @@
 import { actionHookMap } from '@engine/game-server';
 import { QuestKey } from '@engine/config/quest-config';
-import { ActionStrength, ActionType } from '@engine/world/action';
+import { ActionStrength, ActionType } from '@engine/world/action/action-pipeline';
 import { HookTask } from '@engine/world/action/hooks/task';
 
 

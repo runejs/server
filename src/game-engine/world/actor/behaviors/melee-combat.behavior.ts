@@ -6,7 +6,7 @@ import { Behavior, BehaviorType } from './behavior';
 import { Timestamp } from 'rxjs/dist/types/internal/types';
 import { timestamp } from 'rxjs/dist/types/operators';
 import { Player } from '../player/player';
-import { Npc } from '../npc/npc';
+import { Npc } from '../npc';
 
 //This is exclusively for NPCs - use Auto-attack for players
 export class MeleeCombatBehavior extends Behavior {

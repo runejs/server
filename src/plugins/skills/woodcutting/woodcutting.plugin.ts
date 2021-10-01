@@ -12,8 +12,8 @@ import { rollBirdsNestType } from '@engine/world/skill-util/harvest-roll';
 import { world } from '@engine/game-server';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { Axe, getAxe, HarvestTool } from '@engine/world/config/harvest-tool';
-import { TaskExecutor } from '@engine/world/action';
-import { findItem } from '@engine/config';
+import { TaskExecutor } from '@engine/world/action/action-pipeline';
+import { findItem } from '@engine/config/config-handler';
 
 
 const canActivate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: number): boolean => {

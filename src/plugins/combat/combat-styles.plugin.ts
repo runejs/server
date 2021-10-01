@@ -2,7 +2,7 @@ import { equipmentChangeActionHandler, EquipmentChangeAction } from '@engine/wor
 import { ItemDetails, WeaponStyle, weaponWidgetIds } from '@engine/config/item-config';
 import { widgetScripts } from '@engine/world/config/widget';
 import { Player, SidebarTab } from '@engine/world/actor/player/player';
-import { findItem, widgets } from '@engine/config';
+import { findItem, widgets } from '@engine/config/config-handler';
 import { buttonActionHandler } from '@engine/world/action/button.action';
 import { combatStyles } from '@engine/world/actor/combat';
 import { serverConfig } from '@engine/game-server';

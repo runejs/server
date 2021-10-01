@@ -6,7 +6,7 @@ import { Skill } from '@engine/world/actor/skills';
 import { filestore, loopingEvent } from '@engine/game-server';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { objectIds } from '@engine/world/config/object-ids';
-import { findItem, widgets } from '@engine/config';
+import { findItem, widgets } from '@engine/config/config-handler';
 
 interface Spinnable {
     input: number | number[];

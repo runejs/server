@@ -1,5 +1,5 @@
 import { AddressInfo, Socket } from 'net';
-import { OutboundPackets } from '@engine/net/outbound-packets';
+import { OutboundPacketHandler } from '@engine/net/outbound-packet-handler';
 import { Isaac } from '@engine/net/isaac';
 import { PlayerSyncTask } from './sync/player-sync-task';
 import { Actor } from '../actor';
@@ -20,17 +20,17 @@ import {
 import { PlayerWidget, widgetScripts } from '../../config/widget';
 import { ContainerUpdateEvent, getItemFromContainer, ItemContainer } from '../../items/item-container';
 import { Item } from '../../items/item';
-import { Npc } from '../npc/npc';
+import { Npc } from '../npc';
 import { NpcSyncTask } from './sync/npc-sync-task';
 import { Subject } from 'rxjs';
 import { Chunk, ChunkUpdateItem } from '@engine/world/map/chunk';
-import { QuadtreeKey } from '@engine/world';
+import { QuadtreeKey } from '@engine/world/world';
 import { daysSinceLastLogin } from '@engine/util/time';
 import { itemIds } from '@engine/world/config/item-ids';
 import { colors, hexToRgb, rgbTo16Bit } from '@engine/util/colors';
 import { PlayerCommandActionHook } from '@engine/world/action/player-command.action';
 import { updateBonusStrings } from '@plugins/items/equipment/equipment-stats.plugin';
-import { findMusicTrack, findNpc, findSongIdByRegionId, musicRegions } from '@engine/config/index';
+import { findMusicTrack, findNpc, findSongIdByRegionId, musicRegions } from '@engine/config/config-handler';
 
 import {
     DefensiveBonuses,
@@ -41,7 +41,7 @@ import {
     OffensiveBonuses,
     SkillBonuses
 } from '@engine/config/item-config';
-import { findItem, findQuest, npcIdMap, widgets } from '@engine/config';
+import { findItem, findQuest, npcIdMap, widgets } from '@engine/config/config-handler';
 import { NpcDetails } from '@engine/config/npc-config';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { combatStyles } from '@engine/world/actor/combat';
@@ -134,7 +134,7 @@ export class Player extends Actor {
     private readonly _socket: Socket;
     private readonly _inCipher: Isaac;
     private readonly _outCipher: Isaac;
-    private readonly _outgoingPackets: OutboundPackets;
+    private readonly _outgoingPackets: OutboundPacketHandler;
     private readonly _equipment: ItemContainer;
     private _rights: Rights;
     private loggedIn: boolean;
@@ -162,7 +162,7 @@ export class Player extends Actor {
         this.passwordHash = password;
         this._rights = Rights.ADMIN;
         this.isLowDetail = isLowDetail;
-        this._outgoingPackets = new OutboundPackets(this);
+        this._outgoingPackets = new OutboundPacketHandler(this);
         this.playerUpdateTask = new PlayerSyncTask(this);
         this.npcUpdateTask = new NpcSyncTask(this);
         this.trackedPlayers = [];
@@ -1272,7 +1272,7 @@ export class Player extends Actor {
         return this._outCipher;
     }
 
-    public get outgoingPackets(): OutboundPackets {
+    public get outgoingPackets(): OutboundPacketHandler {
         return this._outgoingPackets;
     }
 

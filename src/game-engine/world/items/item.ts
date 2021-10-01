@@ -1,5 +1,5 @@
 import { filestore } from '@engine/game-server';
-import { findItem, itemMap, widgets } from '@engine/config';
+import { findItem, itemMap, widgets } from '@engine/config/config-handler';
 import { ParentWidget, StaticItemWidget, WidgetBase } from '@runejs/filestore';
 
 

@@ -1,6 +1,6 @@
 import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
 import { Shop } from '@engine/config/shop-config';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 
 export const shopSellValueHandler: itemInteractionActionHandler = ({ player, itemDetails }) => {
     const itemValue = itemDetails.value || 1;

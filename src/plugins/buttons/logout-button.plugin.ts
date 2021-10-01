@@ -1,6 +1,6 @@
 import { buttonActionHandler } from '@engine/world/action/button.action';
 import { world } from '@engine/game-server';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 
 
 export const handler: buttonActionHandler = (details) => {

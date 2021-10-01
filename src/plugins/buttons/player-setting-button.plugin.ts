@@ -1,5 +1,5 @@
 import { buttonActionHandler } from '@engine/world/action/button.action';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 
 const buttonIds: number[] = [
     0, // walk/run

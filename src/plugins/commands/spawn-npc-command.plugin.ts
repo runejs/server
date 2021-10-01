@@ -1,7 +1,7 @@
 import { commandActionHandler } from '@engine/world/action/player-command.action';
 import { world } from '@engine/game-server';
-import { Npc } from '@engine/world/actor/npc/npc';
-import { findNpc } from '@engine/config';
+import { Npc } from '@engine/world/actor/npc';
+import { findNpc } from '@engine/config/config-handler';
 import { NpcDetails } from '@engine/config/npc-config';
 import { NpcSpawn } from '@engine/config/npc-spawn-config';
 

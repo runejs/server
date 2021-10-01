@@ -4,7 +4,7 @@ import {
     widgetInteractionActionHandler,
     WidgetInteractionActionHook
 } from '@engine/world/action/widget-interaction.action';
-import { skillGuides, widgets } from '@engine/config';
+import { skillGuides, widgets } from '@engine/config/config-handler';
 import { SkillGuide, SkillSubGuide } from '@engine/config/skill-guide-config';
 
 

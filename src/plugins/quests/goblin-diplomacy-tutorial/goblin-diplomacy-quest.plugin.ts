@@ -5,7 +5,7 @@ import uuidv4 from 'uuid/v4';
 import { logger } from '@runejs/core';
 import { Position } from '@engine/world/position';
 import { WorldInstance } from '@engine/world/instances';
-import { findNpc, widgets } from '@engine/config';
+import { findNpc, widgets } from '@engine/config/config-handler';
 import { updateCombatStyleWidget } from '@plugins/combat/combat-styles.plugin';
 import { Subject } from 'rxjs';
 import { dialogue } from '@engine/world/actor/dialogue';

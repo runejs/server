@@ -1,7 +1,7 @@
 import { ByteBuffer } from '@runejs/core/buffer';
 
 import { Packet, PacketType } from '@engine/net/packet';
-import { Npc } from '@engine/world/actor/npc/npc';
+import { Npc } from '@engine/world/actor/npc';
 import { world } from '@engine/game-server';
 import { registerNewActors, SyncTask, syncTrackedActors } from './actor-sync';
 import { Player } from '../player';

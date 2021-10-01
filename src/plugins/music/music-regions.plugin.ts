@@ -1,4 +1,4 @@
-import { findMusicTrack, findSongIdByRegionId, musicRegionMap, musicRegions, widgets } from '@engine/config';
+import { findMusicTrack, findSongIdByRegionId, musicRegionMap, musicRegions, widgets } from '@engine/config/config-handler';
 import { colors } from '@engine/util/colors';
 import { MusicPlayerMode } from '@plugins/music/music-tab.plugin';
 import { playerInitActionHandler } from '@engine/world/action/player-init.action';

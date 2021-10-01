@@ -2,7 +2,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { Coords, Position } from '@engine/world/position';
 import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
 import { RegionType } from '@engine/world/map/region';
-import { ActionPipe } from '@engine/world/action/index';
+import { ActionPipe } from '@engine/world/action/action-pipeline';
 
 
 /**

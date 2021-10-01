@@ -1,7 +1,7 @@
 import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
-import { World } from '@engine/world';
+import { World } from '@engine/world/world';
 import { itemIds } from '@engine/world/config/item-ids';
-import { findItem } from '@engine/config';
+import { findItem } from '@engine/config/config-handler';
 
 
 export const action: objectInteractionActionHandler = (details) => {

@@ -1,5 +1,5 @@
 import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
-import { World } from '@engine/world';
+import { World } from '@engine/world/world';
 
 
 export const action: objectInteractionActionHandler = (details) => {

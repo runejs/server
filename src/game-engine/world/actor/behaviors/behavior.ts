@@ -1,7 +1,7 @@
 import { Actor } from '../actor';
 import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
 import { Subject } from 'rxjs';
-import { Npc } from '../npc/npc';
+import { Npc } from '../npc';
 import { Player } from '../player/player';
 
 export abstract class Behavior {

@@ -2,9 +2,9 @@ import { ByteBuffer } from '@runejs/core/buffer';
 
 import { world } from '@engine/game-server';
 import { Packet } from '@engine/net/packet';
-import { Npc } from '@engine/world/actor/npc/npc';
+import { Npc } from '@engine/world/actor/npc';
 import { Position } from '@engine/world/position';
-import { QuadtreeKey } from '@engine/world';
+import { QuadtreeKey } from '@engine/world/world';
 import { Actor } from '@engine/world/actor/actor';
 import { Player } from '../player';
 

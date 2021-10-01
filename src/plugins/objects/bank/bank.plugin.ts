@@ -6,7 +6,7 @@ import { itemInteractionActionHandler } from '@engine/world/action/item-interact
 import { fromNote, Item, toNote } from '@engine/world/items/item';
 import { buttonActionHandler } from '@engine/world/action/button.action';
 import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 import { Player } from '@engine/world/actor/player/player';
 
 

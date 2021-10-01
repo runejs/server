@@ -1,8 +1,8 @@
 import { world } from '@engine/game-server';
-import { World } from '@engine/world';
+import { World } from '@engine/world/world';
 import { logger } from '@runejs/core';
 import { Player } from '@engine/world/actor/player/player';
-import { PacketData } from '@engine/net/inbound-packets';
+import { PacketData } from '@engine/net/inbound-packet-handler';
 
 const npcInteractionPacket = (player: Player, packet: PacketData) => {
     const { buffer, packetId } = packet;
