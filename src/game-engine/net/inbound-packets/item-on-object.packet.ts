@@ -1,10 +1,12 @@
 import { logger } from '@runejs/core';
-import { Position } from '../../world/position';
-import { filestore, world } from '../../game-server';
-import { widgets } from '../../config/config-handler';
-import { getVarbitMorphIndex } from "../../util/varbits";
+import { filestore, world } from '@engine/game-server';
+import { Position } from '@engine/world';
+import { widgets } from '@engine/config';
+import { getVarbitMorphIndex } from '@engine/util';
+import { Player } from '@engine/world/actor';
+import { PacketData } from '@engine/net';
 
-const itemOnObjectPacket = (player, packet) => {
+const itemOnObjectPacket = (player: Player, packet: PacketData) => {
     const { buffer } = packet;
     const objectY = buffer.get('short', 'u', 'le');
     const itemId = buffer.get('short', 'u');

@@ -1,15 +1,13 @@
-import { Player, playerOptions } from '../../world/actor/player/player';
-import { world } from '../../game-server';
-import { World } from '../../world/world';
-import { logger } from '@runejs/core';
-import { PacketData } from '../inbound-packet-handler';
+import { world } from '@engine/game-server';
+import { Player } from '@engine/world/actor';
+import { PacketData } from '@engine/net';
 
 
 const magicAttackPacket = (player: Player, packet: PacketData) => {
     const { buffer } = packet;
     const npcWorldIndex = buffer.get('short', 'u'); // unsigned short BE
     const widgetId = buffer.get('short', 'u', 'le'); // unsigned short LE
-    const widgetChildId = buffer.get(); // unsigned short LE
+    const widgetChildId = buffer.get('byte'); // unsigned short LE
 
     const npc = world.npcList[npcWorldIndex];
 

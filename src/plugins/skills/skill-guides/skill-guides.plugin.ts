@@ -5,8 +5,8 @@ import {
     WidgetInteractionActionHook
 } from '@engine/world/action';
 import { Player } from '@engine/world/actor';
-import { loadSkillGuideConfigurations, widgets } from '@engine/config';
-import { SkillGuide, SkillSubGuide } from './skill-guide-config';
+import { widgets } from '@engine/config';
+import { SkillGuide, SkillSubGuide, loadSkillGuideConfigurations } from './skill-guide-config';
 
 
 const skillGuidePath = __dirname.replace(/dist/, 'src');

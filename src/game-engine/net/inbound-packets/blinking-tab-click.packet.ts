@@ -1,6 +1,9 @@
-const blinkingTabClickPacket = (player, packet) => {
+import { Player } from '@engine/world/actor';
+import { PacketData } from '@engine/net';
+
+const blinkingTabClickPacket = (player: Player, packet: PacketData) => {
     const { buffer } = packet;
-    const tabIndex = buffer.get();
+    const tabIndex = buffer.get('byte');
 
     const tabClickEventIndex = player.metadata?.tabClickEvent?.tabIndex || -1;
 

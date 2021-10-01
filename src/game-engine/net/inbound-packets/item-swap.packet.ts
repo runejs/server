@@ -1,6 +1,9 @@
-const itemSwapPacket = (player, packet) => {
+import { Player } from '@engine/world/actor';
+import { PacketData } from '@engine/net';
+
+const itemSwapPacket = (player: Player, packet: PacketData) => {
     const { buffer } = packet;
-    const swapType = buffer.get();
+    const swapType = buffer.get('byte');
     const fromSlot = buffer.get('short', 'u');
     const toSlot = buffer.get('short', 'u', 'le');
     const containerId = buffer.get('short');

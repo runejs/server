@@ -1,10 +1,10 @@
 import { logger } from '@runejs/core';
 
 import { filestore, world } from '@engine/game-server';
-import { Position } from '@engine/world/position';
-import { getVarbitMorphIndex } from '@engine/util/varbits';
-import { PacketData } from '@engine/net/inbound-packet-handler';
-import { Player, Rights } from '@engine/world/actor/player/player';
+import { PacketData } from '@engine/net';
+import { getVarbitMorphIndex } from '@engine/util';
+import { Position } from '@engine/world';
+import { Player, Rights } from '@engine/world/actor';
 
 
 interface ObjectInteractionData {

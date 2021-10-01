@@ -1,6 +1,8 @@
-import { world } from '../../game-server';
+import { world } from '@engine/game-server';
+import { Player } from '@engine/world/actor';
+import { PacketData } from '@engine/net';
 
-const examinePacket = (player, packet) => {
+const examinePacket = (player: Player, packet: PacketData) => {
     const { packetId, buffer } = packet;
     const id = buffer.get('short', 's', 'le');
 

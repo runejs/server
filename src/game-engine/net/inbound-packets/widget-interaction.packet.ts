@@ -1,5 +1,5 @@
-import { Player } from '@engine/world/actor/player/player';
-import { PacketData } from '@engine/net/inbound-packet-handler';
+import { PacketData } from '@engine/net';
+import { Player } from '@engine/world/actor';
 
 
 const widgetInteractionPacket = (player: Player, packet: PacketData) => {

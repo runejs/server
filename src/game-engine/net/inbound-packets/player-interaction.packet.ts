@@ -1,11 +1,14 @@
-import { playerOptions } from '../../world/actor/player/player';
-import { world } from '../../game-server';
-import { World } from '../../world/world';
 import { logger } from '@runejs/core';
 
-const playerInteractionPacket = (player, packet) => {
+import { world } from '@engine/game-server';
+import { World } from '@engine/world';
+import { Player, playerOptions } from '@engine/world/actor';
+import { PacketData } from '@engine/net';
+import { DataType, Endianness, Signedness } from '@runejs/core/buffer';
+
+const playerInteractionPacket = (player: Player, packet: PacketData) => {
     const { buffer, packetId } = packet;
-    const args = {
+    const args: { [key: number]: [ DataType, Signedness?, Endianness? ] } = {
         68: [ 'short', 'u', 'le' ],
         211: [ 'short', 'u', 'le' ]
     };

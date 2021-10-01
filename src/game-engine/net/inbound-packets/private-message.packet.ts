@@ -1,14 +1,16 @@
-import { longToString } from '../../util/strings';
-import { world } from '../../game-server';
+import { world } from '@engine/game-server';
+import { longToString } from '@engine/util';
+import { Player } from '@engine/world/actor';
+import { PacketData } from '@engine/net';
 
 export default {
     opcode: 207,
     size: -3,
-    handler: (player, packet) => {
+    handler: (player: Player, packet: PacketData) => {
         const { buffer } = packet;
 
         buffer.get('byte'); // junk
-        const nameLong = buffer.get('long');
+        const nameLong = BigInt(buffer.get('long'));
         const username = longToString(nameLong).toLowerCase();
         const messageLength = buffer.length - 9;
         const messageBytes = new Array(messageLength);

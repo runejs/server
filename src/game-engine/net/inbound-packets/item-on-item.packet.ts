@@ -1,7 +1,9 @@
 import { logger } from '@runejs/core';
-import { widgets } from '../../config/config-handler';
+import { widgets } from '@engine/config';
+import { Player } from '@engine/world/actor';
+import { PacketData } from '@engine/net';
 
-const itemOnItemPacket = (player, packet) => {
+const itemOnItemPacket = (player: Player, packet: PacketData) => {
     const { buffer } = packet;
     const usedWithItemId = buffer.get('short', 'u', 'le');
     const usedWithSlot = buffer.get('short', 'u', 'le');
