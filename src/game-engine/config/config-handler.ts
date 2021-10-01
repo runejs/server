@@ -17,9 +17,8 @@ import { loadNpcSpawnConfigurations, NpcSpawn } from '@engine/config/npc-spawn-c
 import { loadShopConfigurations, Shop } from '@engine/config/shop-config';
 import { Quest } from '@engine/world/actor/player/quest';
 import { ItemSpawn, loadItemSpawnConfigurations } from '@engine/config/item-spawn-config';
-import { loadSkillGuideConfigurations, SkillGuide } from '@plugins/skills/skill-guides/skill-guide-config';
 import { loadMusicRegionConfigurations, MusicTrack } from '@engine/config/music-regions-config';
-import { LandscapeObject, loadXteaRegionFiles, ObjectConfig, XteaRegion } from '@runejs/filestore';
+import { loadXteaRegionFiles, ObjectConfig, XteaRegion } from '@runejs/filestore';
 
 require('json5/lib/register');
 

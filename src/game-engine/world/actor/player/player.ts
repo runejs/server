@@ -1,7 +1,7 @@
 import { AddressInfo, Socket } from 'net';
 import { OutboundPacketHandler } from '@engine/net/outbound-packet-handler';
 import { Isaac } from '@engine/net/isaac';
-import { PlayerSyncTask } from './sync/player-sync-task';
+import { PlayerSyncTask } from '@engine/world/actor';
 import { Actor } from '../actor';
 import { Position } from '@engine/world/position';
 import { filestore, actionHookMap, serverConfig, world, questMap } from '@engine/game-server';
@@ -19,9 +19,9 @@ import {
 } from './player-data';
 import { PlayerWidget, widgetScripts } from '../../config/widget';
 import { ContainerUpdateEvent, getItemFromContainer, ItemContainer } from '../../items/item-container';
-import { Item } from '../../items/item';
+import { Item } from '@engine/world';
 import { Npc } from '../npc';
-import { NpcSyncTask } from './sync/npc-sync-task';
+import { NpcSyncTask } from '@engine/world/actor';
 import { Subject } from 'rxjs';
 import { Chunk, ChunkUpdateItem } from '@engine/world/map/chunk';
 import { QuadtreeKey } from '@engine/world/world';
@@ -29,7 +29,6 @@ import { daysSinceLastLogin } from '@engine/util/time';
 import { itemIds } from '@engine/world/config/item-ids';
 import { colors, hexToRgb, rgbTo16Bit } from '@engine/util/colors';
 import { PlayerCommandActionHook } from '@engine/world/action/player-command.action';
-import { updateBonusStrings } from '@plugins/items/equipment/equipment-stats.plugin';
 import { findMusicTrack, findNpc, findSongIdByRegionId, musicRegions } from '@engine/config/config-handler';
 
 import {
@@ -52,13 +51,13 @@ import { dialogue } from '@engine/world/actor/dialogue';
 import { PlayerQuest, QuestKey } from '@engine/config/quest-config';
 import { Quest } from '@engine/world/actor/player/quest';
 import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
-import { MusicPlayerMode } from '@plugins/music/music-tab.plugin';
 import { getVarbitMorphIndex } from '@engine/util/varbits';
 import { SendMessageOptions } from '@engine/world/actor/player/model';
 import { AutoAttackBehavior } from '../behaviors/auto-attack.behavior';
 import { EventEmitter } from 'events';
 import { AttackDamageType } from './attack';
 import { EffectType } from '../effect';
+import { MusicPlayerMode } from '@engine/world/sound';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -930,10 +929,28 @@ export class Player extends Actor {
 
         if(this.interfaceState.widgetOpen('screen', widgets.equipmentStats.widgetId)) {
             this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipmentStats, this.equipment);
-            updateBonusStrings(this);
+            this.syncBonuses();
         }
 
         this.updateFlags.appearanceUpdateRequired = true;
+    }
+
+    public syncBonuses(): void {
+        [
+            { id: 108, text: 'Stab', value: this.bonuses.offensive.stab },
+            { id: 109, text: 'Slash', value: this.bonuses.offensive.slash },
+            { id: 110, text: 'Crush', value: this.bonuses.offensive.crush },
+            { id: 111, text: 'Magic', value: this.bonuses.offensive.magic },
+            { id: 112, text: 'Range', value: this.bonuses.offensive.ranged },
+            { id: 113, text: 'Stab', value: this.bonuses.defensive.stab },
+            { id: 114, text: 'Slash', value: this.bonuses.defensive.slash },
+            { id: 115, text: 'Crush', value: this.bonuses.defensive.crush },
+            { id: 116, text: 'Magic', value: this.bonuses.defensive.magic },
+            { id: 117, text: 'Range', value: this.bonuses.defensive.ranged },
+            { id: 119, text: 'Strength', value: this.bonuses.skill.strength },
+            { id: 120, text: 'Prayer', value: this.bonuses.skill.prayer },
+        ].forEach(bonus => this.modifyWidget(widgets.equipmentStats.widgetId, { childId: bonus.id,
+            text: `${bonus.text}: ${bonus.value > 0 ? `+${bonus.value}` : bonus.value}` }));
     }
 
     public unequipItem(slot: EquipmentSlot | number, updateRequired: boolean = true): boolean {

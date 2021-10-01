@@ -1,5 +1,5 @@
 import { WalkingQueue } from './walking-queue';
-import { ItemContainer } from '../items/item-container';
+import { ItemContainer } from '@engine/world';
 import { Animation, DamageType, Graphic, UpdateFlags } from './update-flags';
 import { Npc } from './npc';
 import { Skill, Skills } from '@engine/world/actor/skills';
@@ -16,9 +16,6 @@ import { ActionCancelType, ActionPipeline } from '@engine/world/action/action-pi
 import { LandscapeObject } from '@runejs/filestore';
 import { Behavior } from './behaviors/behavior';
 import { soundIds } from '../config/sound-ids';
-import { animationIds } from '../config/animation-ids';
-import { findNpc } from '../../config/config-handler';
-import { itemIds } from '../config/item-ids';
 import { Attack, AttackDamageType } from './player/attack';
 import { Effect, EffectType } from './effect';
 
@@ -26,8 +23,6 @@ import { Effect, EffectType } from './effect';
  * Handles an actor within the game world.
  */
 export abstract class Actor {
-
-
 
     public readonly updateFlags: UpdateFlags = new UpdateFlags();
     public readonly skills: Skills = new Skills(this);
@@ -185,9 +180,9 @@ export abstract class Actor {
 
         // base level
         // calculate prayer effects
-        // round decimal result calulcation up
+        // round decimal result calculation up
         // add 8
-        // ToDo: add void bonues (effects)
+        // ToDo: add void bonuses (effects)
         // round result down
 
         const equipmentBonus: number = this.isPlayer ? (this as unknown as Player).bonuses.defensive.crush : 0; //object prototyping to find property by name (JS style =/)
@@ -197,7 +192,7 @@ export abstract class Actor {
 
         attack.defenseRoll = (this.skills.defence.level + stanceModifier + 8) * (equipmentBonus + 64);
         //Prayer/Effect bonus - calculate ALL the good and bad effects at once! (prayers, and magic effects, etc.)
-        this.effects.filter(a => a.EffectType === EffectType.BoostDefense || a.EffectType === EffectType.LowerDefense).forEach((effect) => {
+        this.effects.filter(a => a.EffectType === EffectType.BoostDefence || a.EffectType === EffectType.LowerDefence).forEach((effect) => {
             attack.defenseRoll += (this.skills.defence.level * effect.Modifier);
         });
         attack.defenseRoll = Math.round(attack.defenseRoll);

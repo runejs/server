@@ -1,6 +1,6 @@
 import { dialogue } from '@engine/world/actor/dialogue';
 import {
-    handleTutorial,
+    tutorialHandler,
     npcHint, showTabWidgetHint, spawnGoblinBoi,
     startTutorial,
     unlockAvailableTabs
@@ -17,7 +17,7 @@ export const goblinDiplomacyStageHandler: QuestStageHandler = {
     0: async player => {
         await startTutorial(player);
         player.setQuestProgress('tyn:goblin_diplomacy', 5);
-        await handleTutorial(player);
+        await tutorialHandler(player);
     },
     5: async player => {
         npcHint(player, 'rs:runescape_guide');
