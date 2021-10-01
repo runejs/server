@@ -17,7 +17,7 @@ import { loadNpcSpawnConfigurations, NpcSpawn } from '@engine/config/npc-spawn-c
 import { loadShopConfigurations, Shop } from '@engine/config/shop-config';
 import { Quest } from '@engine/world/actor/player/quest';
 import { ItemSpawn, loadItemSpawnConfigurations } from '@engine/config/item-spawn-config';
-import { loadSkillGuideConfigurations, SkillGuide } from '@engine/config/skill-guide-config';
+import { loadSkillGuideConfigurations, SkillGuide } from '@plugins/skills/skill-guides/skill-guide-config';
 import { loadMusicRegionConfigurations, MusicTrack } from '@engine/config/music-regions-config';
 import { LandscapeObject, loadXteaRegionFiles, ObjectConfig, XteaRegion } from '@runejs/filestore';
 
@@ -36,7 +36,6 @@ export let npcSpawns: NpcSpawn[] = [];
 export let musicRegions: MusicTrack[] = [];
 export let itemSpawns: ItemSpawn[] = [];
 export let shopMap: { [key: string]: Shop };
-export let skillGuides: SkillGuide[] = [];
 export let xteaRegions: { [key: number]: XteaRegion };
 
 export const musicRegionMap = new Map<number, number>();
@@ -65,12 +64,11 @@ export async function loadGameConfigurations(): Promise<void> {
     itemSpawns = await loadItemSpawnConfigurations('data/config/item-spawns/');
 
     shopMap = await loadShopConfigurations('data/config/shops/');
-    skillGuides = await loadSkillGuideConfigurations('data/config/skill-guides/');
 
     objectMap = {};
 
     logger.info(`Loaded ${musicRegions.length} music regions, ${Object.keys(itemMap).length} items, ${itemSpawns.length} item spawns, ` +
-        `${Object.keys(npcMap).length} npcs, ${npcSpawns.length} npc spawns, ${Object.keys(shopMap).length} shops and ${skillGuides.length} skill guides.`);
+        `${Object.keys(npcMap).length} npcs, ${npcSpawns.length} npc spawns, and ${Object.keys(shopMap).length} shops.`);
 }
 
 

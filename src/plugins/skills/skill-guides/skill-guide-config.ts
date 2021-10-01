@@ -1,6 +1,6 @@
 import { loadConfigurationFiles } from '@runejs/core/fs';
-import { itemMap } from '@engine/config/config-handler';
-import { ItemDetails } from '@engine/config/item-config';
+import { itemMap, ItemDetails } from '@engine/config';
+
 
 /**
  * Skill Guide Configuration
@@ -34,6 +34,10 @@ export async function loadSkillGuideConfigurations(path: string): Promise<SkillG
 
     const files = await loadConfigurationFiles(path);
     files.forEach((skillGuide) => {
+        if(!skillGuide?.sub_guides) {
+            return;
+        }
+
         const subGuides = [];
         skillGuide.sub_guides.forEach((subGuide) => {
             const subGuideLines = [];

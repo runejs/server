@@ -7,4 +7,4 @@ export * from './npc-spawn-config';
 export * from './quest-config';
 export * from './server-config';
 export * from './shop-config';
-export * from './skill-guide-config';
+export * from '@plugins/skills/skill-guides/skill-guide-config';
