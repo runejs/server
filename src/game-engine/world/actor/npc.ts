@@ -2,19 +2,20 @@ import uuidv4 from 'uuid/v4';
 import EventEmitter from 'events';
 
 import { filestore, world } from '@engine/game-server';
-import { Position, directionData, QuadtreeKey } from '@engine/world';
+import { Position, directionData, QuadtreeKey, WorldInstance } from '@engine/world';
 import { findItem, findNpc, NpcCombatAnimations, NpcDetails, NpcSpawn } from '@engine/config';
-import { MeleeCombatBehavior } from './behaviors/melee-combat.behavior';
 import { soundIds, animationIds } from '@engine/world/config';
 
 import { Actor } from './actor';
-import { SkillName } from './skills';
 import { Player } from './player';
+import { SkillName } from './skills';
+import { MeleeCombatBehavior } from './behaviors';
 
 /**
  * Represents a non-player character within the game world.
  */
 export class Npc extends Actor {
+
     public readonly uuid: string;
     public readonly options: string[];
     public readonly initialPosition: Position;
@@ -31,11 +32,9 @@ export class Npc extends Actor {
         turnRight?: number;
         stand?: number;
     };
-    public instanceId: string = null;
     //ToDo: this should either be calculated by the level or from a config
     public experienceValue: number = 10;
     public npcEvents: EventEmitter = new EventEmitter();
-
 
     private _name: string;
     private _combatLevel: number;
@@ -45,17 +44,18 @@ export class Npc extends Actor {
     private npcSpawn: NpcSpawn;
     private _initialized: boolean = false;
 
-
-
-    public constructor(npcDetails: NpcDetails | number, npcSpawn: NpcSpawn, instanceId: string = null) {
-        super();
+    public constructor(npcDetails: NpcDetails | number, npcSpawn: NpcSpawn, instance: WorldInstance = null) {
+        super('npc');
 
         this.key = npcSpawn.npcKey;
         this.uuid = uuidv4();
         this.position = npcSpawn.spawnPosition.clone();
         this.initialPosition = this.position.clone();
         this.npcSpawn = npcSpawn;
-        this.instanceId = instanceId;
+
+        if(instance) {
+            this.instance = instance;
+        }
 
         if(npcSpawn.movementRadius) {
             this._movementRadius = npcSpawn.movementRadius;
@@ -141,8 +141,13 @@ export class Npc extends Actor {
                 })
             }
         });
-
     }
+
+    public withinBounds(x: number, y: number): boolean {
+        return !(x > this.initialPosition.x + this.movementRadius || x < this.initialPosition.x - this.movementRadius
+            || y > this.initialPosition.y + this.movementRadius || y < this.initialPosition.y - this.movementRadius);
+    }
+
     public getAttackAnimation(): number {
         let attackAnim = findNpc(this.id)?.combatAnimations?.attack || animationIds.combat.punch;
         if(Array.isArray(attackAnim)) {
@@ -276,6 +281,10 @@ export class Npc extends Actor {
 
     public get initialized(): boolean {
         return this._initialized;
+    }
+
+    public get instanceId(): string {
+        return this.instance?.instanceId ?? null;
     }
 }
 

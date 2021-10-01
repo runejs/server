@@ -12,6 +12,15 @@ import { ActionStrength } from '@engine/world/action/action-pipeline';
 export type TaskSessionData = { [key: string]: any };
 
 
+export interface TaskDetails<T> {
+    actor: Actor;
+    player: Player | undefined;
+    npc: Npc | undefined;
+    actionData: T;
+    session: TaskSessionData;
+}
+
+
 export interface HookTask<T = any> {
     canActivate?: <Q = T>(task: TaskExecutor<Q>, iteration?: number) => boolean | Promise<boolean>;
     activate: <Q = T>(task: TaskExecutor<Q>, iteration?: number) => void | undefined | boolean | Promise<void | undefined | boolean>;
@@ -138,23 +147,11 @@ export class TaskExecutor<T> {
         this.session = null;
     }
 
-    public getDetails(): {
-        actor: Actor;
-        player: Player | undefined;
-        npc: Npc | undefined;
-        actionData: T;
-        session: TaskSessionData; } {
-        const {
-            type: {
-                player,
-                npc
-            }
-        } = this.actor;
-
+    public getDetails(): TaskDetails<T> {
         return {
             actor: this.actor,
-            player,
-            npc,
+            player: this.actor.isPlayer ? this.actor as Player : undefined,
+            npc: this.actor.isNpc ? this.actor as Npc : undefined,
             actionData: this.actionData,
             session: this.session
         };

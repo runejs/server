@@ -3,7 +3,7 @@ import { Position } from '../position';
 import { Player } from './player/player';
 import { world } from '@engine/game-server';
 import { Npc } from './npc';
-import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
+import { regionChangeActionFactory } from '@engine/world/action';
 import { Subject } from 'rxjs';
 
 

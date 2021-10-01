@@ -13,7 +13,7 @@ import { Player } from '../player';
  * Handles the registration of nearby NPCs or Players for the specified player.
  */
 export function registerNewActors(packet: Packet, player: Player, trackedActors: Actor[], nearbyActors: QuadtreeKey[],
-    registerActor: (actor: Actor) => void): void {
+                                  registerActor: (actor: Actor) => void): void {
     if(trackedActors.length >= 255) {
         return;
     }
@@ -73,7 +73,7 @@ export function registerNewActors(packet: Packet, player: Player, trackedActors:
  * Handles synchronization of nearby NPCs or Players for the specified player.
  */
 export function syncTrackedActors(packet: Packet, playerPosition: Position, appendUpdateMaskData: (actor: Actor) => void,
-    trackedActors: Actor[], nearbyActors: QuadtreeKey[]): Actor[] {
+                                  trackedActors: Actor[], nearbyActors: QuadtreeKey[]): Actor[] {
     packet.putBits(8, trackedActors.length); // Tracked actor count
 
     if(trackedActors.length === 0) {

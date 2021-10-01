@@ -14,19 +14,18 @@ import { soundIds } from '@engine/world/config/sound-ids';
 import { Axe, getAxe, HarvestTool } from '@engine/world/config/harvest-tool';
 import { TaskExecutor } from '@engine/world/action/action-pipeline';
 import { findItem } from '@engine/config/config-handler';
+import { Player } from '@engine/world/actor';
 
 
 const canActivate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: number): boolean => {
-    const { actor, actionData: { position, object } } = task;
+    const { actor, actionData: { position, object, player } } = task;
     const tree = getTreeFromHealthy(object.objectId);
 
     if(!tree) {
         return false;
     }
 
-    const { type: { player }, isPlayer } = actor;
-
-    const tool = isPlayer ? canInitiateHarvest(player, tree, Skill.WOODCUTTING) : getAxe(Axe.STEEL);
+    const tool = actor.isPlayer ? canInitiateHarvest(player, tree, Skill.WOODCUTTING) : getAxe(Axe.STEEL);
 
     if(!tool) {
         return false;
@@ -38,7 +37,9 @@ const canActivate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration:
     if(taskIteration === 0) {
         // First run
 
-        player?.sendMessage('You swing your axe at the tree.');
+        if(actor.isPlayer) {
+            player.sendMessage('You swing your axe at the tree.');
+        }
 
         actor.face(position);
         actor.playAnimation(tool.animation);

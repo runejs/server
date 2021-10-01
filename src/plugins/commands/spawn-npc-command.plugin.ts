@@ -26,7 +26,7 @@ const action: commandActionHandler = ({ player, args }) => {
 
     const npc = new Npc(npcDetails ? npcDetails : npcKey,
         new NpcSpawn(npcDetails ? npcDetails.key : `unknown-${npcKey}`,
-            player.position.clone(), 0, 'WEST'), player.instance.instanceId);
+            player.position.clone(), 0, 'WEST'), player.instance);
 
     world.registerNpc(npc);
 };
