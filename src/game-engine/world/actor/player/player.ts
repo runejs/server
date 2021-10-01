@@ -1,12 +1,25 @@
 import { AddressInfo, Socket } from 'net';
-import { OutboundPacketHandler } from '@engine/net/outbound-packet-handler';
-import { Isaac } from '@engine/net/isaac';
-import { PlayerSyncTask } from '@engine/world/actor';
-import { Actor } from '../actor';
-import { Position } from '@engine/world/position';
-import { filestore, actionHookMap, serverConfig, world, questMap } from '@engine/game-server';
-import { logger } from '@runejs/core';
 import uuidv4 from 'uuid/v4';
+import { Subject } from 'rxjs';
+import { EventEmitter } from 'events';
+
+import { logger } from '@runejs/core';
+
+import { filestore, actionHookMap, serverConfig, world, questMap } from '@engine/game-server';
+import { findMusicTrack, findNpc, findSongIdByRegionId, musicRegions, DefensiveBonuses, equipmentIndex,
+    EquipmentSlot, getEquipmentSlot, ItemDetails, OffensiveBonuses, SkillBonuses, findItem, findQuest,
+    npcIdMap, widgets, NpcDetails, PlayerQuest, QuestKey } from '@engine/config';
+import { daysSinceLastLogin, colors, hexToRgb, rgbTo16Bit,getVarbitMorphIndex } from '@engine/util';
+import { OutboundPacketHandler, Isaac } from '@engine/net';
+
+import { Position, QuadtreeKey, TileModifications, WorldInstance } from '@engine/world';
+import { PlayerWidget, widgetScripts, itemIds, animationIds } from '@engine/world/config';
+import { PlayerSyncTask, Actor, Npc, NpcSyncTask, combatStyles, dialogue } from '@engine/world/actor';
+import { ContainerUpdateEvent, getItemFromContainer, ItemContainer, Item } from '@engine/world/items';
+import { Chunk, ChunkUpdateItem } from '@engine/world/map';
+import { PlayerCommandActionHook, regionChangeActionFactory } from '@engine/world/action';
+import { MusicPlayerMode } from '@engine/world/sound';
+
 import {
     Appearance,
     defaultAppearance,
@@ -17,47 +30,13 @@ import {
     PlayerSettings,
     savePlayerData
 } from './player-data';
-import { PlayerWidget, widgetScripts } from '../../config/widget';
-import { ContainerUpdateEvent, getItemFromContainer, ItemContainer } from '../../items/item-container';
-import { Item } from '@engine/world';
-import { Npc } from '../npc';
-import { NpcSyncTask } from '@engine/world/actor';
-import { Subject } from 'rxjs';
-import { Chunk, ChunkUpdateItem } from '@engine/world/map/chunk';
-import { QuadtreeKey } from '@engine/world/world';
-import { daysSinceLastLogin } from '@engine/util/time';
-import { itemIds } from '@engine/world/config/item-ids';
-import { colors, hexToRgb, rgbTo16Bit } from '@engine/util/colors';
-import { PlayerCommandActionHook } from '@engine/world/action/player-command.action';
-import { findMusicTrack, findNpc, findSongIdByRegionId, musicRegions } from '@engine/config/config-handler';
-
-import {
-    DefensiveBonuses,
-    equipmentIndex,
-    EquipmentSlot,
-    getEquipmentSlot,
-    ItemDetails,
-    OffensiveBonuses,
-    SkillBonuses
-} from '@engine/config/item-config';
-import { findItem, findQuest, npcIdMap, widgets } from '@engine/config/config-handler';
-import { NpcDetails } from '@engine/config/npc-config';
-import { animationIds } from '@engine/world/config/animation-ids';
-import { combatStyles } from '@engine/world/actor/combat';
-import { TileModifications, WorldInstance } from '@engine/world/instances';
-import { Cutscene } from '@engine/world/actor/player/cutscenes';
-import { InterfaceState } from '@engine/world/actor/player/interface-state';
-import { dialogue } from '@engine/world/actor/dialogue';
-import { PlayerQuest, QuestKey } from '@engine/config/quest-config';
-import { Quest } from '@engine/world/actor/player/quest';
-import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
-import { getVarbitMorphIndex } from '@engine/util/varbits';
-import { SendMessageOptions } from '@engine/world/actor/player/model';
-import { AutoAttackBehavior } from '../behaviors/auto-attack.behavior';
-import { EventEmitter } from 'events';
+import { Cutscene } from './cutscenes';
+import { InterfaceState } from './interface-state';
+import { Quest } from './quest';
+import { SendMessageOptions } from './model';
 import { AttackDamageType } from './attack';
 import { EffectType } from '../effect';
-import { MusicPlayerMode } from '@engine/world/sound';
+import { AutoAttackBehavior } from '../behaviors';
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
