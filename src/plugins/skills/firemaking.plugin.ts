@@ -7,8 +7,8 @@ import { objectIds } from '@engine/world/config/object-ids';
 import { itemIds } from '@engine/world/config/item-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { animationIds } from '@engine/world/config/animation-ids';
-import { loopingEvent } from '@engine/game-server';
 import { LandscapeObject } from '@runejs/filestore';
+import { loopingEvent } from '@engine/plugins';
 
 
 const logs = [

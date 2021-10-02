@@ -1,6 +1,6 @@
 import { commandActionHandler } from '@engine/world/action/player-command.action';
-import { world } from '@engine/game-server';
 import { TravelLocation } from '@engine/world/config/travel-locations';
+import { world } from '@engine/world';
 
 const action: commandActionHandler = (details) => {
     const { player, args } = details;

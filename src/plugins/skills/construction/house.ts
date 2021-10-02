@@ -6,8 +6,8 @@ import {
 import { Position } from '@engine/world/position';
 import { ConstructedChunk, ConstructedRegion } from '@engine/world/map/region';
 import { Player } from '@engine/world/actor/player/player';
-import { world } from '@engine/game-server';
 import { loadHouse } from '@plugins/skills/construction/home-saver';
+import { world } from '@engine/world';
 
 
 export const openHouse = (player: Player): void => {

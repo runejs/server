@@ -1,6 +1,6 @@
-import { dialogue, Emote, goto, execute } from '../../../game-engine/world/actor/dialogue';
-import { animationIds } from '../../../game-engine/world/config/animation-ids';
-import { Achievements, giveAchievement } from '../../../game-engine/world/actor/player/achievements';
+import { dialogue, Emote, goto, execute } from '../../../engine/world/actor/dialogue';
+import { animationIds } from '../../../engine/world/config/animation-ids';
+import { Achievements, giveAchievement } from '../../../engine/world/actor/player/achievements';
 
 
 const handler = async ({ player, npc }) => {

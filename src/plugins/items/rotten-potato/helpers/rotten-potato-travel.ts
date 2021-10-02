@@ -1,8 +1,8 @@
 import { Player } from '@engine/world/actor/player/player';
-import { world } from '@engine/game-server';
 import {
     widgetInteractionActionHandler
 } from '@engine/world/action/widget-interaction.action';
+import { world } from '@engine/world';
 
 export function openTravel(player: Player, page: number) {
     const widget = player.interfaceState.openWidget(27, {

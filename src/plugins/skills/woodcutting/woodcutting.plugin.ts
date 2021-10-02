@@ -9,12 +9,12 @@ import { randomBetween } from '@engine/util/num';
 import { colorText } from '@engine/util/strings';
 import { colors } from '@engine/util/colors';
 import { rollBirdsNestType } from '@engine/world/skill-util/harvest-roll';
-import { world } from '@engine/game-server';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { Axe, getAxe, HarvestTool } from '@engine/world/config/harvest-tool';
 import { TaskExecutor } from '@engine/world/action/action-pipeline';
 import { findItem } from '@engine/config/config-handler';
 import { Player } from '@engine/world/actor';
+import { world } from '@engine/world';
 
 
 const canActivate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: number): boolean => {

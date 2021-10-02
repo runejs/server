@@ -3,7 +3,6 @@ import { Player } from '@engine/world/actor/player/player';
 import { randomBetween } from '@engine/util/num';
 import { itemIds } from '@engine/world/config/item-ids';
 import { animationIds } from '@engine/world/config/animation-ids';
-import { loopingEvent } from '@engine/game-server';
 import { buttonActionHandler, ButtonAction } from '@engine/world/action/button.action';
 import { Skill } from '@engine/world/actor/skills';
 import { widgetButtonIds, widgetItems } from '@plugins/skills/smithing/smelting-constants';
@@ -12,6 +11,7 @@ import { colors } from '@engine/util/colors';
 import { findItem, widgets } from '@engine/config/config-handler';
 import { Fletchable } from '@plugins/skills/fletching/fletching-types';
 import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { loopingEvent } from '@engine/plugins';
 
 //fletching stuff goes below this! lets do it!
 

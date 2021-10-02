@@ -1,7 +1,7 @@
 import { Player } from '@engine/world/actor/player/player';
 import { Coords, Position } from '@engine/world/position';
-import { world } from '@engine/game-server';
 import { ConstructedRegion } from '@engine/world/map/region';
+import { world } from '@engine/world';
 
 
 /**

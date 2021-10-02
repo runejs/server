@@ -1,9 +1,9 @@
 import { commandActionHandler } from '@engine/world/action/player-command.action';
-import { world } from '@engine/game-server';
 import { Npc } from '@engine/world/actor/npc';
 import { findNpc } from '@engine/config/config-handler';
 import { NpcDetails } from '@engine/config/npc-config';
 import { NpcSpawn } from '@engine/config/npc-spawn-config';
+import { world } from '@engine/world';
 
 const action: commandActionHandler = ({ player, args }) => {
     let npcKey: string | number = args.npcKey;

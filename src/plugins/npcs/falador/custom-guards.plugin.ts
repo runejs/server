@@ -1,10 +1,10 @@
 import { npcInitActionHandler } from '@engine/world/action/npc-init.action';
 import { World } from '@engine/world/world';
 import { Position } from '@engine/world/position';
-import { world } from '@engine/game-server';
 import { findNpc } from '@engine/config/config-handler';
 import { Npc } from '@engine/world/actor/npc';
 import { randomBetween } from '@engine/util/num';
+import { world } from '@engine/world';
 const npcs = ['rs:guard:0', 'rs:guard:1']
 const npcObjects = npcs.map((sNpc) => findNpc(sNpc));
 

@@ -1,8 +1,8 @@
 import { buttonActionHandler } from '@engine/world/action';
 import { findMusicTrackByButtonId, findSongIdByRegionId, widgets } from '@engine/config';
 import { widgetScripts } from '@engine/world/config';
-import { world } from '@engine/game-server';
 import { MusicPlayerMode, MusicTabButtonIds } from '@engine/world/sound';
+import { world } from '@engine/world';
 
 export const handler: buttonActionHandler = (details) => {
     const { player, buttonId } = details;

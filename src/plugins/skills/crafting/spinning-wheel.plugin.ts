@@ -3,10 +3,11 @@ import { buttonActionHandler, ButtonAction } from '@engine/world/action/button.a
 import { soundIds } from '@engine/world/config/sound-ids';
 import { itemIds } from '@engine/world/config/item-ids';
 import { Skill } from '@engine/world/actor/skills';
-import { filestore, loopingEvent } from '@engine/game-server';
+import { filestore} from '@server/game/game-server';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { objectIds } from '@engine/world/config/object-ids';
 import { findItem, widgets } from '@engine/config/config-handler';
+import { loopingEvent } from '@engine/plugins';
 
 interface Spinnable {
     input: number | number[];

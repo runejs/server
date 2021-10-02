@@ -4,7 +4,7 @@ import { objectIds } from '@engine/world/config/object-ids';
 import { objectInteractionActionHandler, ObjectInteractionAction } from '@engine/world/action/object-interaction.action';
 import { buttonActionHandler, ButtonAction } from '@engine/world/action/button.action';
 import { Skill } from '@engine/world/actor/skills';
-import { filestore, loopingEvent } from '@engine/game-server';
+import { filestore} from '@server/game/game-server';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { colors } from '@engine/util/colors';
@@ -12,6 +12,7 @@ import { findItem, widgets } from '@engine/config/config-handler';
 import { PlayerQuest } from '@engine/config/quest-config';
 import { widgetButtonIds, widgetItems } from '@plugins/skills/smithing/smelting-constants';
 import { Bar } from '@plugins/skills/smithing/smelting-types';
+import { loopingEvent } from '@engine/plugins';
 
 
 export const openSmeltingInterface: objectInteractionActionHandler = (details) => {

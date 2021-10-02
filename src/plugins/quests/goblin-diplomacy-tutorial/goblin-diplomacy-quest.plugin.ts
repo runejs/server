@@ -1,6 +1,6 @@
 import { defaultPlayerTabWidgets, Player } from '@engine/world/actor/player/player';
 import { questDialogueActionFactory, QuestJournalHandler } from '@engine/config/quest-config';
-import { serverConfig, world } from '@engine/game-server';
+import { serverConfig} from '@server/game/game-server';
 import uuidv4 from 'uuid/v4';
 import { logger } from '@runejs/core';
 import { Position } from '@engine/world/position';
@@ -18,6 +18,7 @@ import { harlanDialogueHandler } from './melee-tutor-dialogue';
 import { goblinDiplomacyStageHandler } from './stage-handler';
 import { Quest } from '@engine/world/actor/player/quest';
 import { playerInitActionHandler } from '@engine/world/action/player-init.action';
+import { world } from '@engine/world';
 
 
 export const tutorialTabWidgetOrder = [
@@ -95,7 +96,7 @@ export function npcHint(player: Player, npcKey: string | number): void {
 export const startTutorial = async (player: Player): Promise<void> => {
     player.setQuestProgress('tyn:goblin_diplomacy', 0);
 
-    defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
+    defaultPlayerTabWidgets().forEach((widgetId: number, tabIndex: number) => {
         if(widgetId !== -1) {
             player.outgoingPackets.sendTabWidget(tabIndex, widgetId === widgets.logoutTab ? widgetId : null);
         }
@@ -150,7 +151,7 @@ export async function tutorialHandler(player: Player): Promise<void> {
     const progress = player.getQuest('tyn:goblin_diplomacy').progress;
     const handler = goblinDiplomacyStageHandler[progress];
 
-    defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
+    defaultPlayerTabWidgets().forEach((widgetId: number, tabIndex: number) => {
         if(widgetId !== -1) {
             player.setSidebarWidget(tabIndex, widgetId === widgets.logoutTab ? widgetId : null);
         }
@@ -174,7 +175,7 @@ const tutorialInitAction: playerInitActionHandler = async ({ player }) => {
         spawnQuestNpcs(player);
         await tutorialHandler(player);
     } else {
-        defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
+        defaultPlayerTabWidgets().forEach((widgetId: number, tabIndex: number) => {
             if(widgetId !== -1) {
                 player.setSidebarWidget(tabIndex, widgetId);
             }

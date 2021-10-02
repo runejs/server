@@ -1,8 +1,8 @@
 import { Position } from '@engine/world/position';
 import { Player } from '@engine/world/actor/player/player';
-import { world } from '@engine/game-server';
 import { World } from '@engine/world/world';
 import { commandActionHandler } from '@engine/world/action/player-command.action';
+import { world } from '@engine/world';
 
 
 const handler: commandActionHandler = ({ player, args }) => {

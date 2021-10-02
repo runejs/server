@@ -27,7 +27,7 @@ export const runescapeGuideDialogueHandler: QuestDialogueHandler = {
                         player.savedMetadata.tutorialComplete = true;
                         player.setQuestProgress('tyn:goblin_diplomacy', 'complete');
                         player.instance = null;
-                        defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
+                        defaultPlayerTabWidgets().forEach((widgetId: number, tabIndex: number) => {
                             if(widgetId !== -1) {
                                 player.setSidebarWidget(tabIndex, widgetId);
                             }

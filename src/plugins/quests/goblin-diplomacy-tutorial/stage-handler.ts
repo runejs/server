@@ -6,12 +6,12 @@ import {
     unlockAvailableTabs
 } from '@plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy-quest.plugin';
 import { schedule } from '@engine/world/task';
-import { world } from '@engine/game-server';
 import { findNpc } from '@engine/config/config-handler';
 import { Cutscene } from '@engine/world/actor/player/cutscenes';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { QuestStageHandler } from '@engine/config/quest-config';
 import { tabIndex } from '@engine/world/actor/player/interface-state';
+import { world } from '@engine/world';
 
 export const goblinDiplomacyStageHandler: QuestStageHandler = {
     0: async player => {
