@@ -1,5 +1,5 @@
-import { Player } from '@engine/world/actor/player/player';
-import { PacketData } from '@engine/net/inbound-packet-handler';
+import { Player } from '@engine/world/actor';
+import { PacketData } from '@engine/net';
 
 
 const characterDesignPacket = (player: Player, packet: PacketData) => {
@@ -7,16 +7,16 @@ const characterDesignPacket = (player: Player, packet: PacketData) => {
 
     // @TODO verify validity of selections
 
-    const gender = buffer.get();
+    const gender = buffer.get('byte');
     const models = new Array(7);
     const colors = new Array(5);
 
     for(let i = 0; i < models.length; i++) {
-        models[i] = buffer.get();
+        models[i] = buffer.get('byte');
     }
 
     for(let i = 0; i < colors.length; i++) {
-        colors[i] = buffer.get();
+        colors[i] = buffer.get('byte');
     }
 
     player.appearance = {

@@ -1,12 +1,27 @@
 import { AddressInfo, Socket } from 'net';
-import { OutboundPacketHandler } from '@engine/net/outbound-packet-handler';
-import { Isaac } from '@engine/net/isaac';
-import { PlayerSyncTask } from './sync/player-sync-task';
-import { Actor } from '../actor';
-import { Position } from '@engine/world/position';
-import { filestore, actionHookMap, serverConfig, world, questMap } from '@engine/game-server';
-import { logger } from '@runejs/core';
 import uuidv4 from 'uuid/v4';
+import { Subject } from 'rxjs';
+import EventEmitter from 'events';
+
+import { logger } from '@runejs/core';
+
+import { filestore, actionHookMap, serverConfig, world, questMap } from '@engine/game-server';
+import {
+    findMusicTrack, findNpc, findSongIdByRegionId, musicRegions, equipmentIndex,
+    EquipmentSlot, getEquipmentSlot, ItemDetails, findItem, findQuest,
+    npcIdMap, widgets, NpcDetails, PlayerQuest, QuestKey
+} from '@engine/config';
+import { daysSinceLastLogin, colors, hexToRgb, rgbTo16Bit,getVarbitMorphIndex } from '@engine/util';
+import { OutboundPacketHandler, Isaac } from '@engine/net';
+
+import { Position, QuadtreeKey, TileModifications, WorldInstance } from '@engine/world';
+import { PlayerWidget, widgetScripts, itemIds, animationIds } from '@engine/world/config';
+import { ContainerUpdateEvent, getItemFromContainer, ItemContainer, Item } from '@engine/world/items';
+import { Chunk, ChunkUpdateItem } from '@engine/world/map';
+import { PlayerCommandActionHook, regionChangeActionFactory } from '@engine/world/action';
+import { MusicPlayerMode } from '@engine/world/sound';
+
+import { Actor } from '../actor';
 import {
     Appearance,
     defaultAppearance,
@@ -17,48 +32,18 @@ import {
     PlayerSettings,
     savePlayerData
 } from './player-data';
-import { PlayerWidget, widgetScripts } from '../../config/widget';
-import { ContainerUpdateEvent, getItemFromContainer, ItemContainer } from '../../items/item-container';
-import { Item } from '../../items/item';
-import { Npc } from '../npc';
-import { NpcSyncTask } from './sync/npc-sync-task';
-import { Subject } from 'rxjs';
-import { Chunk, ChunkUpdateItem } from '@engine/world/map/chunk';
-import { QuadtreeKey } from '@engine/world/world';
-import { daysSinceLastLogin } from '@engine/util/time';
-import { itemIds } from '@engine/world/config/item-ids';
-import { colors, hexToRgb, rgbTo16Bit } from '@engine/util/colors';
-import { PlayerCommandActionHook } from '@engine/world/action/player-command.action';
-import { updateBonusStrings } from '@plugins/items/equipment/equipment-stats.plugin';
-import { findMusicTrack, findNpc, findSongIdByRegionId, musicRegions } from '@engine/config/config-handler';
-
-import {
-    DefensiveBonuses,
-    equipmentIndex,
-    EquipmentSlot,
-    getEquipmentSlot,
-    ItemDetails,
-    OffensiveBonuses,
-    SkillBonuses
-} from '@engine/config/item-config';
-import { findItem, findQuest, npcIdMap, widgets } from '@engine/config/config-handler';
-import { NpcDetails } from '@engine/config/npc-config';
-import { animationIds } from '@engine/world/config/animation-ids';
-import { combatStyles } from '@engine/world/actor/combat';
-import { TileModifications, WorldInstance } from '@engine/world/instances';
-import { Cutscene } from '@engine/world/actor/player/cutscenes';
-import { InterfaceState } from '@engine/world/actor/player/interface-state';
-import { dialogue } from '@engine/world/actor/dialogue';
-import { PlayerQuest, QuestKey } from '@engine/config/quest-config';
-import { Quest } from '@engine/world/actor/player/quest';
-import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
-import { MusicPlayerMode } from '@plugins/music/music-tab.plugin';
-import { getVarbitMorphIndex } from '@engine/util/varbits';
-import { SendMessageOptions } from '@engine/world/actor/player/model';
-import { AutoAttackBehavior } from '../behaviors/auto-attack.behavior';
-import { EventEmitter } from 'events';
+import { Cutscene } from './cutscenes';
+import { InterfaceState } from './interface-state';
+import { Quest } from './quest';
+import { SendMessageOptions } from './model';
 import { AttackDamageType } from './attack';
 import { EffectType } from '../effect';
+import { AutoAttackBehavior } from '../behaviors';
+import { PlayerSyncTask, NpcSyncTask } from './sync';
+import { dialogue } from '../dialogue';
+import { Npc } from '../npc';
+import { combatStyles } from '../combat';
+
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -107,6 +92,7 @@ export enum Rights {
  * A player character within the game world.
  */
 export class Player extends Actor {
+
     public readonly clientUuid: number;
     public readonly username: string;
     public readonly passwordHash: string;
@@ -129,8 +115,6 @@ export class Player extends Actor {
     public cutscene: Cutscene = null;
     public playerEvents: EventEmitter = new EventEmitter();
 
-
-
     private readonly _socket: Socket;
     private readonly _inCipher: Isaac;
     private readonly _outCipher: Isaac;
@@ -143,7 +127,6 @@ export class Player extends Actor {
     private firstTimePlayer: boolean;
     private _appearance: Appearance;
     private queuedWidgets: PlayerWidget[];
-    private _bonuses: { offensive: OffensiveBonuses, defensive: DefensiveBonuses, skill: SkillBonuses };
     private _carryWeight: number;
     private _settings: PlayerSettings;
     private _nearbyChunks: Chunk[];
@@ -152,7 +135,7 @@ export class Player extends Actor {
 
 
     public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
-        super();
+        super('player');
 
         this._socket = socket;
         this._inCipher = inCipher;
@@ -794,7 +777,7 @@ export class Player extends Actor {
         }
         //prayers and other effects that effect strength
         this.effects.filter(a => a.EffectType === EffectType.Strength).forEach((effect) => {
-            this._bonuses.skill['strength'] += this.skills.strength.level * effect.Modifier;
+            this.bonuses.skill['strength'] += this.skills.strength.level * effect.Modifier;
         });
     }
 
@@ -930,10 +913,28 @@ export class Player extends Actor {
 
         if(this.interfaceState.widgetOpen('screen', widgets.equipmentStats.widgetId)) {
             this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipmentStats, this.equipment);
-            updateBonusStrings(this);
+            this.syncBonuses();
         }
 
         this.updateFlags.appearanceUpdateRequired = true;
+    }
+
+    public syncBonuses(): void {
+        [
+            { id: 108, text: 'Stab', value: this.bonuses.offensive.stab },
+            { id: 109, text: 'Slash', value: this.bonuses.offensive.slash },
+            { id: 110, text: 'Crush', value: this.bonuses.offensive.crush },
+            { id: 111, text: 'Magic', value: this.bonuses.offensive.magic },
+            { id: 112, text: 'Range', value: this.bonuses.offensive.ranged },
+            { id: 113, text: 'Stab', value: this.bonuses.defensive.stab },
+            { id: 114, text: 'Slash', value: this.bonuses.defensive.slash },
+            { id: 115, text: 'Crush', value: this.bonuses.defensive.crush },
+            { id: 116, text: 'Magic', value: this.bonuses.defensive.magic },
+            { id: 117, text: 'Range', value: this.bonuses.defensive.ranged },
+            { id: 119, text: 'Strength', value: this.bonuses.skill.strength },
+            { id: 120, text: 'Prayer', value: this.bonuses.skill.prayer },
+        ].forEach(bonus => this.modifyWidget(widgets.equipmentStats.widgetId, { childId: bonus.id,
+            text: `${bonus.text}: ${bonus.value > 0 ? `+${bonus.value}` : bonus.value}` }));
     }
 
     public unequipItem(slot: EquipmentSlot | number, updateRequired: boolean = true): boolean {
@@ -1151,30 +1152,19 @@ export class Player extends Actor {
         const skillBonuses = itemData.equipmentData.skillBonuses;
 
         if(offensiveBonuses) {
-            [ 'speed', 'stab', 'slash', 'crush', 'magic', 'ranged' ].forEach(bonus => this._bonuses.offensive[bonus] += (!offensiveBonuses[bonus] ? 0 : offensiveBonuses[bonus]));
+            [ 'speed', 'stab', 'slash', 'crush', 'magic', 'ranged' ].forEach(bonus =>
+                this.bonuses.offensive[bonus] += (!offensiveBonuses[bonus] ? 0 : offensiveBonuses[bonus]));
         }
 
         if(defensiveBonuses) {
-            [ 'stab', 'slash', 'crush', 'magic', 'ranged' ].forEach(bonus => this._bonuses.defensive[bonus] += (!defensiveBonuses[bonus] ? 0 : defensiveBonuses[bonus]));
+            [ 'stab', 'slash', 'crush', 'magic', 'ranged' ].forEach(bonus =>
+                this.bonuses.defensive[bonus] += (!defensiveBonuses[bonus] ? 0 : defensiveBonuses[bonus]));
         }
 
         if(skillBonuses) {
-            [ 'strength', 'prayer' ].forEach(bonus => this._bonuses.skill[bonus] += (!skillBonuses[bonus] ? 0 : skillBonuses[bonus]));
+            [ 'strength', 'prayer' ].forEach(bonus => this.bonuses.skill[bonus] +=
+                (!skillBonuses[bonus] ? 0 : skillBonuses[bonus]));
         }
-    }
-
-    private clearBonuses(): void {
-        this._bonuses = {
-            offensive: {
-                speed: 0, stab: 0, slash: 0, crush: 0, magic: 0, ranged: 0
-            },
-            defensive: {
-                stab: 0, slash: 0, crush: 0, magic: 0, ranged: 0
-            },
-            skill: {
-                strength: 0, prayer: 0
-            }
-        };
     }
 
     private loadSaveData(): void {
@@ -1313,17 +1303,29 @@ export class Player extends Actor {
         return this._nearbyChunks;
     }
 
-    public get bonuses(): { offensive: OffensiveBonuses, defensive: DefensiveBonuses, skill: SkillBonuses } {
-        return this._bonuses;
+    public get damageType(): AttackDamageType {
+        if (this.bonuses.offensive.crush > 0) return AttackDamageType.Crush;
+        if (this.bonuses.offensive.magic > 0) return AttackDamageType.Magic;
+        if (this.bonuses.offensive.ranged > 0) return AttackDamageType.Range;
+        if (this.bonuses.offensive.slash > 0) return AttackDamageType.Slash;
+        if (this.bonuses.offensive.stab > 0) return AttackDamageType.Stab;
+        return AttackDamageType.Crush;
     }
 
-    public get damageType(): AttackDamageType {
-        if (this._bonuses.offensive.crush > 0) return AttackDamageType.Crush;
-        if (this._bonuses.offensive.magic > 0) return AttackDamageType.Magic;
-        if (this._bonuses.offensive.ranged > 0) return AttackDamageType.Range;
-        if (this._bonuses.offensive.slash > 0) return AttackDamageType.Slash;
-        if (this._bonuses.offensive.stab > 0) return AttackDamageType.Stab;
-        return AttackDamageType.Crush;
+    public get instance(): WorldInstance {
+        return super.instance;
+    }
+
+    public set instance(value: WorldInstance) {
+        if(this.instance?.instanceId) {
+            this.instance.removePlayer(this);
+        }
+
+        if(value) {
+            value.addPlayer(this);
+        }
+
+        this._instance = value;
     }
 
 }

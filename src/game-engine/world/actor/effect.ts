@@ -18,5 +18,7 @@ export enum EffectType {
     Curse,
     Poison,
     Fire,
-    EnvironmentDamage
+    EnvironmentDamage,
+    BoostDefence = 11,
+    LowerDefence = 12
 }

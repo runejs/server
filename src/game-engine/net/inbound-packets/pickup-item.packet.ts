@@ -1,6 +1,8 @@
-import { Position } from '../../world/position';
+import { Position } from '@engine/world';
+import { Player } from '@engine/world/actor';
+import { PacketData } from '@engine/net';
 
-const pickupItemPacket = (player, packet) => {
+const pickupItemPacket = (player: Player, packet: PacketData) => {
     const { buffer } = packet;
     const y = buffer.get('short', 'u');
     const itemId = buffer.get('short', 'u');

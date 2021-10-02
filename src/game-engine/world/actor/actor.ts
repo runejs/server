@@ -1,34 +1,33 @@
-import { WalkingQueue } from './walking-queue';
-import { ItemContainer } from '../items/item-container';
-import { Animation, DamageType, Graphic, UpdateFlags } from './update-flags';
-import { Npc } from './npc';
-import { Skill, Skills } from '@engine/world/actor/skills';
-import { Item } from '@engine/world/items/item';
-import { Position } from '@engine/world/position';
-import { DirectionData, directionFromIndex } from '@engine/world/direction';
-import { Pathfinding } from '@engine/world/actor/pathfinding';
 import { Subject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
-import { world } from '@engine/game-server';
-import { WorldInstance } from '@engine/world/instances';
-import { Player } from '@engine/world/actor/player/player';
-import { ActionCancelType, ActionPipeline } from '@engine/world/action/action-pipeline';
+
 import { LandscapeObject } from '@runejs/filestore';
-import { Behavior } from './behaviors/behavior';
-import { soundIds } from '../config/sound-ids';
-import { animationIds } from '../config/animation-ids';
-import { findNpc } from '../../config/config-handler';
-import { itemIds } from '../config/item-ids';
+
+import { world } from '@engine/game-server';
+import { DefensiveBonuses, OffensiveBonuses, SkillBonuses } from '@engine/config';
+import { Position, DirectionData, directionFromIndex, WorldInstance } from '@engine/world';
+import { Item, ItemContainer } from '@engine/world/items';
+import { ActionCancelType, ActionPipeline } from '@engine/world/action';
+import { soundIds } from '@engine/world/config';
+
+import { WalkingQueue } from './walking-queue';
+import { Animation, DamageType, Graphic, UpdateFlags } from './update-flags';
+import { Skill, Skills } from './skills';
+import { Pathfinding } from './pathfinding';
 import { Attack, AttackDamageType } from './player/attack';
+import { Behavior } from './behaviors';
 import { Effect, EffectType } from './effect';
 
+
+export type ActorType = 'player' | 'npc';
+
+
 /**
- * Handles an actor within the game world.
+ * Handles an entity within the game world.
  */
 export abstract class Actor {
 
-
-
+    public readonly type: ActorType;
     public readonly updateFlags: UpdateFlags = new UpdateFlags();
     public readonly skills: Skills = new Skills(this);
     public readonly walkingQueue: WalkingQueue = new WalkingQueue(this);
@@ -52,34 +51,44 @@ export abstract class Actor {
     public combatTargets: Actor[] = [];
     public hitPoints = this.skills.hitpoints.level * 4;
     public maxHitPoints = this.skills.hitpoints.level * 4;
-
-    public get damageType() {
-        return this._damageType;
-    }
-    public set damageType(value) {
-        this._damageType = value;
-    }
     public effects: Effect[] = []; //spells, effects, prayers, etc
 
     protected randomMovementInterval;
+    protected _instance: WorldInstance = null;
+
     /**
      * @deprecated - use new action system instead
      */
-    private _busy: boolean;
+    private _busy: boolean = false;
     private _position: Position;
     private _lastMapRegionUpdatePosition: Position;
     private _worldIndex: number;
     private _walkDirection: number;
     private _runDirection: number;
     private _faceDirection: number;
-    private _instance: WorldInstance = null;
     private _damageType = AttackDamageType.Crush;
+    private _bonuses: { offensive: OffensiveBonuses, defensive: DefensiveBonuses, skill: SkillBonuses };
 
-    protected constructor() {
+    protected constructor(actorType: ActorType) {
+        this.type = actorType;
         this._walkDirection = -1;
         this._runDirection = -1;
         this._faceDirection = 6;
-        this._busy = false;
+        this.clearBonuses();
+    }
+
+    public clearBonuses(): void {
+        this._bonuses = {
+            offensive: {
+                speed: 0, stab: 0, slash: 0, crush: 0, magic: 0, ranged: 0
+            },
+            defensive: {
+                stab: 0, slash: 0, crush: 0, magic: 0, ranged: 0
+            },
+            skill: {
+                strength: 0, prayer: 0
+            }
+        };
     }
 
     public get highestCombatSkill(): Skill {
@@ -114,12 +123,10 @@ export abstract class Actor {
         // add 8
         // ToDo: add void bonues (effects)
         // round result down
-        let equipmentBonus = 0;
-        if (this.isPlayer) {
-            const player = (this as unknown as Player);
-            equipmentBonus = player.bonuses.offensive.crush;
+        let equipmentBonus = this.bonuses.offensive.crush ?? 0;
+        if (equipmentBonus <= 0) {
+            equipmentBonus = 1;
         }
-        if (equipmentBonus == 0) equipmentBonus = 1;
         /*
          * To calculate your maximum hit:
 
@@ -174,6 +181,7 @@ export abstract class Actor {
         attack.damage = Math.round((maximumHit * attack.hitChance) / 2);
         return attack;
     }
+
     public getDefenseRoll(attack: Attack): Attack {
         //attack need to know the damage roll, which is the item bonuses the weapon damage type etc.
 
@@ -185,19 +193,19 @@ export abstract class Actor {
 
         // base level
         // calculate prayer effects
-        // round decimal result calulcation up
+        // round decimal result calculation up
         // add 8
-        // ToDo: add void bonues (effects)
+        // ToDo: add void bonuses (effects)
         // round result down
 
-        const equipmentBonus: number = this.isPlayer ? (this as unknown as Player).bonuses.defensive.crush : 0; //object prototyping to find property by name (JS style =/)
+        const equipmentBonus: number = this.bonuses.defensive.crush ?? 0; //object prototyping to find property by name (JS style =/)
 
         const stanceModifier: number = _stance_accurate;
 
 
         attack.defenseRoll = (this.skills.defence.level + stanceModifier + 8) * (equipmentBonus + 64);
         //Prayer/Effect bonus - calculate ALL the good and bad effects at once! (prayers, and magic effects, etc.)
-        this.effects.filter(a => a.EffectType === EffectType.BoostDefense || a.EffectType === EffectType.LowerDefense).forEach((effect) => {
+        this.effects.filter(a => a.EffectType === EffectType.BoostDefence || a.EffectType === EffectType.LowerDefence).forEach((effect) => {
             attack.defenseRoll += (this.skills.defence.level * effect.Modifier);
         });
         attack.defenseRoll = Math.round(attack.defenseRoll);
@@ -503,10 +511,10 @@ export abstract class Actor {
             return;
         }
 
-        if(this instanceof Npc) {
-            const nearbyPlayers = world.findNearbyPlayers(this.position, 24, this.instanceId);
+        if(this.isNpc) {
+            const nearbyPlayers = world.findNearbyPlayers(this.position, 24, this.instance?.instanceId);
             if(nearbyPlayers.length === 0) {
-                // No need for this NPC to move if there are no players nearby to see it
+                // No need for this actor to move if there are no players nearby to witness it, save some memory. :)
                 return;
             }
         }
@@ -553,11 +561,8 @@ export abstract class Actor {
 
             let valid = true;
 
-            if(this instanceof Npc) {
-                if(px > this.initialPosition.x + this.movementRadius || px < this.initialPosition.x - this.movementRadius
-                    || py > this.initialPosition.y + this.movementRadius || py < this.initialPosition.y - this.movementRadius) {
-                    valid = false;
-                }
+            if(!this.withinBounds(px, py)) {
+                valid = false;
             }
 
             movementAllowed = valid;
@@ -592,11 +597,8 @@ export abstract class Actor {
                 px += movementDirection.deltaX;
                 py += movementDirection.deltaY;
 
-                if(this instanceof Npc) {
-                    if(px > this.initialPosition.x + this.movementRadius || px < this.initialPosition.x - this.movementRadius
-                        || py > this.initialPosition.y + this.movementRadius || py < this.initialPosition.y - this.movementRadius) {
-                        valid = false;
-                    }
+                if(!this.withinBounds(px, py)) {
+                    valid = false;
                 }
 
             }
@@ -611,6 +613,10 @@ export abstract class Actor {
             this.walkingQueue.valid = true;
             this.walkingQueue.add(px, py);
         }
+    }
+
+    public withinBounds(x: number, y: number): boolean {
+        return true;
     }
 
     public abstract getAttackAnimation(): number;
@@ -669,6 +675,14 @@ export abstract class Actor {
         this._faceDirection = value;
     }
 
+    public get damageType() {
+        return this._damageType;
+    }
+
+    public set damageType(value) {
+        this._damageType = value;
+    }
+
     public get busy(): boolean {
         return this._busy;
     }
@@ -682,34 +696,19 @@ export abstract class Actor {
     }
 
     public set instance(value: WorldInstance) {
-        if(this instanceof Player) {
-            const currentInstance = this._instance;
-            if(currentInstance?.instanceId) {
-                currentInstance.removePlayer(this);
-            }
-
-            if(value) {
-                value.addPlayer(this);
-            }
-        }
-
         this._instance = value;
     }
 
     public get isPlayer(): boolean {
-        return this instanceof Player;
+        return false;
     }
 
     public get isNpc(): boolean {
-        return this instanceof Npc;
+        return false;
     }
 
-    public get type(): { player?: Player, npc?: Npc } {
-        return {
-            player: this.isPlayer ? this as unknown as Player : undefined,
-            npc: this.isNpc ? this as unknown as Npc : undefined
-        };
+    public get bonuses(): { offensive: OffensiveBonuses, defensive: DefensiveBonuses, skill: SkillBonuses } {
+        return this._bonuses;
     }
-
 
 }

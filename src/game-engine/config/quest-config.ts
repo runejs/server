@@ -1,8 +1,6 @@
-import { Player } from '@engine/world/actor/player/player';
-import { Npc } from '@engine/world/actor/npc';
-import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
 import { logger } from '@runejs/core';
-import { handleTutorial } from '@plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy-quest.plugin';
+import { Npc, Player } from '@engine/world/actor';
+import { npcInteractionActionHandler } from '@engine/world/action';
 
 
 export type QuestKey = number | 'complete';
@@ -42,7 +40,9 @@ export class PlayerQuest {
     }
 }
 
-export function questDialogueActionFactory(questId: string, npcDialogueHandler: QuestDialogueHandler): npcInteractionActionHandler {
+export function questDialogueActionFactory(questId: string,
+                                           npcDialogueHandler: QuestDialogueHandler,
+                                           stageHandler: (player: Player) => Promise<void>): npcInteractionActionHandler {
     return async({ player, npc }) => {
         const quest = player.getQuest(questId);
         if(!quest) {
@@ -58,7 +58,7 @@ export function questDialogueActionFactory(questId: string, npcDialogueHandler: 
                 logger.error(e);
             }
 
-            await handleTutorial(player);
+            await stageHandler(player);
         }
     };
 }

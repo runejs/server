@@ -1,13 +1,15 @@
-import { world } from '@engine/game-server';
-import { World } from '@engine/world/world';
 import { logger } from '@runejs/core';
-import { Player } from '@engine/world/actor/player/player';
-import { PacketData } from '@engine/net/inbound-packet-handler';
+import { DataType, Endianness, Signedness } from '@runejs/core/buffer';
+
+import { world } from '@engine/game-server';
+import { PacketData } from '@engine/net';
+import { World } from '@engine/world';
+import { Player } from '@engine/world/actor';
 
 const npcInteractionPacket = (player: Player, packet: PacketData) => {
     const { buffer, packetId } = packet;
 
-    const args = {
+    const args: { [key: number]: [ DataType, Signedness?, Endianness? ] } = {
         63: [ 'short', 'u', 'le' ],
         116: [ 'short', 'u', 'le' ],
         57: [ 'short', 'u' ],

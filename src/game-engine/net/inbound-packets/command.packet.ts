@@ -1,6 +1,7 @@
-import { Rights } from '../../world/actor/player/player';
+import { Player, Rights } from '@engine/world/actor';
+import { PacketData } from '@engine/net';
 
-const commandPacket = (player, packet) => {
+const commandPacket = (player: Player, packet: PacketData) => {
     const input = packet.buffer.getString();
 
     if(!input || input.trim().length === 0) {

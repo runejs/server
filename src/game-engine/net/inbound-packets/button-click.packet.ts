@@ -1,4 +1,7 @@
-const buttonClickPacket = (player, packet) => {
+import { Player } from '@engine/world/actor';
+import { PacketData } from '@engine/net';
+
+const buttonClickPacket = (player: Player, packet: PacketData) => {
     const { buffer } = packet;
     const widgetId = buffer.get('short');
     const buttonId = buffer.get('short');

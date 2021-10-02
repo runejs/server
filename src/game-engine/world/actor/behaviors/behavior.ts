@@ -1,8 +1,5 @@
 import { Actor } from '../actor';
-import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
-import { Subject } from 'rxjs';
-import { Npc } from '../npc';
-import { Player } from '../player/player';
+
 
 export abstract class Behavior {
     //because not all interaction between npcs will be combat oriented me/them is on the base class

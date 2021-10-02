@@ -367,7 +367,7 @@ export class World {
 
         const npc = new Npc(npcData,
             new NpcSpawn(typeof npcData === 'number' ? `unknown_${npcData}` : npcData.key,
-                position, movementRadius, face), instanceId);
+                position, movementRadius, face));
 
         await this.registerNpc(npc);
 

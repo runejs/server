@@ -1,9 +1,8 @@
-import { Actor } from '@engine/world/actor/actor';
-import { Player } from '@engine/world/actor/player/player';
 import { startsWithVowel } from '@engine/util/strings';
 import { serverConfig } from '@engine/game-server';
-import { gfxIds } from '@engine/world/config/gfx-ids';
-import equipmentStatsPlugin from '../../../plugins/items/equipment/equipment-stats.plugin';
+import { gfxIds } from '@engine/world/config';
+import { Actor } from './actor';
+import { Player } from './player';
 
 export enum Skill {
     ATTACK,

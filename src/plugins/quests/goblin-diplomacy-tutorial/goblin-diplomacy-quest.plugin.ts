@@ -52,7 +52,7 @@ export function showTabWidgetHint(player: Player, tabIndex: number, availableTab
         player.setQuestProgress('tyn:goblin_diplomacy', finalProgress);
         player.metadata.tabClickEvent.event.complete();
         delete player.metadata.tabClickEvent;
-        await handleTutorial(player);
+        await tutorialHandler(player);
     });
 }
 
@@ -146,7 +146,7 @@ export async function spawnGoblinBoi(player: Player, spawnPoint: 'beginning' | '
     }
 }
 
-export async function handleTutorial(player: Player): Promise<void> {
+export async function tutorialHandler(player: Player): Promise<void> {
     const progress = player.getQuest('tyn:goblin_diplomacy').progress;
     const handler = goblinDiplomacyStageHandler[progress];
 
@@ -172,7 +172,7 @@ const tutorialInitAction: playerInitActionHandler = async ({ player }) => {
         player.instance = new WorldInstance(uuidv4());
         player.metadata.blockObjectInteractions = true;
         spawnQuestNpcs(player);
-        await handleTutorial(player);
+        await tutorialHandler(player);
     } else {
         defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
             if(widgetId !== -1) {
@@ -192,7 +192,7 @@ const trainingSwordEquipAction: equipmentChangeActionHandler = async ({ player, 
         if((itemDetails.key === 'rs:training_sword' && shieldEquipped) ||
             (itemDetails.key === 'rs:training_shield' && swordEquipped)) {
             player.setQuestProgress('tyn:goblin_diplomacy', 90);
-            await handleTutorial(player);
+            await tutorialHandler(player);
         }
     }
 };
@@ -208,29 +208,32 @@ const journalHandler: QuestJournalHandler = {
 };
 
 
+const QUEST_ID = 'tyn:goblin_diplomacy';
+
+const QUEST = new Quest({
+    id: QUEST_ID,
+    questTabId: 28,
+    name: `Goblin Diplomacy`,
+    points: 1,
+    journalHandler,
+    onComplete: {
+        questCompleteWidget: {
+            rewardText: [ 'A training sword & shield' ],
+            itemId: 9703,
+            modelZoom: 200,
+            modelRotationX: 0,
+            modelRotationY: 180
+        }
+    }
+});
+
+
 /**
  * Custom Goblin Diplomacy tutorial quest!
  */
 export default {
     pluginId: 'tyn:goblin_diplomacy_quest',
-    quests: [
-        new Quest({
-            id: 'tyn:goblin_diplomacy',
-            questTabId: 28,
-            name: `Goblin Diplomacy`,
-            points: 1,
-            journalHandler,
-            onComplete: {
-                questCompleteWidget: {
-                    rewardText: [ 'A training sword & shield' ],
-                    itemId: 9703,
-                    modelZoom: 200,
-                    modelRotationX: 0,
-                    modelRotationY: 180
-                }
-            }
-        })
-    ],
+    quests: [ QUEST ],
     hooks: [
         {
             type: 'player_init',
@@ -238,14 +241,14 @@ export default {
         },
         {
             type: 'npc_interaction',
-            handler: questDialogueActionFactory('tyn:goblin_diplomacy', runescapeGuideDialogueHandler),
+            handler: questDialogueActionFactory(QUEST_ID, runescapeGuideDialogueHandler, tutorialHandler),
             npcs: 'rs:runescape_guide',
             options: 'talk-to',
             walkTo: true
         },
         {
             type: 'npc_interaction',
-            handler: questDialogueActionFactory('tyn:goblin_diplomacy', harlanDialogueHandler),
+            handler: questDialogueActionFactory(QUEST_ID, harlanDialogueHandler, tutorialHandler),
             npcs: 'rs:melee_combat_tutor',
             options: 'talk-to',
             walkTo: true

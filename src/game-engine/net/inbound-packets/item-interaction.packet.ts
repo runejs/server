@@ -1,4 +1,6 @@
-import { getItemOption } from '../../world/items/item';
+import { getItemOption } from '@engine/world';
+import { Player } from '@engine/world/actor';
+import { PacketData } from '@engine/net';
 
 const option1 = buffer => {
     const itemId = buffer.get('short', 'u');
@@ -56,7 +58,7 @@ const inventoryOption4 = buffer => {
     return { widgetId, containerId, itemId, slot };
 };
 
-const itemInteractionPacket = (player, packet) => {
+const itemInteractionPacket = (player: Player, packet: PacketData) => {
     const { packetId } = packet;
     const packets = {
         38: { packetDef: option1, optionNumber: 1 },

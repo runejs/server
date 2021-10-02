@@ -1,9 +1,11 @@
 import { logger } from '@runejs/core';
 import { world } from '@engine/game-server';
-import { World } from '@engine/world/world';
-import { widgets } from '@engine/config/config-handler';
+import { World } from '@engine/world';
+import { widgets } from '@engine/config';
+import { Player } from '@engine/world/actor';
+import { PacketData } from '@engine/net';
 
-const itemOnNpcPacket = (player, packet) => {
+const itemOnNpcPacket = (player: Player, packet: PacketData) => {
     const { buffer } = packet;
     const npcIndex = buffer.get('short', 'u');
     const itemId = buffer.get('short', 'u');

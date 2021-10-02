@@ -1,18 +1,18 @@
-import { buttonActionHandler, ButtonActionHook } from '@engine/world/action/button.action';
-import { Player } from '@engine/world/actor/player/player';
 import {
+    buttonActionHandler,
+    ButtonActionHook,
     widgetInteractionActionHandler,
     WidgetInteractionActionHook
-} from '@engine/world/action/widget-interaction.action';
-import { skillGuides, widgets } from '@engine/config/config-handler';
-import { SkillGuide, SkillSubGuide } from '@engine/config/skill-guide-config';
+} from '@engine/world/action';
+import { Player } from '@engine/world/actor';
+import { widgets } from '@engine/config';
+import { SkillGuide, SkillSubGuide, loadSkillGuideConfigurations } from './skill-guide-config';
 
 
-const guides = skillGuides;
-
+const skillGuidePath = __dirname.replace(/dist/, 'src');
 const sidebarTextIds = [131, 108, 109, 112, 122, 125, 128, 143, 146, 149, 159, 162, 165];
 const sidebarIds = [129, 98, -1, 110, 113, 123, 126, 134, 144, 147, 150, 160, 163];
-const buttonIds = guides.map(g => g.id);
+let guides: SkillGuide[] = [];
 
 function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refreshSidebar: boolean = true): void {
     const guide: SkillGuide = guides.find(g => g.id === guideId);
@@ -65,13 +65,22 @@ function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refr
     player.metadata['activeSkillGuide'] = guideId;
 }
 
-export const guideHandler: buttonActionHandler = (details) => {
+export const guideHandler: buttonActionHandler = async (details) => {
     const { player, buttonId } = details;
+
+    if(!guides.length) {
+        guides = await loadSkillGuideConfigurations(skillGuidePath);
+    }
+
     loadGuide(player, buttonId);
 };
 
-export const subGuideHandler: widgetInteractionActionHandler = (details) => {
+export const subGuideHandler: widgetInteractionActionHandler = async (details) => {
     const { player, childId } = details;
+
+    if(!guides.length) {
+        guides = await loadSkillGuideConfigurations(skillGuidePath);
+    }
 
     const activeSkillGuide = player.metadata['activeSkillGuide'];
 
@@ -95,13 +104,11 @@ export default {
         {
             type: 'button',
             widgetId: widgets.skillsTab,
-            buttonIds,
             handler: guideHandler
         } as ButtonActionHook,
         {
             type: 'widget_interaction',
             widgetIds: widgets.skillGuide,
-            childIds: sidebarTextIds,
             optionId: 0,
             handler: subGuideHandler
         } as WidgetInteractionActionHook
