@@ -2,7 +2,7 @@ import { logger } from '@runejs/core';
 import { parseServerConfig, SocketServer } from '@runejs/core/net';
 import { Filestore } from '@runejs/filestore';
 
-import { createWorld } from '@engine/world';
+import { activateGameWorld } from '@engine/world';
 import { loadCoreConfigurations, loadGameConfigurations, xteaRegions } from '@engine/config';
 import { loadPackets } from '@engine/net';
 import { watchForChanges, watchSource } from '@engine/util';
@@ -46,7 +46,7 @@ export async function launchGameServer(): Promise<void> {
     await loadGameConfigurations();
     await loadPackets();
 
-    const world = await createWorld();
+    const world = await activateGameWorld();
 
     if(process.argv.indexOf('-fakePlayers') !== -1) {
         world.generateFakePlayers();

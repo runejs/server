@@ -18,7 +18,7 @@ export let activeWorld: World;
 /**
  * Creates a new instance of the game world and assigns it to the singleton world variable.
  */
-export const createWorld = async (): Promise<World> => {
+export const activateGameWorld = async (): Promise<World> => {
     activeWorld = new World();
     await activeWorld.startup();
     return activeWorld;
