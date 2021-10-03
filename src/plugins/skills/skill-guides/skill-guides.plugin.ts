@@ -3,7 +3,7 @@ import {
     ButtonActionHook,
     widgetInteractionActionHandler,
     WidgetInteractionActionHook
-} from '@engine/world/action';
+} from '@engine/action';
 import { Player } from '@engine/world/actor';
 import { widgets } from '@engine/config';
 import { SkillGuide, SkillSubGuide, loadSkillGuideConfigurations } from './skill-guide-config';

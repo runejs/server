@@ -2,7 +2,7 @@
  * @Author NickNick
  */
 
-import { objectInteractionActionHandler, ObjectInteractionAction } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler, ObjectInteractionAction } from '@engine/action/object-interaction.action';
 import { Skill } from '@engine/world/actor/skills';
 import {
     altars, combinationRunes,
@@ -10,7 +10,7 @@ import {
     getEntityIds, runeMultiplier,
     runes,
 } from '@plugins/skills/runecrafting/runecrafting-constants';
-import { itemOnObjectActionHandler, ItemOnObjectAction } from '@engine/world/action/item-on-object.action';
+import { itemOnObjectActionHandler, ItemOnObjectAction } from '@engine/action/item-on-object.action';
 import { RunecraftingCombinationRune } from '@plugins/skills/runecrafting/runecrafting-types';
 import { randomBetween } from '@engine/util/num';
 import { itemIds } from '@engine/world/config/item-ids';

@@ -1,4 +1,4 @@
-import { spawnedItemInteractionHandler } from '@engine/world/action/spawned-item-interaction.action';
+import { spawnedItemInteractionHandler } from '@engine/action/spawned-item-interaction.action';
 import { Item } from '@engine/world/items/item';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { widgets } from '@engine/config/config-handler';

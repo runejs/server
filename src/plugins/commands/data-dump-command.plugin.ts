@@ -1,4 +1,4 @@
-import { commandActionHandler } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/action/player-command.action';
 import { DataDumpResult, dumpItems, dumpNpcs, dumpObjects, dumpWidgets } from '@engine/config/data-dump';
 
 

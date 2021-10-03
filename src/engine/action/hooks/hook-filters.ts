@@ -1,5 +1,5 @@
-import { Player } from '@engine/world/actor/player/player';
-import { ActionHook } from '@engine/world/action/hooks/index';
+import { ActionHook } from '@engine/action';
+import { Player } from '@engine/world/actor';
 
 
 export const stringHookFilter = (expected: string | string[], input: string): boolean => {

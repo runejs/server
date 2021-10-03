@@ -1,15 +1,15 @@
-import { NpcInteractionAction, npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
+import { NpcInteractionAction, npcInteractionActionHandler } from '@engine/action/npc-interaction.action';
 import { Actor } from '@engine/world/actor/actor';
 import { Player } from '@engine/world/actor/player/player';
 import { lastValueFrom, timer } from 'rxjs';
-import { World } from '@engine/world/world';
+import { World } from '@engine/world';
 import { filter, take } from 'rxjs/operators';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { Npc } from '@engine/world/actor/npc';
 import { itemIds } from '@engine/world/config/item-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { findNpc } from '@engine/config/config-handler';
-import { TaskExecutor } from '../../engine/world/action/hooks';
+import { TaskExecutor } from '../../engine/action/hooks';
 import { wait } from '../../engine/world/task';
 import { activeWorld } from '@engine/world';
 

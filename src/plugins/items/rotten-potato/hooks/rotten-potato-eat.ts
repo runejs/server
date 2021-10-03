@@ -1,4 +1,4 @@
-import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action/item-interaction.action';
 import { dialogue, execute } from '@engine/world/actor/dialogue';
 
 enum DialogueOption {

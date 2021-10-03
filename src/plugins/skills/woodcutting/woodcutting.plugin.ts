@@ -1,7 +1,7 @@
 import {
     ObjectInteractionAction,
     ObjectInteractionActionHook
-} from '@engine/world/action/object-interaction.action';
+} from '@engine/action/object-interaction.action';
 import { Skill } from '@engine/world/actor/skills';
 import { canInitiateHarvest } from '@engine/world/skill-util/harvest-skill';
 import { getTreeFromHealthy, getTreeIds, IHarvestable } from '@engine/world/config/harvestable-object';
@@ -11,7 +11,7 @@ import { colors } from '@engine/util/colors';
 import { rollBirdsNestType } from '@engine/world/skill-util/harvest-roll';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { Axe, getAxe, HarvestTool } from '@engine/world/config/harvest-tool';
-import { TaskExecutor } from '@engine/world/action/action-pipeline';
+import { TaskExecutor } from '@engine/action/action-pipeline';
 import { findItem } from '@engine/config/config-handler';
 import { Player } from '@engine/world/actor';
 import { activeWorld } from '@engine/world';

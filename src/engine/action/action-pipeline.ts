@@ -1,12 +1,12 @@
-import { gameEngineDist } from '@engine/util/directories';
-import { getFiles } from '@engine/util/files';
-import { logger } from '@runejs/core';
-import { Actor } from '@engine/world/actor/actor';
-import { ActionHook, TaskExecutor } from '@engine/world/action/hooks';
-import { Position } from '@engine/world/position';
-import { Player } from '@engine/world/actor/player/player';
 import { Subscription } from 'rxjs';
+
+import { logger } from '@runejs/core';
 import { LandscapeObject } from '@runejs/filestore';
+
+import { gameEngineDist, getFiles } from '@engine/util';
+import { Actor, Player } from '@engine/world/actor';
+import { ActionHook, TaskExecutor } from '@engine/action';
+import { Position } from '@engine/world';
 
 
 /**
@@ -44,7 +44,8 @@ export type ActionType =
     | 'player_command'
     | 'player_interaction'
     | 'region_change'
-    | 'equipment_change';
+    | 'equipment_change'
+    | 'prayer';
 
 
 export const gentleActions: ActionType[] = [
@@ -258,4 +259,4 @@ export async function loadActionFiles(): Promise<void> {
 }
 
 
-export * from './hooks/index';
+export * from './hooks';

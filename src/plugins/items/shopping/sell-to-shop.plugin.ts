@@ -1,4 +1,4 @@
-import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action/item-interaction.action';
 import { itemIds } from '@engine/world/config/item-ids';
 import { getItemFromContainer } from '@engine/world/items/item-container';
 import { Shop } from '@engine/config/shop-config';

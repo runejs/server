@@ -1,4 +1,4 @@
-import { buttonActionHandler } from '@engine/world/action';
+import { buttonActionHandler } from '@engine/action';
 import { findMusicTrackByButtonId, findSongIdByRegionId, widgets } from '@engine/config';
 import { widgetScripts } from '@engine/world/config';
 import { MusicPlayerMode, MusicTabButtonIds } from '@engine/world/sound';

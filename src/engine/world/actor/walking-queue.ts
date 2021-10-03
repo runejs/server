@@ -2,7 +2,7 @@ import { Actor } from './actor';
 import { Position } from '../position';
 import { Player } from './player/player';
 import { Npc } from './npc';
-import { regionChangeActionFactory } from '@engine/world/action';
+import { regionChangeActionFactory } from '@engine/action';
 import { Subject } from 'rxjs';
 import { activeWorld } from '@engine/world';
 

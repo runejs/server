@@ -1,7 +1,7 @@
 import { Position } from '@engine/world/position';
 import { Player } from '@engine/world/actor/player/player';
-import { World } from '@engine/world/world';
-import { commandActionHandler } from '@engine/world/action/player-command.action';
+import { World } from '@engine/world';
+import { commandActionHandler } from '@engine/action/player-command.action';
 import { activeWorld } from '@engine/world';
 
 

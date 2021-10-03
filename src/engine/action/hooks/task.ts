@@ -1,12 +1,11 @@
 import uuidv4 from 'uuid/v4';
 import { lastValueFrom, Subscription, timer } from 'rxjs';
-import { Actor } from '@engine/world/actor/actor';
-import { ActionHook } from '@engine/world/action/action-pipeline';
-import { World } from '@engine/world/world';
+
 import { logger } from '@runejs/core';
-import { Player } from '@engine/world/actor/player/player';
-import { Npc } from '@engine/world/actor/npc';
-import { ActionStrength } from '@engine/world/action/action-pipeline';
+
+import { ActionHook, ActionStrength } from '@engine/action';
+import { World } from '@engine/world';
+import { Actor, Player, Npc } from '@engine/world/actor';
 
 
 export type TaskSessionData = { [key: string]: any };

@@ -1,5 +1,5 @@
 import { ContentPlugin } from '@engine/plugins';
-import { NpcInteractionActionHook } from '@engine/world/action';
+import { NpcInteractionActionHook } from '@engine/action';
 import { findShop } from '@engine/config';
 
 

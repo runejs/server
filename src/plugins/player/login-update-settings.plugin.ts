@@ -1,6 +1,6 @@
 import { validateSettings } from '@engine/world/actor/player/player-data';
 import { widgetScripts } from '@engine/world/config/widget';
-import { playerInitActionHandler } from '@engine/world/action/player-init.action';
+import { playerInitActionHandler } from '@engine/action/player-init.action';
 
 
 export const handler: playerInitActionHandler = ({ player }) => {

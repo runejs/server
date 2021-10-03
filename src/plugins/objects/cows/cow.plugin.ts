@@ -1,10 +1,10 @@
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action/object-interaction.action';
 import { dialogueAction, DialogueEmote } from '@engine/world/actor/player/dialogue-action';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { itemIds } from '@engine/world/config/item-ids';
 import { objectIds } from '@engine/world/config/object-ids';
-import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
+import { itemOnObjectActionHandler } from '@engine/action/item-on-object.action';
 import { Player } from '@engine/world/actor/player/player';
 import { findItem, findNpc } from '@engine/config/config-handler';
 import { ObjectConfig } from '@runejs/filestore';

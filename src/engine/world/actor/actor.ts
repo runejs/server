@@ -6,7 +6,7 @@ import { LandscapeObject } from '@runejs/filestore';
 import { DefensiveBonuses, OffensiveBonuses, SkillBonuses } from '@engine/config';
 import { Position, DirectionData, directionFromIndex, WorldInstance, activeWorld } from '@engine/world';
 import { Item, ItemContainer } from '@engine/world/items';
-import { ActionCancelType, ActionPipeline } from '@engine/world/action';
+import { ActionCancelType, ActionPipeline } from '@engine/action';
 import { soundIds } from '@engine/world/config';
 
 import { WalkingQueue } from './walking-queue';

@@ -1,4 +1,4 @@
-import { PlayerCommandAction } from '@engine/world/action/player-command.action';
+import { PlayerCommandAction } from '@engine/action/player-command.action';
 
 export default {
     pluginId: 'rs:clear_inventory_command',

@@ -1,5 +1,5 @@
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
-import { World } from '@engine/world/world';
+import { objectInteractionActionHandler } from '@engine/action/object-interaction.action';
+import { World } from '@engine/world';
 import { itemIds } from '@engine/world/config/item-ids';
 import { findItem } from '@engine/config/config-handler';
 
