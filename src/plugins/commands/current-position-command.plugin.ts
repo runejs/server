@@ -1,4 +1,4 @@
-import { commandActionHandler } from '@engine/action/pipe/player-command.action';
+import { commandActionHandler } from '@engine/action';
 
 const action: commandActionHandler = (details) => {
     const { player } = details;

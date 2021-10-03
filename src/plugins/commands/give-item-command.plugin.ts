@@ -1,4 +1,4 @@
-import { commandActionHandler } from '@engine/action/pipe/player-command.action';
+import { commandActionHandler } from '@engine/action';
 import { filestore } from '@server/game/game-server';
 import { itemIds } from '@engine/world/config/item-ids';
 import { findItem, itemIdMap } from '@engine/config/config-handler';

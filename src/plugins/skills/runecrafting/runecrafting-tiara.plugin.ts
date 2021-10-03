@@ -3,7 +3,7 @@
  */
 
 import { getEntityByAttr, getEntityIds, tiaras } from '@plugins/skills/runecrafting/runecrafting-constants';
-import { equipmentChangeActionHandler } from '@engine/action/pipe/equipment-change.action';
+import { equipmentChangeActionHandler } from '@engine/action';
 
 
 const unequipTiara : equipmentChangeActionHandler = (details) => {

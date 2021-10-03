@@ -1,4 +1,4 @@
-import { commandActionHandler } from '@engine/action/pipe/player-command.action';
+import { commandActionHandler } from '@engine/action';
 import { loadPackets } from '@engine/net/inbound-packet-handler';
 import { loadGameConfigurations } from '@engine/config/config-handler';
 import { logger } from '@runejs/core';

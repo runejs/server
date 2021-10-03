@@ -6,7 +6,7 @@ import { gfxIds } from '@engine/world/config/gfx-ids';
 import { TaskExecutor } from '@engine/action/action-pipeline';
 import { widgetButtonIds } from '../skills/smithing/smelting-constants';
 import { logger } from '@runejs/core';
-import { PrayerAction, PrayerActionHook } from '@engine/action/pipe/prayer.action';
+import { PrayerAction, PrayerActionHook } from '@engine/action';
 import { widgets } from '@engine/config/config-handler';
 import { Prayer } from '../../engine/world/actor/prayer';
 import { EffectType } from '../../engine/world/actor/effect';

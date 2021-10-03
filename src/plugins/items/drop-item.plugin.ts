@@ -1,4 +1,4 @@
-import { itemInteractionActionHandler } from '@engine/action/pipe/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { getItemFromContainer } from '@engine/world/items/item-container';
 import { serverConfig } from '@server/game/game-server';

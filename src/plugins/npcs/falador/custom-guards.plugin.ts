@@ -1,4 +1,4 @@
-import { npcInitActionHandler } from '@engine/action/pipe/npc-init.action';
+import { npcInitActionHandler } from '@engine/action';
 import { World } from '@engine/world';
 import { Position } from '@engine/world/position';
 import { findNpc } from '@engine/config/config-handler';

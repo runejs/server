@@ -1,4 +1,4 @@
-import { objectInteractionActionHandler } from '@engine/action/pipe/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
 import { World } from '@engine/world';
 
 

@@ -1,4 +1,4 @@
-import { commandActionHandler } from '@engine/action/pipe/player-command.action';
+import { commandActionHandler } from '@engine/action';
 
 
 const setLevelAction: commandActionHandler = ({ player, args }) => {

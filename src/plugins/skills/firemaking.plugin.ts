@@ -1,4 +1,4 @@
-import { itemOnItemActionHandler } from '@engine/action/pipe/item-on-item.action';
+import { itemOnItemActionHandler } from '@engine/action';
 import { Player } from '@engine/world/actor/player/player';
 import { WorldItem } from '@engine/world/items/world-item';
 import { Position } from '@engine/world/position';

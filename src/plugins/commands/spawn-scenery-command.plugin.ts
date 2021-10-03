@@ -1,4 +1,4 @@
-import { commandActionHandler } from '@engine/action/pipe/player-command.action';
+import { commandActionHandler } from '@engine/action';
 import { objectIds } from '@engine/world/config/object-ids';
 import { safeDump } from 'js-yaml';
 import { writeFileSync } from 'fs';

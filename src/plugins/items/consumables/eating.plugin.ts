@@ -4,7 +4,7 @@ import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { randomBetween } from '@engine/util/num';
 import { World } from '@engine/world';
-import { itemInteractionActionHandler } from '@engine/action/pipe/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action';
 
 
 export const action: itemInteractionActionHandler = (details) => {

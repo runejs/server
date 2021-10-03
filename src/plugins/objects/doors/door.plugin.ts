@@ -1,5 +1,5 @@
 import { directionData, WNES } from '@engine/world/direction';
-import { objectInteractionActionHandler } from '@engine/action/pipe/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { LandscapeObject } from '@runejs/filestore';
 

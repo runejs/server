@@ -1,11 +1,6 @@
 import { Player } from '@engine/world/actor/player/player';
-import { Position } from '@engine/world/position';
-import { animationIds } from '@engine/world/config/animation-ids';
-import { soundIds } from '@engine/world/config/sound-ids';
-import { gfxIds } from '@engine/world/config/gfx-ids';
 import { TaskExecutor } from '@engine/action/action-pipeline';
-import { widgetButtonIds } from '../skills/smithing/smelting-constants';
-import { magiconnpcActionHandler, MagicOnNPCActionHook, MagicOnNPCAction } from '@engine/action/pipe/magic-on-npc.action';
+import { MagicOnNPCActionHook, MagicOnNPCAction } from '@engine/action';
 import { logger } from '@runejs/core';
 import { loopingEvent } from '@engine/plugins';
 

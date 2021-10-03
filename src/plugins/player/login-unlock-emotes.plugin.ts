@@ -1,5 +1,5 @@
 import { unlockEmotes } from '@plugins/buttons/player-emotes.plugin';
-import { playerInitActionHandler } from '@engine/action/pipe/player-init.action';
+import { playerInitActionHandler } from '@engine/action';
 
 
 export const handler: playerInitActionHandler =

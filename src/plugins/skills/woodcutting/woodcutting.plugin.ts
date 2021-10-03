@@ -1,7 +1,7 @@
 import {
     ObjectInteractionAction,
     ObjectInteractionActionHook
-} from '@engine/action/pipe/object-interaction.action';
+} from '@engine/action';
 import { Skill } from '@engine/world/actor/skills';
 import { canInitiateHarvest } from '@engine/world/skill-util/harvest-skill';
 import { getTreeFromHealthy, getTreeIds, IHarvestable } from '@engine/world/config/harvestable-object';

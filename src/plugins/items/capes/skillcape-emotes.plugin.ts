@@ -1,5 +1,5 @@
 import { lockEmote, unlockEmote } from '@plugins/buttons/player-emotes.plugin';
-import { equipmentChangeActionHandler } from '@engine/action/pipe/equipment-change.action';
+import { equipmentChangeActionHandler } from '@engine/action';
 import { itemIds } from '@engine/world/config/item-ids';
 
 export const skillcapeIds: Array<number> = Object.keys(

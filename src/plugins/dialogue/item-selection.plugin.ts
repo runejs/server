@@ -1,4 +1,4 @@
-import { widgetInteractionActionHandler } from '@engine/action/pipe/widget-interaction.action';
+import { widgetInteractionActionHandler } from '@engine/action';
 
 /**
  * Handles an item selection dialogue choice.
