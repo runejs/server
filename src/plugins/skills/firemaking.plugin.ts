@@ -9,13 +9,55 @@ import { soundIds } from '@engine/world/config/sound-ids';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { LandscapeObject } from '@runejs/filestore';
 import { loopingEvent } from '@engine/plugins';
+import { findItem, ItemDetails } from '@engine/config';
 
 
-const logs = [
+interface Burnable {
+    logItem: ItemDetails;
+    requiredLevel: number;
+    experienceGained: number;
+}
+
+const logs: Burnable[] = [
     {
-        logId: itemIds.logs,
+        logItem: findItem('rs:logs'),
         requiredLevel: 1,
-        burnExp: 40
+        experienceGained: 40
+    },
+    {
+        logItem: findItem('rs:oak_logs'),
+        requiredLevel: 15,
+        experienceGained: 60
+    },
+    {
+        logItem: findItem('rs:willow_logs'),
+        requiredLevel: 30,
+        experienceGained: 90
+    },
+    {
+        logItem: findItem('rs:teak_logs'),
+        requiredLevel: 35,
+        experienceGained: 105
+    },
+    {
+        logItem: findItem('rs:maple_logs'),
+        requiredLevel: 45,
+        experienceGained: 135
+    },
+    {
+        logItem: findItem('rs:mahogany_logs'),
+        requiredLevel: 50,
+        experienceGained: 157.5
+    },
+    {
+        logItem: findItem('rs:yew_logs'),
+        requiredLevel: 60,
+        experienceGained: 202.5
+    },
+    {
+        logItem: findItem('rs:magic_logs'),
+        requiredLevel: 75,
+        experienceGained: 303.8
     }
 ];
 
@@ -78,7 +120,7 @@ const action: itemOnItemActionHandler = (details) => {
 
     const log = usedItem.itemId !== itemIds.tinderbox ? usedItem : usedWithItem;
     const removeFromSlot = usedItem.itemId !== itemIds.tinderbox ? usedSlot : usedWithSlot;
-    const skillInfo = logs.find(l => l.logId === log.itemId);
+    const skillInfo = logs.find(l => l.logItem.gameId === log.itemId);
     const position = player.position;
 
     if(!skillInfo) {
@@ -94,7 +136,7 @@ const action: itemOnItemActionHandler = (details) => {
 
     if(player.metadata['lastFire'] && Date.now() - player.metadata['lastFire'] < 1200 &&
         canChain(skillInfo.requiredLevel, player.skills.firemaking.level)) {
-        lightFire(player, position, worldItemLog, skillInfo.burnExp);
+        lightFire(player, position, worldItemLog, skillInfo.experienceGained);
     } else {
         player.sendMessage(`You attempt to light the logs.`);
 
@@ -110,7 +152,7 @@ const action: itemOnItemActionHandler = (details) => {
             if(canLightFire) {
                 loop.cancel();
                 player.metadata.busy = true;
-                setTimeout(() => lightFire(player, position, worldItemLog, skillInfo.burnExp), 1200);
+                setTimeout(() => lightFire(player, position, worldItemLog, skillInfo.experienceGained), 1200);
                 return;
             }
 
@@ -139,7 +181,7 @@ export default {
     hooks: [
         {
             type: 'item_on_item',
-            items: logs.map(log => ({ item1: itemIds.tinderbox, item2: log.logId })),
+            items: logs.map(log => ({ item1: itemIds.tinderbox, item2: log.logItem.gameId })),
             handler: action
         }
     ]

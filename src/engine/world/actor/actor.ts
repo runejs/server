@@ -699,11 +699,11 @@ export abstract class Actor {
     }
 
     public get isPlayer(): boolean {
-        return false;
+        return this.type === 'player';
     }
 
     public get isNpc(): boolean {
-        return false;
+        return this.type === 'npc';
     }
 
     public get bonuses(): { offensive: OffensiveBonuses, defensive: DefensiveBonuses, skill: SkillBonuses } {

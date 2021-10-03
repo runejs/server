@@ -1,6 +1,5 @@
-import { Player } from '@engine/world/actor/player/player';
-import { TaskExecutor } from '@engine/action/action-pipeline';
-import { MagicOnNPCActionHook, MagicOnNPCAction } from '@engine/action';
+import { Player } from '@engine/world/actor';
+import { TaskExecutor, MagicOnNPCActionHook, MagicOnNPCAction } from '@engine/action';
 import { logger } from '@runejs/core';
 import { loopingEvent } from '@engine/plugins';
 

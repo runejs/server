@@ -1,4 +1,3 @@
-import { NpcInteractionAction, npcInteractionActionHandler } from '@engine/action/pipe/npc-interaction.action';
 import { Actor } from '@engine/world/actor/actor';
 import { Player } from '@engine/world/actor/player/player';
 import { lastValueFrom, timer } from 'rxjs';
@@ -9,8 +8,6 @@ import { Npc } from '@engine/world/actor/npc';
 import { itemIds } from '@engine/world/config/item-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { findNpc } from '@engine/config/config-handler';
-import { TaskExecutor } from '../../engine/action/hook';
-import { wait } from '../../engine/world/task';
 import { activeWorld } from '@engine/world';
 
 
@@ -117,8 +114,10 @@ class Combat {
         activeWorld.playLocationSound(defender.position, defender instanceof Player ? soundIds.npc.human.playerDefence :
             soundIds.npc.human.maleDefence, 5);
 
-        const defenderState: 'alive' | 'dead' = defender.damage(actualHit);
+        defender.damage(actualHit);
+        const defenderState: 'alive' | 'dead' = 'alive';
 
+        // @ts-ignore
         if (defenderState === 'dead') {
             // @TODO death sounds
             this.processDeath(defender, attacker);
@@ -157,7 +156,7 @@ class Combat {
             instance = victim.instance;
         }
 
-        instance.spawnWorldItem(itemIds.bones, deathPosition,
+        instance.spawnWorldItem(itemIds.bones.normal, deathPosition,
             { owner: this.assailant instanceof Player ? this.assailant : undefined, expires: 300 });
     }
 
