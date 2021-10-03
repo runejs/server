@@ -1,8 +1,8 @@
 import { buttonActionHandler } from '@engine/world/action';
 import { findMusicTrackByButtonId, findSongIdByRegionId, widgets } from '@engine/config';
 import { widgetScripts } from '@engine/world/config';
-import { world } from '@engine/game-server';
 import { MusicPlayerMode, MusicTabButtonIds } from '@engine/world/sound';
+import { activeWorld } from '@engine/world';
 
 export const handler: buttonActionHandler = (details) => {
     const { player, buttonId } = details;
@@ -10,7 +10,7 @@ export const handler: buttonActionHandler = (details) => {
     if(buttonId === MusicTabButtonIds.AUTO_BUTTON_ID) {
         player.settings.musicPlayerMode = MusicPlayerMode.AUTO;
         const songIdForCurrentRegion = findSongIdByRegionId(
-            world.chunkManager.getRegionIdForWorldPosition(player.position));
+            activeWorld.chunkManager.getRegionIdForWorldPosition(player.position));
 
         if(player.savedMetadata['currentSongIdPlaying'] !== songIdForCurrentRegion) {
             player.playSong(songIdForCurrentRegion);

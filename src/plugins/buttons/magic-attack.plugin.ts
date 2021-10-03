@@ -3,11 +3,11 @@ import { Position } from '@engine/world/position';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { gfxIds } from '@engine/world/config/gfx-ids';
-import { loopingEvent } from '@engine/game-server';
 import { TaskExecutor } from '@engine/world/action/action-pipeline';
 import { widgetButtonIds } from '../skills/smithing/smelting-constants';
-import { magiconnpcActionHandler, MagicOnNPCActionHook, MagicOnNPCAction } from '../../game-engine/world/action/magic-on-npc.action';
+import { magiconnpcActionHandler, MagicOnNPCActionHook, MagicOnNPCAction } from '../../engine/world/action/magic-on-npc.action';
 import { logger } from '@runejs/core';
+import { loopingEvent } from '@engine/plugins';
 
 const buttonIds: number[] = [
     0, // Home Teleport

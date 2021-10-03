@@ -1,5 +1,5 @@
 import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
-import { filestore } from '@engine/game-server';
+import { filestore } from '@server/game/game-server';
 import { itemIds } from '@engine/world/config/item-ids';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';

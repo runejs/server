@@ -3,15 +3,15 @@ import { Position } from '@engine/world/position';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { gfxIds } from '@engine/world/config/gfx-ids';
-import { loopingEvent } from '@engine/game-server';
 import { TaskExecutor } from '@engine/world/action/action-pipeline';
 import { widgetButtonIds } from '../skills/smithing/smelting-constants';
 import { logger } from '@runejs/core';
-import { PrayerAction, PrayerActionHook } from '../../game-engine/world/action/prayer.action';
+import { PrayerAction, PrayerActionHook } from '../../engine/world/action/prayer.action';
 import { widgets } from '@engine/config/config-handler';
-import { Prayer } from '../../game-engine/world/actor/prayer';
-import { EffectType } from '../../game-engine/world/actor/effect';
-import { prayers } from '../../game-engine/world/config/prayers'; 
+import { Prayer } from '../../engine/world/actor/prayer';
+import { EffectType } from '../../engine/world/actor/effect';
+import { prayers } from '../../engine/world/config/prayers';
+import { loopingEvent } from '@engine/plugins';
 const buttonIds: number[] = [
     0, // Home Teleport
     1,

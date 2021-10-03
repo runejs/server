@@ -6,12 +6,12 @@ import { World } from '@engine/world/world';
 import { filter, take } from 'rxjs/operators';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { Npc } from '@engine/world/actor/npc';
-import { world } from '@engine/game-server';
 import { itemIds } from '@engine/world/config/item-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { findNpc } from '@engine/config/config-handler';
-import { TaskExecutor } from '../../game-engine/world/action/hooks';
-import { wait } from '../../game-engine/world/task';
+import { TaskExecutor } from '../../engine/world/action/hooks';
+import { wait } from '../../engine/world/task';
+import { activeWorld } from '@engine/world';
 
 
 class Combat {
@@ -114,7 +114,7 @@ class Combat {
 
         // Animate attacking the opponent and play the sound of them defending
         attacker.playAnimation(attackAnim);
-        world.playLocationSound(defender.position, defender instanceof Player ? soundIds.npc.human.playerDefence :
+        activeWorld.playLocationSound(defender.position, defender instanceof Player ? soundIds.npc.human.playerDefence :
             soundIds.npc.human.maleDefence, 5);
 
         const defenderState: 'alive' | 'dead' = defender.damage(actualHit);
@@ -124,7 +124,7 @@ class Combat {
             this.processDeath(defender, attacker);
         } else {
             // Play the sound of the defender being hit or blocking
-            world.playLocationSound(defender.position, defender instanceof Player ? soundIds.npc.human.noArmorHitPlayer :
+            activeWorld.playLocationSound(defender.position, defender instanceof Player ? soundIds.npc.human.noArmorHitPlayer :
                 soundIds.npc.human.noArmorHit, 5);
             defender.playAnimation(defender.getBlockAnimation());
         }
@@ -141,11 +141,11 @@ class Combat {
 
         this.cancelCombat();
         victim.playAnimation(deathAnim);
-        world.playLocationSound(deathPosition, soundIds.npc.human.maleDeath, 5);
+        activeWorld.playLocationSound(deathPosition, soundIds.npc.human.maleDeath, 5);
 
         await timer(2 * World.TICK_LENGTH).toPromise();
 
-        let instance = world.globalInstance;
+        let instance = activeWorld.globalInstance;
         if (victim instanceof Npc) {
             victim.kill(true);
 

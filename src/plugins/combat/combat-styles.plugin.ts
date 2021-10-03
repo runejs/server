@@ -5,7 +5,7 @@ import { Player, SidebarTab } from '@engine/world/actor/player/player';
 import { findItem, widgets } from '@engine/config/config-handler';
 import { buttonActionHandler } from '@engine/world/action/button.action';
 import { combatStyles } from '@engine/world/actor/combat';
-import { serverConfig } from '@engine/game-server';
+import { serverConfig } from '@server/game/game-server';
 import { playerInitActionHandler } from '@engine/world/action/player-init.action';
 
 

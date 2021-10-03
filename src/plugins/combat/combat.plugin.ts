@@ -6,15 +6,15 @@ import { World } from '@engine/world/world';
 import { filter, take } from 'rxjs/operators';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { Npc } from '@engine/world/actor/npc';
-import { world } from '@engine/game-server';
 import { itemIds } from '@engine/world/config/item-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { findNpc } from '@engine/config/config-handler';
 import EventEmitter from 'events';
 import { logger } from '@runejs/core';
 import { TaskExecutor } from '@engine/world/action/action-pipeline';
-import { wait } from '../../game-engine/world/task';
-import { Behavior, BehaviorType } from '../../game-engine/world/actor/behaviors/behavior';
+import { wait } from '../../engine/world/task';
+import { Behavior, BehaviorType } from '../../engine/world/actor/behaviors/behavior';
+import { activeWorld } from '@engine/world';
 
 
 //Kicking off combat - all subsequent action will be handed off to behaviors

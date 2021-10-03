@@ -9,12 +9,12 @@ import { randomBetween } from '@engine/util/num';
 import { colorText } from '@engine/util/strings';
 import { colors } from '@engine/util/colors';
 import { rollBirdsNestType } from '@engine/world/skill-util/harvest-roll';
-import { world } from '@engine/game-server';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { Axe, getAxe, HarvestTool } from '@engine/world/config/harvest-tool';
 import { TaskExecutor } from '@engine/world/action/action-pipeline';
 import { findItem } from '@engine/config/config-handler';
 import { Player } from '@engine/world/actor';
+import { activeWorld } from '@engine/world';
 
 
 const canActivate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: number): boolean => {
@@ -61,7 +61,7 @@ const activate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: nu
     }
 
     // Grab the tree manually every loop so that we can make sure it's still alive.
-    const { object } = world.findObjectAtLocation(actor, actionObject.objectId, objectPosition);
+    const { object } = activeWorld.findObjectAtLocation(actor, actionObject.objectId, objectPosition);
 
     if(!object) {
         // Tree has been chopped down, cancel.
@@ -87,7 +87,7 @@ const activate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: nu
 
                 if(roll === 1) { // Bird nest chance
                     player?.sendMessage(colorText(`A bird's nest falls out of the tree.`, colors.red));
-                    world.globalInstance.spawnWorldItem(rollBirdsNestType(), actor.position,
+                    activeWorld.globalInstance.spawnWorldItem(rollBirdsNestType(), actor.position,
                         { owner: player || null, expires: 300 });
                 } else { // Standard log chopper
                     player?.sendMessage(`You manage to chop some ${targetName}.`);

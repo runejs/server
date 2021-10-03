@@ -5,10 +5,10 @@
     "main": "dist/index.js",
     "scripts": {
         "start": "npm run build && concurrently \"npm run build:watch\" \"npm run start:infra\" \"npm run start:game\"",
-        "start:game": "nodemon --delay 5000ms --max-old-space-size=2048 dist/main.js",
+        "start:game": "nodemon --delay 5000ms --max-old-space-size=2048 dist/server/runner.js -- -game",
         "start:game:dev": "npm run build && concurrently \"npm run build:watch\" \"npm run start:game\"",
-        "start:login": "node --max-old-space-size=1024 dist/game-engine/login-server.js",
-        "start:update": "node --max-old-space-size=1024 dist/game-engine/update-server.js",
+        "start:login": "node --max-old-space-size=1024 dist/server/runner.js -- -login",
+        "start:update": "node --max-old-space-size=1024 dist/server/runner.js -- -update",
         "start:infra": "concurrently \"npm run start:update\" \"npm run start:login\"",
         "start:standalone": "concurrently \"npm run start:infra\" \"npm run start:game\"",
         "game": "npm run start:game",
