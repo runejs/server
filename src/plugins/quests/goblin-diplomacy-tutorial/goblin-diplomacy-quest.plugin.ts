@@ -10,14 +10,14 @@ import { updateCombatStyleWidget } from '@plugins/combat/combat-styles.plugin';
 import { Subject } from 'rxjs';
 import { dialogue } from '@engine/world/actor/dialogue';
 import { take } from 'rxjs/operators';
-import { equipmentChangeActionHandler } from '@engine/action/equipment-change.action';
-import { buttonActionHandler } from '@engine/action/button.action';
+import { equipmentChangeActionHandler } from '@engine/action/pipe/equipment-change.action';
+import { buttonActionHandler } from '@engine/action/pipe/button.action';
 import { tabIndex } from '@engine/world/actor/player/interface-state';
 import { runescapeGuideDialogueHandler } from './runescape-guide-dialogue';
 import { harlanDialogueHandler } from './melee-tutor-dialogue';
 import { goblinDiplomacyStageHandler } from './stage-handler';
 import { Quest } from '@engine/world/actor/player/quest';
-import { playerInitActionHandler } from '@engine/action/player-init.action';
+import { playerInitActionHandler } from '@engine/action/pipe/player-init.action';
 import { activeWorld } from '@engine/world';
 
 

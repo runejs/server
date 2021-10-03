@@ -1,9 +1,9 @@
-import { itemInteractionActionHandler } from '@engine/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action/pipe/item-interaction.action';
 import { Player } from '@engine/world/actor/player/player';
 import { dialogue, execute } from '@engine/world/actor/dialogue';
-import { getActionHooks } from '@engine/action/hooks';
-import { advancedNumberHookFilter } from '@engine/action/hooks/hook-filters';
-import { ObjectInteractionActionHook } from '@engine/action/object-interaction.action';
+import { getActionHooks } from '@engine/action/hook';
+import { advancedNumberHookFilter } from '@engine/action/hook/hook-filters';
+import { ObjectInteractionActionHook } from '@engine/action/pipe/object-interaction.action';
 import { objectIds } from '@engine/world/config/object-ids';
 import { openTravel } from '@plugins/items/rotten-potato/helpers/rotten-potato-travel';
 

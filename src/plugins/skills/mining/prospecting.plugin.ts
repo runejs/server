@@ -1,4 +1,4 @@
-import { objectInteractionActionHandler } from '@engine/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action/pipe/object-interaction.action';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { World } from '@engine/world';
 import { filestore } from '@server/game/game-server';

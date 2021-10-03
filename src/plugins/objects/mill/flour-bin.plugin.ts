@@ -1,10 +1,10 @@
 import { itemIds } from '@engine/world/config/item-ids';
-import { objectInteractionActionHandler } from '@engine/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action/pipe/object-interaction.action';
 import { soundIds } from '@engine/world/config/sound-ids';
-import { itemOnObjectActionHandler } from '@engine/action/item-on-object.action';
+import { itemOnObjectActionHandler } from '@engine/action/pipe/item-on-object.action';
 import { Player } from '@engine/world/actor/player/player';
 import { ObjectConfig } from '@runejs/filestore';
-import { playerInitActionHandler } from '@engine/action/player-init.action';
+import { playerInitActionHandler } from '@engine/action/pipe/player-init.action';
 
 
 function flourBin(details: { objectConfig: ObjectConfig, player: Player }): void {

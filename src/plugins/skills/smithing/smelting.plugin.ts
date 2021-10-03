@@ -1,8 +1,8 @@
 import { Item } from '@engine/world/items/item';
 import { ItemContainer } from '@engine/world/items/item-container';
 import { objectIds } from '@engine/world/config/object-ids';
-import { objectInteractionActionHandler, ObjectInteractionAction } from '@engine/action/object-interaction.action';
-import { buttonActionHandler, ButtonAction } from '@engine/action/button.action';
+import { objectInteractionActionHandler, ObjectInteractionAction } from '@engine/action/pipe/object-interaction.action';
+import { buttonActionHandler, ButtonAction } from '@engine/action/pipe/button.action';
 import { Skill } from '@engine/world/actor/skills';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';

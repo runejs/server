@@ -1,4 +1,4 @@
-import { buttonActionHandler } from '@engine/action/button.action';
+import { buttonActionHandler } from '@engine/action/pipe/button.action';
 import { Player } from '@engine/world/actor/player/player';
 import { itemIds } from '@engine/world/config/item-ids';
 import { widgets } from '@engine/config/config-handler';

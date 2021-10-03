@@ -1,5 +1,5 @@
 import { findItem, widgets } from '@engine/config/config-handler';
-import { objectInteractionActionHandler } from '@engine/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action/pipe/object-interaction.action';
 import { World } from '@engine/world';
 import { itemIds } from '@engine/world/config/item-ids';
 import { LandscapeObject } from '@runejs/filestore';

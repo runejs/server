@@ -1,4 +1,4 @@
-import { itemInteractionActionHandler } from '@engine/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action/pipe/item-interaction.action';
 import { Shop } from '@engine/config/shop-config';
 import { widgets } from '@engine/config/config-handler';
 

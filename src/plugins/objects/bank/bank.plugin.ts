@@ -1,10 +1,10 @@
 import { objectIds } from '@engine/world/config/object-ids';
 import { widgetScripts } from '@engine/world/config/widget';
-import { objectInteractionActionHandler } from '@engine/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action/pipe/object-interaction.action';
 import { ItemContainer } from '@engine/world/items/item-container';
-import { itemInteractionActionHandler } from '@engine/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action/pipe/item-interaction.action';
 import { fromNote, Item, toNote } from '@engine/world/items/item';
-import { buttonActionHandler } from '@engine/action/button.action';
+import { buttonActionHandler } from '@engine/action/pipe/button.action';
 import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
 import { widgets } from '@engine/config/config-handler';
 import { Player } from '@engine/world/actor/player/player';

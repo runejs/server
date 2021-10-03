@@ -1,9 +1,9 @@
 import {
     objectInteractionActionHandler
-} from '@engine/action/object-interaction.action';
+} from '@engine/action/pipe/object-interaction.action';
 import { openHouse, Room } from '@plugins/skills/construction/house';
 import { MAP_SIZE, roomBuilderButtonMap } from '@plugins/skills/construction/con-constants';
-import { buttonActionHandler } from '@engine/action/button.action';
+import { buttonActionHandler } from '@engine/action/pipe/button.action';
 import { getCurrentRoom } from '@plugins/skills/construction/util';
 import { Player } from '@engine/world/actor/player/player';
 import { Coords } from '@engine/world/position';

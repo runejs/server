@@ -5,7 +5,7 @@ import { soundIds } from '@engine/world/config/sound-ids';
 import { gfxIds } from '@engine/world/config/gfx-ids';
 import { TaskExecutor } from '@engine/action/action-pipeline';
 import { widgetButtonIds } from '../skills/smithing/smelting-constants';
-import { magiconnpcActionHandler, MagicOnNPCActionHook, MagicOnNPCAction } from '../../engine/action/magic-on-npc.action';
+import { magiconnpcActionHandler, MagicOnNPCActionHook, MagicOnNPCAction } from '@engine/action/pipe/magic-on-npc.action';
 import { logger } from '@runejs/core';
 import { loopingEvent } from '@engine/plugins';
 

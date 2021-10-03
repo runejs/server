@@ -1,4 +1,4 @@
-import { itemOnObjectActionHandler, ItemOnObjectActionHook } from '@engine/action/item-on-object.action';
+import { itemOnObjectActionHandler, ItemOnObjectActionHook } from '@engine/action/pipe/item-on-object.action';
 import { widgets } from '@engine/config/config-handler';
 import { Skill } from '@engine/world/actor/skills';
 import { anvilIds, bars, smithables, widgetItems } from '@plugins/skills/smithing/forging-constants';
@@ -7,7 +7,7 @@ import { Smithable } from '@plugins/skills/smithing/forging-types';
 import {
     ItemInteractionAction,
     ItemInteractionActionHook
-} from '@engine/action/item-interaction.action';
+} from '@engine/action/pipe/item-interaction.action';
 import { Player } from '@engine/world/actor/player/player';
 import { findItem } from '@engine/config/config-handler';
 import { TaskExecutor } from '@engine/action/action-pipeline';

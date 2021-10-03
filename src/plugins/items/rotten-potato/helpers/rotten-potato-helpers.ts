@@ -1,8 +1,8 @@
 import { findItem, widgets } from '@engine/config/config-handler';
 import { ItemDetails } from '@engine/config/item-config';
 import { Rights } from '@engine/world/actor/player/player';
-import { ItemOnItemAction } from '@engine/action/item-on-item.action';
-import { WidgetInteractionAction } from '@engine/action/widget-interaction.action';
+import { ItemOnItemAction } from '@engine/action/pipe/item-on-item.action';
+import { WidgetInteractionAction } from '@engine/action/pipe/widget-interaction.action';
 
 export const RottenPotatoItem: ItemDetails = findItem('rs:rotten_potato');
 

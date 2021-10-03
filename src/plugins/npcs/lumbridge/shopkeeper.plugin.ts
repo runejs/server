@@ -1,4 +1,4 @@
-import { npcInteractionActionHandler } from '@engine/action/npc-interaction.action';
+import { npcInteractionActionHandler } from '@engine/action/pipe/npc-interaction.action';
 import { findShop } from '@engine/config/config-handler';
 
 

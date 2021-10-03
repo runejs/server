@@ -1,4 +1,4 @@
-import { equipmentChangeActionHandler } from '@engine/action/equipment-change.action';
+import { equipmentChangeActionHandler } from '@engine/action/pipe/equipment-change.action';
 
 export const equip: equipmentChangeActionHandler = (details) => {
     const { player } = details;

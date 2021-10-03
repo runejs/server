@@ -1,9 +1,9 @@
 import { World } from '@engine/world';
-import { itemOnNpcActionHandler } from '@engine/action/item-on-npc.action';
+import { itemOnNpcActionHandler } from '@engine/action/pipe/item-on-npc.action';
 import { itemIds } from '@engine/world/config/item-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { animationIds } from '@engine/world/config/animation-ids';
-import { npcInitActionHandler } from '@engine/action/npc-init.action';
+import { npcInitActionHandler } from '@engine/action/pipe/npc-init.action';
 
 
 const initAction: npcInitActionHandler = ({ npc }) => {

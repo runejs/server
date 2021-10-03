@@ -6,3 +6,4 @@ export * from './npc-config';
 export * from './npc-spawn-config';
 export * from './quest-config';
 export * from './shop-config';
+export * from './directories';

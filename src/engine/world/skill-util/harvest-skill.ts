@@ -4,7 +4,7 @@ import { soundIds } from '@engine/world/config/sound-ids';
 import { Skill } from '@engine/world/actor/skills';
 import { getBestAxe, getBestPickaxe, HarvestTool } from '@engine/world/config/harvest-tool';
 import { randomBetween } from '@engine/util/num';
-import { ObjectInteractionAction } from '@engine/action/object-interaction.action';
+import { ObjectInteractionAction } from '@engine/action/pipe/object-interaction.action';
 import { colors } from '@engine/util/colors';
 import { checkForGemBoost } from '@engine/world/skill-util/glory-boost';
 import { colorText } from '@engine/util/strings';

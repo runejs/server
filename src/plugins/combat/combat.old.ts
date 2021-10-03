@@ -1,4 +1,4 @@
-import { NpcInteractionAction, npcInteractionActionHandler } from '@engine/action/npc-interaction.action';
+import { NpcInteractionAction, npcInteractionActionHandler } from '@engine/action/pipe/npc-interaction.action';
 import { Actor } from '@engine/world/actor/actor';
 import { Player } from '@engine/world/actor/player/player';
 import { lastValueFrom, timer } from 'rxjs';
@@ -9,7 +9,7 @@ import { Npc } from '@engine/world/actor/npc';
 import { itemIds } from '@engine/world/config/item-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { findNpc } from '@engine/config/config-handler';
-import { TaskExecutor } from '../../engine/action/hooks';
+import { TaskExecutor } from '../../engine/action/hook';
 import { wait } from '../../engine/world/task';
 import { activeWorld } from '@engine/world';
 

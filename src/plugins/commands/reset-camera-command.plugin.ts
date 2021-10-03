@@ -1,4 +1,4 @@
-import { PlayerCommandAction } from '@engine/action/player-command.action';
+import { PlayerCommandAction } from '@engine/action/pipe/player-command.action';
 
 export default {
     pluginId: 'rs:reset_camera_command',

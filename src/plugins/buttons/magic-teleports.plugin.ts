@@ -1,4 +1,4 @@
-import { ButtonAction, buttonActionHandler, ButtonActionHook } from '@engine/action/button.action';
+import { ButtonAction, buttonActionHandler, ButtonActionHook } from '@engine/action/pipe/button.action';
 import { Player } from '@engine/world/actor/player/player';
 import { Position } from '@engine/world/position';
 import { animationIds } from '@engine/world/config/animation-ids';

@@ -1,4 +1,4 @@
-import { commandActionHandler } from '@engine/action/player-command.action';
+import { commandActionHandler } from '@engine/action/pipe/player-command.action';
 
 const songAction: commandActionHandler = (details) => {
     const { player, args } = details;

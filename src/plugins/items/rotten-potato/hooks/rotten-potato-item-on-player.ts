@@ -1,6 +1,6 @@
 import { widgets } from '@engine/config/config-handler';
-import { itemOnPlayerActionHandler } from '@engine/action/item-on-player.action';
-import { itemInteractionActionHandler } from '@engine/action/item-interaction.action';
+import { itemOnPlayerActionHandler } from '@engine/action/pipe/item-on-player.action';
+import { itemInteractionActionHandler } from '@engine/action/pipe/item-interaction.action';
 import { Item } from '@engine/world/items/item';
 import { ItemContainer } from '@engine/world/items/item-container';
 
