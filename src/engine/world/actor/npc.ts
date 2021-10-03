@@ -2,7 +2,7 @@ import uuidv4 from 'uuid/v4';
 import EventEmitter from 'events';
 
 import { filestore } from '@server/game/game-server';
-import { Position, directionData, QuadtreeKey, WorldInstance, world } from '@engine/world';
+import { Position, directionData, QuadtreeKey, WorldInstance, activeWorld } from '@engine/world';
 import { findItem, findNpc, NpcCombatAnimations, NpcDetails, NpcSpawn } from '@engine/config';
 import { soundIds, animationIds } from '@engine/world/config';
 
@@ -105,7 +105,7 @@ export class Npc extends Actor {
     }
 
     public async init(): Promise<void> {
-        world.chunkManager.getChunkForWorldPosition(this.position).addNpc(this);
+        activeWorld.chunkManager.getChunkForWorldPosition(this.position).addNpc(this);
 
         if(this.movementRadius > 0) {
             this.initiateRandomMovement();
@@ -126,7 +126,7 @@ export class Npc extends Actor {
             deathAnim = findNpc((defender as Npc).id)?.combatAnimations?.death || animationIds.death
 
             defender.playAnimation(deathAnim);
-            world.playLocationSound(deathPosition, soundIds.npc.human.maleDeath, 5);
+            activeWorld.playLocationSound(deathPosition, soundIds.npc.human.maleDeath, 5);
             const npcDetails = findNpc((defender as Npc).id);
 
             if(!npcDetails.dropTable) {
@@ -136,7 +136,7 @@ export class Npc extends Actor {
             if(assailant instanceof Player) {
                 const itemDrops = calculateNpcDrops(assailant, npcDetails);
                 itemDrops.forEach(drop => {
-                    world.globalInstance.spawnWorldItem({ itemId: findItem(drop.itemKey).gameId, amount: drop.amount },
+                    activeWorld.globalInstance.spawnWorldItem({ itemId: findItem(drop.itemKey).gameId, amount: drop.amount },
                         deathPosition, { owner: assailant instanceof Player ? assailant : undefined, expires: 300 });
                 })
             }
@@ -165,12 +165,12 @@ export class Npc extends Actor {
 
     public kill(respawn: boolean = true): void {
 
-        world.chunkManager.getChunkForWorldPosition(this.position).removeNpc(this);
+        activeWorld.chunkManager.getChunkForWorldPosition(this.position).removeNpc(this);
         clearInterval(this.randomMovementInterval);
-        world.deregisterNpc(this);
+        activeWorld.deregisterNpc(this);
 
         if(respawn) {
-            world.scheduleNpcRespawn(new Npc(findNpc(this.id), this.npcSpawn));
+            activeWorld.scheduleNpcRespawn(new Npc(findNpc(this.id), this.npcSpawn));
         }
     }
 
@@ -215,7 +215,7 @@ export class Npc extends Actor {
      * @param volume The volume to play the sound at.
      */
     public playSound(soundId: number, volume: number): void {
-        world.playLocationSound(this.position, soundId, volume);
+        activeWorld.playLocationSound(this.position, soundId, volume);
     }
 
     /**
@@ -248,11 +248,11 @@ export class Npc extends Actor {
         super.position = position;
 
         if(this.quadtreeKey !== null) {
-            world.npcTree.remove(this.quadtreeKey);
+            activeWorld.npcTree.remove(this.quadtreeKey);
         }
 
         this.quadtreeKey = { x: position.x, y: position.y, actor: this };
-        world.npcTree.push(this.quadtreeKey);
+        activeWorld.npcTree.push(this.quadtreeKey);
     }
 
     public get position(): Position {

@@ -18,7 +18,7 @@ import { harlanDialogueHandler } from './melee-tutor-dialogue';
 import { goblinDiplomacyStageHandler } from './stage-handler';
 import { Quest } from '@engine/world/actor/player/quest';
 import { playerInitActionHandler } from '@engine/world/action/player-init.action';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 
 export const tutorialTabWidgetOrder = [
@@ -86,7 +86,7 @@ export function npcHint(player: Player, npcKey: string | number): void {
         npcKey = npc.gameId;
     }
 
-    const npc = world.findNpcsById(npcKey as number, player.instance.instanceId)[0] || null;
+    const npc = activeWorld.findNpcsById(npcKey as number, player.instance.instanceId)[0] || null;
 
     if(npc) {
         player.outgoingPackets.showNpcHintIcon(npc);
@@ -124,7 +124,7 @@ export const startTutorial = async (player: Player): Promise<void> => {
 };
 
 export async function spawnGoblinBoi(player: Player, spawnPoint: 'beginning' | 'end'): Promise<void> {
-    const nearbyGoblins = world.findNpcsByKey('rs:goblin', player.instance.instanceId);
+    const nearbyGoblins = activeWorld.findNpcsByKey('rs:goblin', player.instance.instanceId);
     if(nearbyGoblins && nearbyGoblins.length > 0) {
         // Goblin is already spawned, do nothing
         return;
@@ -134,7 +134,7 @@ export async function spawnGoblinBoi(player: Player, spawnPoint: 'beginning' | '
     if(spawnPoint === 'beginning') {
         //const goblin = await world.spawnNpc('rs:goblin', new Position(3219, 3246), 'SOUTH',
         //    0, player.instance.instanceId);
-        const goblin = await world.spawnNpc('rs:goblin', new Position(3221, 3257), 'SOUTH',
+        const goblin = await activeWorld.spawnNpc('rs:goblin', new Position(3221, 3257), 'SOUTH',
             0, player.instance.instanceId);
 
         goblin.pathfinding.walkTo(new Position(3219, 3246), {
@@ -142,7 +142,7 @@ export async function spawnGoblinBoi(player: Player, spawnPoint: 'beginning' | '
             ignoreDestination: false
         });
     } else {
-        await world.spawnNpc('rs:goblin', new Position(3219, 3246), 'SOUTH',
+        await activeWorld.spawnNpc('rs:goblin', new Position(3219, 3246), 'SOUTH',
             0, player.instance.instanceId);
     }
 }
@@ -164,8 +164,8 @@ export async function tutorialHandler(player: Player): Promise<void> {
 }
 
 function spawnQuestNpcs(player: Player): void {
-    world.spawnNpc('rs:runescape_guide', new Position(3230, 3238), 'SOUTH', 2, player.instance.instanceId);
-    world.spawnNpc('rs:melee_combat_tutor', new Position(3219, 3238), 'EAST', 1, player.instance.instanceId);
+    activeWorld.spawnNpc('rs:runescape_guide', new Position(3230, 3238), 'SOUTH', 2, player.instance.instanceId);
+    activeWorld.spawnNpc('rs:melee_combat_tutor', new Position(3219, 3238), 'EAST', 1, player.instance.instanceId);
 }
 
 const tutorialInitAction: playerInitActionHandler = async ({ player }) => {

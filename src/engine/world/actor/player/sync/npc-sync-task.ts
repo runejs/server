@@ -4,7 +4,7 @@ import { Packet, PacketType } from '@engine/net/packet';
 import { Npc } from '@engine/world/actor/npc';
 import { registerNewActors, SyncTask, syncTrackedActors } from './actor-sync';
 import { Player } from '../player';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 
 /**
@@ -26,7 +26,7 @@ export class NpcSyncTask extends SyncTask<void> {
 
             const updateMaskData = new ByteBuffer(5000);
 
-            const nearbyNpcs = world.npcTree.colliding({
+            const nearbyNpcs = activeWorld.npcTree.colliding({
                 x: this.player.position.x - 15,
                 y: this.player.position.y - 15,
                 width: 32,

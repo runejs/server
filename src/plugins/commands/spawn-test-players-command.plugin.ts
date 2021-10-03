@@ -2,7 +2,7 @@ import { Position } from '@engine/world/position';
 import { Player } from '@engine/world/actor/player/player';
 import { World } from '@engine/world/world';
 import { commandActionHandler } from '@engine/world/action/player-command.action';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 
 const handler: commandActionHandler = ({ player, args }) => {
@@ -18,9 +18,9 @@ const handler: commandActionHandler = ({ player, args }) => {
     let xOffset: number = 0;
     let yOffset: number = 0;
 
-    const spawnChunk = world.chunkManager.getChunkForWorldPosition(new Position(x, y, 0));
+    const spawnChunk = activeWorld.chunkManager.getChunkForWorldPosition(new Position(x, y, 0));
 
-    const worldSlotsRemaining = world.playerSlotsRemaining() - 1;
+    const worldSlotsRemaining = activeWorld.playerSlotsRemaining() - 1;
     if(worldSlotsRemaining <= 0) {
         player.sendMessage(`Error: The game world is full.`);
         return;
@@ -35,7 +35,7 @@ const handler: commandActionHandler = ({ player, args }) => {
     for(let i = 0; i < playerSpawnCount; i++) {
         const testPlayer = new Player(null, null, null, i,
             `test${i}`, 'abs', true);
-        world.registerPlayer(testPlayer);
+        activeWorld.registerPlayer(testPlayer);
         testPlayer.interfaceState.closeAllSlots();
 
         xOffset++;
@@ -46,7 +46,7 @@ const handler: commandActionHandler = ({ player, args }) => {
         }
 
         testPlayer.position = new Position(x + xOffset, y + yOffset, 0);
-        const newChunk = world.chunkManager.getChunkForWorldPosition(testPlayer.position);
+        const newChunk = activeWorld.chunkManager.getChunkForWorldPosition(testPlayer.position);
 
         if(!spawnChunk.equals(newChunk)) {
             spawnChunk.removePlayer(testPlayer);

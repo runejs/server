@@ -5,7 +5,7 @@ import { take } from 'rxjs/operators';
 import { logger } from '@runejs/core';
 import { LandscapeObject } from '@runejs/filestore';
 
-import { schedule, WorldInstance, Direction, Position, world } from '@engine/world';
+import { schedule, WorldInstance, Direction, Position, activeWorld } from '@engine/world';
 import { findItem, findNpc, findObject, itemSpawns, npcSpawns, NpcDetails, NpcSpawn } from '@engine/config';
 import { Player, Npc, Actor } from '@engine/world/actor';
 import { loadActionFiles } from '@engine/world/action';
@@ -158,7 +158,7 @@ export class World {
         }
 
         const objectChunk = this.chunkManager.getChunkForWorldPosition(objectPosition);
-        const mapChunk = world.chunkManager.getChunkForWorldPosition(map.renderPosition);
+        const mapChunk = activeWorld.chunkManager.getChunkForWorldPosition(map.renderPosition);
 
         const chunkIndexX = objectChunk.position.x - (mapChunk.position.x - 2);
         const chunkIndexY = objectChunk.position.y - (mapChunk.position.y - 2);
@@ -174,7 +174,7 @@ export class World {
 
         const mapTemplateWorldX = tileX;
         const mapTemplateWorldY = tileY;
-        const mapTemplateChunk = world.chunkManager.getChunkForWorldPosition(new Position(mapTemplateWorldX, mapTemplateWorldY, objectPosition.level));
+        const mapTemplateChunk = activeWorld.chunkManager.getChunkForWorldPosition(new Position(mapTemplateWorldX, mapTemplateWorldY, objectPosition.level));
 
         const templateLocalX = getTemplateLocalX(tileOrientation, objectLocalX, objectLocalY,
             objectConfig?.rendering?.sizeX || 1, objectConfig?.rendering?.sizeY || 1);

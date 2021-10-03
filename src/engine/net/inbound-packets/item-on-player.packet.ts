@@ -1,5 +1,5 @@
 import { logger } from '@runejs/core';
-import { world, World } from '@engine/world';
+import { activeWorld, World } from '@engine/world';
 import { widgets } from '@engine/config';
 import { Player } from '@engine/world/actor';
 import { PacketData } from '@engine/net';
@@ -36,7 +36,7 @@ const itemOnPlayerPacket = (player: Player, packet: PacketData) => {
         return;
     }
 
-    const otherPlayer = world.playerList[playerIndex];
+    const otherPlayer = activeWorld.playerList[playerIndex];
     if(!otherPlayer) {
         return;
     }

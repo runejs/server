@@ -3,7 +3,7 @@ import { WNES } from '@engine/world/direction';
 import { logger } from '@runejs/core';
 import { action as doorAction } from '@plugins/objects/doors/door.plugin';
 import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 const doubleDoors = [
     {
@@ -74,7 +74,7 @@ const action: objectInteractionActionHandler = (details) => {
 
     const otherDoorPosition = new Position(door.x + deltaX, door.y + deltaY, door.level);
 
-    const { object: otherDoor } = world.findObjectAtLocation(player, otherDoorId, otherDoorPosition);
+    const { object: otherDoor } = activeWorld.findObjectAtLocation(player, otherDoorId, otherDoorPosition);
     if(!otherDoor) {
         return;
     }

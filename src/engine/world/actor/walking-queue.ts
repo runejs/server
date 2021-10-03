@@ -4,7 +4,7 @@ import { Player } from './player/player';
 import { Npc } from './npc';
 import { regionChangeActionFactory } from '@engine/world/action';
 import { Subject } from 'rxjs';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 
 /**
@@ -151,7 +151,7 @@ export class WalkingQueue {
         const originalPosition = this.actor.position;
 
         if(this.actor.pathfinding.canMoveTo(originalPosition, walkPosition)) {
-            const oldChunk = world.chunkManager.getChunkForWorldPosition(originalPosition);
+            const oldChunk = activeWorld.chunkManager.getChunkForWorldPosition(originalPosition);
             const lastMapRegionUpdatePosition = this.actor.lastMapRegionUpdatePosition;
 
             const walkDiffX = walkPosition.x - originalPosition.x;
@@ -198,7 +198,7 @@ export class WalkingQueue {
                 this.actor.faceDirection = walkDir;
             }
 
-            const newChunk = world.chunkManager.getChunkForWorldPosition(this.actor.position);
+            const newChunk = activeWorld.chunkManager.getChunkForWorldPosition(this.actor.position);
 
             this.movementEvent.next(this.actor.position);
 

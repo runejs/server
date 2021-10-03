@@ -1,5 +1,5 @@
 import { logger } from '@runejs/core';
-import { world, World } from '@engine/world';
+import { activeWorld, World } from '@engine/world';
 import { widgets } from '@engine/config';
 import { Player } from '@engine/world/actor';
 import { PacketData } from '@engine/net';
@@ -35,7 +35,7 @@ const itemOnNpcPacket = (player: Player, packet: PacketData) => {
         return;
     }
 
-    const npc = world.npcList[npcIndex];
+    const npc = activeWorld.npcList[npcIndex];
     if (!npc) {
         return;
     }

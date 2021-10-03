@@ -7,7 +7,7 @@ import { schedule } from '@engine/world/task';
 import { CollisionMap } from '@engine/world/map/collision-map';
 import { LandscapeObject } from '@runejs/filestore';
 import { logger } from '@runejs/core';
-import { world } from '@engine/world/index';
+import { activeWorld } from '@engine/world/index';
 
 
 /**
@@ -224,7 +224,7 @@ export class WorldInstance {
      * before being shown to other players in the instance.
      */
     public worldItemAdded(worldItem: WorldItem, excludePlayer?: Player): void {
-        const nearbyPlayers = world.findNearbyPlayers(worldItem.position, 16, this.instanceId) || [];
+        const nearbyPlayers = activeWorld.findNearbyPlayers(worldItem.position, 16, this.instanceId) || [];
 
         nearbyPlayers.forEach(player => {
             if(excludePlayer && excludePlayer.equals(player)) {
@@ -240,7 +240,7 @@ export class WorldInstance {
      * @param worldItem The world item that was removed.
      */
     public worldItemRemoved(worldItem: WorldItem): void {
-        const nearbyPlayers = world.findNearbyPlayers(worldItem.position, 16, this.instanceId) || [];
+        const nearbyPlayers = activeWorld.findNearbyPlayers(worldItem.position, 16, this.instanceId) || [];
 
         nearbyPlayers.forEach(player =>
             player.outgoingPackets.removeWorldItem(worldItem, worldItem.position));
@@ -341,7 +341,7 @@ export class WorldInstance {
 
         instancedChunk.collisionMap.markGameObject(object, true);
 
-        const nearbyPlayers = world.findNearbyPlayers(position, 16, this.instanceId) || [];
+        const nearbyPlayers = activeWorld.findNearbyPlayers(position, 16, this.instanceId) || [];
         nearbyPlayers.forEach(player => player.outgoingPackets.setLocationObject(object, position));
     }
 
@@ -373,7 +373,7 @@ export class WorldInstance {
 
         instancedChunk.collisionMap.markGameObject(object, false);
 
-        const nearbyPlayers = world.findNearbyPlayers(position, 16, this.instanceId) || [];
+        const nearbyPlayers = activeWorld.findNearbyPlayers(position, 16, this.instanceId) || [];
         nearbyPlayers.forEach(player => player.outgoingPackets.removeLocationObject(object, position));
     }
 
@@ -391,7 +391,7 @@ export class WorldInstance {
 
         instancedChunk.collisionMap.markGameObject(object, false);
 
-        const nearbyPlayers = world.findNearbyPlayers(position, 16, this.instanceId) || [];
+        const nearbyPlayers = activeWorld.findNearbyPlayers(position, 16, this.instanceId) || [];
         nearbyPlayers.forEach(player => player.outgoingPackets.removeLocationObject(object, position));
     }
 
@@ -423,7 +423,7 @@ export class WorldInstance {
 
         instancedChunk.collisionMap.markGameObject(object, true);
 
-        const nearbyPlayers = world.findNearbyPlayers(position, 16, this.instanceId) || [];
+        const nearbyPlayers = activeWorld.findNearbyPlayers(position, 16, this.instanceId) || [];
         nearbyPlayers.forEach(player => player.outgoingPackets.setLocationObject(object, position));
     }
 
@@ -446,12 +446,12 @@ export class WorldInstance {
         let chunkPosition: Position;
 
         if(typeof worldPositionOrX === 'number') {
-            const chunk = world.chunkManager.getChunk({ x: worldPositionOrX, y, level }) || null;
+            const chunk = activeWorld.chunkManager.getChunk({ x: worldPositionOrX, y, level }) || null;
             if(chunk) {
                 chunkPosition = chunk.position;
             }
         } else {
-            chunkPosition = world.chunkManager.getChunkForWorldPosition(worldPositionOrX)?.position || null;
+            chunkPosition = activeWorld.chunkManager.getChunkForWorldPosition(worldPositionOrX)?.position || null;
         }
 
         if(!chunkPosition) {
@@ -504,8 +504,8 @@ export class WorldInstance {
 
         if(this.instanceId !== null && this.players.size === 0) {
             this.chunkModifications.clear();
-            const instancedNpcs = world.findNpcsByInstance(this.instanceId);
-            instancedNpcs?.forEach(npc => world.deregisterNpc(npc));
+            const instancedNpcs = activeWorld.findNpcsByInstance(this.instanceId);
+            instancedNpcs?.forEach(npc => activeWorld.deregisterNpc(npc));
         }
     }
 

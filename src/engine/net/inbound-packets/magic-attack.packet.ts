@@ -1,6 +1,6 @@
 import { Player } from '@engine/world/actor';
 import { PacketData } from '@engine/net';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 
 const magicAttackPacket = (player: Player, packet: PacketData) => {
@@ -9,7 +9,7 @@ const magicAttackPacket = (player: Player, packet: PacketData) => {
     const widgetId = buffer.get('short', 'u', 'le'); // unsigned short LE
     const widgetChildId = buffer.get('byte'); // unsigned short LE
 
-    const npc = world.npcList[npcWorldIndex];
+    const npc = activeWorld.npcList[npcWorldIndex];
 
     player.actionPipeline.call('magic_on_npc', npc, player, widgetId, widgetChildId);
 };

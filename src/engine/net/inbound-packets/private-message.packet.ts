@@ -1,7 +1,7 @@
 import { longToString } from '@engine/util';
 import { Player } from '@engine/world/actor';
 import { PacketData } from '@engine/net';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 export default {
     opcode: 207,
@@ -18,7 +18,7 @@ export default {
             messageBytes[i] = buffer[buffer.readerIndex + i];
         }
 
-        const otherPlayer = world.findActivePlayerByUsername(username);
+        const otherPlayer = activeWorld.findActivePlayerByUsername(username);
         if(otherPlayer) {
             otherPlayer.privateMessageReceived(player, messageBytes);
         }

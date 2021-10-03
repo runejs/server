@@ -7,7 +7,7 @@ import { Position } from '@engine/world/position';
 import { ConstructedChunk, ConstructedRegion } from '@engine/world/map/region';
 import { Player } from '@engine/world/actor/player/player';
 import { loadHouse } from '@plugins/skills/construction/home-saver';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 
 export const openHouse = (player: Player): void => {
@@ -55,7 +55,7 @@ export const openHouse = (player: Player): void => {
                 const templatePosition = room.templatePosition;
 
                 // load all the PoH template maps into memory so that their collision maps are generated
-                world.chunkManager.getChunk(templatePosition);
+                activeWorld.chunkManager.getChunk(templatePosition);
             }
         }
     }

@@ -3,7 +3,7 @@ import { Npc } from '@engine/world/actor/npc';
 import { findNpc } from '@engine/config/config-handler';
 import { NpcDetails } from '@engine/config/npc-config';
 import { NpcSpawn } from '@engine/config/npc-spawn-config';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 const action: commandActionHandler = ({ player, args }) => {
     let npcKey: string | number = args.npcKey;
@@ -28,7 +28,7 @@ const action: commandActionHandler = ({ player, args }) => {
         new NpcSpawn(npcDetails ? npcDetails.key : `unknown-${npcKey}`,
             player.position.clone(), 0, 'WEST'), player.instance);
 
-    world.registerNpc(npc);
+    activeWorld.registerNpc(npc);
 };
 
 export default {

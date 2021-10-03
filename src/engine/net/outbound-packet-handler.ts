@@ -12,7 +12,7 @@ import { stringToLong } from '@engine/util/strings';
 import { LandscapeObject } from '@runejs/filestore';
 import { xteaRegions } from '@engine/config/config-handler';
 import { ConstructedChunk, ConstructedRegion } from '@engine/world/map/region';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 
 
@@ -600,8 +600,8 @@ export class OutboundPacketHandler {
         const mapWorldX = mapData.renderPosition.x;
         const mapWorldY = mapData.renderPosition.y;
 
-        const topCornerMapChunk = world.chunkManager.getChunkForWorldPosition(new Position(mapWorldX, mapWorldY, this.player.position.level));
-        const playerChunk = world.chunkManager.getChunkForWorldPosition(this.player.position);
+        const topCornerMapChunk = activeWorld.chunkManager.getChunkForWorldPosition(new Position(mapWorldX, mapWorldY, this.player.position.level));
+        const playerChunk = activeWorld.chunkManager.getChunkForWorldPosition(this.player.position);
 
         const offsetX = playerChunk.position.x - (topCornerMapChunk.position.x - 2);
         const offsetY = playerChunk.position.y - (topCornerMapChunk.position.y - 2);

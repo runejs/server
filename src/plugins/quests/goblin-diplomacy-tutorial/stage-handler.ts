@@ -11,7 +11,7 @@ import { Cutscene } from '@engine/world/actor/player/cutscenes';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { QuestStageHandler } from '@engine/config/quest-config';
 import { tabIndex } from '@engine/world/actor/player/interface-state';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 export const goblinDiplomacyStageHandler: QuestStageHandler = {
     0: async player => {
@@ -192,7 +192,7 @@ export const goblinDiplomacyStageHandler: QuestStageHandler = {
         if(Array.isArray(anim)) {
             anim = anim[0];
         }
-        world.findNpcsByKey('rs:goblin', player.instance.instanceId)[0].playAnimation(anim);
+        activeWorld.findNpcsByKey('rs:goblin', player.instance.instanceId)[0].playAnimation(anim);
         player.playSound(soundIds.npc.human.maleDefence, 5);
     }
 };

@@ -12,14 +12,14 @@ export * from './world';
 /**
  * The singleton instance of this game world.
  */
-export let world: World;
+export let activeWorld: World;
 
 
 /**
  * Creates a new instance of the game world and assigns it to the singleton world variable.
  */
 export const createWorld = async (): Promise<World> => {
-    world = new World();
-    await world.startup();
-    return world;
+    activeWorld = new World();
+    await activeWorld.startup();
+    return activeWorld;
 };

@@ -6,7 +6,7 @@ import { Position } from '@engine/world/position';
 import { QuadtreeKey } from '@engine/world/world';
 import { Actor } from '@engine/world/actor/actor';
 import { Player } from '../player';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 
 /**
@@ -37,12 +37,12 @@ export function registerNewActors(packet: Packet, player: Player, trackedActors:
                 continue;
             }
 
-            if(!world.playerOnline(nearbyActor)) {
+            if(!activeWorld.playerOnline(nearbyActor)) {
                 // Other player is no longer in the game world
                 continue;
             }
         } else if(nearbyActor instanceof Npc) {
-            if(!world.npcExists(nearbyActor)) {
+            if(!activeWorld.npcExists(nearbyActor)) {
                 // Npc is no longer in the game world
                 continue;
             }
@@ -87,11 +87,11 @@ export function syncTrackedActors(packet: Packet, playerPosition: Position, appe
         let exists = true;
 
         if(trackedActor instanceof Player) {
-            if(!world.playerOnline(trackedActor as Player)) {
+            if(!activeWorld.playerOnline(trackedActor as Player)) {
                 exists = false;
             }
         } else {
-            if(!world.npcExists(trackedActor as Npc)) {
+            if(!activeWorld.npcExists(trackedActor as Npc)) {
                 exists = false;
             }
         }

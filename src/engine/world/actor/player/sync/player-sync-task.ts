@@ -7,7 +7,7 @@ import { findItem, findNpc } from '@engine/config/config-handler';
 import { EquipmentSlot, ItemDetails } from '@engine/config/item-config';
 import { appendMovement, registerNewActors, SyncTask, syncTrackedActors } from './actor-sync';
 import { Player } from '../player';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 
 /**
@@ -44,7 +44,7 @@ export class PlayerSyncTask extends SyncTask<void> {
 
             this.appendUpdateMaskData(this.player, updateMaskData, false);
 
-            let nearbyPlayers = world.playerTree.colliding({
+            let nearbyPlayers = activeWorld.playerTree.colliding({
                 x: this.player.position.x - 15,
                 y: this.player.position.y - 15,
                 width: 32,
@@ -52,7 +52,7 @@ export class PlayerSyncTask extends SyncTask<void> {
             }).filter(collision => collision?.actor && collision.actor.instance === this.player.instance);
 
             if(nearbyPlayers.length > 200) {
-                nearbyPlayers = world.playerTree.colliding({
+                nearbyPlayers = activeWorld.playerTree.colliding({
                     x: this.player.position.x - 7,
                     y: this.player.position.y - 7,
                     width: 16,

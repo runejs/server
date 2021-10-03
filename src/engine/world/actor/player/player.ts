@@ -15,7 +15,7 @@ import { daysSinceLastLogin, colors, hexToRgb, rgbTo16Bit,getVarbitMorphIndex } 
 import { OutboundPacketHandler, Isaac } from '@engine/net';
 import { actionHookMap, questMap } from '@engine/plugins';
 
-import { Position, QuadtreeKey, TileModifications, world, WorldInstance } from '@engine/world';
+import { Position, QuadtreeKey, TileModifications, activeWorld, WorldInstance } from '@engine/world';
 import { PlayerWidget, widgetScripts, itemIds, animationIds } from '@engine/world/config';
 import { ContainerUpdateEvent, getItemFromContainer, ItemContainer, Item } from '@engine/world/items';
 import { Chunk, ChunkUpdateItem } from '@engine/world/map';
@@ -168,7 +168,7 @@ export class Player extends Actor {
         this.updateFlags.mapRegionUpdateRequired = true;
         this.updateFlags.appearanceUpdateRequired = true;
 
-        const playerChunk = world.chunkManager.getChunkForWorldPosition(this.position);
+        const playerChunk = activeWorld.chunkManager.getChunkForWorldPosition(this.position);
         playerChunk.addPlayer(this);
 
         this.outgoingPackets.updateCurrentMapChunk();
@@ -258,7 +258,7 @@ export class Player extends Actor {
 
         await this.actionPipeline.call('player_init', { player: this });
 
-        world.spawnWorldItems(this);
+        activeWorld.spawnWorldItems(this);
 
         if(!this.metadata.customMap) {
             this.chunkChanged(playerChunk);
@@ -279,7 +279,7 @@ export class Player extends Actor {
             this.position.level = 0;
         }
 
-        world.playerTree.remove(this.quadtreeKey);
+        activeWorld.playerTree.remove(this.quadtreeKey);
         this.save();
 
         this.actionsCancelled.complete();
@@ -288,8 +288,8 @@ export class Player extends Actor {
         this.actionPipeline.shutdown();
         this.outgoingPackets.logout();
         this.instance = null;
-        world.chunkManager.getChunkForWorldPosition(this.position).removePlayer(this);
-        world.deregisterPlayer(this);
+        activeWorld.chunkManager.getChunkForWorldPosition(this.position).removePlayer(this);
+        activeWorld.deregisterPlayer(this);
 
         this.loggedIn = false;
         logger.info(`${this.username} has logged out.`);
@@ -376,7 +376,7 @@ export class Player extends Actor {
      * @param chunk The player's new active map chunk.
      */
     public chunkChanged(chunk: Chunk): void {
-        const nearbyChunks = world.chunkManager.getSurroundingChunks(chunk);
+        const nearbyChunks = activeWorld.chunkManager.getSurroundingChunks(chunk);
         if(this._nearbyChunks.length === 0) {
             this.sendChunkUpdates(nearbyChunks);
         } else {
@@ -651,8 +651,8 @@ export class Player extends Actor {
         this.updateFlags.mapRegionUpdateRequired = updateRegion;
         this.lastMapRegionUpdatePosition = newPosition;
 
-        const oldChunk = world.chunkManager.getChunkForWorldPosition(originalPosition);
-        const newChunk = world.chunkManager.getChunkForWorldPosition(newPosition);
+        const oldChunk = activeWorld.chunkManager.getChunkForWorldPosition(originalPosition);
+        const newChunk = activeWorld.chunkManager.getChunkForWorldPosition(newPosition);
 
         if(!oldChunk.equals(newChunk)) {
             oldChunk.removePlayer(this);
@@ -1121,7 +1121,7 @@ export class Player extends Actor {
     private updateMusicTab(): void {
         if(!this.savedMetadata['currentSongIdPlaying']) {
             this.savedMetadata['currentSongIdPlaying'] =
-                findSongIdByRegionId(world.chunkManager.getRegionIdForWorldPosition(
+                findSongIdByRegionId(activeWorld.chunkManager.getRegionIdForWorldPosition(
                     this.position));
         }
 
@@ -1240,11 +1240,11 @@ export class Player extends Actor {
         super.position = position;
 
         if(this.quadtreeKey !== null) {
-            world.playerTree.remove(this.quadtreeKey);
+            activeWorld.playerTree.remove(this.quadtreeKey);
         }
 
         this.quadtreeKey = { x: position.x, y: position.y, actor: this };
-        world.playerTree.push(this.quadtreeKey);
+        activeWorld.playerTree.push(this.quadtreeKey);
     }
 
     public get position(): Position {

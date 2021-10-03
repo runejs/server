@@ -1,6 +1,6 @@
 import { logger } from '@runejs/core';
 
-import { world, World } from '@engine/world';
+import { activeWorld, World } from '@engine/world';
 import { Player, playerOptions } from '@engine/world/actor';
 import { PacketData } from '@engine/net';
 import { DataType, Endianness, Signedness } from '@runejs/core/buffer';
@@ -17,7 +17,7 @@ const playerInteractionPacket = (player: Player, packet: PacketData) => {
         return;
     }
 
-    const otherPlayer = world.playerList[playerIndex];
+    const otherPlayer = activeWorld.playerList[playerIndex];
     if(!otherPlayer) {
         return;
     }

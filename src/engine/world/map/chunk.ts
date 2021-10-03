@@ -4,7 +4,7 @@ import { CollisionMap } from './collision-map';
 import { Npc } from '../actor/npc';
 import { WorldItem } from '@engine/world/items/world-item';
 import { LandscapeObject } from '@runejs/filestore';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 
 interface CustomLandscapeObject {
@@ -39,7 +39,7 @@ export class Chunk {
     public registerMapRegion(): void {
         const mapRegionX = Math.floor((this.position.x + 6) / 8);
         const mapRegionY = Math.floor((this.position.y + 6) / 8);
-        world.chunkManager.registerMapRegion(mapRegionX, mapRegionY);
+        activeWorld.chunkManager.registerMapRegion(mapRegionX, mapRegionY);
     }
 
     public setFilestoreLandscapeObject(landscapeObject: LandscapeObject): void {

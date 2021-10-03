@@ -3,7 +3,7 @@ import { logger } from '@runejs/core';
 import { filestore } from '@server/game/game-server';
 import { PacketData } from '@engine/net';
 import { getVarbitMorphIndex } from '@engine/util';
-import { Position, world } from '@engine/world';
+import { Position, activeWorld } from '@engine/world';
 import { Player, Rights } from '@engine/world/actor';
 
 
@@ -72,7 +72,7 @@ const objectInteractionPacket = (player: Player, packet: PacketData) => {
     const { objectId, x, y } = objectInteractionPackets[packetId].packetDef(packet);
     const level = player.position.level;
     const objectPosition = new Position(x, y, level);
-    const { object: landscapeObject, cacheOriginal } = world.findObjectAtLocation(player, objectId, objectPosition);
+    const { object: landscapeObject, cacheOriginal } = activeWorld.findObjectAtLocation(player, objectId, objectPosition);
     if(!landscapeObject) {
         if(player.rights === Rights.ADMIN) {
             player.sendMessage(`Custom object ${objectId} @[${objectPosition.key}]`);

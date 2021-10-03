@@ -5,7 +5,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { logger } from '@runejs/core';
 import { WorldInstance } from '@engine/world/instances';
 import { Tile } from '@engine/world/map/chunk-manager';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 
 class Point {
@@ -120,7 +120,7 @@ export class Pathfinding {
         const tiles = [];
         for(let x = lowestX; x < highestX; x++) {
             for(let y = lowestY; y < highestY; y++) {
-                tiles.push(world.chunkManager.getTile(new Position(x, y, this.actor.position.level)));
+                tiles.push(activeWorld.chunkManager.getTile(new Position(x, y, this.actor.position.level)));
             }
         }
 
@@ -272,8 +272,8 @@ export class Pathfinding {
     }
 
     public canMoveTo(origin: Position, destination: Position): boolean {
-        const destinationChunk: Chunk = world.chunkManager.getChunkForWorldPosition(destination);
-        const tile: Tile = world.chunkManager.getTile(destination);
+        const destinationChunk: Chunk = activeWorld.chunkManager.getChunkForWorldPosition(destination);
+        const tile: Tile = activeWorld.chunkManager.getTile(destination);
 
         if(tile?.blocked) {
             return false;
@@ -375,11 +375,11 @@ export class Pathfinding {
 
     public findLocalCornerChunk(cornerX: number, cornerY: number, origin: Position): { localX: number, localY: number, chunk: Chunk } {
         const cornerPosition: Position = new Position(cornerX, cornerY, origin.level + 1);
-        let cornerChunk: Chunk = world.chunkManager.getChunkForWorldPosition(cornerPosition);
-        const tileAbove: Tile = world.chunkManager.getTile(cornerPosition);
+        let cornerChunk: Chunk = activeWorld.chunkManager.getChunkForWorldPosition(cornerPosition);
+        const tileAbove: Tile = activeWorld.chunkManager.getTile(cornerPosition);
         if(!tileAbove?.bridge) {
             cornerPosition.level = cornerPosition.level - 1;
-            cornerChunk = world.chunkManager.getChunkForWorldPosition(cornerPosition);
+            cornerChunk = activeWorld.chunkManager.getChunkForWorldPosition(cornerPosition);
         }
         const localX: number = cornerX - cornerChunk.collisionMap.insetX;
         const localY: number = cornerY - cornerChunk.collisionMap.insetY;
@@ -427,7 +427,7 @@ export class Pathfinding {
     }
 
     private canPathNSEW(position: Position, i: number): boolean {
-        const chunk = world.chunkManager.getChunkForWorldPosition(position);
+        const chunk = activeWorld.chunkManager.getChunkForWorldPosition(position);
         const destinationLocalX: number = position.x - chunk.collisionMap.insetX;
         const destinationLocalY: number = position.y - chunk.collisionMap.insetY;
         return this.movementPermitted(this.instance, chunk, destinationLocalX, destinationLocalY, i);
@@ -435,7 +435,7 @@ export class Pathfinding {
 
     private canPathDiagonally(originX: number, originY: number, position: Position, offsetX: number, offsetY: number,
         destMask: number, cornerMask1: number, cornerMask2: number): boolean {
-        const chunk = world.chunkManager.getChunkForWorldPosition(position);
+        const chunk = activeWorld.chunkManager.getChunkForWorldPosition(position);
         const destinationLocalX: number = position.x - chunk.collisionMap.insetX;
         const destinationLocalY: number = position.y - chunk.collisionMap.insetY;
         return this.diagonalMovementPermitted(this.instance, position, chunk, destinationLocalX, destinationLocalY,
@@ -443,7 +443,7 @@ export class Pathfinding {
     }
 
     private get instance(): WorldInstance {
-        return this.actor instanceof Player ? this.actor.instance : world.globalInstance;
+        return this.actor instanceof Player ? this.actor.instance : activeWorld.globalInstance;
     }
 
 }

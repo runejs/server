@@ -10,7 +10,7 @@ import { checkForGemBoost } from '@engine/world/skill-util/glory-boost';
 import { colorText } from '@engine/util/strings';
 import { rollBirdsNestType, rollGemRockResult, rollGemType } from '@engine/world/skill-util/harvest-roll';
 import { findItem } from '@engine/config/config-handler';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 import { loopingEvent } from '@engine/plugins';
 
 export function canInitiateHarvest(player: Player, target: IHarvestable, skill: Skill): undefined | HarvestTool {
@@ -140,7 +140,7 @@ export function handleHarvesting(details: ObjectInteractionAction, tool: Harvest
                             if (roll === 1) {
                                 randomLoot = true;
                                 details.player.sendMessage(colorText('A bird\'s nest falls out of the tree.', colors.red));
-                                world.globalInstance.spawnWorldItem(rollBirdsNestType(), details.player.position,
+                                activeWorld.globalInstance.spawnWorldItem(rollBirdsNestType(), details.player.position,
                                     { owner: details.player, expires: 300 });
                             }
                             break;

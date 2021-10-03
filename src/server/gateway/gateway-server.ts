@@ -6,7 +6,7 @@ import { parseServerConfig, SocketServer } from '@runejs/core/net';
 import { LoginResponseCode } from '@runejs/login-server';
 
 import { Isaac } from '@engine/net';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 import { Player } from '@engine/world/actor';
 import { GameServerConfig, GameServerConnection } from '@server/game';
 
@@ -120,7 +120,7 @@ export class GatewayServer extends SocketServer {
                     const passwordHash = buffer.getString();
                     const lowDetail = buffer.get('byte') === 1;
 
-                    if(world.playerOnline(username)) {
+                    if(activeWorld.playerOnline(username)) {
                         // Player is already logged in!
                         // @TODO move to login server
                         buffer = new ByteBuffer(1);
@@ -167,7 +167,7 @@ export class GatewayServer extends SocketServer {
 
         this.gameServerConnection = new GameServerConnection(this.clientSocket, player);
 
-        world.registerPlayer(player);
+        activeWorld.registerPlayer(player);
 
         const outputBuffer = new ByteBuffer(6);
 

@@ -1,6 +1,6 @@
 import { logger } from '@runejs/core';
 import { filestore } from '@server/game/game-server';
-import { Position, world } from '@engine/world';
+import { Position, activeWorld } from '@engine/world';
 import { widgets } from '@engine/config';
 import { getVarbitMorphIndex } from '@engine/util';
 import { Player } from '@engine/world/actor';
@@ -37,7 +37,7 @@ const itemOnObjectPacket = (player: Player, packet: PacketData) => {
     const level = player.position.level;
     const objectPosition = new Position(objectX, objectY, level);
 
-    const { object: locationObject, cacheOriginal } = world.findObjectAtLocation(player, objectId, objectPosition);
+    const { object: locationObject, cacheOriginal } = activeWorld.findObjectAtLocation(player, objectId, objectPosition);
     if(!locationObject) {
         return;
     }

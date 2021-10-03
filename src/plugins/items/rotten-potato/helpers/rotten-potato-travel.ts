@@ -2,7 +2,7 @@ import { Player } from '@engine/world/actor/player/player';
 import {
     widgetInteractionActionHandler
 } from '@engine/world/action/widget-interaction.action';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 export function openTravel(player: Player, page: number) {
     const widget = player.interfaceState.openWidget(27, {
@@ -19,7 +19,7 @@ export function openTravel(player: Player, page: number) {
 
     player.modifyWidget(widget.widgetId, {
         childId: 97,
-        hidden: Math.round(world.travelLocations.locations.length / 30) === page
+        hidden: Math.round(activeWorld.travelLocations.locations.length / 30) === page
     })
 
     player.modifyWidget(widget.widgetId, {
@@ -41,20 +41,20 @@ export function openTravel(player: Player, page: number) {
     for (let i = 0; i < 30; i+=2) {
         player.modifyWidget(widget.widgetId, {
             childId: 101+i,
-            text: world.travelLocations.locations[currentLocation]?.name || '',
-            hidden: !world.travelLocations.locations[currentLocation]?.name
+            text: activeWorld.travelLocations.locations[currentLocation]?.name || '',
+            hidden: !activeWorld.travelLocations.locations[currentLocation]?.name
         })
         currentLocation++;
     }
     for (let i = 0; i < 30; i+=2) {
         player.modifyWidget(widget.widgetId, {
             childId: 131+i-1,
-            hidden: !world.travelLocations.locations[currentLocation]?.name
+            hidden: !activeWorld.travelLocations.locations[currentLocation]?.name
         })
         player.modifyWidget(widget.widgetId, {
             childId: 131+i,
-            text: world.travelLocations.locations[currentLocation]?.name || '',
-            hidden: !world.travelLocations.locations[currentLocation]?.name
+            text: activeWorld.travelLocations.locations[currentLocation]?.name || '',
+            hidden: !activeWorld.travelLocations.locations[currentLocation]?.name
         })
         currentLocation++;
     }
@@ -86,7 +86,7 @@ export const travelMenuInteract: widgetInteractionActionHandler = (details) => {
         selectedIndex = ((details.childId - 129)/2 -1) + 15;
     }
     if(selectedIndex != undefined) {
-        details.player.teleport(world.travelLocations.locations[selectedIndex + (30 * (playerWidget.metadata.page-1))].position)
+        details.player.teleport(activeWorld.travelLocations.locations[selectedIndex + (30 * (playerWidget.metadata.page-1))].position)
         details.player.interfaceState.closeAllSlots()
     } else {
         openTravel(details.player, playerWidget.metadata.page)

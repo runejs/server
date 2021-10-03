@@ -1,6 +1,6 @@
 import { Player } from '@engine/world/actor';
 import { PacketData } from '@engine/net';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 const examinePacket = (player: Player, packet: PacketData) => {
     const { packetId, buffer } = packet;
@@ -9,11 +9,11 @@ const examinePacket = (player: Player, packet: PacketData) => {
     let message;
 
     if(packetId === 151) {
-        message = world.examine.getItem(id);
+        message = activeWorld.examine.getItem(id);
     } else if(packetId === 148) {
-        message = world.examine.getObject(id);
+        message = activeWorld.examine.getObject(id);
     } else if(packetId === 247) {
-        message = world.examine.getNpc(id);
+        message = activeWorld.examine.getNpc(id);
     }
 
     if(message) {

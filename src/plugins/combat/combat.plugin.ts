@@ -14,7 +14,7 @@ import { logger } from '@runejs/core';
 import { TaskExecutor } from '@engine/world/action/action-pipeline';
 import { wait } from '../../engine/world/task';
 import { Behavior, BehaviorType } from '../../engine/world/actor/behaviors/behavior';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 
 //Kicking off combat - all subsequent action will be handed off to behaviors

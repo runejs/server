@@ -5,7 +5,7 @@ import { launchLoginServer } from '@runejs/login-server';
 import { launchUpdateServer } from '@runejs/update-server';
 import { launchGameServer } from '@server/game';
 import { initErrorHandling } from '@engine/util';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 
 const shutdownEvents = [
@@ -33,7 +33,7 @@ shutdownEvents.forEach(signal => process.on(signal as any, () => {
     logger.warn(`${signal} received.`);
 
     if(type === 'game') {
-        world?.shutdown();
+        activeWorld?.shutdown();
     }
 
     logger.info(`${type.charAt(0).toUpperCase()}${type.substring(1)} Server shutting down...`);

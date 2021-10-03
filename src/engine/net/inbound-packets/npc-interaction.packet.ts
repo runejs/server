@@ -2,7 +2,7 @@ import { logger } from '@runejs/core';
 import { DataType, Endianness, Signedness } from '@runejs/core/buffer';
 
 import { PacketData } from '@engine/net';
-import { world, World } from '@engine/world';
+import { activeWorld, World } from '@engine/world';
 import { Player } from '@engine/world/actor';
 
 const npcInteractionPacket = (player: Player, packet: PacketData) => {
@@ -21,7 +21,7 @@ const npcInteractionPacket = (player: Player, packet: PacketData) => {
         return;
     }
 
-    const npc = world.npcList[npcIndex];
+    const npc = activeWorld.npcList[npcIndex];
     if (!npc) {
         return;
     }

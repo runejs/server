@@ -2,7 +2,7 @@ import { Chunk } from './chunk';
 import { filestore } from '@server/game/game-server';
 import { WorldInstance } from '@engine/world/instances';
 import { LandscapeObject } from '@runejs/filestore';
-import { world } from '@engine/world';
+import { activeWorld } from '@engine/world';
 
 /**
  * A map of collision masks for a chunk within the game world.
@@ -422,7 +422,7 @@ export class CollisionMap {
 
     public getSiblingCollisionMap(offsetX: number, offsetY: number): CollisionMap {
         if(this.chunk) {
-            const offsetChunk: Chunk = world.chunkManager.getChunk({
+            const offsetChunk: Chunk = activeWorld.chunkManager.getChunk({
                 x: this.chunk.position.x + offsetX,
                 y: this.chunk.position.y + offsetY,
                 level: this.heightLevel

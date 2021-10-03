@@ -4,7 +4,7 @@ import { filter, take } from 'rxjs/operators';
 import { LandscapeObject } from '@runejs/filestore';
 
 import { DefensiveBonuses, OffensiveBonuses, SkillBonuses } from '@engine/config';
-import { Position, DirectionData, directionFromIndex, WorldInstance, world } from '@engine/world';
+import { Position, DirectionData, directionFromIndex, WorldInstance, activeWorld } from '@engine/world';
 import { Item, ItemContainer } from '@engine/world/items';
 import { ActionCancelType, ActionPipeline } from '@engine/world/action';
 import { soundIds } from '@engine/world/config';
@@ -223,7 +223,7 @@ export abstract class Actor {
         this.updateFlags.addDamage(amount, amount === 0 ? DamageType.NO_DAMAGE : damageType,
             this.hitPoints, this.maxHitPoints);
         //this actor should respond when hit
-        world.playLocationSound(this.position, soundIds.npc.human.noArmorHitPlayer,5)
+        activeWorld.playLocationSound(this.position, soundIds.npc.human.noArmorHitPlayer,5)
         this.playAnimation(this.getBlockAnimation());
     }
 
@@ -511,7 +511,7 @@ export abstract class Actor {
         }
 
         if(this.isNpc) {
-            const nearbyPlayers = world.findNearbyPlayers(this.position, 24, this.instance?.instanceId);
+            const nearbyPlayers = activeWorld.findNearbyPlayers(this.position, 24, this.instance?.instanceId);
             if(nearbyPlayers.length === 0) {
                 // No need for this actor to move if there are no players nearby to witness it, save some memory. :)
                 return;
@@ -691,7 +691,7 @@ export abstract class Actor {
     }
 
     public get instance(): WorldInstance {
-        return this._instance || world.globalInstance;
+        return this._instance || activeWorld.globalInstance;
     }
 
     public set instance(value: WorldInstance) {
