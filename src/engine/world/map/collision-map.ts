@@ -1,5 +1,5 @@
 import { Chunk } from './chunk';
-import { filestore} from '@server/game/game-server';
+import { filestore } from '@server/game/game-server';
 import { WorldInstance } from '@engine/world/instances';
 import { LandscapeObject } from '@runejs/filestore';
 import { world } from '@engine/world';

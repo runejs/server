@@ -7,7 +7,7 @@ import {
     loadItemConfigurations,
     translateItemConfig
 } from '@engine/config/item-config';
-import { filestore} from '@server/game/game-server';
+import { filestore } from '@server/game/game-server';
 import {
     loadNpcConfigurations,
     NpcDetails,

@@ -3,7 +3,6 @@ import { buttonActionHandler, ButtonAction } from '@engine/world/action/button.a
 import { soundIds } from '@engine/world/config/sound-ids';
 import { itemIds } from '@engine/world/config/item-ids';
 import { Skill } from '@engine/world/actor/skills';
-import { filestore} from '@server/game/game-server';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { objectIds } from '@engine/world/config/object-ids';
 import { findItem, widgets } from '@engine/config/config-handler';
@@ -26,10 +25,10 @@ const ballOfWool: Spinnable = { input: itemIds.wool, output: itemIds.ballOfWool,
 const bowString: Spinnable = { input: itemIds.flax, output: itemIds.bowstring, experience: 15, requiredLevel: 10 };
 const rootsCbowString: Spinnable = {
     input: [
-        itemIds.oakRoots,
-        itemIds.willowRoots,
-        itemIds.mapleRoots,
-        itemIds.yewRoots
+        itemIds.roots.oak,
+        itemIds.roots.willow,
+        itemIds.roots.maple,
+        itemIds.roots.yew
     ],
     output: itemIds.crossbowString,
     experience: 15,
@@ -42,7 +41,7 @@ const sinewCbowString: Spinnable = {
     requiredLevel: 10
 };
 const magicAmuletString: Spinnable = {
-    input: itemIds.magicRoots,
+    input: itemIds.roots.magic,
     output: itemIds.magicString,
     experience: 30,
     requiredLevel: 19

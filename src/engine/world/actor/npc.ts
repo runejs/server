@@ -1,7 +1,7 @@
 import uuidv4 from 'uuid/v4';
 import EventEmitter from 'events';
 
-import { filestore} from '@server/game/game-server';
+import { filestore } from '@server/game/game-server';
 import { Position, directionData, QuadtreeKey, WorldInstance, world } from '@engine/world';
 import { findItem, findNpc, NpcCombatAnimations, NpcDetails, NpcSpawn } from '@engine/config';
 import { soundIds, animationIds } from '@engine/world/config';

@@ -62,7 +62,9 @@ export class GatewayServer extends SocketServer {
                 host: serverConfig.loginServerHost,
                 port: serverConfig.loginServerPort
             });
-            this.loginServerSocket.on('data', data => this.parseLoginServerResponse(new ByteBuffer(data)));
+            this.loginServerSocket.on('data', data => {
+                this.parseLoginServerResponse(new ByteBuffer(data));
+            });
             this.loginServerSocket.on('end', () => {
                 logger.error(`Login server error.`);
             });

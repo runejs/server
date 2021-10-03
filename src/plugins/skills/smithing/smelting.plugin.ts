@@ -4,7 +4,6 @@ import { objectIds } from '@engine/world/config/object-ids';
 import { objectInteractionActionHandler, ObjectInteractionAction } from '@engine/world/action/object-interaction.action';
 import { buttonActionHandler, ButtonAction } from '@engine/world/action/button.action';
 import { Skill } from '@engine/world/actor/skills';
-import { filestore} from '@server/game/game-server';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { colors } from '@engine/util/colors';

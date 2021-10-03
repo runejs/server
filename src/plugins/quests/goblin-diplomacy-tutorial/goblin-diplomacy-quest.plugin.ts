@@ -1,6 +1,6 @@
 import { defaultPlayerTabWidgets, Player } from '@engine/world/actor/player/player';
 import { questDialogueActionFactory, QuestJournalHandler } from '@engine/config/quest-config';
-import { serverConfig} from '@server/game/game-server';
+import { serverConfig } from '@server/game/game-server';
 import uuidv4 from 'uuid/v4';
 import { logger } from '@runejs/core';
 import { Position } from '@engine/world/position';

@@ -1,10 +1,5 @@
 import { Actor } from '../actor';
-import { regionChangeActionFactory } from '@engine/world/action/region-change.action';
-import { Subject } from 'rxjs';
-import { logger } from '@runejs/core';
 import { Behavior, BehaviorType } from './behavior';
-import { Timestamp } from 'rxjs/dist/types/internal/types';
-import { timestamp } from 'rxjs/dist/types/operators';
 import { Npc } from '../npc';
 import { Player } from '../player/player';
 

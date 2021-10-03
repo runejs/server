@@ -1,6 +1,6 @@
 import { logger } from '@runejs/core';
 
-import { filestore} from '@server/game/game-server';
+import { filestore } from '@server/game/game-server';
 import { PacketData } from '@engine/net';
 import { getVarbitMorphIndex } from '@engine/util';
 import { Position, world } from '@engine/world';

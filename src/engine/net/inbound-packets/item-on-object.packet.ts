@@ -1,5 +1,5 @@
 import { logger } from '@runejs/core';
-import { filestore} from '@server/game/game-server';
+import { filestore } from '@server/game/game-server';
 import { Position, world } from '@engine/world';
 import { widgets } from '@engine/config';
 import { getVarbitMorphIndex } from '@engine/util';
