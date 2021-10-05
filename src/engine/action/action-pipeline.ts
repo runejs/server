@@ -1,12 +1,11 @@
-import { gameEngineDist } from '@engine/util/directories';
-import { getFiles } from '@engine/util/files';
-import { logger } from '@runejs/core';
-import { Actor } from '@engine/world/actor/actor';
-import { ActionHook, TaskExecutor } from '@engine/world/action/hooks';
-import { Position } from '@engine/world/position';
-import { Player } from '@engine/world/actor/player/player';
 import { Subscription } from 'rxjs';
+
+import { logger } from '@runejs/core';
 import { LandscapeObject } from '@runejs/filestore';
+
+import { Actor, Player } from '@engine/world/actor';
+import { ActionHook, TaskExecutor } from '@engine/action';
+import { Position } from '@engine/world';
 
 
 /**
@@ -44,7 +43,8 @@ export type ActionType =
     | 'player_command'
     | 'player_interaction'
     | 'region_change'
-    | 'equipment_change';
+    | 'equipment_change'
+    | 'prayer';
 
 
 export const gentleActions: ActionType[] = [
@@ -223,39 +223,3 @@ export class ActionPipeline {
     }
 
 }
-
-
-/**
- * Finds and loads all available action pipe files (`*.action.ts`).
- */
-export async function loadActionFiles(): Promise<void> {
-    const ACTION_DIRECTORY = `${gameEngineDist}/world/action`;
-    const blacklist = [];
-    const loadedActions: string[] = [];
-
-    for await(const path of getFiles(ACTION_DIRECTORY, blacklist)) {
-        if(!path.endsWith('.action.ts') && !path.endsWith('.action.js')) {
-            continue;
-        }
-
-        const location = '.' + path.substring(ACTION_DIRECTORY.length).replace('.js', '');
-
-        try {
-            const importedAction = (require(location)?.default || null) as ActionPipe | null;
-            if(importedAction && Array.isArray(importedAction) && importedAction[0] && importedAction[1]) {
-                ActionPipeline.register(importedAction[0], importedAction[1]);
-                loadedActions.push(importedAction[0]);
-            }
-        } catch(error) {
-            logger.error(`Error loading action file at ${location}:`);
-            logger.error(error);
-        }
-    }
-
-    logger.info(`Loaded action pipes: ${loadedActions.join(', ')}.`);
-
-    return Promise.resolve();
-}
-
-
-export * from './hooks/index';

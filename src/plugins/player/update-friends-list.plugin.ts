@@ -1,5 +1,5 @@
 import { PrivateMessaging } from '@engine/world/actor/player/private-messaging';
-import { playerInitActionHandler } from '@engine/world/action/player-init.action';
+import { playerInitActionHandler } from '@engine/action';
 
 
 export const handler: playerInitActionHandler = ({ player }) => {

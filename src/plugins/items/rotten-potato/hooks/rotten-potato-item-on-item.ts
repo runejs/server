@@ -1,4 +1,4 @@
-import { itemOnItemActionHandler } from '@engine/world/action/item-on-item.action';
+import { itemOnItemActionHandler } from '@engine/action';
 import { RottenPotatoItem } from '@plugins/items/rotten-potato/helpers/rotten-potato-helpers';
 import { findItem } from '@engine/config/config-handler';
 

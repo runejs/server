@@ -1,4 +1,4 @@
-import { commandActionHandler } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/action';
 import { Player } from '@engine/world/actor/player/player';
 import { logger } from '@runejs/core';
 import { Position } from '@engine/world/position';

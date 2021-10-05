@@ -1,7 +1,7 @@
 import { Player } from '@engine/world/actor/player/player';
 import {
     widgetInteractionActionHandler
-} from '@engine/world/action/widget-interaction.action';
+} from '@engine/action';
 import { activeWorld } from '@engine/world';
 
 export function openTravel(player: Player, page: number) {

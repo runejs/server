@@ -1,5 +1,5 @@
-import { PlayerCommandAction } from '@engine/world/action/player-command.action';
-import { PlayerInitAction } from '@engine/world/action/player-init.action';
+import { PlayerCommandAction } from '@engine/action';
+import { PlayerInitAction } from '@engine/action';
 import { instance1, instance1Max, instance2, instance2Max, roomBuilderButtonMap } from './con-constants';
 import { doorHotspotHandler, roomBuilderWidgetHandler } from '@plugins/skills/construction/room-builder';
 import { openHouse } from '@plugins/skills/construction/house';

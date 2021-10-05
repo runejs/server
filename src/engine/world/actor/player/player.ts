@@ -19,7 +19,7 @@ import { Position, QuadtreeKey, TileModifications, activeWorld, WorldInstance } 
 import { PlayerWidget, widgetScripts, itemIds, animationIds } from '@engine/world/config';
 import { ContainerUpdateEvent, getItemFromContainer, ItemContainer, Item } from '@engine/world/items';
 import { Chunk, ChunkUpdateItem } from '@engine/world/map';
-import { PlayerCommandActionHook, regionChangeActionFactory } from '@engine/world/action';
+import { PlayerCommandActionHook, regionChangeActionFactory } from '@engine/action';
 import { MusicPlayerMode } from '@engine/world/sound';
 
 import { Actor } from '../actor';

@@ -1,6 +1,6 @@
 import { logger } from '@runejs/core';
 import { Npc, Player } from '@engine/world/actor';
-import { npcInteractionActionHandler } from '@engine/world/action';
+import { npcInteractionActionHandler } from '@engine/action';
 
 
 export type QuestKey = number | 'complete';

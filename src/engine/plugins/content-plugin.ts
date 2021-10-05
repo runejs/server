@@ -2,7 +2,7 @@ import { logger } from '@runejs/core';
 import { getFiles } from '@runejs/core/fs';
 import { join } from 'path';
 
-import { ActionHook } from '@engine/world/action/hooks';
+import { ActionHook } from '@engine/action/hook';
 import { Quest } from '@engine/world/actor/player/quest';
 
 

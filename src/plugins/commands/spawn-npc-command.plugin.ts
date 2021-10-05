@@ -1,4 +1,4 @@
-import { commandActionHandler } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/action';
 import { Npc } from '@engine/world/actor/npc';
 import { findNpc } from '@engine/config/config-handler';
 import { NpcDetails } from '@engine/config/npc-config';

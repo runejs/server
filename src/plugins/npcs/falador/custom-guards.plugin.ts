@@ -1,5 +1,5 @@
-import { npcInitActionHandler } from '@engine/world/action/npc-init.action';
-import { World } from '@engine/world/world';
+import { npcInitActionHandler } from '@engine/action';
+import { World } from '@engine/world';
 import { Position } from '@engine/world/position';
 import { findNpc } from '@engine/config/config-handler';
 import { Npc } from '@engine/world/actor/npc';

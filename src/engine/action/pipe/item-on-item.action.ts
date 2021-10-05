@@ -1,8 +1,6 @@
-import { Player } from '@engine/world/actor/player/player';
-import { Item } from '@engine/world/items/item';
-import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
-import { questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe, RunnableHooks } from '@engine/world/action/action-pipeline';
+import { Player } from '@engine/world/actor';
+import { Item } from '@engine/world';
+import { ActionHook, getActionHooks, questHookFilter, ActionPipe, RunnableHooks } from '@engine/action';
 
 
 /**

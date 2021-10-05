@@ -1,4 +1,4 @@
-import { World } from '@engine/world/world';
+import { World } from '@engine/world';
 
 export * from './items';
 export * from './map';

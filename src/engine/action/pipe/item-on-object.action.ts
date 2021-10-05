@@ -1,11 +1,9 @@
-import { Player } from '@engine/world/actor/player/player';
-import { Position } from '@engine/world/position';
-import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
-import { Item } from '@engine/world/items/item';
-import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe, RunnableHooks } from '@engine/world/action/action-pipeline';
 import { LandscapeObject, ObjectConfig } from '@runejs/filestore';
-import { playerWalkTo } from '@engine/plugins';
+import { Position, Item } from '@engine/world';
+import { Player } from '@engine/world/actor';
+import {
+    ActionHook, getActionHooks, advancedNumberHookFilter, questHookFilter, ActionPipe, RunnableHooks
+} from '@engine/action';
 
 
 /**

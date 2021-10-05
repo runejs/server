@@ -2,7 +2,7 @@ import { Position } from '@engine/world/position';
 import { WNES } from '@engine/world/direction';
 import { logger } from '@runejs/core';
 import { action as doorAction } from '@plugins/objects/doors/door.plugin';
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
 import { activeWorld } from '@engine/world';
 
 const doubleDoors = [

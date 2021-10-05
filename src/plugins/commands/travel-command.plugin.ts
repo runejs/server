@@ -1,4 +1,4 @@
-import { commandActionHandler } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/action';
 import { TravelLocation } from '@engine/world/config/travel-locations';
 import { activeWorld } from '@engine/world';
 

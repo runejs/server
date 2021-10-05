@@ -2,7 +2,7 @@ import { Position } from '@engine/world/position';
 import { directionData, WNES } from '@engine/world/direction';
 import { logger } from '@runejs/core';
 import { ModifiedLandscapeObject } from '@engine/world/map/landscape-object';
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { Chunk } from '@engine/world/map/chunk';
 import { activeWorld } from '@engine/world';

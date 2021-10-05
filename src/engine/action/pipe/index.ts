@@ -1,4 +1,3 @@
-export * from './action-pipeline';
 export * from './button.action';
 export * from './equipment-change.action';
 export * from './item-interaction.action';

@@ -1,4 +1,4 @@
-import { commandActionHandler } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/action/pipe/player-command.action';
 import { Position } from '@engine/world/position';
 
 const action: commandActionHandler = (details) => {

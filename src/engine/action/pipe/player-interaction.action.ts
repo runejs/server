@@ -1,9 +1,6 @@
-import { Player } from '@engine/world/actor/player/player';
-import { Position } from '@engine/world/position';
-import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
-import { logger } from '@runejs/core';
-import { stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { RunnableHooks } from '@engine/world/action/action-pipeline';
+import { Player } from '@engine/world/actor';
+import { Position } from '@engine/world';
+import { ActionHook, getActionHooks, stringHookFilter, questHookFilter, RunnableHooks } from '@engine/action';
 import { playerWalkTo } from '@engine/plugins';
 
 

@@ -1,5 +1,5 @@
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
-import { buttonActionHandler, ButtonAction } from '@engine/world/action/button.action';
+import { objectInteractionActionHandler } from '@engine/action';
+import { buttonActionHandler, ButtonAction } from '@engine/action';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { itemIds } from '@engine/world/config/item-ids';
 import { Skill } from '@engine/world/actor/skills';

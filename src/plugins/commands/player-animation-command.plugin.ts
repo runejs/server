@@ -1,4 +1,4 @@
-import { commandActionHandler, PlayerCommandAction } from '@engine/world/action/player-command.action';
+import { commandActionHandler, PlayerCommandAction } from '@engine/action';
 import { Player } from '@engine/world/actor/player/player';
 import { loopingEvent } from '@engine/plugins';
 

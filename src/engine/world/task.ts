@@ -1,5 +1,5 @@
 import { lastValueFrom, timer } from 'rxjs';
-import { World } from '@engine/world/world';
+import { World } from '@engine/world';
 import { take } from 'rxjs/operators';
 
 

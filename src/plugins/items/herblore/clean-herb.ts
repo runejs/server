@@ -1,4 +1,4 @@
-import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action';
 import { findItem, widgets } from '@engine/config/config-handler';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { ItemDetails } from '@engine/config/item-config';

@@ -1,7 +1,6 @@
 export * from './address';
 export * from './colors';
 export * from './data';
-export * from './directories';
 export * from './error-handling';
 export * from './files';
 export * from './num';

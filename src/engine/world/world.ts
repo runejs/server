@@ -8,7 +8,7 @@ import { LandscapeObject } from '@runejs/filestore';
 import { schedule, WorldInstance, Direction, Position, activeWorld } from '@engine/world';
 import { findItem, findNpc, findObject, itemSpawns, npcSpawns, NpcDetails, NpcSpawn } from '@engine/config';
 import { Player, Npc, Actor } from '@engine/world/actor';
-import { loadActionFiles } from '@engine/world/action';
+import { loadActionFiles } from '@engine/action';
 import { ChunkManager, ConstructedRegion, getTemplateLocalX, getTemplateLocalY } from '@engine/world/map';
 import { TravelLocations, ExamineCache, parseScenerySpawns } from '@engine/world/config';
 import { loadPlugins } from '@engine/plugins';

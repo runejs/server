@@ -1,8 +1,7 @@
-import { Player } from '@engine/world/actor/player/player';
-import { Coords, Position } from '@engine/world/position';
-import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
-import { RegionType } from '@engine/world/map/region';
-import { ActionPipe } from '@engine/world/action/action-pipeline';
+import { Player } from '@engine/world/actor';
+import { Coords, Position } from '@engine/world';
+import { RegionType } from '@engine/world/map';
+import { ActionHook, getActionHooks, ActionPipe } from '@engine/action';
 
 
 /**

@@ -1,4 +1,4 @@
-import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
+import { itemOnObjectActionHandler } from '@engine/action';
 import { filestore } from '@server/game/game-server';
 import { itemIds } from '@engine/world/config/item-ids';
 import { animationIds } from '@engine/world/config/animation-ids';

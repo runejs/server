@@ -1,14 +1,11 @@
-import { Player } from '@engine/world/actor/player/player';
-import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
-import { advancedNumberHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe, RunnableHooks } from '@engine/world/action/action-pipeline';
-import { Npc } from '../actor/npc';
+import { Player, Npc } from '@engine/world/actor';
+import { ActionHook, getActionHooks, ActionPipe, RunnableHooks } from '@engine/action';
 
 
 /**
  * Defines a button action hook.
  */
-export interface MagicOnNPCActionHook extends ActionHook<MagicOnNPCAction, magiconnpcActionHandler> {
+export interface PrayerActionHook extends ActionHook<PrayerAction, PrayerActionHandler> {
     // The npc world id that was clicked on after choosing the spell
     npcworldId?: number;
     // The IDs of the UI widgets that the buttons are on.
@@ -23,13 +20,13 @@ export interface MagicOnNPCActionHook extends ActionHook<MagicOnNPCAction, magic
 /**
  * The button action hook handler function to be called when the hook's conditions are met.
  */
-export type magiconnpcActionHandler = (buttonAction: MagicOnNPCAction) => void | Promise<void>;
+export type PrayerActionHandler = (buttonAction: PrayerAction) => void | Promise<void>;
 
 
 /**
  * Details about a button action being performed.
  */
-export interface MagicOnNPCAction {
+export interface PrayerAction {
     // The npc world id that was clicked on after choosing the spell
     npc: Npc;
     // The player performing the action.
@@ -48,11 +45,11 @@ export interface MagicOnNPCAction {
  * @param widgetId
  * @param buttonId
  */
-const magicOnNpcActionPipe = (npc:Npc, player: Player, widgetId: number, buttonId: number): RunnableHooks<MagicOnNPCAction> => {
-    //console.info(`pew pew you use magic on ${npc.name}!`);
+const prayerActionPipe = (npc:Npc, player: Player, widgetId: number, buttonId: number): RunnableHooks<PrayerAction> => {
+    console.info(`You used prayer`);
 
     // Find all object action plugins that reference this location object
-    const matchingHooks = getActionHooks<MagicOnNPCActionHook>('magic_on_npc');
+    const matchingHooks = getActionHooks<PrayerActionHook>('button');
 
     return {
         hooks: matchingHooks,
@@ -72,4 +69,4 @@ const magicOnNpcActionPipe = (npc:Npc, player: Player, widgetId: number, buttonI
 /**
  * Button action pipe definition.
  */
-export default [ 'magic_on_npc', magicOnNpcActionPipe ] as ActionPipe;
+export default [ 'prayer', prayerActionPipe ] as ActionPipe;

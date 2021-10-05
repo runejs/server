@@ -2,7 +2,7 @@ import { Player } from '../world/actor/player/player';
 import { logger } from '@runejs/core';
 import { ByteBuffer } from '@runejs/core/buffer';
 import { getFiles } from '../util/files';
-import { gameEngineDist } from '@engine/util/directories';
+import { BUILD_DIR } from '@engine/config';
 
 interface InboundPacket {
     opcode: number;
@@ -18,7 +18,7 @@ export interface PacketData {
 
 export const incomingPackets = new Map<number, InboundPacket>();
 
-export const PACKET_DIRECTORY = `${gameEngineDist}/net/inbound-packets`;
+export const PACKET_DIRECTORY = `${BUILD_DIR}/net/inbound-packets`;
 
 export async function loadPackets(): Promise<Map<number, InboundPacket>> {
     incomingPackets.clear();

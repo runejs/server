@@ -1,10 +1,8 @@
-import { Player } from '@engine/world/actor/player/player';
-import { Npc } from '@engine/world/actor/npc';
-import { Position } from '@engine/world/position';
-import { ActionHook, getActionHooks } from '@engine/world/action/hooks';
-import { stringHookFilter, questHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ActionPipe, RunnableHooks } from '@engine/world/action/action-pipeline';
-import { playerWalkTo } from '@engine/plugins';
+import { Player, Npc } from '@engine/world/actor';
+import { Position } from '@engine/world';
+import {
+    ActionHook, getActionHooks, stringHookFilter, questHookFilter, ActionPipe, RunnableHooks
+} from '@engine/action';
 
 
 /**
