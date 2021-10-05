@@ -115,9 +115,8 @@ class Combat {
             soundIds.npc.human.maleDefence, 5);
 
         defender.damage(actualHit);
-        const defenderState: 'alive' | 'dead' = 'alive';
+        /*const defenderState: 'alive' | 'dead' = 'alive';
 
-        // @ts-ignore
         if (defenderState === 'dead') {
             // @TODO death sounds
             this.processDeath(defender, attacker);
@@ -126,7 +125,7 @@ class Combat {
             activeWorld.playLocationSound(defender.position, defender instanceof Player ? soundIds.npc.human.noArmorHitPlayer :
                 soundIds.npc.human.noArmorHit, 5);
             defender.playAnimation(defender.getBlockAnimation());
-        }
+        }*/
     }
 
     public async processDeath(victim: Actor, assailant?: Actor): Promise<void> {
