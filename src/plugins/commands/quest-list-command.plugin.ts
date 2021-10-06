@@ -3,7 +3,7 @@ import { questMap } from '@engine/plugins';
 
 const action: commandActionHandler = (details) => {
     for (const quest of Object.values(questMap)) {
-       details.player.sendLogMessage(quest.id, details.isConsole);
+        details.player.sendLogMessage(quest.id, details.isConsole);
     }
 };
 
