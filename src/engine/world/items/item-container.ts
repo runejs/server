@@ -4,6 +4,7 @@ import { filestore } from '@server/game/game-server';
 import { hasValueNotNull } from '@engine/util/data';
 import { findItem } from '@engine/config/config-handler';
 import { logger } from '@runejs/core';
+import { fromNote } from '@engine/world/items/item';
 
 
 export interface ContainerUpdateEvent {
@@ -308,7 +309,7 @@ export class ItemContainer {
         if(!itemDefinition) {
             throw new Error(`Item ID ${ item.itemId } not found!`);
         }
-        if(itemDefinition.stackable || everythingStacks) {
+        if(itemDefinition.stackable || everythingStacks || fromNote(item) > -1) {
             if(this.has(item.itemId)) {
                 const invItem = this.items[this.findIndex(item.itemId)];
                 return invItem.amount + item.amount <= 2147483647;
