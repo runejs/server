@@ -44,6 +44,7 @@ import { PlayerSyncTask, NpcSyncTask } from './sync';
 import { dialogue } from '../dialogue';
 import { Npc } from '../npc';
 import { combatStyles } from '../combat';
+import { SkillName } from '../skills';
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
@@ -830,6 +831,33 @@ export class Player extends Actor {
         return this.equipment.items[equipmentIndex(equipmentSlot)] || null;
     }
 
+    public canEquipItem(item: ItemDetails): boolean {
+        const requirements = item.equipmentData?.requirements;
+        if (!requirements) return true;
+
+        const hasSkillRequirements = Object.entries(requirements.skills || {}).every(([skill, level]) => this.skills.hasLevel(skill as SkillName, level));
+        const hasQuestRequirements = Object.entries(requirements.quests || {}).every(([quest, stage]) => this.getQuest(quest).progress >= stage);
+
+        return hasSkillRequirements && hasQuestRequirements;
+    }
+
+    public missingItemEquipRequirements(item: ItemDetails): string[] {
+        const missingRequirements = [];
+        const requirements = item.equipmentData?.requirements;
+        if (!requirements) return missingRequirements;
+
+        missingRequirements.push(
+            ...Object.entries(requirements.skills || {})
+                .filter(([skill, level]) => !this.skills.hasLevel(skill as SkillName, level))
+                .map(([skill, level]) => `You need to be at least level ${level} ${skill} to equip this item.`),
+            ...Object.entries(requirements.quests || {})
+                .filter(([quest, stage]) => this.getQuest(quest).progress < stage)
+                .map(([quest]) => `You must progress further in the ${quest.replace(/_/g, ' ')} quest to equip this item.`)
+        );
+
+        return missingRequirements;
+    }
+
     public equipItem(itemId: number, itemSlot: number, slot: EquipmentSlot | number): boolean {
         const itemToEquip = getItemFromContainer(itemId, itemSlot, this.inventory);
 
@@ -853,6 +881,12 @@ export class Player extends Actor {
 
         if(!itemDetails || !itemDetails.equipmentData || !itemDetails.equipmentData.equipmentSlot) {
             this.sendMessage(`Unable to equip item ${itemId}/${itemDetails.name}: Missing equipment data.`);
+            return;
+        }
+
+        const missingRequirements = this.missingItemEquipRequirements(itemDetails);
+        if (missingRequirements.length) {
+            missingRequirements.forEach( s => {this.sendMessage(s)});
             return;
         }
 
