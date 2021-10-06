@@ -1,0 +1,260 @@
+{
+    "presets": {
+        "rs:rune_armour_base": {
+            "tradable": true,
+            "equippable": true,
+            "equipment_data": {
+                "requirements": {
+                    "skills": {
+                        "defence": 40
+                    }
+                }
+            }
+        }
+    },
+
+    "rs:rune_gloves": {
+        "game_id": 7460,
+        "examine": "A pair of very nice gloves.",
+        "weight": 0.226,
+        "tradable": false,
+        "equipment_data": {
+            "equipment_slot": "hands",
+            "offensive_bonuses": {
+                "stab": 8,
+                "slash": 8,
+                "crush": 8,
+                "magic": 4,
+                "ranged": 8
+            },
+            "defensive_bonuses": {
+                "stab": 8,
+                "slash": 8,
+                "crush": 8,
+                "magic": 4,
+                "ranged": 8
+            },
+            "skill_bonuses": {
+                "strength": 8
+            }
+        }
+    },
+
+    "rs:rune_defender": {
+        "extends": "rs:rune_armour_base",
+        "game_id": 8850,
+        "examine": "A defensive weapon.",
+        "weight": 0.453,
+        "equipment_data": {
+            "equipment_slot": "off_hand",
+            "requirements": {
+                "skills": {
+                    "attack": 40
+                }
+            },
+            "offensive_bonuses": {
+                "stab": 20,
+                "slash": 19,
+                "crush": 18,
+                "magic": -3,
+                "ranged": -2
+            },
+            "defensive_bonuses": {
+                "stab": 20,
+                "slash": 19,
+                "crush": 18,
+                "magic": -3,
+                "ranged": -2
+            },
+            "skill_bonuses": {
+                "strength": 5
+            }
+        }
+    },
+
+    "rs:rune_boots": {
+        "extends": "rs:rune_armour_base",
+        "game_id": 4131,
+        "examine": "These will protect my feet.",
+        "weight": 1.36,
+        "equipment_data": {
+            "equipment_slot": "feet",
+            "offensive_bonuses": {
+                "magic": -3,
+                "ranged": -1
+            },
+            "defensive_bonuses": {
+                "stab": 12,
+                "slash": 13,
+                "crush": 14
+            },
+            "skill_bonuses": {
+                "strength": 2
+            }
+        }
+    },
+
+    "rs:rune_med_helm": {
+        "extends": "rs:rune_armour_base",
+        "game_id": 1147,
+        "examine": "A medium sized helmet.",
+        "weight": 1.814,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "offensive_bonuses": {
+                "magic": -3
+            },
+            "defensive_bonuses": {
+                "stab": 22,
+                "slash": 23,
+                "crush": 21,
+                "magic": -1,
+                "ranged": 22
+            }
+        }
+    },
+
+    "rs:rune_full_helm": {
+        "extends": "rs:rune_armour_base",
+        "game_id": 1163,
+        "examine": "A full face helmet.",
+        "weight": 2.721,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "offensive_bonuses": {
+                "magic": -6,
+                "ranged": -3
+            },
+            "defensive_bonuses": {
+                "stab": 30,
+                "slash": 32,
+                "crush": 27,
+                "magic": -1,
+                "ranged": 30
+            }
+        }
+    },
+
+    "rs:rune_sq_shield": {
+        "extends": "rs:rune_armour_base",
+        "game_id": 1185,
+        "examine": "A medium square shield.",
+        "weight": 3.628,
+        "equipment_data": {
+            "equipment_slot": "off_hand",
+            "offensive_bonuses": {
+                "magic": -6
+            },
+            "defensive_bonuses": {
+                "stab": 38,
+                "slash": 40,
+                "crush": 36,
+                "ranged": 38
+            }
+        }
+    },
+
+    "rs:rune_kiteshield": {
+        "extends": "rs:rune_armour_base",
+        "game_id": 1201,
+        "examine": "A large metal shield.",
+        "weight": 5.443,
+        "equipment_data": {
+            "equipment_slot": "off_hand",
+            "offensive_bonuses": {
+                "magic": -8,
+                "ranged": -3
+            },
+            "defensive_bonuses": {
+                "stab": 44,
+                "slash": 48,
+                "crush": 46,
+                "magic": -1,
+                "ranged": 46
+            }
+        }
+    },
+
+    "rs:rune_platelegs": {
+        "extends": "rs:rune_armour_base",
+        "game_id": 1079,
+        "examine": "These look pretty heavy.",
+        "weight": 9.071,
+        "equipment_data": {
+            "equipment_slot": "legs",
+            "offensive_bonuses": {
+                "magic": -21,
+                "ranged": -11
+            },
+            "defensive_bonuses": {
+                "stab": 51,
+                "slash": 49,
+                "crush": 47,
+                "magic": -4,
+                "ranged": 49
+            }
+        }
+    },
+
+    "rs:rune_plateskirt": {
+        "extends": "rs:rune_armour_base",
+        "game_id": 1093,
+        "examine": "Designer leg protection.",
+        "weight": 8.164,
+        "equipment_data": {
+            "equipment_slot": "legs",
+            "offensive_bonuses": {
+                "magic": -21,
+                "ranged": -11
+            },
+            "defensive_bonuses": {
+                "stab": 51,
+                "slash": 49,
+                "crush": 47,
+                "magic": -4,
+                "ranged": 49
+            }
+        }
+    },
+
+    "rs:rune_chainbody": {
+        "extends": "rs:rune_armour_base",
+        "game_id": 1113,
+        "examine": "A series of connected metal rings.",
+        "weight": 6.803,
+        "equipment_data": {
+            "equipment_slot": "torso",
+            "offensive_bonuses": {
+                "magic": -15
+            },
+            "defensive_bonuses": {
+                "stab": 63,
+                "slash": 72,
+                "crush": 78,
+                "magic": -3,
+                "ranged": 65
+            }
+        }
+    },
+
+    "rs:rune_platebody": {
+        "extends": "rs:rune_armour_base",
+        "game_id": 1127,
+        "examine": "Provides excellent protection.",
+        "weight": 9.979,
+        "equipment_data": {
+            "equipment_slot": "torso",
+            "offensive_bonuses": {
+                "magic": -30,
+                "ranged": -15
+            },
+            "defensive_bonuses": {
+                "stab": 82,
+                "slash": 80,
+                "crush": 72,
+                "magic": -6,
+                "ranged": 80
+            }
+        }
+    }
+}

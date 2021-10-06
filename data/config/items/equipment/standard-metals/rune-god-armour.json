@@ -1,0 +1,333 @@
+{
+    "presets": {
+        "rs:rune_god_armour_base": {
+            "tradable": true,
+            "equippable": true,
+            "equipment_data": {
+                "requirements": {
+                    "skills": {
+                        "defence": 40
+                    }
+                },
+                "skill_bonuses": {
+                    "prayer": 1
+                }
+            }
+        }
+    },
+
+    "rs:guthix_full_helm": {
+        "extends": "rs:rune_god_armour_base",
+        "game_id": 2673,
+        "examine": "A rune full face helmet in the colours of Guthix.",
+        "weight": 2.721,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "offensive_bonuses": {
+                "magic": -6,
+                "ranged": -3
+            },
+            "defensive_bonuses": {
+                "stab": 30,
+                "slash": 32,
+                "crush": 27,
+                "magic": -1,
+                "ranged": 30
+            }
+        }
+    },
+
+    "rs:guthix_kiteshield": {
+        "extends": "rs:rune_god_armour_base",
+        "game_id": 2675,
+        "examine": "Rune kiteshield in the colours of Guthix.",
+        "weight": 5.443,
+        "equipment_data": {
+            "equipment_slot": "off_hand",
+            "offensive_bonuses": {
+                "magic": -8,
+                "ranged": -3
+            },
+            "defensive_bonuses": {
+                "stab": 44,
+                "slash": 48,
+                "crush": 46,
+                "magic": -1,
+                "ranged": 46
+            }
+        }
+    },
+
+    "rs:guthix_platelegs": {
+        "extends": "rs:rune_god_armour_base",
+        "game_id": 2671,
+        "examine": "Rune platelegs in the colours of Guthix.",
+        "weight": 9.071,
+        "equipment_data": {
+            "equipment_slot": "legs",
+            "offensive_bonuses": {
+                "magic": -21,
+                "ranged": -11
+            },
+            "defensive_bonuses": {
+                "stab": 51,
+                "slash": 49,
+                "crush": 47,
+                "magic": -4,
+                "ranged": 49
+            }
+        }
+    },
+
+    "rs:guthix_plateskirt": {
+        "extends": "rs:rune_god_armour_base",
+        "game_id": 3480,
+        "examine": "Rune plateskirt in the colours of Guthix.",
+        "weight": 8.164,
+        "equipment_data": {
+            "equipment_slot": "legs",
+            "offensive_bonuses": {
+                "magic": -21,
+                "ranged": -11
+            },
+            "defensive_bonuses": {
+                "stab": 51,
+                "slash": 49,
+                "crush": 47,
+                "magic": -4,
+                "ranged": 49
+            }
+        }
+    },
+
+    "rs:guthix_platebody": {
+        "extends": "rs:rune_god_armour_base",
+        "game_id": 2669,
+        "examine": "Rune platebody in the colours of Guthix.",
+        "weight": 9.979,
+        "equipment_data": {
+            "equipment_slot": "torso",
+            "offensive_bonuses": {
+                "magic": -30,
+                "ranged": -15
+            },
+            "defensive_bonuses": {
+                "stab": 82,
+                "slash": 80,
+                "crush": 72,
+                "magic": -6,
+                "ranged": 80
+            }
+        }
+    },
+
+    "rs:zamorak_full_helm": {
+        "extends": "rs:rune_god_armour_base",
+        "game_id": 2657,
+        "examine": "A rune full face helmet in the colours of Zamorak.",
+        "weight": 2.721,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "offensive_bonuses": {
+                "magic": -6,
+                "ranged": -3
+            },
+            "defensive_bonuses": {
+                "stab": 30,
+                "slash": 32,
+                "crush": 27,
+                "magic": -1,
+                "ranged": 30
+            }
+        }
+    },
+
+    "rs:zamorak_kiteshield": {
+        "extends": "rs:rune_god_armour_base",
+        "game_id": 2659,
+        "examine": "Rune kiteshield in the colours of Zamorak.",
+        "weight": 5.443,
+        "equipment_data": {
+            "equipment_slot": "off_hand",
+            "offensive_bonuses": {
+                "magic": -8,
+                "ranged": -3
+            },
+            "defensive_bonuses": {
+                "stab": 44,
+                "slash": 48,
+                "crush": 46,
+                "magic": -1,
+                "ranged": 46
+            }
+        }
+    },
+
+    "rs:zamorak_platelegs": {
+        "extends": "rs:rune_god_armour_base",
+        "game_id": 2655,
+        "examine": "Rune platelegs in the colours of Zamorak.",
+        "weight": 9.071,
+        "equipment_data": {
+            "equipment_slot": "legs",
+            "offensive_bonuses": {
+                "magic": -21,
+                "ranged": -11
+            },
+            "defensive_bonuses": {
+                "stab": 51,
+                "slash": 49,
+                "crush": 47,
+                "magic": -4,
+                "ranged": 49
+            }
+        }
+    },
+
+    "rs:zamorak_plateskirt": {
+        "extends": "rs:rune_god_armour_base",
+        "game_id": 3478,
+        "examine": "Rune plateskirt in the colours of Zamorak.",
+        "weight": 8.164,
+        "equipment_data": {
+            "equipment_slot": "legs",
+            "offensive_bonuses": {
+                "magic": -21,
+                "ranged": -11
+            },
+            "defensive_bonuses": {
+                "stab": 51,
+                "slash": 49,
+                "crush": 47,
+                "magic": -4,
+                "ranged": 49
+            }
+        }
+    },
+
+    "rs:zamorak_platebody": {
+        "extends": "rs:rune_god_armour_base",
+        "game_id": 2653,
+        "examine": "Rune platebody in the colours of Zamorak.",
+        "weight": 9.979,
+        "equipment_data": {
+            "equipment_slot": "torso",
+            "offensive_bonuses": {
+                "magic": -30,
+                "ranged": -15
+            },
+            "defensive_bonuses": {
+                "stab": 82,
+                "slash": 80,
+                "crush": 72,
+                "magic": -6,
+                "ranged": 80
+            }
+        }
+    },
+
+    "rs:saradomin_full_helm": {
+        "extends": "rs:rune_god_armour_base",
+        "game_id": 2665,
+        "examine": "A rune full face helmet in the colours of Saradomin.",
+        "weight": 2.721,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "offensive_bonuses": {
+                "magic": -6,
+                "ranged": -3
+            },
+            "defensive_bonuses": {
+                "stab": 30,
+                "slash": 32,
+                "crush": 27,
+                "magic": -1,
+                "ranged": 30
+            }
+        }
+    },
+
+    "rs:saradomin_kiteshield": {
+        "extends": "rs:rune_god_armour_base",
+        "game_id": 2667,
+        "examine": "Rune kiteshield in the colours of Saradomin.",
+        "weight": 5.443,
+        "equipment_data": {
+            "equipment_slot": "off_hand",
+            "offensive_bonuses": {
+                "magic": -8,
+                "ranged": -3
+            },
+            "defensive_bonuses": {
+                "stab": 44,
+                "slash": 48,
+                "crush": 46,
+                "magic": -1,
+                "ranged": 46
+            }
+        }
+    },
+
+    "rs:saradomin_platelegs": {
+        "extends": "rs:rune_god_armour_base",
+        "game_id": 2663,
+        "examine": "Rune platelegs in the colours of Saradomin.",
+        "weight": 9.071,
+        "equipment_data": {
+            "equipment_slot": "legs",
+            "offensive_bonuses": {
+                "magic": -21,
+                "ranged": -11
+            },
+            "defensive_bonuses": {
+                "stab": 51,
+                "slash": 49,
+                "crush": 47,
+                "magic": -4,
+                "ranged": 49
+            }
+        }
+    },
+
+    "rs:saradomin_plateskirt": {
+        "extends": "rs:rune_god_armour_base",
+        "game_id": 3479,
+        "examine": "Rune plateskirt in the colours of Saradomin.",
+        "weight": 8.164,
+        "equipment_data": {
+            "equipment_slot": "legs",
+            "offensive_bonuses": {
+                "magic": -21,
+                "ranged": -11
+            },
+            "defensive_bonuses": {
+                "stab": 51,
+                "slash": 49,
+                "crush": 47,
+                "magic": -4,
+                "ranged": 49
+            }
+        }
+    },
+
+    "rs:saradomin_platebody": {
+        "extends": "rs:rune_god_armour_base",
+        "game_id": 2661,
+        "examine": "Rune platebody in the colours of Saradomin.",
+        "weight": 9.979,
+        "equipment_data": {
+            "equipment_slot": "torso",
+            "offensive_bonuses": {
+                "magic": -30,
+                "ranged": -15
+            },
+            "defensive_bonuses": {
+                "stab": 82,
+                "slash": 80,
+                "crush": 72,
+                "magic": -6,
+                "ranged": 80
+            }
+        }
+    }
+}
