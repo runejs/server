@@ -254,6 +254,11 @@
                 "crush": 72,
                 "magic": -6,
                 "ranged": 80
+            },
+            "requirements": {
+                "quests" : {
+                    "rs:dragon_slayer": "complete"
+                }
             }
         }
     }

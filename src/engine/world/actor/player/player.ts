@@ -9,7 +9,7 @@ import { filestore, serverConfig } from '@server/game';
 import {
     findMusicTrack, findNpc, findSongIdByRegionId, musicRegions, equipmentIndex,
     EquipmentSlot, getEquipmentSlot, ItemDetails, findItem, findQuest,
-    npcIdMap, widgets, NpcDetails, PlayerQuest, QuestKey
+    npcIdMap, widgets, NpcDetails, PlayerQuest, QuestKey, itemMap
 } from '@engine/config';
 import { daysSinceLastLogin, colors, hexToRgb, rgbTo16Bit,getVarbitMorphIndex } from '@engine/util';
 import { OutboundPacketHandler, Isaac } from '@engine/net';
@@ -461,6 +461,24 @@ export class Player extends Actor {
     }
 
     /**
+     * Checks if the player has unlocked the required stage of a quest
+     * @param questId The ID of the quest to find the player's status on.
+     * @param minimumStage The minimum quest stage required, defaults to completed
+     * @return boolean if the player has reached the required stage, if the quest does not exist it defaults to true
+     */
+    public hasQuestRequirement(questId: string, minimumStage: QuestKey = 'complete'): boolean {
+        if(!questMap[questId]) {
+            return true;
+        }
+        let playerQuest = this.quests.find(quest => quest.questId === questId);
+        if(!playerQuest) {
+            playerQuest = new PlayerQuest(questId);
+            this.quests.push(playerQuest);
+        }
+        return playerQuest.progress === minimumStage || playerQuest.progress >= minimumStage;
+    }
+
+    /**
      * Sets a player's quest progress to the specified value.
      * @param questId The ID of the quest to set the progress of.
      * @param progress The progress to set the quest to.
@@ -831,31 +849,36 @@ export class Player extends Actor {
         return this.equipment.items[equipmentIndex(equipmentSlot)] || null;
     }
 
-    public canEquipItem(item: ItemDetails): boolean {
-        const requirements = item.equipmentData?.requirements;
-        if (!requirements) return true;
 
-        const hasSkillRequirements = Object.entries(requirements.skills || {}).every(([skill, level]) => this.skills.hasLevel(skill as SkillName, level));
-        const hasQuestRequirements = Object.entries(requirements.quests || {}).every(([quest, stage]) => this.getQuest(quest).progress >= stage);
-
-        return hasSkillRequirements && hasQuestRequirements;
-    }
-
-    public missingItemEquipRequirements(item: ItemDetails): string[] {
+    /**
+     * Check if a player can equip an item
+     * @param item either an ItemDetails instance or the string id of the item to be checked
+     * @return {equipable: boolean, missingRequirements: string[]} equipable is false if for any reason the item can not
+     * be equipped, if it can not be equipped, a list of reasons are attached as the missingRequirements array
+     *
+     * defaults to equipable=true if the item string id does not exist
+     */
+    public canEquipItem(item: ItemDetails | string): { equipable: boolean, missingRequirements?: string[] } {
+        if(typeof item === 'string') {
+            item = itemMap[item];
+            if(!item) {
+                return { equipable: true }
+            }
+        }
         const missingRequirements = [];
         const requirements = item.equipmentData?.requirements;
-        if (!requirements) return missingRequirements;
+        if (!requirements) return { equipable: true };
 
         missingRequirements.push(
             ...Object.entries(requirements.skills || {})
                 .filter(([skill, level]) => !this.skills.hasLevel(skill as SkillName, level))
                 .map(([skill, level]) => `You need to be at least level ${level} ${skill} to equip this item.`),
             ...Object.entries(requirements.quests || {})
-                .filter(([quest, stage]) => this.getQuest(quest).progress < stage)
-                .map(([quest]) => `You must progress further in the ${quest.replace(/_/g, ' ')} quest to equip this item.`)
+                .filter(([quest, stage]) => this.hasQuestRequirement(quest, stage))
+                .map(([quest]) => `You must progress further in the ${quest.replace(/^([a-z]+:)/gm, '').replace(/_/g, ' ')} quest to equip this item.`)
         );
 
-        return missingRequirements;
+        return { equipable: true, missingRequirements: missingRequirements };
     }
 
     public equipItem(itemId: number, itemSlot: number, slot: EquipmentSlot | number): boolean {
@@ -884,9 +907,9 @@ export class Player extends Actor {
             return;
         }
 
-        const missingRequirements = this.missingItemEquipRequirements(itemDetails);
-        if (missingRequirements.length) {
-            missingRequirements.forEach( s => {this.sendMessage(s)});
+        const equippable = this.canEquipItem(itemDetails);
+        if (equippable.missingRequirements.length) {
+            equippable.missingRequirements.forEach( s => {this.sendMessage(s)});
             return;
         }
 
