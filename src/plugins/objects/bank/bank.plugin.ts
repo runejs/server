@@ -114,7 +114,7 @@ export const withdrawItem: itemInteractionActionHandler = (details) => {
     }
 
     let itemIdToAdd: number = details.itemId;
-    let stackable = details.itemDetails.stackable;
+    let stackable: boolean = details.itemDetails.stackable;
     if (details.player.settings.bankWithdrawNoteMode) {
         const toNoteId: number = toNote(details.itemId);
         if (toNoteId > -1) {
@@ -172,11 +172,13 @@ export const withdrawItem: itemInteractionActionHandler = (details) => {
         amount: removeFromContainer(playerBank, details.itemId, countToRemove)
     };
 
-    if (stackable)
+    if (stackable) {
         playerInventory.add({ itemId: itemToAdd.itemId, amount: itemToAdd.amount });
-    else
-        for(let count = 0; count < itemToAdd.amount; count++)
+    } else {
+        for(let count = 0; count < itemToAdd.amount; count++) {
             playerInventory.add({ itemId: itemToAdd.itemId, amount: 1 });
+        }
+    }
 
     updateBankingInterface(details.player);
 };
