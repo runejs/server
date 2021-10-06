@@ -17,6 +17,7 @@
         "game_id": 7460,
         "examine": "A pair of very nice gloves.",
         "weight": 0.226,
+        "tradable": false,
         "equipment_data": {
             "equipment_slot": "hands",
             "offensive_bonuses": {
