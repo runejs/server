@@ -908,8 +908,10 @@ export class Player extends Actor {
         }
 
         const equippable = this.canEquipItem(itemDetails);
-        if (equippable.missingRequirements.length) {
-            equippable.missingRequirements.forEach( s => {this.sendMessage(s)});
+        if (!equippable.equipable) {
+            if(equippable.missingRequirements) {
+                equippable.missingRequirements.forEach((s) => this.sendMessage(s));
+            }
             return;
         }
 
