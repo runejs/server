@@ -878,7 +878,7 @@ export class Player extends Actor {
                 .map(([quest]) => `You must progress further in the ${quest.replace(/^([a-z]+:)/gm, '').replace(/_/g, ' ')} quest to equip this item.`)
         );
 
-        return { equipable: true, missingRequirements: missingRequirements };
+        return { equipable: missingRequirements.length === 0, missingRequirements: missingRequirements };
     }
 
     public equipItem(itemId: number, itemSlot: number, slot: EquipmentSlot | number): boolean {
