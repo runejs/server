@@ -468,6 +468,7 @@ export class Player extends Actor {
      */
     public hasQuestRequirement(questId: string, minimumStage: QuestKey = 'complete'): boolean {
         if(!questMap[questId]) {
+            logger.warn(`Quest data not found for ${questId}`);
             return true;
         }
         let playerQuest = this.quests.find(quest => quest.questId === questId);
