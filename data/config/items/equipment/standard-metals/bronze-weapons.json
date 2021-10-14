@@ -9,7 +9,7 @@
             "equipment_type": "one_handed",
             "requirements": {
                 "quests": {
-                    "goblin_diplomacy": 20
+                    "tyn:goblin_diplomacy": 20
                 }
             },
             "offensive_bonuses": {
