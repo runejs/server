@@ -648,7 +648,7 @@ export class OutboundPacketHandler {
         for(let mapX = 29; mapX <= 30; mapX++) {
             const xteaRegion = xteaRegions[`l${mapX}_79`];
             for(let seeds = 0; seeds < 4; seeds++) {
-                packet.put(xteaRegion?.key[seeds] || 0, 'int');
+                packet.put(/*xteaRegion?.key[seeds] || */0, 'int');
             }
         }
 
@@ -672,7 +672,7 @@ export class OutboundPacketHandler {
             for(let mapY = startY; mapY <= endY; mapY++) {
                 const xteaRegion = xteaRegions[`l${mapX}_${mapY}`];
                 for(let seeds = 0; seeds < 4; seeds++) {
-                    packet.put(xteaRegion?.key[seeds] || 0, 'int');
+                    packet.put(/*xteaRegion?.key[seeds] || */0, 'int');
                 }
             }
         }
