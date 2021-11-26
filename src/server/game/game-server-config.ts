@@ -3,6 +3,7 @@ export interface GameServerConfig {
     rsaExp: string;
     host: string;
     port: number;
+    encryptionEnabled: boolean;
     loginServerHost: string;
     loginServerPort: number;
     updateServerHost: string;

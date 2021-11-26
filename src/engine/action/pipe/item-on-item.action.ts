@@ -56,11 +56,19 @@ const itemOnItemActionPipe = (player: Player, usedItem: Item, usedSlot: number, 
     }
 
     // Find all item on item action plugins that match this action
-    let matchingHooks = getActionHooks<ItemOnItemActionHook>('item_on_item').filter(plugin =>
-        questHookFilter(player, plugin) &&
-        (plugin.items.findIndex(i => i.item1 === usedItem.itemId && i.item2 === usedWithItem.itemId) !== -1 ||
-        plugin.items.findIndex(i => i.item2 === usedItem.itemId && i.item1 === usedWithItem.itemId) !== -1 ||
-        plugin.items.findIndex(i => i.item1 === usedItem.itemId && !i.item2 || i.item1 === usedWithItem.itemId && !i.item2 )  !== -1));
+    let matchingHooks = getActionHooks<ItemOnItemActionHook>('item_on_item', plugin => {
+        if(questHookFilter(player, plugin)) {
+            const used = usedItem.itemId;
+            const usedWith = usedWithItem.itemId;
+
+            return (plugin.items.some(({ item1, item2 }) => {
+                const items = [ item1, item2 ];
+                return items.includes(used) && items.includes(usedWith);
+            }));
+        }
+
+        return false;
+    });
 
     const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
 
