@@ -1,18 +1,16 @@
-import { Player, SidebarTab } from '../world/actor/player/player';
 import { Socket } from 'net';
-import { Packet, PacketType } from '@engine/net/packet';
-import { ItemContainer } from '@engine/world/items/item-container';
-import { Item } from '@engine/world/items/item';
-import { Position } from '@engine/world/position';
-import { Chunk, ChunkUpdateItem } from '@engine/world/map/chunk';
-import { WorldItem } from '@engine/world/items/world-item';
-import { ByteBuffer } from '@runejs/core/buffer';
-import { Npc } from '@engine/world/actor/npc';
-import { stringToLong } from '@engine/util/strings';
 import { LandscapeObject } from '@runejs/filestore';
-import { xteaRegions } from '@engine/config/config-handler';
-import { ConstructedChunk, ConstructedRegion } from '@engine/world/map/region';
+import { ByteBuffer } from '@runejs/core/buffer';
+
+import { serverConfig } from '@server/game';
+import { Packet, PacketType } from '@engine/net';
+import { xteaRegions } from '@engine/config';
 import { activeWorld } from '@engine/world';
+import { stringToLong } from '@engine/util';
+import { ChunkUpdateItem, Position } from '@engine/world';
+import { Player, SidebarTab, Npc } from '@engine/world/actor';
+import { ItemContainer, Item, WorldItem } from '@engine/world/items';
+import { Chunk, ConstructedChunk, ConstructedRegion } from '@engine/world/map';
 
 
 
@@ -643,12 +641,14 @@ export class OutboundPacketHandler {
 
         packet.closeBitBuffer();
 
+        const encryptionEnabled = serverConfig.encryptionEnabled === undefined ? true : serverConfig.encryptionEnabled;
+
         // Put the xtea keys for the two construction room template maps
         // Map coords: 29,79 && 30,79
         for(let mapX = 29; mapX <= 30; mapX++) {
             const xteaRegion = xteaRegions[`l${mapX}_79`];
             for(let seeds = 0; seeds < 4; seeds++) {
-                packet.put(xteaRegion?.key[seeds] || 0, 'int');
+                packet.put(encryptionEnabled ? (xteaRegion?.key[seeds] ?? 0) : 0, 'int');
             }
         }
 
@@ -668,11 +668,13 @@ export class OutboundPacketHandler {
         const startY = Math.floor(this.player.position.chunkY / 8);
         const endY = Math.floor((this.player.position.chunkY + 12) / 8);
 
+        const encryptionEnabled = serverConfig.encryptionEnabled === undefined ? true : serverConfig.encryptionEnabled;
+
         for(let mapX = startX; mapX <= endX; mapX++) {
             for(let mapY = startY; mapY <= endY; mapY++) {
                 const xteaRegion = xteaRegions[`l${mapX}_${mapY}`];
                 for(let seeds = 0; seeds < 4; seeds++) {
-                    packet.put(xteaRegion?.key[seeds] || 0, 'int');
+                    packet.put(encryptionEnabled ? (xteaRegion?.key[seeds] ?? 0) : 0, 'int');
                 }
             }
         }

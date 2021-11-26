@@ -30,7 +30,8 @@ const itemOnItemPacket = (player: Player, packet: PacketData) => {
             return;
         }
 
-        player.actionPipeline.call('item_on_item', player, usedItem, usedSlot, usedWidgetId, usedWithItem, usedWithSlot, usedWithWidgetId);
+        player.actionPipeline.call('item_on_item',
+            player, usedItem, usedSlot, usedWidgetId, usedWithItem, usedWithSlot, usedWithWidgetId);
     } else {
         logger.warn(`Unhandled item on item case using widgets ${usedWidgetId}:${usedContainerId} => ${usedWithWidgetId}:${usedWithContainerId}`);
     }
