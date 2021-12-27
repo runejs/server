@@ -27,7 +27,7 @@ export function deepMerge<T>(objectA: T, objectB: T): T {
             }
             if(Array.isArray(objectA[key])) {
                 if(!Array.isArray(objectB[key])) {
-                    newObject[key] = [...objectA[key],  objectB[key]]
+                    newObject[key] = [...objectA[key],  objectB[key]];
                     return;
                 }
                 newObject[key] = deepMerge(objectA[key], objectB[key]);
@@ -35,7 +35,7 @@ export function deepMerge<T>(objectA: T, objectB: T): T {
             }
             if(Array.isArray(objectB[key])) {
                 if(!Array.isArray(objectA[key])) {
-                    newObject[key] = [...objectB[key],  objectA[key]]
+                    newObject[key] = [...objectB[key],  objectA[key]];
                     return;
                 }
                 console.error('Something is wrong with deepmerger', key, objectA, objectB);
@@ -46,7 +46,7 @@ export function deepMerge<T>(objectA: T, objectB: T): T {
             }
             newObject[key] = objectA[key];
         })
-        return newObject
+        return newObject;
     }
     return objectA;
 }

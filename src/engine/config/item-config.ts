@@ -281,7 +281,7 @@ export async function loadItemConfigurations(path: string): Promise<{ items: { [
                             }
                         });
                     }
-                    items[subKey] = item
+                    items[subKey] = item;
                     items[subKey].groups.forEach((group) => {
                         if(!itemGroups[group]) {
                             itemGroups[group] = {};

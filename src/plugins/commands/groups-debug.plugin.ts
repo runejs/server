@@ -4,27 +4,27 @@ import { findItemTagsInGroup, findItemTagsInGroupFilter } from '@engine/config/c
 const selectGroups: commandActionHandler = ({ player, args, isConsole }) => {
     const groups: string | number = args.groupkeys;
     if(!groups || typeof groups !== 'string') {
-        player.sendLogMessage('invalid input', isConsole)
-        return
+        player.sendLogMessage('invalid input', isConsole);
+        return;
     }
-    player.sendLogMessage('results:', isConsole)
+    player.sendLogMessage('results:', isConsole);
     findItemTagsInGroup(groups.split(',')).forEach((itemName) => {
         player.sendLogMessage(itemName, isConsole);
-    })
+    });
     return;
 };
 
 const filterGroups: commandActionHandler = ({ player, args, isConsole }) => {
     const groups: string | number = args.groupkeys;
     if(!groups || typeof groups !== 'string') {
-        player.sendLogMessage('invalid input', isConsole)
-        return
+        player.sendLogMessage('invalid input', isConsole);
+        return;
     }
 
-    player.sendLogMessage('results:', isConsole)
+    player.sendLogMessage('results:', isConsole);
     findItemTagsInGroupFilter(groups.split(',')).forEach((itemName) => {
         player.sendLogMessage(itemName, isConsole);
-    })
+    });
     return;
 };
 
