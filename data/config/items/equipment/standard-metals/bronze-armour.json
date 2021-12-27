@@ -1,5 +1,20 @@
 {
+    "presets": {
+        "rs:bronze_armour_base": {
+            "tradable": true,
+            "equippable": true,
+            "equipment_data": {
+                "requirements": {
+                    "skills": {
+                        "defence": 1
+                    }
+                }
+            },
+            "groups": ["bronze_metal", "equipment"]
+        }
+    },
     "rs:bronze_platelegs": {
+        "extends": "rs:bronze_armour_base",
         "game_id": 1075,
         "examine": "These look pretty heavy.",
         "weight": 9.071,
@@ -18,11 +33,13 @@
                 "magic": -4,
                 "ranged": 7
             }
-        }
+        },
+        "groups": ["legs"]
     },
 
     "rs:bronze_plateskirt": {
         "game_id": 1087,
+        "extends": "rs:bronze_armour_base",
         "examine": "Designer leg protection.",
         "weight": 8.164,
         "tradable": true,
@@ -40,6 +57,7 @@
                 "magic": -4,
                 "ranged": 7
             }
-        }
+        },
+        "groups": ["legs"]
     }
 }
