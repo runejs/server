@@ -14,12 +14,12 @@ export interface ContainerUpdateEvent {
 }
 
 export const getItemFromContainer = (itemId: number, slot: number, container: ItemContainer): Item => {
-    if(slot < 0 || slot > container.items.length - 1) {
+    if (slot < 0 || slot > container.items.length - 1) {
         return null;
     }
 
     const item = container.items[slot];
-    if(!item || item.itemId !== itemId) {
+    if (!item || item.itemId !== itemId) {
         return null;
     }
 
@@ -37,7 +37,7 @@ export class ItemContainer {
         this._items = new Array(size);
         this._containerUpdated = new Subject<ContainerUpdateEvent>();
 
-        for(let i = 0; i < size; i++) {
+        for (let i = 0; i < size; i++) {
             this._items[i] = null;
         }
     }
@@ -45,7 +45,7 @@ export class ItemContainer {
     public clear(fireEvent: boolean = true): void {
         this._items.forEach((item, index) => this._items[index] = null);
 
-        if(fireEvent) {
+        if (fireEvent) {
             this._containerUpdated.next({ type: 'CLEAR_ALL' });
         }
     }
@@ -66,27 +66,27 @@ export class ItemContainer {
      * @returns An array of slot numbers.
      */
     public findAll(search: number | Item): number[] {
-        if(typeof search !== 'number') {
+        if (typeof search !== 'number') {
             search = search.itemId;
         }
 
         const stackable = findItem(search).stackable;
 
-        if(stackable) {
+        if (stackable) {
             const index = this.findIndex(search);
 
-            if(!hasValueNotNull(index) || index === -1) {
+            if (!hasValueNotNull(index) || index === -1) {
                 return [];
             } else {
-                return [ index ];
+                return [index];
             }
         } else {
             const slots = [];
 
-            for(let i = 0; i < this.size; i++) {
+            for (let i = 0; i < this.size; i++) {
                 const item = this.items[i];
 
-                if(hasValueNotNull(item) && item.itemId === search) {
+                if (hasValueNotNull(item) && item.itemId === search) {
                     slots.push(i);
                 }
             }
@@ -101,25 +101,25 @@ export class ItemContainer {
     }
 
     public setAll(items: Item[], fireEvent: boolean = true): void {
-        for(let i = 0; i < this._size; i++) {
+        for (let i = 0; i < this._size; i++) {
             this._items[i] = items[i];
         }
 
-        if(fireEvent) {
+        if (fireEvent) {
             this._containerUpdated.next({ type: 'SET_ALL' });
         }
     }
 
     public set(slot: number, item: Item, fireEvent: boolean = true): void {
         this._items[slot] = item;
-        if(fireEvent) {
+        if (fireEvent) {
             this._containerUpdated.next({ type: 'SET', slot, item });
         }
     }
 
     public findItemIndex(item: Item): number {
-        for(let i = 0; i < this._size; i++) {
-            if(hasValueNotNull(this._items[i]) &&
+        for (let i = 0; i < this._size; i++) {
+            if (hasValueNotNull(this._items[i]) &&
                 this._items[i].itemId === item.itemId &&
                 this._items[i].amount >= item.amount) {
                 return i;
@@ -129,17 +129,17 @@ export class ItemContainer {
         return -1;
     }
 
-    public add(item: number | string | Item, fireEvent: boolean = true): { item: Item, slot: number } {
+    public add(item: number | string | Item, fireEvent: boolean = true, amount: number = 1): { item: Item, slot: number } {
         if (typeof item === 'number') {
-            item = { itemId: item, amount: 1 } as Item;
+            item = { itemId: item, amount } as Item;
         } else if (typeof item === 'string') {
             const itemDetails = findItem(item);
-            if(!itemDetails) {
+            if (!itemDetails) {
                 logger.warn(`Item ${item} not configured on the server.`);
                 return null;
             }
 
-            item = { itemId: itemDetails.gameId, amount: 1 };
+            item = { itemId: itemDetails.gameId, amount };
         }
 
         const existingItemIndex = this.findItemIndex({ itemId: item.itemId, amount: 1 });
@@ -200,7 +200,7 @@ export class ItemContainer {
             return { item: newItem, slot: existingItemIndex };
         } else {
             const newItemIndex = this.getFirstOpenSlot();
-            if(newItemIndex === -1) {
+            if (newItemIndex === -1) {
                 // Not enough container space
                 return null;
             }
@@ -222,13 +222,13 @@ export class ItemContainer {
 
     public removeFirst(item: number | Item, fireEvent: boolean = true): number {
         const slot = this.findIndex(item);
-        if(slot === -1) {
+        if (slot === -1) {
             return -1;
         }
 
         this._items[slot] = null;
 
-        if(fireEvent) {
+        if (fireEvent) {
             this._containerUpdated.next({ type: 'REMOVE', slot });
         }
 
@@ -239,7 +239,7 @@ export class ItemContainer {
         const item = this._items[slot];
         this._items[slot] = null;
 
-        if(fireEvent) {
+        if (fireEvent) {
             this._containerUpdated.next({ type: 'REMOVE', slot });
         }
         return item;
@@ -256,8 +256,8 @@ export class ItemContainer {
 
     public getOpenSlotCount(): number {
         let count = 0;
-        for(let i = 0; i < this._size; i++) {
-            if(!hasValueNotNull(this._items[i])) {
+        for (let i = 0; i < this._size; i++) {
+            if (!hasValueNotNull(this._items[i])) {
                 count++;
             }
         }
@@ -268,8 +268,8 @@ export class ItemContainer {
     public getOpenSlots(): number[] {
         const slots: number[] = [];
 
-        for(let i = 0; i < this._size; i++) {
-            if(!hasValueNotNull(this._items[i])) {
+        for (let i = 0; i < this._size; i++) {
+            if (!hasValueNotNull(this._items[i])) {
                 slots.push(i);
             }
         }
@@ -278,39 +278,20 @@ export class ItemContainer {
     }
 
     public swap(fromSlot: number, toSlot: number): void {
-        const fromItem = this._items[fromSlot];
-        const toItem = this._items[toSlot];
-
-        this._items[toSlot] = fromItem;
-        this._items[fromSlot] = toItem;
+        [this._items[fromSlot], this._items[toSlot]] = [this._items[toSlot], this._items[fromSlot]];
     }
 
     public weight(): number {
-        let weight = 0;
-
-        for(const item of this._items) {
-            if(!hasValueNotNull(item)) {
-                continue;
-            }
-
-            const itemData = findItem(item.itemId);
-            if(!itemData?.weight) {
-                continue;
-            }
-
-            weight += itemData.weight;
-        }
-
-        return weight;
+        return this._items.reduce((weight, item) => weight + (hasValueNotNull(item) ? findItem(item.itemId)?.weight || 0 : 0), 0);
     }
 
     public canFit(item: Item, everythingStacks: boolean = false): boolean {
         const itemDefinition = filestore.configStore.itemStore.getItem(item.itemId);
-        if(!itemDefinition) {
-            throw new Error(`Item ID ${ item.itemId } not found!`);
+        if (!itemDefinition) {
+            throw new Error(`Item ID ${item.itemId} not found!`);
         }
-        if(itemDefinition.stackable || everythingStacks || fromNote(item) > -1) {
-            if(this.has(item.itemId)) {
+        if (itemDefinition.stackable || everythingStacks || fromNote(item) > -1) {
+            if (this.has(item.itemId)) {
                 const invItem = this.items[this.findIndex(item.itemId)];
                 return invItem.amount + item.amount <= 2147483647;
             }

@@ -4,12 +4,27 @@ import { ActionHook, getActionHooks, questHookFilter, ActionPipe, RunnableHooks 
 
 
 /**
- * Defines an item-on-item action hook.
+ * Defines an item-on-item action hook via object list.
  */
-export interface ItemOnItemActionHook extends ActionHook<ItemOnItemAction, itemOnItemActionHandler> {
+export interface ItemOnItemActionHookViaList extends ActionHook<ItemOnItemAction, itemOnItemActionHandler> {
     // The item pairs being used. Each item can be used on the other, so item order does not matter.
+    acceptItems: never;
     items: { item1: number, item2?: number }[];
 }
+
+/**
+ * Defines an item-on-item action hook via accept function.
+ */
+export interface ItemOnItemActionHookViaFunc extends ActionHook<ItemOnItemAction, itemOnItemActionHandler> {
+    acceptItems: (item1: number, item2: number) => boolean;
+    items: never;
+}
+
+export type ItemOnItemActionHook = ItemOnItemActionHookViaList | ItemOnItemActionHookViaFunc;
+
+// Hook Type guards
+const isHookViaList = (obj: any): obj is ItemOnItemActionHookViaList => 'items' in obj;
+const isHookViaFunc = (obj: any): obj is ItemOnItemActionHookViaFunc => 'acceptItems' in obj;
 
 
 /**
@@ -51,20 +66,24 @@ export interface ItemOnItemAction {
  */
 const itemOnItemActionPipe = (player: Player, usedItem: Item, usedSlot: number, usedWidgetId: number,
     usedWithItem: Item, usedWithSlot: number, usedWithWidgetId: number): RunnableHooks<ItemOnItemAction> => {
-    if(player.busy) {
+    if (player.busy) {
         return;
     }
 
     // Find all item on item action plugins that match this action
     let matchingHooks = getActionHooks<ItemOnItemActionHook>('item_on_item', plugin => {
-        if(questHookFilter(player, plugin)) {
+        if (questHookFilter(player, plugin)) {
             const used = usedItem.itemId;
             const usedWith = usedWithItem.itemId;
 
-            return (plugin.items.some(({ item1, item2 }) => {
-                const items = [ item1, item2 ];
-                return items.includes(used) && items.includes(usedWith);
-            }));
+            if (isHookViaFunc(plugin)) {
+                return plugin.acceptItems(used, usedWith);
+            } else if (isHookViaList(plugin)) {
+                return (plugin.items.some(({ item1, item2 }) => {
+                    const items = [item1, item2];
+                    return items.includes(used) && items.includes(usedWith);
+                }));
+            }
         }
 
         return false;
@@ -72,11 +91,11 @@ const itemOnItemActionPipe = (player: Player, usedItem: Item, usedSlot: number, 
 
     const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
 
-    if(questActions.length !== 0) {
+    if (questActions.length !== 0) {
         matchingHooks = questActions;
     }
 
-    if(matchingHooks.length === 0) {
+    if (matchingHooks.length === 0) {
         player.outgoingPackets.chatboxMessage(
             `Unhandled item on item interaction: ${usedItem.itemId} on ${usedWithItem.itemId}`);
         return null;
@@ -95,4 +114,4 @@ const itemOnItemActionPipe = (player: Player, usedItem: Item, usedSlot: number, 
 /**
  * Item-on-item action pipe definition.
  */
-export default [ 'item_on_item', itemOnItemActionPipe ] as ActionPipe;
+export default ['item_on_item', itemOnItemActionPipe] as ActionPipe;

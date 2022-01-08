@@ -1,7 +1,8 @@
-import { itemInteractionActionHandler } from '@engine/action';
+import { itemInteractionActionHandler, ItemInteractionActionHook } from '@engine/action';
 import { findItem, widgets } from '@engine/config/config-handler';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { ItemDetails } from '@engine/config/item-config';
+import { itemIds } from '@engine/world/config';
 
 interface IGrimyHerb {
     grimy: ItemDetails;
@@ -100,28 +101,34 @@ const herbs: IGrimyHerb[] = [
 export const action: itemInteractionActionHandler = details => {
     const { player, itemId, itemSlot } = details;
     const herb: IGrimyHerb = herbs.find((herb) => herb.grimy.gameId === itemId);
-    if(!herb) {
+    if (!herb) {
         return;
     }
-    if(!player.skills.hasLevel('herblore', herb.level)) {
+    if (!player.skills.hasLevel('herblore', herb.level)) {
         player.sendMessage(`You need a Herblore level of ${herb.level} to identify this herb.`, true);
         return;
     }
     // Always check for cheaters
-    if(!player.inventory.items[itemSlot] && player.inventory.items[itemSlot].itemId === herb.grimy.gameId) {
+    if (!player.inventory.items[itemSlot] && player.inventory.items[itemSlot].itemId === herb.grimy.gameId) {
         return;
     }
     player.skills.addExp('herblore', herb.experience);
     player.inventory.set(itemSlot, { itemId: herb.clean.gameId, amount: 1 });
+    player.sendMessage(`You identify the herb as a ${herb.clean.name.toLowerCase()}.`);
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, details.player.inventory);
     player.playSound(soundIds.herblore.clean_herb);
 };
 
 export default {
-    type: 'item_action',
-    widgets: widgets.inventory,
-    options: 'identify',
-    itemIds: herbs.map((herb) => herb.grimy.gameId),
-    action,
-    cancelOtherActions: true
+    pluginId: 'rs:clean_herb',
+    hooks: [
+        {
+            type: 'item_interaction',
+            widgets: widgets.inventory,
+            options: 'identify',
+            itemIds: herbs.map(herb => herb.grimy.gameId),
+            handler: action,
+            cancelOtherActions: true,
+        } as ItemInteractionActionHook
+    ]
 };
