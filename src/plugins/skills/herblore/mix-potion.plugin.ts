@@ -5,6 +5,7 @@ import {
 import { widgets } from "@engine/config/config-handler";
 import ingredients from './ingredients';
 
+const VIAL_OF_WATER = 227;
 const ANIMATION = 363;
 const SOUND = 2608;
 
@@ -44,9 +45,9 @@ const handler = ({
 
   player.inventory.remove(usedSlot);
   player.inventory.remove(usedWithSlot);
-  if ([item1.id, item2.id].includes(227)) {
+  if ([item1.id, item2.id].includes(VIAL_OF_WATER)) {
     // 2259 - Pouring Vial Onto Ground
-    const herb = [item1, item2].find(i => i.id !== 227);
+    const herb = [item1, item2].find(i => i.id !== VIAL_OF_WATER);
     player.sendMessage(`You put the clean ${herb.name} into the vial of water.`);
   } else {
     const secondary = [item1, item2].find(i => !i.name.includes('(unf)'));
