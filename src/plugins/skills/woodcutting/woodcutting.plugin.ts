@@ -68,7 +68,7 @@ const activate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: nu
     }
 
     // Check if the amount of ticks passed equal the tools pulses.
-    if(taskIteration % 3 === 0 && taskIteration != 0) {
+    if(taskIteration % 3 === 0 && taskIteration !== 0) {
         const successChance = randomBetween(0, 255);
 
         let toolLevel = tool.level - 1;

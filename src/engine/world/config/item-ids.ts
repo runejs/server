@@ -103,6 +103,33 @@ export const itemIds = {
         raurg: 4832,
         ourg: 4834
     },
+    grimy_herbs: {
+        guam: 199,
+        marrentill: 201,
+        tarromin: 203,
+        harralander: 205,
+        ranarr: 207,
+        irit: 209,
+        avantoe: 211,
+        kwuarm: 213,
+        cadantine: 215,
+        dwarf_weed: 217,
+        torstol: 219,
+    },
+    herbs: {
+        guam: 249,
+        marrentill: 251,
+        tarromin: 253,
+        harralander: 255,
+        ranarr: 257,
+        toadflax: 257,
+        irit: 259,
+        avantoe: 261,
+        kwuarm: 263,
+        cadantine: 265,
+        dwarf_weed: 267,
+        torstol: 269,
+    },
     essence: {
         pure: 7936,
         rune: 1436

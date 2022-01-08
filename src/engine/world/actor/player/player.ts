@@ -11,7 +11,7 @@ import {
     EquipmentSlot, getEquipmentSlot, ItemDetails, findItem, findQuest,
     npcIdMap, widgets, NpcDetails, PlayerQuest, QuestKey, itemMap
 } from '@engine/config';
-import { daysSinceLastLogin, colors, hexToRgb, rgbTo16Bit,getVarbitMorphIndex } from '@engine/util';
+import { daysSinceLastLogin, colors, hexToRgb, rgbTo16Bit, getVarbitMorphIndex } from '@engine/util';
 import { OutboundPacketHandler, Isaac } from '@engine/net';
 import { actionHookMap, questMap } from '@engine/plugins';
 
@@ -110,7 +110,7 @@ export class Player extends Actor {
     public savedMetadata: { [key: string]: any } = {};
     public sessionMetadata: { [key: string]: any } = {};
     public quests: PlayerQuest[] = [];
-    public musicTracks: Array<number> = [ 0, 400, 547, 321 ];
+    public musicTracks: Array<number> = [0, 400, 547, 321];
     public achievements: string[] = [];
     public friendsList: string[] = [];
     public ignoreList: string[] = [];
@@ -180,26 +180,26 @@ export class Player extends Actor {
 
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
-        for(const item of this.equipment.items) {
-            if(item) {
+        for (const item of this.equipment.items) {
+            if (item) {
                 await this.actionPipeline.call('equipment_change', this, item.itemId, 'EQUIP');
             }
         }
 
-        if(this.firstTimePlayer) {
-            if(!serverConfig.tutorialEnabled) {
+        if (this.firstTimePlayer) {
+            if (!serverConfig.tutorialEnabled) {
                 this.interfaceState.openWidget(widgets.characterDesign, {
                     slot: 'screen',
                     multi: false
                 });
             }
-        } else if(serverConfig.showWelcome && (!serverConfig.tutorialEnabled || this.savedMetadata.tutorialComplete)) {
+        } else if (serverConfig.showWelcome && (!serverConfig.tutorialEnabled || this.savedMetadata.tutorialComplete)) {
             const daysSinceLogin = daysSinceLastLogin(this.loginDate);
             let loginDaysStr = '';
 
-            if(daysSinceLogin <= 0) {
+            if (daysSinceLogin <= 0) {
                 loginDaysStr = 'earlier today';
-            } else if(daysSinceLogin === 1) {
+            } else if (daysSinceLogin === 1) {
                 loginDaysStr = 'yesterday';
             } else {
                 loginDaysStr = daysSinceLogin + ' days ago';
@@ -219,7 +219,7 @@ export class Player extends Actor {
             });
         }
 
-        for(const playerOption of playerOptions) {
+        for (const playerOption of playerOptions) {
             this.outgoingPackets.updatePlayerOption(playerOption.option, playerOption.index, playerOption.placement);
         }
 
@@ -236,15 +236,15 @@ export class Player extends Actor {
         this.actionsCancelled.subscribe(type => {
             let closeWidget: boolean;
 
-            if(type === 'manual-movement' || type === 'pathing-movement') {
+            if (type === 'manual-movement' || type === 'pathing-movement') {
                 closeWidget = true;
-            } else if(type === 'keep-widgets-open' || type === 'button' || type === 'widget') {
+            } else if (type === 'keep-widgets-open' || type === 'button' || type === 'widget') {
                 closeWidget = false;
             } else {
                 closeWidget = true;
             }
 
-            if(closeWidget) {
+            if (closeWidget) {
                 this.interfaceState.closeAllSlots();
             }
         });
@@ -252,7 +252,7 @@ export class Player extends Actor {
         this._loginDate = new Date();
         this._lastAddress = (this._socket?.address() as AddressInfo)?.address || '127.0.0.1';
 
-        if(this.rights === Rights.ADMIN) {
+        if (this.rights === Rights.ADMIN) {
             this.sendCommandList(actionHookMap.player_command as PlayerCommandActionHook[]);
         }
         this.outgoingPackets.resetAllClientConfigs();
@@ -261,7 +261,7 @@ export class Player extends Actor {
 
         activeWorld.spawnWorldItems(this);
 
-        if(!this.metadata.customMap) {
+        if (!this.metadata.customMap) {
             this.chunkChanged(playerChunk);
         }
 
@@ -272,11 +272,11 @@ export class Player extends Actor {
     }
 
     public logout(): void {
-        if(!this.loggedIn) {
+        if (!this.loggedIn) {
             return;
         }
 
-        if(this.position.level > 3) {
+        if (this.position.level > 3) {
             this.position.level = 0;
         }
 
@@ -301,15 +301,15 @@ export class Player extends Actor {
     }
 
     public getAttackAnimation(): number {
-        let combatStyle = [ 'unarmed', 0 ];
+        let combatStyle = ['unarmed', 0];
 
-        if(this.savedMetadata.combatStyle) {
+        if (this.savedMetadata.combatStyle) {
             combatStyle = this.savedMetadata.combatStyle;
         }
 
         let attackAnim = combatStyles[combatStyle[0]][combatStyle[1]]?.anim || animationIds.combat.punch;
 
-        if(Array.isArray(attackAnim)) {
+        if (Array.isArray(attackAnim)) {
             // Player has multiple attack animations possible, pick a random one from the list to use
             const idx = Math.floor(Math.random() * attackAnim.length);
             attackAnim = attackAnim[idx];
@@ -327,7 +327,7 @@ export class Player extends Actor {
     }
 
     public addFriend(friendName: string): boolean {
-        if(!playerExists(friendName)) {
+        if (!playerExists(friendName)) {
             return false;
         }
 
@@ -339,7 +339,7 @@ export class Player extends Actor {
     public removeFriend(friendName: string): boolean {
         friendName = friendName.toLowerCase();
         const index = this.friendsList.findIndex(friend => friend === friendName);
-        if(index === -1) {
+        if (index === -1) {
             return false;
         }
 
@@ -348,7 +348,7 @@ export class Player extends Actor {
     }
 
     public addIgnoredPlayer(playerName: string): boolean {
-        if(!playerExists(playerName)) {
+        if (!playerExists(playerName)) {
             return false;
         }
 
@@ -360,7 +360,7 @@ export class Player extends Actor {
     public removeIgnoredPlayer(playerName: string): boolean {
         playerName = playerName.toLowerCase();
         const index = this.ignoreList.findIndex(ignoredPlayer => ignoredPlayer === playerName);
-        if(index === -1) {
+        if (index === -1) {
             return false;
         }
 
@@ -378,7 +378,7 @@ export class Player extends Actor {
      */
     public chunkChanged(chunk: Chunk): void {
         const nearbyChunks = activeWorld.chunkManager.getSurroundingChunks(chunk);
-        if(this._nearbyChunks.length === 0) {
+        if (this._nearbyChunks.length === 0) {
             this.sendChunkUpdates(nearbyChunks);
         } else {
             const newChunks = nearbyChunks.filter(c1 => this._nearbyChunks.findIndex(c2 => c1.equals(c2)) === -1);
@@ -394,8 +394,8 @@ export class Player extends Actor {
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
 
-            if(this.updateFlags.mapRegionUpdateRequired) {
-                if(this.position.x >= 6400) { // Custom map drawing area is anywhere x >= 6400 on the map
+            if (this.updateFlags.mapRegionUpdateRequired) {
+                if (this.position.x >= 6400) { // Custom map drawing area is anywhere x >= 6400 on the map
                     this.outgoingPackets.constructMapRegion(this.metadata.customMap);
                 } else {
                     this.outgoingPackets.updateCurrentMapChunk();
@@ -407,7 +407,7 @@ export class Player extends Actor {
     }
 
     public async update(): Promise<void> {
-        await Promise.all([ this.playerUpdateTask.execute(), this.npcUpdateTask.execute() ]);
+        await Promise.all([this.playerUpdateTask.execute(), this.npcUpdateTask.execute()]);
     }
 
     public async reset(): Promise<void> {
@@ -416,7 +416,7 @@ export class Player extends Actor {
 
             this.outgoingPackets.flushQueue();
 
-            if(this.metadata['updateChunk']) {
+            if (this.metadata['updateChunk']) {
                 const { newChunk, oldChunk } = this.metadata['updateChunk'];
                 oldChunk.removePlayer(this);
                 newChunk.addPlayer(this);
@@ -424,7 +424,7 @@ export class Player extends Actor {
                 this.metadata['updateChunk'] = null;
             }
 
-            if(this.metadata['teleporting']) {
+            if (this.metadata['teleporting']) {
                 this.metadata['teleporting'] = null;
             }
 
@@ -438,7 +438,7 @@ export class Player extends Actor {
     public getQuestPoints(): number {
         let questPoints = 0;
 
-        if(this.quests && this.quests.length !== 0) {
+        if (this.quests && this.quests.length !== 0) {
             this.quests.filter(quest => quest.complete)
                 .forEach(quest => questPoints += questMap[quest.questId]?.points || 0);
         }
@@ -452,7 +452,7 @@ export class Player extends Actor {
      */
     public getQuest(questId: string): PlayerQuest {
         let playerQuest = this.quests.find(quest => quest.questId === questId);
-        if(!playerQuest) {
+        if (!playerQuest) {
             playerQuest = new PlayerQuest(questId);
             this.quests.push(playerQuest);
         }
@@ -467,12 +467,12 @@ export class Player extends Actor {
      * @return boolean if the player has reached the required stage, if the quest does not exist it defaults to true
      */
     public hasQuestRequirement(questId: string, minimumStage: QuestKey = 'complete'): boolean {
-        if(!questMap[questId]) {
+        if (!questMap[questId]) {
             logger.warn(`Quest data not found for ${questId}`);
             return true;
         }
         let playerQuest = this.quests.find(quest => quest.questId === questId);
-        if(!playerQuest) {
+        if (!playerQuest) {
             playerQuest = new PlayerQuest(questId);
             this.quests.push(playerQuest);
         }
@@ -487,21 +487,21 @@ export class Player extends Actor {
     public setQuestProgress(questId: string, progress: QuestKey): void {
         const questData: Quest = findQuest(questId);
 
-        if(!questData) {
+        if (!questData) {
             logger.warn(`Quest data not found for ${questId}`);
             return;
         }
 
         let playerQuest = this.quests.find(quest => quest.questId === questId);
-        if(!playerQuest) {
+        if (!playerQuest) {
             playerQuest = new PlayerQuest(questId);
             this.quests.push(playerQuest);
         }
 
-        if(playerQuest.progress === 0 && !playerQuest.complete) {
+        if (playerQuest.progress === 0 && !playerQuest.complete) {
             playerQuest.progress = progress;
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.yellow });
-        } else if(!playerQuest.complete && progress === 'complete') {
+        } else if (!playerQuest.complete && progress === 'complete') {
             playerQuest.complete = true;
             playerQuest.progress = 'complete';
             this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, questData.points + this.getQuestPoints());
@@ -511,8 +511,8 @@ export class Player extends Actor {
                 text: `${questData.points} Quest Point${questData.points > 1 ? 's' : ''}`
             });
 
-            for(let i = 0; i < 5; i++) {
-                if(i >= questData.onComplete.questCompleteWidget.rewardText.length) {
+            for (let i = 0; i < 5; i++) {
+                if (i >= questData.onComplete.questCompleteWidget.rewardText.length) {
                     this.modifyWidget(widgets.questReward, { childId: 9 + i, text: '' });
                 } else {
                     this.modifyWidget(widgets.questReward, {
@@ -522,10 +522,10 @@ export class Player extends Actor {
                 }
             }
 
-            if(questData.onComplete.questCompleteWidget.itemId) {
+            if (questData.onComplete.questCompleteWidget.itemId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3,
                     filestore.configStore.itemStore.getItem(questData.onComplete.questCompleteWidget.itemId)?.model2d?.widgetModel);
-            } else if(questData.onComplete.questCompleteWidget.modelId) {
+            } else if (questData.onComplete.questCompleteWidget.modelId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.onComplete.questCompleteWidget.modelId);
             }
 
@@ -541,7 +541,7 @@ export class Player extends Actor {
 
             this.modifyWidget(widgets.questTab, { childId: questData.questTabId, textColor: colors.green });
 
-            if(questData.onComplete.giveRewards) {
+            if (questData.onComplete.giveRewards) {
                 questData.onComplete.giveRewards(this);
             }
         } else {
@@ -557,14 +557,14 @@ export class Player extends Actor {
     public modifyWidget(widgetId: number, options: { childId?: number, text?: string, hidden?: boolean, textColor?: number }): void {
         const { childId, text, hidden, textColor } = options;
 
-        if(childId !== undefined) {
-            if(text !== undefined) {
+        if (childId !== undefined) {
+            if (text !== undefined) {
                 this.outgoingPackets.updateWidgetString(widgetId, childId, text);
             }
-            if(hidden !== undefined) {
+            if (hidden !== undefined) {
                 this.outgoingPackets.toggleWidgetVisibility(widgetId, childId, hidden);
             }
-            if(textColor !== undefined) {
+            if (textColor !== undefined) {
                 const { r, g, b } = hexToRgb(textColor);
                 this.outgoingPackets.updateWidgetColor(widgetId, childId, rgbTo16Bit(r, g, b));
             }
@@ -624,14 +624,14 @@ export class Player extends Actor {
     public async sendMessage(messages: string | string[], options: SendMessageOptions): Promise<boolean>;
 
     public async sendMessage(messages: string | string[], options: boolean | SendMessageOptions): Promise<boolean> {
-        if(!Array.isArray(messages)) {
-            messages = [ messages ];
+        if (!Array.isArray(messages)) {
+            messages = [messages];
         }
 
         let showDialogue = false;
         let showInConsole = false;
-        if(options) {
-            if(typeof options === 'boolean') {
+        if (options) {
+            if (typeof options === 'boolean') {
                 showDialogue = true;
             } else {
                 showDialogue = options.dialogue || false;
@@ -639,19 +639,19 @@ export class Player extends Actor {
             }
         }
 
-        if(!showDialogue) {
+        if (!showDialogue) {
             messages.forEach(message => this.outgoingPackets.chatboxMessage(message));
         } else {
-            for(let i = 0; i < messages.length; i++) {
+            for (let i = 0; i < messages.length; i++) {
                 messages[i] = messages[i]?.trim() || '';
             }
 
-            return await dialogue([ this ], [
+            return await dialogue([this], [
                 text => (messages as string[]).join(' ')
             ]);
         }
 
-        if(showInConsole) {
+        if (showInConsole) {
             messages.forEach(message => this.outgoingPackets.consoleMessage(message));
         }
     }
@@ -674,12 +674,12 @@ export class Player extends Actor {
         const oldChunk = activeWorld.chunkManager.getChunkForWorldPosition(originalPosition);
         const newChunk = activeWorld.chunkManager.getChunkForWorldPosition(newPosition);
 
-        if(!oldChunk.equals(newChunk)) {
+        if (!oldChunk.equals(newChunk)) {
             oldChunk.removePlayer(this);
             newChunk.addPlayer(this);
             this.metadata['updateChunk'] = { newChunk, oldChunk };
 
-            if(updateRegion) {
+            if (updateRegion) {
                 this.actionPipeline.call('region_change', regionChangeActionFactory(
                     this, originalPosition, newPosition, true));
             }
@@ -693,7 +693,7 @@ export class Player extends Actor {
     public removeFirstItem(item: number | Item): number {
         const slot = this.inventory.removeFirst(item);
 
-        if(slot === -1) {
+        if (slot === -1) {
             return -1;
         }
 
@@ -713,7 +713,7 @@ export class Player extends Actor {
 
     public giveItem(item: number | Item | string): boolean {
         const addedItem = this.inventory.add(item);
-        if(addedItem === null) {
+        if (addedItem === null) {
             return false;
         }
 
@@ -733,7 +733,7 @@ export class Player extends Actor {
         const oldWeight = this._carryWeight;
         this._carryWeight = Math.round(this.inventory.weight() + this.equipment.weight());
 
-        if(oldWeight !== this._carryWeight || force) {
+        if (oldWeight !== this._carryWeight || force) {
             this.outgoingPackets.updateCarryWeight(this._carryWeight);
         }
     }
@@ -775,7 +775,7 @@ export class Player extends Actor {
             // 151: {setting: 'autoRetaliateEnabled', value: false}
         };
 
-        if(!settingsMappings[buttonId]) {
+        if (!settingsMappings[buttonId]) {
             return;
         }
 
@@ -789,8 +789,8 @@ export class Player extends Actor {
     public updateBonuses(): void {
         this.clearBonuses();
 
-        for(const item of this._equipment.items) {
-            if(item === null) {
+        for (const item of this._equipment.items) {
+            if (item === null) {
                 continue;
             }
 
@@ -803,7 +803,7 @@ export class Player extends Actor {
     }
 
     public sendLogMessage(message: string, isConsole: boolean): void {
-        if(isConsole) {
+        if (isConsole) {
             this.outgoingPackets.consoleMessage(message);
         } else {
             this.outgoingPackets.chatboxMessage(message);
@@ -811,21 +811,21 @@ export class Player extends Actor {
     }
 
     public sendCommandList(commands: PlayerCommandActionHook[]): void {
-        if(!commands || commands.length === 0) {
+        if (!commands || commands.length === 0) {
             return;
         }
 
-        for(const command of commands) {
+        for (const command of commands) {
             let strCmd: string;
-            if(Array.isArray(command.commands)) {
+            if (Array.isArray(command.commands)) {
                 strCmd = command.commands.join('|');
             } else {
                 strCmd = command.commands;
             }
             let strHelp: string = '';
-            if(command.args) {
-                for(const arg of command.args) {
-                    if(arg.defaultValue) {
+            if (command.args) {
+                for (const arg of command.args) {
+                    if (arg.defaultValue) {
                         strHelp = `${strHelp} \\<${arg.name} = ${arg.defaultValue}>`;
                     } else {
                         strHelp = `${strHelp} \\<${arg.name}>`;
@@ -837,9 +837,9 @@ export class Player extends Actor {
     }
 
     public isItemEquipped(item: number | Item | string): boolean {
-        if(typeof item === 'string') {
+        if (typeof item === 'string') {
             item = findItem(item)?.gameId || 0;
-            if(!item) {
+            if (!item) {
                 return false;
             }
         }
@@ -860,9 +860,9 @@ export class Player extends Actor {
      * defaults to equipable=true if the item string id does not exist
      */
     public canEquipItem(item: ItemDetails | string): { equipable: boolean, missingRequirements?: string[] } {
-        if(typeof item === 'string') {
+        if (typeof item === 'string') {
             item = itemMap[item];
-            if(!item) {
+            if (!item) {
                 return { equipable: true }
             }
         }
@@ -885,13 +885,13 @@ export class Player extends Actor {
     public equipItem(itemId: number, itemSlot: number, slot: EquipmentSlot | number): boolean {
         const itemToEquip = getItemFromContainer(itemId, itemSlot, this.inventory);
 
-        if(!itemToEquip) {
+        if (!itemToEquip) {
             // The specified item was not found in the specified slot.
             return false;
         }
 
         let slotIndex: number;
-        if(typeof slot === 'number') {
+        if (typeof slot === 'number') {
             slotIndex = slot;
             slot = getEquipmentSlot(slotIndex);
         } else {
@@ -903,39 +903,39 @@ export class Player extends Actor {
         let shouldUnequipMainHand: boolean = false;
         const itemDetails: ItemDetails = findItem(itemId);
 
-        if(!itemDetails || !itemDetails.equipmentData || !itemDetails.equipmentData.equipmentSlot) {
+        if (!itemDetails || !itemDetails.equipmentData || !itemDetails.equipmentData.equipmentSlot) {
             this.sendMessage(`Unable to equip item ${itemId}/${itemDetails.name}: Missing equipment data.`);
             return;
         }
 
         const equippable = this.canEquipItem(itemDetails);
         if (!equippable.equipable) {
-            if(equippable.missingRequirements) {
+            if (equippable.missingRequirements) {
                 equippable.missingRequirements.forEach(async (s) => this.sendMessage(s));
             }
             return;
         }
 
-        if(itemDetails && itemDetails.equipmentData) {
-            if(itemDetails.equipmentData.equipmentType === 'two_handed') {
+        if (itemDetails && itemDetails.equipmentData) {
+            if (itemDetails.equipmentData.equipmentType === 'two_handed') {
                 shouldUnequipOffHand = true;
             }
 
-            if(slot === 'off_hand' && this.getEquippedItem('main_hand')) {
+            if (slot === 'off_hand' && this.getEquippedItem('main_hand')) {
                 const mainHandItemData: ItemDetails = findItem(this.getEquippedItem('main_hand').itemId);
 
-                if(mainHandItemData && mainHandItemData.equipmentData && mainHandItemData.equipmentData.equipmentType === 'two_handed') {
+                if (mainHandItemData && mainHandItemData.equipmentData && mainHandItemData.equipmentData.equipmentType === 'two_handed') {
                     shouldUnequipMainHand = true;
                 }
             }
         }
 
-        if(itemToUnequip) {
-            if(shouldUnequipOffHand && !this.unequipItem('off_hand', false)) {
+        if (itemToUnequip) {
+            if (shouldUnequipOffHand && !this.unequipItem('off_hand', false)) {
                 return false;
             }
 
-            if(shouldUnequipMainHand && !this.unequipItem('main_hand', false)) {
+            if (shouldUnequipMainHand && !this.unequipItem('main_hand', false)) {
                 return false;
             }
 
@@ -951,11 +951,11 @@ export class Player extends Actor {
             this.equipment.set(slotIndex, itemToEquip);
             this.inventory.remove(itemSlot);
 
-            if(shouldUnequipOffHand) {
+            if (shouldUnequipOffHand) {
                 this.unequipItem('off_hand');
             }
 
-            if(shouldUnequipMainHand) {
+            if (shouldUnequipMainHand) {
                 this.unequipItem('main_hand');
             }
         }
@@ -972,7 +972,7 @@ export class Player extends Actor {
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
 
-        if(this.interfaceState.widgetOpen('screen', widgets.equipmentStats.widgetId)) {
+        if (this.interfaceState.widgetOpen('screen', widgets.equipmentStats.widgetId)) {
             this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipmentStats, this.equipment);
             this.syncBonuses();
         }
@@ -994,19 +994,21 @@ export class Player extends Actor {
             { id: 117, text: 'Range', value: this.bonuses.defensive.ranged },
             { id: 119, text: 'Strength', value: this.bonuses.skill.strength },
             { id: 120, text: 'Prayer', value: this.bonuses.skill.prayer },
-        ].forEach(bonus => this.modifyWidget(widgets.equipmentStats.widgetId, { childId: bonus.id,
-            text: `${bonus.text}: ${bonus.value > 0 ? `+${bonus.value}` : bonus.value}` }));
+        ].forEach(bonus => this.modifyWidget(widgets.equipmentStats.widgetId, {
+            childId: bonus.id,
+            text: `${bonus.text}: ${bonus.value > 0 ? `+${bonus.value}` : bonus.value}`
+        }));
     }
 
     public unequipItem(slot: EquipmentSlot | number, updateRequired: boolean = true): boolean {
         const inventorySlot = this.inventory.getFirstOpenSlot();
-        if(inventorySlot === -1) {
+        if (inventorySlot === -1) {
             this.sendMessage(`You don't have enough free space to do that.`);
             return false;
         }
 
         let slotIndex: number;
-        if(typeof slot === 'number') {
+        if (typeof slot === 'number') {
             slotIndex = slot;
             slot = getEquipmentSlot(slotIndex);
         } else {
@@ -1015,7 +1017,7 @@ export class Player extends Actor {
 
         const itemInSlot = this.equipment.items[slotIndex];
 
-        if(!itemInSlot) {
+        if (!itemInSlot) {
             return true;
         }
 
@@ -1023,7 +1025,7 @@ export class Player extends Actor {
 
         this.equipment.remove(slotIndex);
         this.inventory.set(inventorySlot, itemInSlot);
-        if(updateRequired) {
+        if (updateRequired) {
             this.equipmentChanged();
         }
         return true;
@@ -1034,27 +1036,27 @@ export class Player extends Actor {
      * @param npc The NPC to copy the appearance of.
      */
     public transformInto(npc: Npc | NpcDetails | string | number): void {
-        if(!npc) {
+        if (!npc) {
             delete this.savedMetadata.npcTransformation;
             this.updateFlags.appearanceUpdateRequired = true;
             return;
         }
 
-        if(typeof npc !== 'number') {
-            if(typeof npc === 'string') {
-                if(npc.indexOf(':') !== -1) {
+        if (typeof npc !== 'number') {
+            if (typeof npc === 'string') {
+                if (npc.indexOf(':') !== -1) {
                     npc = npcIdMap[npc];
                 } else {
                     npc = parseInt(npc, 10);
                 }
-            } else if(npc instanceof Npc) {
+            } else if (npc instanceof Npc) {
                 npc = npc.id;
             } else {
                 npc = npc.gameId;
             }
         }
 
-        if(!npc) {
+        if (!npc) {
             logger.error(`NPC not found.`);
             return;
         }
@@ -1094,9 +1096,9 @@ export class Player extends Actor {
     }
 
     private inventoryUpdated(event: ContainerUpdateEvent): void {
-        if(event.type === 'CLEAR_ALL') {
+        if (event.type === 'CLEAR_ALL') {
             this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
-        } else if(event.type === 'ADD') {
+        } else if (event.type === 'ADD') {
             this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, event.slot, event.item);
         }
         this.updateCarryWeight();
@@ -1120,14 +1122,14 @@ export class Player extends Actor {
             this.findChunkUpdates(chunkModifications?.mods, chunkUpdateItems);
             this.findChunkUpdates(personalChunkModifications?.mods, chunkUpdateItems);
 
-            if(chunkUpdateItems.length !== 0) {
+            if (chunkUpdateItems.length !== 0) {
                 this.outgoingPackets.updateChunk(chunk, chunkUpdateItems);
             }
         });
     }
 
     private findChunkUpdates(chunkMods: Map<string, TileModifications>, chunkUpdateItems: ChunkUpdateItem[]): void {
-        if(!chunkMods) {
+        if (!chunkMods) {
             return;
         }
 
@@ -1139,7 +1141,7 @@ export class Player extends Actor {
                 chunkUpdateItems.push({ object, type: 'ADD' }));
 
             worldMods.worldItems?.forEach(worldItem => {
-                if(!worldItem.owner || worldItem.owner.equals(this)) {
+                if (!worldItem.owner || worldItem.owner.equals(this)) {
                     chunkUpdateItems.push({ worldItem, type: 'ADD' });
                 }
             });
@@ -1152,7 +1154,7 @@ export class Player extends Actor {
     private updateQuestTab(): void {
         this.outgoingPackets.updateClientConfig(widgetScripts.questPoints, this.getQuestPoints());
 
-        if(!questMap) {
+        if (!questMap) {
             return;
         }
         Object.keys(questMap).forEach(questKey => {
@@ -1179,13 +1181,13 @@ export class Player extends Actor {
      * Updates the player's music tab progress.
      */
     private updateMusicTab(): void {
-        if(!this.savedMetadata['currentSongIdPlaying']) {
+        if (!this.savedMetadata['currentSongIdPlaying']) {
             this.savedMetadata['currentSongIdPlaying'] =
                 findSongIdByRegionId(activeWorld.chunkManager.getRegionIdForWorldPosition(
                     this.position));
         }
 
-        if(this.settings.musicPlayerMode === MusicPlayerMode.MANUAL) {
+        if (this.settings.musicPlayerMode === MusicPlayerMode.MANUAL) {
             this.playSong(this.savedMetadata['currentSongIdPlaying']);
         }
 
@@ -1193,7 +1195,7 @@ export class Player extends Actor {
             const musicData = musicRegions[key];
             let color = colors.red;
 
-            if(this.musicTracks.includes(musicData.songId)) {
+            if (this.musicTracks.includes(musicData.songId)) {
                 color = colors.green;
             }
 
@@ -1204,7 +1206,7 @@ export class Player extends Actor {
     private addBonuses(item: Item): void {
         const itemData: ItemDetails = findItem(item.itemId);
 
-        if(!itemData || !itemData.equipmentData) {
+        if (!itemData || !itemData.equipmentData) {
             return;
         }
 
@@ -1212,18 +1214,18 @@ export class Player extends Actor {
         const defensiveBonuses = itemData.equipmentData.defensiveBonuses;
         const skillBonuses = itemData.equipmentData.skillBonuses;
 
-        if(offensiveBonuses) {
-            [ 'speed', 'stab', 'slash', 'crush', 'magic', 'ranged' ].forEach(bonus =>
+        if (offensiveBonuses) {
+            ['speed', 'stab', 'slash', 'crush', 'magic', 'ranged'].forEach(bonus =>
                 this.bonuses.offensive[bonus] += (!offensiveBonuses[bonus] ? 0 : offensiveBonuses[bonus]));
         }
 
-        if(defensiveBonuses) {
-            [ 'stab', 'slash', 'crush', 'magic', 'ranged' ].forEach(bonus =>
+        if (defensiveBonuses) {
+            ['stab', 'slash', 'crush', 'magic', 'ranged'].forEach(bonus =>
                 this.bonuses.defensive[bonus] += (!defensiveBonuses[bonus] ? 0 : defensiveBonuses[bonus]));
         }
 
-        if(skillBonuses) {
-            [ 'strength', 'prayer' ].forEach(bonus => this.bonuses.skill[bonus] +=
+        if (skillBonuses) {
+            ['strength', 'prayer'].forEach(bonus => this.bonuses.skill[bonus] +=
                 (!skillBonuses[bonus] ? 0 : skillBonuses[bonus]));
         }
     }
@@ -1233,23 +1235,23 @@ export class Player extends Actor {
         const firstTimePlayer: boolean = playerSave === null;
         this.firstTimePlayer = firstTimePlayer;
 
-        if(!firstTimePlayer) {
-            if(playerSave.savedMetadata) {
+        if (!firstTimePlayer) {
+            if (playerSave.savedMetadata) {
                 this.savedMetadata = playerSave.savedMetadata;
             }
 
             // Existing player logging in
             this.position = new Position(playerSave.position.x, playerSave.position.y, playerSave.position.level);
-            if(playerSave.inventory && playerSave.inventory.length !== 0) {
+            if (playerSave.inventory && playerSave.inventory.length !== 0) {
                 this.inventory.setAll(playerSave.inventory);
             }
-            if(playerSave.bank && playerSave.bank.length !== 0) {
+            if (playerSave.bank && playerSave.bank.length !== 0) {
                 this.bank.setAll(playerSave.bank);
             }
-            if(playerSave.equipment && playerSave.equipment.length !== 0) {
+            if (playerSave.equipment && playerSave.equipment.length !== 0) {
                 this.equipment.setAll(playerSave.equipment);
             }
-            if(playerSave.skills && playerSave.skills.length !== 0) {
+            if (playerSave.skills && playerSave.skills.length !== 0) {
                 this.skills.values = playerSave.skills;
             }
             this._appearance = playerSave.appearance;
@@ -1257,25 +1259,25 @@ export class Player extends Actor {
             this._rights = playerSave.rights || Rights.USER;
 
             const lastLogin = playerSave.lastLogin?.date;
-            if(!lastLogin) {
+            if (!lastLogin) {
                 this._loginDate = new Date();
             } else {
                 this._loginDate = new Date(lastLogin);
             }
 
-            if(playerSave.questList) {
+            if (playerSave.questList) {
                 this.quests = playerSave.questList;
             }
-            if(playerSave.musicTracks) {
+            if (playerSave.musicTracks) {
                 this.musicTracks = playerSave.musicTracks;
             }
-            if(playerSave.achievements) {
+            if (playerSave.achievements) {
                 this.achievements = playerSave.achievements;
             }
-            if(playerSave.friendsList) {
+            if (playerSave.friendsList) {
                 this.friendsList = playerSave.friendsList;
             }
-            if(playerSave.ignoreList) {
+            if (playerSave.ignoreList) {
                 this.ignoreList = playerSave.ignoreList;
             }
 
@@ -1291,7 +1293,7 @@ export class Player extends Actor {
             };
         }
 
-        if(!this._settings) {
+        if (!this._settings) {
             this._settings = defaultSettings();
         }
     }
@@ -1299,7 +1301,7 @@ export class Player extends Actor {
     public set position(position: Position) {
         super.position = position;
 
-        if(this.quadtreeKey !== null) {
+        if (this.quadtreeKey !== null) {
             activeWorld.playerTree.remove(this.quadtreeKey);
         }
 
@@ -1378,11 +1380,11 @@ export class Player extends Actor {
     }
 
     public set instance(value: WorldInstance) {
-        if(this.instance?.instanceId) {
+        if (this.instance?.instanceId) {
             this.instance.removePlayer(this);
         }
 
-        if(value) {
+        if (value) {
             value.addPlayer(this);
         }
 
