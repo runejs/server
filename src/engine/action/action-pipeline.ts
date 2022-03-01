@@ -1,6 +1,6 @@
 import { Subscription } from 'rxjs';
 
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { LandscapeObject } from '@runejs/filestore';
 
 import { Actor, Player } from '@engine/world/actor';

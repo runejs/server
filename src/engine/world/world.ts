@@ -2,7 +2,7 @@ import Quadtree from 'quadtree-lib';
 import { lastValueFrom, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { LandscapeObject } from '@runejs/filestore';
 
 import { schedule, WorldInstance, Direction, Position, activeWorld } from '@engine/world';

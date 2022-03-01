@@ -1,5 +1,5 @@
-import { logger } from '@runejs/core';
-import { parseServerConfig, SocketServer } from '@runejs/core/net';
+import { logger } from '@runejs/common';
+import { parseServerConfig, SocketServer } from '@runejs/common/net';
 import { Filestore } from '@runejs/filestore';
 
 import { activateGameWorld } from '@engine/world';

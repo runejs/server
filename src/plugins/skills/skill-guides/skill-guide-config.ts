@@ -1,4 +1,4 @@
-import { loadConfigurationFiles } from '@runejs/core/fs';
+import { loadConfigurationFiles } from '@runejs/common/fs';
 import { itemMap, ItemDetails } from '@engine/config';
 
 

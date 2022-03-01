@@ -1,4 +1,4 @@
-import { ByteBuffer } from '@runejs/core/buffer';
+import { ByteBuffer } from '@runejs/common';
 
 import { UpdateFlags } from '@engine/world/actor/update-flags';
 import { Packet, PacketType } from '@engine/net/packet';

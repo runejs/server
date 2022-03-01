@@ -1,5 +1,5 @@
-import { logger } from '@runejs/core';
-import { getFiles } from '@runejs/core/fs';
+import { logger } from '@runejs/common';
+import { getFiles } from '@runejs/common/fs';
 import { join } from 'path';
 
 import { ActionHook } from '@engine/action/hook';

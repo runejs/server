@@ -1,6 +1,6 @@
 import { Socket } from 'net';
 import { LandscapeObject } from '@runejs/filestore';
-import { ByteBuffer } from '@runejs/core/buffer';
+import { ByteBuffer } from '@runejs/common';
 
 import { serverConfig } from '@server/game';
 import { Packet, PacketType } from '@engine/net';

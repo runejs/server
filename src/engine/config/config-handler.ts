@@ -1,5 +1,5 @@
 import 'json5/lib/register';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import _ from 'lodash';
 import {
     ItemDetails,

@@ -1,8 +1,8 @@
 import { createConnection, Socket } from 'net';
 
-import { logger } from '@runejs/core';
-import { ByteBuffer } from '@runejs/core/buffer';
-import { parseServerConfig, SocketServer } from '@runejs/core/net';
+import { logger } from '@runejs/common';
+import { ByteBuffer } from '@runejs/common';
+import { parseServerConfig, SocketServer } from '@runejs/common/net';
 import { LoginResponseCode } from '@runejs/login-server';
 
 import { Isaac } from '@engine/net';

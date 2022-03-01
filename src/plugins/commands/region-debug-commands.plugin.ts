@@ -1,6 +1,6 @@
 import { commandActionHandler } from '@engine/action';
 import { Player } from '@engine/world/actor/player/player';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { Position } from '@engine/world/position';
 import { activeWorld } from '@engine/world';
 

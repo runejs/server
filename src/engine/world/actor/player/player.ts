@@ -3,7 +3,7 @@ import uuidv4 from 'uuid/v4';
 import { Subject } from 'rxjs';
 import EventEmitter from 'events';
 
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 
 import { filestore, serverConfig } from '@server/game';
 import {

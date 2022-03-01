@@ -1,4 +1,4 @@
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 import { readFileSync } from 'fs';
 import { LandscapeObject } from '@runejs/filestore';

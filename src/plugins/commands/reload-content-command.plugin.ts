@@ -1,7 +1,7 @@
 import { commandActionHandler } from '@engine/action';
 import { loadPackets } from '@engine/net/inbound-packet-handler';
 import { loadGameConfigurations } from '@engine/config/config-handler';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { loadPlugins } from '@engine/plugins';
 
 const action: commandActionHandler = async (details) => {

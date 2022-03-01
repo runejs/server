@@ -2,7 +2,7 @@ import { commandActionHandler } from '@engine/action';
 import { objectIds } from '@engine/world/config/object-ids';
 import { safeDump } from 'js-yaml';
 import { writeFileSync } from 'fs';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { LandscapeObject } from '@runejs/filestore';
 
 const spawnSceneryAction: commandActionHandler = ({ player, args }) => {

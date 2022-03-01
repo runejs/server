@@ -1,7 +1,7 @@
-import { loadConfigurationFiles } from '@runejs/core/fs';
+import { loadConfigurationFiles } from '@runejs/common/fs';
 import { SkillName } from '@engine/world/actor/skills';
 import _ from 'lodash';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 
 
 export type WeaponStyle = 'axe' | 'hammer' | 'bow' | 'claws' | 'crossbow' | 'longsword'

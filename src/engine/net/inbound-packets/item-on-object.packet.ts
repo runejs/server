@@ -1,4 +1,4 @@
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { filestore } from '@server/game/game-server';
 import { Position, activeWorld } from '@engine/world';
 import { widgets } from '@engine/config';

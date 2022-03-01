@@ -1,6 +1,6 @@
 import { ContainerUpdateEvent, ItemContainer } from '@engine/world/items/item-container';
 import { findItem, widgets } from '@engine/config/config-handler';
-import { loadConfigurationFiles } from '@runejs/core/fs';
+import { loadConfigurationFiles } from '@runejs/common/fs';
 import { Player } from '@engine/world/actor/player/player';
 import { ItemDetails } from '@engine/config/item-config';
 import { WidgetClosedEvent } from '@engine/world/actor/player/interface-state';

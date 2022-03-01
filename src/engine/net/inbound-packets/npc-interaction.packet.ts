@@ -1,5 +1,5 @@
-import { logger } from '@runejs/core';
-import { DataType, Endianness, Signedness } from '@runejs/core/buffer';
+import { logger } from '@runejs/common';
+import { DataType, Endianness, Signedness } from '@runejs/common';
 
 import { PacketData } from '@engine/net';
 import { activeWorld, World } from '@engine/world';

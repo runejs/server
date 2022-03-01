@@ -1,6 +1,6 @@
 import { loadPluginFiles } from '@engine/plugins/content-plugin';
 import { Quest } from '@engine/world/actor';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { ActionHook, ActionType, sortActionHooks } from '@engine/action';
 
 /**
