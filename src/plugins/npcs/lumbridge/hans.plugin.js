@@ -5,7 +5,9 @@ import { animationIds } from '@engine/world/config';
 const handler = async ({ player, npc }) => {
     let sadEnding = false;
 
-    const dialogueSuccessful = await dialogue([ player, { npc, key: 'hans' } ], [
+    const dialogueParticipants = [ player, { npc, key: 'hans' }];
+
+    const dialogue = [
         hans => [ Emote.GENERIC, `Welcome to RuneJS!` ],
         (hans, tag_Hans_Question) => [ Emote.HAPPY, `How do you feel about RuneJS so far?\n` +
         `Please take a moment to let us know what you think!` ],
@@ -32,7 +34,9 @@ const handler = async ({ player, npc }) => {
                 goto('tag_Hans_Question')
             ]
         ])
-    ]);
+    ];
+
+    const dialogueSuccessful = await dialogue(dialogueParticipants, dialogue);
 
     npc.clearFaceActor();
     player.clearFaceActor();

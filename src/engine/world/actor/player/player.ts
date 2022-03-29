@@ -34,7 +34,7 @@ import {
     savePlayerData
 } from './player-data';
 import { Cutscene } from './cutscenes';
-import { InterfaceState } from './interface-state';
+import { InterfaceState } from '@engine/interface';
 import { Quest } from './quest';
 import { SendMessageOptions } from './model';
 import { AttackDamageType } from './attack';
