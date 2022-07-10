@@ -35,3 +35,42 @@ We do have a few coding styles and lint rules we'd like all contributors to adhe
 - Use TypeScript getters/setters instead of specific getter/setter methods
   - `public get myVar(): number` instead of `public getMyVar(): number`
   - `public set myVar(myVar: number)` instead of `public setMyVar(myVar: number)`
+
+## Testing
+
+Unit tests can be written using Jest. To execute the test suite, run `npm test`
+
+- Test files should be located next to the file under test, and called `file-name.test.ts`
+- Tests should use the `when / then` pattern made up of composable `describe` statements
+- Make use of `beforeEach` to set up state before each test
+
+### When / Then testing pattern
+
+Tests should be broken down into a series of `describe` statements, which set up their own internal state when possible.
+
+```ts
+describe('when there is a player', () => {
+  let player: Player
+
+  beforeEach(() => {
+    player = createMockPlayer()
+  })
+
+  describe('when player is wearing a hat', () => {
+    beforeEach(() => {
+      player.equipment().set(0, someHatItem)
+    })
+
+    test('should return true', () => {
+      const result = isWearingHat(player)
+
+      expect(result).toEqual(true)
+    })
+  })
+})
+```
+
+There are two main benefits to this kind of design:
+
+- It serves as living documentation: from reading the `beforeEach` block you can clearly see how the prerequisite of "player is wearing a hat" is achieved
+- It allows for easy expansion of test cases: future developers can add further statements inside "when player is wearing a hat" if they want to make use of that setup
