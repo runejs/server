@@ -44,6 +44,8 @@ Unit tests can be written using Jest. To execute the test suite, run `npm test`
 - Tests should use the `when / then` pattern made up of composable `describe` statements
 - Make use of `beforeEach` to set up state before each test
 
+After running the tests, you can find code coverage in the `./coverage/` folder.
+
 ### When / Then testing pattern
 
 Tests should be broken down into a series of `describe` statements, which set up their own internal state when possible.
