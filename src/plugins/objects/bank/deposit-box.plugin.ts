@@ -1,9 +1,9 @@
 import { objectIds } from '@engine/world/config/object-ids';
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
 import { ItemContainer } from '@engine/world/items/item-container';
-import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action';
 import { fromNote, Item } from '@engine/world/items/item';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 
 export const openDepositBoxInterface: objectInteractionActionHandler = ({ player }) => {
 

@@ -1,4 +1,4 @@
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
 import { Skill } from '@engine/world/actor/skills';
 import { canInitiateHarvest, handleHarvesting } from '@engine/world/skill-util/harvest-skill';
 import { getAllOreIds, getOreFromRock } from '@engine/world/config/harvestable-object';

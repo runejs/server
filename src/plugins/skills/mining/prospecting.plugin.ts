@@ -1,9 +1,9 @@
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { World } from '@engine/world';
-import { filestore } from '@engine/game-server';
+import { filestore } from '@server/game/game-server';
 import { getAllOreIds, getOreFromRock } from '@engine/world/config/harvestable-object';
-import { findItem } from '@engine/config';
+import { findItem } from '@engine/config/config-handler';
 
 const action: objectInteractionActionHandler = (details) => {
     details.player.sendMessage('You examine the rock for ores.');

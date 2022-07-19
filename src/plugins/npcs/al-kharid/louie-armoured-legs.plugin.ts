@@ -1,5 +1,5 @@
-import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
-import { findShop } from '@engine/config';
+import { npcInteractionActionHandler } from '@engine/action';
+import { findShop } from '@engine/config/config-handler';
 
 
 const tradeAction: npcInteractionActionHandler = ({ player }) =>

@@ -1,7 +1,7 @@
-import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
+import { npcInteractionActionHandler } from '@engine/action';
 import { itemIds } from '@engine/world/config/item-ids';
 import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 
 const talkToAction : npcInteractionActionHandler = (details) => {
     const { player, npc } = details;

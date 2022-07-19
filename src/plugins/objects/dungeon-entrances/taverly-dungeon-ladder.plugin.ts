@@ -1,4 +1,4 @@
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
 import { objectIds } from '@engine/world/config/object-ids';
 import { World } from '@engine/world';
 import { animationIds } from '@engine/world/config/animation-ids';

@@ -1,9 +1,9 @@
-import { itemIds } from '../../game-engine/world/config/item-ids';
-import { soundIds } from '../../game-engine/world/config/sound-ids';
-import { animationIds } from '../../game-engine/world/config/animation-ids';
-import { Achievements, giveAchievement } from '../../game-engine/world/actor/player/achievements';
-import { Skill } from '../../game-engine/world/actor/skills';
-import { widgets } from '../../game-engine/config';
+import { itemIds } from '../../engine/world/config/item-ids';
+import { soundIds } from '../../engine/world/config/sound-ids';
+import { animationIds } from '../../engine/world/config/animation-ids';
+import { Achievements, giveAchievement } from '../../engine/world/actor/player/achievements';
+import { Skill } from '../../engine/world/actor/skills';
+import { widgets } from '@engine/config/config-handler';
 
 const buryBonesHandler = async ({ player, itemSlot }) => {
     player.playAnimation(animationIds.buryBones);

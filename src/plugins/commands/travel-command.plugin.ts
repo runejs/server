@@ -1,12 +1,12 @@
-import { commandActionHandler } from '@engine/world/action/player-command.action';
-import { world } from '@engine/game-server';
+import { commandActionHandler } from '@engine/action';
 import { TravelLocation } from '@engine/world/config/travel-locations';
+import { activeWorld } from '@engine/world';
 
 const action: commandActionHandler = (details) => {
     const { player, args } = details;
 
     const search: string = args.search as string;
-    const location = world.travelLocations.find(search) as TravelLocation;
+    const location = activeWorld.travelLocations.find(search) as TravelLocation;
 
     if (location) {
         player.teleport(location.position);

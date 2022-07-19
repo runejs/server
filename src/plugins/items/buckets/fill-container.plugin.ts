@@ -1,9 +1,9 @@
-import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
-import { filestore } from '@engine/game-server';
+import { itemOnObjectActionHandler } from '@engine/action';
+import { filestore } from '@server/game/game-server';
 import { itemIds } from '@engine/world/config/item-ids';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
-import { findItem } from '@engine/config';
+import { findItem } from '@engine/config/config-handler';
 
 
 const FountainIds: number[] = [879];

@@ -1,7 +1,8 @@
 import {
     ObjectInteractionAction,
-    ObjectInteractionActionHook
-} from '@engine/world/action/object-interaction.action';
+    ObjectInteractionActionHook,
+    TaskExecutor
+} from '@engine/action';
 import { Skill } from '@engine/world/actor/skills';
 import { canInitiateHarvest } from '@engine/world/skill-util/harvest-skill';
 import { getTreeFromHealthy, getTreeIds, IHarvestable } from '@engine/world/config/harvestable-object';
@@ -9,24 +10,21 @@ import { randomBetween } from '@engine/util/num';
 import { colorText } from '@engine/util/strings';
 import { colors } from '@engine/util/colors';
 import { rollBirdsNestType } from '@engine/world/skill-util/harvest-roll';
-import { world } from '@engine/game-server';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { Axe, getAxe, HarvestTool } from '@engine/world/config/harvest-tool';
-import { TaskExecutor } from '@engine/world/action';
-import { findItem } from '@engine/config';
+import { findItem } from '@engine/config/config-handler';
+import { activeWorld } from '@engine/world';
 
 
 const canActivate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: number): boolean => {
-    const { actor, actionData: { position, object } } = task;
+    const { actor, actionData: { position, object, player } } = task;
     const tree = getTreeFromHealthy(object.objectId);
 
     if(!tree) {
         return false;
     }
 
-    const { type: { player }, isPlayer } = actor;
-
-    const tool = isPlayer ? canInitiateHarvest(player, tree, Skill.WOODCUTTING) : getAxe(Axe.STEEL);
+    const tool = actor.isPlayer ? canInitiateHarvest(player, tree, Skill.WOODCUTTING) : getAxe(Axe.STEEL);
 
     if(!tool) {
         return false;
@@ -38,7 +36,9 @@ const canActivate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration:
     if(taskIteration === 0) {
         // First run
 
-        player?.sendMessage('You swing your axe at the tree.');
+        if(actor.isPlayer) {
+            player.sendMessage('You swing your axe at the tree.');
+        }
 
         actor.face(position);
         actor.playAnimation(tool.animation);
@@ -60,7 +60,7 @@ const activate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: nu
     }
 
     // Grab the tree manually every loop so that we can make sure it's still alive.
-    const { object } = world.findObjectAtLocation(actor, actionObject.objectId, objectPosition);
+    const { object } = activeWorld.findObjectAtLocation(actor, actionObject.objectId, objectPosition);
 
     if(!object) {
         // Tree has been chopped down, cancel.
@@ -86,7 +86,7 @@ const activate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: nu
 
                 if(roll === 1) { // Bird nest chance
                     player?.sendMessage(colorText(`A bird's nest falls out of the tree.`, colors.red));
-                    world.globalInstance.spawnWorldItem(rollBirdsNestType(), actor.position,
+                    activeWorld.globalInstance.spawnWorldItem(rollBirdsNestType(), actor.position,
                         { owner: player || null, expires: 300 });
                 } else { // Standard log chopper
                     player?.sendMessage(`You manage to chop some ${targetName}.`);

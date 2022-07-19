@@ -15,7 +15,8 @@
         "allowJs": true,
         "outDir": "./dist/",
         "paths": {
-            "@engine/*": ["src/game-engine/*"],
+            "@engine/*": ["src/engine/*"],
+            "@server/*": ["src/server/*"],
             "@plugins/*": ["src/plugins/*"]
         },
         "types": [
@@ -31,10 +32,8 @@
     "include": [
         "src/**/*.js",
         "src/**/*.ts",
-        "src/**/*.tsx",
-        "src/**/*.vue",
-        "tests/**/*.ts",
-        "tests/**/*.tsx"
+        "tests/**/*.js",
+        "tests/**/*.ts"
     ],
     "exclude": [
         "node_modules"

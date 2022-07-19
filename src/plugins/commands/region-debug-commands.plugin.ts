@@ -1,17 +1,17 @@
-import { commandActionHandler } from '@engine/world/action/player-command.action';
-import { world } from '@engine/game-server';
+import { commandActionHandler } from '@engine/action';
 import { Player } from '@engine/world/actor/player/player';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { Position } from '@engine/world/position';
+import { activeWorld } from '@engine/world';
 
 
 
 const debugMapRegion = (player: Player, mapRegionX: number, mapRegionY: number,
                         worldX: number, worldY: number, level: number = -1): void => {
     const key = `${mapRegionX},${mapRegionY}`;
-    player.sendMessage(`Region ${key} - ${world.chunkManager.getRegionIdForWorldPosition(player.position)}`);
+    player.sendMessage(`Region ${key} - ${activeWorld.chunkManager.getRegionIdForWorldPosition(player.position)}`);
 
-    if(!world.chunkManager.regionMap.has(key)) {
+    if(!activeWorld.chunkManager.regionMap.has(key)) {
         player.sendMessage(`Map region not loaded.`);
         return;
     }
@@ -20,7 +20,7 @@ const debugMapRegion = (player: Player, mapRegionX: number, mapRegionY: number,
         level = player.position.level;
     }
 
-    const region = world.chunkManager.regionMap.get(key);
+    const region = activeWorld.chunkManager.regionMap.get(key);
 
     let debug: string = `\nRegion ${key},${level}\n\n`;
     for(let y = 63; y >= 0; y--) {
@@ -31,7 +31,7 @@ const debugMapRegion = (player: Player, mapRegionX: number, mapRegionY: number,
             if(tileWorldX === player.position.x && tileWorldY === player.position.y) {
                 line[x] = '@';
             } else if(region.mapFile?.tileSettings) {
-                const tileSettings = world.chunkManager
+                const tileSettings = activeWorld.chunkManager
                     .getTile(new Position(tileWorldX, tileWorldY, level)).settings;
 
                 if(!tileSettings) {
@@ -61,12 +61,12 @@ const regionDebugHandler: commandActionHandler = ({ player, args }) => {
 };
 
 const tileDebugHandler: commandActionHandler = ({ player }) => {
-    const tile = world.chunkManager.getTile(player.position);
+    const tile = activeWorld.chunkManager.getTile(player.position);
 
-    const tile0 = world.chunkManager.getTile(player.position.copy().setLevel(0));
-    const tile1 = world.chunkManager.getTile(player.position.copy().setLevel(1));
-    const tile2 = world.chunkManager.getTile(player.position.copy().setLevel(2));
-    const tile3 = world.chunkManager.getTile(player.position.copy().setLevel(3));
+    const tile0 = activeWorld.chunkManager.getTile(player.position.copy().setLevel(0));
+    const tile1 = activeWorld.chunkManager.getTile(player.position.copy().setLevel(1));
+    const tile2 = activeWorld.chunkManager.getTile(player.position.copy().setLevel(2));
+    const tile3 = activeWorld.chunkManager.getTile(player.position.copy().setLevel(3));
 
     const chunkX = player.position.chunkX + 6;
     const chunkY = player.position.chunkY + 6;

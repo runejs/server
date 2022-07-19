@@ -1,16 +1,13 @@
-import { itemOnObjectActionHandler, ItemOnObjectActionHook } from '@engine/world/action/item-on-object.action';
-import { widgets } from '@engine/config';
+import {
+    itemOnObjectActionHandler, ItemOnObjectActionHook, ItemInteractionAction, ItemInteractionActionHook, TaskExecutor
+} from '@engine/action';
+import { widgets } from '@engine/config/config-handler';
 import { Skill } from '@engine/world/actor/skills';
 import { anvilIds, bars, smithables, widgetItems } from '@plugins/skills/smithing/forging-constants';
 import { itemIds } from '@engine/world/config/item-ids';
 import { Smithable } from '@plugins/skills/smithing/forging-types';
-import {
-    ItemInteractionAction,
-    ItemInteractionActionHook
-} from '@engine/world/action/item-interaction.action';
 import { Player } from '@engine/world/actor/player/player';
-import { findItem } from '@engine/config';
-import { TaskExecutor } from '@engine/world/action';
+import { findItem } from '@engine/config/config-handler';
 import { Position } from '@engine/world/position';
 
 /**

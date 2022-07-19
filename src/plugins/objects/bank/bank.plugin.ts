@@ -1,12 +1,12 @@
 import { objectIds } from '@engine/world/config/object-ids';
 import { widgetScripts } from '@engine/world/config/widget';
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
 import { ItemContainer } from '@engine/world/items/item-container';
-import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action';
 import { fromNote, Item, toNote } from '@engine/world/items/item';
-import { buttonActionHandler } from '@engine/world/action/button.action';
+import { buttonActionHandler } from '@engine/action';
 import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 import { Player } from '@engine/world/actor/player/player';
 
 
@@ -114,10 +114,12 @@ export const withdrawItem: itemInteractionActionHandler = (details) => {
     }
 
     let itemIdToAdd: number = details.itemId;
+    let stackable: boolean = details.itemDetails.stackable;
     if (details.player.settings.bankWithdrawNoteMode) {
         const toNoteId: number = toNote(details.itemId);
         if (toNoteId > -1) {
             itemIdToAdd = toNoteId;
+            stackable = true;
         } else {
             details.player.sendMessage('This item can not be withdrawn as a note.');
         }
@@ -154,7 +156,7 @@ export const withdrawItem: itemInteractionActionHandler = (details) => {
         countToRemove = itemAmount;
     }
 
-    if (!details.itemDetails.stackable) {
+    if (!stackable) {
         const slots = playerInventory.getOpenSlotCount();
         if (slots < countToRemove) {
             countToRemove = slots;
@@ -170,7 +172,13 @@ export const withdrawItem: itemInteractionActionHandler = (details) => {
         amount: removeFromContainer(playerBank, details.itemId, countToRemove)
     };
 
-    playerInventory.add({ itemId: itemToAdd.itemId, amount: itemToAdd.amount });
+    if (stackable) {
+        playerInventory.add({ itemId: itemToAdd.itemId, amount: itemToAdd.amount });
+    } else {
+        for(let count = 0; count < itemToAdd.amount; count++) {
+            playerInventory.add({ itemId: itemToAdd.itemId, amount: 1 });
+        }
+    }
 
     updateBankingInterface(details.player);
 };

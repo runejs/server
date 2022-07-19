@@ -2,7 +2,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { ConstructedRegion } from '@engine/world/map/region';
 import JSON5 from 'json5';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { join } from 'path';
 import { House, Room } from '@plugins/skills/construction/house';
 

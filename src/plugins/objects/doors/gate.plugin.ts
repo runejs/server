@@ -1,11 +1,11 @@
 import { Position } from '@engine/world/position';
 import { directionData, WNES } from '@engine/world/direction';
-import { logger } from '@runejs/core';
-import { world } from '@engine/game-server';
+import { logger } from '@runejs/common';
 import { ModifiedLandscapeObject } from '@engine/world/map/landscape-object';
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { Chunk } from '@engine/world/map/chunk';
+import { activeWorld } from '@engine/world';
 
 const gates = [
     {
@@ -87,7 +87,7 @@ const action: objectInteractionActionHandler = (details) => {
             }
 
             const pos = new Position(gate.x + deltaX, gate.y + deltaY, gate.level);
-            hingeChunk = world.chunkManager.getChunkForWorldPosition(pos);
+            hingeChunk = activeWorld.chunkManager.getChunkForWorldPosition(pos);
             gate = hingeChunk.getFilestoreLandscapeObject(details.main, pos);
             direction = WNES[gate.orientation];
             position = pos;
@@ -164,7 +164,7 @@ const action: objectInteractionActionHandler = (details) => {
             gateSecondPosition = new Position(gate.x + deltaX, gate.y + deltaY, gate.level);
         }
 
-        const gateSecondChunk = world.chunkManager.getChunkForWorldPosition(gateSecondPosition);
+        const gateSecondChunk = activeWorld.chunkManager.getChunkForWorldPosition(gateSecondPosition);
 
         if(!clickedSecondary) {
             secondGate = gateSecondChunk.getFilestoreLandscapeObject(details.secondary, gateSecondPosition);

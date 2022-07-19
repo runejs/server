@@ -1,8 +1,8 @@
-import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action';
 import { Item } from '@engine/world/items/item';
 import { getItemFromContainer, ItemContainer } from '@engine/world/items/item-container';
 import { itemIds } from '@engine/world/config/item-ids';
-import { findItem, widgets } from '@engine/config';
+import { findItem, widgets } from '@engine/config/config-handler';
 import { Shop } from '@engine/config/shop-config';
 
 

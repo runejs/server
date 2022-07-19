@@ -1,4 +1,4 @@
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 import { itemIds } from '@engine/world/config/item-ids';
 import { Bar, Smeltable } from '@plugins/skills/smithing/smelting-types';
 

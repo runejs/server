@@ -1,20 +1,5 @@
-import { NpcInteractionAction, npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
-import { Actor } from '@engine/world/actor/actor';
-import { Player } from '@engine/world/actor/player/player';
-import { lastValueFrom, timer } from 'rxjs';
-import { World } from '@engine/world';
-import { filter, take } from 'rxjs/operators';
-import { animationIds } from '@engine/world/config/animation-ids';
-import { Npc } from '@engine/world/actor/npc/npc';
-import { world } from '@engine/game-server';
-import { itemIds } from '@engine/world/config/item-ids';
-import { soundIds } from '@engine/world/config/sound-ids';
-import { findNpc } from '@engine/config';
-import EventEmitter from 'events';
-import { logger } from '@runejs/core';
-import { TaskExecutor } from '../../game-engine/world/action';
-import { wait } from '../../game-engine/world/task';
-import { Behavior, BehaviorType } from '../../game-engine/world/actor/behaviors/behavior';
+import { NpcInteractionAction, TaskExecutor } from '@engine/action';
+import { BehaviorType } from '@engine/world/actor/behaviors';
 
 
 //Kicking off combat - all subsequent action will be handed off to behaviors
