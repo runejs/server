@@ -12,7 +12,7 @@
         "start:infra": "concurrently \"npm run start:update\" \"npm run start:login\"",
         "start:standalone": "concurrently \"npm run start:infra\" \"npm run start:game\"",
         "game": "npm run start:game",
-        "game:dev": "npm run start:game",
+        "game:dev": "npm run start:game:dev",
         "login": "npm run start:login",
         "update": "npm run start:update",
         "infra": "npm run start:infra",
@@ -20,7 +20,8 @@
         "lint": "eslint --ext .ts src",
         "lint:fix": "eslint --ext .ts src --fix",
         "build:watch": "babel ./src --out-dir dist --extensions \".ts,.tsx,.js\" --source-maps --watch",
-        "build": "rimraf dist && babel ./src --out-dir dist --extensions \".ts,.tsx,.js\" --source-maps"
+        "build": "rimraf dist && babel ./src --out-dir dist --extensions \".ts,.tsx,.js\" --source-maps",
+        "test": "jest"
     },
     "repository": {
         "type": "git",
@@ -63,6 +64,7 @@
         "@babel/preset-env": "^7.16.11",
         "@babel/preset-typescript": "^7.16.7",
         "@runejs/eslint-config": "^1.0.0",
+        "@types/jest": "^28.1.4",
         "@types/js-yaml": "^3.12.7",
         "@types/json5": "0.0.30",
         "@types/lodash": "^4.14.179",
@@ -75,6 +77,7 @@
         "chokidar": "^3.5.3",
         "concurrently": "^5.3.0",
         "eslint": "^7.32.0",
+        "jest": "^28.1.2",
         "mkdirp": "^1.0.4",
         "nodemon": "^2.0.15",
         "rimraf": "^3.0.2",

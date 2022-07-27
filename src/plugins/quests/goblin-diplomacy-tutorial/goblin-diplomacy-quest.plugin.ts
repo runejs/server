@@ -12,7 +12,7 @@ import { dialogue } from '@engine/world/actor/dialogue';
 import { take } from 'rxjs/operators';
 import { equipmentChangeActionHandler } from '@engine/action';
 import { buttonActionHandler } from '@engine/action';
-import { tabIndex } from '@engine/world/actor/player/interface-state';
+import { tabIndex } from '@engine/interface';
 import { runescapeGuideDialogueHandler } from './runescape-guide-dialogue';
 import { harlanDialogueHandler } from './melee-tutor-dialogue';
 import { goblinDiplomacyStageHandler } from './stage-handler';

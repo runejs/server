@@ -131,7 +131,7 @@ function wrapDialogueText(text: string, type: 'ACTOR' | 'TEXT'): string[] {
             width = widget.width;
             break;
         default:
-            throw new Error(`Unhandled widget type: ${type}`);
+            throw new Error(`Unhandled widget type: ${ type }`);
     }
 
     return wrapText(text, width, widget.fontId);
@@ -140,18 +140,18 @@ function wrapDialogueText(text: string, type: 'ACTOR' | 'TEXT'): string[] {
 function parseDialogueFunctionArgs(func: Function): string[] {
     const str = func.toString();
 
-    if(!str) {
+    if (!str) {
         return null;
     }
 
     const argEndIndex = str.indexOf('=>');
 
-    if(argEndIndex === -1) {
+    if (argEndIndex === -1) {
         return null;
     }
 
     const arg = str.substring(0, argEndIndex).replace(/[\\(\\) ]/g, '').trim();
-    if(!arg || arg.length === 0) {
+    if (!arg || arg.length === 0) {
         return null;
     }
 
@@ -172,7 +172,8 @@ interface NpcParticipant {
 }
 
 class DialogueFunction {
-    constructor(public type: string, public execute: Function) {}
+    constructor(public type: string, public execute: Function) {
+    }
 }
 
 export const execute = (execute: Function): DialogueFunction => new DialogueFunction('execute', execute);
@@ -245,7 +246,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
 
         let args = parseDialogueFunctionArgs(dialogueAction);
         if (args === null) {
-            args = ['()'];
+            args = [ '()' ];
         }
 
         const dialogueType = args[0];
@@ -319,7 +320,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
         } else if (dialogueType === 'titled') {
             // Text-only dialogue (no option to continue).
 
-            const [title, text] = dialogueAction();
+            const [ title, text ] = dialogueAction();
             const lines = wrapDialogueText(text, 'TEXT');
 
             while (lines.length < 4) {
@@ -335,7 +336,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
         } else {
             // Player or Npc dialogue.
 
-            let dialogueDetails: [Emote, string];
+            let dialogueDetails: [ Emote, string ];
             let npc: Npc | number | string;
 
             if (dialogueType !== 'player') {
@@ -367,7 +368,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
             let lines = wrapDialogueText(text, 'ACTOR');
             // logger.info('length = ' + lines.length + ' - lines equals this: ' + lines);
 
-            const animation = nonLineEmotes.indexOf(emote) !== -1 ? EmoteAnimation[emote] : EmoteAnimation[`${emote}_${lines.length}LINE`];
+            const animation = nonLineEmotes.indexOf(emote) !== -1 ? EmoteAnimation[emote] : EmoteAnimation[`${ emote }_${ lines.length }LINE`];
 
             if (dialogueType !== 'player') {
                 if (lines.length > 4) {
@@ -384,7 +385,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
                         carryoverDialogue = lines.slice(4, lines.length) as string[];
                         lines = carryoverDialogue;
 
-                        if(i === dialogueTree.length - 1 && lines.length <= 4) {
+                        if (i === dialogueTree.length - 1 && lines.length <= 4) {
                             const npcDialogueAction: NpcDialogueAction = {
                                 npcId: npc as number, animation, lines, tag, type: 'NPC'
                             };
@@ -414,7 +415,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
 
 async function runDialogueAction(player: Player, dialogueAction: string | DialogueFunction | DialogueAction,
     tag?: string | undefined | false, additionalOptions?: AdditionalOptions): Promise<string | undefined | false> {
-    if(dialogueAction instanceof DialogueFunction && !tag) {
+    if (dialogueAction instanceof DialogueFunction && !tag) {
         // Code execution dialogue.
         dialogueAction.execute();
         return tag;
@@ -422,10 +423,10 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 
     dialogueAction = dialogueAction as DialogueAction;
 
-    if(dialogueAction.type === 'GOTO' && !tag) {
+    if (dialogueAction.type === 'GOTO' && !tag) {
         // Goto dialogue.
         const goToAction = (dialogueAction as GoToAction);
-        if(typeof goToAction.to === 'function') {
+        if (typeof goToAction.to === 'function') {
             const goto: string = goToAction.to();
             await runParsedDialogue(player, player.metadata.dialogueTree, goto, additionalOptions);
         } else {
@@ -437,76 +438,76 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
     let widgetId: number;
     let isOptions = false;
 
-    if(dialogueAction.type === 'OPTIONS') {
+    if (dialogueAction.type === 'OPTIONS') {
         // Option dialogue.
         const optionsAction = dialogueAction as OptionsDialogueAction;
         isOptions = true;
         const options = Object.keys(optionsAction.options);
         const trees = options.map(option => optionsAction.options[option]);
-        if(tag === undefined || dialogueAction.tag === tag) {
+        if (tag === undefined || dialogueAction.tag === tag) {
             tag = undefined;
 
             widgetId = optionWidgetIds[options.length - 2];
 
-            for(let i = 0; i < options.length; i++) {
+            for (let i = 0; i < options.length; i++) {
                 player.outgoingPackets.updateWidgetString(widgetId, 1 + i, options[i]);
             }
-        } else if(tag !== undefined) {
-            for(let i = 0; i < options.length; i++) {
+        } else if (tag !== undefined) {
+            for (let i = 0; i < options.length; i++) {
                 const tree = trees[i];
                 const didRun = await runParsedDialogue(player, tree, tag, additionalOptions);
-                if(didRun) {
+                if (didRun) {
                     return;
                 }
             }
         }
-    } else if(dialogueAction.type === 'TEXT') {
+    } else if (dialogueAction.type === 'TEXT') {
         // Text-only dialogue.
 
-        if(tag === undefined || dialogueAction.tag === tag) {
+        if (tag === undefined || dialogueAction.tag === tag) {
             tag = undefined;
 
             const textDialogueAction = dialogueAction as TextDialogueAction;
             const lines = textDialogueAction.lines;
 
-            if(lines.length > 5) {
-                throw new Error(`Too many lines for text dialogue! Dialogue has ${lines.length} lines but ` +
-                    `the maximum is 5: ${JSON.stringify(lines)}`);
+            if (lines.length > 5) {
+                throw new Error(`Too many lines for text dialogue! Dialogue has ${ lines.length } lines but ` +
+                    `the maximum is 5: ${ JSON.stringify(lines) }`);
             }
 
             widgetId = (textDialogueAction.canContinue ? continuableTextWidgetIds : textWidgetIds)[lines.length - 1];
 
-            for(let i = 0; i < lines.length; i++) {
+            for (let i = 0; i < lines.length; i++) {
                 player.outgoingPackets.updateWidgetString(widgetId, i, lines[i]);
             }
         }
-    } else if(dialogueAction.type === 'TITLED') {
+    } else if (dialogueAction.type === 'TITLED') {
         // Text-only dialogue.
 
-        if(tag === undefined || dialogueAction.tag === tag) {
+        if (tag === undefined || dialogueAction.tag === tag) {
             tag = undefined;
 
             const titledDialogueAction = dialogueAction as TitledTextDialogueAction;
             const { title, lines } = titledDialogueAction;
 
-            if(lines.length > 4) {
-                throw new Error(`Too many lines for titled dialogue! Dialogue has ${lines.length} lines but ` +
-                    `the maximum is 4: ${JSON.stringify(lines)}`);
+            if (lines.length > 4) {
+                throw new Error(`Too many lines for titled dialogue! Dialogue has ${ lines.length } lines but ` +
+                    `the maximum is 4: ${ JSON.stringify(lines) }`);
             }
 
             widgetId = titledTextWidgetId;
 
             player.outgoingPackets.updateWidgetString(widgetId, 0, title);
 
-            for(let i = 0; i < lines.length; i++) {
+            for (let i = 0; i < lines.length; i++) {
                 player.outgoingPackets.updateWidgetString(widgetId, i + 1, lines[i]);
             }
         }
-    } else if(dialogueAction.type === 'SUBTREE') {
+    } else if (dialogueAction.type === 'SUBTREE') {
         // Dialogue sub-tree.
         const action = (dialogueAction as SubDialogueTreeAction);
 
-        if(dialogueAction.tag === tag) {
+        if (dialogueAction.tag === tag) {
             const originalIndices = _.cloneDeep(player.metadata.dialogueIndices || {});
             const originalTree = _.cloneDeep(player.metadata.dialogueTree || []);
             player.metadata.dialogueIndices = {};
@@ -517,7 +518,7 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 
             player.metadata.dialogueIndices = originalIndices;
             player.metadata.dialogueTree = originalTree;
-        } else if(tag && dialogueAction.tag !== tag) {
+        } else if (tag && dialogueAction.tag !== tag) {
             const originalIndices = _.cloneDeep(player.metadata.dialogueIndices || {});
             const originalTree = _.cloneDeep(player.metadata.dialogueTree || []);
             player.metadata.dialogueIndices = {};
@@ -532,26 +533,26 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
     } else {
         // Player or Npc dialogue.
 
-        if(tag === undefined || dialogueAction.tag === tag) {
+        if (tag === undefined || dialogueAction.tag === tag) {
             tag = undefined;
 
             let npcId: number;
 
-            if(dialogueAction.type === 'NPC') {
+            if (dialogueAction.type === 'NPC') {
                 npcId = (dialogueAction as NpcDialogueAction).npcId;
             }
 
             const actorDialogueAction = dialogueAction as ActorDialogueAction;
             const lines = actorDialogueAction.lines;
 
-            if(lines.length > 4) {
-                throw new Error(`Too many lines for actor dialogue! Dialogue has ${lines.length} lines but ` +
-                    `the maximum is 4: ${JSON.stringify(lines)}`);
+            if (lines.length > 4) {
+                throw new Error(`Too many lines for actor dialogue! Dialogue has ${ lines.length } lines but ` +
+                    `the maximum is 4: ${ JSON.stringify(lines) }`);
             }
 
             const animation = actorDialogueAction.animation;
 
-            if(dialogueAction.type === 'NPC') {
+            if (dialogueAction.type === 'NPC') {
                 widgetId = npcWidgetIds[lines.length - 1];
                 player.outgoingPackets.setWidgetNpcHead(widgetId, 0, npcId as number);
                 player.outgoingPackets.updateWidgetString(widgetId, 1,
@@ -563,7 +564,7 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
             }
             player.outgoingPackets.playWidgetAnimation(widgetId, 0, animation);
 
-            for(let i = 0; i < lines.length; i++) {
+            for (let i = 0; i < lines.length; i++) {
                 player.outgoingPackets.updateWidgetString(widgetId, 2 + i, lines[i]);
             }
 
@@ -571,10 +572,10 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
     }
 
 
-    if(tag === undefined && widgetId) {
+    if (tag === undefined && widgetId) {
         const permanent = additionalOptions?.permanent || false;
 
-        if(permanent) {
+        if (permanent) {
             player.interfaceState.openChatOverlayWidget(widgetId);
         } else {
             player.interfaceState.openWidget(widgetId, {
@@ -584,13 +585,13 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 
 
             const widgetClosedEvent = await player.interfaceState.widgetClosed('chatbox');
-            if(widgetClosedEvent.data !== undefined) {
-                if(isOptions && typeof widgetClosedEvent.data === 'number') {
+            if (widgetClosedEvent.data !== undefined) {
+                if (isOptions && typeof widgetClosedEvent.data === 'number') {
                     const optionsAction = dialogueAction as OptionsDialogueAction;
                     const options = Object.keys(optionsAction.options);
                     const trees = options.map(option => optionsAction.options[option]);
                     const tree: ParsedDialogueTree = trees[widgetClosedEvent.data - 1];
-                    if(tree && tree.length !== 0) {
+                    if (tree && tree.length !== 0) {
                         await runParsedDialogue(player, tree, tag, additionalOptions);
                     }
                 }
@@ -604,9 +605,9 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 
 async function runParsedDialogue(player: Player, dialogueTree: ParsedDialogueTree, tag?: string | undefined | false,
     additionalOptions?: AdditionalOptions): Promise<boolean> {
-    for(let i = 0; i < dialogueTree.length; i++) {
+    for (let i = 0; i < dialogueTree.length; i++) {
         tag = await runDialogueAction(player, dialogueTree[i], tag, additionalOptions);
-        if(tag === false) {
+        if (tag === false) {
             break;
         }
     }
@@ -618,12 +619,12 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
     additionalOptions?: AdditionalOptions): Promise<boolean> {
     const player = participants.find(p => p instanceof Player) as Player;
 
-    if(!player) {
+    if (!player) {
         throw new Error('Player instance not provided to dialogue action.');
     }
 
     let npcParticipants = participants.filter(p => !(p instanceof Player)) as NpcParticipant[];
-    if(!npcParticipants) {
+    if (!npcParticipants) {
         npcParticipants = [];
     }
 
@@ -635,7 +636,7 @@ export async function dialogue(participants: (Player | NpcParticipant)[], dialog
         await runParsedDialogue(player, parsedDialogueTree, undefined, additionalOptions);
         player.interfaceState.closeAllSlots();
         return true;
-    } catch(error) {
+    } catch (error) {
         player.interfaceState.closeAllSlots();
         logger.warn(error);
         return false;
@@ -694,11 +695,11 @@ export interface ItemSelection {
 export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'MAKING', items: SelectableItem[]): Promise<ItemSelection> {
     let widgetId = 307;
 
-    if(type === 'MAKING') {
-        if(items.length === 1) {
+    if (type === 'MAKING') {
+        if (items.length === 1) {
             widgetId = 309;
         } else {
-            if(items.length > 5) {
+            if (items.length > 5) {
                 throw new Error(`Too many items provided to the item selection action!`);
             }
 
@@ -710,11 +711,11 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
     childIds.forEach((childId, index) => {
         const itemInfo = items[index];
 
-        if(itemInfo.offset === undefined) {
+        if (itemInfo.offset === undefined) {
             itemInfo.offset = -12;
         }
 
-        if(itemInfo.zoom === undefined) {
+        if (itemInfo.zoom === undefined) {
             itemInfo.zoom = 180;
         }
 
@@ -735,7 +736,7 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
         });
 
         const interactionSub = player.dialogueInteractionEvent.subscribe(childId => {
-            if(!player.interfaceState.widgetOpen('chatbox', widgetId)) {
+            if (!player.interfaceState.widgetOpen('chatbox', widgetId)) {
                 interactionSub.unsubscribe();
                 actionsSub.unsubscribe();
                 reject('Active Widget Mismatch');
@@ -746,7 +747,7 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
 
             const choiceIndex = options.findIndex(arr => arr.indexOf(childId) !== -1);
 
-            if(choiceIndex === -1) {
+            if (choiceIndex === -1) {
                 interactionSub.unsubscribe();
                 actionsSub.unsubscribe();
                 reject('Choice Index Not Found');
@@ -755,7 +756,7 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
 
             const optionIndex = options[choiceIndex].indexOf(childId);
 
-            if(optionIndex === -1) {
+            if (optionIndex === -1) {
                 interactionSub.unsubscribe();
                 actionsSub.unsubscribe();
                 reject('Option Index Not Found');
@@ -765,7 +766,7 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
             const itemId = items[choiceIndex].itemId;
             let amount = itemSelectionDialogueAmounts[optionIndex];
 
-            if(amount === 'X') {
+            if (amount === 'X') {
                 actionsSub.unsubscribe();
 
                 player.outgoingPackets.showNumberInputDialogue();
@@ -780,7 +781,7 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
                     actionsSub.unsubscribe();
                     interactionSub.unsubscribe();
 
-                    if(input < 1 || input > 2147483647) {
+                    if (input < 1 || input > 2147483647) {
                         player.interfaceState.closeWidget('chatbox');
                         reject('Invalid User Amount Input');
                     } else {
@@ -789,7 +790,7 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
                     }
                 });
             } else {
-                if(amount === 'All') {
+                if (amount === 'All') {
                     amount = player.inventory.findAll(itemId).length;
                 }
 

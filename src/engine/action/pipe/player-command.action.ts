@@ -1,5 +1,7 @@
 import { Player } from '@engine/world/actor';
 import { ActionHook, getActionHooks, ActionPipe, RunnableHooks } from '@engine/action';
+import { reloadContent, reloadContentCommands } from '@engine/plugins/reload-content';
+import { logger } from '@runejs/common';
 
 
 /**
@@ -48,6 +50,12 @@ export interface PlayerCommandAction {
 const playerCommandActionPipe = (player: Player, command: string, isConsole: boolean,
                                  inputArgs: string[]): RunnableHooks<PlayerCommandAction> => {
     command = command.toLowerCase();
+
+    // Reload game content
+    if (reloadContentCommands.indexOf(command) !== -1) {
+        reloadContent(player, isConsole).catch(logger.error);
+        return;
+    }
 
     const actionArgs = {};
 

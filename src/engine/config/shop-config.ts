@@ -3,7 +3,7 @@ import { findItem, widgets } from '@engine/config/config-handler';
 import { loadConfigurationFiles } from '@runejs/common/fs';
 import { Player } from '@engine/world/actor/player/player';
 import { ItemDetails } from '@engine/config/item-config';
-import { WidgetClosedEvent } from '@engine/world/actor/player/interface-state';
+import { WidgetClosedEvent } from '@engine/interface';
 import { Subscription } from 'rxjs';
 
 
