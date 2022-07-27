@@ -12,7 +12,7 @@
         "start:infra": "concurrently \"npm run start:update\" \"npm run start:login\"",
         "start:standalone": "concurrently \"npm run start:infra\" \"npm run start:game\"",
         "game": "npm run start:game",
-        "game:dev": "npm run start:game",
+        "game:dev": "npm run start:game:dev",
         "login": "npm run start:login",
         "update": "npm run start:update",
         "infra": "npm run start:infra",
