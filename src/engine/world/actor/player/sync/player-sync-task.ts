@@ -139,7 +139,7 @@ export class PlayerSyncTask extends SyncTask<void> {
 
         if(updateFlags.damage !== null) {
             const damage = updateFlags.damage;
-            updateMaskData.put(damage.damageType);
+            updateMaskData.put(damage.damageDealt);
             updateMaskData.put(damage.damageType.valueOf());
             updateMaskData.put(damage.remainingHitpoints);
             updateMaskData.put(damage.maxHitpoints);
