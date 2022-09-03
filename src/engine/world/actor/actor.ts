@@ -13,6 +13,8 @@ import { Animation, Graphic, UpdateFlags } from './update-flags';
 import { Skills } from './skills';
 import { Pathfinding } from './pathfinding';
 import { ActorMetadata } from './metadata';
+import { Task, TaskScheduler } from '@engine/task';
+import { logger } from '@runejs/common';
 
 
 export type ActorType = 'player' | 'npc';
@@ -53,6 +55,13 @@ export abstract class Actor {
     protected _instance: WorldInstance = null;
 
     /**
+     * Is this actor currently active? If true, the actor will have its task queue processed.
+     *
+     * This is true for players that are currently logged in, and NPCs that are currently in the world.
+     */
+    protected active: boolean;
+
+    /**
      * @deprecated - use new action system instead
      */
     private _busy: boolean = false;
@@ -64,12 +73,30 @@ export abstract class Actor {
     private _faceDirection: number;
     private _bonuses: { offensive: OffensiveBonuses, defensive: DefensiveBonuses, skill: SkillBonuses };
 
+    private readonly scheduler = new TaskScheduler();
+
     protected constructor(actorType: ActorType) {
         this.type = actorType;
         this._walkDirection = -1;
         this._runDirection = -1;
         this._faceDirection = 6;
         this.clearBonuses();
+    }
+
+    /**
+     * Adds a task to the actor's scheduler queue. These tasks will be stopped when the become inactive.
+     *
+     * If the task has a stack type of `NEVER`, other tasks in the same group will be cancelled.
+     *
+     * @param task The task to add
+     */
+    public enqueueTask(task: Task): void {
+        if (!this.active) {
+            logger.warn(`Attempted to enqueue task for logged out player`);
+            return;
+        }
+
+        this.scheduler.enqueue(task);
     }
 
     public clearBonuses(): void {
@@ -439,6 +466,28 @@ export abstract class Actor {
         return true;
     }
 
+    /**
+     * Initialise the actor.
+     */
+    protected init() {
+        this.active = true;
+    }
+
+    /**
+     * Destroy this actor.
+     *
+     * This will stop the processing of its action queue.
+     */
+    protected destroy() {
+        this.active = false;
+
+        this.scheduler.clear();
+    }
+
+    protected tick() {
+        this.scheduler.tick();
+    }
+
     public abstract equals(actor: Actor): boolean;
 
     public get position(): Position {
@@ -520,5 +569,4 @@ export abstract class Actor {
     public get bonuses(): { offensive: OffensiveBonuses, defensive: DefensiveBonuses, skill: SkillBonuses } {
         return this._bonuses;
     }
-
 }
