@@ -7,3 +7,4 @@ export * from './num';
 export * from './strings';
 export * from './time';
 export * from './varbits';
+export * from './queue';
