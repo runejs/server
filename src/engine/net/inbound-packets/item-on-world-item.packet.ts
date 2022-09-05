@@ -5,9 +5,9 @@ import { PacketData } from '@engine/net';
 import { Position } from '@engine/world';
 
 /**
- * Parses the item on ground item packet and calls the `item_on_ground_item` action pipeline.
+ * Parses the item on world item packet and calls the `item_on_world_item` action pipeline.
  *
- * This will check that the item being used is in the player's inventory, and that the item being used on is on the ground.
+ * This will check that the item being used is in the player's inventory, and that the world item exists in the correct location.
  * The action pipeline will not be called if either of these conditions are not met.
  *
  * @param player The player that sent the packet.
@@ -15,7 +15,7 @@ import { Position } from '@engine/world';
  *
  * @author jameskmonger
  */
-const itemOnGroundItemPacket = (player: Player, packet: PacketData) => {
+const itemOnWorldItemPacket = (player: Player, packet: PacketData) => {
     const { buffer } = packet;
 
     const usedWithX = buffer.get('short', 'u');
@@ -37,18 +37,18 @@ const itemOnGroundItemPacket = (player: Player, packet: PacketData) => {
         const usedItem = player.inventory.items[usedSlot];
         const usedWithItem = player.instance.getTileModifications(position).mods.worldItems.find(p => p.itemId === usedWithItemId);
         if(!usedItem || !usedWithItem) {
-            logger.warn(`Unhandled item on ground item case (A) for ${usedSlot} (${usedItemId}) on ${usedWithItemId} (${usedWithX}, ${usedWithY}) by ${player.username}`);
+            logger.warn(`Unhandled item on world item case (A) for ${usedSlot} (${usedItemId}) on ${usedWithItemId} (${usedWithX}, ${usedWithY}) by ${player.username}`);
             return;
         }
 
         if(usedItem.itemId !== usedItemId || usedWithItem.itemId !== usedWithItemId) {
-            logger.warn(`Unhandled item on ground item case (B) for ${usedItem.itemId}:${usedItemId} on ${usedWithItem.itemId}:${usedWithItemId} by ${player.username}`);
+            logger.warn(`Unhandled item on world item case (B) for ${usedItem.itemId}:${usedItemId} on ${usedWithItem.itemId}:${usedWithItemId} by ${player.username}`);
             return;
         }
 
-        player.actionPipeline.call('item_on_ground_item', player, usedItem, usedWithItem, usedWidgetId, usedContainerId, usedSlot);
+        player.actionPipeline.call('item_on_world_item', player, usedItem, usedWithItem, usedWidgetId, usedContainerId, usedSlot);
     } else {
-        logger.warn(`Unhandled item on ground item case (C) using widgets ${usedWidgetId}:${usedContainerId} by ${player.username}`);
+        logger.warn(`Unhandled item on world item case (C) using widgets ${usedWidgetId}:${usedContainerId} by ${player.username}`);
     }
 
 };
@@ -56,5 +56,5 @@ const itemOnGroundItemPacket = (player: Player, packet: PacketData) => {
 export default {
     opcode: 172,
     size: 14,
-    handler: itemOnGroundItemPacket
+    handler: itemOnWorldItemPacket
 };

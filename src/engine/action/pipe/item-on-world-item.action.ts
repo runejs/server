@@ -4,30 +4,30 @@ import { ActionHook, getActionHooks, questHookFilter, ActionPipe, RunnableHooks 
 
 
 /**
- * Defines an item-on-item action hook.
+ * Defines an item-on-world-item action hook.
  *
  * @author jameskmonger
  */
-export interface ItemOnGroundItemActionHook extends ActionHook<ItemOnGroundItemAction, itemOnGroundItemActionHandler> {
+export interface ItemOnWorldItemActionHook extends ActionHook<ItemOnWorldItemAction, itemOnWorldItemActionHandler> {
     /**
      * The item pairs being used. Both items are optional so that you can specify a single item, a pair of items, or neither.
      */
-    items: { item?: number, groundItem?: number }[];
+    items: { item?: number, worldItem?: number }[];
 }
 
 
 /**
- * The item-on-ground-item action hook handler function to be called when the hook's conditions are met.
+ * The item-on-world-item action hook handler function to be called when the hook's conditions are met.
  */
-export type itemOnGroundItemActionHandler = (itemOnGroundItemAction: ItemOnGroundItemAction) => void;
+export type itemOnWorldItemActionHandler = (itemOnWorldItemAction: ItemOnWorldItemAction) => void;
 
 
 /**
- * Details about an item-on-ground-item action being performed.
+ * Details about an item-on-world-item action being performed.
  *
  * @author jameskmonger
  */
-export interface ItemOnGroundItemAction {
+export interface ItemOnWorldItemAction {
     /**
      * The player performing the action.
      */
@@ -60,34 +60,34 @@ export interface ItemOnGroundItemAction {
 }
 
 /**
- * The pipe that the game engine hands item-on-ground-item actions off to.
+ * The pipe that the game engine hands item-on-world-item actions off to.
  *
- * This will call the `item_on_ground_item` action hooks, if any are registered and match the action being performed.
+ * This will call the `item_on_world_item` action hooks, if any are registered and match the action being performed.
  *
- * Both `item` and `groundItem` are optional, but if they are provided then they must match the items in use.
+ * Both `item` and `worldItem` are optional, but if they are provided then they must match the items in use.
  *
  * @author jameskmonger
  */
-const itemOnGroundItemActionPipe = (
+const itemOnWorldItemActionPipe = (
     player: Player,
     usedItem: Item, usedWithItem: WorldItem,
     usedWidgetId: number, usedContainerId: number, usedSlot: number
-): RunnableHooks<ItemOnGroundItemAction> => {
+): RunnableHooks<ItemOnWorldItemAction> => {
     if(player.busy) {
         return;
     }
 
     // Find all item on item action plugins that match this action
-    let matchingHooks = getActionHooks<ItemOnGroundItemActionHook>('item_on_ground_item', plugin => {
+    let matchingHooks = getActionHooks<ItemOnWorldItemActionHook>('item_on_world_item', plugin => {
         if(questHookFilter(player, plugin)) {
             const used = usedItem.itemId;
             const usedWith = usedWithItem.itemId;
 
-            return (plugin.items.some(({ item, groundItem }) => {
+            return (plugin.items.some(({ item, worldItem }) => {
                 const itemMatch = item === undefined || item === used;
-                const groundItemMatch = groundItem === undefined || groundItem === usedWith;
+                const worldItemMatch = worldItem === undefined || worldItem === usedWith;
 
-                return itemMatch && groundItemMatch;
+                return itemMatch && worldItemMatch;
             }));
         }
 
@@ -102,7 +102,7 @@ const itemOnGroundItemActionPipe = (
 
     if(matchingHooks.length === 0) {
         player.outgoingPackets.chatboxMessage(
-            `Unhandled item on ground item interaction: ${usedItem.itemId} on ${usedWithItem.itemId}`);
+            `Unhandled item on world item interaction: ${usedItem.itemId} on ${usedWithItem.itemId}`);
         return null;
     }
 
@@ -118,6 +118,6 @@ const itemOnGroundItemActionPipe = (
 
 
 /**
- * Item-on-item action pipe definition.
+ * Item-on-world-item action pipe definition.
  */
-export default [ 'item_on_ground_item', itemOnGroundItemActionPipe ] as ActionPipe;
+export default [ 'item_on_world_item', itemOnWorldItemActionPipe ] as ActionPipe;
