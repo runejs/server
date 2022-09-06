@@ -9,57 +9,7 @@ import { soundIds } from '@engine/world/config/sound-ids';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { LandscapeObject } from '@runejs/filestore';
 import { loopingEvent } from '@engine/plugins';
-import { findItem, ItemDetails } from '@engine/config';
-
-
-interface Burnable {
-    logItem: ItemDetails;
-    requiredLevel: number;
-    experienceGained: number;
-}
-
-const logs: Burnable[] = [
-    {
-        logItem: findItem('rs:logs'),
-        requiredLevel: 1,
-        experienceGained: 40
-    },
-    {
-        logItem: findItem('rs:oak_logs'),
-        requiredLevel: 15,
-        experienceGained: 60
-    },
-    {
-        logItem: findItem('rs:willow_logs'),
-        requiredLevel: 30,
-        experienceGained: 90
-    },
-    {
-        logItem: findItem('rs:teak_logs'),
-        requiredLevel: 35,
-        experienceGained: 105
-    },
-    {
-        logItem: findItem('rs:maple_logs'),
-        requiredLevel: 45,
-        experienceGained: 135
-    },
-    {
-        logItem: findItem('rs:mahogany_logs'),
-        requiredLevel: 50,
-        experienceGained: 157.5
-    },
-    {
-        logItem: findItem('rs:yew_logs'),
-        requiredLevel: 60,
-        experienceGained: 202.5
-    },
-    {
-        logItem: findItem('rs:magic_logs'),
-        requiredLevel: 75,
-        experienceGained: 303.8
-    }
-];
+import { FIREMAKING_LOGS } from './data';
 
 const canLight = (logLevel: number, playerLevel: number): boolean => {
     playerLevel++;
@@ -120,7 +70,7 @@ const action: itemOnItemActionHandler = (details) => {
 
     const log = usedItem.itemId !== itemIds.tinderbox ? usedItem : usedWithItem;
     const removeFromSlot = usedItem.itemId !== itemIds.tinderbox ? usedSlot : usedWithSlot;
-    const skillInfo = logs.find(l => l.logItem.gameId === log.itemId);
+    const skillInfo = FIREMAKING_LOGS.find(l => l.logItem.gameId === log.itemId);
     const position = player.position;
 
     if(!skillInfo) {
@@ -181,7 +131,7 @@ export default {
     hooks: [
         {
             type: 'item_on_item',
-            items: logs.map(log => ({ item1: itemIds.tinderbox, item2: log.logItem.gameId })),
+            items: FIREMAKING_LOGS.map(log => ({ item1: itemIds.tinderbox, item2: log.logItem.gameId })),
             handler: action
         }
     ]
