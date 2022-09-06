@@ -1,8 +1,7 @@
 import { itemOnItemActionHandler } from '@engine/action';
-import { itemIds, soundIds, animationIds } from '@engine/world/config';
-import { loopingEvent } from '@engine/plugins';
+import { itemIds } from '@engine/world/config';
 import { FIREMAKING_LOGS } from './data';
-import { canChain, canLight } from './chance';
+import { canChain } from './chance';
 import { lightFire } from './light-fire';
 import { runFiremakingTask } from './firemaking-task';
 
@@ -34,7 +33,7 @@ const action: itemOnItemActionHandler = (details) => {
     } else {
         player.sendMessage(`You attempt to light the logs.`);
 
-        runFiremakingTask(player, worldItemLog, skillInfo);
+        runFiremakingTask(player, worldItemLog);
     }
 };
 
