@@ -136,4 +136,3 @@ The following areas will make interesting use of the task system and would serve
 
 - Health regen
 - NPC movement
-- Firemaking

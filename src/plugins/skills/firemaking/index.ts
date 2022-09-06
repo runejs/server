@@ -1,4 +1,4 @@
-import { itemOnItemActionHandler } from '@engine/action';
+import { itemOnItemActionHandler, ItemOnItemActionHook, ItemOnWorldItemActionHook } from '@engine/action';
 import { itemIds } from '@engine/world/config';
 import { FIREMAKING_LOGS } from './data';
 import { canChain } from './chance';
@@ -44,6 +44,13 @@ export default {
             type: 'item_on_item',
             items: FIREMAKING_LOGS.map(log => ({ item1: itemIds.tinderbox, item2: log.logItem.gameId })),
             handler: action
-        }
+        } as ItemOnItemActionHook,
+        {
+            type: 'item_on_world_item',
+            items: FIREMAKING_LOGS.map(log => ({ item: itemIds.tinderbox, worldItem: log.logItem.gameId })),
+            handler: ({ player, usedWithItem }) => {
+                runFiremakingTask(player, usedWithItem);
+            }
+        } as ItemOnWorldItemActionHook
     ]
 };
