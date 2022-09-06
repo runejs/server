@@ -176,7 +176,7 @@ export class Player extends Actor {
         this.outgoingPackets.chatboxMessage('Welcome to RuneJS.');
 
         this.skills.values.forEach((skill, index) =>
-            this.outgoingPackets.updateSkill(index, skill.level, skill.exp));
+            this.outgoingPackets.updateSkill(index, this.skills.getLevel(index), skill.exp));
 
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
         this.outgoingPackets.sendUpdateAllWidgetItems(widgets.equipment, this.equipment);
