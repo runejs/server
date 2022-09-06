@@ -1,65 +1,9 @@
 import { itemOnItemActionHandler } from '@engine/action';
-import { Player } from '@engine/world/actor/player/player';
-import { WorldItem } from '@engine/world/items/world-item';
-import { Position } from '@engine/world/position';
-import { randomBetween } from '@engine/util/num';
-import { objectIds } from '@engine/world/config/object-ids';
-import { itemIds } from '@engine/world/config/item-ids';
-import { soundIds } from '@engine/world/config/sound-ids';
-import { animationIds } from '@engine/world/config/animation-ids';
-import { LandscapeObject } from '@runejs/filestore';
+import { itemIds, soundIds, animationIds } from '@engine/world/config';
 import { loopingEvent } from '@engine/plugins';
 import { FIREMAKING_LOGS } from './data';
-
-const canLight = (logLevel: number, playerLevel: number): boolean => {
-    playerLevel++;
-    const hostRatio = Math.random() * logLevel;
-    const clientRatio = Math.random() * ((playerLevel - logLevel) * (1 + (logLevel * 0.01)));
-    return hostRatio < clientRatio;
-};
-
-const canChain = (logLevel: number, playerLevel: number): boolean => {
-    playerLevel++;
-    const hostRatio = Math.random() * logLevel;
-    const clientRatio = Math.random() * ((playerLevel - logLevel) * (1 + (logLevel * 0.01)));
-    return clientRatio - hostRatio < 3.5;
-};
-
-const fireDuration = (): number => {
-    return randomBetween(100, 200); // 1-2 minutes
-};
-
-const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, burnExp: number): void => {
-    player.instance.despawnWorldItem(worldItemLog);
-    const fireObject: LandscapeObject = {
-        objectId: objectIds.fire,
-        x: position.x,
-        y: position.y,
-        level: position.level,
-        type: 10,
-        orientation: 0
-    };
-
-    player.playAnimation(null);
-    player.sendMessage(`The fire catches and the logs begin to burn.`);
-    player.skills.firemaking.addExp(burnExp);
-
-    if(!player.walkingQueue.moveIfAble(-1, 0)) {
-        if(!player.walkingQueue.moveIfAble(1, 0)) {
-            if(!player.walkingQueue.moveIfAble(0, -1)) {
-                player.walkingQueue.moveIfAble(0, 1);
-            }
-        }
-    }
-
-    player.instance.spawnTemporaryGameObject(fireObject, position, fireDuration()).then(() => {
-        player.instance.spawnWorldItem({ itemId: itemIds.ashes, amount: 1 }, position, { expires: 300 });
-    });
-
-    player.face(position, false);
-    player.metadata.lastFire = Date.now();
-    player.busy = false;
-};
+import { canChain, canLight } from './chance';
+import { lightFire } from './light-fire';
 
 const action: itemOnItemActionHandler = (details) => {
     const { player, usedItem, usedWithItem, usedSlot, usedWithSlot } = details;
