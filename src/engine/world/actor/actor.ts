@@ -84,15 +84,47 @@ export abstract class Actor {
     }
 
     /**
-     * Adds a task to the actor's scheduler queue. These tasks will be stopped when the become inactive.
+     * Instantiate a task with the Actor instance and a set of arguments.
+     *
+     * @param taskClass The task class to instantiate. Must be a subclass of {@link Task}
+     * @param args The arguments to pass to the task constructor
+     *
+     * If the task has a stack type of `NEVER`, other tasks in the same {@link TaskStackGroup} will be cancelled.
+     */
+    public enqueueTask(taskClass: new (actor: Actor) => Task, ...args: never[]): void;
+    public enqueueTask<T1, T2, T3, T4, T5, T6>(taskClass: new (actor: Actor, arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6) => Task, args: [ T1, T2, T3, T4, T5, T6 ]): void;
+    public enqueueTask<T1, T2, T3, T4, T5>(taskClass: new (actor: Actor, arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5) => Task, args: [ T1, T2, T3, T4, T5 ]): void;
+    public enqueueTask<T1, T2, T3, T4>(taskClass: new (actor: Actor, arg1: T1, arg2: T2, arg3: T3, arg4: T4) => Task, args: [ T1, T2, T3, T4 ]): void;
+    public enqueueTask<T1, T2, T3>(taskClass: new (actor: Actor, arg1: T1, arg2: T2, arg3: T3) => Task, args: [ T1, T2, T3 ]): void;
+    public enqueueTask<T1, T2>(taskClass: new (actor: Actor, arg1: T1, arg2: T2) => Task, args: [ T1, T2 ]): void;
+    public enqueueTask<T1>(taskClass: new (actor: Actor, arg1: T1) => Task, args: [ T1 ]): void;
+    public enqueueTask<T>(taskClass: new (actor: Actor, ...args: T[]) => Task, args: T[]): void {
+        if (!this.active) {
+            logger.warn(`Attempted to instantiate task for inactive actor`);
+            return;
+        }
+
+        if (args) {
+            this.enqueueBaseTask(
+                new taskClass(this, ...args)
+            );
+        } else {
+            this.enqueueBaseTask(
+                new taskClass(this)
+            );
+        }
+    }
+
+    /**
+     * Adds a task to the actor's scheduler queue. These tasks will be stopped when they become inactive.
      *
      * If the task has a stack type of `NEVER`, other tasks in the same group will be cancelled.
      *
      * @param task The task to add
      */
-    public enqueueTask(task: Task): void {
+    public enqueueBaseTask(task: Task): void {
         if (!this.active) {
-            logger.warn(`Attempted to enqueue task for logged out player`);
+            logger.warn(`Attempted to enqueue task for  inactive actor`);
             return;
         }
 
