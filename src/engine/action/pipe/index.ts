@@ -2,6 +2,7 @@ export * from './button.action';
 export * from './equipment-change.action';
 export * from './item-interaction.action';
 export * from './item-on-item.action';
+export * from './item-on-world-item.action';
 export * from './item-on-npc.action';
 export * from './item-on-object.action';
 export * from './item-on-player.action';
