@@ -13,6 +13,11 @@ import { Position } from '@engine/world/position';
  */
 export type PlayerMetadata = {
     /**
+     * The player's client configuration options (varps).
+     */
+    configs: number[];
+
+    /**
      * The player's current and previous chunks.
      */
     updateChunk: {

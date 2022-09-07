@@ -15,4 +15,9 @@ export type ActorMetadata = {
      * TODO Should this live on Actor rather than on {@link Player}? I don't think NPCs can have a custom map.
      */
     customMap: ConstructedRegion;
+
+    /**
+     * Set to true if the actor is currently teleporting.
+     */
+    teleporting: boolean;
 };

@@ -1087,9 +1087,9 @@ export class Player extends Actor {
 
         let morphIndex: number;
         if (originalNpc.varbitId !== -1) {
-            morphIndex = getVarbitMorphIndex(originalNpc.varbitId, this.metadata['configs']);
+            morphIndex = getVarbitMorphIndex(originalNpc.varbitId, this.metadata.configs);
         } else if (originalNpc.settingId !== -1) {
-            morphIndex = this.metadata['configs'] && this.metadata['configs'][originalNpc.settingId] ? this.metadata['configs'][originalNpc.settingId] : 0;
+            morphIndex = this.metadata.configs && this.metadata.configs[originalNpc.settingId] ? this.metadata.configs[originalNpc.settingId] : 0;
         } else {
             logger.warn(`Tried to fetch a child NPC index, but but no varbitId or settingId were found in the NPC details. NPC: ${originalNpc.id}, childrenIDs: ${originalNpc.childrenIds}`);
             return null;
