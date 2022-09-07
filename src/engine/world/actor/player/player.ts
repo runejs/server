@@ -429,16 +429,16 @@ export class Player extends Actor {
 
             this.outgoingPackets.flushQueue();
 
-            if(this.metadata['updateChunk']) {
-                const { newChunk, oldChunk } = this.metadata['updateChunk'];
+            if(this.metadata.updateChunk) {
+                const { newChunk, oldChunk } = this.metadata.updateChunk;
                 oldChunk.removePlayer(this);
                 newChunk.addPlayer(this);
                 this.chunkChanged(newChunk);
-                this.metadata['updateChunk'] = null;
+                this.metadata.updateChunk = null;
             }
 
-            if(this.metadata['teleporting']) {
-                this.metadata['teleporting'] = null;
+            if(this.metadata.teleporting) {
+                this.metadata.teleporting = null;
             }
 
             resolve();
@@ -677,9 +677,9 @@ export class Player extends Actor {
     public teleport(newPosition: Position, updateRegion: boolean = true): void {
         this.walkingQueue.clear();
         const originalPosition = this.position.copy();
-        this.metadata['lastPosition'] = originalPosition;
+        this.metadata.lastPosition = originalPosition;
         this.position = newPosition;
-        this.metadata['teleporting'] = true;
+        this.metadata.teleporting = true;
 
         this.updateFlags.mapRegionUpdateRequired = updateRegion;
         this.lastMapRegionUpdatePosition = newPosition;
@@ -690,7 +690,7 @@ export class Player extends Actor {
         if(!oldChunk.equals(newChunk)) {
             oldChunk.removePlayer(this);
             newChunk.addPlayer(this);
-            this.metadata['updateChunk'] = { newChunk, oldChunk };
+            this.metadata.updateChunk = { newChunk, oldChunk };
 
             if(updateRegion) {
                 this.actionPipeline.call('region_change', regionChangeActionFactory(

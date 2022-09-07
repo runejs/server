@@ -1,3 +1,6 @@
+import { Chunk } from '@engine/world/map';
+import { Position } from '@engine/world/position';
+
 /**
  * The definition of the metadata directly available on a {@link Player}.
  *
@@ -9,4 +12,16 @@
  * @author jameskmonger
  */
 export type PlayerMetadata = {
+    /**
+     * The player's current and previous chunks.
+     */
+    updateChunk: {
+        oldChunk: Chunk;
+        newChunk: Chunk;
+    };
+
+    /**
+     * The player's last position before teleporting.
+     */
+    lastPosition: Position;
 };

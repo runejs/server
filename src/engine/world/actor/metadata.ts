@@ -1,3 +1,5 @@
+import { ConstructedRegion } from '../map';
+
 /**
  * The definition of the metadata available on an {@link Actor}.
  *
@@ -7,4 +9,10 @@
  * @author jameskmonger
  */
 export type ActorMetadata = {
+    /**
+     * The custom constructed map region for this actor.
+     *
+     * TODO Should this live on Actor rather than on {@link Player}? I don't think NPCs can have a custom map.
+     */
+    customMap: ConstructedRegion;
 };

@@ -213,7 +213,7 @@ export class WalkingQueue {
 
             if(!oldChunk.equals(newChunk)) {
                 if(this.actor instanceof Player) {
-                    this.actor.metadata['updateChunk'] = { newChunk, oldChunk };
+                    this.actor.metadata.updateChunk = { newChunk, oldChunk };
 
                     this.actor.actionPipeline.call('region_change', regionChangeActionFactory(
                         this.actor, originalPosition, this.actor.position));
