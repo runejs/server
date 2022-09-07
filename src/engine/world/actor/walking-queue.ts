@@ -144,7 +144,7 @@ export class WalkingQueue {
 
         const walkPosition = this.queue.shift();
 
-        if(this.actor.metadata['faceActorClearedByWalking'] === undefined || this.actor.metadata['faceActorClearedByWalking']) {
+        if(this.actor.metadata.faceActorClearedByWalking === undefined || this.actor.metadata.faceActorClearedByWalking) {
             this.actor.clearFaceActor();
         }
 
