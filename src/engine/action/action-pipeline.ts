@@ -31,6 +31,7 @@ export type ActionType =
     | 'item_on_npc'
     | 'item_on_player'
     | 'item_on_item'
+    | 'item_on_world_item'
     | 'item_swap'
     | 'move_item'
     | 'spawned_item_interaction'
