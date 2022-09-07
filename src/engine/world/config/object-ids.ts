@@ -26,51 +26,87 @@ export const objectIds = {
     tree: {
         normal: [
             { default: 1276, stump: 1342 },
-            { default: 1278, stump: 1342 }
+            { default: 1277, stump: 1343 },
+            { default: 1278, stump: 1342 },
+            { default: 1279, stump: 1345 },
+            { default: 1280, stump: 1343 },
+            { default: 1315, stump: 1342 },
+            { default: 1316, stump: 1355 },
+            { default: 1318, stump: 1355 },
+            { default: 1319, stump: 1355 },
+            { default: 1330, stump: 1357 },
+            { default: 1331, stump: 1357 },
+            { default: 1332, stump: 1357 },
+            { default: 3033, stump: 1345 },
+            { default: 3034, stump: 1345 },
+            { default: 3879, stump: 3880 },
+            { default: 3881, stump: 3880 },
+            { default: 3882, stump: 3880 },
+            // { default: 3883, stump: 3884 }, // sigex: no matching stump
+            { default: 14308, stump: 1342 }, // Sigex questionable object, high value
+            { default: 14309, stump: 1342 }, // Sigex questionable object, high value
         ],
         dead: [
+            // Sigex: OSRS has an extra root on the stump too
             { default: 1282, stump: 1347 },
             { default: 1283, stump: 1347 },
+            { default: 1284, stump: 1348 },
+            { default: 1285, stump: 1349 },
             { default: 1286, stump: 1351 },
             { default: 1289, stump: 1353 },
-            { default: 1365, stump: 1352 }
+            { default: 1290, stump: 1354 },
+            { default: 1291, stump: 1351 },
+            { default: 1365, stump: 1352 },
+            { default: 1383, stump: 1358 },
+            { default: 1384, stump: 1359 },
+            { default: 3035, stump: 1347 },
+            // { default: 3036, stump: 1351 },// Sigex: no suitable stump offset looks wrong
+            { default: 5902, stump: 1347 },
+            { default: 5903, stump: 1351 },
+            { default: 5904, stump: 1351 },
         ],
         archey: [
             { default: 2023, stump: 3371 }
         ],
         oak: [
-            { default: 1281, stump: 1342 },
-            { default: 3037, stump: 1342 }
+            { default: 1281, stump: 1356 },
+            // { default: 3037, stump: 1342 }, // Sigex: dark Oak tutorial island no stump
+            { default: 8467, stump: 0 } // Farming
         ],
         willow: [
-            { default: 5551, stump: 1324 },
-            { default: 1308, stump: 1324 },
-            { default: 5552, stump: 1324 },
-            { default: 5553, stump: 1324 },
-            { default: 8481, stump: 1324 },
-            { default: 8482, stump: 1324 },
-            { default: 8483, stump: 1324 },
-            { default: 8484, stump: 1324 },
-            { default: 8485, stump: 1324 },
-            { default: 8486, stump: 1324 },
-            { default: 8487, stump: 1324 },
-            { default: 8488, stump: 1324 },
+            { default: 1308, stump: 7399 },
+            { default: 5551, stump: 5554 },
+            { default: 5552, stump: 5554 }, // Sigex: offset is wrong
+            { default: 5553, stump: 5554 }, // Sigex: offset is wrong
+            { default: 8487, stump: 1324 }, // Farming
+            // { default: 8488, stump: 1324 }, // Farming
         ],
         teak: [
-            { default: 9036, stump: 1342 },
+            { default: 9036, stump: 9037 },
+            { default: 15062, stump: 9037 }, // Sigex: questionable object, high value
+        ],
+        dramen: [
+            { default: 1292, stump: -1 },
         ],
         maple: [
-            { default: 1307, stump: 1342 },
-            { default: 4674, stump: 1342 },
+            { default: 1307, stump: 7400 },
+            { default: 4674, stump: 7400 },
+            // { default: 8444, stump: 0 }, // Farming
+        ],
+        hollow: [
+            { default: 2289, stump: 2310 },
+            { default: 4060, stump: 4061 },
         ],
         mahogany: [
-            { default: 9034, stump: 1342 },
+            { default: 9034, stump: 9035 },
         ],
         yew: [
-            { default: 1309, stump: 1342 },
+            { default: 1309, stump: 7402 },
+            // { default: 8513, stump: 0 }, // Farming
         ],
         magic: [
-            { default: 1292, stump: 1324 },
+            { default: 1306, stump: 7401 },
+            // { default: 8409, stump: 0 }, // Farming
         ],
     },
     default: {
