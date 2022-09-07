@@ -69,14 +69,12 @@ export const activate = (task: TaskExecutor<ObjectInteractionAction>, taskIterat
 
     // Check if the amount of ticks passed equal the tools pulses.
     if(taskIteration % 3 === 0 && taskIteration != 0) {
-        const successChance = randomBetween(0, 255);
 
         let toolLevel = tool.level - 1;
         if(tool.itemId === 1349 || tool.itemId === 1267) {
             toolLevel = 2;
         }
 
-        const percentNeeded = tree.baseChance + toolLevel + actor.skills.woodcutting.level;
         const succeeds = canCut(tree, toolLevel, actor.skills.woodcutting.level);
         if(succeeds) {
             const targetName: string = findItem(tree.itemId).name.toLowerCase();
