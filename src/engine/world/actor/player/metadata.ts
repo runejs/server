@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { Chunk } from '@engine/world/map';
 import { Position } from '@engine/world/position';
 
@@ -29,4 +30,18 @@ export type PlayerMetadata = {
      * The player's last position before teleporting.
      */
     lastPosition: Position;
+
+    /**
+     * The player's currently open shop.
+     *
+     * TODO (jameskmonger) This is currently an instance of `Shop`. We shouldn't be storing whole instances of classes in the metadata.
+     */
+    lastOpenedShop: any;
+
+    /**
+     * A subscription to the player's "widget closed" events.
+     *
+     * Used to remove a player from a shop when they close the shop's widget.
+     */
+    shopCloseListener: Subscription;
 };
