@@ -2,7 +2,7 @@ import {
     ObjectInteractionActionHook,
 } from '@engine/action';
 import { getTreeIds } from '@engine/world/config/harvestable-object';
-import { activate, canActivate, onComplete } from './woodcutting-task';
+import { runWoodcuttingTask } from './woodcutting-task';
 
 
 export default {
@@ -12,12 +12,8 @@ export default {
             type: 'object_interaction',
             options: [ 'chop down', 'chop' ],
             objectIds: getTreeIds(),
-            strength: 'normal',
-            task: {
-                canActivate,
-                activate,
-                onComplete,
-                interval: 1
+            handler: ({ player, object }) => {
+                runWoodcuttingTask(player, object);
             }
         } as ObjectInteractionActionHook
     ]
