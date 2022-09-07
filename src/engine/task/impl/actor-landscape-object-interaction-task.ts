@@ -1,6 +1,6 @@
+import { LandscapeObject } from '@runejs/filestore';
 import { activeWorld, Position } from '@engine/world';
 import { Actor } from '@engine/world/actor';
-import { LandscapeObject } from '@runejs/filestore';
 import { ActorWalkToTask } from './actor-walk-to-task';
 
 /**
@@ -11,8 +11,9 @@ import { ActorWalkToTask } from './actor-walk-to-task';
  *
  * @author jameskmonger
  */
-export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor = Actor> extends ActorWalkToTask<TActor> {
+export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor = Actor> extends ActorWalkToTask<TActor, LandscapeObject> {
     private _landscapeObject: LandscapeObject;
+    private _objectPosition: Position;
 
     /**
      * Gets the {@link LandscapeObject} that this task is interacting with.
@@ -38,6 +39,19 @@ export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor =
     }
 
     /**
+     * Get the position of this task's landscape object
+     *
+     * @returns The position of this task's landscape object, or null if the landscape object is not present
+     */
+    protected get landscapeObjectPosition(): Position {
+        if (!this._landscapeObject) {
+            return null;
+        }
+
+        return this._objectPosition;
+    }
+
+    /**
      * @param actor The actor executing this task.
      * @param landscapeObject The landscape object to interact with.
      * @param sizeX The size of the LandscapeObject in the X direction.
@@ -51,7 +65,7 @@ export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor =
     ) {
         super(
             actor,
-            new Position(landscapeObject.x, landscapeObject.y, landscapeObject.level),
+            landscapeObject,
             Math.max(sizeX, sizeY)
         );
 
@@ -60,6 +74,8 @@ export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor =
             return;
         }
 
+        // create the Position here to prevent instantiating a new Position every tick
+        this._objectPosition = new Position(landscapeObject.x, landscapeObject.y, landscapeObject.level);
         this._landscapeObject = landscapeObject;
     }
 
@@ -80,7 +96,7 @@ export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor =
             return;
         }
 
-        const { object: worldObject } = activeWorld.findObjectAtLocation(this.actor, this._landscapeObject.objectId, this.destination);
+        const { object: worldObject } = activeWorld.findObjectAtLocation(this.actor, this._landscapeObject.objectId, this._objectPosition);
 
         if (!worldObject) {
             this.stop();

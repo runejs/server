@@ -1,3 +1,4 @@
+import { LandscapeObject } from '@runejs/filestore';
 import { Position } from '@engine/world/position';
 import { Actor } from '@engine/world/actor';
 import { TaskStackType, TaskBreakType, TaskStackGroup } from '../types';
@@ -11,7 +12,7 @@ import { ActorTask } from './actor-task';
  *
  * @author jameskmonger
  */
-export interface ActorWalkToTask<TActor extends Actor = Actor> extends ActorTask<TActor> {
+export interface ActorWalkToTask<TActor extends Actor = Actor, TTarget extends LandscapeObject | Position = Position> extends ActorTask<TActor> {
     /**
      * An optional function that is called when the actor arrives at the destination.
      */
@@ -26,7 +27,7 @@ export interface ActorWalkToTask<TActor extends Actor = Actor> extends ActorTask
  *
  * @author jameskmonger
  */
-export abstract class ActorWalkToTask<TActor extends Actor = Actor> extends ActorTask<TActor> {
+export abstract class ActorWalkToTask<TActor extends Actor = Actor, TTarget extends LandscapeObject | Position = Position> extends ActorTask<TActor> {
     private _atDestination: boolean = false;
 
     /**
@@ -43,7 +44,7 @@ export abstract class ActorWalkToTask<TActor extends Actor = Actor> extends Acto
      */
     constructor (
         actor: TActor,
-        protected readonly destination: Position,
+        protected readonly destination: TTarget,
         protected readonly distance = 1,
     ) {
         super(
@@ -58,7 +59,11 @@ export abstract class ActorWalkToTask<TActor extends Actor = Actor> extends Acto
             }
         );
 
-        this.actor.pathfinding.walkTo(destination, { })
+        if(destination instanceof Position) {
+            this.actor.pathfinding.walkTo(destination, { })
+        } else {
+            this.actor.pathfinding.walkTo(new Position(destination.x, destination.y), { })
+        }
     }
 
     /**
