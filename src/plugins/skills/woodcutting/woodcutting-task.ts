@@ -1,6 +1,6 @@
+
 import {
     ObjectInteractionAction,
-    ObjectInteractionActionHook,
     TaskExecutor
 } from '@engine/action';
 import { Skill } from '@engine/world/actor/skills';
@@ -14,9 +14,9 @@ import { soundIds } from '@engine/world/config/sound-ids';
 import { Axe, getAxe, HarvestTool } from '@engine/world/config/harvest-tool';
 import { findItem } from '@engine/config/config-handler';
 import { activeWorld } from '@engine/world';
+import { canCut } from './chance';
 
-
-const canActivate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: number): boolean => {
+export const canActivate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: number): boolean => {
     const { actor, actionData: { position, object, player } } = task;
     const tree = getTreeFromHealthy(object.objectId);
 
@@ -48,7 +48,7 @@ const canActivate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration:
 };
 
 
-const activate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: number): boolean => {
+export const activate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: number): boolean => {
     const { actor, player, actionData, session } = task.getDetails();
     const { position: objectPosition, object: actionObject } = actionData;
     const tree: IHarvestable = session.tree;
@@ -77,7 +77,8 @@ const activate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: nu
         }
 
         const percentNeeded = tree.baseChance + toolLevel + actor.skills.woodcutting.level;
-        if(successChance <= percentNeeded) {
+        const succeeds = canCut(tree, toolLevel, actor.skills.woodcutting.level);
+        if(succeeds) {
             const targetName: string = findItem(tree.itemId).name.toLowerCase();
 
             if(actor.inventory.hasSpace()) {
@@ -122,25 +123,6 @@ const activate = (task: TaskExecutor<ObjectInteractionAction>, taskIteration: nu
     return true;
 };
 
-const onComplete = (task: TaskExecutor<ObjectInteractionAction>): void => {
+export const onComplete = (task: TaskExecutor<ObjectInteractionAction>): void => {
     task.actor.stopAnimation();
-};
-
-
-export default {
-    pluginId: 'rs:woodcutting',
-    hooks: [
-        {
-            type: 'object_interaction',
-            options: [ 'chop down', 'chop' ],
-            objectIds: getTreeIds(),
-            strength: 'normal',
-            task: {
-                canActivate,
-                activate,
-                onComplete,
-                interval: 1
-            }
-        } as ObjectInteractionActionHook
-    ]
 };
