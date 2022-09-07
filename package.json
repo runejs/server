@@ -21,7 +21,8 @@
         "lint:fix": "eslint --ext .ts src --fix",
         "build:watch": "babel ./src --out-dir dist --extensions \".ts,.tsx,.js\" --source-maps --watch",
         "build": "rimraf dist && babel ./src --out-dir dist --extensions \".ts,.tsx,.js\" --source-maps",
-        "test": "jest"
+        "test": "jest",
+        "typecheck": "tsc -p ./ --noEmit"
     },
     "repository": {
         "type": "git",
