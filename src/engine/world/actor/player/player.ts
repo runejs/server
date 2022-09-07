@@ -45,6 +45,7 @@ import { dialogue } from '../dialogue';
 import { Npc } from '../npc';
 import { combatStyles } from '../combat';
 import { SkillName } from '../skills';
+import { PlayerMetadata } from './metadata';
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
@@ -116,6 +117,18 @@ export class Player extends Actor {
     public ignoreList: string[] = [];
     public cutscene: Cutscene = null;
     public playerEvents: EventEmitter = new EventEmitter();
+
+    /**
+     * Override the Actor's `metadata` property to provide a more specific type.
+     *
+     * You cannot guarantee that this will be populated with data, so you should always check for the existence of the
+     * metadata you are looking for before using it.
+     *
+     * The ! is used to tell the compiler that we know this property will be defined.
+     *
+     * @author jameskmonger
+     */
+    public readonly metadata!: (Actor['metadata'] & Partial<PlayerMetadata>);
 
     private readonly _socket: Socket;
     private readonly _inCipher: Isaac;

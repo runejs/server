@@ -16,6 +16,7 @@ import { Pathfinding } from './pathfinding';
 import { Attack, AttackDamageType } from './player/attack';
 import { Behavior } from './behaviors';
 import { Effect, EffectType } from './effect';
+import { ActorMetadata } from './metadata';
 
 
 export type ActorType = 'player' | 'npc';
@@ -33,7 +34,16 @@ export abstract class Actor {
     public readonly inventory: ItemContainer = new ItemContainer(28);
     public readonly bank: ItemContainer = new ItemContainer(376);
     public readonly actionPipeline = new ActionPipeline(this);
-    public readonly metadata: { [key: string]: any } = {};
+
+    /**
+     * The map of available metadata for this actor.
+     *
+     * You cannot guarantee that this will be populated with data, so you should always check for the existence of the
+     * metadata you are looking for before using it.
+     *
+     * @author jameskmonger
+     */
+    public readonly metadata: Partial<ActorMetadata> = {};
 
     /**
      * @deprecated - use new action system instead
