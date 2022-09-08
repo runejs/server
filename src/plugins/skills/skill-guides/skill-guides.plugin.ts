@@ -62,7 +62,7 @@ function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refr
         slot: 'screen',
         multi: false
     });
-    player.metadata['activeSkillGuide'] = guideId;
+    player.metadata.activeSkillGuide = guideId;
 }
 
 export const guideHandler: buttonActionHandler = async (details) => {
@@ -82,7 +82,7 @@ export const subGuideHandler: widgetInteractionActionHandler = async (details) =
         guides = await loadSkillGuideConfigurations(skillGuidePath);
     }
 
-    const activeSkillGuide = player.metadata['activeSkillGuide'];
+    const activeSkillGuide = player.metadata.activeSkillGuide;
 
     if(!activeSkillGuide) {
         return;

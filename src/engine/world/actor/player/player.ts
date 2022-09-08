@@ -45,6 +45,7 @@ import { dialogue } from '../dialogue';
 import { Npc } from '../npc';
 import { combatStyles } from '../combat';
 import { SkillName } from '../skills';
+import { PlayerMetadata } from './metadata';
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
@@ -116,6 +117,18 @@ export class Player extends Actor {
     public ignoreList: string[] = [];
     public cutscene: Cutscene = null;
     public playerEvents: EventEmitter = new EventEmitter();
+
+    /**
+     * Override the Actor's `metadata` property to provide a more specific type.
+     *
+     * You cannot guarantee that this will be populated with data, so you should always check for the existence of the
+     * metadata you are looking for before using it.
+     *
+     * The ! is used to tell the compiler that we know this property will be defined.
+     *
+     * @author jameskmonger
+     */
+    public readonly metadata!: (Actor['metadata'] & Partial<PlayerMetadata>);
 
     private readonly _socket: Socket;
     private readonly _inCipher: Isaac;
@@ -416,16 +429,16 @@ export class Player extends Actor {
 
             this.outgoingPackets.flushQueue();
 
-            if(this.metadata['updateChunk']) {
-                const { newChunk, oldChunk } = this.metadata['updateChunk'];
+            if(this.metadata.updateChunk) {
+                const { newChunk, oldChunk } = this.metadata.updateChunk;
                 oldChunk.removePlayer(this);
                 newChunk.addPlayer(this);
                 this.chunkChanged(newChunk);
-                this.metadata['updateChunk'] = null;
+                this.metadata.updateChunk = null;
             }
 
-            if(this.metadata['teleporting']) {
-                this.metadata['teleporting'] = null;
+            if(this.metadata.teleporting) {
+                this.metadata.teleporting = null;
             }
 
             resolve();
@@ -664,9 +677,9 @@ export class Player extends Actor {
     public teleport(newPosition: Position, updateRegion: boolean = true): void {
         this.walkingQueue.clear();
         const originalPosition = this.position.copy();
-        this.metadata['lastPosition'] = originalPosition;
+        this.metadata.lastPosition = originalPosition;
         this.position = newPosition;
-        this.metadata['teleporting'] = true;
+        this.metadata.teleporting = true;
 
         this.updateFlags.mapRegionUpdateRequired = updateRegion;
         this.lastMapRegionUpdatePosition = newPosition;
@@ -677,7 +690,7 @@ export class Player extends Actor {
         if(!oldChunk.equals(newChunk)) {
             oldChunk.removePlayer(this);
             newChunk.addPlayer(this);
-            this.metadata['updateChunk'] = { newChunk, oldChunk };
+            this.metadata.updateChunk = { newChunk, oldChunk };
 
             if(updateRegion) {
                 this.actionPipeline.call('region_change', regionChangeActionFactory(
@@ -1074,9 +1087,9 @@ export class Player extends Actor {
 
         let morphIndex: number;
         if (originalNpc.varbitId !== -1) {
-            morphIndex = getVarbitMorphIndex(originalNpc.varbitId, this.metadata['configs']);
+            morphIndex = getVarbitMorphIndex(originalNpc.varbitId, this.metadata.configs);
         } else if (originalNpc.settingId !== -1) {
-            morphIndex = this.metadata['configs'] && this.metadata['configs'][originalNpc.settingId] ? this.metadata['configs'][originalNpc.settingId] : 0;
+            morphIndex = this.metadata.configs && this.metadata.configs[originalNpc.settingId] ? this.metadata.configs[originalNpc.settingId] : 0;
         } else {
             logger.warn(`Tried to fetch a child NPC index, but but no varbitId or settingId were found in the NPC details. NPC: ${originalNpc.id}, childrenIDs: ${originalNpc.childrenIds}`);
             return null;

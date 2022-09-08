@@ -16,6 +16,7 @@ import { Pathfinding } from './pathfinding';
 import { Attack, AttackDamageType } from './player/attack';
 import { Behavior } from './behaviors';
 import { Effect, EffectType } from './effect';
+import { ActorMetadata } from './metadata';
 
 
 export type ActorType = 'player' | 'npc';
@@ -33,7 +34,16 @@ export abstract class Actor {
     public readonly inventory: ItemContainer = new ItemContainer(28);
     public readonly bank: ItemContainer = new ItemContainer(376);
     public readonly actionPipeline = new ActionPipeline(this);
-    public readonly metadata: { [key: string]: any } = {};
+
+    /**
+     * The map of available metadata for this actor.
+     *
+     * You cannot guarantee that this will be populated with data, so you should always check for the existence of the
+     * metadata you are looking for before using it.
+     *
+     * @author jameskmonger
+     */
+    public readonly metadata: Partial<ActorMetadata> = {};
 
     /**
      * @deprecated - use new action system instead
@@ -109,13 +119,13 @@ export abstract class Actor {
     // https://oldschool.runescape.wiki/w/Combat_level#:~:text=Calculating%20combat%20level,-Simply&text=Add%20your%20Strength%20and%20Attack,have%20your%20melee%20combat%20level.&text=Multiply%20this%20by%200.325%20and,have%20your%20magic%20combat%20level
     // https://oldschool.runescape.wiki/w/Damage_per_second/Melee#:~:text=1%20Step%20one%3A%20Calculate%20the%20effective%20strength%20level%3B,1.7%20Step%20seven%3A%20Calculate%20the%20melee%20damage%20output
     public getAttackRoll(defender): Attack {
-        
+
         //the amount of damage is random from 0 to Max
         //stance modifiers
         const _stance_defense = 3;
         const _stance_accurate = 0;
         const _stance_controlled = 1;
-        
+
         // base level
         // ToDo: calculate prayer effects
         // round decimal result calulcation up
@@ -131,7 +141,7 @@ export abstract class Actor {
 
             Effective strength level
             Multiply by(Equipment Melee Strength + 64)
-            Add 320 
+            Add 320
             Divide by 640
             Round down to nearest integer
             Multiply by gear bonus
@@ -211,7 +221,7 @@ export abstract class Actor {
         return attack;
         //+ stance modifier
     }
-    // #endregion  
+    // #endregion
 
     public damage(amount: number, damageType: DamageType = DamageType.DAMAGE) {
         const armorReduction = 0;
@@ -347,7 +357,7 @@ export abstract class Actor {
 
     public follow(target: Actor): void {
         this.face(target, false, false, false);
-        this.metadata['following'] = target;
+        this.metadata.following = target;
 
         this.moveBehind(target);
         const subscription = target.walkingQueue.movementEvent.subscribe(() => {
@@ -362,7 +372,7 @@ export abstract class Actor {
         ).subscribe(() => {
             subscription.unsubscribe();
             this.face(null);
-            delete this.metadata['following'];
+            delete this.metadata.following;
         });
     }
 
@@ -376,7 +386,7 @@ export abstract class Actor {
         if(distance <= 1) {
             return false;
         }
-        
+
         if(distance > 16) {
             this.clearFaceActor();
             this.metadata.faceActorClearedByWalking = true;
@@ -398,7 +408,7 @@ export abstract class Actor {
             return;
         }
 
-        this.metadata['tailing'] = target;
+        this.metadata.tailing = target;
 
         this.moveTo(target);
         const subscription = target.walkingQueue.movementEvent.subscribe(async () => this.moveTo(target));
@@ -409,7 +419,7 @@ export abstract class Actor {
         ).subscribe(() => {
             subscription.unsubscribe();
             this.face(null);
-            delete this.metadata['tailing'];
+            delete this.metadata.tailing;
         });
     }
 
@@ -424,8 +434,8 @@ export abstract class Actor {
             this.updateFlags.facePosition = face;
         } else if(face instanceof Actor) {
             this.updateFlags.faceActor = face;
-            this.metadata['faceActor'] = face;
-            this.metadata['faceActorClearedByWalking'] = clearedByWalking;
+            this.metadata.faceActor = face;
+            this.metadata.faceActorClearedByWalking = clearedByWalking;
 
             if(autoClear) {
                 setTimeout(() => {
@@ -441,9 +451,9 @@ export abstract class Actor {
     }
 
     public clearFaceActor(): void {
-        if(this.metadata['faceActor']) {
+        if(this.metadata.faceActor) {
             this.updateFlags.faceActor = null;
-            this.metadata['faceActor'] = undefined;
+            this.metadata.faceActor = undefined;
         }
     }
 

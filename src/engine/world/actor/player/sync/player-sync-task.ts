@@ -30,10 +30,10 @@ export class PlayerSyncTask extends SyncTask<void> {
 
             const updateMaskData = new ByteBuffer(5000);
 
-            if(updateFlags.mapRegionUpdateRequired || this.player.metadata['teleporting']) {
+            if(updateFlags.mapRegionUpdateRequired || this.player.metadata.teleporting) {
                 playerUpdatePacket.putBits(1, 1); // Update Required
                 playerUpdatePacket.putBits(2, 3); // Map Region changed (movement type - 0=nomove, 1=walk, 2=run, 3=mapchange
-                playerUpdatePacket.putBits(1, this.player.metadata['teleporting'] ? 1 : 0); // Whether or not the client should discard the current walking queue (1 if teleporting, 0 if not)
+                playerUpdatePacket.putBits(1, this.player.metadata.teleporting ? 1 : 0); // Whether or not the client should discard the current walking queue (1 if teleporting, 0 if not)
                 playerUpdatePacket.putBits(2, this.player.position.level); // Player Height
                 playerUpdatePacket.putBits(1, updateFlags.updateBlockRequired ? 1 : 0); // Whether or not an update flag block follows
                 playerUpdatePacket.putBits(7, this.player.position.chunkLocalX); // Player Local Chunk X

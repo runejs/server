@@ -8,7 +8,7 @@ export const shopSellValueHandler: itemInteractionActionHandler = ({ player, ite
 };
 
 export const shopPurchaseValueHandler: itemInteractionActionHandler = ({ player, itemDetails }) => {
-    const openedShop: Shop = player.metadata['lastOpenedShop'];
+    const openedShop = player.metadata.lastOpenedShop;
     if(!openedShop) {
         return;
     }
