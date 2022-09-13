@@ -124,11 +124,9 @@ export class Player extends Actor {
      * You cannot guarantee that this will be populated with data, so you should always check for the existence of the
      * metadata you are looking for before using it.
      *
-     * The ! is used to tell the compiler that we know this property will be defined.
-     *
      * @author jameskmonger
      */
-    public readonly metadata!: (Actor['metadata'] & Partial<PlayerMetadata>);
+    public readonly metadata: (Actor['metadata'] & Partial<PlayerMetadata>) = {};
 
     private readonly _socket: Socket;
     private readonly _inCipher: Isaac;
