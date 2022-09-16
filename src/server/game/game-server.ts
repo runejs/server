@@ -22,10 +22,11 @@ export let serverConfig: GameServerConfig;
 export let filestore: Filestore;
 
 
-export const openGatewayServer = (host: string, port: number): void =>
+export const openGatewayServer = (host: string, port: number): void => {
     SocketServer.launch<GatewayServer>(
         'Game Gateway Server',
         host, port, socket => new GatewayServer(socket));
+};
 
 
 /**
@@ -57,6 +58,3 @@ export async function launchGameServer(): Promise<void> {
     watchSource('src/').subscribe(() => world.saveOnlinePlayers());
     watchForChanges('dist/plugins/', /[/\\]plugins[/\\]/);
 }
-
-
-
