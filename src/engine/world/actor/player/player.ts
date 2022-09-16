@@ -37,13 +37,10 @@ import { Cutscene } from './cutscenes';
 import { InterfaceState } from '@engine/interface';
 import { Quest } from './quest';
 import { SendMessageOptions } from './model';
-import { AttackDamageType } from './attack';
 import { EffectType } from '../effect';
-import { AutoAttackBehavior } from '../behaviors';
 import { PlayerSyncTask, NpcSyncTask } from './sync';
 import { dialogue } from '../dialogue';
 import { Npc } from '../npc';
-import { combatStyles } from '../combat';
 import { SkillName } from '../skills';
 import { PlayerMetadata } from './metadata';
 
@@ -276,8 +273,6 @@ export class Player extends Actor {
             this.chunkChanged(playerChunk);
         }
 
-        this.Behaviors.push(new AutoAttackBehavior());
-
         this.outgoingPackets.flushQueue();
         logger.info(`${this.username}:${this.worldIndex} has logged in.`);
     }
@@ -309,28 +304,6 @@ export class Player extends Actor {
 
     public save(): void {
         savePlayerData(this);
-    }
-
-    public getAttackAnimation(): number {
-        let combatStyle = [ 'unarmed', 0 ];
-
-        if(this.savedMetadata.combatStyle) {
-            combatStyle = this.savedMetadata.combatStyle;
-        }
-
-        let attackAnim = combatStyles[combatStyle[0]][combatStyle[1]]?.anim || animationIds.combat.punch;
-
-        if(Array.isArray(attackAnim)) {
-            // Player has multiple attack animations possible, pick a random one from the list to use
-            const idx = Math.floor(Math.random() * attackAnim.length);
-            attackAnim = attackAnim[idx];
-        }
-
-        return animationIds.combat[attackAnim] || animationIds.combat.kick;
-    }
-
-    public getBlockAnimation(): number {
-        return animationIds.combat.armBlock; // @TODO
     }
 
     public privateMessageReceived(fromPlayer: Player, messageBytes: number[]): void {
@@ -399,9 +372,6 @@ export class Player extends Actor {
     }
 
     public async tick(): Promise<void> {
-        for (let i = 0; i < this.Behaviors.length; i++) {
-            this.Behaviors[i].tick();
-        }
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
 
@@ -1373,15 +1343,6 @@ export class Player extends Actor {
 
     public get nearbyChunks(): Chunk[] {
         return this._nearbyChunks;
-    }
-
-    public get damageType(): AttackDamageType {
-        if (this.bonuses.offensive.crush > 0) return AttackDamageType.Crush;
-        if (this.bonuses.offensive.magic > 0) return AttackDamageType.Magic;
-        if (this.bonuses.offensive.ranged > 0) return AttackDamageType.Range;
-        if (this.bonuses.offensive.slash > 0) return AttackDamageType.Slash;
-        if (this.bonuses.offensive.stab > 0) return AttackDamageType.Stab;
-        return AttackDamageType.Crush;
     }
 
     public get instance(): WorldInstance {

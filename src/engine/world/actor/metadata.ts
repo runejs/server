@@ -26,13 +26,6 @@ export type ActorMetadata = {
     walkingTo: Position;
 
     /**
-     * The actor currently being `tailed` by this actor.
-     *
-     * TODO (jameskmonger) we should delete this - only used by deleted code in the old combat plugin
-     */
-    tailing: Actor;
-
-    /**
      * The actor currently being followed by this actor.
      */
     following: Actor;

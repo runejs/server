@@ -7,15 +7,12 @@ import { DefensiveBonuses, OffensiveBonuses, SkillBonuses } from '@engine/config
 import { Position, DirectionData, directionFromIndex, WorldInstance, activeWorld } from '@engine/world';
 import { Item, ItemContainer } from '@engine/world/items';
 import { ActionCancelType, ActionPipeline } from '@engine/action';
-import { soundIds } from '@engine/world/config';
 
 import { WalkingQueue } from './walking-queue';
-import { Animation, DamageType, Graphic, UpdateFlags } from './update-flags';
-import { Skill, Skills } from './skills';
+import { Animation, Graphic, UpdateFlags } from './update-flags';
+import { Skills } from './skills';
 import { Pathfinding } from './pathfinding';
-import { Attack, AttackDamageType } from './player/attack';
-import { Behavior } from './behaviors';
-import { Effect, EffectType } from './effect';
+import { Effect } from './effect';
 import { ActorMetadata } from './metadata';
 
 
@@ -53,13 +50,6 @@ export abstract class Actor {
     public pathfinding: Pathfinding = new Pathfinding(this);
     public lastMovementPosition: Position;
     // #region Behaviors and Combat flags/checks
-    public inCombat: boolean = false;
-    public meleeDistance: number = 1;
-    public Behaviors: Behavior[] = [];
-    public isDead: boolean = false;
-    public combatTargets: Actor[] = [];
-    public hitPoints = this.skills.hitpoints.level * 4;
-    public maxHitPoints = this.skills.hitpoints.level * 4;
     public effects: Effect[] = []; //spells, effects, prayers, etc
 
     protected randomMovementInterval;
@@ -75,7 +65,6 @@ export abstract class Actor {
     private _walkDirection: number;
     private _runDirection: number;
     private _faceDirection: number;
-    private _damageType = AttackDamageType.Crush;
     private _bonuses: { offensive: OffensiveBonuses, defensive: DefensiveBonuses, skill: SkillBonuses };
 
     protected constructor(actorType: ActorType) {
@@ -99,159 +88,6 @@ export abstract class Actor {
             }
         };
     }
-
-    public get highestCombatSkill(): Skill {
-        const attack = this.skills.getLevel('attack');
-        const magic = this.skills.getLevel('magic');
-        const ranged = this.skills.getLevel('ranged');
-
-        if (ranged > magic && ranged > ranged) return ranged;
-        else if (magic > attack && magic > ranged) return magic;
-        else return attack;
-    }
-
-    //https://oldschool.runescape.wiki/w/Attack_range#:~:text=All%20combat%20magic%20spells%20have,also%20allow%20longrange%20attack%20style
-    // range should be within 10 tiles for magic
-    // range should be within 7 for magic staff
-    // https://www.theoatrix.net/post/how-defence-works-in-osrs
-    // https://oldschool.runescape.wiki/w/Damage_per_second/Magic
-    // https://oldschool.runescape.wiki/w/Successful_hit
-    // https://oldschool.runescape.wiki/w/Combat_level#:~:text=Calculating%20combat%20level,-Simply&text=Add%20your%20Strength%20and%20Attack,have%20your%20melee%20combat%20level.&text=Multiply%20this%20by%200.325%20and,have%20your%20magic%20combat%20level
-    // https://oldschool.runescape.wiki/w/Damage_per_second/Melee#:~:text=1%20Step%20one%3A%20Calculate%20the%20effective%20strength%20level%3B,1.7%20Step%20seven%3A%20Calculate%20the%20melee%20damage%20output
-    public getAttackRoll(defender): Attack {
-
-        //the amount of damage is random from 0 to Max
-        //stance modifiers
-        const _stance_defense = 3;
-        const _stance_accurate = 0;
-        const _stance_controlled = 1;
-
-        // base level
-        // ToDo: calculate prayer effects
-        // round decimal result calulcation up
-        // add 8
-        // ToDo: add void bonues (effects)
-        // round result down
-        let equipmentBonus = this.bonuses.offensive.crush ?? 0;
-        if (equipmentBonus <= 0) {
-            equipmentBonus = 1;
-        }
-        /*
-         * To calculate your maximum hit:
-
-            Effective strength level
-            Multiply by(Equipment Melee Strength + 64)
-            Add 320
-            Divide by 640
-            Round down to nearest integer
-            Multiply by gear bonus
-            Round down to nearest integer
-        */
-        const stanceModifier = _stance_accurate;
-        const strengthLevel = (this.skills.attack.level + stanceModifier + 8);
-        let attackCalc = strengthLevel * (equipmentBonus + 64) + 320;
-        attackCalc = Math.round(attackCalc / 640);
-        //console.log(`strengthLevel = ${strengthLevel} \r\n attackCalc = ${attackCalc} \r\n equipmentBonus = ${equipmentBonus}`);
-        const maximumHit = Math.round(attackCalc * equipmentBonus);
-
-        /*
-            To calculate your effective attack level:
-
-            (Attack level + Attack level boost) * prayer bonus
-            Round down to nearest integer
-            + 3 if using the accurate attack style, +1 if using controlled
-                + 8
-            Multiply by 1.1 if wearing void
-            Round down to nearest integer
-        */
-        const attackLevel = this.skills.attack.level;
-        let effectiveAttackLevel = attackLevel;
-
-        //Prayer/Effect bonus - calculate ALL the good and bad effects at once! (prayers, and magic effects, etc.)
-        this.effects.filter(a => a.EffectType === EffectType.Attack).forEach((effect) => {
-            effectiveAttackLevel += (attackLevel * effect.Modifier);
-        });
-        effectiveAttackLevel = Math.round(effectiveAttackLevel) + stanceModifier;
-
-        /*
-         * Calculate the Attack roll
-            Effective attack level * (Equipment Attack bonus + 64)
-            Multiply by gear bonus
-            Round down to nearest integer
-         * */
-        let attack = new Attack();
-        attack.damageType = this.damageType ?? AttackDamageType.Crush;
-        attack.attackRoll = Math.round(effectiveAttackLevel * (equipmentBonus + 64));
-        attack = defender.getDefenseRoll(attack);
-        attack.maximumHit = maximumHit;
-        if (attack.attackRoll >= attack.defenseRoll) attack.hitChance = 1 - ((attack.defenseRoll + 2) / (2 * (attack.attackRoll + 1)))
-        if (attack.attackRoll < attack.defenseRoll) attack.hitChance = attack.attackRoll / (2 * attack.defenseRoll + 1);
-
-        attack.damage = Math.round((maximumHit * attack.hitChance) / 2);
-        return attack;
-    }
-
-    public getDefenseRoll(attack: Attack): Attack {
-        //attack need to know the damage roll, which is the item bonuses the weapon damage type etc.
-
-
-        //stance modifiers
-        const _stance_defense = 3;
-        const _stance_accurate = 0;
-        const _stance_controlled = 1;
-
-        // base level
-        // calculate prayer effects
-        // round decimal result calculation up
-        // add 8
-        // ToDo: add void bonuses (effects)
-        // round result down
-
-        const equipmentBonus: number = this.bonuses.defensive.crush ?? 0; //object prototyping to find property by name (JS style =/)
-
-        const stanceModifier: number = _stance_accurate;
-
-
-        attack.defenseRoll = (this.skills.defence.level + stanceModifier + 8) * (equipmentBonus + 64);
-        //Prayer/Effect bonus - calculate ALL the good and bad effects at once! (prayers, and magic effects, etc.)
-        this.effects.filter(a => a.EffectType === EffectType.BoostDefence || a.EffectType === EffectType.LowerDefence).forEach((effect) => {
-            attack.defenseRoll += (this.skills.defence.level * effect.Modifier);
-        });
-        attack.defenseRoll = Math.round(attack.defenseRoll);
-        return attack;
-        //+ stance modifier
-    }
-    // #endregion
-
-    public damage(amount: number, damageType: DamageType = DamageType.DAMAGE) {
-        const armorReduction = 0;
-        const spellDamageReduction = 0;
-        const poisonReistance = 0;
-        amount -= armorReduction;
-        this.hitPoints -= amount;
-        this.skills.setHitpoints(this.hitPoints);
-        this.updateFlags.addDamage(amount, amount === 0 ? DamageType.NO_DAMAGE : damageType,
-            this.hitPoints, this.maxHitPoints);
-        //this actor should respond when hit
-        activeWorld.playLocationSound(this.position, soundIds.npc.human.noArmorHitPlayer,5)
-        this.playAnimation(this.getBlockAnimation());
-    }
-
-
-
-    //public damage(amount: number, damageType: DamageType = DamageType.DAMAGE): 'alive' | 'dead' {
-    //    let remainingHitpoints: number = this.skills.hitpoints.level - amount;
-    //    const maximumHitpoints: number = this.skills.hitpoints.levelForExp;
-    //    if(remainingHitpoints < 0) {
-    //        remainingHitpoints = 0;
-    //    }
-
-    //    this.skills.setHitpoints(remainingHitpoints);
-    //    this.updateFlags.addDamage(amount, amount === 0 ? DamageType.NO_DAMAGE : damageType,
-    //        remainingHitpoints, maximumHitpoints);
-
-    //    return remainingHitpoints === 0 ? 'dead' : 'alive';
-    //}
 
     /**
      * Waits for the actor to reach the specified position before resolving it's promise.
@@ -399,28 +235,6 @@ export abstract class Actor {
         });
 
         return true;
-    }
-
-    public tail(target: Actor): void {
-        this.face(target, false, false, false);
-
-        if(this.metadata.tailing && this.metadata.tailing.equals(target)) {
-            return;
-        }
-
-        this.metadata.tailing = target;
-
-        this.moveTo(target);
-        const subscription = target.walkingQueue.movementEvent.subscribe(async () => this.moveTo(target));
-
-        this.actionsCancelled.pipe(
-            filter(type => type !== 'pathing-movement'),
-            take(1)
-        ).subscribe(() => {
-            subscription.unsubscribe();
-            this.face(null);
-            delete this.metadata.tailing;
-        });
     }
 
     public face(face: Position | Actor | null, clearWalkingQueue: boolean = true, autoClear: boolean = true, clearedByWalking: boolean = true): void {
@@ -628,8 +442,6 @@ export abstract class Actor {
         return true;
     }
 
-    public abstract getAttackAnimation(): number;
-    public abstract getBlockAnimation(): number;
     public abstract equals(actor: Actor): boolean;
 
     public get position(): Position {
@@ -682,14 +494,6 @@ export abstract class Actor {
 
     public set faceDirection(value: number) {
         this._faceDirection = value;
-    }
-
-    public get damageType() {
-        return this._damageType;
-    }
-
-    public set damageType(value) {
-        this._damageType = value;
     }
 
     public get busy(): boolean {
