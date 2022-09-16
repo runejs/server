@@ -37,7 +37,6 @@ import { Cutscene } from './cutscenes';
 import { InterfaceState } from '@engine/interface';
 import { Quest } from './quest';
 import { SendMessageOptions } from './model';
-import { EffectType } from '../effect';
 import { PlayerSyncTask, NpcSyncTask } from './sync';
 import { dialogue } from '../dialogue';
 import { Npc } from '../npc';
@@ -777,10 +776,6 @@ export class Player extends Actor {
 
             this.addBonuses(item);
         }
-        //prayers and other effects that effect strength
-        this.effects.filter(a => a.EffectType === EffectType.Strength).forEach((effect) => {
-            this.bonuses.skill['strength'] += this.skills.strength.level * effect.Modifier;
-        });
     }
 
     public sendLogMessage(message: string, isConsole: boolean): void {

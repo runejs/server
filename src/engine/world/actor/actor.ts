@@ -12,7 +12,6 @@ import { WalkingQueue } from './walking-queue';
 import { Animation, Graphic, UpdateFlags } from './update-flags';
 import { Skills } from './skills';
 import { Pathfinding } from './pathfinding';
-import { Effect } from './effect';
 import { ActorMetadata } from './metadata';
 
 
@@ -49,8 +48,6 @@ export abstract class Actor {
 
     public pathfinding: Pathfinding = new Pathfinding(this);
     public lastMovementPosition: Position;
-    // #region Behaviors and Combat flags/checks
-    public effects: Effect[] = []; //spells, effects, prayers, etc
 
     protected randomMovementInterval;
     protected _instance: WorldInstance = null;
