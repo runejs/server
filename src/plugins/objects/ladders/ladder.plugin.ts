@@ -21,10 +21,10 @@ export const action: objectInteractionActionHandler = (details) => {
                 ]))
             .then(d => {
                 d.close();
-                switch (d._action.data) {
+                switch (d.action) {
                     case 1:
                     case 2:
-                        action({ ...details, option: `climb-${(d._action.data === 1 ? 'up' : 'down')}` });
+                        action({ ...details, option: `climb-${(d.action === 1 ? 'up' : 'down')}` });
                         return;
                 }
             });
