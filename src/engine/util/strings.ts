@@ -171,7 +171,7 @@ const VALID_CHARS = ['_', 'a', 'b', 'c', 'd',
     '*', '(', ')', '-', '+', '=', ':', ';', '.', '>', '<', ',', '"',
     '[', ']', '|', '?', '/', '`'];
 
-export function longToString(nameLong: BigInt): string {
+export function longToString(nameLong: bigint): string {
     let ac: string = '';
     while(nameLong !== BigInt(0)) {
         const l1 = nameLong;
