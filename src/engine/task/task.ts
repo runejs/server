@@ -1,7 +1,7 @@
 import { TaskBreakType, TaskConfig, TaskStackGroup, TaskStackType } from './types';
 
 const DEFAULT_TASK_CONFIG: Required<TaskConfig> = {
-    interval: 0,
+    interval: 1,
     stackType: TaskStackType.STACK,
     stackGroup: TaskStackGroup.ACTION,
     immediate: false,
@@ -40,12 +40,34 @@ export interface Task {
  * @author jameskmonger
  */
 export abstract class Task {
+    /**
+     * How the task should be stacked with other tasks of the same stack group.
+     */
     public readonly stackType: TaskStackType;
+
+    /**
+     * The stack group for this task.
+     */
     public readonly stackGroup: string;
+
+    /**
+     * Conditions under which the task should be broken.
+     */
     public readonly breakTypes: TaskBreakType[];
 
+    /**
+     * The number of ticks between each execution of the task.
+     */
     private interval: number;
+
+    /**
+     * The number of ticks remaining before the task is executed.
+     */
     private ticksRemaining: number;
+
+    /**
+     * Should the task be repeated indefinitely?
+     */
     private repeat: boolean;
 
     private _isActive = true;

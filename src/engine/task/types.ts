@@ -49,10 +49,33 @@ export enum TaskBreakType {
  * @author jameskmonger
  */
 export type TaskConfig = Partial<Readonly<{
+    /**
+     * How the task should be stacked with other tasks of the same stack group.
+     */
     stackType: TaskStackType;
+
+    /**
+     * The stack group for this task.
+     */
     stackGroup: string;
+
+    /**
+     * Conditions under which the task should be broken.
+     */
     breakTypes: TaskBreakType[];
+
+    /**
+     * The number of ticks between each execution of the task.
+     */
     interval: number;
+
+    /**
+     * Should the task be executed on the first tick after it is added?
+     */
     immediate: boolean;
+
+    /**
+     * Should the task be repeated indefinitely?
+     */
     repeat: boolean;
 }>>;
