@@ -130,7 +130,6 @@ export class Player extends Actor {
     private readonly _outgoingPackets: OutboundPacketHandler;
     private readonly _equipment: ItemContainer;
     private _rights: Rights;
-    private loggedIn: boolean;
     private _loginDate: Date;
     private _lastAddress: string;
     private firstTimePlayer: boolean;
@@ -172,7 +171,8 @@ export class Player extends Actor {
     }
 
     public async init(): Promise<void> {
-        this.loggedIn = true;
+        super.init();
+
         this.updateFlags.mapRegionUpdateRequired = true;
         this.updateFlags.appearanceUpdateRequired = true;
 
@@ -277,7 +277,7 @@ export class Player extends Actor {
     }
 
     public logout(): void {
-        if(!this.loggedIn) {
+        if(!this.active) {
             return;
         }
 
@@ -288,6 +288,8 @@ export class Player extends Actor {
         activeWorld.playerTree.remove(this.quadtreeKey);
         this.save();
 
+        this.destroy();
+
         this.actionsCancelled.complete();
         this.walkingQueue.movementEvent.complete();
         this.walkingQueue.movementQueued.complete();
@@ -297,7 +299,6 @@ export class Player extends Actor {
         activeWorld.chunkManager.getChunkForWorldPosition(this.position).removePlayer(this);
         activeWorld.deregisterPlayer(this);
 
-        this.loggedIn = false;
         logger.info(`${this.username} has logged out.`);
     }
 
@@ -371,6 +372,8 @@ export class Player extends Actor {
     }
 
     public async tick(): Promise<void> {
+        super.tick();
+
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
 

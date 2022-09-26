@@ -12,6 +12,7 @@ import { loadActionFiles } from '@engine/action';
 import { ChunkManager, ConstructedRegion, getTemplateLocalX, getTemplateLocalY } from '@engine/world/map';
 import { TravelLocations, ExamineCache, parseScenerySpawns } from '@engine/world/config';
 import { loadPlugins } from '@engine/plugins';
+import { TaskScheduler, Task } from '@engine/task';
 
 
 export interface QuadtreeKey {
@@ -39,6 +40,7 @@ export class World {
     public readonly npcTree: Quadtree<QuadtreeKey>;
     public readonly globalInstance = new WorldInstance();
     public readonly tickComplete: Subject<void> = new Subject<void>();
+    private readonly scheduler = new TaskScheduler();
 
     private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
 
@@ -67,6 +69,19 @@ export class World {
     public shutdown(): void {
         this.kickAllPlayers();
         logger.info(`Shutting down world...`);
+    }
+
+    /**
+     * Adds a task to the world scheduler queue. These tasks will run forever until they are cancelled.
+     *
+     * @warning Did you mean to add a world task, rather than an Actor task?
+     *
+     * If the task has a stack type of `NEVER`, other tasks in the same group will be cancelled.
+     *
+     * @param task The task to add
+     */
+    public enqueueTask(task: Task): void {
+        this.scheduler.enqueue(task);
     }
 
     /**
@@ -441,6 +456,9 @@ export class World {
 
     public async worldTick(): Promise<void> {
         const hrStart = Date.now();
+
+        this.scheduler.tick();
+
         const activePlayers: Player[] = this.playerList.filter(player => player !== null);
 
         if(activePlayers.length === 0) {

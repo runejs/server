@@ -103,6 +103,8 @@ export class Npc extends Actor {
     }
 
     public async init(): Promise<void> {
+        super.init();
+
         activeWorld.chunkManager.getChunkForWorldPosition(this.position).addNpc(this);
 
         if(this.movementRadius > 0) {
@@ -147,6 +149,7 @@ export class Npc extends Actor {
     }
 
     public kill(respawn: boolean = true): void {
+        this.destroy();
 
         activeWorld.chunkManager.getChunkForWorldPosition(this.position).removeNpc(this);
         clearInterval(this.randomMovementInterval);
@@ -158,6 +161,8 @@ export class Npc extends Actor {
     }
 
     public async tick(): Promise<void> {
+        super.tick();
+
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
             resolve();
