@@ -8,6 +8,14 @@ const fireDurationTicks = (): number => {
     return randomBetween(100, 200); // 1-2 minutes
 };
 
+/**
+ * Light a fire at the specified position.
+ *
+ * @param player The player lighting the fire.
+ * @param position The position to light the fire at.
+ * @param worldItemLog The world item representing the log.
+ * @param burnExp The experience gained for lighting the fire.
+ */
 export const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, burnExp: number): void => {
     player.instance.despawnWorldItem(worldItemLog);
     const fireObject: LandscapeObject = {
@@ -20,7 +28,7 @@ export const lightFire = (player: Player, position: Position, worldItemLog: Worl
     };
 
     player.playAnimation(null);
-    player.sendMessage(`The fire catches and the logs begin to burn.`);
+    player.sendMessage('The fire catches and the logs begin to burn.');
     player.skills.firemaking.addExp(burnExp);
 
     if(!player.walkingQueue.moveIfAble(-1, 0)) {

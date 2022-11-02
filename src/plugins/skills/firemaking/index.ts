@@ -5,7 +5,10 @@ import { canChain } from './chance';
 import { lightFire } from './light-fire';
 import { runFiremakingTask } from './firemaking-task';
 
-const action: itemOnItemActionHandler = (details) => {
+/**
+ * Action hook for lighting a log with a tinderbox in the player's inventory.
+ */
+const tinderboxOnLogHandler: itemOnItemActionHandler = (details) => {
     const { player, usedItem, usedWithItem, usedSlot, usedWithSlot } = details;
 
     if(player.metadata.lastFire && Date.now() - player.metadata.lastFire < 600) {
@@ -27,23 +30,30 @@ const action: itemOnItemActionHandler = (details) => {
     player.removeItem(removeFromSlot);
     const worldItemLog = player.instance.spawnWorldItem(log, player.position, { owner: player, expires: 300 });
 
+    // TODO (jameskmonger) chaining functionality needs documentation, I can't find anything about it online
     if(player.metadata.lastFire && Date.now() - player.metadata.lastFire < 1200 &&
         canChain(skillInfo.requiredLevel, player.skills.firemaking.level)) {
         lightFire(player, player.position, worldItemLog, skillInfo.experienceGained);
     } else {
-        player.sendMessage(`You attempt to light the logs.`);
+        player.sendMessage('You attempt to light the logs.');
 
         runFiremakingTask(player, worldItemLog);
     }
 };
 
+/**
+ * Firemaking plugin
+ *
+ * TODO:
+ * - Document/remove `canChain` functionality - this is not documented anywhere online (RS wiki etc)
+ */
 export default {
     pluginId: 'rs:firemaking',
     hooks: [
         {
             type: 'item_on_item',
             items: FIREMAKING_LOGS.map(log => ({ item1: itemIds.tinderbox, item2: log.logItem.gameId })),
-            handler: action
+            handler: tinderboxOnLogHandler
         } as ItemOnItemActionHook,
         {
             type: 'item_on_world_item',
