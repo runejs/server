@@ -8,6 +8,10 @@
  * @returns `true` if the player successfully lights the fire, `false` otherwise.
  */
 export const canLight = (logLevel: number, playerLevel: number): boolean => {
+    if (playerLevel < logLevel) {
+        return false;
+    }
+
     playerLevel++;
     const hostRatio = Math.random() * logLevel;
     const clientRatio = Math.random() * ((playerLevel - logLevel) * (1 + (logLevel * 0.01)));
@@ -25,6 +29,10 @@ export const canLight = (logLevel: number, playerLevel: number): boolean => {
  * @returns `true` if the player successfully lights the fire, `false` otherwise.
  */
 export const canChain = (logLevel: number, playerLevel: number): boolean => {
+    if (playerLevel < logLevel) {
+        return false;
+    }
+
     playerLevel++;
     const hostRatio = Math.random() * logLevel;
     const clientRatio = Math.random() * ((playerLevel - logLevel) * (1 + (logLevel * 0.01)));

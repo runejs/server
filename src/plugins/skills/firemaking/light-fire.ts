@@ -9,6 +9,29 @@ const fireDurationTicks = (): number => {
 };
 
 /**
+ * Whether or not a fire can be lit at the player's position.
+ *
+ * This is `true` if there are no spawned objects at the specified position of type 10.
+ *
+ * Probably should be moved to a more generic location (maybe on WorldInstance)
+ *
+ * @param player The player attempting to light the fire.
+ * @returns `true` if a fire can be lit at the specified position, `false` otherwise.
+ *
+ * @author jameskmonger
+ */
+export const canLightFireAtCurrentPosition = (player: Player): boolean => {
+    const existingFire = player.instance.getTileModifications(player.position).mods.spawnedObjects.find(o => (
+        o.x === player.position.x
+        && o.y === player.position.y
+        && o.level === player.position.level
+        && o.type === 10
+    ))
+
+    return existingFire === undefined;
+}
+
+/**
  * Light a fire at the specified position.
  *
  * @param player The player lighting the fire.
@@ -17,6 +40,11 @@ const fireDurationTicks = (): number => {
  * @param burnExp The experience gained for lighting the fire.
  */
 export const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, burnExp: number): void => {
+    if (!canLightFireAtCurrentPosition(player)) {
+        player.sendMessage('You cannot light a fire here.');
+        return;
+    }
+
     player.instance.despawnWorldItem(worldItemLog);
     const fireObject: LandscapeObject = {
         objectId: objectIds.fire,
@@ -45,5 +73,5 @@ export const lightFire = (player: Player, position: Position, worldItemLog: Worl
 
     player.face(position, false);
     player.metadata.lastFire = Date.now();
-    player.metadata.busy = false;
+    player.busy = false;
 };

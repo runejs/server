@@ -103,7 +103,7 @@ class FiremakingTask extends ActorWorldItemInteractionTask<Player> {
         // if we can now light the fire, reset the timer so that on the next tick we can begin lighting the fire
         if (this.canLightFire) {
             this.elapsedTicks = 0;
-            this.actor.metadata.busy = true;
+            this.actor.busy = true;
             this.actor.playSound(soundIds.fireLit, 7);
 
             return;

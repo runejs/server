@@ -2,7 +2,7 @@ import { itemOnItemActionHandler, ItemOnItemActionHook, ItemOnWorldItemActionHoo
 import { itemIds } from '@engine/world/config';
 import { FIREMAKING_LOGS } from './data';
 import { canChain } from './chance';
-import { lightFire } from './light-fire';
+import { canLightFireAtCurrentPosition, lightFire } from './light-fire';
 import { runFiremakingTask } from './firemaking-task';
 
 /**
@@ -11,7 +11,7 @@ import { runFiremakingTask } from './firemaking-task';
 const tinderboxOnLogHandler: itemOnItemActionHandler = (details) => {
     const { player, usedItem, usedWithItem, usedSlot, usedWithSlot } = details;
 
-    if(player.metadata.lastFire && Date.now() - player.metadata.lastFire < 600) {
+    if (player.metadata.lastFire && Date.now() - player.metadata.lastFire < 600) {
         return;
     }
 
@@ -19,19 +19,26 @@ const tinderboxOnLogHandler: itemOnItemActionHandler = (details) => {
     const removeFromSlot = usedItem.itemId !== itemIds.tinderbox ? usedSlot : usedWithSlot;
     const skillInfo = FIREMAKING_LOGS.find(l => l.logItem.gameId === log.itemId);
 
-    if(!skillInfo) {
+    if (!skillInfo) {
         player.sendMessage(`Mishandled firemaking log ${log.itemId}.`);
         return;
     }
 
-    // @TODO check for existing location objects
-    // @TODO check firemaking level
+    if (player.skills.firemaking.level < skillInfo.requiredLevel) {
+        player.sendMessage(`You need a Firemaking level of ${skillInfo.requiredLevel} to light this log.`);
+        return;
+    }
+
+    if (!canLightFireAtCurrentPosition(player)) {
+        player.sendMessage('You cannot light a fire here.');
+        return;
+    }
 
     player.removeItem(removeFromSlot);
     const worldItemLog = player.instance.spawnWorldItem(log, player.position, { owner: player, expires: 300 });
 
     // TODO (jameskmonger) chaining functionality needs documentation, I can't find anything about it online
-    if(player.metadata.lastFire && Date.now() - player.metadata.lastFire < 1200 &&
+    if (player.metadata.lastFire && Date.now() - player.metadata.lastFire < 1200 &&
         canChain(skillInfo.requiredLevel, player.skills.firemaking.level)) {
         lightFire(player, player.position, worldItemLog, skillInfo.experienceGained);
     } else {
