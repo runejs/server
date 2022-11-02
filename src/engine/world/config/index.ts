@@ -5,7 +5,6 @@ export * from './harvest-tool';
 export * from './harvestable-object';
 export * from './item-ids';
 export * from './object-ids';
-export * from './prayers';
 export * from './scenery-spawns';
 export * from './songs';
 export * from './sound-ids';

@@ -9,7 +9,6 @@ import { soundIds, animationIds } from '@engine/world/config';
 import { Actor } from './actor';
 import { Player } from './player';
 import { SkillName } from './skills';
-import { MeleeCombatBehavior } from './behaviors';
 
 /**
  * Represents a non-player character within the game world.
@@ -99,12 +98,13 @@ export class Npc extends Actor {
         } else {
             this._name = 'Unknown';
         }
-        // ToDo: this should be config based and not always melee (obviously)
-        this.Behaviors.push(new MeleeCombatBehavior());
+
         this.npcEvents.on('death', this.processDeath);
     }
 
     public async init(): Promise<void> {
+        super.init();
+
         activeWorld.chunkManager.getChunkForWorldPosition(this.position).addNpc(this);
 
         if(this.movementRadius > 0) {
@@ -148,22 +148,8 @@ export class Npc extends Actor {
             || y > this.initialPosition.y + this.movementRadius || y < this.initialPosition.y - this.movementRadius);
     }
 
-    public getAttackAnimation(): number {
-        let attackAnim = findNpc(this.id)?.combatAnimations?.attack || animationIds.combat.punch;
-        if(Array.isArray(attackAnim)) {
-            // NPC has multiple attack animations possible, pick a random one from the list to use
-            const idx = Math.floor(Math.random() * attackAnim.length);
-            attackAnim = attackAnim[idx];
-        }
-
-        return attackAnim;
-    }
-
-    public getBlockAnimation(): number {
-        return findNpc(this.id)?.combatAnimations?.defend || animationIds.combat.armBlock;
-    }
-
     public kill(respawn: boolean = true): void {
+        this.destroy();
 
         activeWorld.chunkManager.getChunkForWorldPosition(this.position).removeNpc(this);
         clearInterval(this.randomMovementInterval);
@@ -175,9 +161,8 @@ export class Npc extends Actor {
     }
 
     public async tick(): Promise<void> {
-        for (let i = 0; i < this.Behaviors.length; i++) {
-            this.Behaviors[i].tick();
-        }
+        super.tick();
+
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
             resolve();
@@ -203,7 +188,7 @@ export class Npc extends Actor {
      * Whether or not the Npc can currently move.
      */
     public canMove(): boolean {
-        if(this.metadata.following || this.metadata.tailing) {
+        if(this.metadata.following) {
             return false;
         }
         return this.updateFlags.faceActor === undefined && this.updateFlags.animation === undefined;

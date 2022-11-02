@@ -37,14 +37,11 @@ import { Cutscene } from './cutscenes';
 import { InterfaceState } from '@engine/interface';
 import { Quest } from './quest';
 import { SendMessageOptions } from './model';
-import { AttackDamageType } from './attack';
-import { EffectType } from '../effect';
-import { AutoAttackBehavior } from '../behaviors';
 import { PlayerSyncTask, NpcSyncTask } from './sync';
 import { dialogue } from '../dialogue';
 import { Npc } from '../npc';
-import { combatStyles } from '../combat';
 import { SkillName } from '../skills';
+import { PlayerMetadata } from './metadata';
 
 
 export const playerOptions: { option: string, index: number, placement: 'TOP' | 'BOTTOM' }[] = [
@@ -117,13 +114,22 @@ export class Player extends Actor {
     public cutscene: Cutscene = null;
     public playerEvents: EventEmitter = new EventEmitter();
 
+    /**
+     * Override the Actor's `metadata` property to provide a more specific type.
+     *
+     * You cannot guarantee that this will be populated with data, so you should always check for the existence of the
+     * metadata you are looking for before using it.
+     *
+     * @author jameskmonger
+     */
+    public readonly metadata: (Actor['metadata'] & Partial<PlayerMetadata>) = {};
+
     private readonly _socket: Socket;
     private readonly _inCipher: Isaac;
     private readonly _outCipher: Isaac;
     private readonly _outgoingPackets: OutboundPacketHandler;
     private readonly _equipment: ItemContainer;
     private _rights: Rights;
-    private loggedIn: boolean;
     private _loginDate: Date;
     private _lastAddress: string;
     private firstTimePlayer: boolean;
@@ -165,7 +171,8 @@ export class Player extends Actor {
     }
 
     public async init(): Promise<void> {
-        this.loggedIn = true;
+        super.init();
+
         this.updateFlags.mapRegionUpdateRequired = true;
         this.updateFlags.appearanceUpdateRequired = true;
 
@@ -265,14 +272,12 @@ export class Player extends Actor {
             this.chunkChanged(playerChunk);
         }
 
-        this.Behaviors.push(new AutoAttackBehavior());
-
         this.outgoingPackets.flushQueue();
         logger.info(`${this.username}:${this.worldIndex} has logged in.`);
     }
 
     public logout(): void {
-        if(!this.loggedIn) {
+        if(!this.active) {
             return;
         }
 
@@ -283,6 +288,8 @@ export class Player extends Actor {
         activeWorld.playerTree.remove(this.quadtreeKey);
         this.save();
 
+        this.destroy();
+
         this.actionsCancelled.complete();
         this.walkingQueue.movementEvent.complete();
         this.walkingQueue.movementQueued.complete();
@@ -292,34 +299,11 @@ export class Player extends Actor {
         activeWorld.chunkManager.getChunkForWorldPosition(this.position).removePlayer(this);
         activeWorld.deregisterPlayer(this);
 
-        this.loggedIn = false;
         logger.info(`${this.username} has logged out.`);
     }
 
     public save(): void {
         savePlayerData(this);
-    }
-
-    public getAttackAnimation(): number {
-        let combatStyle = [ 'unarmed', 0 ];
-
-        if(this.savedMetadata.combatStyle) {
-            combatStyle = this.savedMetadata.combatStyle;
-        }
-
-        let attackAnim = combatStyles[combatStyle[0]][combatStyle[1]]?.anim || animationIds.combat.punch;
-
-        if(Array.isArray(attackAnim)) {
-            // Player has multiple attack animations possible, pick a random one from the list to use
-            const idx = Math.floor(Math.random() * attackAnim.length);
-            attackAnim = attackAnim[idx];
-        }
-
-        return animationIds.combat[attackAnim] || animationIds.combat.kick;
-    }
-
-    public getBlockAnimation(): number {
-        return animationIds.combat.armBlock; // @TODO
     }
 
     public privateMessageReceived(fromPlayer: Player, messageBytes: number[]): void {
@@ -388,9 +372,8 @@ export class Player extends Actor {
     }
 
     public async tick(): Promise<void> {
-        for (let i = 0; i < this.Behaviors.length; i++) {
-            this.Behaviors[i].tick();
-        }
+        super.tick();
+
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
 
@@ -416,16 +399,16 @@ export class Player extends Actor {
 
             this.outgoingPackets.flushQueue();
 
-            if(this.metadata['updateChunk']) {
-                const { newChunk, oldChunk } = this.metadata['updateChunk'];
+            if(this.metadata.updateChunk) {
+                const { newChunk, oldChunk } = this.metadata.updateChunk;
                 oldChunk.removePlayer(this);
                 newChunk.addPlayer(this);
                 this.chunkChanged(newChunk);
-                this.metadata['updateChunk'] = null;
+                this.metadata.updateChunk = null;
             }
 
-            if(this.metadata['teleporting']) {
-                this.metadata['teleporting'] = null;
+            if(this.metadata.teleporting) {
+                this.metadata.teleporting = null;
             }
 
             resolve();
@@ -664,9 +647,9 @@ export class Player extends Actor {
     public teleport(newPosition: Position, updateRegion: boolean = true): void {
         this.walkingQueue.clear();
         const originalPosition = this.position.copy();
-        this.metadata['lastPosition'] = originalPosition;
+        this.metadata.lastPosition = originalPosition;
         this.position = newPosition;
-        this.metadata['teleporting'] = true;
+        this.metadata.teleporting = true;
 
         this.updateFlags.mapRegionUpdateRequired = updateRegion;
         this.lastMapRegionUpdatePosition = newPosition;
@@ -677,7 +660,7 @@ export class Player extends Actor {
         if(!oldChunk.equals(newChunk)) {
             oldChunk.removePlayer(this);
             newChunk.addPlayer(this);
-            this.metadata['updateChunk'] = { newChunk, oldChunk };
+            this.metadata.updateChunk = { newChunk, oldChunk };
 
             if(updateRegion) {
                 this.actionPipeline.call('region_change', regionChangeActionFactory(
@@ -796,10 +779,6 @@ export class Player extends Actor {
 
             this.addBonuses(item);
         }
-        //prayers and other effects that effect strength
-        this.effects.filter(a => a.EffectType === EffectType.Strength).forEach((effect) => {
-            this.bonuses.skill['strength'] += this.skills.strength.level * effect.Modifier;
-        });
     }
 
     public sendLogMessage(message: string, isConsole: boolean): void {
@@ -1074,9 +1053,9 @@ export class Player extends Actor {
 
         let morphIndex: number;
         if (originalNpc.varbitId !== -1) {
-            morphIndex = getVarbitMorphIndex(originalNpc.varbitId, this.metadata['configs']);
+            morphIndex = getVarbitMorphIndex(originalNpc.varbitId, this.metadata.configs);
         } else if (originalNpc.settingId !== -1) {
-            morphIndex = this.metadata['configs'] && this.metadata['configs'][originalNpc.settingId] ? this.metadata['configs'][originalNpc.settingId] : 0;
+            morphIndex = this.metadata.configs && this.metadata.configs[originalNpc.settingId] ? this.metadata.configs[originalNpc.settingId] : 0;
         } else {
             logger.warn(`Tried to fetch a child NPC index, but but no varbitId or settingId were found in the NPC details. NPC: ${originalNpc.id}, childrenIDs: ${originalNpc.childrenIds}`);
             return null;
@@ -1362,15 +1341,6 @@ export class Player extends Actor {
 
     public get nearbyChunks(): Chunk[] {
         return this._nearbyChunks;
-    }
-
-    public get damageType(): AttackDamageType {
-        if (this.bonuses.offensive.crush > 0) return AttackDamageType.Crush;
-        if (this.bonuses.offensive.magic > 0) return AttackDamageType.Magic;
-        if (this.bonuses.offensive.ranged > 0) return AttackDamageType.Range;
-        if (this.bonuses.offensive.slash > 0) return AttackDamageType.Slash;
-        if (this.bonuses.offensive.stab > 0) return AttackDamageType.Stab;
-        return AttackDamageType.Crush;
     }
 
     public get instance(): WorldInstance {

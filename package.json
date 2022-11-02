@@ -80,7 +80,7 @@
         "eslint": "^7.32.0",
         "jest": "^28.1.2",
         "mkdirp": "^1.0.4",
-        "nodemon": "^2.0.15",
+        "nodemon": "^2.0.20",
         "rimraf": "^3.0.2",
         "ts-node": "^10.5.0",
         "tsconfig-paths": "^3.12.0",

@@ -61,12 +61,6 @@ const buttonActionPipe = (player: Player, widgetId: number, buttonId: number): R
         matchingHooks = questActions;
     }
 
-    if(player.metadata.buttonListener) {
-        if(widgetId === player.metadata.buttonListener.widgetId) {
-            player.metadata.buttonListener.event.next(buttonId);
-        }
-    }
-
     if(matchingHooks.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled button interaction: ${widgetId}:${buttonId}`);
         return null;

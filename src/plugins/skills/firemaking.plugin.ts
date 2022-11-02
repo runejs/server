@@ -108,13 +108,13 @@ const lightFire = (player: Player, position: Position, worldItemLog: WorldItem, 
 
     player.face(position, false);
     player.metadata.lastFire = Date.now();
-    player.metadata.busy = false;
+    player.busy = false;
 };
 
 const action: itemOnItemActionHandler = (details) => {
     const { player, usedItem, usedWithItem, usedSlot, usedWithSlot } = details;
 
-    if(player.metadata['lastFire'] && Date.now() - player.metadata['lastFire'] < 600) {
+    if(player.metadata.lastFire && Date.now() - player.metadata.lastFire < 600) {
         return;
     }
 
@@ -134,7 +134,7 @@ const action: itemOnItemActionHandler = (details) => {
     player.removeItem(removeFromSlot);
     const worldItemLog = player.instance.spawnWorldItem(log, player.position, { owner: player, expires: 300 });
 
-    if(player.metadata['lastFire'] && Date.now() - player.metadata['lastFire'] < 1200 &&
+    if(player.metadata.lastFire && Date.now() - player.metadata.lastFire < 1200 &&
         canChain(skillInfo.requiredLevel, player.skills.firemaking.level)) {
         lightFire(player, position, worldItemLog, skillInfo.experienceGained);
     } else {
@@ -151,7 +151,7 @@ const action: itemOnItemActionHandler = (details) => {
 
             if(canLightFire) {
                 loop.cancel();
-                player.metadata.busy = true;
+                player.busy = true;
                 setTimeout(() => lightFire(player, position, worldItemLog, skillInfo.experienceGained), 1200);
                 return;
             }
