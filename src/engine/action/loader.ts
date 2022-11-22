@@ -1,4 +1,4 @@
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 
 import { ActionPipe, ActionPipeline } from '@engine/action';
 import { getFiles } from '@engine/util';

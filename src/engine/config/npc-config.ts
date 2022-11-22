@@ -1,9 +1,9 @@
 import { DefensiveBonuses } from '@engine/config/item-config';
-import { loadConfigurationFiles } from '@runejs/core/fs';
+import { loadConfigurationFiles } from '@runejs/common/fs';
 import { filestore } from '@server/game/game-server';
 import _ from 'lodash';
 import { NpcConfig } from '@runejs/filestore';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { QuestRequirement } from '@engine/action';
 
 

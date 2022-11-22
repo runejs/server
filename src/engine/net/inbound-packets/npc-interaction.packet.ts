@@ -1,5 +1,4 @@
-import { logger } from '@runejs/core';
-import { DataType, Endianness, Signedness } from '@runejs/core/buffer';
+import { logger } from '@runejs/common';
 
 import { PacketData } from '@engine/net';
 import { activeWorld, World } from '@engine/world';
@@ -8,14 +7,14 @@ import { Player } from '@engine/world/actor';
 const npcInteractionPacket = (player: Player, packet: PacketData) => {
     const { buffer, packetId } = packet;
 
-    const args: { [key: number]: [ DataType, Signedness?, Endianness? ] } = {
-        63: [ 'short', 'u', 'le' ],
-        116: [ 'short', 'u', 'le' ],
-        57: [ 'short', 'u' ],
+    const packetReaders: Record<number, () => number> = {
+        63: () => buffer.get('short', 'u', 'le'),
+        116: () => buffer.get('short', 'u', 'le'),
+        57: () => buffer.get('short', 'u'),
         /*42: 'readUnsignedShortLE',
         8: 'readUnsignedShortLE'*/
     };
-    const npcIndex = buffer.get(...args[packetId]);
+    const npcIndex = packetReaders[packetId]();
 
     if (npcIndex < 0 || npcIndex > World.MAX_NPCS - 1) {
         return;

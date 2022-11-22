@@ -1,5 +1,5 @@
 import { Position } from '@engine/world/position';
-import { loadConfigurationFiles } from '@runejs/core/fs';
+import { loadConfigurationFiles } from '@runejs/common/fs';
 
 
 export interface ItemSpawnConfiguration {

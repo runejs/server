@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { JSON_SCHEMA, safeLoad } from 'js-yaml';
 
 interface Examine {

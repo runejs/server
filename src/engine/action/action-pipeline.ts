@@ -1,6 +1,6 @@
 import { Subscription } from 'rxjs';
 
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { LandscapeObject } from '@runejs/filestore';
 
 import { Actor, Player } from '@engine/world/actor';
@@ -31,6 +31,7 @@ export type ActionType =
     | 'item_on_npc'
     | 'item_on_player'
     | 'item_on_item'
+    | 'item_on_world_item'
     | 'item_swap'
     | 'move_item'
     | 'spawned_item_interaction'

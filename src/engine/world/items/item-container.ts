@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { filestore } from '@server/game/game-server';
 import { hasValueNotNull } from '@engine/util/data';
 import { findItem } from '@engine/config/config-handler';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { fromNote } from '@engine/world/items/item';
 
 

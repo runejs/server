@@ -6,7 +6,7 @@ import { World } from '@engine/world';
 import { schedule } from '@engine/world/task';
 import { CollisionMap } from '@engine/world/map/collision-map';
 import { LandscapeObject } from '@runejs/filestore';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { activeWorld } from '@engine/world/index';
 
 

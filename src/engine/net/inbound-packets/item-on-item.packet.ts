@@ -1,4 +1,4 @@
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { widgets } from '@engine/config';
 import { Player } from '@engine/world/actor';
 import { PacketData } from '@engine/net';

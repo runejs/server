@@ -1,7 +1,7 @@
 import uuidv4 from 'uuid/v4';
 import { lastValueFrom, Subscription, timer } from 'rxjs';
 
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 
 import { ActionHook, ActionStrength } from '@engine/action';
 import { World } from '@engine/world';

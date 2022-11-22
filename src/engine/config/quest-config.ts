@@ -1,4 +1,4 @@
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { Npc, Player } from '@engine/world/actor';
 import { npcInteractionActionHandler } from '@engine/action';
 

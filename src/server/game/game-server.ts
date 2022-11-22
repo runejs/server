@@ -1,5 +1,5 @@
-import { logger } from '@runejs/core';
-import { parseServerConfig, SocketServer } from '@runejs/core/net';
+import { logger } from '@runejs/common';
+import { parseServerConfig, SocketServer } from '@runejs/common/net';
 import { Filestore } from '@runejs/filestore';
 
 import { activateGameWorld } from '@engine/world';
@@ -22,10 +22,11 @@ export let serverConfig: GameServerConfig;
 export let filestore: Filestore;
 
 
-export const openGatewayServer = (host: string, port: number): void =>
+export const openGatewayServer = (host: string, port: number): void => {
     SocketServer.launch<GatewayServer>(
         'Game Gateway Server',
         host, port, socket => new GatewayServer(socket));
+};
 
 
 /**
@@ -57,6 +58,3 @@ export async function launchGameServer(): Promise<void> {
     watchSource('src/').subscribe(() => world.saveOnlinePlayers());
     watchForChanges('dist/plugins/', /[/\\]plugins[/\\]/);
 }
-
-
-

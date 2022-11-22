@@ -18,10 +18,11 @@ yarn-error.log*
 
 # Editor directories.ts and files
 .idea
-.vscode
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 /.vs
+
+/coverage/

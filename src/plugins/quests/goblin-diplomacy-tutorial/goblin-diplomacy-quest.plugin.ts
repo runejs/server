@@ -2,7 +2,7 @@ import { defaultPlayerTabWidgets, Player } from '@engine/world/actor/player/play
 import { questDialogueActionFactory, QuestJournalHandler } from '@engine/config/quest-config';
 import { serverConfig } from '@server/game/game-server';
 import uuidv4 from 'uuid/v4';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { Position } from '@engine/world/position';
 import { WorldInstance } from '@engine/world/instances';
 import { findNpc, widgets } from '@engine/config/config-handler';
@@ -12,7 +12,7 @@ import { dialogue } from '@engine/world/actor/dialogue';
 import { take } from 'rxjs/operators';
 import { equipmentChangeActionHandler } from '@engine/action';
 import { buttonActionHandler } from '@engine/action';
-import { tabIndex } from '@engine/world/actor/player/interface-state';
+import { tabIndex } from '@engine/interface';
 import { runescapeGuideDialogueHandler } from './runescape-guide-dialogue';
 import { harlanDialogueHandler } from './melee-tutor-dialogue';
 import { goblinDiplomacyStageHandler } from './stage-handler';

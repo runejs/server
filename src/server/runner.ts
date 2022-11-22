@@ -1,6 +1,6 @@
 import 'source-map-support/register';
 
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { launchLoginServer } from '@runejs/login-server';
 import { launchUpdateServer } from '@runejs/update-server';
 import { launchGameServer } from '@server/game';

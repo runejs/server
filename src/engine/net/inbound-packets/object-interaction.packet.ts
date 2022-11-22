@@ -1,4 +1,4 @@
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 
 import { filestore } from '@server/game/game-server';
 import { PacketData } from '@engine/net';
@@ -85,11 +85,11 @@ const objectInteractionPacket = (player: Player, packet: PacketData) => {
         let morphIndex = -1;
         if(objectConfig.varbitId === -1) {
             if(objectConfig.configId !== -1) {
-                morphIndex = player.metadata['configs'] && player.metadata['configs'][objectConfig.configId] ?
-                    player.metadata['configs'][objectConfig.configId] : 0;
+                morphIndex = player.metadata.configs && player.metadata.configs[objectConfig.configId] ?
+                    player.metadata.configs[objectConfig.configId] : 0;
             }
         } else {
-            morphIndex = getVarbitMorphIndex(objectConfig.varbitId, player.metadata['configs']);
+            morphIndex = getVarbitMorphIndex(objectConfig.varbitId, player.metadata.configs);
         }
         if(morphIndex !== -1) {
             objectConfig = filestore.configStore.objectStore.getObject(objectConfig.configChangeDest[morphIndex]);

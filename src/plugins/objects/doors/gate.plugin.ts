@@ -1,6 +1,6 @@
 import { Position } from '@engine/world/position';
 import { directionData, WNES } from '@engine/world/direction';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { ModifiedLandscapeObject } from '@engine/world/map/landscape-object';
 import { objectInteractionActionHandler } from '@engine/action';
 import { soundIds } from '@engine/world/config/sound-ids';

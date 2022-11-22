@@ -1,9 +1,9 @@
 version: "3.8"
 
 services:
-  rune-js-server:
-    image: node:14
-    container_name: server
+  runejs_game_server:
+    image: node:16
+    container_name: runejs_game_server
     ports:
       - "43594:43594"
     volumes:
@@ -13,4 +13,4 @@ services:
 
 networks:
   default:
-    name: rune_js_network
+    name: runejs_network

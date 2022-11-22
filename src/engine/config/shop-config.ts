@@ -1,9 +1,9 @@
 import { ContainerUpdateEvent, ItemContainer } from '@engine/world/items/item-container';
 import { findItem, widgets } from '@engine/config/config-handler';
-import { loadConfigurationFiles } from '@runejs/core/fs';
+import { loadConfigurationFiles } from '@runejs/common/fs';
 import { Player } from '@engine/world/actor/player/player';
 import { ItemDetails } from '@engine/config/item-config';
-import { WidgetClosedEvent } from '@engine/world/actor/player/interface-state';
+import { WidgetClosedEvent } from '@engine/interface';
 import { Subscription } from 'rxjs';
 
 
@@ -97,8 +97,8 @@ export class Shop {
     }
 
     public open(player: Player): void {
-        player.metadata['lastOpenedShop'] = this;
-        player.metadata['shopCloseListener'] = player.interfaceState.closed.subscribe((whatClosed: WidgetClosedEvent) => {
+        player.metadata.lastOpenedShop = this;
+        player.metadata.shopCloseListener = player.interfaceState.closed.subscribe((whatClosed: WidgetClosedEvent) => {
             if(whatClosed && whatClosed.widget && whatClosed.widget.widgetId === widgets.shop.widgetId) {
                 this.removePlayerFromShop(player);
             }
@@ -121,7 +121,7 @@ export class Shop {
 
     private updateCustomers() {
         for (const player of this.customers) {
-            if(player.metadata['lastOpenedShop'] === this) {
+            if(player.metadata.lastOpenedShop === this) {
                 player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shop, this.container);
             } else {
                 this.removePlayerFromShop(player);
@@ -130,9 +130,9 @@ export class Shop {
     }
 
     private removePlayerFromShop(player: Player) {
-        if(player.metadata['lastOpenedShop'] === this) {
-            player.metadata['lastOpenedShop'] = undefined;
-            player.metadata['shopCloseListener'].unsubscribe();
+        if(player.metadata.lastOpenedShop === this) {
+            player.metadata.lastOpenedShop = undefined;
+            player.metadata.shopCloseListener.unsubscribe();
         }
         this.customers = this.customers.filter((c) => c !== player);
     }

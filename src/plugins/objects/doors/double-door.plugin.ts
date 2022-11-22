@@ -1,6 +1,6 @@
 import { Position } from '@engine/world/position';
 import { WNES } from '@engine/world/direction';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { action as doorAction } from '@plugins/objects/doors/door.plugin';
 import { objectInteractionActionHandler } from '@engine/action';
 import { activeWorld } from '@engine/world';

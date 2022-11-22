@@ -2,7 +2,7 @@ import { Actor } from '@engine/world/actor/actor';
 import { Position } from '../position';
 import { Chunk } from '@engine/world/map/chunk';
 import { Player } from '@engine/world/actor/player/player';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { WorldInstance } from '@engine/world/instances';
 import { Tile } from '@engine/world/map/chunk-manager';
 import { activeWorld } from '@engine/world';

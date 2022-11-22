@@ -12,7 +12,7 @@ export const handler: itemInteractionActionHandler = (details) => {
         return;
     }
 
-    const openedShop: Shop = player.metadata['lastOpenedShop'];
+    const openedShop = player.metadata.lastOpenedShop;
     if(!openedShop) {
         return;
     }

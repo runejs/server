@@ -1,6 +1,6 @@
-import { loadConfigurationFiles } from '@runejs/core/fs';
+import { loadConfigurationFiles } from '@runejs/common/fs';
 import { SkillName } from '@engine/world/actor/skills';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { deepMerge } from '@engine/util/objects';
 
 

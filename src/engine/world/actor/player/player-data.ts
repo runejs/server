@@ -1,7 +1,7 @@
 import { Item } from '@engine/world/items/item';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { Player } from './player';
 import { SkillValue } from '@engine/world/actor/skills';
 import { hasValueNotNull } from '@engine/util/data';

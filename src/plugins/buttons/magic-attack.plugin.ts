@@ -1,6 +1,6 @@
 import { Player } from '@engine/world/actor';
 import { TaskExecutor, MagicOnNPCActionHook, MagicOnNPCAction } from '@engine/action';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { loopingEvent } from '@engine/plugins';
 
 const buttonIds: number[] = [

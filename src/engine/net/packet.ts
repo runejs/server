@@ -1,5 +1,5 @@
 import { Isaac } from './isaac';
-import { ByteBuffer } from '@runejs/core/buffer';
+import { ByteBuffer } from '@runejs/common';
 
 /**
  * The type of packet; Fixed, Dynamic Small (sized byte), or Dynamic Large (sized short)

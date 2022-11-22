@@ -1,4 +1,4 @@
-import { ByteBuffer } from '@runejs/core/buffer';
+import { ByteBuffer } from '@runejs/common';
 
 import { UpdateFlags } from '@engine/world/actor/update-flags';
 import { Packet, PacketType } from '@engine/net/packet';
@@ -30,10 +30,10 @@ export class PlayerSyncTask extends SyncTask<void> {
 
             const updateMaskData = new ByteBuffer(5000);
 
-            if(updateFlags.mapRegionUpdateRequired || this.player.metadata['teleporting']) {
+            if(updateFlags.mapRegionUpdateRequired || this.player.metadata.teleporting) {
                 playerUpdatePacket.putBits(1, 1); // Update Required
                 playerUpdatePacket.putBits(2, 3); // Map Region changed (movement type - 0=nomove, 1=walk, 2=run, 3=mapchange
-                playerUpdatePacket.putBits(1, this.player.metadata['teleporting'] ? 1 : 0); // Whether or not the client should discard the current walking queue (1 if teleporting, 0 if not)
+                playerUpdatePacket.putBits(1, this.player.metadata.teleporting ? 1 : 0); // Whether or not the client should discard the current walking queue (1 if teleporting, 0 if not)
                 playerUpdatePacket.putBits(2, this.player.position.level); // Player Height
                 playerUpdatePacket.putBits(1, updateFlags.updateBlockRequired ? 1 : 0); // Whether or not an update flag block follows
                 playerUpdatePacket.putBits(7, this.player.position.chunkLocalX); // Player Local Chunk X
@@ -139,7 +139,7 @@ export class PlayerSyncTask extends SyncTask<void> {
 
         if(updateFlags.damage !== null) {
             const damage = updateFlags.damage;
-            updateMaskData.put(damage.damageType);
+            updateMaskData.put(damage.damageDealt);
             updateMaskData.put(damage.damageType.valueOf());
             updateMaskData.put(damage.remainingHitpoints);
             updateMaskData.put(damage.maxHitpoints);

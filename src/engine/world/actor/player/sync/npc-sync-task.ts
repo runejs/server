@@ -1,4 +1,4 @@
-import { ByteBuffer } from '@runejs/core/buffer';
+import { ByteBuffer } from '@runejs/common';
 
 import { Packet, PacketType } from '@engine/net/packet';
 import { Npc } from '@engine/world/actor/npc';
@@ -105,7 +105,7 @@ export class NpcSyncTask extends SyncTask<void> {
 
         if(updateFlags.damage !== null) {
             const damage = updateFlags.damage;
-            updateMaskData.put(damage.damageType);
+            updateMaskData.put(damage.damageDealt);
             updateMaskData.put(damage.damageType.valueOf());
             updateMaskData.put(damage.remainingHitpoints);
             updateMaskData.put(damage.maxHitpoints);

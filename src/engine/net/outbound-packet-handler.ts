@@ -1,6 +1,6 @@
 import { Socket } from 'net';
 import { LandscapeObject } from '@runejs/filestore';
-import { ByteBuffer } from '@runejs/core/buffer';
+import { ByteBuffer } from '@runejs/common';
 
 import { serverConfig } from '@server/game';
 import { Packet, PacketType } from '@engine/net';
@@ -71,7 +71,7 @@ export class OutboundPacketHandler {
 
     public sendProjectile(position: Position, offsetX: number, offsetY: number, id: number, startHeight: number, endHeight: number, speed: number, lockon: number, delay: number) {
         this.updateReferencePosition(position);
-        
+
         const packet = new Packet(1);
         packet.put(0);
         packet.put(offsetY, 'byte');
@@ -85,7 +85,8 @@ export class OutboundPacketHandler {
         packet.put(16);
         packet.put(64);
         this.queue(packet);
-    } 
+    }
+
     public updateFriendStatus(friendName: string, worldId: number): void {
         const packet = new Packet(156);
         packet.put(stringToLong(friendName.toLowerCase()), 'LONG');
@@ -278,8 +279,8 @@ export class OutboundPacketHandler {
     public updateClientConfig(configId: number, value: number): void {
         let packet: Packet;
         const metadata = this.player.metadata;
-        if(!metadata['configs']) {
-            metadata['configs'] = []
+        if(!metadata.configs) {
+            metadata.configs = []
         }
         metadata.configs[configId] = value;
 
