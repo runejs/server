@@ -73,24 +73,14 @@ export async function loadGameConfigurations(): Promise<void> {
 
 /**
  * find all items in all select groups
- * @param groupKey string or array of string of which to find items connected with
+ * @param groupKeys array of string of which to find items connected with
  * @return itemsKeys array of itemkeys in all select groups
  */
-export const findItemTagsInGroup = (groupKey: string | string[]): string[] => {
-    if(!groupKey) {
-        return [];
-    }
-
-    if(Array.isArray(groupKey)) {
-        const collection: Record<string, boolean> = {}
-        groupKey.forEach((currentGroup) => {
-            const items = findItemTagsInGroup(currentGroup);
-            items.forEach((item) => collection[item] = true)
-        })
-        return Object.keys(collection)
-    }
-
-    return Object.keys(itemGroupMap[groupKey] || {})
+export const findItemTagsInGroups = (groupKeys: string[]): string[] => {
+    return Object.keys(groupKeys.reduce<Record<string, boolean>>((all, groupKey)=> {
+        const items = itemGroupMap[groupKey] || {};
+        return { ...all, ...items };
+    }, {}));
 }
 
 
@@ -103,7 +93,7 @@ export const findItemTagsInGroupFilter = (groupKeys: string[]): string[] => {
     if(!groupKeys || groupKeys.length === 0) {
         return [];
     }
-    let collection: Record<string, boolean> | undefined = undefined
+    let collection: Record<string, boolean> | undefined = undefined;
     groupKeys.forEach((groupKey) => {
         if(!collection) {
             collection = { ...(itemGroupMap[groupKey] || {}) };
@@ -115,10 +105,10 @@ export const findItemTagsInGroupFilter = (groupKeys: string[]): string[] => {
             if(!(existingItemKey in current)) {
                 delete collection[existingItemKey];
             }
-        })
-    })
+        });
+    });
 
-    return Object.keys(collection)
+    return Object.keys(collection);
 }
 
 

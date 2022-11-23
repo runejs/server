@@ -1,5 +1,5 @@
 import { commandActionHandler } from '@engine/action';
-import { findItemTagsInGroup, findItemTagsInGroupFilter } from '@engine/config/config-handler';
+import { findItemTagsInGroups, findItemTagsInGroupFilter } from '@engine/config/config-handler';
 
 const selectGroups: commandActionHandler = ({ player, args, isConsole }) => {
     const groups: string | number = args.groupkeys;
@@ -8,7 +8,7 @@ const selectGroups: commandActionHandler = ({ player, args, isConsole }) => {
         return;
     }
     player.sendLogMessage('results:', isConsole);
-    findItemTagsInGroup(groups.split(',')).forEach((itemName) => {
+    findItemTagsInGroups(groups.split(',')).forEach((itemName) => {
         player.sendLogMessage(itemName, isConsole);
     });
     return;
