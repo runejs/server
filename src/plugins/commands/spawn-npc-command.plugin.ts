@@ -24,9 +24,11 @@ const action: commandActionHandler = ({ player, args }) => {
         npcKey = npcDetails.gameId;
     }
 
+    const movementRadius: number = args.movementRadius as number;
+
     const npc = new Npc(npcDetails ? npcDetails : npcKey,
         new NpcSpawn(npcDetails ? npcDetails.key : `unknown-${npcKey}`,
-            player.position.clone(), 0, 'WEST'), player.instance);
+            player.position.clone(), movementRadius, 'WEST'), player.instance);
 
     activeWorld.registerNpc(npc);
 };
@@ -41,6 +43,11 @@ export default {
                 {
                     name: 'npcKey',
                     type: 'either'
+                },
+                {
+                    name: 'movementRadius',
+                    type: 'number',
+                    defaultValue: 0
                 }
             ],
             handler: action
