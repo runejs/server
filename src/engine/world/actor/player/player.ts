@@ -804,7 +804,7 @@ export class Player extends Actor {
             let strHelp: string = '';
             if(command.args) {
                 for(const arg of command.args) {
-                    if(arg.defaultValue) {
+                    if(arg.defaultValue !== undefined) {
                         strHelp = `${strHelp} \\<${arg.name} = ${arg.defaultValue}>`;
                     } else {
                         strHelp = `${strHelp} \\<${arg.name}>`;
