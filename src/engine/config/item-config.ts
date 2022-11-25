@@ -1,7 +1,7 @@
 import { loadConfigurationFiles } from '@runejs/common/fs';
 import { SkillName } from '@engine/world/actor/skills';
-import _ from 'lodash';
 import { logger } from '@runejs/common';
+import { deepMerge } from '@engine/util/objects';
 
 
 export type WeaponStyle = 'axe' | 'hammer' | 'bow' | 'claws' | 'crossbow' | 'longsword'
@@ -125,6 +125,7 @@ export interface ItemConfiguration {
     equippable?: boolean;
     consumable?: boolean;
     destroy?: string | boolean;
+    groups?: string[];
     equipment_data?: {
         equipment_slot: EquipmentSlot;
         equipment_type?: EquipmentType;
@@ -155,6 +156,7 @@ export class ItemDetails {
     consumable?: boolean;
     stackable: boolean = false;
     value: number = 0;
+    groups: string[] = [];
     members: boolean = false;
     groundOptions: string[] = [];
     inventoryOptions: string[] = [];
@@ -194,6 +196,7 @@ export function translateItemConfig(key: string, config: ItemConfiguration): any
         equippable: config.equippable,
         weight: config.weight,
         destroy: config.destroy || undefined,
+        groups: config.groups || [],
         consumable: config.consumable,
         equipmentData: config.equipment_data ? {
             equipmentType: config.equipment_data?.equipment_type || undefined,
@@ -209,12 +212,14 @@ export function translateItemConfig(key: string, config: ItemConfiguration): any
 }
 
 export async function loadItemConfigurations(path: string): Promise<{ items: { [key: string]: ItemDetails };
-    itemIds: { [key: number]: string }; itemPresets: ItemPresetConfiguration; }> {
+    itemIds: { [key: number]: string }; itemPresets: ItemPresetConfiguration; itemGroups: Record<string, Record<string, boolean>>; }> {
     const itemIds: { [key: number]: string } = {};
     const items: { [key: string]: ItemDetails } = {};
+    const itemGroups : Record<string, Record<string, boolean>> = {} // Record where key is group id, and value is an array of all itemstags in group
     let itemPresets: ItemPresetConfiguration = {};
 
     const files = await loadConfigurationFiles(path);
+    const itemConfigurations: Record<string, ItemConfiguration> = {};
 
     files.forEach(itemConfigs => {
         const itemKeys = Object.keys(itemConfigs);
@@ -222,30 +227,73 @@ export async function loadItemConfigurations(path: string): Promise<{ items: { [
             if(key === 'presets') {
                 itemPresets = { ...itemPresets, ...itemConfigs[key] };
             } else {
-
-                const itemConfig: ItemConfiguration = itemConfigs[key] as ItemConfiguration;
-                if(!isNaN(itemConfig.game_id)) {
-                    itemIds[itemConfig.game_id] = key;
-                    items[key] = { ...translateItemConfig(key, itemConfig) };
-                }
-
-                if(itemConfig.variations) {
-                    for(const subItem of itemConfig.variations) {
-                        const subKey = subItem.suffix ? key + ':' + subItem.suffix : key;
-                        const baseItem = JSON.parse(JSON.stringify({ ...translateItemConfig(key, itemConfig) }));
-                        const subBaseItem = JSON.parse(JSON.stringify({ ...translateItemConfig(subKey, subItem) }));
-                        itemIds[subItem.game_id] = subKey;
-
-                        if(!items[subKey]) {
-                            items[subKey] = _.merge(baseItem, subBaseItem);
-                        } else {
-                            logger.warn(`Duplicate item key ${subKey} found - the item was not loaded.`);
-                        }
-                    }
-                }
+                itemConfigurations[key] = itemConfigs[key] as ItemConfiguration;
             }
         });
     });
+    Object.entries(itemConfigurations).forEach(([key, itemConfig]) => {
+        if(!isNaN(itemConfig.game_id)) {
+            itemIds[itemConfig.game_id] = key;
+            let item = { ...translateItemConfig(key, itemConfig) }
+            if(item?.extends) {
+                let extensions = item.extends;
+                if(typeof extensions === 'string') {
+                    extensions = [ extensions ];
+                }
 
-    return { items, itemIds, itemPresets };
+                extensions.forEach(extKey => {
+                    const extensionItem = itemPresets[extKey];
+                    if(extensionItem) {
+                        const preset = translateItemConfig(undefined, extensionItem);
+                        item = deepMerge(item, preset);
+                    }
+                });
+            }
+            items[key] = item;
+            item.groups.forEach((group) => {
+                if(!itemGroups[group]) {
+                    itemGroups[group] = {};
+                }
+                itemGroups[group][key] = true;
+            })
+        }
+
+        if(itemConfig.variations) {
+            for(const subItem of itemConfig.variations) {
+                const subKey = subItem.suffix ? key + ':' + subItem.suffix : key;
+                const baseItem = JSON.parse(JSON.stringify({ ...translateItemConfig(key, itemConfig) }));
+                const subBaseItem = JSON.parse(JSON.stringify({ ...translateItemConfig(subKey, subItem) }));
+                itemIds[subItem.game_id] = subKey;
+
+                if(!items[subKey]) {
+                    let item = deepMerge(baseItem, subBaseItem);
+                    if(item?.extends) {
+                        let extensions = item.extends;
+                        if(typeof extensions === 'string') {
+                            extensions = [ extensions ];
+                        }
+
+                        extensions.forEach(extKey => {
+                            const extensionItem = itemPresets[extKey];
+                            if(extensionItem) {
+                                const preset = translateItemConfig(undefined, extensionItem);
+                                item = deepMerge(item, preset);
+                            }
+                        });
+                    }
+                    items[subKey] = item;
+                    items[subKey].groups.forEach((group) => {
+                        if(!itemGroups[group]) {
+                            itemGroups[group] = {};
+                        }
+                        itemGroups[group][subKey] = true;
+                    })
+                } else {
+                    logger.warn(`Duplicate item key ${subKey} found - the item was not loaded.`);
+                }
+            }
+        }
+    })
+
+    return { items, itemIds, itemPresets, itemGroups };
 }
