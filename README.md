@@ -32,6 +32,12 @@ The game server will spin up and be accessible via port 43594.
 The [RuneScape Java Client #435](https://github.com/runejs/refactored-client-435) must be used to log into a RuneJS game server.
 
 ## Additional Commands
+
+Before running these commands, you must:
+
+1. have [NodeJS **version 16 or higher**](https://nodejs.org/en/) installed on your machine
+2. run `npm install` from the root of this project
+
 * `npm run game` Launches the game server by itself without building
 * `npm run game:dev` Builds and launches the game server by itself in watch mode
 * `npm run login` Launches the login server by itself without building
