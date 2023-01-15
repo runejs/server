@@ -7,8 +7,9 @@ RUN npm install
 
 COPY src ./src
 COPY tsconfig.json ./
+COPY .babelrc ./
 
-RUN npm build
+RUN npm run build
 
 EXPOSE 43594
 CMD [ "npm", "start" ]
