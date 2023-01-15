@@ -12,4 +12,4 @@ COPY .babelrc ./
 RUN npm run build
 
 EXPOSE 43594
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "start:standalone" ]
