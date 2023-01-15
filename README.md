@@ -14,12 +14,16 @@ The game server currently runs a build of RuneScape from October 30th-31st, 2006
 
 ## Setup
 
-1. Download and install Docker and Docker Compose: first https://docs.docker.com/get-docker/ then https://docs.docker.com/compose/install/
-2. Copy the `config/server-config.example.json` and paste it into the same folder using the name `server-config.json`
-3. Go into your new `server-config.json` file and modify your RSA modulus and exponent with the ones matching your game client
+### Prerequisites
+
+- [`docker`](https://docs.docker.com/get-docker/) and [`docker-compose`](https://docs.docker.com/compose/install/)
+  - If on Windows, `docker-compose` comes with `docker`
+
+1. Copy the `config/server-config.example.json` and paste it into the same folder using the name `server-config.json`
+2. Go into your new `server-config.json` file and modify your RSA modulus and exponent with the ones matching your game client
   - You may also modify the server's port and host address from this configuration file
-4. Build the docker image with `docker-compose build`
-5. Run the game server with `docker-compose up'
+3. Build the docker image with `docker-compose build`
+4. Run the game server with `docker-compose up'
 
 The game server will spin up and be accessible via port 43594.
 
