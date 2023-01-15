@@ -15,9 +15,24 @@ import { LandscapeObject } from '@runejs/filestore';
 import { logger } from '@runejs/common';
 
 class WoodcuttingTask extends ActorLandscapeObjectInteractionTask<Player> {
+    /**
+     * The tree being cut down.
+     */
     private treeInfo: IHarvestable;
+
+    /**
+     * The number of ticks that `execute` has been called inside this task.
+     */
     private elapsedTicks = 0;
 
+    /**
+     * Create a new woodcutting task.
+     *
+     * @param player The player that is attempting to cut down the tree.
+     * @param landscapeObject The object that represents the tree.
+     * @param sizeX The size of the tree in x axis.
+     * @param sizeY The size of the tree in y axis.
+     */
     constructor(
         player: Player,
         landscapeObject: LandscapeObject,
@@ -43,6 +58,14 @@ class WoodcuttingTask extends ActorLandscapeObjectInteractionTask<Player> {
         }
     }
 
+    /**
+     * Execute the main woodcutting task loop. This method is called every game tick until the task is completed.
+     *
+     * As this task extends {@link ActorLandscapeObjectInteractionTask}, it's important that the
+     * `super.execute` method is called at the start of this method.
+     *
+     * The base `execute` performs a number of checks that allow this task to function healthily.
+     */
     public execute(): void {
         super.execute();
 
@@ -67,59 +90,68 @@ class WoodcuttingTask extends ActorLandscapeObjectInteractionTask<Player> {
             return;
         }
 
-        if(taskIteration % 3 === 0) {
-
-            let toolLevel = tool.level - 1;
-            if(tool.itemId === 1349 || tool.itemId === 1267) {
-                toolLevel = 2;
-            }
-
-            const succeeds = canCut(this.treeInfo, toolLevel, this.actor.skills.woodcutting.level);
-            if(succeeds) {
-                const targetName: string = findItem(this.treeInfo.itemId).name.toLowerCase();
-
-                if(this.actor.inventory.hasSpace()) {
-                    const itemToAdd = this.treeInfo.itemId;
-                    const roll = randomBetween(1, 256);
-
-                    if(roll === 1) { // Bird nest chance
-                        this.actor.sendMessage(colorText(`A bird's nest falls out of the tree.`, colors.red));
-                        activeWorld.globalInstance.spawnWorldItem(rollBirdsNestType(), this.actor.position,
-                            { owner: this.actor || null, expires: 300 });
-                    } else { // Standard log chopper
-                        this.actor.sendMessage(`You manage to chop some ${targetName}.`);
-                        this.actor.giveItem(itemToAdd);
-                    }
-
-                    this.actor.skills.woodcutting.addExp(this.treeInfo.experience);
-
-                    if(randomBetween(0, 100) <= this.treeInfo.break) {
-                        this.actor.playSound(soundIds.oreDepeleted);
-                        this.actor.instance.replaceGameObject(this.treeInfo.objects.get(this.landscapeObject.objectId),
-                            this.landscapeObject, randomBetween(this.treeInfo.respawnLow, this.treeInfo.respawnHigh));
-                        this.stop();
-                        return;
-                    }
-                } else {
-                    this.actor.sendMessage(`Your inventory is too full to hold any more ${targetName}.`, true);
-                    this.actor.playSound(soundIds.inventoryFull);
-                    this.stop();
-                    return;
-                }
-            }
-        } else {
+        // play a random axe sound at the correct time
+        if(taskIteration % 3 !== 0) {
             if(taskIteration % 1 === 0) {
                 const randomSoundIdx = Math.floor(Math.random() * soundIds.axeSwing.length);
                 this.actor.playSound(soundIds.axeSwing[randomSoundIdx], 7, 0);
             }
+            return;
         }
 
-        if(taskIteration % 3 === 0) {
-            this.actor.playAnimation(tool.animation);
+        // Get tool level, and set it to 2 if the tool is an iron hatchet or iron pickaxe axe
+        // TODO why is this set to 2? Was ported from the old code
+        let toolLevel = tool.level - 1;
+        if(tool.itemId === 1349 || tool.itemId === 1267) {
+            toolLevel = 2;
         }
+
+        // roll for success
+        const succeeds = canCut(this.treeInfo, toolLevel, this.actor.skills.woodcutting.level);
+        if(!succeeds) {
+            return;
+        }
+
+        const targetName: string = findItem(this.treeInfo.itemId).name.toLowerCase();
+
+        // if player doesn't have space in inventory, stop the task
+        if(!this.actor.inventory.hasSpace()) {
+            this.actor.sendMessage(`Your inventory is too full to hold any more ${targetName}.`, true);
+            this.actor.playSound(soundIds.inventoryFull);
+            this.stop();
+            return;
+        }
+
+        const itemToAdd = this.treeInfo.itemId;
+        const roll = randomBetween(1, 256);
+        // roll for bird nest chance
+        if(roll === 1) {
+            this.actor.sendMessage(colorText(`A bird's nest falls out of the tree.`, colors.red));
+            activeWorld.globalInstance.spawnWorldItem(rollBirdsNestType(), this.actor.position,
+                { owner: this.actor || null, expires: 300 });
+        } else { // Standard log chopper
+            this.actor.sendMessage(`You manage to chop some ${targetName}.`);
+            this.actor.giveItem(itemToAdd);
+        }
+
+        this.actor.skills.woodcutting.addExp(this.treeInfo.experience);
+
+        // check if the tree should be broken
+        if(randomBetween(0, 100) <= this.treeInfo.break) {
+            this.actor.playSound(soundIds.oreDepeleted);
+            this.actor.instance.replaceGameObject(this.treeInfo.objects.get(this.landscapeObject.objectId),
+                this.landscapeObject, randomBetween(this.treeInfo.respawnLow, this.treeInfo.respawnHigh));
+            this.stop();
+            return;
+        }
+
+        this.actor.playAnimation(tool.animation);
 
     }
 
+    /**
+     * This method is called when the task stops.
+     */
     public onStop(): void {
         super.onStop();
 
