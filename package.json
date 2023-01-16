@@ -43,7 +43,7 @@
     "homepage": "https://github.com/runejs/server#readme",
     "dependencies": {
         "@runejs/common": "^2.0.1",
-        "@runejs/filestore": "^0.16.0",
+        "@runejs/store": "^1.0.0-beta.1",
         "@runejs/login-server": "^2.0.0",
         "@runejs/update-server": "^1.3.0",
         "bigi": "^1.4.2",
