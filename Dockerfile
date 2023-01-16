@@ -3,12 +3,13 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY package-lock.json ./
 
-RUN npm install
+RUN npm ci
 
 COPY src ./src
 COPY tsconfig.json ./
+COPY .babelrc ./
 
-RUN npm build
+RUN npm run build
 
 EXPOSE 43594
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "start:standalone" ]
