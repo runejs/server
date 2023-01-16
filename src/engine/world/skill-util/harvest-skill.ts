@@ -13,6 +13,11 @@ import { findItem } from '@engine/config/config-handler';
 import { activeWorld } from '@engine/world';
 import { loopingEvent } from '@engine/plugins';
 
+/**
+ * Check if a player can harvest a given {@link IHarvestable}
+ *
+ * @returns a {@link HarvestTool} if the player can harvest the object, or undefined if they cannot.
+ */
 export function canInitiateHarvest(player: Player, target: IHarvestable, skill: Skill): undefined | HarvestTool {
     if (!target) {
         switch (skill) {
