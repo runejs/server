@@ -14,24 +14,16 @@ The game server currently runs a build of RuneScape from October 30th-31st, 2006
 
 ## Setup
 
-1. Download and install NodeJS **version 16 or higher**: https://nodejs.org/en/
-2. Clone the Github Repo: https://github.com/runejs/server
-3. Install dependencies by navigating to the project in your Terminal or command prompt and running the command npm install
-4. Copy the `config/server-config.example.json` and paste it into the same folder using the name `server-config.json`
-5. *Optional:* Go into the new `server-config.json` file and modify the RSA modulus and exponent with the ones matching your desired game client
+### Prerequisites
+
+- [`docker`](https://docs.docker.com/get-docker/) and [`docker-compose`](https://docs.docker.com/compose/install/)
+  - If on Windows, `docker-compose` comes with `docker`
+
+1. Copy the `config/server-config.example.json` and paste it into the same folder using the name `server-config.json`
+2. Go into your new `server-config.json` file and modify your RSA modulus and exponent with the ones matching your game client
   - You may also modify the server's port and host address from this configuration file
-6. Run the game server with `npm start`
-
-The game server will spin up and be accessible via port 43594.
-
-### Setup using docker
-
-1. Download and install Docker and Docker Compose: first https://docs.docker.com/get-docker/ then https://docs.docker.com/compose/install/ 
-2. Copy the `config/server-config.example.json` and paste it into the same folder using the name `server-config.json`
-3. Go into your new `server-config.json` file and modify your RSA modulus and exponent with the ones matching your game client
-  - You may also modify the server's port and host address from this configuration file
-4. Build the docker image with `docker-compose build`
-5. Run the game server with `docker-compose up'
+3. Build the docker image with `docker-compose build`
+4. Run the game server with `docker-compose up'
 
 The game server will spin up and be accessible via port 43594.
 
@@ -40,6 +32,12 @@ The game server will spin up and be accessible via port 43594.
 The [RuneScape Java Client #435](https://github.com/runejs/refactored-client-435) must be used to log into a RuneJS game server.
 
 ## Additional Commands
+
+Before running these commands, you must:
+
+1. have [NodeJS **version 16 or higher**](https://nodejs.org/en/) installed on your machine
+2. run `npm install` from the root of this project
+
 * `npm run game` Launches the game server by itself without building
 * `npm run game:dev` Builds and launches the game server by itself in watch mode
 * `npm run login` Launches the login server by itself without building
