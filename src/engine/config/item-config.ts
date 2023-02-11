@@ -232,7 +232,7 @@ export async function loadItemConfigurations(path: string): Promise<{ items: { [
         });
     });
     Object.entries(itemConfigurations).forEach(([key, itemConfig]) => {
-        if(!isNaN(itemConfig.game_id)) {
+        if(itemConfig.game_id !== undefined && !isNaN(itemConfig.game_id)) {
             itemIds[itemConfig.game_id] = key;
             let item = { ...translateItemConfig(key, itemConfig) }
             if(item?.extends) {
@@ -260,6 +260,11 @@ export async function loadItemConfigurations(path: string): Promise<{ items: { [
 
         if(itemConfig.variations) {
             for(const subItem of itemConfig.variations) {
+                if (!subItem.game_id) {
+                    logger.warn(`Item ${key} has a variation without a game_id. Skipping.`);
+                    continue;
+                }
+
                 const subKey = subItem.suffix ? key + ':' + subItem.suffix : key;
                 const baseItem = JSON.parse(JSON.stringify({ ...translateItemConfig(key, itemConfig) }));
                 const subBaseItem = JSON.parse(JSON.stringify({ ...translateItemConfig(subKey, subItem) }));
