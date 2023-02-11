@@ -294,7 +294,7 @@ export class Npc extends Actor {
         return this._initialized;
     }
 
-    public get instanceId(): string {
+    public get instanceId(): string | null {
         return this.instance?.instanceId ?? null;
     }
 }

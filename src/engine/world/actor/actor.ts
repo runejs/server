@@ -254,7 +254,7 @@ export abstract class Actor {
         this.moveBehind(target);
         const subscription = target.walkingQueue.movementEvent.subscribe(() => {
             if(!this.moveBehind(target)) {
-                this.actionsCancelled.next(null);
+                this.actionsCancelled.next(null as unknown as ActionCancelType);
             }
         });
 
@@ -467,7 +467,7 @@ export abstract class Actor {
             px = this.position.x;
             py = this.position.y;
 
-            const movementDirection: DirectionData = directionFromIndex(direction);
+            const movementDirection = directionFromIndex(direction);
             if(!movementDirection) {
                 return;
             }

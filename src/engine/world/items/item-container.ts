@@ -9,7 +9,7 @@ import { fromNote } from '@engine/world/items/item';
 
 export interface ContainerUpdateEvent {
     slot?: number;
-    item?: Item;
+    item?: Item | null;
     type: 'ADD' | 'REMOVE' | 'SWAP' | 'SET' | 'SET_ALL' | 'UPDATE_AMOUNT' | 'CLEAR_ALL';
 }
 
@@ -124,7 +124,7 @@ export class ItemContainer {
         }
     }
 
-    public set(slot: number, item: Item, fireEvent: boolean = true): void {
+    public set(slot: number, item: Item | null, fireEvent: boolean = true): void {
         this._items[slot] = item;
         if(fireEvent) {
             this._containerUpdated.next({ type: 'SET', slot, item });

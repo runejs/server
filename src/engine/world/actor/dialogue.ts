@@ -229,7 +229,7 @@ interface SubDialogueTreeAction extends DialogueAction {
 function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], dialogueTree: DialogueTree): ParsedDialogueTree {
     const parsedDialogueTree: ParsedDialogueTree = [];
 
-    let carryoverDialogue = [];
+    let carryoverDialogue: string[] = [];
     for (let i = 0; i < dialogueTree.length; i++) {
         const dialogueAction = dialogueTree[i];
 
@@ -250,10 +250,14 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
         }
 
         const dialogueType = args[0];
-        let tag: string = null;
+        let tag: string | null = null;
 
         if (args.length === 2 && typeof args[1] === 'string') {
-            player.metadata.dialogueIndices[args[1]] = i;
+            if (player.metadata.dialogueIndices) {
+                player.metadata.dialogueIndices[args[1]] = i;
+            } else {
+                logger.warn('Player metadata does not contain dialogueIndices');
+            }
             tag = args[1];
         }
 
@@ -294,8 +298,13 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
                 const trees = (result as any[]).filter((option, index) => index % 2 !== 0);
                 const optionsDialogueAction: OptionsDialogueAction = {
                     options: {},
-                    tag, type: 'OPTIONS'
+                    tag: tag || '',
+                    type: 'OPTIONS'
                 };
+
+                if (!tag) {
+                    logger.warn('No tag provided for options dialogue.');
+                }
 
                 for (let j = 0; j < options.length; j++) {
                     const option = options[j];
@@ -337,7 +346,7 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
             // Player or Npc dialogue.
 
             let dialogueDetails: [ Emote, string ];
-            let npc: Npc | number | string;
+            let npc: Npc | number | string = -1;
 
             if (dialogueType !== 'player') {
                 const participant = npcParticipants.find(p => p.key === dialogueType) as NpcParticipant;
@@ -360,6 +369,10 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
                 dialogueDetails = dialogueAction(player);
             }
 
+            // TODO (Jameskmonger) not sure if this check is needed, added it when getting TypeScript types into strict mode
+            if (npc === -1) {
+                throw new Error('No npc found for dialogue action.');
+            }
 
             const emote = dialogueDetails[0] as Emote;
             const text = carryoverDialogue.join(' ') + dialogueDetails[1] as string;
@@ -370,6 +383,10 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
 
             const animation = nonLineEmotes.indexOf(emote) !== -1 ? EmoteAnimation[emote] : EmoteAnimation[`${ emote }_${ lines.length }LINE`];
 
+            if (!tag) {
+                logger.warn('No tag provided for npc dialogue.');
+            }
+
             if (dialogueType !== 'player') {
                 if (lines.length > 4) {
                     while (lines.length > 4) {
@@ -377,8 +394,13 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
                         lines = lines.slice(0, 4);
 
                         const npcDialogueAction: NpcDialogueAction = {
-                            npcId: npc as number, animation, lines, tag, type: 'NPC'
+                            npcId: npc as number,
+                            animation,
+                            lines,
+                            tag: tag || '',
+                            type: 'NPC'
                         };
+
                         parsedDialogueTree.push(npcDialogueAction);
 
                         lines = copyOfLines.slice(0, copyOfLines.length);
@@ -387,7 +409,11 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
 
                         if (i === dialogueTree.length - 1 && lines.length <= 4) {
                             const npcDialogueAction: NpcDialogueAction = {
-                                npcId: npc as number, animation, lines, tag, type: 'NPC'
+                                npcId: npc as number,
+                                animation,
+                                lines,
+                                tag: tag || '',
+                                type: 'NPC'
                             };
 
                             parsedDialogueTree.push(npcDialogueAction);
@@ -395,14 +421,22 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
                     }
                 } else {
                     const npcDialogueAction: NpcDialogueAction = {
-                        npcId: npc as number, animation, lines, tag, type: 'NPC'
+                        npcId: npc as number,
+                        animation,
+                        lines,
+                        tag: tag || '',
+                        type: 'NPC'
                     };
 
                     parsedDialogueTree.push(npcDialogueAction);
                 }
             } else {
                 const playerDialogueAction: PlayerDialogueAction = {
-                    player, animation, lines, tag, type: 'PLAYER'
+                    player,
+                    animation,
+                    lines,
+                    tag: tag || '',
+                    type: 'PLAYER'
                 };
 
                 parsedDialogueTree.push(playerDialogueAction);
@@ -435,7 +469,7 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
         return tag;
     }
 
-    let widgetId: number;
+    let widgetId: number = -1;
     let isOptions = false;
 
     if (dialogueAction.type === 'OPTIONS') {
@@ -507,11 +541,19 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
         // Dialogue sub-tree.
         const action = (dialogueAction as SubDialogueTreeAction);
 
+        if (!action.npcParticipants) {
+            // (Jameskmonger) I added this log because the TypeScript types allow for this to be undefined, but
+            //             parseDialogueTree requires it. I'm not sure if it can be undefined in practice.
+            logger.warn('No NPC participants for dialogue action');
+        }
+        // (Jameskmonger) default value added here
+        const npcParticipants = action.npcParticipants || [];
+
         if (dialogueAction.tag === tag) {
             const originalIndices = _.cloneDeep(player.metadata.dialogueIndices || {});
             const originalTree = _.cloneDeep(player.metadata.dialogueTree || []);
             player.metadata.dialogueIndices = {};
-            const parsedSubTree = parseDialogueTree(player, action.npcParticipants, action.subTree);
+            const parsedSubTree = parseDialogueTree(player, npcParticipants, action.subTree);
             player.metadata.dialogueTree = parsedSubTree;
 
             await runParsedDialogue(player, parsedSubTree, undefined, additionalOptions);
@@ -522,7 +564,7 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
             const originalIndices = _.cloneDeep(player.metadata.dialogueIndices || {});
             const originalTree = _.cloneDeep(player.metadata.dialogueTree || []);
             player.metadata.dialogueIndices = {};
-            const parsedSubTree = parseDialogueTree(player, action.npcParticipants, action.subTree);
+            const parsedSubTree = parseDialogueTree(player, npcParticipants, action.subTree);
             player.metadata.dialogueTree = parsedSubTree;
 
             await runParsedDialogue(player, parsedSubTree, tag, additionalOptions);
@@ -536,10 +578,14 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
         if (tag === undefined || dialogueAction.tag === tag) {
             tag = undefined;
 
-            let npcId: number;
+            let npcId: number = -1;
 
             if (dialogueAction.type === 'NPC') {
                 npcId = (dialogueAction as NpcDialogueAction).npcId;
+            }
+            // TODO (Jameskmonger) not sure if this check is needed, added it when getting TypeScript types into strict mode
+            if (npcId === -1) {
+                throw new Error('No npc found for dialogue action.');
             }
 
             const actorDialogueAction = dialogueAction as ActorDialogueAction;
@@ -554,9 +600,13 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 
             if (dialogueAction.type === 'NPC') {
                 widgetId = npcWidgetIds[lines.length - 1];
-                player.outgoingPackets.setWidgetNpcHead(widgetId, 0, npcId as number);
-                player.outgoingPackets.updateWidgetString(widgetId, 1,
-                    filestore.configStore.npcStore.getNpc(npcId as number).name);
+                player.outgoingPackets.setWidgetNpcHead(widgetId, 0, npcId);
+
+                const npcDetails = filestore.configStore.npcStore.getNpc(npcId);
+
+                if (npcDetails && npcDetails.name) {
+                    player.outgoingPackets.updateWidgetString(widgetId, 1, npcDetails.name);
+                }
             } else {
                 widgetId = playerWidgetIds[lines.length - 1];
                 player.outgoingPackets.setWidgetPlayerHead(widgetId, 0);
@@ -572,7 +622,7 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
     }
 
 
-    if (tag === undefined && widgetId) {
+    if (tag === undefined && widgetId !== -1) {
         const permanent = additionalOptions?.permanent || false;
 
         if (permanent) {

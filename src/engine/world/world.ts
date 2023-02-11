@@ -13,6 +13,7 @@ import { ChunkManager, ConstructedRegion, getTemplateLocalX, getTemplateLocalY }
 import { TravelLocations, ExamineCache, parseScenerySpawns } from '@engine/world/config';
 import { loadPlugins } from '@engine/plugins';
 import { TaskScheduler, Task } from '@engine/task';
+import { Isaac } from '@engine/net';
 
 
 export interface QuadtreeKey {
@@ -401,7 +402,7 @@ export class World {
             throw new Error('NPC key must be provided.');
         }
 
-        let npcData = findNpc(npcKey);
+        const npcData = findNpc(npcKey);
         if(!npcData) {
             throw new Error(`NPC ${npcKey} not found in the cache`);
         }
@@ -434,7 +435,7 @@ export class World {
         const spawnChunk = this.chunkManager.getChunkForWorldPosition(new Position(x, y, 0));
 
         for(let i = 0; i < 1000; i++) {
-            const player = new Player(null, null, null, i, `test${i}`, 'abs', true);
+            const player = new Player(null, new Isaac([0, 0, 0, 0]), new Isaac([0, 0, 0, 0]), i, `test${i}`, 'abs', true);
             this.registerPlayer(player);
             player.interfaceState.closeAllSlots();
 
@@ -555,7 +556,7 @@ export class World {
      * @param player The player to remove from the world list.
      */
     public deregisterPlayer(player: Player): void {
-        this.playerList[player.worldIndex] = null;
+        delete this.playerList[player.worldIndex];
     }
 
     public npcExists(npc: Npc): boolean {
@@ -587,7 +588,7 @@ export class World {
 
     public deregisterNpc(npc: Npc): void {
         npc.exists = false;
-        this.npcList[npc.worldIndex] = null;
+        delete this.npcList[npc.worldIndex];
     }
 
 }

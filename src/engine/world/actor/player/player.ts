@@ -124,7 +124,7 @@ export class Player extends Actor {
      */
     public readonly metadata: (Actor['metadata'] & Partial<PlayerMetadata>) = {};
 
-    private readonly _socket: Socket;
+    private readonly _socket: Socket | null;
     private readonly _inCipher: Isaac;
     private readonly _outCipher: Isaac;
     private readonly _outgoingPackets: OutboundPacketHandler;
@@ -142,7 +142,7 @@ export class Player extends Actor {
     private privateMessageIndex: number = 1;
 
 
-    public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
+    public constructor(socket: Socket | null, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super('player');
 
         this._socket = socket;
@@ -625,9 +625,9 @@ export class Player extends Actor {
      * @returns A Promise<void> that resolves when the player has clicked the "click to continue" button or
      * after their chat messages have been sent.
      */
-    public async sendMessage(messages: string | string[], options: SendMessageOptions): Promise<boolean>;
+    public async sendMessage(messages: string | string[], options?: SendMessageOptions): Promise<boolean>;
 
-    public async sendMessage(messages: string | string[], options: boolean | SendMessageOptions): Promise<boolean> {
+    public async sendMessage(messages: string | string[], options?: boolean | SendMessageOptions): Promise<boolean> {
         if(!Array.isArray(messages)) {
             messages = [ messages ];
         }
@@ -658,6 +658,8 @@ export class Player extends Actor {
         if(showInConsole) {
             messages.forEach(message => this.outgoingPackets.consoleMessage(message));
         }
+
+        return true;
     }
 
     /**
@@ -1033,9 +1035,9 @@ export class Player extends Actor {
 
     /**
      * Transform's the player's appearance into the specified NPC.
-     * @param npc The NPC to copy the appearance of.
+     * @param npc The NPC to copy the appearance of, or null to reset.
      */
-    public transformInto(npc: Npc | NpcDetails | string | number): void {
+    public transformInto(npc: Npc | NpcDetails | string | number | null): void {
         if(!npc) {
             delete this.savedMetadata.npcTransformation;
             this.updateFlags.appearanceUpdateRequired = true;
@@ -1328,7 +1330,7 @@ export class Player extends Actor {
         return super.position;
     }
 
-    public get socket(): Socket {
+    public get socket(): Socket | null {
         return this._socket;
     }
 

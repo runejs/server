@@ -38,7 +38,7 @@ export function canInitiateHarvest(player: Player, target: IHarvestable, skill: 
     const item = findItem(target.itemId);
     if (!item) {
         logger.error(`Could not find item with id ${target.itemId} for harvestable object.`);
-        player.sendMessage("Sorry, there was an error. Please contact a developer.");
+        player.sendMessage('Sorry, there was an error. Please contact a developer.');
         return;
     }
 
@@ -180,10 +180,18 @@ export function handleHarvesting(details: ObjectInteractionAction, tool: Harvest
                     details.player.skills.addExp(skill, target.experience);
                     if (randomBetween(0, 100) <= target.break) {
                         details.player.playSound(soundIds.oreDepeleted);
-                        details.player.instance.replaceGameObject(target.objects.get(details.object.objectId),
-                            details.object, randomBetween(target.respawnLow, target.respawnHigh));
+
+                        const replacementObject = target.objects.get(details.object.objectId);
+                        const respawnTime = randomBetween(target.respawnLow, target.respawnHigh);
+
+                        if (replacementObject) {
+                            details.player.instance.replaceGameObject(replacementObject, details.object, respawnTime);
+                        }
+
+                        // TODO (Jameskmonger) cancel animation
+                        // details.player.playAnimation(null);
+
                         loop.cancel();
-                        details.player.playAnimation(null);
                         return;
                     }
                 } else {
