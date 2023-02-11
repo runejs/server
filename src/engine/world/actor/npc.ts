@@ -9,6 +9,7 @@ import { soundIds, animationIds } from '@engine/world/config';
 import { Actor } from './actor';
 import { Player } from './player';
 import { SkillName } from './skills';
+import { logger } from '@runejs/common';
 
 /**
  * Represents a non-player character within the game world.
@@ -38,12 +39,12 @@ export class Npc extends Actor {
     private _name: string;
     private _combatLevel: number;
     private _movementRadius: number = 0;
-    private quadtreeKey: QuadtreeKey = null;
+    private quadtreeKey: QuadtreeKey | null = null;
     private _exists: boolean = true;
     private npcSpawn: NpcSpawn;
     private _initialized: boolean = false;
 
-    public constructor(npcDetails: NpcDetails | number, npcSpawn: NpcSpawn, instance: WorldInstance = null) {
+    public constructor(npcDetails: NpcDetails | number, npcSpawn: NpcSpawn, instance: WorldInstance | null = null) {
         super('npc');
 
         this.key = npcSpawn.npcKey;
@@ -69,12 +70,12 @@ export class Npc extends Actor {
         } else {
             this.id = npcDetails.gameId;
             this._combatLevel = npcDetails.combatLevel;
-            this.animations = npcDetails.combatAnimations;
-            this.options = npcDetails.options;
+            this.animations = npcDetails.combatAnimations || {};
+            this.options = npcDetails.options || [];
 
             if(npcDetails.skills) {
                 const skillNames = Object.keys(npcDetails.skills);
-                skillNames.forEach(skillName => this.skills.setLevel(skillName as SkillName, npcDetails.skills[skillName]));
+                skillNames.forEach(skillName => this.skills.setLevel(skillName as SkillName, npcDetails.skills![skillName]));
             }
         }
 
@@ -82,9 +83,10 @@ export class Npc extends Actor {
         if(cacheDetails) {
             // NPC not registered on the server, but exists in the game cache - use that for our info and assume it's
             // Not a combatant NPC since we have no useful combat information for it.
-            this._name = cacheDetails.name;
+
+            this._name = cacheDetails.name || '';
             this._combatLevel = cacheDetails.combatLevel;
-            this.options = cacheDetails.options;
+            this.options = cacheDetails.options || [];
             this.varbitId = cacheDetails.varbitId;
             this.settingId = cacheDetails.settingId;
             this.childrenIds = cacheDetails.childrenIds;
@@ -129,14 +131,25 @@ export class Npc extends Actor {
             activeWorld.playLocationSound(deathPosition, soundIds.npc.human.maleDeath, 5);
             const npcDetails = findNpc((defender as Npc).id);
 
-            if(!npcDetails.dropTable) {
+            if(!npcDetails || !npcDetails.dropTable) {
                 return;
             }
 
             if(assailant instanceof Player) {
                 const itemDrops = calculateNpcDrops(assailant, npcDetails);
                 itemDrops.forEach(drop => {
-                    activeWorld.globalInstance.spawnWorldItem({ itemId: findItem(drop.itemKey).gameId, amount: drop.amount },
+                    const droppedItem = findItem(drop.itemKey);
+
+                    if (!droppedItem) {
+                        logger.error(`Unable to find item with key: ${drop.itemKey}`);
+                        return;
+                    }
+
+                    if (!drop.amount) {
+                        return;
+                    }
+
+                    activeWorld.globalInstance.spawnWorldItem({ itemId: droppedItem.gameId, amount: drop.amount },
                         deathPosition, { owner: assailant instanceof Player ? assailant : undefined, expires: 300 });
                 })
             }
@@ -156,7 +169,13 @@ export class Npc extends Actor {
         activeWorld.deregisterNpc(this);
 
         if(respawn) {
-            activeWorld.scheduleNpcRespawn(new Npc(findNpc(this.id), this.npcSpawn));
+            const npcDetails = findNpc(this.id);
+
+            if(!npcDetails) {
+                return;
+            }
+
+            activeWorld.scheduleNpcRespawn(new Npc(npcDetails, this.npcSpawn));
         }
     }
 
@@ -208,7 +227,14 @@ export class Npc extends Actor {
      * @param npcKey The unique string key of the Npc to transform into.
      */
     public transformInto(npcKey: string): void {
-        this.id = findNpc(npcKey).gameId;
+        const npcDetails = findNpc(npcKey);
+
+        if(!npcDetails) {
+            logger.error(`Unable to find npc with key: ${npcKey} for transformation.`);
+            return;
+        }
+
+        this.id = npcDetails.gameId;
         this.updateFlags.appearanceUpdateRequired = true;
     }
 

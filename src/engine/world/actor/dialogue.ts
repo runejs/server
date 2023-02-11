@@ -137,7 +137,7 @@ function wrapDialogueText(text: string, type: 'ACTOR' | 'TEXT'): string[] {
     return wrapText(text, width, widget.fontId);
 }
 
-function parseDialogueFunctionArgs(func: Function): string[] {
+function parseDialogueFunctionArgs(func: Function): string[] | null {
     const str = func.toString();
 
     if (!str) {
