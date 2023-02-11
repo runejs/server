@@ -103,7 +103,7 @@ export const playerWalkTo = async(player: Player, position: Position, interactin
                 }
 
                 clearInterval(inter);
-                player.metadata.walkingTo = null;
+                player.metadata.walkingTo = undefined;
             }
         }, 100);
     });

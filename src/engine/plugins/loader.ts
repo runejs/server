@@ -38,13 +38,14 @@ export async function loadPlugins(): Promise<void> {
 
     if(pluginActionHookList && pluginActionHookList.length !== 0) {
         pluginActionHookList.reduce(
-            (a, b) => a.concat(b))?.forEach(action => {
+            (a, b) => (a || []).concat(b || []))?.forEach(action => {
             if(!(action instanceof Quest)) {
                 if(!actionHookMap[action.type]) {
                     actionHookMap[action.type] = [];
                 }
 
-                actionHookMap[action.type].push(action);
+                // using ! here because we have just set it if it was undefined
+                actionHookMap[action.type]!.push(action);
             } else {
                 if(!actionHookMap['quest']) {
                     actionHookMap['quest'] = [];
@@ -57,11 +58,14 @@ export async function loadPlugins(): Promise<void> {
         logger.warn(`No action hooks detected - update plugins.`);
     }
 
-    const pluginQuestList = plugins?.filter(plugin => !!plugin?.quests)?.map(plugin => plugin.quests);
+    for (const plugin of plugins) {
+        if (!plugin.quests) {
+            continue;
+        }
 
-    if(pluginQuestList && pluginQuestList.length > 0) {
-        pluginQuestList.reduce((prev, curr) => prev.concat(curr))
-            .forEach(quest => questMap[quest.id] = quest);
+        for (const quest of plugin.quests) {
+            questMap[quest.id] = quest;
+        }
     }
 
     // @TODO implement proper sorting rules

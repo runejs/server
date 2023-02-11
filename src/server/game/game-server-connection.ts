@@ -9,8 +9,8 @@ import { Player } from '@engine/world/actor';
 
 export class GameServerConnection {
 
-    private activePacketId: number = null;
-    private activePacketSize: number = null;
+    private activePacketId: number | null = null;
+    private activePacketSize: number | null = null;
     private activeBuffer: ByteBuffer;
 
     public constructor(private readonly clientSocket: Socket,
@@ -114,4 +114,3 @@ export class GameServerConnection {
     }
 
 }
-
