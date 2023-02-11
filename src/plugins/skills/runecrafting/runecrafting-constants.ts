@@ -399,4 +399,6 @@ export function runeMultiplier(runeId: number, level: number): number {
         case 563: return 1.0;
         case 560: return 1.0;
     }
+
+    return 1.0;
 }

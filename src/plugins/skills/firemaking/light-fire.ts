@@ -55,7 +55,7 @@ export const lightFire = (player: Player, position: Position, worldItemLog: Worl
         orientation: 0
     };
 
-    player.playAnimation(null);
+    // TODO (Jameskmonger) cancel animation
     player.sendMessage('The fire catches and the logs begin to burn.');
     player.skills.firemaking.addExp(burnExp);
 

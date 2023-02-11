@@ -6,7 +6,7 @@ import { Npc } from '@engine/world/actor/npc';
 import { randomBetween } from '@engine/util/num';
 import { activeWorld } from '@engine/world';
 const npcs = ['rs:guard:0', 'rs:guard:1']
-const npcObjects = npcs.map((sNpc) => findNpc(sNpc));
+const npcObjects = npcs.map((sNpc) => findNpc(sNpc)!);
 
 interface DialogueNpcTree {
     a?: string;

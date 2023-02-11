@@ -112,7 +112,16 @@ class WoodcuttingTask extends ActorLandscapeObjectInteractionTask<Player> {
             return;
         }
 
-        const targetName: string = findItem(this.treeInfo.itemId).name.toLowerCase();
+        const logItem = findObject(this.treeInfo.itemId);
+
+        if(!logItem) {
+            logger.error(`Could not find log item with id ${this.treeInfo.itemId}`);
+            this.actor.sendMessage('Sorry, an error occurred. Please report this to a developer.');
+            this.stop();
+            return;
+        }
+
+        const targetName = (logItem.name || '').toLowerCase();
 
         // if player doesn't have space in inventory, stop the task
         if(!this.actor.inventory.hasSpace()) {
@@ -138,9 +147,18 @@ class WoodcuttingTask extends ActorLandscapeObjectInteractionTask<Player> {
 
         // check if the tree should be broken
         if(randomBetween(0, 100) <= this.treeInfo.break) {
+            // TODO (Jameskmonger) is this the correct sound?
             this.actor.playSound(soundIds.oreDepeleted);
-            this.actor.instance.replaceGameObject(this.treeInfo.objects.get(this.landscapeObject.objectId),
-                this.landscapeObject, randomBetween(this.treeInfo.respawnLow, this.treeInfo.respawnHigh));
+
+            const brokenTreeId = this.treeInfo.objects.get(this.landscapeObject.objectId);
+
+            if (brokenTreeId !== undefined) {
+                this.actor.instance.replaceGameObject(brokenTreeId,
+                    this.landscapeObject, randomBetween(this.treeInfo.respawnLow, this.treeInfo.respawnHigh));
+            } else {
+                logger.error(`Could not find broken tree id for tree id ${this.landscapeObject.objectId}`);
+            }
+
             this.stop();
             return;
         }
