@@ -357,7 +357,7 @@ export class OutboundPacketHandler {
     }
 
     // @TODO this can support multiple items/slots !!!
-    public sendUpdateSingleWidgetItem(widget: { widgetId: number, containerId: number }, slot: number, item: Item): void {
+    public sendUpdateSingleWidgetItem(widget: { widgetId: number, containerId: number }, slot: number, item: Item | null): void {
         const packet = new Packet(214, PacketType.DYNAMIC_LARGE);
         packet.put(widget.widgetId << 16 | widget.containerId, 'INT');
         packet.put(slot, 'SMART');

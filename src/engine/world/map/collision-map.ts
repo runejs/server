@@ -3,6 +3,7 @@ import { filestore } from '@server/game/game-server';
 import { WorldInstance } from '@engine/world/instances';
 import { LandscapeObject } from '@runejs/filestore';
 import { activeWorld } from '@engine/world';
+import { logger } from '@runejs/common';
 
 /**
  * A map of collision masks for a chunk within the game world.
@@ -19,7 +20,7 @@ export class CollisionMap {
     private _adjacency: number[][];
     private chunk: Chunk;
     private instance: WorldInstance;
-    
+
     public constructor(x: number, y: number, heightLevel: number, options?: { chunk?: Chunk, instance?: WorldInstance }) {
         this.heightLevel = heightLevel;
         this.x = x;
@@ -44,6 +45,11 @@ export class CollisionMap {
         const objectOrientation = landscapeObject.orientation;
         const objectDetails = filestore.configStore.objectStore.getObject(landscapeObject.objectId);
 
+        if (!objectDetails) {
+            logger.error(`Could not find object details for object id: ${landscapeObject.objectId} when marking collision map.`);
+            return;
+        }
+
         if(objectDetails.solid) {
             if(objectType === 22) {
                 if(objectDetails.hasOptions) {
@@ -61,7 +67,7 @@ export class CollisionMap {
             }
         }
     }
-    
+
     public reset(): void {
         for(let x = 0; x < this.sizeX; x++) {
             for(let y = 0; y < this.sizeY; y++) {
@@ -69,11 +75,11 @@ export class CollisionMap {
             }
         }
     }
-    
+
     public markWall(x: number, y: number, type: number, rotation: number, walkable: boolean): void {
         x -= this._insetX;
         y -= this._insetY;
-        
+
         if(type == 0) {
             if(rotation == 0) {
                 this.set(x, y, 128);
@@ -316,7 +322,7 @@ export class CollisionMap {
             }
         }
     }
-    
+
     public markSolidOccupant(occupantX: number, occupantY: number, width: number, height: number, rotation: number, walkable: boolean, mark: boolean): void {
         let occupied = 256;
         if(walkable) {
@@ -357,7 +363,7 @@ export class CollisionMap {
             this._adjacency[x][y] &= 0xdfffff;
         }
     }
-    
+
     public set(x: number, y: number, flag: number): void {
         let outOfBounds = false;
 
@@ -392,7 +398,7 @@ export class CollisionMap {
             this._adjacency[x][y] |= flag;
         }
     }
-    
+
     public unset(x: number, y: number, flag: number): void {
         let outOfBounds = false;
 
@@ -420,7 +426,7 @@ export class CollisionMap {
         }
     }
 
-    public getSiblingCollisionMap(offsetX: number, offsetY: number): CollisionMap {
+    public getSiblingCollisionMap(offsetX: number, offsetY: number): CollisionMap | null {
         if(this.chunk) {
             const offsetChunk: Chunk = activeWorld.chunkManager.getChunk({
                 x: this.chunk.position.x + offsetX,

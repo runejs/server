@@ -114,7 +114,7 @@ export class ItemContainer {
         return this._items.findIndex(i => i?.itemId === itemId);
     }
 
-    public setAll(items: Item[], fireEvent: boolean = true): void {
+    public setAll(items: (Item | null)[], fireEvent: boolean = true): void {
         for(let i = 0; i < this._size; i++) {
             this._items[i] = items[i];
         }

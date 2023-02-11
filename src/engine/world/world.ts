@@ -91,7 +91,7 @@ export class World {
      * @param objectPosition The game world position that the object is expected at.
      */
     public findObjectAtLocation(actor: Actor, objectId: number,
-                                objectPosition: Position): { object: LandscapeObject, cacheOriginal: boolean } {
+                                objectPosition: Position): { object: LandscapeObject | null, cacheOriginal: boolean } {
         const x = objectPosition.x;
         const y = objectPosition.y;
 
@@ -112,7 +112,13 @@ export class World {
         let personalTileModifications;
 
         if(actor.isPlayer) {
-            tileModifications = (actor as Player).instance.getTileModifications(objectPosition);
+            const instance = (actor as Player).instance;
+
+            if (!instance) {
+                throw new Error(`Player ${(actor as Player).username} has no instance.`);
+            }
+
+            tileModifications = instance.getTileModifications(objectPosition);
             personalTileModifications = (actor as Player).personalInstance.getTileModifications(objectPosition);
         } else {
             tileModifications = this.globalInstance.getTileModifications(objectPosition);
@@ -279,7 +285,7 @@ export class World {
      * @param distance The maximum distance to search for NPCs.
      * @param instanceId The NPC's active instance.
      */
-    public findNearbyNpcsById(position: Position, npcId: number, distance: number, instanceId: string = null): Npc[] {
+    public findNearbyNpcsById(position: Position, npcId: number, distance: number, instanceId: string | null = null): Npc[] {
         return this.npcTree.colliding({
             x: position.x - (distance / 2),
             y: position.y - (distance / 2),
@@ -293,7 +299,7 @@ export class World {
      * @param npcKey The Key of the NPCs to find.
      * @param instanceId The NPC's active instance.
      */
-    public findNpcsByKey(npcKey: string, instanceId: string = null): Npc[] {
+    public findNpcsByKey(npcKey: string, instanceId: string | null = null): Npc[] {
         return this.npcList.filter(npc => npc && npc.key === npcKey && npc.instanceId === instanceId);
     }
 
@@ -302,7 +308,7 @@ export class World {
      * @param npcId The ID of the NPCs to find.
      * @param instanceId The NPC's active instance.
      */
-    public findNpcsById(npcId: number, instanceId: string = null): Npc[] {
+    public findNpcsById(npcId: number, instanceId: string | null = null): Npc[] {
         return this.npcList.filter(npc => npc && npc.id === npcId && npc.instanceId === instanceId);
     }
 
@@ -320,7 +326,7 @@ export class World {
      * @param distance The maximum distance to search for NPCs.
      * @param instanceId The NPC's active instance.
      */
-    public findNearbyNpcs(position: Position, distance: number, instanceId: string = null): Npc[] {
+    public findNearbyNpcs(position: Position, distance: number, instanceId: string | null = null): Npc[] {
         return this.npcTree.colliding({
             x: position.x - (distance / 2),
             y: position.y - (distance / 2),
@@ -335,7 +341,8 @@ export class World {
      * @param distance The maximum distance to search for Players.
      * @param instanceId The player's active instance.
      */
-    public findNearbyPlayers(position: Position, distance: number, instanceId: string = null): Player[] {
+    public findNearbyPlayers(position: Position, distance: number, instanceId: string | null = null): Player[] {
+        // TODO (Jameskmonger) how should this handle `instanceId` param if it's null?
         return this.playerTree.colliding({
             x: position.x - (distance / 2),
             y: position.y - (distance / 2),
@@ -343,17 +350,19 @@ export class World {
             height: distance
         })
             .map(quadree => quadree.actor as Player)
-            .filter(player => player.personalInstance.instanceId === instanceId ||
-                player.instance.instanceId === instanceId);
+            .filter(player => (
+                player.personalInstance.instanceId === instanceId
+                || player.instance?.instanceId === instanceId
+            ));
     }
 
     /**
      * Finds a logged in player via their username.
      * @param username The player's username.
      */
-    public findActivePlayerByUsername(username: string): Player {
+    public findActivePlayerByUsername(username: string): Player | null {
         username = username.toLowerCase();
-        return this.playerList.find(p => p && p.username.toLowerCase() === username);
+        return this.playerList.find(p => p && p.username.toLowerCase() === username) || null;
     }
 
     /**
@@ -387,20 +396,14 @@ export class World {
     }
 
     public async spawnNpc(npcKey: string | number, position: Position, face: Direction,
-                          movementRadius: number = 0, instanceId: string = null): Promise<Npc> {
+                          movementRadius: number = 0, instanceId: string | null = null): Promise<Npc> {
         if(!npcKey) {
-            return null;
+            throw new Error('NPC key must be provided.');
         }
 
-        let npcData: NpcDetails | number = findNpc(npcKey);
+        let npcData = findNpc(npcKey);
         if(!npcData) {
-            logger.warn(`NPC ${npcKey} not yet registered on the server.`);
-
-            if(typeof npcKey === 'number') {
-                npcData = npcKey;
-            } else {
-                return null;
-            }
+            throw new Error(`NPC ${npcKey} not found in the cache`);
         }
 
         const npc = new Npc(npcData,
@@ -506,7 +509,7 @@ export class World {
         return this.playerList.filter(player => !player).length;
     }
 
-    public findPlayer(playerUsername: string): Player {
+    public findPlayer(playerUsername: string): Player | null {
         playerUsername = playerUsername.toLowerCase();
         return this.playerList?.find(p => p !== null && p.username.toLowerCase() === playerUsername) || null;
     }
