@@ -87,7 +87,7 @@ const playerCommandActionPipe = (player: Player, command: string, isConsole: boo
 
 
             for(let i = 0; i < actionHook.args.length; i++) {
-                let argValue: string | number = inputArgs[i] || null;
+                let argValue: string | number | null = inputArgs[i] || null;
                 const pluginArg = actionHook.args[i];
 
                 if(argValue === null || argValue === undefined) {
