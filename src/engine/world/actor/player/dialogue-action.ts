@@ -1,6 +1,7 @@
 import { Player } from '@engine/world/actor/player/player';
 import { filestore } from '@server/game/game-server';
 import { Npc } from '@engine/world/actor/npc';
+import { logger } from '@runejs/common';
 
 export const dialogueWidgetIds = {
     PLAYER: [ 64, 65, 66, 67 ],
@@ -68,7 +69,7 @@ export interface DialogueOptions {
 // @DEPRECATED
 export class DialogueAction {
 
-    private _action: number = null;
+    private _action: number | null = null;
 
     public constructor(private readonly p: Player) {
     }
@@ -115,9 +116,21 @@ export class DialogueAction {
             }
 
             if(options.type === 'NPC') {
-                this.p.outgoingPackets.setWidgetNpcHead(widgetId, 0, options.npc);
-                this.p.outgoingPackets.updateWidgetString(widgetId, 1,
-                    filestore.configStore.npcStore.getNpc(options.npc).name);
+                const npc = options.npc;
+
+                if (npc === undefined) {
+                    // TODO (Jameskmonger) how can this error be handled in a better way?
+                    throw new Error('NPC not supplied.');
+                }
+
+                const cacheNpc = filestore.configStore.npcStore.getNpc(npc);
+
+                if (!cacheNpc) {
+                    throw new Error(`NPC ${npc} not found in cache.`);
+                }
+
+                this.p.outgoingPackets.setWidgetNpcHead(widgetId, 0, npc);
+                this.p.outgoingPackets.updateWidgetString(widgetId, 1, cacheNpc.name || 'Unknown');
             } else if(options.type === 'PLAYER') {
                 this.p.outgoingPackets.setWidgetPlayerHead(widgetId, 0);
                 this.p.outgoingPackets.updateWidgetString(widgetId, 1, this.p.username);
@@ -126,7 +139,7 @@ export class DialogueAction {
             this.p.outgoingPackets.playWidgetAnimation(widgetId, 0, options.emote);
             textOffset = 2;
         } else if(options.type === 'OPTIONS') {
-            this.p.outgoingPackets.updateWidgetString(widgetId, 0, options.title);
+            this.p.outgoingPackets.updateWidgetString(widgetId, 0, options.title || 'No Title');
             textOffset = 1;
         } else if(options.type === 'TEXT') {
             textOffset = 0;
@@ -152,11 +165,11 @@ export class DialogueAction {
         this.p.outgoingPackets.closeActiveWidgets();
     }
 
-    public get action(): number {
+    public get action(): number | null {
         return this._action;
     }
 
-    public set action(value: number) {
+    public set action(value: number | null) {
         this._action = value;
     }
 }
