@@ -1,4 +1,5 @@
 import Quadtree from 'quadtree-lib';
+import uuidv4 from 'uuid/v4';
 import { lastValueFrom, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
@@ -39,7 +40,7 @@ export class World {
     public readonly travelLocations: TravelLocations = new TravelLocations();
     public readonly playerTree: Quadtree<QuadtreeKey>;
     public readonly npcTree: Quadtree<QuadtreeKey>;
-    public readonly globalInstance = new WorldInstance();
+    public readonly globalInstance = new WorldInstance(uuidv4());
     public readonly tickComplete: Subject<void> = new Subject<void>();
     private readonly scheduler = new TaskScheduler();
 
