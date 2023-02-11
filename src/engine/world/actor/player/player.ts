@@ -111,7 +111,7 @@ export class Player extends Actor {
     public achievements: string[] = [];
     public friendsList: string[] = [];
     public ignoreList: string[] = [];
-    public cutscene: Cutscene = null;
+    public cutscene: Cutscene | null = null;
     public playerEvents: EventEmitter = new EventEmitter();
 
     /**
@@ -138,7 +138,7 @@ export class Player extends Actor {
     private _carryWeight: number;
     private _settings: PlayerSettings;
     private _nearbyChunks: Chunk[];
-    private quadtreeKey: QuadtreeKey = null;
+    private quadtreeKey: QuadtreeKey | null = null;
     private privateMessageIndex: number = 1;
 
 
@@ -285,7 +285,13 @@ export class Player extends Actor {
             this.position.level = 0;
         }
 
-        activeWorld.playerTree.remove(this.quadtreeKey);
+        if (this.quadtreeKey) {
+            activeWorld.playerTree.remove(this.quadtreeKey);
+        } else {
+            // TODO (Jameskmonger) remove this log if it isn't a problem state
+            logger.warn(`Player ${this.username} has no quadtree key on logout.`);
+        }
+
         this.save();
 
         this.destroy();
@@ -468,7 +474,7 @@ export class Player extends Actor {
      * @param progress The progress to set the quest to.
      */
     public setQuestProgress(questId: string, progress: QuestKey): void {
-        const questData: Quest = findQuest(questId);
+        const questData = findQuest(questId);
 
         if(!questData) {
             logger.warn(`Quest data not found for ${questId}`);
@@ -1208,8 +1214,8 @@ export class Player extends Actor {
     }
 
     private loadSaveData(): void {
-        const playerSave: PlayerSave = loadPlayerSave(this.username);
-        const firstTimePlayer: boolean = playerSave === null;
+        const playerSave = loadPlayerSave(this.username);
+        const firstTimePlayer = playerSave === null;
         this.firstTimePlayer = firstTimePlayer;
 
         if(!firstTimePlayer) {
@@ -1343,11 +1349,11 @@ export class Player extends Actor {
         return this._nearbyChunks;
     }
 
-    public get instance(): WorldInstance {
+    public get instance(): WorldInstance | null {
         return super.instance;
     }
 
-    public set instance(value: WorldInstance) {
+    public set instance(value: WorldInstance | null) {
         if(this.instance?.instanceId) {
             this.instance.removePlayer(this);
         }

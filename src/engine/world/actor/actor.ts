@@ -52,7 +52,7 @@ export abstract class Actor {
     public lastMovementPosition: Position;
 
     protected randomMovementInterval;
-    protected _instance: WorldInstance = null;
+    protected _instance: WorldInstance | null = null;
 
     /**
      * Is this actor currently active? If true, the actor will have its task queue processed.
@@ -196,7 +196,7 @@ export abstract class Actor {
                     }
 
                     clearInterval(inter);
-                    this.metadata.walkingTo = null;
+                    this.metadata.walkingTo = undefined;
                 }
             }, 100);
         });
@@ -404,8 +404,8 @@ export abstract class Actor {
             return;
         }
 
-        let px: number;
-        let py: number;
+        let px = this.position.x;
+        let py = this.position.y;
         let movementAllowed = false;
 
         while(!movementAllowed) {
@@ -459,8 +459,8 @@ export abstract class Actor {
             return;
         }
 
-        let px: number;
-        let py: number;
+        let px = this.position.x;
+        let py = this.position.y;
         let movementAllowed = false;
 
         while(!movementAllowed) {
@@ -483,8 +483,6 @@ export abstract class Actor {
             }
 
             movementAllowed = valid;
-
-
         }
 
         if(px !== this.position.x || py !== this.position.y) {
@@ -582,11 +580,11 @@ export abstract class Actor {
         this._busy = value;
     }
 
-    public get instance(): WorldInstance {
+    public get instance(): WorldInstance | null {
         return this._instance || activeWorld.globalInstance;
     }
 
-    public set instance(value: WorldInstance) {
+    public set instance(value: WorldInstance | null) {
         this._instance = value;
     }
 
