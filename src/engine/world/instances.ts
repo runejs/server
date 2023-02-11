@@ -97,7 +97,7 @@ export class WorldInstance {
      * @param instanceId [optional] The instanceId to apply to this new world instance.
      * If not provided, the instance will be considered a public global world instance.
      */
-    public constructor(public readonly instanceId: string = null) {
+    public constructor(public readonly instanceId: string) {
     }
 
     /**
@@ -132,7 +132,7 @@ export class WorldInstance {
                 owner.outgoingPackets.setWorldItem(worldItem, worldItem.position);
             } catch(error) {
                 logger.error(`Error spawning world item ${worldItem?.itemId} at ${worldItem?.position?.key}`, error);
-                return null;
+                throw error;
             }
         }
 
@@ -174,12 +174,12 @@ export class WorldInstance {
     public despawnWorldItem(worldItem: WorldItem): void {
         const chunkMap = this.getInstancedChunk(worldItem.position);
 
-        if(!chunkMap.mods.has(worldItem.position.key)) {
+        const chunkMod = chunkMap.mods.get(worldItem.position.key);
+        if(!chunkMod) {
             // Object no longer exists
             return;
         }
 
-        const chunkMod = chunkMap.mods.get(worldItem.position.key);
         if(chunkMod.worldItems && chunkMod.worldItems.length !== 0) {
             const idx = chunkMod.worldItems.findIndex(i => i.itemId === worldItem.itemId && i.amount === worldItem.amount);
             if(idx !== -1) {
@@ -204,6 +204,11 @@ export class WorldInstance {
      * @param worldItem The item to re-spawn.
      */
     public async respawnItem(worldItem: WorldItem): Promise<void> {
+        if (worldItem.respawns === undefined) {
+            logger.warn(`Attempting to respawn item ${worldItem.itemId} at ${worldItem.position.key} that does not have a respawn time.`);
+            return;
+        }
+
         await schedule(worldItem.respawns);
 
         this.spawnWorldItem({
@@ -353,12 +358,12 @@ export class WorldInstance {
         const position = new Position(object.x, object.y, object.level);
         const instancedChunk = this.getInstancedChunk(position);
 
-        if(!instancedChunk.mods.has(position.key)) {
+        const tileModifications = instancedChunk.mods.get(position.key);
+        if(!tileModifications) {
             // Object no longer exists
             return;
         }
 
-        const tileModifications = instancedChunk.mods.get(position.key);
         if(tileModifications.spawnedObjects && tileModifications.spawnedObjects.length !== 0) {
             const idx = tileModifications.spawnedObjects.findIndex(o => o.objectId === object.objectId &&
                 o.type === object.type && o.orientation === object.orientation);
@@ -403,12 +408,13 @@ export class WorldInstance {
         const position = new Position(object.x, object.y, object.level);
         const instancedChunk = this.getInstancedChunk(position);
 
-        if(!instancedChunk.mods.has(position.key)) {
+        const tileModifications = instancedChunk.mods.get(position.key);
+
+        if(!tileModifications) {
             // Object no longer exists
             return;
         }
 
-        const tileModifications = instancedChunk.mods.get(position.key);
         if(tileModifications.hiddenObjects && tileModifications.hiddenObjects.length !== 0) {
             const idx = tileModifications.hiddenObjects.findIndex(o => o.objectId === object.objectId &&
                 o.type === object.type && o.orientation === object.orientation);
@@ -443,10 +449,17 @@ export class WorldInstance {
     public getInstancedChunk(x: number, y: number, level: number): InstancedChunk;
 
     public getInstancedChunk(worldPositionOrX: Position | number, y?: number, level?: number): InstancedChunk {
-        let chunkPosition: Position;
+        let chunkPosition: Position | null = null;
 
         if(typeof worldPositionOrX === 'number') {
-            const chunk = activeWorld.chunkManager.getChunk({ x: worldPositionOrX, y, level }) || null;
+            const chunk = activeWorld.chunkManager.getChunk({
+                x: worldPositionOrX,
+
+                // using ! here because we know that if the first parameter is a number, the other two will be too
+                y: y!,
+                level: level!
+            });
+
             if(chunk) {
                 chunkPosition = chunk.position;
             }
@@ -456,8 +469,11 @@ export class WorldInstance {
 
         if(!chunkPosition) {
             // Chunk not found - fail gracefully
+            logger.error('Failed to find chunk for world position', worldPositionOrX, y, level);
+            logger.error('Something has likely gone horribly wrong!');
+
             return {
-                collisionMap: new CollisionMap(chunkPosition.x, chunkPosition.y, chunkPosition.level, { instance: this }),
+                collisionMap: new CollisionMap(0, 0, 0, { instance: this }),
                 mods: new Map<string, TileModifications>()
             };
         }
@@ -469,7 +485,8 @@ export class WorldInstance {
             });
         }
 
-        return this.chunkModifications.get(chunkPosition.key);
+        // using ! here because we know the chunk exists, as we've just created it if it didn't
+        return this.chunkModifications.get(chunkPosition.key)!;
     }
 
     /**
@@ -479,10 +496,14 @@ export class WorldInstance {
     public getTileModifications(worldPosition: Position): { chunk: InstancedChunk, mods: TileModifications } {
         const instancedChunk = this.getInstancedChunk(worldPosition);
         if(instancedChunk.mods.has(worldPosition.key)) {
-            return { chunk: instancedChunk, mods: instancedChunk.mods.get(worldPosition.key) };
-        } else {
-            return { chunk: instancedChunk, mods: new TileModifications() };
+            return {
+                chunk: instancedChunk,
+                // using ! here because we know it exists
+                mods: instancedChunk.mods.get(worldPosition.key)!
+            };
         }
+
+        return { chunk: instancedChunk, mods: new TileModifications() };
     }
 
     /**
@@ -517,11 +538,15 @@ export class WorldInstance {
      */
     private clearTileIfEmpty(worldPosition: Position): void {
         const instancedChunk = this.getInstancedChunk(worldPosition);
-        if(instancedChunk.mods.has(worldPosition.key)) {
-            const mods = instancedChunk.mods.get(worldPosition.key);
-            if(mods.empty) {
-                instancedChunk.mods.delete(worldPosition.key);
-            }
+
+        const mods = instancedChunk.mods.get(worldPosition.key);
+
+        if (!mods) {
+            return;
+        }
+
+        if(mods.empty) {
+            instancedChunk.mods.delete(worldPosition.key);
         }
     }
 
