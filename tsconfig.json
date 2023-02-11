@@ -12,7 +12,7 @@
         "allowSyntheticDefaultImports": true,
         "sourceMap": true,
         "strict": false,
-        "strictBindCallApply": false,
+        "strictBindCallApply": true,
         "strictFunctionTypes": false,
         "strictNullChecks": true,
         "strictPropertyInitialization": false,
