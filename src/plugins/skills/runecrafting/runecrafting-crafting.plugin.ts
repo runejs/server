@@ -21,6 +21,12 @@ import { logger } from '@runejs/common';
 const craftRune: objectInteractionActionHandler = (details: ObjectInteractionAction) => {
     const { player, object } = details;
     const rune = getEntityByAttr(runes, 'altar.craftingId', object.objectId);
+
+    if (!rune) {
+        logger.error(`No rune [crafting] found for runecrafting plugin: ${object.objectId}`);
+        return;
+    }
+
     const runeDetails = findItem(rune.id);
 
     if (!runeDetails) {

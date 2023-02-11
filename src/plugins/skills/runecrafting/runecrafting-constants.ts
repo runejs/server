@@ -354,8 +354,8 @@ export const combinationRunes: Map<string, RunecraftingCombinationRune> = new Ma
     } as RunecraftingCombinationRune],
 ]);
 
-export function getEntityByAttr<T>(entities: Map<any, T>, attr: string, value: unknown): T {
-    let entity = undefined;
+export function getEntityByAttr<T>(entities: Map<any, T>, attr: string, value: unknown): T | null {
+    let entity: T | null = null;
     const splits = attr.split('.');
 
     // Handles dot seperated attribute names.

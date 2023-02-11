@@ -20,8 +20,18 @@ import { logger } from '@runejs/common';
 
 const enterAltar: itemOnObjectActionHandler = (details: ItemOnObjectAction) => {
     const { player, object, item } = details;
-    const altar: RunecraftingAltar = getEntityByAttr(altars, 'entranceId', object.objectId);
-    const rune: RunecraftingRune = getEntityByAttr(runes, 'altar.entranceId', object.objectId);
+    const altar = getEntityByAttr(altars, 'entranceId', object.objectId);
+    const rune = getEntityByAttr(runes, 'altar.entranceId', object.objectId);
+
+    if (!altar) {
+        logger.error(`No altar [entrance] found for runecrafting altar plugin: ${object.objectId}`);
+        return;
+    }
+
+    if (!rune) {
+        logger.error(`No rune found for runecrafting altar plugin: ${object.objectId}`);
+        return;
+    }
 
     if (item.itemId === itemIds.talismans.elemental) {
         if (rune.talisman.id === itemIds.talismans.air
@@ -63,6 +73,12 @@ function finishEnterAltar(player: Player, item: Item, altar: RunecraftingAltar):
 const exitAltar: objectInteractionActionHandler = (details: ObjectInteractionAction) => {
     const { player, object } = details;
     const altar = getEntityByAttr(altars, 'portalId', object.objectId);
+
+    if (!altar) {
+        logger.error(`No altar [exit] found for runecrafting altar plugin: ${object.objectId}`);
+        return;
+    }
+
     player.teleport(altar.exit);
 };
 

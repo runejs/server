@@ -32,6 +32,11 @@ export const handler: spawnedItemInteractionHandler = ({ player, worldItem, item
         return;
     }
 
+    if (!worldItem.instance) {
+        logger.error(`World item ${worldItem.itemId} has no instance`);
+        return;
+    }
+
     worldItem.instance.despawnWorldItem(worldItem);
 
     const item: Item = {
