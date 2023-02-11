@@ -5,7 +5,9 @@ import { findNpc } from '@engine/config/config-handler';
 
 const talkTo : npcInteractionActionHandler = (details) => {
     const { player, npc } = details;
-    dialogue([player, { npc, key: 'wilough' }, { npc: findNpc('rs:varrock_shilop').gameId, key: 'shilop' }], [
+    // using ! here because we know the item exists
+    const shilop = findNpc('rs:varrock_shilop')!;
+    dialogue([player, { npc, key: 'wilough' }, { npc: shilop.gameId, key: 'shilop' }], [
         player => [Emote.GENERIC, `Hello again.`],
         wilough => [Emote.GENERIC, `You think you're tough do you?`],
         player => [Emote.GENERIC, `Pardon?`],

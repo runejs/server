@@ -12,7 +12,8 @@ import { ObjectConfig } from '@runejs/filestore';
 
 function milkCow(details: { objectConfig: ObjectConfig, player: Player }): void {
     const { player, objectConfig } = details;
-    const emptyBucketItem = findItem(itemIds.bucket);
+    // using ! here because we know the item exists
+    const emptyBucketItem = findItem(itemIds.bucket)!;
 
     if (player.hasItemInInventory(itemIds.bucket)) {
         player.playAnimation(animationIds.milkCow);
@@ -21,7 +22,8 @@ function milkCow(details: { objectConfig: ObjectConfig, player: Player }): void 
         player.giveItem(itemIds.bucketOfMilk);
         player.sendMessage(`You milk the ${objectConfig.name} and receive some milk.`);
     } else {
-        const gillieId = findNpc('rs:gillie_groats').gameId;
+        // using ! here because we know the item exists
+        const gillieId = findNpc('rs:gillie_groats')!.gameId;
         dialogueAction(player)
             .then(async d => d.npc(gillieId, DialogueEmote.LAUGH_1, [`Tee hee! You've never milked a cow before, have you?`]))
             .then(async d => d.player(DialogueEmote.CALM_TALK_1, ['Erm... No. How could you tell?']))

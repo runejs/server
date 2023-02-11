@@ -204,7 +204,7 @@ export const runes: Map<string, RunecraftingRune> = new Map<string, Runecrafting
         altar: altars.get('air'),
         talisman: talismans.get('air'),
         tiara: tiaras.get('air')
-    }],
+    } as RunecraftingRune],
     ['mind', {
         id: 558,
         xp: 5.5,
@@ -213,7 +213,7 @@ export const runes: Map<string, RunecraftingRune> = new Map<string, Runecrafting
         altar: altars.get('mind'),
         talisman: talismans.get('mind'),
         tiara: tiaras.get('mind')
-    }],
+    } as RunecraftingRune],
     ['water', {
         id: 555,
         xp: 6,
@@ -222,7 +222,7 @@ export const runes: Map<string, RunecraftingRune> = new Map<string, Runecrafting
         altar: altars.get('water'),
         talisman: talismans.get('water'),
         tiara: tiaras.get('water')
-    }],
+    } as RunecraftingRune],
     ['earth', {
         id: 557,
         xp: 6.5,
@@ -231,7 +231,7 @@ export const runes: Map<string, RunecraftingRune> = new Map<string, Runecrafting
         altar: altars.get('earth'),
         talisman: talismans.get('earth'),
         tiara: tiaras.get('earth')
-    }],
+    } as RunecraftingRune],
     ['fire', {
         id: 554,
         xp: 7.0,
@@ -240,7 +240,7 @@ export const runes: Map<string, RunecraftingRune> = new Map<string, Runecrafting
         altar: altars.get('fire'),
         talisman: talismans.get('fire'),
         tiara: tiaras.get('fire')
-    }],
+    } as RunecraftingRune],
     ['body', {
         id: 559,
         xp: 7.5,
@@ -249,7 +249,7 @@ export const runes: Map<string, RunecraftingRune> = new Map<string, Runecrafting
         altar: altars.get('body'),
         talisman: talismans.get('body'),
         tiara: tiaras.get('body')
-    }],
+    } as RunecraftingRune],
     ['cosmic', {
         id: 564,
         xp: 8.0,
@@ -258,7 +258,7 @@ export const runes: Map<string, RunecraftingRune> = new Map<string, Runecrafting
         altar: altars.get('cosmic'),
         talisman: talismans.get('cosmic'),
         tiara: tiaras.get('cosmic')
-    }],
+    } as RunecraftingRune],
     ['chaos', {
         id: 562,
         xp: 8.5,
@@ -267,7 +267,7 @@ export const runes: Map<string, RunecraftingRune> = new Map<string, Runecrafting
         altar: altars.get('chaos'),
         talisman: talismans.get('chaos'),
         tiara: tiaras.get('chaos')
-    }],
+    } as RunecraftingRune],
     ['nature', {
         id: 561,
         xp: 9.0,
@@ -276,7 +276,7 @@ export const runes: Map<string, RunecraftingRune> = new Map<string, Runecrafting
         altar: altars.get('nature'),
         talisman: talismans.get('nature'),
         tiara: tiaras.get('nature')
-    }],
+    } as RunecraftingRune],
     ['law', {
         id: 563,
         xp: 9.5,
@@ -285,7 +285,7 @@ export const runes: Map<string, RunecraftingRune> = new Map<string, Runecrafting
         altar: altars.get('law'),
         talisman: talismans.get('law'),
         tiara: tiaras.get('law')
-    }],
+    } as RunecraftingRune],
     ['death', {
         id: 560,
         xp: 10.0,
@@ -294,7 +294,7 @@ export const runes: Map<string, RunecraftingRune> = new Map<string, Runecrafting
         altar: altars.get('death'),
         talisman: talismans.get('death'),
         tiara: tiaras.get('death')
-    }],
+    } as RunecraftingRune],
 ]);
 
 export const combinationRunes: Map<string, RunecraftingCombinationRune> = new Map<string, RunecraftingCombinationRune>([
@@ -306,7 +306,7 @@ export const combinationRunes: Map<string, RunecraftingCombinationRune> = new Ma
         tiara: [tiaras.get('air'), tiaras.get('water')],
         runes: [runes.get('air'), runes.get('water')],
         xp: [8.0, 8.5]
-    }],
+    } as RunecraftingCombinationRune],
     ['dust', {
         id: 4696,
         level: 10,
@@ -315,7 +315,7 @@ export const combinationRunes: Map<string, RunecraftingCombinationRune> = new Ma
         talisman: [talismans.get('air'), talismans.get('earth')],
         runes: [runes.get('air'), runes.get('earth')],
         tiara: [tiaras.get('air'), tiaras.get('earth')],
-    }],
+    } as RunecraftingCombinationRune],
     ['mud', {
         id: 4698,
         level: 13,
@@ -324,7 +324,7 @@ export const combinationRunes: Map<string, RunecraftingCombinationRune> = new Ma
         talisman: [talismans.get('water'), talismans.get('earth')],
         runes: [runes.get('water'), runes.get('earth')],
         tiara: [tiaras.get('water'), tiaras.get('earth')],
-    }],
+    } as RunecraftingCombinationRune],
     ['smoke', {
         id: 4697,
         level: 15,
@@ -333,7 +333,7 @@ export const combinationRunes: Map<string, RunecraftingCombinationRune> = new Ma
         talisman: [talismans.get('air'), talismans.get('fire')],
         runes: [runes.get('air'), runes.get('fire')],
         tiara: [tiaras.get('air'), tiaras.get('fire')],
-    }],
+    } as RunecraftingCombinationRune],
     ['steam', {
         id: 4694,
         level: 19,
@@ -342,7 +342,7 @@ export const combinationRunes: Map<string, RunecraftingCombinationRune> = new Ma
         talisman: [talismans.get('water'), talismans.get('fire')],
         runes: [runes.get('water'), runes.get('fire')],
         tiara: [tiaras.get('water'), tiaras.get('fire')],
-    }],
+    } as RunecraftingCombinationRune],
     ['lava', {
         id: 4699,
         level: 23,
@@ -351,7 +351,7 @@ export const combinationRunes: Map<string, RunecraftingCombinationRune> = new Ma
         talisman: [talismans.get('earth'), talismans.get('fire')],
         runes: [runes.get('earth'), runes.get('fire')],
         tiara: [tiaras.get('earth'), tiaras.get('fire')],
-    }]
+    } as RunecraftingCombinationRune],
 ]);
 
 export function getEntityByAttr<T>(entities: Map<any, T>, attr: string, value: unknown): T {

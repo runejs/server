@@ -8,10 +8,11 @@ export const action: objectInteractionActionHandler = (details) => {
     const veggies = [itemIds.onion, itemIds.grain, itemIds.cabbage];
     details.player.busy = true;
     details.player.playAnimation(827);
-    
-    const random = Math.floor(Math.random() * 3);  
-    const pickedItem = findItem(veggies[random]);
-    
+
+    const random = Math.floor(Math.random() * 3);
+    // using ! here because we know the item exists
+    const pickedItem = findItem(veggies[random])!;
+
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, details.player.inventory);
 
     setTimeout(() => {
