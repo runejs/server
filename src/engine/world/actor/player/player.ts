@@ -1383,7 +1383,7 @@ export class Player extends Actor {
         return this._nearbyChunks;
     }
 
-    public get instance(): WorldInstance | null {
+    public get instance(): WorldInstance {
         return super.instance;
     }
 

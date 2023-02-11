@@ -580,7 +580,7 @@ export abstract class Actor {
         this._busy = value;
     }
 
-    public get instance(): WorldInstance | null {
+    public get instance(): WorldInstance {
         return this._instance || activeWorld.globalInstance;
     }
 
