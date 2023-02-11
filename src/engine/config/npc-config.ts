@@ -86,7 +86,7 @@ export class NpcDetails extends NpcConfig {
 
 }
 
-export function translateNpcServerConfig(npcKey: string, config: NpcServerConfig): NpcDetails {
+export function translateNpcServerConfig(npcKey: string | undefined, config: NpcServerConfig): NpcDetails {
     return new NpcDetails({
         key: npcKey,
         extends: config.extends || undefined,

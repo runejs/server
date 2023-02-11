@@ -186,7 +186,7 @@ export class ItemDetails {
     }
 }
 
-export function translateItemConfig(key: string, config: ItemConfiguration): any {
+export function translateItemConfig(key: string | undefined, config: ItemConfiguration): any {
     return {
         key,
         extends: config.extends || undefined,
