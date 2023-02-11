@@ -1,10 +1,6 @@
 import { filestore } from '@server/game/game-server';
-import { findNpc } from '@engine/config/config-handler';
-import { logger } from '@runejs/common';
-import { Npc } from '@engine/world/actor/npc';
-import { Player } from '@engine/world/actor/player/player';
 
-const varbitMasks = [];
+const varbitMasks: number[] = [];
 
 /**
  * Returns the index to morph actor/object into, based on set config
@@ -21,6 +17,11 @@ export function getVarbitMorphIndex(varbitId, playerConfig) {
         }
     }
     const varbitDefinition = filestore.configStore.varbitStore.getVarbit(varbitId);
+
+    if(!varbitDefinition) {
+        throw new Error(`Could not find varbit definition for id ${varbitId}`);
+    }
+
     const mostSignificantBit = varbitDefinition.mostSignificantBit;
     const configId = varbitDefinition.index;
     const leastSignificantBit = varbitDefinition.leastSignificantBit;
@@ -29,4 +30,3 @@ export function getVarbitMorphIndex(varbitId, playerConfig) {
     const configValue = playerConfig && playerConfig[configId] ? playerConfig[configId] : 0;
     return ((configValue) >> leastSignificantBit & i_8_);
 }
-

@@ -12,6 +12,7 @@ import { rollBirdsNestType, rollGemRockResult, rollGemType } from '@engine/world
 import { findItem } from '@engine/config/config-handler';
 import { activeWorld } from '@engine/world';
 import { loopingEvent } from '@engine/plugins';
+import { logger } from '@runejs/common';
 
 /**
  * Check if a player can harvest a given {@link IHarvestable}
@@ -34,7 +35,14 @@ export function canInitiateHarvest(player: Player, target: IHarvestable, skill: 
         return;
     }
 
-    let targetName: string = findItem(target.itemId).name.toLowerCase();
+    const item = findItem(target.itemId);
+    if (!item) {
+        logger.error(`Could not find item with id ${target.itemId} for harvestable object.`);
+        player.sendMessage("Sorry, there was an error. Please contact a developer.");
+        return;
+    }
+
+    let targetName = item.name.toLowerCase();
     switch (skill) {
         case Skill.MINING:
             targetName = targetName.replace(' ore', '');
@@ -94,7 +102,13 @@ export function handleHarvesting(details: ObjectInteractionAction, tool: Harvest
     if (details.object.objectId === 2111 && details.player.skills.hasLevel(Skill.MINING, 30)) {
         itemToAdd = rollGemRockResult().itemId;
     }
-    let targetName: string = findItem(itemToAdd).name.toLowerCase();
+    const item = findItem(target.itemId);
+    if (!item) {
+        logger.error(`Could not find item with id ${target.itemId} for harvestable object.`);
+        return;
+    }
+
+    let targetName = item.name.toLowerCase();
 
     switch (skill) {
         case Skill.MINING:
@@ -197,5 +211,7 @@ export function handleHarvesting(details: ObjectInteractionAction, tool: Harvest
         }
         elapsedTicks++;
     }, () => {
-    }, () => details.player.playAnimation(null));
+    }, () => {
+        // TODO (Jameskmonger) clear animation
+    });
 }

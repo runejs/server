@@ -11,7 +11,7 @@ export const startsWithVowel = (str: string): boolean => {
 };
 
 
-function getFont(font: number | string) {
+function getFont(font?: number | string) {
     if (font && typeof font === 'number') {
         return filestore.fontStore.getFontById(font);
     } else if (font && typeof font === 'string') {
@@ -58,7 +58,7 @@ const charWidths = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
 
 // TODO refactor a bit
 export function wrapText(text: string, maxWidth: number, font?: number | string): string[] {
-    const lines = [];
+    const lines: string[] = [];
     const selectedFont = getFont(font);
     const colorQueue: string[] = [];
     const decorationQueue: string[] = [];
@@ -120,7 +120,7 @@ export function wrapText(text: string, maxWidth: number, font?: number | string)
         if (rendered) {
             currentLine += char;
         }
-        if (!hidden && currentTagIndex == -1) {
+        if (!hidden && currentTagIndex == -1 && char !== undefined) {
             const charWidth = selectedFont.getCharWidth(char);
             currentWidth += charWidth;
         }
