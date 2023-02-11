@@ -223,7 +223,9 @@ export const findShop = (shopKey: string): Shop | null => {
 
 
 export const findQuest = (questId: string): Quest | null => {
-    return questMap[Object.keys(questMap).find(quest => quest.toLocaleLowerCase() === questId.toLocaleLowerCase())] || null;
+    const questKey = Object.keys(questMap).find(quest => quest.toLocaleLowerCase() === questId.toLocaleLowerCase());
+
+    return questKey ? questMap[questKey] : null;
 };
 
 export const findMusicTrack = (trackId: number): MusicTrack | null => {

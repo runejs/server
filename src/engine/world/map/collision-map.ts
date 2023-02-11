@@ -18,8 +18,8 @@ export class CollisionMap {
     private _insetX: number;
     private _insetY: number;
     private _adjacency: number[][];
-    private chunk: Chunk;
-    private instance: WorldInstance;
+    private chunk: Chunk | null;
+    private instance: WorldInstance | null;
 
     public constructor(x: number, y: number, heightLevel: number, options?: { chunk?: Chunk, instance?: WorldInstance }) {
         this.heightLevel = heightLevel;
@@ -29,8 +29,8 @@ export class CollisionMap {
         this.sizeY = 8;
         this._insetX = (x + 6) * 8;
         this._insetY = (y + 6) * 8;
-        this.chunk = options?.chunk;
-        this.instance = options?.instance;
+        this.chunk = options?.chunk || null;
+        this.instance = options?.instance || null;
         this._adjacency = new Array(this.sizeX);
         for(let i = 0; i < this.sizeX; i++) {
             this._adjacency[i] = new Array(this.sizeY);
@@ -71,7 +71,8 @@ export class CollisionMap {
     public reset(): void {
         for(let x = 0; x < this.sizeX; x++) {
             for(let y = 0; y < this.sizeY; y++) {
-                this._adjacency[x][y] = this.chunk ? 0 : null;
+                // this._adjacency[x][y] = this.chunk ? 0 : null;
+                this._adjacency[x][y] = 0;
             }
         }
     }

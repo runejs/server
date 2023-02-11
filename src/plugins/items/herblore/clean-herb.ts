@@ -2,6 +2,7 @@ import { itemInteractionActionHandler } from '@engine/action';
 import { findItem, widgets } from '@engine/config/config-handler';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { ItemDetails } from '@engine/config/item-config';
+import { logger } from '@runejs/common';
 
 interface IGrimyHerb {
     grimy: ItemDetails;
@@ -113,10 +114,20 @@ export const action: itemInteractionActionHandler = details => {
         player.sendMessage(`You need a Herblore level of ${herb.level} to identify this herb.`, true);
         return;
     }
+
+    const inventoryItem = player.inventory.items[itemSlot];
+
     // Always check for cheaters
-    if(!player.inventory.items[itemSlot] && player.inventory.items[itemSlot].itemId === herb.grimy.gameId) {
+    if (!inventoryItem) {
+        logger.warn(`[herblore] Player ${player.username} tried to clean herb without having it in their inventory.`);
         return;
     }
+
+    if (inventoryItem.itemId !== herb.grimy.gameId) {
+        logger.warn(`[herblore] Player ${player.username} tried to clean herb but itemId did not match.`);
+        return;
+    }
+
     player.skills.addExp('herblore', herb.experience);
     player.inventory.set(itemSlot, { itemId: herb.clean.gameId, amount: 1 });
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, details.player.inventory);
