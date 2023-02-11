@@ -14,7 +14,7 @@ const action: commandActionHandler = (details) => {
     }
 
     const itemSearch: string = args.itemSearch as string;
-    let itemId: number;
+    let itemId: number | null = null;
 
     if(itemSearch.match(/^[0-9]+$/)) {
         itemId = parseInt(itemSearch, 10);
@@ -27,7 +27,7 @@ const action: commandActionHandler = (details) => {
         }
     }
 
-    if(isNaN(itemId)) {
+    if(!itemId || isNaN(itemId)) {
         throw new Error(`Item name not found.`);
     }
 

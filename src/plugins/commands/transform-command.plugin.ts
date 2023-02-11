@@ -1,7 +1,7 @@
 import { commandActionHandler, PlayerCommandActionHook } from '@engine/action';
 
 const action: commandActionHandler = (details) => {
-    const { player } = details;
+    const { player, args } = details;
 
     player.transformInto(details && details.args ? details.args['npcKey'] : null)
 };
@@ -16,7 +16,7 @@ export default {
                 {
                     name: 'npcKey',
                     type: 'either',
-                    defaultValue: null
+                    defaultValue: undefined
                 }
             ],
             handler: action
