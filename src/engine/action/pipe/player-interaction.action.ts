@@ -42,7 +42,7 @@ export interface PlayerInteractionAction {
  * @param option
  */
 const playerInteractionActionPipe = (player: Player, otherPlayer: Player, position: Position,
-                                     option: string): RunnableHooks<PlayerInteractionAction> => {
+                                     option: string): RunnableHooks<PlayerInteractionAction> | null => {
     // Find all player action plugins that reference this option
     let matchingHooks = getActionHooks<PlayerInteractionActionHook>('player_interaction')
         .filter(plugin => questHookFilter(player, plugin) && stringHookFilter(plugin.options, option));

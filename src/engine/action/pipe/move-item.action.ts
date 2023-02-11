@@ -42,7 +42,7 @@ export interface MoveItemAction {
  * @param widget
  */
 const moveItemActionPipe = (player: Player, fromSlot: number, toSlot: number,
-                            widget: { widgetId: number, containerId: number }): RunnableHooks<MoveItemAction> => {
+                            widget: { widgetId: number, containerId: number }): RunnableHooks<MoveItemAction> | null => {
     const matchingHooks = getActionHooks<MoveItemActionHook>('move_item')
         .filter(plugin => numberHookFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 

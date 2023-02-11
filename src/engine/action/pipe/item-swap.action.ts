@@ -42,7 +42,7 @@ export interface ItemSwapAction {
  * @param widget
  */
 const itemSwapActionPipe = (player: Player, fromSlot: number, toSlot: number,
-                            widget: { widgetId: number, containerId: number }): RunnableHooks<ItemSwapAction> => {
+                            widget: { widgetId: number, containerId: number }): RunnableHooks<ItemSwapAction> | null => {
     const matchingHooks = getActionHooks<ItemSwapActionHook>('item_swap')
         .filter(plugin => numberHookFilter(plugin.widgetId || plugin.widgetIds, widget.widgetId));
 

@@ -48,13 +48,13 @@ export interface PlayerCommandAction {
  * @param inputArgs
  */
 const playerCommandActionPipe = (player: Player, command: string, isConsole: boolean,
-                                 inputArgs: string[]): RunnableHooks<PlayerCommandAction> => {
+                                 inputArgs: string[]): RunnableHooks<PlayerCommandAction> | null => {
     command = command.toLowerCase();
 
     // Reload game content
     if (reloadContentCommands.indexOf(command) !== -1) {
         reloadContent(player, isConsole).catch(logger.error);
-        return;
+        return null;
     }
 
     const actionArgs = {};
@@ -121,7 +121,7 @@ const playerCommandActionPipe = (player: Player, command: string, isConsole: boo
 
     if(plugins.length === 0) {
         player.sendLogMessage(`Unhandled command: ${ command }`, isConsole);
-        return;
+        return null;
     }
 
     return {
