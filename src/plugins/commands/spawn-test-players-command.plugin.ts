@@ -33,9 +33,11 @@ const handler: commandActionHandler = ({ player, args }) => {
         player.sendMessage(`Warning: There was only room for ${playerSpawnCount}/${playerCount} player spawns.`);
     }
 
+    // TODO (JameskmongeR) what's the difference between this and `generateFakePlayers`
+
     for(let i = 0; i < playerSpawnCount; i++) {
-        const testPlayer = new Player(null, new Isaac([0, 0, 0, 0]), new Isaac([0, 0, 0, 0]), i,
-            `test${i}`, 'abs', true);
+        // TODO (Jameskmonger) we should be able to create a player without a connection, and without passing nulls in
+        const testPlayer = new Player(null as any, null as any, null as any, i, `test${i}`, 'abs', true);
         activeWorld.registerPlayer(testPlayer);
         testPlayer.interfaceState.closeAllSlots();
 

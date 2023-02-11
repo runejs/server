@@ -436,7 +436,8 @@ export class World {
         const spawnChunk = this.chunkManager.getChunkForWorldPosition(new Position(x, y, 0));
 
         for(let i = 0; i < 1000; i++) {
-            const player = new Player(null, new Isaac([0, 0, 0, 0]), new Isaac([0, 0, 0, 0]), i, `test${i}`, 'abs', true);
+            // TODO (Jameskmonger) we should be able to create a player without a connection, and without passing nulls in
+            const player = new Player(null as any, null as any, null as any, i, `test${i}`, 'abs', true);
             this.registerPlayer(player);
             player.interfaceState.closeAllSlots();
 

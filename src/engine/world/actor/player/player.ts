@@ -124,7 +124,7 @@ export class Player extends Actor {
      */
     public readonly metadata: (Actor['metadata'] & Partial<PlayerMetadata>) = {};
 
-    private readonly _socket: Socket | null;
+    private readonly _socket: Socket;
     private readonly _inCipher: Isaac;
     private readonly _outCipher: Isaac;
     private readonly _outgoingPackets: OutboundPacketHandler;
@@ -142,7 +142,7 @@ export class Player extends Actor {
     private privateMessageIndex: number = 1;
 
 
-    public constructor(socket: Socket | null, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
+    public constructor(socket: Socket, inCipher: Isaac, outCipher: Isaac, clientUuid: number, username: string, password: string, isLowDetail: boolean) {
         super('player');
 
         this._socket = socket;
@@ -1330,7 +1330,7 @@ export class Player extends Actor {
         return super.position;
     }
 
-    public get socket(): Socket | null {
+    public get socket(): Socket {
         return this._socket;
     }
 
