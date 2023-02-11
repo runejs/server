@@ -11,7 +11,7 @@ export class GameServerConnection {
 
     private activePacketId: number | null = null;
     private activePacketSize: number | null = null;
-    private activeBuffer: ByteBuffer;
+    private activeBuffer: ByteBuffer | null;
 
     public constructor(private readonly clientSocket: Socket,
                        private readonly player: Player) {
@@ -19,7 +19,12 @@ export class GameServerConnection {
 
     public decodeMessage(buffer?: ByteBuffer): void | Promise<void> {
         if(!this.activeBuffer) {
-            this.activeBuffer = buffer;
+            if (!buffer) {
+                logger.error(`No buffer provided to decodeMessage.`);
+                return;
+            } else {
+                this.activeBuffer = buffer;
+            }
         } else if(buffer) {
             const readable = this.activeBuffer.readable;
             const newBuffer = new ByteBuffer(readable + buffer.length);
@@ -78,7 +83,7 @@ export class GameServerConnection {
         }
 
         // read packet data
-        let packetData = null;
+        let packetData: ByteBuffer | null = null;
         if(this.activePacketSize !== 0) {
             packetData = new ByteBuffer(this.activePacketSize);
             this.activeBuffer.copy(packetData, 0, this.activeBuffer.readerIndex,
@@ -86,7 +91,7 @@ export class GameServerConnection {
             this.activeBuffer.readerIndex += this.activePacketSize;
         }
 
-        if(!handlePacket(this.player, this.activePacketId, this.activePacketSize, packetData)) {
+        if(packetData && !handlePacket(this.player, this.activePacketId, this.activePacketSize, packetData)) {
             logger.error(`Player packets out of sync for ${this.player.username}, resetting packet buffer...`,
                 `If you're seeing this, there's a packet that needs fixing. :)`);
             clearBuffer = true;
