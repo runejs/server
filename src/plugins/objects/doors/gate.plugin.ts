@@ -102,9 +102,18 @@ const action: objectInteractionActionHandler = (details) => {
 
             const pos = new Position(gate.x + deltaX, gate.y + deltaY, gate.level);
             hingeChunk = activeWorld.chunkManager.getChunkForWorldPosition(pos);
-            gate = hingeChunk.getFilestoreLandscapeObject(details.main, pos);
-            direction = WNES[gate.orientation];
-            position = pos;
+
+            const mainGate = hingeChunk.getFilestoreLandscapeObject(details.main, pos);
+
+            if (mainGate) {
+                gate = mainGate;
+                direction = WNES[gate.orientation];
+                position = pos;
+            } else {
+                logger.error('Could not find main gate for secondary gate at ' + gate.x + ',' + gate.y + ',' + gate.level);
+                player.sendMessage('Oops, something went wrong. Please report this to a developer.');
+            }
+
         } else {
             hinge = details.hinge;
         }

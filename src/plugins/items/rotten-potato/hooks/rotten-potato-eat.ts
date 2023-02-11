@@ -32,7 +32,9 @@ const eatPotato: itemInteractionActionHandler = async (details) => {
             ],
         ]
     ]);
-    switch (chosenOption) {
+
+    // using ! here because we have just set it in the dialogue
+    switch (chosenOption!) {
         case DialogueOption.SET_ALL_STATS:
             break;
         case DialogueOption.TELEPORT_TO_PLAYER:

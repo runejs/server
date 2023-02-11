@@ -3,6 +3,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { World } from '@engine/world';
 import { commandActionHandler } from '@engine/action';
 import { activeWorld } from '@engine/world';
+import { Isaac } from '@engine/net';
 
 
 const handler: commandActionHandler = ({ player, args }) => {
@@ -33,7 +34,7 @@ const handler: commandActionHandler = ({ player, args }) => {
     }
 
     for(let i = 0; i < playerSpawnCount; i++) {
-        const testPlayer = new Player(null, null, null, i,
+        const testPlayer = new Player(null, new Isaac([0, 0, 0, 0]), new Isaac([0, 0, 0, 0]), i,
             `test${i}`, 'abs', true);
         activeWorld.registerPlayer(testPlayer);
         testPlayer.interfaceState.closeAllSlots();
