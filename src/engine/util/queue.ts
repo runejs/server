@@ -46,11 +46,11 @@ export class Queue<TItem> {
      * Remove an item from the front of the queue.
      * @returns The item removed.
      */
-    public dequeue(): TItem {
+    public dequeue(): TItem | undefined {
         const item = this._items.shift();
 
         if (!item) {
-            throw new Error('Cannot dequeue an empty queue.');
+            return undefined;
         }
 
         return item;
