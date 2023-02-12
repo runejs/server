@@ -43,6 +43,7 @@ export const handler: itemInteractionActionHandler = ({ player, itemId, itemSlot
     player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, itemSlot, null);
     player.playSound(soundIds.dropItem, 5);
     player.instance.spawnWorldItem(item, player.position, { owner: player, expires: 300 });
+    // (Jameskmonger) actionsCancelled is deprecated, casting this to satisfy the typecheck for now
     player.actionsCancelled.next(null as unknown as ActionCancelType);
 };
 

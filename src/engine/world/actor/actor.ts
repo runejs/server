@@ -254,6 +254,7 @@ export abstract class Actor {
         this.moveBehind(target);
         const subscription = target.walkingQueue.movementEvent.subscribe(() => {
             if(!this.moveBehind(target)) {
+                // (Jameskmonger) actionsCancelled is deprecated, casting this to satisfy the typecheck for now
                 this.actionsCancelled.next(null as unknown as ActionCancelType);
             }
         });

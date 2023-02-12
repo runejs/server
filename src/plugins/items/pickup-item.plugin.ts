@@ -53,6 +53,7 @@ export const handler: spawnedItemInteractionHandler = ({ player, worldItem, item
 
     player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, addedItem.slot, addedItem.item);
     player.playSound(soundIds.pickupItem, 3);
+    // (Jameskmonger) actionsCancelled is deprecated, casting this to satisfy the typecheck for now
     player.actionsCancelled.next(null as unknown as ActionCancelType);
 };
 
