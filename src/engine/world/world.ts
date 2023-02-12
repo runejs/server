@@ -268,8 +268,8 @@ export class World {
      * @param volume The volume the sound should play at.
      * @param distance The distance which the sound should reach.
      */
-    public playLocationSound(position: Position, soundId: number, volume: number, distance: number = 10): void {
-        this.findNearbyPlayers(position, distance).forEach(player => {
+    public playLocationSound(position: Position, instanceId: string, soundId: number, volume: number, distance: number = 10): void {
+        this.findNearbyPlayers(position, distance, instanceId).forEach(player => {
             player.outgoingPackets.updateReferencePosition(position);
             player.outgoingPackets.playSoundAtPosition(
                 soundId,
@@ -343,8 +343,7 @@ export class World {
      * @param distance The maximum distance to search for Players.
      * @param instanceId The player's active instance.
      */
-    public findNearbyPlayers(position: Position, distance: number, instanceId: string | null = null): Player[] {
-        // TODO (Jameskmonger) how should this handle `instanceId` param if it's null?
+    public findNearbyPlayers(position: Position, distance: number, instanceId: string): Player[] {
         return this.playerTree.colliding({
             x: position.x - (distance / 2),
             y: position.y - (distance / 2),

@@ -129,7 +129,7 @@ export class Npc extends Actor {
             deathAnim = findNpc((defender as Npc).id)?.combatAnimations?.death || animationIds.death
 
             defender.playAnimation(deathAnim);
-            activeWorld.playLocationSound(deathPosition, soundIds.npc.human.maleDeath, 5);
+            activeWorld.playLocationSound(deathPosition, defender.instance.instanceId, soundIds.npc.human.maleDeath, 5);
             const npcDetails = findNpc((defender as Npc).id);
 
             if(!npcDetails || !npcDetails.dropTable) {
@@ -221,7 +221,7 @@ export class Npc extends Actor {
      * @param volume The volume to play the sound at.
      */
     public playSound(soundId: number, volume: number): void {
-        activeWorld.playLocationSound(this.position, soundId, volume);
+        activeWorld.playLocationSound(this.position, this.instance.instanceId, soundId, volume);
     }
 
     /**
