@@ -7,6 +7,8 @@ import { Smithable } from './forging-types';
  * A task that handles the forging of an item.
  *
  * Operates repeatedly every 4 ticks, and stops when the player has forged the amount they wanted.
+ *
+ * @author jameskmonger
  */
 export class ForgingTask extends ActorTask<Player> {
     private elapsedTicks = 0;
@@ -57,6 +59,10 @@ export class ForgingTask extends ActorTask<Player> {
         this.amountForged++;
     }
 
+    /**
+     * Whether the player has the required materials to forge the item.
+     * @returns {boolean} True if the player has the required materials, false otherwise.
+     */
     private hasMaterials() {
         return this.smithable.ingredient.amount <= this.actor.inventory.findAll(this.smithable.ingredient.itemId).length
     }

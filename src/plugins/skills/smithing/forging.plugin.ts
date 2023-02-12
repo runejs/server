@@ -43,8 +43,7 @@ const findSmithableByItemId = (itemId): Smithable => {
 };
 
 /**
- * Check if the player is able to perform the action.
- * @param task
+ * Check if the player is able to forge an item.
  */
 const canForge = (player: Player, smithable: Smithable): boolean => {
     // In case the smithable doesn't exist.

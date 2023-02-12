@@ -8,6 +8,8 @@ import { animationIds, soundIds } from '@engine/world/config';
  * A task that handles the smelting of an item.
  *
  * Operates repeatedly every 3 ticks, and stops when the player has smelted the amount they wanted.
+ *
+ * @author jameskmonger
  */
 export class SmeltingTask extends ActorTask<Player> {
     private elapsedTicks = 0;
@@ -56,9 +58,12 @@ export class SmeltingTask extends ActorTask<Player> {
 
         this.actor.playAnimation(animationIds.smelting);
         this.actor.outgoingPackets.playSound(soundIds.smelting, 5);
-
     }
 
+    /**
+     * Whether the player has the required materials to smelt the item.
+     * @returns {boolean} True if the player has the required materials, false otherwise.
+     */
     private hasMaterials() {
         return this.smeltable.bar.ingredients.every((item) => {
             const itemIndex = this.actor.inventory.findIndex(item);
@@ -70,6 +75,10 @@ export class SmeltingTask extends ActorTask<Player> {
         });
     }
 
+    /**
+     * Whether the player has the required level to smelt the item.
+     * @returns {boolean} True if the player has the required level, false otherwise.
+     */
     private hasLevel() {
         return this.actor.skills.hasLevel(Skill.SMITHING, this.smeltable.bar.requiredLevel);
     }
