@@ -1,6 +1,6 @@
 import { LandscapeObject } from '@runejs/filestore';
 import { findItem } from '@engine/config';
-import { ActorLandscapeObjectInteractionTask, ActorTask } from '@engine/task/impl';
+import { ActorLandscapeObjectInteractionTask } from '@engine/task/impl';
 import { colors, colorText, randomBetween } from '@engine/util';
 import { Player, Skill } from '@engine/world/actor';
 import { HarvestTool, IHarvestable, soundIds } from '@engine/world/config';
@@ -9,20 +9,46 @@ import { rollGemType } from '@engine/world/skill-util/harvest-roll';
 import { canMine } from './chance';
 
 /**
- * A task that handles mining.
+ * A task that handles mining. It is a subclass of ActorLandscapeObjectInteractionTask, which means that it will
+ * walk to the object, and then execute the task when it is in range.
+ *
+ * The mining task will repeat until the player's inventory is full, or the rock is depleted, or the task is otherwise
+ * stopped.
+ *
+ * @author jameskmonger
  */
 export class MiningTask extends ActorLandscapeObjectInteractionTask<Player> {
+    /**
+     * The number of ticks that have elapsed since this task was started.
+     *
+     * We use this to determine when to mine the next ore, or play the next animation.
+     */
     private elapsedTicks = 0;
+
+    /**
+     * The name of the item that we are mining.
+     */
     private targetItemName: string;
 
     constructor(player: Player, landscapeObject: LandscapeObject, private readonly ore: IHarvestable, private readonly tool: HarvestTool) {
         super(player, landscapeObject);
 
-        this.targetItemName = findItem(this.ore.itemId).name.toLowerCase().replace(' ore', '')
+        const item = findItem(ore.itemId);
+
+        if (!item) {
+            throw new Error(`Could not find item with ID ${ore.itemId}`);
+        }
+
+        this.targetItemName = item.name.toLowerCase().replace(' ore', '')
     }
 
     public execute(): void {
         const taskIteration = this.elapsedTicks++;
+
+        // This will be null if the player is not in range of the object.
+        if (!this.landscapeObject) {
+            return;
+        }
 
         if (!this.hasLevel()) {
             this.actor.sendMessage(`You need a Mining level of ${this.ore.level} to mine this rock.`, true);
@@ -81,20 +107,37 @@ export class MiningTask extends ActorLandscapeObjectInteractionTask<Player> {
 
         this.actor.skills.addExp(Skill.MINING, this.ore.experience);
 
+        // check if the rock is depleted
         if (randomBetween(0, 100) <= this.ore.break) {
             this.actor.playSound(soundIds.oreDepeleted);
-            this.actor.instance.replaceGameObject(this.ore.objects.get(this.landscapeObject.objectId),
-                this.landscapeObject, randomBetween(this.ore.respawnLow, this.ore.respawnHigh));
-            this.stop();
             this.actor.playAnimation(null);
+
+            const replacementObject = this.ore.objects.get(this.landscapeObject.objectId);
+
+            if (replacementObject) {
+                const respawnTime = randomBetween(this.ore.respawnLow, this.ore.respawnHigh);
+                this.actor.instance.replaceGameObject(replacementObject, this.landscapeObject, respawnTime);
+            }
+
+            this.stop();
             return;
         }
     }
 
+    /**
+     * Checks if the player has the pickaxe they started with.
+     *
+     * @returns true if the player has the pickaxe, false otherwise
+     */
     private hasMaterials() {
         return this.actor.inventory.has(this.tool.itemId);
     }
 
+    /**
+     * Check that the player still has the level to mine the ore.
+     *
+     * @returns true if the player has the level, false otherwise
+     */
     private hasLevel() {
         return this.actor.skills.hasLevel(Skill.MINING, this.ore.level);
     }
