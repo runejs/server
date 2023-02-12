@@ -94,8 +94,7 @@ export class WorldInstance {
 
     /**
      * Creates a new game world instance.
-     * @param instanceId [optional] The instanceId to apply to this new world instance.
-     * If not provided, the instance will be considered a public global world instance.
+     * @param instanceId The instanceId to apply to this new world instance.
      */
     public constructor(public readonly instanceId: string) {
     }
