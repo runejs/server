@@ -1,5 +1,5 @@
 import {
-    itemOnObjectActionHandler, ItemOnObjectActionHook, ItemInteractionAction, ItemInteractionActionHook, TaskExecutor
+    itemOnObjectActionHandler, ItemOnObjectActionHook, ItemInteractionActionHook
 } from '@engine/action';
 import { widgets } from '@engine/config/config-handler';
 import { Skill } from '@engine/world/actor/skills';
@@ -9,16 +9,7 @@ import { Smithable } from '@plugins/skills/smithing/forging-types';
 import { Player } from '@engine/world/actor/player/player';
 import { findItem } from '@engine/config/config-handler';
 import { Position } from '@engine/world/position';
-
-/**
- * The amount of items the player wants to forge.
- */
-let wantedAmount = 0;
-
-/**
- * The amount of items already forged.
- */
-let forgedAmount = 0;
+import { ForgingTask } from './forging-task';
 
 const mapWidgetItemsToFlatArray = (input) => {
     const result = [];
@@ -44,7 +35,7 @@ const mapToFlatArray = (input) => {
  * Lookup a smithable from just an item id.
  * @param itemId
  */
-const findSmithableByItemId = (itemId) : Smithable => {
+const findSmithableByItemId = (itemId): Smithable => {
     return mapToFlatArray(smithables).find((smithable) => {
         return smithable.item.itemId === itemId;
     });
@@ -54,11 +45,7 @@ const findSmithableByItemId = (itemId) : Smithable => {
  * Check if the player is able to perform the action.
  * @param task
  */
-const canActivate = (task: TaskExecutor<ItemInteractionAction>): boolean => {
-    const { actor, player, actionData } = task.getDetails();
-    const itemId = actionData.itemId;
-    const smithable = findSmithableByItemId(itemId);
-
+const canForge = (player: Player, smithable: Smithable): boolean => {
     // In case the smithable doesn't exist.
     if (!smithable) {
         return false;
@@ -81,56 +68,6 @@ const canActivate = (task: TaskExecutor<ItemInteractionAction>): boolean => {
     player.interfaceState.closeAllSlots();
 
     return true;
-};
-
-/**
- * The actual forging loop.
- * @param task
- * @param taskIteration
- */
-const activate = (task: TaskExecutor<ItemInteractionAction>, taskIteration: number): boolean => {
-    const { player, actionData } = task.getDetails();
-    const itemId = actionData.itemId;
-    const smithable = findSmithableByItemId(itemId);
-
-    // How many? Quick and dirty.
-    switch (actionData.option) {
-        case 'make'     : wantedAmount = 1; break;
-        case 'make-5'   : wantedAmount = 5; break;
-        case 'make-10'  : wantedAmount = 10; break;
-    }
-
-    for(let m=0; m<wantedAmount; m++) {
-        player.playAnimation(898);
-        if(taskIteration % 4 === 0) {
-            if (!hasMaterials(player, smithable) || wantedAmount === forgedAmount) {
-                return false;
-            }
-
-            // Remove ingredients
-            for (let i=0; i<smithable.ingredient.amount; i++) {
-                player.inventory.removeFirst(smithable.ingredient.itemId);
-            }
-
-            // Add item to inventory
-            player.inventory.add({
-                itemId: smithable.item.itemId, amount: smithable.item.amount
-            });
-
-            player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
-            player.skills.addExp(Skill.SMITHING, smithable.experience);
-
-            forgedAmount++;
-            return true;
-        }
-    }
-
-    // Reset the properties, and strap in for the next batch.
-    if (forgedAmount === wantedAmount) {
-        forgedAmount = 0;
-        wantedAmount = 0;
-        return false;
-    }
 };
 
 /**
@@ -198,10 +135,21 @@ export default {
             itemIds: [...mapWidgetItemsToFlatArray(smithables)],
             options: ['make', 'make-5', 'make-10'],
             cancelOtherActions: true,
-            task: {
-                canActivate,
-                activate,
-                interval: 1
+            handler: ({ player, itemId, option }) => {
+                const smithable = findSmithableByItemId(itemId);
+                let wantedAmount = 0;
+
+                switch (option) {
+                    case 'make': wantedAmount = 1; break;
+                    case 'make-5': wantedAmount = 5; break;
+                    case 'make-10': wantedAmount = 10; break;
+                }
+
+                if (!canForge(player, smithable)) {
+                    return;
+                }
+
+                player.enqueueTask(ForgingTask, [smithable, wantedAmount]);
             }
         } as ItemInteractionActionHook
     ]
