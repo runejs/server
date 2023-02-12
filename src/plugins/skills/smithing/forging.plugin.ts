@@ -10,6 +10,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { findItem } from '@engine/config/config-handler';
 import { Position } from '@engine/world/position';
 import { ForgingTask } from './forging-task';
+import { logger } from '@runejs/common';
 
 const mapWidgetItemsToFlatArray = (input) => {
     const result = [];
@@ -54,14 +55,26 @@ const canForge = (player: Player, smithable: Smithable): boolean => {
     // Check if the player has the level required.
     if (smithable.level > player.skills.getLevel(Skill.SMITHING)) {
         const item = findItem(smithable.item.itemId);
+
+        if (!item) {
+            logger.error(`Could not find smithable item with id ${smithable.item.itemId}`);
+            return false;
+        }
+
         player.sendMessage(`You have to be at least level ${smithable.level} to smith ${item.name}s.`, true);
         return false;
     }
 
     // Check if the player has sufficient materials.
     if (!hasMaterials(player, smithable)) {
-        const bar = findItem(smithable.ingredient.itemId);
-        player.sendMessage(`You don't have enough ${bar.name}s.`, true);
+        const ingredient = findItem(smithable.ingredient.itemId);
+
+        if (!ingredient) {
+            logger.error(`Could not find smithable ingredient with id ${smithable.ingredient.itemId}`);
+            return false;
+        }
+
+        player.sendMessage(`You don't have enough ${ingredient.name}s.`, true);
         return false;
     }
 
@@ -97,6 +110,12 @@ const openForgingInterface: itemOnObjectActionHandler = (details) => {
 
     const barLevel = bars.get(item.itemId);
     const bar = findItem(item.itemId);
+
+    if (barLevel === undefined || !bar) {
+        logger.error(`Could not find bar with id ${item.itemId}`);
+        return;
+    }
+
     if (barLevel > player.skills.getLevel(Skill.SMITHING)) {
         player.sendMessage(`You have to be at least level ${barLevel} to smith ${bar.name}s.`, true);
         return;
