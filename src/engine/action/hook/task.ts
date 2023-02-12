@@ -54,13 +54,13 @@ export class TaskExecutor<T> {
 
         if(!!this.task.delay || !!this.task.delayMs) {
             await lastValueFrom(timer(this.task.delayMs !== undefined ? this.task.delayMs :
-                    (this.task.delay || 0 * World.TICK_LENGTH)));
+                    (this.task.delay! * World.TICK_LENGTH)));
         }
 
         if(!!this.task.interval || !!this.task.intervalMs) {
             // Looping execution task
             const intervalMs = this.task.intervalMs !== undefined ? this.task.intervalMs :
-                    (this.task.interval || 0 * World.TICK_LENGTH);
+                    (this.task.interval! * World.TICK_LENGTH);
 
             await new Promise<void>(resolve => {
                 this.intervalSubscription = timer(0, intervalMs).subscribe(

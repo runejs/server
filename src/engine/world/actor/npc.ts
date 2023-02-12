@@ -146,6 +146,7 @@ export class Npc extends Actor {
                     }
 
                     if (!drop.amount) {
+                        logger.error(`Unable to drop item with key: ${drop.itemKey} - no amount specified`);
                         return;
                     }
 

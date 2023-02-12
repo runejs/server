@@ -152,8 +152,6 @@ export class WalkingQueue {
         const walkPosition = this.queue.shift();
 
         if (!walkPosition) {
-            // (Jameskmonger) not sure if this is an issue or not..
-            logger.warn('No walk position found');
             return;
         }
 
@@ -187,8 +185,6 @@ export class WalkingQueue {
                     const runPosition = this.queue.shift();
 
                     if (!runPosition) {
-                        // (Jameskmonger) not sure if this is an issue or not..
-                        logger.warn('No run position found');
                         return;
                     }
 

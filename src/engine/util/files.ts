@@ -19,7 +19,7 @@ export async function* getFiles(directory: string, list: string[] = [], useWhite
 
         if(statistics.isDirectory()) {
             // (Jameskmonger) I set the default value of `true` here, not sure if it is correct.
-            for await (const child of getFiles(path, list, useWhitelist || true)) {
+            for await (const child of getFiles(path, list, useWhitelist || false)) {
                 yield child;
             }
         } else {
