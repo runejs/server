@@ -99,7 +99,7 @@ class WoodcuttingTask extends ActorLandscapeObjectInteractionTask<Player> {
             return;
         }
 
-        // Get tool level, and set it to 2 if the tool is an iron hatchet or iron pickaxe axe
+        // Get tool level, and set it to 2 if the tool is an iron hatchet or iron pickaxe
         // TODO why is this set to 2? Was ported from the old code
         let toolLevel = tool.level - 1;
         if(tool.itemId === 1349 || tool.itemId === 1267) {
