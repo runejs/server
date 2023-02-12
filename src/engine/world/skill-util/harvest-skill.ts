@@ -188,8 +188,7 @@ export function handleHarvesting(details: ObjectInteractionAction, tool: Harvest
                             details.player.instance.replaceGameObject(replacementObject, details.object, respawnTime);
                         }
 
-                        // TODO (Jameskmonger) cancel animation
-                        // details.player.playAnimation(null);
+                        details.player.playAnimation(null);
 
                         loop.cancel();
                         return;
@@ -220,6 +219,6 @@ export function handleHarvesting(details: ObjectInteractionAction, tool: Harvest
         elapsedTicks++;
     }, () => {
     }, () => {
-        // TODO (Jameskmonger) clear animation
+        details.player.playAnimation(null);
     });
 }

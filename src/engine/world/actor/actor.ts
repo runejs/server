@@ -327,7 +327,7 @@ export abstract class Actor {
         }
     }
 
-    public playAnimation(animation: number | Animation): void {
+    public playAnimation(animation: number | Animation | null): void {
         if(typeof animation === 'number') {
             animation = { id: animation, delay: 0 };
         }
