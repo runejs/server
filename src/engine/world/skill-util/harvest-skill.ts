@@ -12,7 +12,7 @@ import { findItem } from '@engine/config/config-handler';
  */
 export function canInitiateHarvest(player: Player, target: IHarvestable, skill: Skill): undefined | HarvestTool {
 
-    let targetName: string = findItem(target.itemId).name.toLowerCase();
+    const targetName: string = findItem(target.itemId).name.toLowerCase();
 
 
     // Check player level against the required level

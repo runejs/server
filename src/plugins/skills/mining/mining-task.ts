@@ -1,12 +1,12 @@
 import { LandscapeObject } from '@runejs/filestore';
-import { findItem } from "@engine/config";
-import { ActorLandscapeObjectInteractionTask, ActorTask } from "@engine/task/impl";
-import { colors, colorText, randomBetween } from "@engine/util";
-import { Player, Skill } from "@engine/world/actor";
-import { HarvestTool, IHarvestable, soundIds } from "@engine/world/config";
-import { checkForGemBoost } from "@engine/world/skill-util/glory-boost";
-import { rollGemType } from "@engine/world/skill-util/harvest-roll";
-import { canMine } from "./chance";
+import { findItem } from '@engine/config';
+import { ActorLandscapeObjectInteractionTask, ActorTask } from '@engine/task/impl';
+import { colors, colorText, randomBetween } from '@engine/util';
+import { Player, Skill } from '@engine/world/actor';
+import { HarvestTool, IHarvestable, soundIds } from '@engine/world/config';
+import { checkForGemBoost } from '@engine/world/skill-util/glory-boost';
+import { rollGemType } from '@engine/world/skill-util/harvest-roll';
+import { canMine } from './chance';
 
 /**
  * A task that handles mining.
