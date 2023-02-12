@@ -1,7 +1,7 @@
-import { ActorTask } from "@engine/task/impl";
+import { ActorTask } from '@engine/task/impl';
 import { widgets } from '@engine/config/config-handler';
-import { Player, Skill } from "@engine/world/actor";
-import { Smithable } from "./forging-types";
+import { Player, Skill } from '@engine/world/actor';
+import { Smithable } from './forging-types';
 
 /**
  * A task that handles the forging of an item.
