@@ -33,7 +33,7 @@ const eatPotato: itemInteractionActionHandler = async (details) => {
         ]
     ]);
 
-    // using ! here because we have just set it in the dialogue
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     switch (chosenOption!) {
         case DialogueOption.SET_ALL_STATS:
             break;

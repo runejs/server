@@ -196,7 +196,7 @@ export const goblinDiplomacyStageHandler: QuestStageHandler = {
                 return null;
             }
 
-            const anims = goblinDetails!.combatAnimations;
+            const anims = goblinDetails.combatAnimations;
 
             if (!anims) {
                 return null;

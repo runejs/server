@@ -36,6 +36,7 @@ export class Position {
     public constructor(arg0: number | Coords | Position, y?: number, level?: number) {
         if(typeof arg0 === 'number') {
             // using ! here, because we know that if arg0 is a number, then y and level are numbers
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             this.move(arg0, y!, level);
         } else {
             this.move(arg0.x, arg0.y, arg0.level);

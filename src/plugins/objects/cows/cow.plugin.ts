@@ -12,7 +12,7 @@ import { ObjectConfig } from '@runejs/filestore';
 
 function milkCow(details: { objectConfig: ObjectConfig, player: Player }): void {
     const { player, objectConfig } = details;
-    // using ! here because we know the item exists
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const emptyBucketItem = findItem(itemIds.bucket)!;
 
     if (player.hasItemInInventory(itemIds.bucket)) {
@@ -22,7 +22,7 @@ function milkCow(details: { objectConfig: ObjectConfig, player: Player }): void 
         player.giveItem(itemIds.bucketOfMilk);
         player.sendMessage(`You milk the ${objectConfig.name} and receive some milk.`);
     } else {
-        // using ! here because we know the item exists
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const gillieId = findNpc('rs:gillie_groats')!.gameId;
         dialogueAction(player)
             .then(async d => d.npc(gillieId, DialogueEmote.LAUGH_1, [`Tee hee! You've never milked a cow before, have you?`]))

@@ -1,7 +1,6 @@
 import { itemInteractionActionHandler } from '@engine/action';
 import { itemIds } from '@engine/world/config/item-ids';
 import { getItemFromContainer } from '@engine/world/items/item-container';
-import { Shop } from '@engine/config/shop-config';
 import { widgets } from '@engine/config/config-handler';
 
 
@@ -82,7 +81,8 @@ export const handler: itemInteractionActionHandler = (details) => {
             coinsIndex = inventory.getFirstOpenSlot();
             inventory.set(coinsIndex, { itemId: itemIds.coins, amount: sellPrice });
         } else {
-            // using a ! here because we know the coins exist in that slot
+            // TODO (Jameskmonger) consider being explicit to prevent dupes
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             inventory.items[coinsIndex]!.amount += sellPrice;
         }
     }

@@ -75,6 +75,7 @@ export class Npc extends Actor {
 
             if(npcDetails.skills) {
                 const skillNames = Object.keys(npcDetails.skills);
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 skillNames.forEach(skillName => this.skills.setLevel(skillName as SkillName, npcDetails.skills![skillName]));
             }
         }

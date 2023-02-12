@@ -71,7 +71,6 @@ export class CollisionMap {
     public reset(): void {
         for(let x = 0; x < this.sizeX; x++) {
             for(let y = 0; y < this.sizeY; y++) {
-                // this._adjacency[x][y] = this.chunk ? 0 : null;
                 this._adjacency[x][y] = 0;
             }
         }

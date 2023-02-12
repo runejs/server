@@ -456,8 +456,10 @@ export class WorldInstance {
                 x: worldPositionOrX,
 
                 // using ! here because we know that if the first parameter is a number, the other two will be too
+                /* eslint-disable @typescript-eslint/no-non-null-assertion */
                 y: y!,
                 level: level!
+                /* eslint-enable @typescript-eslint/no-non-null-assertion */
             });
 
             if(chunk) {
@@ -486,6 +488,7 @@ export class WorldInstance {
         }
 
         // using ! here because we know the chunk exists, as we've just created it if it didn't
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return this.chunkModifications.get(chunkPosition.key)!;
     }
 
@@ -499,6 +502,7 @@ export class WorldInstance {
             return {
                 chunk: instancedChunk,
                 // using ! here because we know it exists
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 mods: instancedChunk.mods.get(worldPosition.key)!
             };
         }
