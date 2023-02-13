@@ -13,8 +13,8 @@ const widgetIds = [
 /**
  * Handles a level-up dialogue action.
  */
-export const handler: widgetInteractionActionHandler = ({ player }) =>
-    player.interfaceState.closeWidget('chatbox');
+export const handler: widgetInteractionActionHandler = ({ player }) => player.interfaceState.closeChatOverlayWidget();
+
 
 export default {
     pluginId: 'rs:close_level_up_message',
