@@ -32,7 +32,9 @@ const eatPotato: itemInteractionActionHandler = async (details) => {
             ],
         ]
     ]);
-    switch (chosenOption) {
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    switch (chosenOption!) {
         case DialogueOption.SET_ALL_STATS:
             break;
         case DialogueOption.TELEPORT_TO_PLAYER:

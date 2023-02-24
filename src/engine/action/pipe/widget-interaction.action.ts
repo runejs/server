@@ -47,7 +47,7 @@ export interface WidgetInteractionAction {
  * @param childId The ID of the widget child being interacted with.
  * @param optionId The widget context option chosen by the player.
  */
-const widgetActionPipe = (player: Player, widgetId: number, childId: number, optionId: number): RunnableHooks<WidgetInteractionAction> => {
+const widgetActionPipe = (player: Player, widgetId: number, childId: number, optionId: number): RunnableHooks<WidgetInteractionAction> | null => {
     const playerWidget = Object.values(player.interfaceState.widgetSlots)
         .find((widget) => widget && widget.widgetId === widgetId);
 

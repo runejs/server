@@ -4,6 +4,7 @@ import { ItemDetails, findItem } from '@engine/config';
 import {
     ActionHook, getActionHooks, numberHookFilter, stringHookFilter, questHookFilter, ActionPipe, RunnableHooks
 } from '@engine/action';
+import { logger } from '@runejs/common';
 
 
 /**
@@ -44,7 +45,7 @@ export interface SpawnedItemInteractionAction {
  * @param worldItem
  * @param option
  */
-const spawnedItemInteractionPipe = (player: Player, worldItem: WorldItem, option: string): RunnableHooks<SpawnedItemInteractionAction> => {
+const spawnedItemInteractionPipe = (player: Player, worldItem: WorldItem, option: string): RunnableHooks<SpawnedItemInteractionAction> | null => {
     // Find all world item action plugins that reference this world item
     let matchingHooks = getActionHooks<SpawnedItemInteractionHook>('spawned_item_interaction').filter(plugin => {
         if(!questHookFilter(player, plugin)) {
@@ -76,6 +77,11 @@ const spawnedItemInteractionPipe = (player: Player, worldItem: WorldItem, option
     }
 
     const itemDetails = findItem(worldItem.itemId);
+
+    if(!itemDetails) {
+        logger.error(`Item ${worldItem.itemId} not registered on the server [spawned-item-interaction action pipe]`);
+        return null;
+    }
 
     return {
         hooks: matchingHooks,

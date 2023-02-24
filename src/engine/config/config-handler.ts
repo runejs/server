@@ -102,13 +102,13 @@ export const findItemTagsInGroupFilter = (groupKeys: string[]): string[] => {
         const current = itemGroupMap[groupKey] || {};
 
         Object.keys(collection).forEach((existingItemKey) => {
-            if(!(existingItemKey in current)) {
+            if(!(existingItemKey in current) && collection) {
                 delete collection[existingItemKey];
             }
         });
     });
 
-    return Object.keys(collection);
+    return Object.keys(collection || {});
 }
 
 
@@ -117,7 +117,7 @@ export const findItem = (itemKey: number | string): ItemDetails | null => {
         return null;
     }
 
-    let gameId: number;
+    let gameId: number | null = null;
     if(typeof itemKey === 'number') {
         gameId = itemKey;
         itemKey = itemIdMap[gameId];
@@ -223,7 +223,9 @@ export const findShop = (shopKey: string): Shop | null => {
 
 
 export const findQuest = (questId: string): Quest | null => {
-    return questMap[Object.keys(questMap).find(quest => quest.toLocaleLowerCase() === questId.toLocaleLowerCase())] || null;
+    const questKey = Object.keys(questMap).find(quest => quest.toLocaleLowerCase() === questId.toLocaleLowerCase());
+
+    return questKey ? questMap[questKey] : null;
 };
 
 export const findMusicTrack = (trackId: number): MusicTrack | null => {
@@ -235,5 +237,5 @@ export const findMusicTrackByButtonId = (buttonId: number): MusicTrack | null =>
 };
 
 export const findSongIdByRegionId = (regionId: number): number | null => {
-    return musicRegionMap.has(regionId) ? musicRegionMap.get(regionId) : null;
+    return musicRegionMap.get(regionId) || null;
 };

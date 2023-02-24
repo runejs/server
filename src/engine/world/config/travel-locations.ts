@@ -34,7 +34,7 @@ export class TravelLocations {
         this.locations = readLocations();
     }
 
-    public find (search: string): TravelLocation {
+    public find (search: string): TravelLocation | null {
         search = search.toLowerCase().trim();
         for (const location of this.locations) {
             if (location.key.indexOf(search) >= 0) {

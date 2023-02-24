@@ -4,7 +4,13 @@ import { Rights } from '@engine/world/actor/player/player';
 import { ItemOnItemAction } from '@engine/action/pipe/item-on-item.action';
 import { WidgetInteractionAction } from '@engine/action/pipe/widget-interaction.action';
 
-export const RottenPotatoItem: ItemDetails = findItem('rs:rotten_potato');
+/**
+ * The rotten potato item.
+ *
+ * (Jameskmonger) I have put ! after findItem() because we know the item exists.
+ */
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+export const RottenPotatoItem: ItemDetails = findItem('rs:rotten_potato')!;
 
 
 export const ExecuteIfAdmin = (details: ItemOnItemAction | WidgetInteractionAction, callback) => {

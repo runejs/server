@@ -46,12 +46,10 @@ export interface NpcInteractionAction {
  * @param position
  * @param option
  */
-const npcInteractionActionPipe = (player: Player, npc: Npc, position: Position, option: string): RunnableHooks<NpcInteractionAction> => {
+const npcInteractionActionPipe = (player: Player, npc: Npc, position: Position, option: string): RunnableHooks<NpcInteractionAction> | null => {
     if(player.busy) {
-        return;
+        return null;
     }
-
-
 
     const morphedNpc = player.getMorphedNpcDetails(npc);
 
@@ -61,7 +59,7 @@ const npcInteractionActionPipe = (player: Player, npc: Npc, position: Position, 
             (!plugin.npcs || stringHookFilter(plugin.npcs, morphedNpc?.key || npc.key)) &&
             (!plugin.options || stringHookFilter(plugin.options, option)));
     const questActions = matchingHooks.filter(plugin => plugin.questRequirement !== undefined);
-    
+
 
     if(questActions.length !== 0) {
         matchingHooks = questActions;

@@ -8,10 +8,10 @@ import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { colors } from '@engine/util/colors';
 import { findItem, widgets } from '@engine/config/config-handler';
-import { PlayerQuest } from '@engine/config/quest-config';
 import { widgetButtonIds, widgetItems } from '@plugins/skills/smithing/smelting-constants';
 import { Bar } from '@plugins/skills/smithing/smelting-types';
 import { loopingEvent } from '@engine/plugins';
+import { logger } from '@runejs/common';
 
 
 export const openSmeltingInterface: objectInteractionActionHandler = (details) => {
@@ -23,7 +23,7 @@ export const openSmeltingInterface: objectInteractionActionHandler = (details) =
 
 // We need to tell the widget what the bars actually look like.
 const loadSmeltingInterface = (details: ObjectInteractionAction) => {
-    const theKnightsSwordQuest : PlayerQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
+    const theKnightsSwordQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
     // Send the items to the widget.
     widgetItems.forEach((item) => {
         details.player.outgoingPackets.setItemOnWidget(widgets.furnace.widgetId, item.slot.modelId, item.bar.barId, 125);
@@ -32,6 +32,9 @@ const loadSmeltingInterface = (details: ObjectInteractionAction) => {
         } else {
             details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.black });
         }
+
+
+        // TODO (Jameskmonger) I don't think that this logic is correct.. it targets all items, not just those related to the quest.
         // Check if the player has completed 'The Knight's Sword' quest, even if the level is okay.
         if (item.bar.quest !== undefined && (theKnightsSwordQuest == undefined || theKnightsSwordQuest.complete)) {
             details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.red });
@@ -46,7 +49,9 @@ const hasIngredients = (details: ButtonAction, ingredients: Item[], inventory: I
     ingredients.forEach((item: Item) => {
         const itemIndex = inventory.findIndex(item);
         if (itemIndex === -1 || inventory.amountInStack(itemIndex) < item.amount) {
-            details.player.sendMessage(`You don't have enough ${findItem(item.itemId).name.toLowerCase()}.`, true);
+            const itemName = findItem(item.itemId)?.name || '';
+
+            details.player.sendMessage(`You don't have enough ${itemName.toLowerCase()}.`, true);
             loop.cancel();
             return;
         }
@@ -59,7 +64,8 @@ const canSmelt = (details: ButtonAction, bar: Bar): boolean =>  {
 
 const smeltProduct = (details: ButtonAction, bar: Bar, count: number) => {
 
-    const theKnightsSwordQuest : PlayerQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
+    // TODO (Jameskmonger) I don't think that this logic is correct.. it targets all items, not just those related to the quest.
+    const theKnightsSwordQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
     if (bar.quest !== undefined && (theKnightsSwordQuest == undefined || theKnightsSwordQuest.complete)) {
         details.player.sendMessage(`You need to complete The Knight's Sword quest first.`, true);
         return;
@@ -67,7 +73,8 @@ const smeltProduct = (details: ButtonAction, bar: Bar, count: number) => {
 
     // Check if the player has the required smithing level.
     if (!canSmelt(details, bar)) {
-        details.player.sendMessage(`You need a smithing level of ${bar.requiredLevel} to smelt ${findItem(bar.barId).name.toLowerCase()}s.`, true);
+        const barName = findItem(bar.barId)?.name || '';
+        details.player.sendMessage(`You need a smithing level of ${bar.requiredLevel} to smelt ${barName.toLowerCase()}s.`, true);
         return;
     }
 
@@ -115,6 +122,11 @@ export const buttonClicked : buttonActionHandler = (details) => {
     }
 
     const product = widgetButtonIds.get(details.buttonId);
+
+    if (!product) {
+        logger.warn(`No smeltable product found for buttonId ${details.buttonId}.`);
+        return;
+    }
 
     details.player.interfaceState.closeAllSlots();
 

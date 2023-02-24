@@ -59,7 +59,11 @@ export class Shop {
         const itemStock = this.container.amount(item.gameId);
 
         if(itemSoldHere) {
-            originalStockAmount = this.originalStock.find(stock => stock && stock[0] === itemKey)[1];
+            const foundStock = this.originalStock.find(stock => stock && stock[0] === itemKey);
+
+            if (foundStock) {
+                originalStockAmount = foundStock[1];
+            }
         } else if(!this.generalStore) {
             return -1; // Can not sell this item to this shop (shop is not a general store!)
         }
@@ -132,7 +136,8 @@ export class Shop {
     private removePlayerFromShop(player: Player) {
         if(player.metadata.lastOpenedShop === this) {
             player.metadata.lastOpenedShop = undefined;
-            player.metadata.shopCloseListener.unsubscribe();
+
+            player.metadata.shopCloseListener?.unsubscribe();
         }
         this.customers = this.customers.filter((c) => c !== player);
     }

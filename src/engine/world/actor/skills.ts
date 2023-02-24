@@ -60,7 +60,7 @@ export const skillDetails: SkillDetail[] = [
     { name: 'Slayer', advancementWidgetId: 173 },
     { name: 'Farming', advancementWidgetId: 162 },
     { name: 'Runecrafting', advancementWidgetId: 172 },
-    null,
+    null as unknown as SkillDetail, // (Jameskmonger) this is a placeholder
     { name: 'Construction' }
 ];
 

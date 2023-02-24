@@ -47,11 +47,13 @@ class FiremakingTask extends ActorWorldItemInteractionTask<Player> {
     ) {
         super(player, logWorldItem);
 
-        this.logInfo = FIREMAKING_LOGS.find(l => l.logItem.gameId === logWorldItem.itemId);
+        const logInfo = FIREMAKING_LOGS.find(l => l.logItem.gameId === logWorldItem.itemId);
 
-        if (!this.logInfo) {
+        if (!logInfo) {
             throw new Error(`Invalid firemaking log item id: ${logWorldItem.itemId}`);
         }
+
+        this.logInfo = logInfo;
     }
 
     /**

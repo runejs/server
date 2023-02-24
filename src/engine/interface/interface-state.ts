@@ -1,5 +1,6 @@
 import { Player } from '@engine/world/actor/player/player';
 import { ItemContainer } from '@engine/world/items/item-container';
+import { logger } from '@runejs/common';
 import { lastValueFrom, Subject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 
@@ -45,7 +46,7 @@ export class Widget {
     public multi: boolean = false;
     public queued: boolean = false;
     public containerId: number;
-    public container: ItemContainer = null;
+    public container: ItemContainer | null = null;
     public fakeWidget?: number;
     public metadata: { [key: string]: any };
 
@@ -133,7 +134,17 @@ export class InterfaceState {
     }
 
     public closeWidget(slot: GameInterfaceSlot, widgetId?: number, data?: number): void {
-        const widget: Widget | null = (slot ? this.widgetSlots[slot] : this.findWidget(widgetId)) || null;
+        let widget: Widget | null = null;
+
+        if (slot) {
+            widget = this.widgetSlots[slot];
+        } else {
+            if (!widgetId) {
+                throw new Error('Invalid widget close request: no slot or widgetId provided');
+            }
+
+            widget = this.findWidget(widgetId);
+        }
 
         if(!widget) {
             return;
@@ -193,7 +204,7 @@ export class InterfaceState {
 
     public findWidget(widgetId: number): Widget | null {
         const slots: GameInterfaceSlot[] = Object.keys(this.widgetSlots) as GameInterfaceSlot[];
-        let widget: Widget;
+        let widget: Widget | null = null;
         slots.forEach(slot => {
             if(this.widgetSlots[slot]?.widgetId === widgetId) {
                 widget = this.widgetSlots[slot];
@@ -252,6 +263,12 @@ export class InterfaceState {
             }
         } else if(slot === 'tabarea') {
             const screenWidget = this.getWidget('screen');
+
+            if (!screenWidget) {
+                logger.error(`Tried to open tab widget ${widgetId} without a screen widget open`);
+                return;
+            }
+
             if(multi) {
                 packets.showScreenAndTabWidgets(screenWidget.widgetId, widgetId);
             } else {

@@ -41,7 +41,7 @@ export const handler: buttonActionHandler = async ({ player, buttonId }) => {
     }
 
     const color = 128;
-    let text: string;
+    let text: string = '';
 
     if(typeof journalHandler === 'function') {
         text = await Promise.resolve(journalHandler(player));
@@ -49,7 +49,7 @@ export const handler: buttonActionHandler = async ({ player, buttonId }) => {
         text = journalHandler;
     }
 
-    let lines;
+    let lines: string[];
     if(text) {
         lines = wrapText(text as string, 395);
     } else {

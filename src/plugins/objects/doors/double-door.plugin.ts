@@ -79,17 +79,18 @@ const action: objectInteractionActionHandler = (details) => {
         return;
     }
 
+    // TODO (Jameskmonger) fix the 'as any' here, I used it to satisfy TypeScript strict checks
     doorAction({
         player,
         object: door,
-        objectConfig: null,
+        objectConfig: null as any,
         position, cacheOriginal,
         option: opening ? 'open' : 'close'
     });
     doorAction({
         player,
         object: otherDoor,
-        objectConfig: null,
+        objectConfig: null as any,
         position: otherDoorPosition,
         cacheOriginal,
         option: opening ? 'open' : 'close'

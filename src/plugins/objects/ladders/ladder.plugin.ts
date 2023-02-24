@@ -2,6 +2,7 @@ import { objectInteractionActionHandler } from '@engine/action';
 import { dialogueAction } from '@engine/world/actor/player/dialogue-action';
 import { World } from '@engine/world';
 import { Position } from '@engine/world/position';
+import { logger } from '@runejs/common';
 
 
 const planes = { min: 0, max: 3 };
@@ -11,13 +12,19 @@ const validate: (level: number) => boolean = (level) => {
 
 export const action: objectInteractionActionHandler = (details) => {
     const { player, option } = details;
+
+    const ladderObjectName = details.objectConfig.name || '';
+    if (!ladderObjectName) {
+        logger.warn(`Ladder object ${details.object.objectId} has no name.`);
+    }
+
     if (option === 'climb') {
         dialogueAction(player)
             .then(async d => d.options(
-                `Climb up or down the ${details.objectConfig.name.toLowerCase()}?`,
+                `Climb up or down the ${ladderObjectName.toLowerCase()}?`,
                 [
-                    `Climb up the ${details.objectConfig.name.toLowerCase()}.`,
-                    `Climb down the ${details.objectConfig.name.toLowerCase()}.`
+                    `Climb up the ${ladderObjectName.toLowerCase()}.`,
+                    `Climb down the ${ladderObjectName.toLowerCase()}.`
                 ]))
             .then(d => {
                 d.close();
@@ -46,10 +53,10 @@ export const action: objectInteractionActionHandler = (details) => {
         }
     }
     if (!validate(newPosition.level)) return;
-    if (!details.objectConfig.name.startsWith('Stair')) {
+    if (!ladderObjectName.startsWith('Stair')) {
         player.playAnimation(up ? 828 : 827);
     }
-    player.sendMessage(`You climb ${option.slice(6)} the ${details.objectConfig.name.toLowerCase()}.`);
+    player.sendMessage(`You climb ${option.slice(6)} the ${ladderObjectName.toLowerCase()}.`);
     setTimeout(() => details.player.teleport(newPosition), World.TICK_LENGTH);
 
 };

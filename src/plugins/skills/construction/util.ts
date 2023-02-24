@@ -1,6 +1,5 @@
 import { Player } from '@engine/world/actor/player/player';
 import { Coords, Position } from '@engine/world/position';
-import { ConstructedRegion } from '@engine/world/map/region';
 import { activeWorld } from '@engine/world';
 
 
@@ -10,7 +9,7 @@ import { activeWorld } from '@engine/world';
  * @param player The player to find the room for.
  */
 export const getCurrentRoom = (player: Player): Coords | null => {
-    const customMap: ConstructedRegion = player.metadata?.customMap;
+    const customMap = player.metadata?.customMap;
 
     if(!customMap) {
         return null;

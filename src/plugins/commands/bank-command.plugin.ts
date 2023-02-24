@@ -8,7 +8,11 @@ import { objectIds } from '@engine/world/config/object-ids';
 const action: commandActionHandler = (details) => {
     const interactionActions = getActionHooks<ObjectInteractionActionHook>('object_interaction')
         .filter(plugin => advancedNumberHookFilter(plugin.objectIds, objectIds.bankBooth, plugin.options, 'use-quickly'));
-    interactionActions.forEach(plugin =>
+    interactionActions.forEach(plugin => {
+        if (!plugin.handler) {
+            return;
+        }
+
         plugin.handler({
             player: details.player,
             object: {
@@ -19,11 +23,12 @@ const action: commandActionHandler = (details) => {
                 orientation: 0,
                 type: 0
             },
-            objectConfig: undefined,
             option: 'use-quickly',
             position: details.player.position,
-            cacheOriginal: undefined
-        }));
+            objectConfig: undefined as any,
+            cacheOriginal: undefined as any
+        })
+    });
 };
 
 export default {
