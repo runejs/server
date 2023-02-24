@@ -1,20 +1,66 @@
 {
-    "rs:lumbridge_general_store": {
-        "name": "Lumbridge General Store",
-        "general_store": true,
-        "shop_sell_rate": 1.3,
-        "rate_modifier": 0.03,
-        "shop_buy_rate": 0.4,
-        "stock": [
-            [ "rs:pot", 5 ],
-            [ "rs:jug", 2 ],
-            [ "rs:shears", 2 ],
-            [ "rs:bucket", 3 ],
-            [ "rs:cake_tin", 2 ],
-            [ "rs:tinderbox", 2 ],
-            [ "rs:chisel", 2 ],
-            [ "rs:spade", 5 ],
-            [ "rs:hammer", 5 ]
-        ]
-    }
+  "rs:lumbridge_general_store": {
+    "name": "Lumbridge General Store",
+    "general_store": true,
+    "shop_sell_rate": 1.3,
+    "shop_buy_rate": 0.4,
+    "rate_modifier": 0.03,
+    "stock": [
+      {
+        "itemKey": "rs:pot",
+        "amount": 5,
+        "restock": 10
+      },
+      {
+        "itemKey": "rs:jug",
+        "amount": 2,
+        "restock": 100
+      },
+      {
+        "itemKey": "rs:shears",
+        "amount": 2,
+        "restock": 100
+      },
+      {
+        "itemKey": "rs:knife",
+        "amount": 5,
+        "restock": 100
+      },
+      {
+        "itemKey": "rs:bucket",
+        "amount": 3,
+        "restock": 10
+      },
+      {
+        "itemKey": "rs:bowl",
+        "amount": 2,
+        "restock": 50
+      },
+      {
+        "itemKey": "rs:cake_tin",
+        "amount": 2,
+        "restock": 50
+      },
+      {
+        "itemKey": "rs:tinderbox",
+        "amount": 2,
+        "restock": 100
+      },
+      {
+        "itemKey": "rs:chisel",
+        "amount": 2,
+        "restock": 100
+      },
+      {
+        "itemKey": "rs:spade",
+        "amount": 5,
+        "restock": 100
+      },
+      {
+        "itemKey": "rs:hammer",
+        "amount": 5,
+        "restock": 100
+      }
+    ]
+  }
 }

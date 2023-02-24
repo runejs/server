@@ -37,7 +37,7 @@ export let shopMap: { [key: string]: Shop };
 export let xteaRegions: { [key: number]: XteaRegion };
 
 export const musicRegionMap = new Map<number, number>();
-export const widgets: { [key: string]: any } = require('../../../data/config/widgets.ts');
+export const widgets: { [key: string]: any } = require('../../../data/config/widgets.json');
 
 export async function loadCoreConfigurations(): Promise<void> {
     xteaRegions = await loadXteaRegionFiles('data/config/xteas');

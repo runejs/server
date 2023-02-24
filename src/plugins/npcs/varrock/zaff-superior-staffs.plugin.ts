@@ -4,7 +4,7 @@ import { findShop } from '@engine/config/config-handler';
 
 
 const tradeAction: npcInteractionActionHandler = ({ player }) =>
-    findShop('rs:zaffs_staffs')?.open(player);
+    findShop('rs:zaffs_superior_staffs')?.open(player);
 
 const talkToAction : npcInteractionActionHandler = (details) => {
     const { player, npc } = details;

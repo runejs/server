@@ -20,11 +20,6 @@
     "rs:wilderness_course": {
         "game_id": 553
     },
-    "rs:werewolf_agility_course": {
-        "game_id": 1379
-    },
-
-
     "rs:agility_jump_green": {
         "game_id": 6518
     },

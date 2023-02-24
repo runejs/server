@@ -42,28 +42,84 @@
         "restock": 700
       },
       {
-        "itemKey": "rs:shears",
-        "amount": 2
+        "itemKey": "rs:leather_body",
+        "amount": 12,
+        "restock": 500
       },
       {
-        "itemKey": "rs:bucket",
-        "amount": 3
+        "itemKey": "rs:leather_gloves",
+        "amount": 10,
+        "restock": 500
       },
       {
-        "itemKey": "rs:cake_tin",
-        "amount": 2
+        "itemKey": "rs:leather_boots",
+        "amount": 10,
+        "restock": 500
       },
       {
-        "itemKey": "rs:chisel",
-        "amount": 2
+        "itemKey": "rs:cooked_meat",
+        "amount": 2,
+        "restock": 500
+      },
+      {
+        "itemKey": "rs:bread",
+        "amount": 10,
+        "restock": 500
+      },
+      {
+        "itemKey": "rs:bronze_bar",
+        "amount": 10,
+        "restock": 500
       },
       {
         "itemKey": "rs:spade",
-        "amount": 5
+        "amount": 10,
+        "restock": 500
+      },
+      {
+        "itemKey": "rs:candle",
+        "amount": 10,
+        "restock": 500
+      },
+      {
+        "itemKey": "rs:unlit_torch",
+        "amount": 10,
+        "restock": 500
+      },
+      {
+        "itemKey": "rs:chisel",
+        "amount": 10,
+        "restock": 500
       },
       {
         "itemKey": "rs:hammer",
-        "amount": 5
+        "amount": 10,
+        "restock": 500
+      },
+      {
+        "itemKey": "rs:papyrus",
+        "amount": 50,
+        "restock": 200
+      },
+      {
+        "itemKey": "rs:charcoal",
+        "amount": 50,
+        "restock": 200
+      },
+      {
+        "itemKey": "rs:vial:water",
+        "amount": 50,
+        "restock": 200
+      },
+      {
+        "itemKey": "rs:machete",
+        "amount": 50,
+        "restock": 200
+      },
+      {
+        "itemKey": "rs:rope",
+        "amount": 10,
+        "restock": 200
       }
     ]
   }

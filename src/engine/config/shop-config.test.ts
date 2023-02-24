@@ -5,26 +5,52 @@ import { findItem, findShop, widgets } from '@engine/config/config-handler';
 describe('shopping', () => {
 
     const shopConfig: ShopConfiguration = {
-        name: 'Test General Store',
-        general_store: true,
-        shop_sell_rate: 1.3,
-        rate_modifier: 0.03,
-        shop_buy_rate: 0.4,
+        name: 'Test Shop',
+        general_store: false,
+        shop_sell_rate: 1.0,
+        shop_buy_rate: 0.55,
+        rate_modifier: 0.02,
         stock: [
-            [ 'rs:pot', 5 ],
-            [ 'rs:jug', 2 ],
-            [ 'rs:shears', 2 ],
-            [ 'rs:bucket', 3 ],
-            [ 'rs:cake_tin', 2 ],
-            [ 'rs:tinderbox', 2 ],
-            [ 'rs:chisel', 2 ],
-            [ 'rs:spade', 5 ],
-            [ 'rs:hammer', 5 ],
+            {
+                itemKey: 'rs:battlestaff',
+                amount: 5,
+                restock: 100
+            },
+            {
+                itemKey: 'rs:staff',
+                amount: 5,
+                restock: 100
+            },
+            {
+                itemKey: 'rs:magic_staff',
+                amount: 5,
+                restock: 200
+            },
+            {
+                itemKey: 'rs:staff_of_air',
+                amount: 2,
+                restock: 1000
+            },
+            {
+                itemKey: 'rs:staff_of_water',
+                amount: 2,
+                restock: 1000
+            },
+            {
+                itemKey: 'rs:staff_of_earth',
+                amount: 2,
+                restock: 1000
+            },
+            {
+                itemKey: 'rs:staff_of_fire',
+                amount: 2,
+                restock: 1000
+            }
         ]
 
     }
 
-    const shopname = 'rs:test_general_store';
+    const shopname = 'rs:test_shop';
     let shop: Shop;
     let world;
 
@@ -41,48 +67,66 @@ describe('shopping', () => {
             expect(shop?.key).toEqual(shopname);
         })
         test('shop stock should be correct', () => {
-            expect(shopConfig.stock.reduce((all, curr) => all && shop.isItemSoldHere(curr[0]), true)).toBeTruthy()
+            expect(shopConfig.stock.reduce((all, curr) => all && shop.isItemSoldHere(curr.itemKey), true)).toBeTruthy()
             expect(shop.isItemSoldHere('rs:salmon')).toBeFalsy()
         })
-        test('shop should buy at correct value', () => {
-            const spadeItem = findItem('rs:spade');
-            const shopSpade = shop.container.items[shop.container.findIndex(spadeItem.gameId)];
-            expect(shop.getBuyPrice(spadeItem)).toBe(Math.round(spadeItem.value * shopConfig.shop_buy_rate))
-            expect(shop.getBuyPrice(spadeItem)).toBe(1)
-            expect(shopSpade.amount).toBe(5)
-            shopSpade.amount += 1;
-            expect(shopSpade.amount).toBe(6)
-            expect(shop.getBuyPrice(spadeItem)).toBe(1)
+        test('player should buy item from shop at correct value', () => { // Player purchases, shop sells
 
+            console.log(shop.container.items.map(a => a?.itemId))
 
-            console.log(shop.getBuyPrice(spadeItem));
+            const battleStaffItem = findItem('rs:battlestaff');
+            if (!battleStaffItem) {
+                throw new Error('battleStaffItem not found in server config');
+            }
+            const shopBStaffIndex = shop.container.findIndex(battleStaffItem.gameId);
+            const shopBstaff = shop.container.items[shopBStaffIndex];
+            if (!shopBstaff) {
+                throw new Error('Battle staff item not found in shop config');
+            }
+            expect(shop.getBuyPrice(battleStaffItem)).toBe(Math.round(battleStaffItem.value * (shopConfig.shop_sell_rate || 1.00)))
+            expect(shop.getBuyPrice(battleStaffItem)).toBe(7000) // BStaff standard price
+            expect(shopBstaff.amount).toBe(5)
+            shopBstaff.amount += 1;
+            expect(shopBstaff.amount).toBe(6)
+            expect(shop.getBuyPrice(battleStaffItem)).toBe(6860);
+            shopBstaff.amount -= 3;
+            expect(shopBstaff.amount).toBe(3)
+            expect(shop.getBuyPrice(battleStaffItem)).toBe(7280);
+
 
         })
-        test('shop should sell at correct value', () => {
+        test('shop should sell at correct value', () => { // Player sells, shop pays
 
-            const spadeItem = findItem('rs:spade');
-            const shopSpade = shop.container.items[shop.container.findIndex(spadeItem.gameId)];
+            const battleStaffItem = findItem('rs:battlestaff');
+            if (!battleStaffItem) {
+                throw new Error('battleStaffItem not found in server config');
+            }
+            const shopBStaffIndex = shop.container.findIndex(battleStaffItem.gameId);
+            const shopBstaff = shop.container.items[shopBStaffIndex];
+            if (!shopBstaff) {
+                throw new Error('Battle staff item not found in shop config');
+            }
 
             // shopSpade.amount = 2;
 
 
-            expect(shopSpade.amount).toBe(5)
-            expect(shop.getSellPrice(spadeItem)).toBe(3)
-            shopSpade.amount = 4;
-            expect(shopSpade.amount).toBe(4)
-            expect(shop.getSellPrice(spadeItem)).toBe(3)
+            expect(shopBstaff.amount).toBe(5)
+            expect(shop.getSellPrice(battleStaffItem)).toBe(3850)
+            shopBstaff.amount = 4;
+            expect(shopBstaff.amount).toBe(4)
+            expect(shop.getSellPrice(battleStaffItem)).toBe(3990)
 
-            shopSpade.amount = 2;
-            expect(shopSpade.amount).toBe(2)
-            expect(shop.getSellPrice(spadeItem)).toBe(4)
+            shopBstaff.amount = 1;
+            expect(shopBstaff.amount).toBe(1)
+            expect(shop.getSellPrice(battleStaffItem)).toBe(4410)
 
-            shopSpade.amount = 16;
-            expect(shopSpade.amount).toBe(16)
-            expect(shop.getSellPrice(spadeItem)).toBe(2)
+            shopBstaff.amount = 16;
+            expect(shopBstaff.amount).toBe(16)
+            expect(shop.getSellPrice(battleStaffItem)).toBe(2310)
 
-            shopSpade.amount = 3;
-            expect(shopSpade.amount).toBe(3)
-            expect(shop.getSellPrice(spadeItem)).toBe(4)
+            shopBstaff.amount = 3;
+            expect(shopBstaff.amount).toBe(3)
+            expect(shop.getSellPrice(battleStaffItem)).toBe(4130)
         })
     })
 })
