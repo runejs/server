@@ -62,7 +62,7 @@ export interface ItemOnObjectAction {
 const itemOnObjectActionPipe = (player: Player, landscapeObject: LandscapeObject,
     objectConfig: ObjectConfig, position: Position,
     item: Item, itemWidgetId: number, itemContainerId: number,
-    cacheOriginal: boolean): RunnableHooks<ItemOnObjectAction> => {
+    cacheOriginal: boolean): RunnableHooks<ItemOnObjectAction> | null => {
     // Find all item on object action plugins that reference this location object
     let matchingHooks = getActionHooks<ItemOnObjectActionHook>('item_on_object')
         .filter(plugin => questHookFilter(player, plugin) &&

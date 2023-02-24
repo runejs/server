@@ -24,7 +24,7 @@ export const reloadContent = async (player: Player, isConsole: boolean = false) 
         'server'
     ].map(p => sep + p + sep);
 
-    const pluginCache = [];
+    const pluginCache: string[] = [];
     const cacheKeys = Object.keys(require.cache);
 
     // Delete node cache for all the old JS plugins

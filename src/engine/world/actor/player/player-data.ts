@@ -59,9 +59,9 @@ export interface PlayerSave {
         address: string;
     };
     appearance: Appearance;
-    inventory: Item[];
-    bank: Item[];
-    equipment: Item[];
+    inventory: (Item | null)[];
+    bank: (Item | null)[];
+    equipment: (Item | null)[];
     skills: SkillValue[];
     settings: PlayerSettings;
     savedMetadata: { [key: string]: any };
@@ -157,7 +157,7 @@ export function playerExists(username: string): boolean {
     return existsSync(filePath);
 }
 
-export function loadPlayerSave(username: string): PlayerSave {
+export function loadPlayerSave(username: string): PlayerSave | null {
     const fileName = username.toLowerCase() + '.json';
     const filePath = join('data/saves', fileName);
 

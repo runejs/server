@@ -32,8 +32,8 @@ export function showUnarmed(player: Player): void {
     updateCombatStyle(player, 'unarmed', style);
 }
 
-export function setWeaponWidget(player: Player, weaponStyle: WeaponStyle, itemDetails: ItemDetails): void {
-    player.modifyWidget(weaponWidgetIds[weaponStyle], { childId: 0, text: itemDetails.name || 'Unknown' });
+export function setWeaponWidget(player: Player, weaponStyle: WeaponStyle, itemDetails: ItemDetails | null): void {
+    player.modifyWidget(weaponWidgetIds[weaponStyle], { childId: 0, text: itemDetails?.name || 'Unknown' });
     player.setSidebarWidget(SidebarTab.COMBAT, weaponWidgetIds[weaponStyle]);
     if(player.savedMetadata.combatStyle) {
         updateCombatStyle(player, weaponStyle, player.savedMetadata.combatStyle[1] || 0);
@@ -77,7 +77,7 @@ const initAction: playerInitActionHandler = ({ player }) => {
 
 const combatStyleSelection: buttonActionHandler = ({ player, buttonId }) => {
     const equippedItem = player.getEquippedItem('main_hand');
-    let weaponStyle = 'unarmed';
+    let weaponStyle: string | null = 'unarmed';
 
     if(equippedItem) {
         weaponStyle = findItem(equippedItem.itemId)?.equipmentData?.weaponInfo?.style || null;

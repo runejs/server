@@ -7,7 +7,7 @@ export class Isaac {
     private r: number[] = Array(256); // result array
     private gnt = 0; // generation counter
 
-    public constructor(seed?: number[]) {
+    public constructor(seed: number[]) {
         this.seed(seed);
     }
 

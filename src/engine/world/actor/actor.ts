@@ -52,7 +52,7 @@ export abstract class Actor {
     public lastMovementPosition: Position;
 
     protected randomMovementInterval;
-    protected _instance: WorldInstance = null;
+    protected _instance: WorldInstance | null = null;
 
     /**
      * Is this actor currently active? If true, the actor will have its task queue processed.
@@ -196,7 +196,7 @@ export abstract class Actor {
                     }
 
                     clearInterval(inter);
-                    this.metadata.walkingTo = null;
+                    this.metadata.walkingTo = undefined;
                 }
             }, 100);
         });
@@ -254,7 +254,8 @@ export abstract class Actor {
         this.moveBehind(target);
         const subscription = target.walkingQueue.movementEvent.subscribe(() => {
             if(!this.moveBehind(target)) {
-                this.actionsCancelled.next(null);
+                // (Jameskmonger) actionsCancelled is deprecated, casting this to satisfy the typecheck for now
+                this.actionsCancelled.next(null as unknown as ActionCancelType);
             }
         });
 
@@ -327,7 +328,7 @@ export abstract class Actor {
         }
     }
 
-    public playAnimation(animation: number | Animation): void {
+    public playAnimation(animation: number | Animation | null): void {
         if(typeof animation === 'number') {
             animation = { id: animation, delay: 0 };
         }
@@ -404,8 +405,8 @@ export abstract class Actor {
             return;
         }
 
-        let px: number;
-        let py: number;
+        let px = this.position.x;
+        let py = this.position.y;
         let movementAllowed = false;
 
         while(!movementAllowed) {
@@ -459,15 +460,15 @@ export abstract class Actor {
             return;
         }
 
-        let px: number;
-        let py: number;
+        let px = this.position.x;
+        let py = this.position.y;
         let movementAllowed = false;
 
         while(!movementAllowed) {
             px = this.position.x;
             py = this.position.y;
 
-            const movementDirection: DirectionData = directionFromIndex(direction);
+            const movementDirection = directionFromIndex(direction);
             if(!movementDirection) {
                 return;
             }
@@ -483,8 +484,6 @@ export abstract class Actor {
             }
 
             movementAllowed = valid;
-
-
         }
 
         if(px !== this.position.x || py !== this.position.y) {
@@ -586,7 +585,7 @@ export abstract class Actor {
         return this._instance || activeWorld.globalInstance;
     }
 
-    public set instance(value: WorldInstance) {
+    public set instance(value: WorldInstance | null) {
         this._instance = value;
     }
 

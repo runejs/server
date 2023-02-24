@@ -3,11 +3,17 @@ import { Item } from '@engine/world/items/item';
 import { getItemFromContainer, ItemContainer } from '@engine/world/items/item-container';
 import { itemIds } from '@engine/world/config/item-ids';
 import { findItem, widgets } from '@engine/config/config-handler';
-import { Shop } from '@engine/config/shop-config';
+import { logger } from '@runejs/common';
 
 
 function removeCoins(inventory: ItemContainer, coinsIndex: number, cost: number): void {
     const coins = inventory.items[coinsIndex];
+
+    if (!coins) {
+        logger.error(`Could not find coins in inventory at slot ${coinsIndex} while trying to remove coins`);
+        return;
+    }
+
     const amountAfterPurchase = coins.amount - cost;
     inventory.set(coinsIndex, { itemId: itemIds.coins, amount: amountAfterPurchase });
 }
@@ -48,6 +54,12 @@ export const handler: itemInteractionActionHandler = (details) => {
     }
 
     const buyItem = findItem(itemId);
+
+    if(!buyItem) {
+        logger.error(`Could not find cache item for item id ${itemId} in shop ${openedShop.id}`);
+        return;
+    }
+
     const buyItemValue = buyItem.value || 0;
     let buyCost = buyAmount * buyItemValue;
     const coinsIndex = player.hasCoins(buyCost);
@@ -69,6 +81,12 @@ export const handler: itemInteractionActionHandler = (details) => {
             }
         } else {
             const inventoryItem = inventory.items[inventoryStackSlot];
+
+            if (!inventoryItem) {
+                logger.error(`Coult not find inventory item at slot ${inventoryStackSlot} for player ${player.username} while trying to stack`);
+                return;
+            }
+
             if(inventoryItem.amount + buyAmount >= 2147483647) {
                 player.sendMessage(`You don't have enough space in your inventory.`);
                 return;

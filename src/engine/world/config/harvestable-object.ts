@@ -366,11 +366,11 @@ export function getOre(ore: Ore): IHarvestable {
 }
 
 export function getOreFromRock(id: number): IHarvestable {
-    return Ores.find(ore => ore.objects.has(id));
+    return Ores.find(ore => ore.objects.has(id)) as IHarvestable;
 }
 
 export function getTreeFromHealthy(id: number): IHarvestable {
-    return Trees.find(tree => tree.objects.has(id));
+    return Trees.find(tree => tree.objects.has(id)) as IHarvestable;
 }
 
 export function getOreFromDepletedRock(id: number): IHarvestable {
@@ -381,7 +381,7 @@ export function getOreFromDepletedRock(id: number): IHarvestable {
             }
         }
         return false;
-    });
+    }) as IHarvestable;
 }
 
 export function getAllOreIds(): number[] {

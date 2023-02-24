@@ -1,7 +1,6 @@
 import { objectInteractionActionHandler } from '@engine/action';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { World } from '@engine/world';
-import { filestore } from '@server/game/game-server';
 import { getAllOreIds, getOreFromRock } from '@engine/world/config/harvestable-object';
 import { findItem } from '@engine/config/config-handler';
 
@@ -11,12 +10,19 @@ const action: objectInteractionActionHandler = (details) => {
     const ore = getOreFromRock(details.object.objectId);
     details.player.playSound(soundIds.oreEmpty, 7, 0);
 
+    const oreItem = findItem(ore.itemId);
+
+    if (!oreItem) {
+        details.player.sendMessage('Sorry, something went wrong. Please report this to a developer.');
+        return;
+    }
+
     setTimeout(() => {
         if (!ore) {
             details.player.sendMessage('There is current no ore available in this rock.');
             return;
         }
-        const oreName = findItem(ore.itemId).name.toLowerCase().replace(' ore', '');
+        const oreName = oreItem.name.toLowerCase().replace(' ore', '');
 
         details.player.sendMessage(`This rock contains ${oreName}.`);
     }, World.TICK_LENGTH * 3);

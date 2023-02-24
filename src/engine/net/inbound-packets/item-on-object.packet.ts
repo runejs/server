@@ -43,7 +43,10 @@ const itemOnObjectPacket = (player: Player, packet: PacketData) => {
     }
 
     let objectConfig = filestore.configStore.objectStore.getObject(objectId);
-    if (objectConfig.configChangeDest) {
+
+    if (!objectConfig) {
+        logger.error(`Could not find object config for object id ${objectId}!`);
+    } else if (objectConfig.configChangeDest) {
         let morphIndex = -1;
         if(objectConfig.varbitId === -1) {
             if(objectConfig.configId !== -1) {

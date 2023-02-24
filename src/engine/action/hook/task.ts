@@ -52,15 +52,17 @@ export class TaskExecutor<T> {
     public async run(): Promise<void> {
         this.running = true;
 
+        /* eslint-disable @typescript-eslint/no-non-null-assertion */
         if(!!this.task.delay || !!this.task.delayMs) {
             await lastValueFrom(timer(this.task.delayMs !== undefined ? this.task.delayMs :
-                    (this.task.delay * World.TICK_LENGTH)));
+                    (this.task.delay! * World.TICK_LENGTH)));
         }
 
         if(!!this.task.interval || !!this.task.intervalMs) {
             // Looping execution task
             const intervalMs = this.task.intervalMs !== undefined ? this.task.intervalMs :
-                    (this.task.interval * World.TICK_LENGTH);
+                    (this.task.interval! * World.TICK_LENGTH);
+            /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
             await new Promise<void>(resolve => {
                 this.intervalSubscription = timer(0, intervalMs).subscribe(
@@ -142,8 +144,6 @@ export class TaskExecutor<T> {
         if(this.task?.onComplete) {
             await this.task.onComplete(this, this.iteration);
         }
-
-        this.session = null;
     }
 
     public getDetails(): TaskDetails<T> {

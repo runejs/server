@@ -50,9 +50,9 @@ export interface ItemOnItemAction {
  * @param usedWithWidgetId
  */
 const itemOnItemActionPipe = (player: Player, usedItem: Item, usedSlot: number, usedWidgetId: number,
-    usedWithItem: Item, usedWithSlot: number, usedWithWidgetId: number): RunnableHooks<ItemOnItemAction> => {
+    usedWithItem: Item, usedWithSlot: number, usedWithWidgetId: number): RunnableHooks<ItemOnItemAction> | null => {
     if(player.busy) {
-        return;
+        return null;
     }
 
     // Find all item on item action plugins that match this action

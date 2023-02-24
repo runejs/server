@@ -26,7 +26,7 @@ const warnings = [
 ];
 
 export function initErrorHandling(): void {
-    process.on('unhandledRejection', (error, promise) => {
+    process.on('unhandledRejection', (error: any, promise) => {
         for(const t of warnings) {
             if(error instanceof t) {
                 logger.warn(`Promise cancelled with warning: ${error.name}`);
