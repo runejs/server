@@ -111,7 +111,7 @@ export class Player extends Actor {
     public achievements: string[] = [];
     public friendsList: string[] = [];
     public ignoreList: string[] = [];
-    public cutscene: Cutscene = null;
+    public cutscene: Cutscene | null = null;
     public playerEvents: EventEmitter = new EventEmitter();
 
     /**
@@ -138,7 +138,7 @@ export class Player extends Actor {
     private _carryWeight: number;
     private _settings: PlayerSettings;
     private _nearbyChunks: Chunk[];
-    private quadtreeKey: QuadtreeKey = null;
+    private quadtreeKey: QuadtreeKey | null = null;
     private privateMessageIndex: number = 1;
 
 
@@ -285,7 +285,13 @@ export class Player extends Actor {
             this.position.level = 0;
         }
 
-        activeWorld.playerTree.remove(this.quadtreeKey);
+        if (this.quadtreeKey) {
+            activeWorld.playerTree.remove(this.quadtreeKey);
+        } else {
+            // TODO (Jameskmonger) remove this log if it isn't a problem state
+            logger.warn(`Player ${this.username} has no quadtree key on logout.`);
+        }
+
         this.save();
 
         this.destroy();
@@ -379,7 +385,11 @@ export class Player extends Actor {
 
             if(this.updateFlags.mapRegionUpdateRequired) {
                 if(this.position.x >= 6400) { // Custom map drawing area is anywhere x >= 6400 on the map
-                    this.outgoingPackets.constructMapRegion(this.metadata.customMap);
+                    if (this.metadata.customMap) {
+                        this.outgoingPackets.constructMapRegion(this.metadata.customMap);
+                    } else {
+                        logger.warn(`Player ${this.username} is in custom map area but has no custom map set.`);
+                    }
                 } else {
                     this.outgoingPackets.updateCurrentMapChunk();
                 }
@@ -404,11 +414,11 @@ export class Player extends Actor {
                 oldChunk.removePlayer(this);
                 newChunk.addPlayer(this);
                 this.chunkChanged(newChunk);
-                this.metadata.updateChunk = null;
+                this.metadata.updateChunk = undefined;
             }
 
             if(this.metadata.teleporting) {
-                this.metadata.teleporting = null;
+                this.metadata.teleporting = undefined;
             }
 
             resolve();
@@ -468,7 +478,7 @@ export class Player extends Actor {
      * @param progress The progress to set the quest to.
      */
     public setQuestProgress(questId: string, progress: QuestKey): void {
-        const questData: Quest = findQuest(questId);
+        const questData = findQuest(questId);
 
         if(!questData) {
             logger.warn(`Quest data not found for ${questId}`);
@@ -506,8 +516,13 @@ export class Player extends Actor {
             }
 
             if(questData.onComplete.questCompleteWidget.itemId) {
-                this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3,
-                    filestore.configStore.itemStore.getItem(questData.onComplete.questCompleteWidget.itemId)?.model2d?.widgetModel);
+                const cacheItemData = filestore.configStore.itemStore.getItem(questData.onComplete.questCompleteWidget.itemId);
+
+                if (cacheItemData && cacheItemData.model2d.widgetModel) {
+                    this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, cacheItemData.model2d.widgetModel);
+                }
+
+
             } else if(questData.onComplete.questCompleteWidget.modelId) {
                 this.outgoingPackets.updateWidgetModel1(widgets.questReward, 3, questData.onComplete.questCompleteWidget.modelId);
             }
@@ -568,9 +583,15 @@ export class Player extends Actor {
      * @param songId The id of the song to play.
      */
     public playSong(songId: number): void {
+        const musicTrack = findMusicTrack(songId);
+        if(!musicTrack) {
+            logger.warn(`Music track not found for id ${songId}`);
+            return;
+        }
+
         this.modifyWidget(widgets.musicPlayerTab, {
             childId: 177,
-            text: findMusicTrack(songId).songName,
+            text: musicTrack.songName,
             textColor: colors.green
         });
         this.savedMetadata['currentSongIdPlaying'] = songId;
@@ -604,9 +625,9 @@ export class Player extends Actor {
      * @returns A Promise<void> that resolves when the player has clicked the "click to continue" button or
      * after their chat messages have been sent.
      */
-    public async sendMessage(messages: string | string[], options: SendMessageOptions): Promise<boolean>;
+    public async sendMessage(messages: string | string[], options?: SendMessageOptions): Promise<boolean>;
 
-    public async sendMessage(messages: string | string[], options: boolean | SendMessageOptions): Promise<boolean> {
+    public async sendMessage(messages: string | string[], options?: boolean | SendMessageOptions): Promise<boolean> {
         if(!Array.isArray(messages)) {
             messages = [ messages ];
         }
@@ -637,6 +658,8 @@ export class Player extends Actor {
         if(showInConsole) {
             messages.forEach(message => this.outgoingPackets.consoleMessage(message));
         }
+
+        return true;
     }
 
     /**
@@ -804,7 +827,7 @@ export class Player extends Actor {
             let strHelp: string = '';
             if(command.args) {
                 for(const arg of command.args) {
-                    if(arg.defaultValue) {
+                    if(arg.defaultValue !== undefined) {
                         strHelp = `${strHelp} \\<${arg.name} = ${arg.defaultValue}>`;
                     } else {
                         strHelp = `${strHelp} \\<${arg.name}>`;
@@ -845,7 +868,7 @@ export class Player extends Actor {
                 return { equipable: true }
             }
         }
-        const missingRequirements = [];
+        const missingRequirements: string[] = [];
         const requirements = item.equipmentData?.requirements;
         if (!requirements) return { equipable: true };
 
@@ -877,14 +900,14 @@ export class Player extends Actor {
             slotIndex = equipmentIndex(slot);
         }
 
-        const itemToUnequip: Item = this.equipment.items[slotIndex];
-        let shouldUnequipOffHand: boolean = false;
-        let shouldUnequipMainHand: boolean = false;
-        const itemDetails: ItemDetails = findItem(itemId);
+        const itemToUnequip = this.equipment.items[slotIndex];
+        let shouldUnequipOffHand = false;
+        let shouldUnequipMainHand = false;
+        const itemDetails = findItem(itemId);
 
         if(!itemDetails || !itemDetails.equipmentData || !itemDetails.equipmentData.equipmentSlot) {
-            this.sendMessage(`Unable to equip item ${itemId}/${itemDetails.name}: Missing equipment data.`);
-            return;
+            this.sendMessage(`Unable to equip item ${itemId}: Missing equipment data.`);
+            return false;
         }
 
         const equippable = this.canEquipItem(itemDetails);
@@ -892,7 +915,7 @@ export class Player extends Actor {
             if(equippable.missingRequirements) {
                 equippable.missingRequirements.forEach(async (s) => this.sendMessage(s));
             }
-            return;
+            return false;
         }
 
         if(itemDetails && itemDetails.equipmentData) {
@@ -900,8 +923,10 @@ export class Player extends Actor {
                 shouldUnequipOffHand = true;
             }
 
-            if(slot === 'off_hand' && this.getEquippedItem('main_hand')) {
-                const mainHandItemData: ItemDetails = findItem(this.getEquippedItem('main_hand').itemId);
+            const mainHandEquipped = this.getEquippedItem('main_hand');
+
+            if(slot === 'off_hand' && mainHandEquipped) {
+                const mainHandItemData = findItem(mainHandEquipped.itemId);
 
                 if(mainHandItemData && mainHandItemData.equipmentData && mainHandItemData.equipmentData.equipmentType === 'two_handed') {
                     shouldUnequipMainHand = true;
@@ -974,7 +999,7 @@ export class Player extends Actor {
             { id: 119, text: 'Strength', value: this.bonuses.skill.strength },
             { id: 120, text: 'Prayer', value: this.bonuses.skill.prayer },
         ].forEach(bonus => this.modifyWidget(widgets.equipmentStats.widgetId, { childId: bonus.id,
-            text: `${bonus.text}: ${bonus.value > 0 ? `+${bonus.value}` : bonus.value}` }));
+            text: `${bonus.text}: ${(bonus.value || 0) > 0 ? `+${bonus.value}` : bonus.value}` }));
     }
 
     public unequipItem(slot: EquipmentSlot | number, updateRequired: boolean = true): boolean {
@@ -1010,9 +1035,9 @@ export class Player extends Actor {
 
     /**
      * Transform's the player's appearance into the specified NPC.
-     * @param npc The NPC to copy the appearance of.
+     * @param npc The NPC to copy the appearance of, or null to reset.
      */
-    public transformInto(npc: Npc | NpcDetails | string | number): void {
+    public transformInto(npc: Npc | NpcDetails | string | number | null): void {
         if(!npc) {
             delete this.savedMetadata.npcTransformation;
             this.updateFlags.appearanceUpdateRequired = true;
@@ -1062,8 +1087,10 @@ export class Player extends Actor {
         }
 
         const npcDetails = findNpc(originalNpc.childrenIds[morphIndex]);
-        if (!npcDetails.key) {
-            logger.warn(`Fetched a morphed NPC, but it isn't yet registered on the server. (id-${originalNpc.id}) (morphedId-${npcDetails.gameId})`);
+        if (!npcDetails) {
+            logger.warn(`Fetched a morphed NPC, but it isn't yet registered on the server. (id-${originalNpc.id}) (morphedId-${originalNpc.childrenIds[morphIndex]})`);
+
+            return;
         }
         return npcDetails;
     }
@@ -1076,7 +1103,12 @@ export class Player extends Actor {
         if(event.type === 'CLEAR_ALL') {
             this.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, this.inventory);
         } else if(event.type === 'ADD') {
-            this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, event.slot, event.item);
+            if (event.slot !== undefined && event.item !== undefined) {
+                this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, event.slot, event.item);
+            } else {
+                logger.error(`Inventory update event was missing slot or item.`, event);
+            }
+
         }
         this.updateCarryWeight();
     }
@@ -1086,12 +1118,19 @@ export class Player extends Actor {
      * @param chunks The chunks to update.
      */
     private sendChunkUpdates(chunks: Chunk[]): void {
+        const instance = this.instance;
+
+        if (!instance) {
+            logger.error(`Player ${this.username} tried to send chunk updates without an instance.`);
+            return;
+        }
+
         chunks.forEach(chunk => {
             this.outgoingPackets.clearChunk(chunk);
 
             const chunkUpdateItems: ChunkUpdateItem[] = [];
 
-            const chunkModifications = this.instance
+            const chunkModifications = instance
                 .getInstancedChunk(chunk.position.x, chunk.position.y, chunk.position.level) || null;
             const personalChunkModifications = this.personalInstance?.getInstancedChunk(chunk.position.x,
                 chunk.position.y, chunk.position.level) || null;
@@ -1137,12 +1176,13 @@ export class Player extends Actor {
         Object.keys(questMap).forEach(questKey => {
             const questData = questMap[questKey];
             const playerQuest = this.quests.find(quest => quest.questId === questData.id);
+
             let color: number;
 
             if (playerQuest?.complete) {
                 // Quest complete, regardless of progress
                 color = colors.green;
-            } else if (playerQuest?.progress > 0) {
+            } else if ((playerQuest?.progress || 0) > 0) {
                 // Quest in progress, not yet complete but progress is greater than 0
                 color = colors.yellow;
             } else {
@@ -1181,7 +1221,7 @@ export class Player extends Actor {
     }
 
     private addBonuses(item: Item): void {
-        const itemData: ItemDetails = findItem(item.itemId);
+        const itemData = findItem(item.itemId);
 
         if(!itemData || !itemData.equipmentData) {
             return;
@@ -1208,8 +1248,8 @@ export class Player extends Actor {
     }
 
     private loadSaveData(): void {
-        const playerSave: PlayerSave = loadPlayerSave(this.username);
-        const firstTimePlayer: boolean = playerSave === null;
+        const playerSave = loadPlayerSave(this.username);
+        const firstTimePlayer = playerSave === null;
         this.firstTimePlayer = firstTimePlayer;
 
         if(!firstTimePlayer) {
@@ -1347,7 +1387,7 @@ export class Player extends Actor {
         return super.instance;
     }
 
-    public set instance(value: WorldInstance) {
+    public set instance(value: WorldInstance | null) {
         if(this.instance?.instanceId) {
             this.instance.removePlayer(this);
         }

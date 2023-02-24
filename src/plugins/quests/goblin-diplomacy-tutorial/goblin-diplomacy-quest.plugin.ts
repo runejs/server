@@ -35,10 +35,11 @@ export const tutorialTabWidgetOrder = [
 ];
 
 export function showTabWidgetHint(player: Player, tabIndex: number, availableTabs: number, finalProgress: number, helpTitle: string, helpText: string): void {
-    player.metadata.tabClickEvent = {
+    const tabClickEvent = {
         tabIndex,
         event: new Subject<boolean>()
     };
+    player.metadata.tabClickEvent = tabClickEvent;
 
     dialogue([ player ], [
         titled => [ helpTitle, helpText ]
@@ -49,9 +50,9 @@ export function showTabWidgetHint(player: Player, tabIndex: number, availableTab
     unlockAvailableTabs(player, availableTabs);
     player.outgoingPackets.blinkTabIcon(tabIndex);
 
-    player.metadata.tabClickEvent.event.pipe(take(1)).subscribe(async () => {
+    tabClickEvent.event.pipe(take(1)).subscribe(async () => {
         player.setQuestProgress('tyn:goblin_diplomacy', finalProgress);
-        player.metadata.tabClickEvent.event.complete();
+        tabClickEvent.event.complete();
         delete player.metadata.tabClickEvent;
         await tutorialHandler(player);
     });

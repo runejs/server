@@ -43,7 +43,7 @@ export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor =
      *
      * @returns The position of this task's landscape object, or null if the landscape object is not present
      */
-    protected get landscapeObjectPosition(): Position {
+    protected get landscapeObjectPosition(): Position | null {
         if (!this._landscapeObject) {
             return null;
         }

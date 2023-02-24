@@ -2,6 +2,7 @@ import { npcInteractionActionHandler } from '@engine/action';
 import { itemIds } from '@engine/world/config/item-ids';
 import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
 import { widgets } from '@engine/config/config-handler';
+import { logger } from '@runejs/common';
 
 const talkToAction : npcInteractionActionHandler = (details) => {
     const { player, npc } = details;
@@ -22,6 +23,11 @@ const talkToAction : npcInteractionActionHandler = (details) => {
 
                         if (!inventory.hasSpace()) {
                             player.sendMessage(`You don't have enough space in your inventory.`);
+                            return;
+                        }
+
+                        if (!item) {
+                            logger.warn(`Could not find item with id ${itemIds.coins} in player inventory. [Karim plugin]`);
                             return;
                         }
 

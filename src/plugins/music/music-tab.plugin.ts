@@ -3,6 +3,7 @@ import { findMusicTrackByButtonId, findSongIdByRegionId, widgets } from '@engine
 import { widgetScripts } from '@engine/world/config';
 import { MusicPlayerMode, MusicTabButtonIds } from '@engine/world/sound';
 import { activeWorld } from '@engine/world';
+import { logger } from '@runejs/common';
 
 export const handler: buttonActionHandler = (details) => {
     const { player, buttonId } = details;
@@ -11,6 +12,11 @@ export const handler: buttonActionHandler = (details) => {
         player.settings.musicPlayerMode = MusicPlayerMode.AUTO;
         const songIdForCurrentRegion = findSongIdByRegionId(
             activeWorld.chunkManager.getRegionIdForWorldPosition(player.position));
+
+        if (!songIdForCurrentRegion) {
+            logger.warn(`No song found for current region`);
+            return;
+        }
 
         if(player.savedMetadata['currentSongIdPlaying'] !== songIdForCurrentRegion) {
             player.playSong(songIdForCurrentRegion);

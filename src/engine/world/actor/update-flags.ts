@@ -52,11 +52,11 @@ export class UpdateFlags {
     private _mapRegionUpdateRequired: boolean;
     private _appearanceUpdateRequired: boolean;
     private _chatMessages: ChatMessage[];
-    private _facePosition: Position;
-    private _faceActor: Actor;
-    private _graphics: Graphic;
-    private _animation: Animation;
-    private _damage: Damage;
+    private _facePosition: Position | null;
+    private _faceActor: Actor | null;
+    private _graphics: Graphic | null;
+    private _animation: Animation | null;
+    private _damage: Damage | null;
 
     public constructor() {
         this._chatMessages = [];
@@ -67,9 +67,9 @@ export class UpdateFlags {
         this._mapRegionUpdateRequired = false;
         this._appearanceUpdateRequired = false;
         this._facePosition = null;
-        this._faceActor = undefined;
+        this._faceActor = null;
         this._graphics = null;
-        this._animation = undefined;
+        this._animation = null;
         this._damage = null;
 
         if(this._chatMessages.length !== 0) {
@@ -122,43 +122,43 @@ export class UpdateFlags {
         this._chatMessages = value;
     }
 
-    public get facePosition(): Position {
+    public get facePosition(): Position | null {
         return this._facePosition;
     }
 
-    public set facePosition(value: Position) {
+    public set facePosition(value: Position | null) {
         this._facePosition = value;
     }
 
-    public get faceActor(): Actor {
+    public get faceActor(): Actor | null {
         return this._faceActor;
     }
 
-    public set faceActor(value: Actor) {
+    public set faceActor(value: Actor | null) {
         this._faceActor = value;
     }
 
-    public get graphics(): Graphic {
+    public get graphics(): Graphic | null {
         return this._graphics;
     }
 
-    public set graphics(value: Graphic) {
+    public set graphics(value: Graphic | null) {
         this._graphics = value;
     }
 
-    public get animation(): Animation {
+    public get animation(): Animation | null {
         return this._animation;
     }
 
-    public set animation(value: Animation) {
+    public set animation(value: Animation | null) {
         this._animation = value;
     }
 
-    public get damage(): Damage {
+    public get damage(): Damage | null {
         return this._damage;
     }
 
-    public set damage(value: Damage) {
+    public set damage(value: Damage | null) {
         this._damage = value;
     }
 }

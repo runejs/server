@@ -9,7 +9,8 @@
                         "defence": 10
                     }
                 }
-            }
+            },
+            "groups": ["black_metal", "equipment"]
         }
     },
 
@@ -31,7 +32,8 @@
                 "magic": -4,
                 "ranged": 20
             }
-        }
+        },
+        "groups": ["legs"]
     },
 
     "rs:black_plateskirt": {
@@ -52,6 +54,7 @@
                 "magic": -4,
                 "ranged": 20
             }
-        }
+        },
+        "groups": ["legs"]
     }
 }

@@ -61,7 +61,13 @@ export const handler: itemInteractionActionHandler = (details) => {
         }
 
         for(let i = 0; i < sellAmount; i++) {
-            inventory.remove(foundItems[i]);
+            const item = foundItems[i];
+
+            if (!item) {
+                throw new Error(`Inventory item was not present, for item id ${itemId} in inventory, while trying to sell`);
+            }
+
+            inventory.remove(item);
         }
     }
 
@@ -81,7 +87,9 @@ export const handler: itemInteractionActionHandler = (details) => {
             coinsIndex = inventory.getFirstOpenSlot();
             inventory.set(coinsIndex, { itemId: itemIds.coins, amount: sellPrice });
         } else {
-            inventory.items[coinsIndex].amount += sellPrice;
+            // TODO (Jameskmonger) consider being explicit to prevent dupes
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            inventory.items[coinsIndex]!.amount += sellPrice;
         }
     }
 

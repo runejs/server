@@ -11,7 +11,7 @@ function flourBin(details: { objectConfig: ObjectConfig, player: Player }): void
     const { player, objectConfig } = details;
 
     if (!details.player.savedMetadata['mill-flour']) {
-        player.sendMessage(`The ${objectConfig.name.toLowerCase()} is already empty. You need to place wheat in the hopper upstairs `);
+        player.sendMessage(`The ${(objectConfig.name || '').toLowerCase()} is already empty. You need to place wheat in the hopper upstairs `);
         player.sendMessage(`first.`);
     } else {
         if (player.hasItemInInventory(itemIds.pot)) {

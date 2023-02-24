@@ -48,7 +48,7 @@ const spawnSceneryAction: commandActionHandler = ({ player, args }) => {
 const undoSceneryAction: commandActionHandler = (details) => {
     const { player } = details;
 
-    const o: LandscapeObject = player.metadata.lastSpawnedScenery;
+    const o = player.metadata.lastSpawnedScenery;
 
     if(!o) {
         return;

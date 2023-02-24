@@ -12,7 +12,13 @@ import { rollBirdsNestType, rollGemRockResult, rollGemType } from '@engine/world
 import { findItem } from '@engine/config/config-handler';
 import { activeWorld } from '@engine/world';
 import { loopingEvent } from '@engine/plugins';
+import { logger } from '@runejs/common';
 
+/**
+ * Check if a player can harvest a given {@link IHarvestable}
+ *
+ * @returns a {@link HarvestTool} if the player can harvest the object, or undefined if they cannot.
+ */
 export function canInitiateHarvest(player: Player, target: IHarvestable, skill: Skill): undefined | HarvestTool {
     if (!target) {
         switch (skill) {
@@ -29,7 +35,14 @@ export function canInitiateHarvest(player: Player, target: IHarvestable, skill: 
         return;
     }
 
-    let targetName: string = findItem(target.itemId).name.toLowerCase();
+    const item = findItem(target.itemId);
+    if (!item) {
+        logger.error(`Could not find item with id ${target.itemId} for harvestable object.`);
+        player.sendMessage('Sorry, there was an error. Please contact a developer.');
+        return;
+    }
+
+    let targetName = item.name.toLowerCase();
     switch (skill) {
         case Skill.MINING:
             targetName = targetName.replace(' ore', '');
@@ -89,7 +102,13 @@ export function handleHarvesting(details: ObjectInteractionAction, tool: Harvest
     if (details.object.objectId === 2111 && details.player.skills.hasLevel(Skill.MINING, 30)) {
         itemToAdd = rollGemRockResult().itemId;
     }
-    let targetName: string = findItem(itemToAdd).name.toLowerCase();
+    const item = findItem(target.itemId);
+    if (!item) {
+        logger.error(`Could not find item with id ${target.itemId} for harvestable object.`);
+        return;
+    }
+
+    let targetName = item.name.toLowerCase();
 
     switch (skill) {
         case Skill.MINING:
@@ -161,10 +180,17 @@ export function handleHarvesting(details: ObjectInteractionAction, tool: Harvest
                     details.player.skills.addExp(skill, target.experience);
                     if (randomBetween(0, 100) <= target.break) {
                         details.player.playSound(soundIds.oreDepeleted);
-                        details.player.instance.replaceGameObject(target.objects.get(details.object.objectId),
-                            details.object, randomBetween(target.respawnLow, target.respawnHigh));
-                        loop.cancel();
+
+                        const replacementObject = target.objects.get(details.object.objectId);
+                        const respawnTime = randomBetween(target.respawnLow, target.respawnHigh);
+
+                        if (replacementObject) {
+                            details.player.instance.replaceGameObject(replacementObject, details.object, respawnTime);
+                        }
+
                         details.player.playAnimation(null);
+
+                        loop.cancel();
                         return;
                     }
                 } else {
@@ -192,5 +218,7 @@ export function handleHarvesting(details: ObjectInteractionAction, tool: Harvest
         }
         elapsedTicks++;
     }, () => {
-    }, () => details.player.playAnimation(null));
+    }, () => {
+        details.player.playAnimation(null);
+    });
 }

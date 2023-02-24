@@ -22,6 +22,12 @@ const debugMapRegion = (player: Player, mapRegionX: number, mapRegionY: number,
 
     const region = activeWorld.chunkManager.regionMap.get(key);
 
+    if (!region) {
+        player.sendMessage(`Map region not loaded.`);
+        logger.error(`Map region not loaded. ${key}`)
+        return;
+    }
+
     let debug: string = `\nRegion ${key},${level}\n\n`;
     for(let y = 63; y >= 0; y--) {
         const line = new Array(64).fill('?');

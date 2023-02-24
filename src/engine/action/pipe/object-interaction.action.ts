@@ -54,7 +54,7 @@ export interface ObjectInteractionAction {
  * @param cacheOriginal
  */
 const objectInteractionActionPipe = (player: Player, landscapeObject: LandscapeObject, objectConfig: ObjectConfig,
-                                     position: Position, option: string, cacheOriginal: boolean): RunnableHooks<ObjectInteractionAction> => {
+                                     position: Position, option: string, cacheOriginal: boolean): RunnableHooks<ObjectInteractionAction> | null => {
     if(player.metadata.blockObjectInteractions) {
         return null;
     }

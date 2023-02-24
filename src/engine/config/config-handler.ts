@@ -5,7 +5,6 @@ import {
     ItemDetails,
     ItemPresetConfiguration,
     loadItemConfigurations,
-    translateItemConfig
 } from '@engine/config/item-config';
 import { filestore } from '@server/game/game-server';
 import {
@@ -24,6 +23,7 @@ import { questMap } from '@engine/plugins';
 
 
 export let itemMap: { [key: string]: ItemDetails };
+export let itemGroupMap: Record<string, Record<string, boolean>>;
 export let itemIdMap: { [key: number]: string };
 export let objectMap: { [key: number]: ObjectConfig };
 export let itemPresetMap: ItemPresetConfiguration;
@@ -46,8 +46,9 @@ export async function loadCoreConfigurations(): Promise<void> {
 export async function loadGameConfigurations(): Promise<void> {
     logger.info(`Loading server configurations...`);
 
-    const { items, itemIds, itemPresets } = await loadItemConfigurations('data/config/items/');
+    const { items, itemIds, itemPresets, itemGroups } = await loadItemConfigurations('data/config/items/');
     itemMap = items;
+    itemGroupMap = itemGroups;
     itemIdMap = itemIds;
     itemPresetMap = itemPresets;
 
@@ -70,12 +71,53 @@ export async function loadGameConfigurations(): Promise<void> {
 }
 
 
+/**
+ * find all items in all select groups
+ * @param groupKeys array of string of which to find items connected with
+ * @return itemsKeys array of itemkeys in all select groups
+ */
+export const findItemTagsInGroups = (groupKeys: string[]): string[] => {
+    return Object.keys(groupKeys.reduce<Record<string, boolean>>((all, groupKey)=> {
+        const items = itemGroupMap[groupKey] || {};
+        return { ...all, ...items };
+    }, {}));
+}
+
+
+/**
+ * find all items which are shared by all the groups, and discard items not in all groups
+ * @param groupKeys groups keys which to find items shared by
+ * @return itemKeys of items shared by all groups
+ */
+export const findItemTagsInGroupFilter = (groupKeys: string[]): string[] => {
+    if(!groupKeys || groupKeys.length === 0) {
+        return [];
+    }
+    let collection: Record<string, boolean> | undefined = undefined;
+    groupKeys.forEach((groupKey) => {
+        if(!collection) {
+            collection = { ...(itemGroupMap[groupKey] || {}) };
+            return;
+        }
+        const current = itemGroupMap[groupKey] || {};
+
+        Object.keys(collection).forEach((existingItemKey) => {
+            if(!(existingItemKey in current) && collection) {
+                delete collection[existingItemKey];
+            }
+        });
+    });
+
+    return Object.keys(collection || {});
+}
+
+
 export const findItem = (itemKey: number | string): ItemDetails | null => {
     if(!itemKey) {
         return null;
     }
 
-    let gameId: number;
+    let gameId: number | null = null;
     if(typeof itemKey === 'number') {
         gameId = itemKey;
         itemKey = itemIdMap[gameId];
@@ -95,20 +137,6 @@ export const findItem = (itemKey: number | string): ItemDetails | null => {
         }
         if(item?.gameId) {
             gameId = item.gameId;
-        }
-
-        if(item?.extends) {
-            let extensions = item.extends;
-            if(typeof extensions === 'string') {
-                extensions = [ extensions ];
-            }
-
-            extensions.forEach(extKey => {
-                const extensionItem = itemPresetMap[extKey];
-                if(extensionItem) {
-                    item = _.merge(item, translateItemConfig(undefined, extensionItem));
-                }
-            });
         }
     }
 
@@ -195,7 +223,9 @@ export const findShop = (shopKey: string): Shop | null => {
 
 
 export const findQuest = (questId: string): Quest | null => {
-    return questMap[Object.keys(questMap).find(quest => quest.toLocaleLowerCase() === questId.toLocaleLowerCase())] || null;
+    const questKey = Object.keys(questMap).find(quest => quest.toLocaleLowerCase() === questId.toLocaleLowerCase());
+
+    return questKey ? questMap[questKey] : null;
 };
 
 export const findMusicTrack = (trackId: number): MusicTrack | null => {
@@ -207,5 +237,5 @@ export const findMusicTrackByButtonId = (buttonId: number): MusicTrack | null =>
 };
 
 export const findSongIdByRegionId = (regionId: number): number | null => {
-    return musicRegionMap.has(regionId) ? musicRegionMap.get(regionId) : null;
+    return musicRegionMap.get(regionId) || null;
 };

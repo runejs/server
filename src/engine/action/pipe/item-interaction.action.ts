@@ -3,6 +3,7 @@ import { findItem, ItemDetails } from '@engine/config';
 import {
     ActionHook, getActionHooks, numberHookFilter, stringHookFilter, questHookFilter, ActionPipe, RunnableHooks
 } from '@engine/action';
+import { logger } from '@runejs/common';
 
 
 /**
@@ -57,7 +58,7 @@ export interface ItemInteractionAction {
  * @param option
  */
 const itemInteractionActionPipe = (player: Player, itemId: number, slot: number, widgetId: number,
-                                   containerId: number, option: string): RunnableHooks<ItemInteractionAction> => {
+                                   containerId: number, option: string): RunnableHooks<ItemInteractionAction> | null => {
     const playerWidget = Object.values(player.interfaceState.widgetSlots).find((widget) => widget && widget.widgetId === widgetId);
 
     if(playerWidget && playerWidget.fakeWidget != undefined) {
@@ -116,6 +117,13 @@ const itemInteractionActionPipe = (player: Player, itemId: number, slot: number,
         return null;
     }
 
+    const itemDetails = findItem(itemId);
+
+    if(!itemDetails) {
+        logger.error(`Item ${itemId} not registered on the server [item-interaction action pipe]`);
+        return null;
+    }
+
     return {
         hooks: matchingHooks,
         action: {
@@ -124,7 +132,7 @@ const itemInteractionActionPipe = (player: Player, itemId: number, slot: number,
             itemSlot: slot,
             widgetId,
             containerId,
-            itemDetails: findItem(itemId),
+            itemDetails,
             option
         }
     }
