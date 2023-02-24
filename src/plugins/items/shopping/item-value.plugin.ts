@@ -1,7 +1,6 @@
 import { itemInteractionActionHandler } from '@engine/action';
-import { Shop } from '@engine/config/shop-config';
 import { findItem, findShop, widgets } from '@engine/config/config-handler';
-import { getItemFromContainer } from "@engine/world";
+import { getItemFromContainer } from '@engine/world';
 
 export const shopSellValueHandler: itemInteractionActionHandler = (details) => {
     const { player, itemId, itemSlot, widgetId, option } = details;
