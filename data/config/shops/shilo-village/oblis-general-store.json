@@ -1,0 +1,70 @@
+{
+  "rs:oblis-general-store": {
+    "name": "Obli's General Store",
+    "general_store": true,
+    "shop_sell_rate": 1.5,
+    "rate_modifier": 0.02,
+    "shop_buy_rate": 0.5,
+    "stock": [
+      {
+        "itemKey": "rs:tinderbox",
+        "amount": 2,
+        "restock": 500
+      },
+      {
+        "itemKey": "rs:vial",
+        "amount": 10,
+        "restock": 500
+      },
+      {
+        "itemKey": "rs:pestle_and_mortar",
+        "amount": 3,
+        "restock": 500
+      },
+      {
+        "itemKey": "rs:pot",
+        "amount": 3,
+        "restock": 500
+      },
+      {
+        "itemKey": "rs:bronze_axe",
+        "amount": 3,
+        "restock": 500
+      },
+      {
+        "itemKey": "rs:bronze_pickaxe",
+        "amount": 2,
+        "restock": 500
+      },
+      {
+        "itemKey": "rs:iron_axe",
+        "amount": 5,
+        "restock": 700
+      },
+      {
+        "itemKey": "rs:shears",
+        "amount": 2
+      },
+      {
+        "itemKey": "rs:bucket",
+        "amount": 3
+      },
+      {
+        "itemKey": "rs:cake_tin",
+        "amount": 2
+      },
+      {
+        "itemKey": "rs:chisel",
+        "amount": 2
+      },
+      {
+        "itemKey": "rs:spade",
+        "amount": 5
+      },
+      {
+        "itemKey": "rs:hammer",
+        "amount": 5
+      }
+    ]
+  }
+}

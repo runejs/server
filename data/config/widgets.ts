@@ -1,4 +1,4 @@
-{
+export default {
     characterDesign: 269,
     furnace: {
         widgetId: 311,

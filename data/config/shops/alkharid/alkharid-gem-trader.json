@@ -1,17 +1,50 @@
 {
-    "rs:alkharid_gem_trader": {
-        "name": "Gem Trader",
-        "shop_buy_rate": 0.70,
-        "rate_modifier": 0.03,
-        "stock": [
-            [ "rs:uncut_sapphire", 1 ],
-            [ "rs:uncut_emerald", 1 ],
-            [ "rs:uncut_ruby", 0 ],
-            [ "rs:uncut_diamond", 0 ],
-            [ "rs:sapphire", 1 ],
-            [ "rs:emerald", 1 ],
-            [ "rs:ruby", 0 ],
-            [ "rs:diamond", 0 ]
-        ]
-    }
+  "rs:alkharid_gem_trader": {
+    "name": "Gem Trader",
+    "shop_sell_rate": 1.0,
+    "shop_buy_rate": 0.70,
+    "rate_modifier": 0.03,
+    "stock": [
+      {
+        "itemKey": "rs:uncut_sapphire",
+        "amount": 1,
+        "restock": 25000
+      },
+      {
+        "itemKey": "rs:uncut_emerald",
+        "amount": 1,
+        "restock": 40000
+      },
+      {
+        "itemKey": "rs:uncut_ruby",
+        "amount": 0,
+        "restock": 2000
+      },
+      {
+        "itemKey": "rs:uncut_diamond",
+        "amount": 0,
+        "restock": 4000
+      },
+      {
+        "itemKey": "rs:sapphire",
+        "amount": 1,
+        "restock": 15000
+      },
+      {
+        "itemKey": "rs:emerald",
+        "amount": 1,
+        "restock": 35000
+      },
+      {
+        "itemKey": "rs:ruby",
+        "amount": 0,
+        "restock": 2000
+      },
+      {
+        "itemKey": "rs:diamond",
+        "amount": 0,
+        "restock": 4000
+      }
+    ]
+  }
 }

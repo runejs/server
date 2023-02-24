@@ -1,6 +1,6 @@
 import { itemInteractionActionHandler } from '@engine/action';
 import { Shop } from '@engine/config/shop-config';
-import { widgets } from '@engine/config/config-handler';
+import { findShop, widgets } from '@engine/config/config-handler';
 
 export const shopSellValueHandler: itemInteractionActionHandler = ({ player, itemDetails }) => {
     const itemValue = itemDetails.value || 1;
@@ -8,12 +8,17 @@ export const shopSellValueHandler: itemInteractionActionHandler = ({ player, ite
 };
 
 export const shopPurchaseValueHandler: itemInteractionActionHandler = ({ player, itemDetails }) => {
-    const openedShop = player.metadata.lastOpenedShop;
-    if(!openedShop) {
+    const openedShopKey = player.metadata.lastOpenedShopKey;
+    if(!openedShopKey) {
         return;
     }
 
-    const shopBuyPrice = openedShop.getBuyPrice(itemDetails);
+    const shop = findShop(openedShopKey);
+    if(!shop) {
+        return;
+    }
+
+    const shopBuyPrice = shop.getBuyPrice(itemDetails);
 
     if(shopBuyPrice === -1) {
         player.sendMessage(`You can't sell this item to this shop.`);

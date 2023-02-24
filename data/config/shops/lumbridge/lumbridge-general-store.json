@@ -3,6 +3,8 @@
         "name": "Lumbridge General Store",
         "general_store": true,
         "shop_sell_rate": 1.3,
+        "rate_modifier": 0.03,
+        "shop_buy_rate": 0.4,
         "stock": [
             [ "rs:pot", 5 ],
             [ "rs:jug", 2 ],

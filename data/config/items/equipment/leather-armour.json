@@ -1,4 +1,56 @@
 {
+    "rs:leather_cowl": {
+        "game_id": 1167,
+        "tradable": true,
+        "weight": 0.34,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "feet",
+            "defensive_bonuses": {
+                "slash": 1,
+                "crush": 1
+            }
+        }
+    },
+    "rs:leather_body": {
+        "game_id": 1061,
+        "tradable": true,
+        "weight": 0.34,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "feet",
+            "defensive_bonuses": {
+                "slash": 1,
+                "crush": 1
+            }
+        }
+    }
+    "rs:leather_chaps": {
+        "game_id": 1061,
+        "tradable": true,
+        "weight": 0.34,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "feet",
+            "defensive_bonuses": {
+                "slash": 1,
+                "crush": 1
+            }
+        }
+    },
+    "rs:leather_vambraces": {
+        "game_id": 1061,
+        "tradable": true,
+        "weight": 0.34,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "feet",
+            "defensive_bonuses": {
+                "slash": 1,
+                "crush": 1
+            }
+        }
+    },
     "rs:leather_boots": {
         "game_id": 1061,
         "tradable": true,

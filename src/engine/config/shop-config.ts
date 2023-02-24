@@ -7,7 +7,7 @@ import { WidgetClosedEvent } from '@engine/interface';
 import { Subscription } from 'rxjs';
 
 
-export type ShopStock = [ [ string, number ] ];
+export type ShopStock = {itemKey: string, amount: number, restock?: number}[];
 
 export class Shop {
 
@@ -43,7 +43,7 @@ export class Shop {
     public resetShopStock(): void {
         for(let i = 0; i < this.container.size; i++) {
             if(this.originalStock[i]) {
-                const [ itemKey, amount ] = this.originalStock[i];
+                const { itemKey, amount } = this.originalStock[i];
                 const itemDetails = findItem(itemKey);
                 this.container.set(i, !itemDetails ? null : { itemId: itemDetails.gameId, amount: amount || 0 }, false);
             } else {
@@ -52,6 +52,11 @@ export class Shop {
         }
     }
 
+    /**
+     * Get the price which a shop can offer to pay for your item, returns -1 if item cannot be sold to shop.
+     * @param item to sell to shop
+     * @return amount offered to pay for players item, -1 if unable to sell.
+     */
     public getBuyPrice(item: ItemDetails): number {
         const itemKey = item.key;
         const itemSoldHere: boolean = this.isItemSoldHere(itemKey);
@@ -59,7 +64,7 @@ export class Shop {
         const itemStock = this.container.amount(item.gameId);
 
         if(itemSoldHere) {
-            originalStockAmount = this.originalStock.find(stock => stock && stock[0] === itemKey)[1];
+            originalStockAmount = this.originalStock.find(stock => stock && stock.itemKey === itemKey)[1];
         } else if(!this.generalStore) {
             return -1; // Can not sell this item to this shop (shop is not a general store!)
         }
@@ -70,7 +75,7 @@ export class Shop {
             const overstockAmount = (itemStock - originalStockAmount);
 
             if(this.generalStore) {
-                const decrementAmount = 0.075 * overstockAmount;
+                const decrementAmount = this.rateModifier * overstockAmount;
                 finalAmount = item.lowAlchValue - decrementAmount;
             } else {
                 let shopBuyRate = this.buyRate;
@@ -87,6 +92,38 @@ export class Shop {
         return finalAmount < min ? min : finalAmount;
     }
 
+    /**
+     * Price which shop sells item to player for.
+     * @param item
+     */
+    public getSellPrice(item: ItemDetails): number {
+        const itemKey = item.key;
+        const itemSoldHere: boolean = this.isItemSoldHere(itemKey);
+        let originalStockAmount: number = 0;
+        const itemStock = this.container.amount(item.gameId);
+
+
+        if(itemSoldHere) {
+            originalStockAmount = this.originalStock.find(stock => stock && stock[0] === itemKey)[1];
+        } else if(!this.generalStore) {
+            return -1; // Can not sell this item to this shop (shop is not a general store!)
+        }
+
+        let finalAmount: number;
+        const initialValue = (item.value * this.sellRate);
+
+        if(itemStock !== originalStockAmount) {
+            const stockDiff = (originalStockAmount - itemStock);
+            const shopBuyRate = this.sellRate + (stockDiff * this.rateModifier);
+            finalAmount = Math.floor(item.value * shopBuyRate);
+        } else {
+            finalAmount = Math.floor(initialValue);
+        }
+
+        const min = item.minimumValue || 0;
+        return finalAmount < min ? min : finalAmount;
+    }
+
     public isItemSoldHere(itemKey: string): boolean {
         for(const stock of this.originalStock) {
             if(stock && stock[0] === itemKey) {
@@ -97,7 +134,7 @@ export class Shop {
     }
 
     public open(player: Player): void {
-        player.metadata.lastOpenedShop = this;
+        player.metadata.lastOpenedShopKey = this.key;
         player.metadata.shopCloseListener = player.interfaceState.closed.subscribe((whatClosed: WidgetClosedEvent) => {
             if(whatClosed && whatClosed.widget && whatClosed.widget.widgetId === widgets.shop.widgetId) {
                 this.removePlayerFromShop(player);
@@ -121,7 +158,7 @@ export class Shop {
 
     private updateCustomers() {
         for (const player of this.customers) {
-            if(player.metadata.lastOpenedShop === this) {
+            if(player.metadata.lastOpenedShopKey === this.key) {
                 player.outgoingPackets.sendUpdateAllWidgetItems(widgets.shop, this.container);
             } else {
                 this.removePlayerFromShop(player);
@@ -130,8 +167,8 @@ export class Shop {
     }
 
     private removePlayerFromShop(player: Player) {
-        if(player.metadata.lastOpenedShop === this) {
-            player.metadata.lastOpenedShop = undefined;
+        if(player.metadata.lastOpenedShopKey === this.key) {
+            delete player.metadata.lastOpenedShopKey;
             player.metadata.shopCloseListener.unsubscribe();
         }
         this.customers = this.customers.filter((c) => c !== player);

@@ -2,7 +2,7 @@ import { itemInteractionActionHandler } from '@engine/action';
 import { Item } from '@engine/world/items/item';
 import { getItemFromContainer, ItemContainer } from '@engine/world/items/item-container';
 import { itemIds } from '@engine/world/config/item-ids';
-import { findItem, widgets } from '@engine/config/config-handler';
+import { findItem, findShop, widgets } from '@engine/config/config-handler';
 import { Shop } from '@engine/config/shop-config';
 
 
@@ -19,12 +19,18 @@ export const handler: itemInteractionActionHandler = (details) => {
         return;
     }
 
-    const openedShop = player.metadata.lastOpenedShop;
-    if(!openedShop) {
+    const openedShopKey = player.metadata.lastOpenedShopKey;
+    if(!openedShopKey) {
         return;
     }
 
-    const shopContainer = openedShop.container;
+    const shop = findShop(openedShopKey);
+
+    if(!shop) {
+        return;
+    }
+
+    const shopContainer = shop.container;
     const shopItem = getItemFromContainer(itemId, itemSlot, shopContainer);
 
     if(!shopItem) {
@@ -48,7 +54,8 @@ export const handler: itemInteractionActionHandler = (details) => {
     }
 
     const buyItem = findItem(itemId);
-    const buyItemValue = buyItem.value || 0;
+    const buyItemValue = shop.getBuyPrice(buyItem);
+    player.sendMessage(`${buyItem.name} : ${buyItemValue}, ${buyItem.value}`)
     let buyCost = buyAmount * buyItemValue;
     const coinsIndex = player.hasCoins(buyCost);
 
