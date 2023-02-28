@@ -57,7 +57,7 @@ export class Shop {
      * @param item to purchase from shop
      * @return price which item is available for purchase at
      */
-    public getBuyPrice(item: ItemDetails): number {
+    public getBuyFromShopPrice(item: ItemDetails): number {
         const itemKey = item.key;
         const itemSoldHere: boolean = this.isItemSoldHere(itemKey);
         let originalStockAmount: number = 0;
@@ -100,7 +100,7 @@ export class Shop {
      * Price which shop pays player for.
      * @param item
      */
-    public getSellPrice(item: ItemDetails): number {
+    public getSellToShopPrice(item: ItemDetails): number {
         const itemKey = item.key;
         const itemSoldHere: boolean = this.isItemSoldHere(itemKey);
         let originalStockAmount: number = 0;

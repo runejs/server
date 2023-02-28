@@ -83,15 +83,15 @@ describe('shopping', () => {
             if (!shopBstaff) {
                 throw new Error('Battle staff item not found in shop config');
             }
-            expect(shop.getBuyPrice(battleStaffItem)).toBe(Math.round(battleStaffItem.value * (shopConfig.shop_sell_rate || 1.00)))
-            expect(shop.getBuyPrice(battleStaffItem)).toBe(7000) // BStaff standard price
+            expect(shop.getBuyFromShopPrice(battleStaffItem)).toBe(Math.round(battleStaffItem.value * (shopConfig.shop_sell_rate || 1.00)))
+            expect(shop.getBuyFromShopPrice(battleStaffItem)).toBe(7000) // BStaff standard price
             expect(shopBstaff.amount).toBe(5)
             shopBstaff.amount += 1;
             expect(shopBstaff.amount).toBe(6)
-            expect(shop.getBuyPrice(battleStaffItem)).toBe(6860);
+            expect(shop.getBuyFromShopPrice(battleStaffItem)).toBe(6860);
             shopBstaff.amount -= 3;
             expect(shopBstaff.amount).toBe(3)
-            expect(shop.getBuyPrice(battleStaffItem)).toBe(7280);
+            expect(shop.getBuyFromShopPrice(battleStaffItem)).toBe(7280);
 
 
         })
@@ -111,22 +111,22 @@ describe('shopping', () => {
 
 
             expect(shopBstaff.amount).toBe(5)
-            expect(shop.getSellPrice(battleStaffItem)).toBe(3850)
+            expect(shop.getSellToShopPrice(battleStaffItem)).toBe(3850)
             shopBstaff.amount = 4;
             expect(shopBstaff.amount).toBe(4)
-            expect(shop.getSellPrice(battleStaffItem)).toBe(3990)
+            expect(shop.getSellToShopPrice(battleStaffItem)).toBe(3990)
 
             shopBstaff.amount = 1;
             expect(shopBstaff.amount).toBe(1)
-            expect(shop.getSellPrice(battleStaffItem)).toBe(4410)
+            expect(shop.getSellToShopPrice(battleStaffItem)).toBe(4410)
 
             shopBstaff.amount = 16;
             expect(shopBstaff.amount).toBe(16)
-            expect(shop.getSellPrice(battleStaffItem)).toBe(2310)
+            expect(shop.getSellToShopPrice(battleStaffItem)).toBe(2310)
 
             shopBstaff.amount = 3;
             expect(shopBstaff.amount).toBe(3)
-            expect(shop.getSellPrice(battleStaffItem)).toBe(4130)
+            expect(shop.getSellToShopPrice(battleStaffItem)).toBe(4130)
         })
     })
 })

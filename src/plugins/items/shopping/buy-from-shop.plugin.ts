@@ -62,7 +62,7 @@ export const handler: itemInteractionActionHandler = (details) => {
         logger.error(`Could not find cache item for item id ${itemId} in shop ${openedShopKey}`);
         return;
     }
-    const buyItemValue = shop.getBuyPrice(buyItem);
+    const buyItemValue = shop.getBuyFromShopPrice(buyItem);
     player.sendMessage(`${buyItem.key} : ${buyItemValue}, ${buyItem.value}`)
     let buyCost = buyAmount * buyItemValue;
     const coinsIndex = player.hasCoins(buyCost);

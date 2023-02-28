@@ -40,7 +40,7 @@ export const shopSellValueHandler: itemInteractionActionHandler = (details) => {
         player.sendMessage(`Error item does not exist. [id:${itemId}]`);
         return;
     }
-    player.sendMessage(`${buyItem.name}: currently costs ${shop.getBuyPrice(buyItem)} coins.`);
+    player.sendMessage(`${buyItem.name}: currently costs ${shop.getBuyFromShopPrice(buyItem)} coins.`);
 };
 
 export const shopPurchaseValueHandler: itemInteractionActionHandler = ({ player, itemDetails }) => {
@@ -54,7 +54,7 @@ export const shopPurchaseValueHandler: itemInteractionActionHandler = ({ player,
         return;
     }
 
-    const shopBuyPrice = shop.getBuyPrice(itemDetails);
+    const shopBuyPrice = shop.getBuyFromShopPrice(itemDetails);
 
     if(shopBuyPrice === -1) {
         player.sendMessage(`You can't sell this item to this shop.`);

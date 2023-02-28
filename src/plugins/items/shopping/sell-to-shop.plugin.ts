@@ -71,7 +71,7 @@ export const handler: itemInteractionActionHandler = (details) => {
         }
     }
 
-    const itemValue = shop.getSellPrice(itemDetails); // @TODO scale price per item, not per sale
+    const itemValue = shop.getSellToShopPrice(itemDetails); // @TODO scale price per item, not per sale
 
     if(!shopItem) {
         shopContainer.set(shopContainer.getFirstOpenSlot(), { itemId, amount: sellAmount });
