@@ -28,7 +28,7 @@ export function translateMusicRegionsConfig(config: MusicRegionsConfiguration): 
 }
 
 export async function loadMusicRegionConfigurations(): Promise<MusicTrack[]> {
-    const regions = [];
+    const regions: MusicTrack[] = [];
 
     await musicRegionsFile.musicRegions.forEach(musicRegion => regions.push(translateMusicRegionsConfig(musicRegion)));
     return regions;

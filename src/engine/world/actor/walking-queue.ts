@@ -5,6 +5,7 @@ import { Npc } from './npc';
 import { regionChangeActionFactory } from '@engine/action';
 import { Subject } from 'rxjs';
 import { activeWorld } from '@engine/world';
+import { logger } from '@runejs/common';
 
 
 /**
@@ -67,7 +68,10 @@ export class WalkingQueue {
 
             if(this.actor.pathfinding.canMoveTo(lastPosition, newPosition)) {
                 lastPosition = newPosition;
-                newPosition.metadata = positionMetadata;
+                newPosition.metadata = {
+                    ...newPosition.metadata,
+                    ...positionMetadata
+                };
                 this.queue.push(newPosition);
                 this.movementQueued.next(newPosition);
             } else {
@@ -80,7 +84,10 @@ export class WalkingQueue {
             const newPosition = new Position(x, y, this.actor.position.level);
 
             if(this.actor.pathfinding.canMoveTo(lastPosition, newPosition)) {
-                newPosition.metadata = positionMetadata;
+                newPosition.metadata = {
+                    ...newPosition.metadata,
+                    ...positionMetadata
+                };
                 this.queue.push(newPosition);
                 this.movementQueued.next(newPosition);
             } else {
@@ -144,7 +151,11 @@ export class WalkingQueue {
 
         const walkPosition = this.queue.shift();
 
-        if(this.actor.metadata['faceActorClearedByWalking'] === undefined || this.actor.metadata['faceActorClearedByWalking']) {
+        if (!walkPosition) {
+            return;
+        }
+
+        if(this.actor.metadata.faceActorClearedByWalking === undefined || this.actor.metadata.faceActorClearedByWalking) {
             this.actor.clearFaceActor();
         }
 
@@ -172,6 +183,10 @@ export class WalkingQueue {
             if(this.actor instanceof Player) {
                 if(this.actor.settings.runEnabled && this.queue.length !== 0) {
                     const runPosition = this.queue.shift();
+
+                    if (!runPosition) {
+                        return;
+                    }
 
                     if(this.actor.pathfinding.canMoveTo(walkPosition, runPosition)) {
                         const runDiffX = runPosition.x - walkPosition.x;
@@ -213,7 +228,7 @@ export class WalkingQueue {
 
             if(!oldChunk.equals(newChunk)) {
                 if(this.actor instanceof Player) {
-                    this.actor.metadata['updateChunk'] = { newChunk, oldChunk };
+                    this.actor.metadata.updateChunk = { newChunk, oldChunk };
 
                     this.actor.actionPipeline.call('region_change', regionChangeActionFactory(
                         this.actor, originalPosition, this.actor.position));

@@ -31,6 +31,7 @@ export type ActionType =
     | 'item_on_npc'
     | 'item_on_player'
     | 'item_on_item'
+    | 'item_on_world_item'
     | 'item_swap'
     | 'move_item'
     | 'spawned_item_interaction'
@@ -106,8 +107,8 @@ export class ActionPipeline {
             .subscribe(async () => this.cancelRunningTasks());
     }
 
-    public static getPipe(action: ActionType): ActionPipeHandler {
-        return ActionPipeline.pipes.get(action);
+    public static getPipe(action: ActionType): ActionPipeHandler | null {
+        return ActionPipeline.pipes.get(action) || null;
     }
 
     public static register(action: ActionType, actionPipeHandlerFn: ActionPipeHandler): void {

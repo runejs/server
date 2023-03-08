@@ -33,7 +33,13 @@ export interface NpcInitAction {
 const npcInitActionPipe = ({ npc }: NpcInitAction): void => {
     const actionHooks = getActionHooks<NpcInitActionHook>('npc_init')
         .filter(plugin => (!plugin.npcs || stringHookFilter(plugin.npcs, npc.key)));
-    actionHooks.forEach(actionHook => actionHook.handler({ npc }));
+    actionHooks.forEach(actionHook => {
+        if (!actionHook.handler) {
+            return;
+        }
+
+        actionHook.handler({ npc });
+    });
 };
 
 

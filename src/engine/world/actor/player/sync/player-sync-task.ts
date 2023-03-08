@@ -4,7 +4,7 @@ import { UpdateFlags } from '@engine/world/actor/update-flags';
 import { Packet, PacketType } from '@engine/net/packet';
 import { stringToLong } from '@engine/util/strings';
 import { findItem, findNpc } from '@engine/config/config-handler';
-import { EquipmentSlot, ItemDetails } from '@engine/config/item-config';
+import { EquipmentSlot, EquipmentType, ItemDetails } from '@engine/config/item-config';
 import { appendMovement, registerNewActors, SyncTask, syncTrackedActors } from './actor-sync';
 import { Player } from '../player';
 import { activeWorld } from '@engine/world';
@@ -30,10 +30,10 @@ export class PlayerSyncTask extends SyncTask<void> {
 
             const updateMaskData = new ByteBuffer(5000);
 
-            if(updateFlags.mapRegionUpdateRequired || this.player.metadata['teleporting']) {
+            if(updateFlags.mapRegionUpdateRequired || this.player.metadata.teleporting) {
                 playerUpdatePacket.putBits(1, 1); // Update Required
                 playerUpdatePacket.putBits(2, 3); // Map Region changed (movement type - 0=nomove, 1=walk, 2=run, 3=mapchange
-                playerUpdatePacket.putBits(1, this.player.metadata['teleporting'] ? 1 : 0); // Whether or not the client should discard the current walking queue (1 if teleporting, 0 if not)
+                playerUpdatePacket.putBits(1, this.player.metadata.teleporting ? 1 : 0); // Whether or not the client should discard the current walking queue (1 if teleporting, 0 if not)
                 playerUpdatePacket.putBits(2, this.player.position.level); // Player Height
                 playerUpdatePacket.putBits(1, updateFlags.updateBlockRequired ? 1 : 0); // Whether or not an update flag block follows
                 playerUpdatePacket.putBits(7, this.player.position.chunkLocalX); // Player Local Chunk X
@@ -139,7 +139,7 @@ export class PlayerSyncTask extends SyncTask<void> {
 
         if(updateFlags.damage !== null) {
             const damage = updateFlags.damage;
-            updateMaskData.put(damage.damageType);
+            updateMaskData.put(damage.damageDealt);
             updateMaskData.put(damage.damageType.valueOf());
             updateMaskData.put(damage.remainingHitpoints);
             updateMaskData.put(damage.maxHitpoints);
@@ -159,8 +159,8 @@ export class PlayerSyncTask extends SyncTask<void> {
                 updateMaskData.put(-1, 'SHORT', 'LITTLE_ENDIAN');
                 updateMaskData.put(0, 'BYTE');
             } else {
-                const delay = updateFlags.animation.delay || 0;
-                updateMaskData.put(updateFlags.animation.id, 'SHORT', 'LITTLE_ENDIAN');
+                const delay = animation.delay || 0;
+                updateMaskData.put(animation.id, 'SHORT', 'LITTLE_ENDIAN');
                 updateMaskData.put(delay, 'BYTE');
             }
         }
@@ -187,7 +187,12 @@ export class PlayerSyncTask extends SyncTask<void> {
 
         if(updateFlags.chatMessages.length !== 0) {
             const message = updateFlags.chatMessages[0];
-            updateMaskData.put(((message.color & 0xFF) << 8) + (message.effects & 0xFF), 'SHORT');
+
+            if (!message.data) {
+                throw new Error('Chat message data is undefined');
+            }
+
+            updateMaskData.put(((message.color || 0 & 0xFF) << 8) + (message.effects || 0 & 0xFF), 'SHORT');
             updateMaskData.put(player.rights.valueOf(), 'BYTE');
             updateMaskData.put(message.data.length, 'BYTE');
             for(let i = 0; i < message.data.length; i++) {
@@ -217,7 +222,7 @@ export class PlayerSyncTask extends SyncTask<void> {
                 }
 
                 const torsoItem = player.getEquippedItem('torso');
-                let torsoItemData: ItemDetails = null;
+                let torsoItemData: ItemDetails | null = null;
                 if(torsoItem) {
                     torsoItemData = findItem(torsoItem.itemId);
                     appearanceData.put(0x200 + torsoItem.itemId, 'SHORT');
@@ -242,7 +247,7 @@ export class PlayerSyncTask extends SyncTask<void> {
                 this.appendBasicAppearanceItem(appearanceData, player, player.appearance.legs, 'legs');
 
                 const headItem = player.getEquippedItem('head');
-                let helmetType = null;
+                let helmetType: EquipmentType | null = null;
                 let fullHelmet = false;
 
                 if(headItem) {

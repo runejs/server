@@ -66,7 +66,7 @@ export const openHouse = (player: Player): void => {
 
 export class House {
 
-    public rooms: Room[][][];
+    public rooms: (Room | null)[][][];
 
     public constructor() {
         this.rooms = new Array(4);
@@ -84,11 +84,12 @@ export class House {
         }
     }
 
-    public copyRooms(rooms: Room[][][]): void {
+    public copyRooms(rooms: (Room | null)[][][]): void {
         for(let level = 0; level < 4; level++) {
             for(let x = 0; x < MAP_SIZE; x++) {
                 for(let y = 0; y < MAP_SIZE; y++) {
                     const existingRoom = rooms[level][x][y] ?? null;
+
                     this.rooms[level][x][y] = existingRoom ? new Room(existingRoom.type, existingRoom.orientation) : null;
                 }
             }

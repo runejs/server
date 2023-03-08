@@ -30,7 +30,7 @@ export interface SkillSubGuide {
  * @return SkillGuideConfiguration[]
  */
 export async function loadSkillGuideConfigurations(path: string): Promise<SkillGuide[]> {
-    const skillGuides = [];
+    const skillGuides: SkillGuide[] = [];
 
     const files = await loadConfigurationFiles(path);
     files.forEach((skillGuide) => {
@@ -38,9 +38,9 @@ export async function loadSkillGuideConfigurations(path: string): Promise<SkillG
             return;
         }
 
-        const subGuides = [];
+        const subGuides: SkillSubGuide[] = [];
         skillGuide.sub_guides.forEach((subGuide) => {
-            const subGuideLines = [];
+            const subGuideLines: SkillSubGuide['lines'] = [];
             subGuide.lines.forEach((line) => {
                 subGuideLines.push({
                     item: itemMap[line.item],

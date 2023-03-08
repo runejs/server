@@ -7,7 +7,7 @@ import { activeWorld } from '@engine/world';
 
 const action: commandActionHandler = ({ player, args }) => {
     let npcKey: string | number = args.npcKey;
-    let npcDetails: NpcDetails;
+    let npcDetails: NpcDetails | null = null;
 
     if(typeof npcKey === 'string' && npcKey.match(/^[0-9]+$/)) {
         npcKey = parseInt(npcKey, 10);
@@ -24,9 +24,16 @@ const action: commandActionHandler = ({ player, args }) => {
         npcKey = npcDetails.gameId;
     }
 
+    if (!npcDetails) {
+        player.sendMessage(`NPC ${npcKey} is not yet registered on the server.`);
+        return;
+    }
+
+    const movementRadius: number = args.movementRadius as number;
+
     const npc = new Npc(npcDetails ? npcDetails : npcKey,
         new NpcSpawn(npcDetails ? npcDetails.key : `unknown-${npcKey}`,
-            player.position.clone(), 0, 'WEST'), player.instance);
+            player.position.clone(), movementRadius, 'WEST'), player.instance);
 
     activeWorld.registerNpc(npc);
 };
@@ -41,6 +48,11 @@ export default {
                 {
                     name: 'npcKey',
                     type: 'either'
+                },
+                {
+                    name: 'movementRadius',
+                    type: 'number',
+                    defaultValue: 0
                 }
             ],
             handler: action

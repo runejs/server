@@ -44,7 +44,7 @@ export interface ButtonAction {
  * @param widgetId
  * @param buttonId
  */
-const buttonActionPipe = (player: Player, widgetId: number, buttonId: number): RunnableHooks<ButtonAction> => {
+const buttonActionPipe = (player: Player, widgetId: number, buttonId: number): RunnableHooks<ButtonAction> | null => {
     let matchingHooks = getActionHooks<ButtonActionHook>('button')
         .filter(plugin =>
             questHookFilter(player, plugin) && (
@@ -59,12 +59,6 @@ const buttonActionPipe = (player: Player, widgetId: number, buttonId: number): R
 
     if(questActions.length !== 0) {
         matchingHooks = questActions;
-    }
-
-    if(player.metadata.buttonListener) {
-        if(widgetId === player.metadata.buttonListener.widgetId) {
-            player.metadata.buttonListener.event.next(buttonId);
-        }
     }
 
     if(matchingHooks.length === 0) {

@@ -1,6 +1,7 @@
 import { Direction, directionData } from '@engine/world/direction';
 import { filestore } from '@server/game/game-server';
 import { LandscapeObject } from '@runejs/filestore';
+import { logger } from '@runejs/common';
 
 
 const directionDeltaX = [-1, 0, 1, -1, 1, -1, 0, 1];
@@ -34,7 +35,9 @@ export class Position {
     public constructor(x: number, y: number, level?: number);
     public constructor(arg0: number | Coords | Position, y?: number, level?: number) {
         if(typeof arg0 === 'number') {
-            this.move(arg0, y, level);
+            // using ! here, because we know that if arg0 is a number, then y and level are numbers
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            this.move(arg0, y!, level);
         } else {
             this.move(arg0.x, arg0.y, arg0.level);
         }
@@ -52,10 +55,15 @@ export class Position {
             return this.distanceBetween(target) <= minimumDistance;
         } else {
             const definition = filestore.configStore.objectStore.getObject(target.objectId);
+
+            if (!definition) {
+                logger.warn(`Object with id ${target.objectId} does not exist in the object store.`);
+            }
+
             const occupantX = target.x;
             const occupantY = target.y;
-            let width = definition.rendering?.sizeX || 1;
-            let height = definition.rendering?.sizeY || 1;
+            let width = definition?.rendering?.sizeX || 1;
+            let height = definition?.rendering?.sizeY || 1;
 
             if(width === undefined || width === null || width < 1) {
                 width = 1;

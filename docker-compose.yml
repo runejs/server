@@ -2,14 +2,15 @@ version: "3.8"
 
 services:
   runejs_game_server:
-    image: node:16
-    container_name: runejs_game_server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./data:/usr/src/app/data
+      - ./cache:/usr/src/app/cache
+      - ./config:/usr/src/app/config
     ports:
       - "43594:43594"
-    volumes:
-      - .:/usr/src/service
-    working_dir: /usr/src/service
-    command: npm run start
 
 networks:
   default:

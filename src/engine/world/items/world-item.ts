@@ -3,7 +3,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { WorldInstance } from '@engine/world/instances';
 
 
-export class WorldItem {
+export type WorldItem = {
     itemId: number;
     amount: number;
     position: Position;
@@ -11,5 +11,5 @@ export class WorldItem {
     expires?: number;
     respawns?: number;
     removed?: boolean;
-    instance: WorldInstance = null;
+    instance: WorldInstance;
 }

@@ -398,7 +398,9 @@ export const itemIds = {
         oak: 1521,
         willow: 1519,
         teak: 6333,
+        dramenbranch:771,
         maple: 1517,
+        bark: 3239,
         mahogany: 6332,
         yew: 1515,
         magic: 1513

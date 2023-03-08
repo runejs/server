@@ -9,7 +9,7 @@ import { soundIds, animationIds } from '@engine/world/config';
 import { Actor } from './actor';
 import { Player } from './player';
 import { SkillName } from './skills';
-import { MeleeCombatBehavior } from './behaviors';
+import { logger } from '@runejs/common';
 
 /**
  * Represents a non-player character within the game world.
@@ -39,12 +39,12 @@ export class Npc extends Actor {
     private _name: string;
     private _combatLevel: number;
     private _movementRadius: number = 0;
-    private quadtreeKey: QuadtreeKey = null;
+    private quadtreeKey: QuadtreeKey | null = null;
     private _exists: boolean = true;
     private npcSpawn: NpcSpawn;
     private _initialized: boolean = false;
 
-    public constructor(npcDetails: NpcDetails | number, npcSpawn: NpcSpawn, instance: WorldInstance = null) {
+    public constructor(npcDetails: NpcDetails | number, npcSpawn: NpcSpawn, instance: WorldInstance | null = null) {
         super('npc');
 
         this.key = npcSpawn.npcKey;
@@ -70,12 +70,13 @@ export class Npc extends Actor {
         } else {
             this.id = npcDetails.gameId;
             this._combatLevel = npcDetails.combatLevel;
-            this.animations = npcDetails.combatAnimations;
-            this.options = npcDetails.options;
+            this.animations = npcDetails.combatAnimations || {};
+            this.options = npcDetails.options || [];
 
             if(npcDetails.skills) {
                 const skillNames = Object.keys(npcDetails.skills);
-                skillNames.forEach(skillName => this.skills.setLevel(skillName as SkillName, npcDetails.skills[skillName]));
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                skillNames.forEach(skillName => this.skills.setLevel(skillName as SkillName, npcDetails.skills![skillName]));
             }
         }
 
@@ -83,9 +84,10 @@ export class Npc extends Actor {
         if(cacheDetails) {
             // NPC not registered on the server, but exists in the game cache - use that for our info and assume it's
             // Not a combatant NPC since we have no useful combat information for it.
-            this._name = cacheDetails.name;
+
+            this._name = cacheDetails.name || '';
             this._combatLevel = cacheDetails.combatLevel;
-            this.options = cacheDetails.options;
+            this.options = cacheDetails.options || [];
             this.varbitId = cacheDetails.varbitId;
             this.settingId = cacheDetails.settingId;
             this.childrenIds = cacheDetails.childrenIds;
@@ -99,12 +101,13 @@ export class Npc extends Actor {
         } else {
             this._name = 'Unknown';
         }
-        // ToDo: this should be config based and not always melee (obviously)
-        this.Behaviors.push(new MeleeCombatBehavior());
+
         this.npcEvents.on('death', this.processDeath);
     }
 
     public async init(): Promise<void> {
+        super.init();
+
         activeWorld.chunkManager.getChunkForWorldPosition(this.position).addNpc(this);
 
         if(this.movementRadius > 0) {
@@ -126,17 +129,29 @@ export class Npc extends Actor {
             deathAnim = findNpc((defender as Npc).id)?.combatAnimations?.death || animationIds.death
 
             defender.playAnimation(deathAnim);
-            activeWorld.playLocationSound(deathPosition, soundIds.npc.human.maleDeath, 5);
+            activeWorld.playLocationSound(deathPosition, defender.instance.instanceId, soundIds.npc.human.maleDeath, 5);
             const npcDetails = findNpc((defender as Npc).id);
 
-            if(!npcDetails.dropTable) {
+            if(!npcDetails || !npcDetails.dropTable) {
                 return;
             }
 
             if(assailant instanceof Player) {
                 const itemDrops = calculateNpcDrops(assailant, npcDetails);
                 itemDrops.forEach(drop => {
-                    activeWorld.globalInstance.spawnWorldItem({ itemId: findItem(drop.itemKey).gameId, amount: drop.amount },
+                    const droppedItem = findItem(drop.itemKey);
+
+                    if (!droppedItem) {
+                        logger.error(`Unable to find item with key: ${drop.itemKey}`);
+                        return;
+                    }
+
+                    if (!drop.amount) {
+                        logger.error(`Unable to drop item with key: ${drop.itemKey} - no amount specified`);
+                        return;
+                    }
+
+                    activeWorld.globalInstance.spawnWorldItem({ itemId: droppedItem.gameId, amount: drop.amount },
                         deathPosition, { owner: assailant instanceof Player ? assailant : undefined, expires: 300 });
                 })
             }
@@ -148,36 +163,27 @@ export class Npc extends Actor {
             || y > this.initialPosition.y + this.movementRadius || y < this.initialPosition.y - this.movementRadius);
     }
 
-    public getAttackAnimation(): number {
-        let attackAnim = findNpc(this.id)?.combatAnimations?.attack || animationIds.combat.punch;
-        if(Array.isArray(attackAnim)) {
-            // NPC has multiple attack animations possible, pick a random one from the list to use
-            const idx = Math.floor(Math.random() * attackAnim.length);
-            attackAnim = attackAnim[idx];
-        }
-
-        return attackAnim;
-    }
-
-    public getBlockAnimation(): number {
-        return findNpc(this.id)?.combatAnimations?.defend || animationIds.combat.armBlock;
-    }
-
     public kill(respawn: boolean = true): void {
+        this.destroy();
 
         activeWorld.chunkManager.getChunkForWorldPosition(this.position).removeNpc(this);
         clearInterval(this.randomMovementInterval);
         activeWorld.deregisterNpc(this);
 
         if(respawn) {
-            activeWorld.scheduleNpcRespawn(new Npc(findNpc(this.id), this.npcSpawn));
+            const npcDetails = findNpc(this.id);
+
+            if(!npcDetails) {
+                return;
+            }
+
+            activeWorld.scheduleNpcRespawn(new Npc(npcDetails, this.npcSpawn));
         }
     }
 
     public async tick(): Promise<void> {
-        for (let i = 0; i < this.Behaviors.length; i++) {
-            this.Behaviors[i].tick();
-        }
+        super.tick();
+
         return new Promise<void>(resolve => {
             this.walkingQueue.process();
             resolve();
@@ -203,7 +209,7 @@ export class Npc extends Actor {
      * Whether or not the Npc can currently move.
      */
     public canMove(): boolean {
-        if(this.metadata.following || this.metadata.tailing) {
+        if(this.metadata.following) {
             return false;
         }
         return this.updateFlags.faceActor === undefined && this.updateFlags.animation === undefined;
@@ -215,7 +221,7 @@ export class Npc extends Actor {
      * @param volume The volume to play the sound at.
      */
     public playSound(soundId: number, volume: number): void {
-        activeWorld.playLocationSound(this.position, soundId, volume);
+        activeWorld.playLocationSound(this.position, this.instance.instanceId, soundId, volume);
     }
 
     /**
@@ -223,7 +229,14 @@ export class Npc extends Actor {
      * @param npcKey The unique string key of the Npc to transform into.
      */
     public transformInto(npcKey: string): void {
-        this.id = findNpc(npcKey).gameId;
+        const npcDetails = findNpc(npcKey);
+
+        if(!npcDetails) {
+            logger.error(`Unable to find npc with key: ${npcKey} for transformation.`);
+            return;
+        }
+
+        this.id = npcDetails.gameId;
         this.updateFlags.appearanceUpdateRequired = true;
     }
 
@@ -283,7 +296,7 @@ export class Npc extends Actor {
         return this._initialized;
     }
 
-    public get instanceId(): string {
+    public get instanceId(): string | null {
         return this.instance?.instanceId ?? null;
     }
 }

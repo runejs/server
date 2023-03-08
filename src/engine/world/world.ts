@@ -1,4 +1,5 @@
 import Quadtree from 'quadtree-lib';
+import uuidv4 from 'uuid/v4';
 import { lastValueFrom, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
@@ -12,6 +13,8 @@ import { loadActionFiles } from '@engine/action';
 import { ChunkManager, ConstructedRegion, getTemplateLocalX, getTemplateLocalY } from '@engine/world/map';
 import { TravelLocations, ExamineCache, parseScenerySpawns } from '@engine/world/config';
 import { loadPlugins } from '@engine/plugins';
+import { TaskScheduler, Task } from '@engine/task';
+import { Isaac } from '@engine/net';
 
 
 export interface QuadtreeKey {
@@ -37,8 +40,9 @@ export class World {
     public readonly travelLocations: TravelLocations = new TravelLocations();
     public readonly playerTree: Quadtree<QuadtreeKey>;
     public readonly npcTree: Quadtree<QuadtreeKey>;
-    public readonly globalInstance = new WorldInstance();
+    public readonly globalInstance = new WorldInstance(uuidv4());
     public readonly tickComplete: Subject<void> = new Subject<void>();
+    private readonly scheduler = new TaskScheduler();
 
     private readonly debugCycleDuration: boolean = process.argv.indexOf('-tickTime') !== -1;
 
@@ -70,13 +74,26 @@ export class World {
     }
 
     /**
+     * Adds a task to the world scheduler queue. These tasks will run forever until they are cancelled.
+     *
+     * @warning Did you mean to add a world task, rather than an Actor task?
+     *
+     * If the task has a stack type of `NEVER`, other tasks in the same group will be cancelled.
+     *
+     * @param task The task to add
+     */
+    public enqueueTask(task: Task): void {
+        this.scheduler.enqueue(task);
+    }
+
+    /**
      * Searched for an object by ID at the given position in any of the player's active instances.
      * @param actor The actor to find the object for.
      * @param objectId The game ID of the object.
      * @param objectPosition The game world position that the object is expected at.
      */
     public findObjectAtLocation(actor: Actor, objectId: number,
-                                objectPosition: Position): { object: LandscapeObject, cacheOriginal: boolean } {
+                                objectPosition: Position): { object: LandscapeObject | null, cacheOriginal: boolean } {
         const x = objectPosition.x;
         const y = objectPosition.y;
 
@@ -97,7 +114,13 @@ export class World {
         let personalTileModifications;
 
         if(actor.isPlayer) {
-            tileModifications = (actor as Player).instance.getTileModifications(objectPosition);
+            const instance = (actor as Player).instance;
+
+            if (!instance) {
+                throw new Error(`Player ${(actor as Player).username} has no instance.`);
+            }
+
+            tileModifications = instance.getTileModifications(objectPosition);
             personalTileModifications = (actor as Player).personalInstance.getTileModifications(objectPosition);
         } else {
             tileModifications = this.globalInstance.getTileModifications(objectPosition);
@@ -245,8 +268,8 @@ export class World {
      * @param volume The volume the sound should play at.
      * @param distance The distance which the sound should reach.
      */
-    public playLocationSound(position: Position, soundId: number, volume: number, distance: number = 10): void {
-        this.findNearbyPlayers(position, distance).forEach(player => {
+    public playLocationSound(position: Position, instanceId: string, soundId: number, volume: number, distance: number = 10): void {
+        this.findNearbyPlayers(position, distance, instanceId).forEach(player => {
             player.outgoingPackets.updateReferencePosition(position);
             player.outgoingPackets.playSoundAtPosition(
                 soundId,
@@ -264,7 +287,7 @@ export class World {
      * @param distance The maximum distance to search for NPCs.
      * @param instanceId The NPC's active instance.
      */
-    public findNearbyNpcsById(position: Position, npcId: number, distance: number, instanceId: string = null): Npc[] {
+    public findNearbyNpcsById(position: Position, npcId: number, distance: number, instanceId: string | null = null): Npc[] {
         return this.npcTree.colliding({
             x: position.x - (distance / 2),
             y: position.y - (distance / 2),
@@ -278,7 +301,7 @@ export class World {
      * @param npcKey The Key of the NPCs to find.
      * @param instanceId The NPC's active instance.
      */
-    public findNpcsByKey(npcKey: string, instanceId: string = null): Npc[] {
+    public findNpcsByKey(npcKey: string, instanceId: string | null = null): Npc[] {
         return this.npcList.filter(npc => npc && npc.key === npcKey && npc.instanceId === instanceId);
     }
 
@@ -287,7 +310,7 @@ export class World {
      * @param npcId The ID of the NPCs to find.
      * @param instanceId The NPC's active instance.
      */
-    public findNpcsById(npcId: number, instanceId: string = null): Npc[] {
+    public findNpcsById(npcId: number, instanceId: string | null = null): Npc[] {
         return this.npcList.filter(npc => npc && npc.id === npcId && npc.instanceId === instanceId);
     }
 
@@ -305,7 +328,7 @@ export class World {
      * @param distance The maximum distance to search for NPCs.
      * @param instanceId The NPC's active instance.
      */
-    public findNearbyNpcs(position: Position, distance: number, instanceId: string = null): Npc[] {
+    public findNearbyNpcs(position: Position, distance: number, instanceId: string | null = null): Npc[] {
         return this.npcTree.colliding({
             x: position.x - (distance / 2),
             y: position.y - (distance / 2),
@@ -320,7 +343,7 @@ export class World {
      * @param distance The maximum distance to search for Players.
      * @param instanceId The player's active instance.
      */
-    public findNearbyPlayers(position: Position, distance: number, instanceId: string = null): Player[] {
+    public findNearbyPlayers(position: Position, distance: number, instanceId: string): Player[] {
         return this.playerTree.colliding({
             x: position.x - (distance / 2),
             y: position.y - (distance / 2),
@@ -328,17 +351,19 @@ export class World {
             height: distance
         })
             .map(quadree => quadree.actor as Player)
-            .filter(player => player.personalInstance.instanceId === instanceId ||
-                player.instance.instanceId === instanceId);
+            .filter(player => (
+                player.personalInstance.instanceId === instanceId
+                || player.instance?.instanceId === instanceId
+            ));
     }
 
     /**
      * Finds a logged in player via their username.
      * @param username The player's username.
      */
-    public findActivePlayerByUsername(username: string): Player {
+    public findActivePlayerByUsername(username: string): Player | null {
         username = username.toLowerCase();
-        return this.playerList.find(p => p && p.username.toLowerCase() === username);
+        return this.playerList.find(p => p && p.username.toLowerCase() === username) || null;
     }
 
     /**
@@ -372,20 +397,14 @@ export class World {
     }
 
     public async spawnNpc(npcKey: string | number, position: Position, face: Direction,
-                          movementRadius: number = 0, instanceId: string = null): Promise<Npc> {
+                          movementRadius: number = 0, instanceId: string | null = null): Promise<Npc> {
         if(!npcKey) {
-            return null;
+            throw new Error('NPC key must be provided.');
         }
 
-        let npcData: NpcDetails | number = findNpc(npcKey);
+        const npcData = findNpc(npcKey);
         if(!npcData) {
-            logger.warn(`NPC ${npcKey} not yet registered on the server.`);
-
-            if(typeof npcKey === 'number') {
-                npcData = npcKey;
-            } else {
-                return null;
-            }
+            throw new Error(`NPC ${npcKey} not found in the cache`);
         }
 
         const npc = new Npc(npcData,
@@ -416,7 +435,8 @@ export class World {
         const spawnChunk = this.chunkManager.getChunkForWorldPosition(new Position(x, y, 0));
 
         for(let i = 0; i < 1000; i++) {
-            const player = new Player(null, null, null, i, `test${i}`, 'abs', true);
+            // TODO (Jameskmonger) we should be able to create a player without a connection, and without passing nulls in
+            const player = new Player(null as any, null as any, null as any, i, `test${i}`, 'abs', true);
             this.registerPlayer(player);
             player.interfaceState.closeAllSlots();
 
@@ -441,6 +461,9 @@ export class World {
 
     public async worldTick(): Promise<void> {
         const hrStart = Date.now();
+
+        this.scheduler.tick();
+
         const activePlayers: Player[] = this.playerList.filter(player => player !== null);
 
         if(activePlayers.length === 0) {
@@ -488,7 +511,7 @@ export class World {
         return this.playerList.filter(player => !player).length;
     }
 
-    public findPlayer(playerUsername: string): Player {
+    public findPlayer(playerUsername: string): Player | null {
         playerUsername = playerUsername.toLowerCase();
         return this.playerList?.find(p => p !== null && p.username.toLowerCase() === playerUsername) || null;
     }
@@ -534,7 +557,7 @@ export class World {
      * @param player The player to remove from the world list.
      */
     public deregisterPlayer(player: Player): void {
-        this.playerList[player.worldIndex] = null;
+        delete this.playerList[player.worldIndex];
     }
 
     public npcExists(npc: Npc): boolean {
@@ -566,7 +589,7 @@ export class World {
 
     public deregisterNpc(npc: Npc): void {
         npc.exists = false;
-        this.npcList[npc.worldIndex] = null;
+        delete this.npcList[npc.worldIndex];
     }
 
 }

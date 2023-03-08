@@ -11,6 +11,11 @@
         "resolveJsonModule": true,
         "allowSyntheticDefaultImports": true,
         "sourceMap": true,
+        "strict": false,
+        "strictBindCallApply": true,
+        "strictFunctionTypes": false,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": false,
         "baseUrl": ".",
         "allowJs": true,
         "outDir": "./dist/",
@@ -20,6 +25,7 @@
             "@plugins/*": ["src/plugins/*"]
         },
         "types": [
+            "jest",
             "node"
         ],
         "lib": [

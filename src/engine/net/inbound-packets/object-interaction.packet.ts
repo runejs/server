@@ -81,19 +81,30 @@ const objectInteractionPacket = (player: Player, packet: PacketData) => {
     }
 
     let objectConfig = filestore.configStore.objectStore.getObject(objectId);
+
+    if (!objectConfig) {
+        logger.error(`[object-interaction] Could not find object config for object id ${objectId}!`);
+        return;
+    }
+
     if (objectConfig.configChangeDest) {
         let morphIndex = -1;
         if(objectConfig.varbitId === -1) {
             if(objectConfig.configId !== -1) {
-                morphIndex = player.metadata['configs'] && player.metadata['configs'][objectConfig.configId] ?
-                    player.metadata['configs'][objectConfig.configId] : 0;
+                morphIndex = player.metadata.configs && player.metadata.configs[objectConfig.configId] ?
+                    player.metadata.configs[objectConfig.configId] : 0;
             }
         } else {
-            morphIndex = getVarbitMorphIndex(objectConfig.varbitId, player.metadata['configs']);
+            morphIndex = getVarbitMorphIndex(objectConfig.varbitId, player.metadata.configs);
         }
         if(morphIndex !== -1) {
             objectConfig = filestore.configStore.objectStore.getObject(objectConfig.configChangeDest[morphIndex]);
         }
+    }
+
+    if (!objectConfig) {
+        logger.error(`[object-interaction - after morph] Could not find object config for object id ${objectId}!`);
+        return;
     }
 
     const actionIdx = objectInteractionPackets[packetId].index;
