@@ -1,12 +1,14 @@
-import { npcInitActionHandler } from '@engine/world/action/npc-init.action';
+import { npcInitActionHandler } from '@engine/action';
 import { World } from '@engine/world';
 import { Position } from '@engine/world/position';
-import { world } from '@engine/game-server';
-import { findNpc } from '@engine/config';
-import { Npc } from '@engine/world/actor/npc/npc';
+import { findNpc } from '@engine/config/config-handler';
+import { Npc } from '@engine/world/actor/npc';
 import { randomBetween } from '@engine/util/num';
+import { activeWorld } from '@engine/world';
+
 const npcs = ['rs:guard:0', 'rs:guard:1']
-const npcObjects = npcs.map((sNpc) => findNpc(sNpc));
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const npcObjects = npcs.map((sNpc) => findNpc(sNpc)!);
 
 interface DialogueNpcTree {
     a?: string;
@@ -163,7 +165,7 @@ function doDialogue(a: Npc, b: Npc, dialogueIndex: number, dialogueTree: Dialogu
 const npcIdleAction =  (npc: Npc) => {
     if(Math.random() >= 0.14) {
         const currentLocation = new Position(npc.position);
-        const closeNpcs = world.findNearbyNpcs(currentLocation, 4);
+        const closeNpcs = activeWorld.findNearbyNpcs(currentLocation, 4);
         for (const closeNpc of closeNpcs) {
             if(closeNpc === npc) {
                 continue;

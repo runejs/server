@@ -2,7 +2,7 @@ name: Lint & Build Project
 
 on:
     pull_request:
-        branches: [ master, develop ]
+        branches: [ master, develop, feature/** ]
     push:
         branches: [ master, develop ]
 
@@ -24,6 +24,9 @@ jobs:
 
             -   name: Run Linter
                 run: npm run lint
+
+            -   name: Run Typecheck
+                run: npm run typecheck
 
             -   name: Build Project
                 run: npm run build

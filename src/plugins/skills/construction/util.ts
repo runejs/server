@@ -1,7 +1,6 @@
 import { Player } from '@engine/world/actor/player/player';
 import { Coords, Position } from '@engine/world/position';
-import { world } from '@engine/game-server';
-import { ConstructedRegion } from '@engine/world/map/region';
+import { activeWorld } from '@engine/world';
 
 
 /**
@@ -10,7 +9,7 @@ import { ConstructedRegion } from '@engine/world/map/region';
  * @param player The player to find the room for.
  */
 export const getCurrentRoom = (player: Player): Coords | null => {
-    const customMap: ConstructedRegion = player.metadata?.customMap;
+    const customMap = player.metadata?.customMap;
 
     if(!customMap) {
         return null;
@@ -19,8 +18,8 @@ export const getCurrentRoom = (player: Player): Coords | null => {
     const mapWorldX = customMap.renderPosition.x;
     const mapWorldY = customMap.renderPosition.y;
 
-    const topCornerMapChunk = world.chunkManager.getChunkForWorldPosition(new Position(mapWorldX, mapWorldY, player.position.level));
-    const playerChunk = world.chunkManager.getChunkForWorldPosition(player.position);
+    const topCornerMapChunk = activeWorld.chunkManager.getChunkForWorldPosition(new Position(mapWorldX, mapWorldY, player.position.level));
+    const playerChunk = activeWorld.chunkManager.getChunkForWorldPosition(player.position);
 
     const currentRoomX = playerChunk.position.x - (topCornerMapChunk.position.x - 2);
     const currentRoomY = playerChunk.position.y - (topCornerMapChunk.position.y - 2);

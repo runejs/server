@@ -1,7 +1,7 @@
-import { findMusicTrack, findSongIdByRegionId, musicRegionMap, musicRegions, widgets } from '@engine/config';
+import { findMusicTrack, findSongIdByRegionId, musicRegionMap, musicRegions, widgets } from '@engine/config/config-handler';
 import { colors } from '@engine/util/colors';
-import { MusicPlayerMode } from '@plugins/music/music-tab.plugin';
-import { playerInitActionHandler } from '@engine/world/action/player-init.action';
+import { playerInitActionHandler } from '@engine/action';
+import { MusicPlayerMode } from '@engine/world/sound';
 
 
 musicRegions.forEach(song => song.regionIds.forEach(region => musicRegionMap.set(region, song.songId)));
@@ -14,16 +14,23 @@ function getByValue(map, searchValue) {
 }
 
 const regionChangedHandler = ({ player, currentMapRegionId }): void => {
-    const songId: number = findSongIdByRegionId(currentMapRegionId);
+    const songId = findSongIdByRegionId(currentMapRegionId);
     if(songId == null) {
         return;
     }
-    const songName = findMusicTrack(songId).songName;
+
+    const musicTrack = findMusicTrack(songId)
+
+    if (!musicTrack) {
+        return;
+    }
+
+    const songName = musicTrack.songName;
     // player.sendMessage(`Playing ${songId}:${getByValue(songs, songId)} at region ${currentMapRegionId}`);
     if(!player.musicTracks.includes(songId)) {
         player.musicTracks.push(songId);
         player.sendMessage('You have unlocked a new music track: <col=ef101f>' + songName + '.</col>');
-        player.modifyWidget(widgets.musicPlayerTab, { childId:  findMusicTrack(songId).musicTabButtonId, textColor: colors.green });
+        player.modifyWidget(widgets.musicPlayerTab, { childId:  musicTrack.musicTabButtonId, textColor: colors.green });
     }
     if(player.settings.musicPlayerMode === MusicPlayerMode.AUTO) {
         player.playSong(songId);

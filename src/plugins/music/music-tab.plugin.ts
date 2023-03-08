@@ -1,7 +1,9 @@
-import { buttonActionHandler } from '@engine/world/action/button.action';
-import { widgets, findMusicTrackByButtonId, findSongIdByRegionId } from '@engine/config';
-import { widgetScripts } from '@engine/world/config/widget';
-import { world } from '@engine/game-server';
+import { buttonActionHandler } from '@engine/action';
+import { findMusicTrackByButtonId, findSongIdByRegionId, widgets } from '@engine/config';
+import { widgetScripts } from '@engine/world/config';
+import { MusicPlayerMode, MusicTabButtonIds } from '@engine/world/sound';
+import { activeWorld } from '@engine/world';
+import { logger } from '@runejs/common';
 
 export const handler: buttonActionHandler = (details) => {
     const { player, buttonId } = details;
@@ -9,7 +11,12 @@ export const handler: buttonActionHandler = (details) => {
     if(buttonId === MusicTabButtonIds.AUTO_BUTTON_ID) {
         player.settings.musicPlayerMode = MusicPlayerMode.AUTO;
         const songIdForCurrentRegion = findSongIdByRegionId(
-            world.chunkManager.getRegionIdForWorldPosition(player.position));
+            activeWorld.chunkManager.getRegionIdForWorldPosition(player.position));
+
+        if (!songIdForCurrentRegion) {
+            logger.warn(`No song found for current region`);
+            return;
+        }
 
         if(player.savedMetadata['currentSongIdPlaying'] !== songIdForCurrentRegion) {
             player.playSong(songIdForCurrentRegion);
@@ -31,22 +38,6 @@ export const handler: buttonActionHandler = (details) => {
         player.sendMessage('You haven\'t unlocked this piece of music yet!');
     }
 };
-
-export enum MusicPlayerMode {
-    MANUAL = 0,
-    AUTO = 1
-}
-
-export enum MusicPlayerLoopMode {
-    ENABLED = 0,
-    DISABLED = 1
-}
-
-export enum MusicTabButtonIds {
-    AUTO_BUTTON_ID = 180,
-    MANUAL_BUTTON_ID = 181,
-    LOOP_BUTTON_ID = 251
-}
 
 export default {
     pluginId: 'rs:music_tab',

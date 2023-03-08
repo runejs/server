@@ -1,17 +1,17 @@
 import { itemIds } from '@engine/world/config/item-ids';
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
 import { soundIds } from '@engine/world/config/sound-ids';
-import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
+import { itemOnObjectActionHandler } from '@engine/action';
 import { Player } from '@engine/world/actor/player/player';
 import { ObjectConfig } from '@runejs/filestore';
-import { playerInitActionHandler } from '@engine/world/action/player-init.action';
+import { playerInitActionHandler } from '@engine/action';
 
 
 function flourBin(details: { objectConfig: ObjectConfig, player: Player }): void {
     const { player, objectConfig } = details;
 
     if (!details.player.savedMetadata['mill-flour']) {
-        player.sendMessage(`The ${objectConfig.name.toLowerCase()} is already empty. You need to place wheat in the hopper upstairs `);
+        player.sendMessage(`The ${(objectConfig.name || '').toLowerCase()} is already empty. You need to place wheat in the hopper upstairs `);
         player.sendMessage(`first.`);
     } else {
         if (player.hasItemInInventory(itemIds.pot)) {

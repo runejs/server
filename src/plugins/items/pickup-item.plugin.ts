@@ -1,7 +1,8 @@
-import { spawnedItemInteractionHandler } from '@engine/world/action/spawned-item-interaction.action';
+import { ActionCancelType, spawnedItemInteractionHandler } from '@engine/action';
 import { Item } from '@engine/world/items/item';
 import { soundIds } from '@engine/world/config/sound-ids';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
+import { logger } from '@runejs/common';
 
 
 export const handler: spawnedItemInteractionHandler = ({ player, worldItem, itemDetails }) => {
@@ -13,7 +14,7 @@ export const handler: spawnedItemInteractionHandler = ({ player, worldItem, item
         const existingItemIndex = inventory.findIndex(worldItem.itemId);
         if(existingItemIndex !== -1) {
             const existingItem = inventory.items[existingItemIndex];
-            if(existingItem.amount + worldItem.amount >= 2147483647) {
+            if(existingItem && (existingItem.amount + worldItem.amount >= 2147483647)) {
                 // @TODO create new item stack
                 return;
             } else {
@@ -31,6 +32,11 @@ export const handler: spawnedItemInteractionHandler = ({ player, worldItem, item
         return;
     }
 
+    if (!worldItem.instance) {
+        logger.error(`World item ${worldItem.itemId} has no instance`);
+        return;
+    }
+
     worldItem.instance.despawnWorldItem(worldItem);
 
     const item: Item = {
@@ -39,9 +45,16 @@ export const handler: spawnedItemInteractionHandler = ({ player, worldItem, item
     };
 
     const addedItem = inventory.add(item);
+
+    if (!addedItem) {
+        logger.error(`Failed to add item ${item.itemId} to inventory for player ${player.username}`);
+        return;
+    }
+
     player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, addedItem.slot, addedItem.item);
     player.playSound(soundIds.pickupItem, 3);
-    player.actionsCancelled.next(null);
+    // (Jameskmonger) actionsCancelled is deprecated, casting this to satisfy the typecheck for now
+    player.actionsCancelled.next(null as unknown as ActionCancelType);
 };
 
 export default {

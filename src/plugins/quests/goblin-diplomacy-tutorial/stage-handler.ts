@@ -1,23 +1,24 @@
 import { dialogue } from '@engine/world/actor/dialogue';
 import {
-    handleTutorial,
+    tutorialHandler,
     npcHint, showTabWidgetHint, spawnGoblinBoi,
     startTutorial,
     unlockAvailableTabs
 } from '@plugins/quests/goblin-diplomacy-tutorial/goblin-diplomacy-quest.plugin';
 import { schedule } from '@engine/world/task';
-import { world } from '@engine/game-server';
-import { findNpc } from '@engine/config';
+import { findNpc } from '@engine/config/config-handler';
 import { Cutscene } from '@engine/world/actor/player/cutscenes';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { QuestStageHandler } from '@engine/config/quest-config';
-import { tabIndex } from '@engine/world/actor/player/interface-state';
+import { tabIndex } from '@engine/interface';
+import { activeWorld } from '@engine/world';
+import { logger } from '@runejs/common';
 
 export const goblinDiplomacyStageHandler: QuestStageHandler = {
     0: async player => {
         await startTutorial(player);
         player.setQuestProgress('tyn:goblin_diplomacy', 5);
-        await handleTutorial(player);
+        await tutorialHandler(player);
     },
     5: async player => {
         npcHint(player, 'rs:runescape_guide');
@@ -187,12 +188,37 @@ export const goblinDiplomacyStageHandler: QuestStageHandler = {
 
         await schedule(3);
 
-        const goblinDetails = findNpc('rs:goblin');
-        let anim = goblinDetails.combatAnimations.attack;
-        if(Array.isArray(anim)) {
-            anim = anim[0];
+        function getAnim() {
+            const goblinDetails = findNpc('rs:goblin');
+
+            if (!goblinDetails) {
+                logger.error('Could not find goblin details.');
+                return null;
+            }
+
+            const anims = goblinDetails.combatAnimations;
+
+            if (!anims) {
+                return null;
+            }
+
+            if (!anims.attack) {
+                return null;
+            }
+
+            if (Array.isArray(anims.attack)) {
+                return anims.attack[0];
+            }
+
+            return anims.attack;
         }
-        world.findNpcsByKey('rs:goblin', player.instance.instanceId)[0].playAnimation(anim);
+
+        const goblinAnim = getAnim();
+
+        if (goblinAnim !== null) {
+            activeWorld.findNpcsByKey('rs:goblin', player.instance.instanceId)[0].playAnimation(goblinAnim);
+        }
+
         player.playSound(soundIds.npc.human.maleDefence, 5);
     }
 };

@@ -2,7 +2,7 @@
  * @Author NickNick
  */
 
-import { objectInteractionActionHandler, ObjectInteractionAction } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler, ObjectInteractionAction } from '@engine/action';
 import { Skill } from '@engine/world/actor/skills';
 import {
     altars, combinationRunes,
@@ -10,17 +10,29 @@ import {
     getEntityIds, runeMultiplier,
     runes,
 } from '@plugins/skills/runecrafting/runecrafting-constants';
-import { itemOnObjectActionHandler, ItemOnObjectAction } from '@engine/world/action/item-on-object.action';
+import { itemOnObjectActionHandler, ItemOnObjectAction } from '@engine/action';
 import { RunecraftingCombinationRune } from '@plugins/skills/runecrafting/runecrafting-types';
 import { randomBetween } from '@engine/util/num';
 import { itemIds } from '@engine/world/config/item-ids';
-import { findItem, widgets } from '@engine/config';
+import { findItem, widgets } from '@engine/config/config-handler';
+import { logger } from '@runejs/common';
 
 
 const craftRune: objectInteractionActionHandler = (details: ObjectInteractionAction) => {
     const { player, object } = details;
     const rune = getEntityByAttr(runes, 'altar.craftingId', object.objectId);
+
+    if (!rune) {
+        logger.error(`No rune [crafting] found for runecrafting plugin: ${object.objectId}`);
+        return;
+    }
+
     const runeDetails = findItem(rune.id);
+
+    if (!runeDetails) {
+        logger.warn(`Could not find rune details for rune id ${rune.id}`);
+        return;
+    }
 
     const level = player.skills.get(Skill.RUNECRAFTING).level;
     if (level < rune.level) {
@@ -52,15 +64,13 @@ const craftRune: objectInteractionActionHandler = (details: ObjectInteractionAct
 };
 
 function getCombinationRuneByAltar(itemId: number, objectId: number): RunecraftingCombinationRune | undefined {
-    let rune = undefined;
     for (const combinationRune of combinationRunes.values()) {
         const altarIndex = combinationRune.altar.findIndex((altar) => altar.craftingId === objectId);
         if (altarIndex > -1 && combinationRune.talisman[altarIndex ^ 1].id === itemId) {
-            rune = combinationRune;
-            break;
+            return combinationRune;
         }
     }
-    return rune;
+    return undefined;
 }
 
 const craftCombinationRune: itemOnObjectActionHandler = (details: ItemOnObjectAction) => {
@@ -79,6 +89,11 @@ const craftCombinationRune: itemOnObjectActionHandler = (details: ItemOnObjectAc
         return;
     }
     const runeDetails = findItem(rune.id);
+
+    if (!runeDetails) {
+        logger.warn(`Could not find rune details for rune id ${rune.id}`);
+        return;
+    }
 
     const level = player.skills.get(Skill.RUNECRAFTING).level;
     if (level < rune.level) {

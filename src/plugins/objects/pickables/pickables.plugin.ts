@@ -1,7 +1,8 @@
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
 import { World } from '@engine/world';
 import { itemIds } from '@engine/world/config/item-ids';
-import { findItem } from '@engine/config';
+import { findItem } from '@engine/config/config-handler';
+import { logger } from '@runejs/common';
 
 
 export const action: objectInteractionActionHandler = (details) => {
@@ -30,8 +31,15 @@ export const action: objectInteractionActionHandler = (details) => {
             break;
     }
     const pickedItem = findItem(itemId);
+
+    if (!pickedItem) {
+        logger.warn(`Could not find item for pickable with id ${itemId}`);
+        details.player.busy = false;
+        return;
+    }
+
     setTimeout(() => {
-        details.player.sendMessage(`You ${details.option} the ${details.objectConfig.name.toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`);
+        details.player.sendMessage(`You ${details.option} the ${(details.objectConfig.name || '').toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`);
         details.player.playSound(2581, 7);
         if (details.objectConfig.name !== 'Flax' || Math.floor(Math.random() * 10) === 1) {
             details.player.instance.hideGameObjectTemporarily(details.object, 30);

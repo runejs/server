@@ -3,7 +3,8 @@
  */
 
 import { getEntityByAttr, getEntityIds, tiaras } from '@plugins/skills/runecrafting/runecrafting-constants';
-import { equipmentChangeActionHandler } from '@engine/world/action/equipment-change.action';
+import { equipmentChangeActionHandler } from '@engine/action';
+import { logger } from '@runejs/common';
 
 
 const unequipTiara : equipmentChangeActionHandler = (details) => {
@@ -14,6 +15,12 @@ const unequipTiara : equipmentChangeActionHandler = (details) => {
 const equipTiara : equipmentChangeActionHandler = (details) => {
     const { player, itemId } = details;
     const tiara = getEntityByAttr(tiaras, 'id', itemId);
+
+    if (!tiara) {
+        logger.error(`No tiara [equipping] found for runecrafting plugin: ${itemId}`);
+        return;
+    }
+
     player.outgoingPackets.updateClientConfig(491, tiara.config);
 };
 

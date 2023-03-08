@@ -1644,257 +1644,260 @@ export const smithables : Map<string, Map<string, Smithable>> = new Map<string, 
     ])],
 ]);
 
+/**
+ * TODO (Jameskmonger) I ran a find-and-replace over this to stop TypeScript errors, recommend refactoring
+ */
 export const widgetItems : Map<number, Map<number, Smithable[]>> = new Map<number, Map<number, Smithable[]>>([
     [itemIds.bars.bronze, new Map<number, Smithable[]>([
         [146, [ // Dagger, Sword, Scimitar, Longsword, 2h sword
-            smithables.get('dagger').get('bronze'),
-            smithables.get('sword').get('bronze'),
-            smithables.get('scimitar').get('bronze'),
-            smithables.get('longsword').get('bronze'),
-            smithables.get('twoHandedSword').get('bronze'),
+            smithables.get('dagger')?.get('bronze') as Smithable,
+            smithables.get('sword')?.get('bronze') as Smithable,
+            smithables.get('scimitar')?.get('bronze') as Smithable,
+            smithables.get('longsword')?.get('bronze') as Smithable,
+            smithables.get('twoHandedSword')?.get('bronze') as Smithable,
         ]],
         [147, [ // Axe, Mace, Warhammer, Battleaxe, Claws
-            smithables.get('axe').get('bronze'),
-            smithables.get('mace').get('bronze'),
-            smithables.get('warhammer').get('bronze'),
-            smithables.get('battleaxe').get('bronze'),
-            smithables.get('claws').get('bronze')
+            smithables.get('axe')?.get('bronze') as Smithable,
+            smithables.get('mace')?.get('bronze') as Smithable,
+            smithables.get('warhammer')?.get('bronze') as Smithable,
+            smithables.get('battleaxe')?.get('bronze') as Smithable,
+            smithables.get('claws')?.get('bronze') as Smithable
         ]],
         [148, [ // Chainbody, Platelegs, Plateskirt, Platebody, *Lantern*
-            smithables.get('chainbody').get('bronze'),
-            smithables.get('platelegs').get('bronze'),
-            smithables.get('plateskirt').get('bronze'),
-            smithables.get('platebody').get('bronze'),
-            smithables.get('unknown').get('any')
+            smithables.get('chainbody')?.get('bronze') as Smithable,
+            smithables.get('platelegs')?.get('bronze') as Smithable,
+            smithables.get('plateskirt')?.get('bronze') as Smithable,
+            smithables.get('platebody')?.get('bronze') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable
         ]],
         [149, [ // Medium helm, Full helm, Sq shield, kite shield, Nails
-            smithables.get('mediumHelm').get('bronze'),
-            smithables.get('fullHelm').get('bronze'),
-            smithables.get('squareShield').get('bronze'),
-            smithables.get('kiteshield').get('bronze'),
-            smithables.get('nails').get('bronze')
+            smithables.get('mediumHelm')?.get('bronze') as Smithable,
+            smithables.get('fullHelm')?.get('bronze') as Smithable,
+            smithables.get('squareShield')?.get('bronze') as Smithable,
+            smithables.get('kiteshield')?.get('bronze') as Smithable,
+            smithables.get('nails')?.get('bronze') as Smithable
         ]],
         [150, [ // Dart tip, Arrowtips, Throwing knives, *Other*, *Studs*
-            smithables.get('dartTips').get('bronze'),
-            smithables.get('arrowTips').get('bronze'),
-            smithables.get('unknown').get('any'),
-            smithables.get('unknown').get('any'),
-            smithables.get('unknown').get('any')
+            smithables.get('dartTips')?.get('bronze') as Smithable,
+            smithables.get('arrowTips')?.get('bronze') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable
         ]],
         [151, [ // Bolts, Limbs, Grapple tips
-            smithables.get('bolts').get('bronze'),
-            smithables.get('limbs').get('bronze'),
-            smithables.get('unknown').get('any'),
+            smithables.get('bolts')?.get('bronze') as Smithable,
+            smithables.get('limbs')?.get('bronze') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable,
         ]]
     ])],
     [itemIds.bars.iron, new Map<number, Smithable[]>([
         [146, [ // Dagger, Sword, Scimitar, Longsword, 2h sword
-            smithables.get('dagger').get('iron'),
-            smithables.get('sword').get('iron'),
-            smithables.get('scimitar').get('iron'),
-            smithables.get('longsword').get('iron'),
-            smithables.get('twoHandedSword').get('iron'),
+            smithables.get('dagger')?.get('iron') as Smithable,
+            smithables.get('sword')?.get('iron') as Smithable,
+            smithables.get('scimitar')?.get('iron') as Smithable,
+            smithables.get('longsword')?.get('iron') as Smithable,
+            smithables.get('twoHandedSword')?.get('iron') as Smithable,
         ]],
         [147, [ // Axe, Mace, Warhammer, Battleaxe, Claws
-            smithables.get('axe').get('iron'),
-            smithables.get('mace').get('iron'),
-            smithables.get('warhammer').get('iron'),
-            smithables.get('battleaxe').get('iron'),
-            smithables.get('claws').get('iron')
+            smithables.get('axe')?.get('iron') as Smithable,
+            smithables.get('mace')?.get('iron') as Smithable,
+            smithables.get('warhammer')?.get('iron') as Smithable,
+            smithables.get('battleaxe')?.get('iron') as Smithable,
+            smithables.get('claws')?.get('iron') as Smithable
         ]],
         [148, [ // Chainbody, Platelegs, Plateskirt, Platebody, *Lantern*
-            smithables.get('chainbody').get('iron'),
-            smithables.get('platelegs').get('iron'),
-            smithables.get('plateskirt').get('iron'),
-            smithables.get('platebody').get('iron'),
-            smithables.get('unknown').get('any')
+            smithables.get('chainbody')?.get('iron') as Smithable,
+            smithables.get('platelegs')?.get('iron') as Smithable,
+            smithables.get('plateskirt')?.get('iron') as Smithable,
+            smithables.get('platebody')?.get('iron') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable
         ]],
         [149, [ // Medium helm, Full helm, Sq shield, kite shield, Nails
-            smithables.get('mediumHelm').get('iron'),
-            smithables.get('fullHelm').get('iron'),
-            smithables.get('squareShield').get('iron'),
-            smithables.get('kiteshield').get('iron'),
-            smithables.get('nails').get('iron')
+            smithables.get('mediumHelm')?.get('iron') as Smithable,
+            smithables.get('fullHelm')?.get('iron') as Smithable,
+            smithables.get('squareShield')?.get('iron') as Smithable,
+            smithables.get('kiteshield')?.get('iron') as Smithable,
+            smithables.get('nails')?.get('iron') as Smithable
         ]],
         [150, [ // Dart tip, Arrowtips, Throwing knives, *Other*, *Studs*
-            smithables.get('dartTips').get('iron'),
-            smithables.get('arrowTips').get('iron'),
-            smithables.get('unknown').get('any'),
-            smithables.get('unknown').get('any'),
-            smithables.get('unknown').get('any')
+            smithables.get('dartTips')?.get('iron') as Smithable,
+            smithables.get('arrowTips')?.get('iron') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable
         ]],
         [151, [ // Bolts, Limbs, Grapple tips
-            smithables.get('bolts').get('iron'),
-            smithables.get('limbs').get('iron'),
-            smithables.get('unknown').get('any'),
+            smithables.get('bolts')?.get('iron') as Smithable,
+            smithables.get('limbs')?.get('iron') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable,
         ]]
     ])],
     [itemIds.bars.steel, new Map<number, Smithable[]>([
         [146, [ // Dagger, Sword, Scimitar, Longsword, 2h sword
-            smithables.get('dagger').get('steel'),
-            smithables.get('sword').get('steel'),
-            smithables.get('scimitar').get('steel'),
-            smithables.get('longsword').get('steel'),
-            smithables.get('twoHandedSword').get('steel'),
+            smithables.get('dagger')?.get('steel') as Smithable,
+            smithables.get('sword')?.get('steel') as Smithable,
+            smithables.get('scimitar')?.get('steel') as Smithable,
+            smithables.get('longsword')?.get('steel') as Smithable,
+            smithables.get('twoHandedSword')?.get('steel') as Smithable,
         ]],
         [147, [ // Axe, Mace, Warhammer, Battleaxe, Claws
-            smithables.get('axe').get('steel'),
-            smithables.get('mace').get('steel'),
-            smithables.get('warhammer').get('steel'),
-            smithables.get('battleaxe').get('steel'),
-            smithables.get('claws').get('steel')
+            smithables.get('axe')?.get('steel') as Smithable,
+            smithables.get('mace')?.get('steel') as Smithable,
+            smithables.get('warhammer')?.get('steel') as Smithable,
+            smithables.get('battleaxe')?.get('steel') as Smithable,
+            smithables.get('claws')?.get('steel') as Smithable
         ]],
         [148, [ // Chainbody, Platelegs, Plateskirt, Platebody, *Lantern*
-            smithables.get('chainbody').get('steel'),
-            smithables.get('platelegs').get('steel'),
-            smithables.get('plateskirt').get('steel'),
-            smithables.get('platebody').get('steel'),
-            smithables.get('unknown').get('any')
+            smithables.get('chainbody')?.get('steel') as Smithable,
+            smithables.get('platelegs')?.get('steel') as Smithable,
+            smithables.get('plateskirt')?.get('steel') as Smithable,
+            smithables.get('platebody')?.get('steel') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable
         ]],
         [149, [ // Medium helm, Full helm, Sq shield, kite shield, Nails
-            smithables.get('mediumHelm').get('steel'),
-            smithables.get('fullHelm').get('steel'),
-            smithables.get('squareShield').get('steel'),
-            smithables.get('kiteshield').get('steel'),
-            smithables.get('nails').get('steel')
+            smithables.get('mediumHelm')?.get('steel') as Smithable,
+            smithables.get('fullHelm')?.get('steel') as Smithable,
+            smithables.get('squareShield')?.get('steel') as Smithable,
+            smithables.get('kiteshield')?.get('steel') as Smithable,
+            smithables.get('nails')?.get('steel') as Smithable
         ]],
         [150, [ // Dart tip, Arrowtips, Throwing knives, *Other*, *Studs*
-            smithables.get('dartTips').get('steel'),
-            smithables.get('arrowTips').get('steel'),
-            smithables.get('knife').get('steel'),
-            smithables.get('unknown').get('any'),
-            smithables.get('unknown').get('any')
+            smithables.get('dartTips')?.get('steel') as Smithable,
+            smithables.get('arrowTips')?.get('steel') as Smithable,
+            smithables.get('knife')?.get('steel') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable
         ]],
         [151, [ // Bolts, Limbs, Grapple tips
-            smithables.get('bolts').get('steel'),
-            smithables.get('limbs').get('steel'),
-            smithables.get('unknown').get('any'),
+            smithables.get('bolts')?.get('steel') as Smithable,
+            smithables.get('limbs')?.get('steel') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable,
         ]]
     ])],
     [itemIds.bars.mithril, new Map<number, Smithable[]>([
         [146, [ // Dagger, Sword, Scimitar, Longsword, 2h sword
-            smithables.get('dagger').get('mithril'),
-            smithables.get('sword').get('mithril'),
-            smithables.get('scimitar').get('mithril'),
-            smithables.get('longsword').get('mithril'),
-            smithables.get('twoHandedSword').get('mithril'),
+            smithables.get('dagger')?.get('mithril') as Smithable,
+            smithables.get('sword')?.get('mithril') as Smithable,
+            smithables.get('scimitar')?.get('mithril') as Smithable,
+            smithables.get('longsword')?.get('mithril') as Smithable,
+            smithables.get('twoHandedSword')?.get('mithril') as Smithable,
         ]],
         [147, [ // Axe, Mace, Warhammer, Battleaxe, Claws
-            smithables.get('axe').get('mithril'),
-            smithables.get('mace').get('mithril'),
-            smithables.get('warhammer').get('mithril'),
-            smithables.get('battleaxe').get('mithril'),
-            smithables.get('claws').get('mithril')
+            smithables.get('axe')?.get('mithril') as Smithable,
+            smithables.get('mace')?.get('mithril') as Smithable,
+            smithables.get('warhammer')?.get('mithril') as Smithable,
+            smithables.get('battleaxe')?.get('mithril') as Smithable,
+            smithables.get('claws')?.get('mithril') as Smithable
         ]],
         [148, [ // Chainbody, Platelegs, Plateskirt, Platebody, *Lantern*
-            smithables.get('chainbody').get('mithril'),
-            smithables.get('platelegs').get('mithril'),
-            smithables.get('plateskirt').get('mithril'),
-            smithables.get('platebody').get('mithril'),
-            smithables.get('unknown').get('any')
+            smithables.get('chainbody')?.get('mithril') as Smithable,
+            smithables.get('platelegs')?.get('mithril') as Smithable,
+            smithables.get('plateskirt')?.get('mithril') as Smithable,
+            smithables.get('platebody')?.get('mithril') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable
         ]],
         [149, [ // Medium helm, Full helm, Sq shield, kite shield, Nails
-            smithables.get('mediumHelm').get('mithril'),
-            smithables.get('fullHelm').get('mithril'),
-            smithables.get('squareShield').get('mithril'),
-            smithables.get('kiteshield').get('mithril'),
-            smithables.get('nails').get('mithril')
+            smithables.get('mediumHelm')?.get('mithril') as Smithable,
+            smithables.get('fullHelm')?.get('mithril') as Smithable,
+            smithables.get('squareShield')?.get('mithril') as Smithable,
+            smithables.get('kiteshield')?.get('mithril') as Smithable,
+            smithables.get('nails')?.get('mithril') as Smithable
         ]],
         [150, [ // Dart tip, Arrowtips, Throwing knives, *Other*, *Studs*
-            smithables.get('dartTips').get('mithril'),
-            smithables.get('arrowTips').get('mithril'),
-            smithables.get('knife').get('mithril'),
-            smithables.get('unknown').get('any'),
-            smithables.get('unknown').get('any')
+            smithables.get('dartTips')?.get('mithril') as Smithable,
+            smithables.get('arrowTips')?.get('mithril') as Smithable,
+            smithables.get('knife')?.get('mithril') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable
         ]],
         [151, [ // Bolts, Limbs, Grapple tips
-            smithables.get('bolts').get('mithril'),
-            smithables.get('limbs').get('mithril'),
-            smithables.get('unknown').get('any'),
+            smithables.get('bolts')?.get('mithril') as Smithable,
+            smithables.get('limbs')?.get('mithril') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable,
         ]]
     ])],
     [itemIds.bars.adamantite, new Map<number, Smithable[]>([
         [146, [ // Dagger, Sword, Scimitar, Longsword, 2h sword
-            smithables.get('dagger').get('adamant'),
-            smithables.get('sword').get('adamant'),
-            smithables.get('scimitar').get('adamant'),
-            smithables.get('longsword').get('adamant'),
-            smithables.get('twoHandedSword').get('adamant'),
+            smithables.get('dagger')?.get('adamant') as Smithable,
+            smithables.get('sword')?.get('adamant') as Smithable,
+            smithables.get('scimitar')?.get('adamant') as Smithable,
+            smithables.get('longsword')?.get('adamant') as Smithable,
+            smithables.get('twoHandedSword')?.get('adamant') as Smithable,
         ]],
         [147, [ // Axe, Mace, Warhammer, Battleaxe, Claws
-            smithables.get('axe').get('adamant'),
-            smithables.get('mace').get('adamant'),
-            smithables.get('warhammer').get('adamant'),
-            smithables.get('battleaxe').get('adamant'),
-            smithables.get('claws').get('adamant')
+            smithables.get('axe')?.get('adamant') as Smithable,
+            smithables.get('mace')?.get('adamant') as Smithable,
+            smithables.get('warhammer')?.get('adamant') as Smithable,
+            smithables.get('battleaxe')?.get('adamant') as Smithable,
+            smithables.get('claws')?.get('adamant') as Smithable
         ]],
         [148, [ // Chainbody, Platelegs, Plateskirt, Platebody, *Lantern*
-            smithables.get('chainbody').get('adamant'),
-            smithables.get('platelegs').get('adamant'),
-            smithables.get('plateskirt').get('adamant'),
-            smithables.get('platebody').get('adamant'),
-            smithables.get('unknown').get('any')
+            smithables.get('chainbody')?.get('adamant') as Smithable,
+            smithables.get('platelegs')?.get('adamant') as Smithable,
+            smithables.get('plateskirt')?.get('adamant') as Smithable,
+            smithables.get('platebody')?.get('adamant') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable
         ]],
         [149, [ // Medium helm, Full helm, Sq shield, kite shield, Nails
-            smithables.get('mediumHelm').get('adamant'),
-            smithables.get('fullHelm').get('adamant'),
-            smithables.get('squareShield').get('adamant'),
-            smithables.get('kiteshield').get('adamant'),
-            smithables.get('nails').get('adamant')
+            smithables.get('mediumHelm')?.get('adamant') as Smithable,
+            smithables.get('fullHelm')?.get('adamant') as Smithable,
+            smithables.get('squareShield')?.get('adamant') as Smithable,
+            smithables.get('kiteshield')?.get('adamant') as Smithable,
+            smithables.get('nails')?.get('adamant') as Smithable
         ]],
         [150, [ // Dart tip, Arrowtips, Throwing knives, *Other*, *Studs*
-            smithables.get('dartTips').get('adamant'),
-            smithables.get('arrowTips').get('adamant'),
-            smithables.get('knife').get('adamant'),
-            smithables.get('unknown').get('any'),
-            smithables.get('unknown').get('any')
+            smithables.get('dartTips')?.get('adamant') as Smithable,
+            smithables.get('arrowTips')?.get('adamant') as Smithable,
+            smithables.get('knife')?.get('adamant') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable
         ]],
         [151, [ // Bolts, Limbs, Grapple tips
-            smithables.get('bolts').get('adamant'),
-            smithables.get('limbs').get('adamant'),
-            smithables.get('unknown').get('any'),
+            smithables.get('bolts')?.get('adamant') as Smithable,
+            smithables.get('limbs')?.get('adamant') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable,
         ]]
     ])],
     [itemIds.bars.runite, new Map<number, Smithable[]>([
         [146, [ // Dagger, Sword, Scimitar, Longsword, 2h sword
-            smithables.get('dagger').get('rune'),
-            smithables.get('sword').get('rune'),
-            smithables.get('scimitar').get('rune'),
-            smithables.get('longsword').get('rune'),
-            smithables.get('twoHandedSword').get('rune'),
+            smithables.get('dagger')?.get('rune') as Smithable,
+            smithables.get('sword')?.get('rune') as Smithable,
+            smithables.get('scimitar')?.get('rune') as Smithable,
+            smithables.get('longsword')?.get('rune') as Smithable,
+            smithables.get('twoHandedSword')?.get('rune') as Smithable,
         ]],
         [147, [ // Axe, Mace, Warhammer, Battleaxe, Claws
-            smithables.get('axe').get('rune'),
-            smithables.get('mace').get('rune'),
-            smithables.get('warhammer').get('rune'),
-            smithables.get('battleaxe').get('rune'),
-            smithables.get('claws').get('rune')
+            smithables.get('axe')?.get('rune') as Smithable,
+            smithables.get('mace')?.get('rune') as Smithable,
+            smithables.get('warhammer')?.get('rune') as Smithable,
+            smithables.get('battleaxe')?.get('rune') as Smithable,
+            smithables.get('claws')?.get('rune') as Smithable
         ]],
         [148, [ // Chainbody, Platelegs, Plateskirt, Platebody, *Lantern*
-            smithables.get('chainbody').get('rune'),
-            smithables.get('platelegs').get('rune'),
-            smithables.get('plateskirt').get('rune'),
-            smithables.get('platebody').get('rune'),
-            smithables.get('unknown').get('any')
+            smithables.get('chainbody')?.get('rune') as Smithable,
+            smithables.get('platelegs')?.get('rune') as Smithable,
+            smithables.get('plateskirt')?.get('rune') as Smithable,
+            smithables.get('platebody')?.get('rune') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable
         ]],
         [149, [ // Medium helm, Full helm, Sq shield, kite shield, Nails
-            smithables.get('mediumHelm').get('rune'),
-            smithables.get('fullHelm').get('rune'),
-            smithables.get('squareShield').get('rune'),
-            smithables.get('kiteshield').get('rune'),
-            smithables.get('nails').get('rune')
+            smithables.get('mediumHelm')?.get('rune') as Smithable,
+            smithables.get('fullHelm')?.get('rune') as Smithable,
+            smithables.get('squareShield')?.get('rune') as Smithable,
+            smithables.get('kiteshield')?.get('rune') as Smithable,
+            smithables.get('nails')?.get('rune') as Smithable
         ]],
         [150, [ // Dart tip, Arrowtips, Throwing knives, *Other*, *Studs*
-            smithables.get('dartTips').get('rune'),
-            smithables.get('arrowTips').get('rune'),
-            smithables.get('knife').get('rune'),
-            smithables.get('unknown').get('any'),
-            smithables.get('unknown').get('any')
+            smithables.get('dartTips')?.get('rune') as Smithable,
+            smithables.get('arrowTips')?.get('rune') as Smithable,
+            smithables.get('knife')?.get('rune') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable
         ]],
         [151, [ // Bolts, Limbs, Grapple tips
-            smithables.get('bolts').get('rune'),
-            smithables.get('limbs').get('rune'),
-            smithables.get('unknown').get('any'),
+            smithables.get('bolts')?.get('rune') as Smithable,
+            smithables.get('limbs')?.get('rune') as Smithable,
+            smithables.get('unknown')?.get('any') as Smithable,
         ]]
     ])]
 ]);

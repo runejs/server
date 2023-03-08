@@ -1,9 +1,9 @@
-import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action/pipe/item-interaction.action';
 import { Player } from '@engine/world/actor/player/player';
 import { dialogue, execute } from '@engine/world/actor/dialogue';
-import { getActionHooks } from '@engine/world/action/hooks';
-import { advancedNumberHookFilter } from '@engine/world/action/hooks/hook-filters';
-import { ObjectInteractionActionHook } from '@engine/world/action/object-interaction.action';
+import { getActionHooks } from '@engine/action/hook';
+import { advancedNumberHookFilter } from '@engine/action/hook/hook-filters';
+import { ObjectInteractionActionHook } from '@engine/action/pipe/object-interaction.action';
 import { objectIds } from '@engine/world/config/object-ids';
 import { openTravel } from '@plugins/items/rotten-potato/helpers/rotten-potato-travel';
 
@@ -11,7 +11,11 @@ import { openTravel } from '@plugins/items/rotten-potato/helpers/rotten-potato-t
 function openBank(player: Player) {
     const interactionActions = getActionHooks<ObjectInteractionActionHook>('object_interaction')
         .filter(plugin => advancedNumberHookFilter(plugin.objectIds, objectIds.bankBooth, plugin.options, 'use-quickly'));
-    interactionActions.forEach(plugin =>
+    interactionActions.forEach(plugin => {
+        if (!plugin.handler) {
+            return;
+        }
+
         plugin.handler({
             player: player,
             object: {
@@ -22,11 +26,12 @@ function openBank(player: Player) {
                 orientation: 0,
                 type: 0
             },
-            objectConfig: undefined,
             option: 'use-quickly',
             position: player.position,
-            cacheOriginal: undefined
-        }));
+            objectConfig: undefined as any,
+            cacheOriginal: undefined as any
+        })
+    });
 }
 
 enum DialogueOption {
@@ -56,7 +61,10 @@ const peelPotato: itemInteractionActionHandler = async (details) => {
             // ],
         ]
     ]);
-    switch (chosenOption) {
+
+    // using ! here because we have just set it in the dialogue
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    switch (chosenOption!) {
         case DialogueOption.BANK:
             openBank(details.player);
             break;

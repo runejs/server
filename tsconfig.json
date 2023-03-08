@@ -11,14 +11,21 @@
         "resolveJsonModule": true,
         "allowSyntheticDefaultImports": true,
         "sourceMap": true,
+        "strict": false,
+        "strictBindCallApply": true,
+        "strictFunctionTypes": false,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": false,
         "baseUrl": ".",
         "allowJs": true,
         "outDir": "./dist/",
         "paths": {
-            "@engine/*": ["src/game-engine/*"],
+            "@engine/*": ["src/engine/*"],
+            "@server/*": ["src/server/*"],
             "@plugins/*": ["src/plugins/*"]
         },
         "types": [
+            "jest",
             "node"
         ],
         "lib": [
@@ -31,10 +38,8 @@
     "include": [
         "src/**/*.js",
         "src/**/*.ts",
-        "src/**/*.tsx",
-        "src/**/*.vue",
-        "tests/**/*.ts",
-        "tests/**/*.tsx"
+        "tests/**/*.js",
+        "tests/**/*.ts"
     ],
     "exclude": [
         "node_modules"

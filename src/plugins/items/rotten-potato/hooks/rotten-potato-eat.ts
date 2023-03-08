@@ -1,4 +1,4 @@
-import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action';
 import { dialogue, execute } from '@engine/world/actor/dialogue';
 
 enum DialogueOption {
@@ -32,7 +32,9 @@ const eatPotato: itemInteractionActionHandler = async (details) => {
             ],
         ]
     ]);
-    switch (chosenOption) {
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    switch (chosenOption!) {
         case DialogueOption.SET_ALL_STATS:
             break;
         case DialogueOption.TELEPORT_TO_PLAYER:

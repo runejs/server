@@ -1,13 +1,14 @@
 import { objectIds } from '@engine/world/config/object-ids';
 import { widgetScripts } from '@engine/world/config/widget';
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
 import { ItemContainer } from '@engine/world/items/item-container';
-import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action';
 import { fromNote, Item, toNote } from '@engine/world/items/item';
-import { buttonActionHandler } from '@engine/world/action/button.action';
+import { buttonActionHandler } from '@engine/action';
 import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 import { Player } from '@engine/world/actor/player/player';
+import { logger } from '@runejs/common';
 
 
 const buttonIds: number[] = [
@@ -79,11 +80,24 @@ export const depositItem: itemInteractionActionHandler = (details) => {
             throw new Error('Unhandled option in banking plugin: ' + details.option);
     }
 
-    const playerInventory: ItemContainer = details.player.inventory;
-    const playerBank: ItemContainer = details.player.bank;
-    const slotsWithItem: number[] = playerInventory.findAll(details.itemId);
-    let itemAmount: number = 0;
-    slotsWithItem.forEach((slot) => itemAmount += playerInventory.items[slot].amount);
+    const playerInventory = details.player.inventory;
+    const playerBank = details.player.bank;
+    const slotsWithItem = playerInventory.findAll(details.itemId);
+
+    let itemAmount = 0;
+    slotsWithItem.forEach((slot) => {
+        const item = playerInventory.items[slot];
+
+        if (!item) {
+            throw new Error(`Container item was not present, for item id ${details.itemId} in inventory, while trying to deposit`);
+        }
+
+        if (item.itemId !== details.itemId) {
+            throw new Error(`Container item id mismatch, for item id ${details.itemId} in inventory, while trying to deposit`);
+        }
+
+        itemAmount += item.amount;
+    });
     if (countToRemove === -1 || countToRemove > itemAmount) {
         countToRemove = itemAmount;
     }
@@ -114,10 +128,12 @@ export const withdrawItem: itemInteractionActionHandler = (details) => {
     }
 
     let itemIdToAdd: number = details.itemId;
+    let stackable: boolean = details.itemDetails.stackable;
     if (details.player.settings.bankWithdrawNoteMode) {
         const toNoteId: number = toNote(details.itemId);
         if (toNoteId > -1) {
             itemIdToAdd = toNoteId;
+            stackable = true;
         } else {
             details.player.sendMessage('This item can not be withdrawn as a note.');
         }
@@ -146,15 +162,22 @@ export const withdrawItem: itemInteractionActionHandler = (details) => {
             throw new Error('Unhandled option in banking plugin: ' + details.option);
     }
 
-    const playerBank: ItemContainer = details.player.bank;
-    const playerInventory: ItemContainer = details.player.inventory;
-    const slotWithItem: number = playerBank.findIndex(details.itemId);
-    const itemAmount: number = playerBank.items[slotWithItem].amount;
+    const playerBank = details.player.bank;
+    const playerInventory = details.player.inventory;
+    const slotWithItem = playerBank.findIndex(details.itemId);
+    const itemInBank = playerBank.items[slotWithItem];
+
+    if (!itemInBank) {
+        logger.error(`Container item was not present, for item id ${details.itemId} in bank, while trying to withdraw`);
+        return;
+    }
+
+    const itemAmount = itemInBank.amount;
     if (countToRemove === -1 || countToRemove > itemAmount) {
         countToRemove = itemAmount;
     }
 
-    if (!details.itemDetails.stackable) {
+    if (!stackable) {
         const slots = playerInventory.getOpenSlotCount();
         if (slots < countToRemove) {
             countToRemove = slots;
@@ -170,7 +193,13 @@ export const withdrawItem: itemInteractionActionHandler = (details) => {
         amount: removeFromContainer(playerBank, details.itemId, countToRemove)
     };
 
-    playerInventory.add({ itemId: itemToAdd.itemId, amount: itemToAdd.amount });
+    if (stackable) {
+        playerInventory.add({ itemId: itemToAdd.itemId, amount: itemToAdd.amount });
+    } else {
+        for(let count = 0; count < itemToAdd.amount; count++) {
+            playerInventory.add({ itemId: itemToAdd.itemId, amount: 1 });
+        }
+    }
 
     updateBankingInterface(details.player);
 };
@@ -195,6 +224,10 @@ export const removeFromContainer = (from: ItemContainer, itemId: number, amount:
     while (removeAmount > 0 && from.has(itemId)) {
         const containerIndex = from.findIndex(itemId);
         const containerItem = from.items[containerIndex];
+
+        if (!containerItem) {
+            throw new Error(`Container item was not present, for item id ${itemId} in bank, while trying to remove`);
+        }
 
         if (removeAmount >= containerItem.amount) {
             resultingAmount += containerItem.amount;

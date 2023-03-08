@@ -1,9 +1,9 @@
 import { Position } from '@engine/world/position';
 import { WNES } from '@engine/world/direction';
-import { logger } from '@runejs/core';
-import { world } from '@engine/game-server';
+import { logger } from '@runejs/common';
 import { action as doorAction } from '@plugins/objects/doors/door.plugin';
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
+import { activeWorld } from '@engine/world';
 
 const doubleDoors = [
     {
@@ -74,22 +74,23 @@ const action: objectInteractionActionHandler = (details) => {
 
     const otherDoorPosition = new Position(door.x + deltaX, door.y + deltaY, door.level);
 
-    const { object: otherDoor } = world.findObjectAtLocation(player, otherDoorId, otherDoorPosition);
+    const { object: otherDoor } = activeWorld.findObjectAtLocation(player, otherDoorId, otherDoorPosition);
     if(!otherDoor) {
         return;
     }
 
+    // TODO (Jameskmonger) fix the 'as any' here, I used it to satisfy TypeScript strict checks
     doorAction({
         player,
         object: door,
-        objectConfig: null,
+        objectConfig: null as any,
         position, cacheOriginal,
         option: opening ? 'open' : 'close'
     });
     doorAction({
         player,
         object: otherDoor,
-        objectConfig: null,
+        objectConfig: null as any,
         position: otherDoorPosition,
         cacheOriginal,
         option: opening ? 'open' : 'close'

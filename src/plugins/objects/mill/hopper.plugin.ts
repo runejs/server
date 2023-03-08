@@ -1,6 +1,6 @@
 import { World } from '@engine/world';
 import { itemIds } from '@engine/world/config/item-ids';
-import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
+import { itemOnObjectActionHandler } from '@engine/action';
 
 
 export const action: itemOnObjectActionHandler = (details) => {

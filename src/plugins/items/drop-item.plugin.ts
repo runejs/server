@@ -1,9 +1,9 @@
-import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { ActionCancelType, itemInteractionActionHandler } from '@engine/action';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { getItemFromContainer } from '@engine/world/items/item-container';
-import { serverConfig } from '@engine/game-server';
+import { serverConfig } from '@server/game/game-server';
 import { Rights } from '@engine/world/actor/player/player';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 import { dialogue, execute } from '@engine/world/actor/dialogue';
 
 
@@ -43,7 +43,8 @@ export const handler: itemInteractionActionHandler = ({ player, itemId, itemSlot
     player.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, itemSlot, null);
     player.playSound(soundIds.dropItem, 5);
     player.instance.spawnWorldItem(item, player.position, { owner: player, expires: 300 });
-    player.actionsCancelled.next(null);
+    // (Jameskmonger) actionsCancelled is deprecated, casting this to satisfy the typecheck for now
+    player.actionsCancelled.next(null as unknown as ActionCancelType);
 };
 
 export default {

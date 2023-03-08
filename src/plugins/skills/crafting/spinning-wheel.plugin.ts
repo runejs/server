@@ -1,12 +1,13 @@
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
-import { buttonActionHandler, ButtonAction } from '@engine/world/action/button.action';
+import { objectInteractionActionHandler } from '@engine/action';
+import { buttonActionHandler, ButtonAction } from '@engine/action';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { itemIds } from '@engine/world/config/item-ids';
 import { Skill } from '@engine/world/actor/skills';
-import { filestore, loopingEvent } from '@engine/game-server';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { objectIds } from '@engine/world/config/object-ids';
-import { findItem, widgets } from '@engine/config';
+import { findItem, widgets } from '@engine/config/config-handler';
+import { loopingEvent } from '@engine/plugins';
+import { logger } from '@runejs/common';
 
 interface Spinnable {
     input: number | number[];
@@ -25,10 +26,10 @@ const ballOfWool: Spinnable = { input: itemIds.wool, output: itemIds.ballOfWool,
 const bowString: Spinnable = { input: itemIds.flax, output: itemIds.bowstring, experience: 15, requiredLevel: 10 };
 const rootsCbowString: Spinnable = {
     input: [
-        itemIds.oakRoots,
-        itemIds.willowRoots,
-        itemIds.mapleRoots,
-        itemIds.yewRoots
+        itemIds.roots.oak,
+        itemIds.roots.willow,
+        itemIds.roots.maple,
+        itemIds.roots.yew
     ],
     output: itemIds.crossbowString,
     experience: 15,
@@ -41,7 +42,7 @@ const sinewCbowString: Spinnable = {
     requiredLevel: 10
 };
 const magicAmuletString: Spinnable = {
-    input: itemIds.magicRoots,
+    input: itemIds.roots.magic,
     output: itemIds.magicString,
     experience: 30,
     requiredLevel: 19
@@ -111,7 +112,8 @@ const spinProduct: any = (details: ButtonAction, spinnable: Spinnable, count: nu
                 cancel = true;
             }
             if (cancel) {
-                details.player.sendMessage(`You don't have any ${findItem(currentItem).name.toLowerCase()}.`);
+                const itemName = findItem(currentItem)?.name || '';
+                details.player.sendMessage(`You don't have any ${itemName.toLowerCase()}.`);
                 loop.cancel();
                 return;
             }
@@ -140,11 +142,18 @@ export const buttonClicked: buttonActionHandler = (details) => {
     }
     const product = widgetButtonIds.get(details.buttonId);
 
+    if (!product) {
+        logger.error(`Unhandled button id ${details.buttonId} for buttonClicked in spinning wheel.`);
+        return;
+    }
+
     // Close the widget as it is no longer needed
     details.player.interfaceState.closeAllSlots();
 
     if (!details.player.skills.hasLevel(Skill.CRAFTING, product.spinnable.requiredLevel)) {
-        details.player.sendMessage(`You need a crafting level of ${product.spinnable.requiredLevel} to craft ${findItem(product.spinnable.output).name.toLowerCase()}.`, true);
+        const outputName = findItem(product.spinnable.output)?.name || '';
+
+        details.player.sendMessage(`You need a crafting level of ${product.spinnable.requiredLevel} to craft ${outputName.toLowerCase()}.`, true);
         return;
     }
 

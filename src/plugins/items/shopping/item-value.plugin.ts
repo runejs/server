@@ -1,6 +1,6 @@
-import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action';
 import { Shop } from '@engine/config/shop-config';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 
 export const shopSellValueHandler: itemInteractionActionHandler = ({ player, itemDetails }) => {
     const itemValue = itemDetails.value || 1;
@@ -8,7 +8,7 @@ export const shopSellValueHandler: itemInteractionActionHandler = ({ player, ite
 };
 
 export const shopPurchaseValueHandler: itemInteractionActionHandler = ({ player, itemDetails }) => {
-    const openedShop: Shop = player.metadata['lastOpenedShop'];
+    const openedShop = player.metadata.lastOpenedShop;
     if(!openedShop) {
         return;
     }

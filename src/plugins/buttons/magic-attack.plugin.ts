@@ -1,13 +1,7 @@
-import { Player } from '@engine/world/actor/player/player';
-import { Position } from '@engine/world/position';
-import { animationIds } from '@engine/world/config/animation-ids';
-import { soundIds } from '@engine/world/config/sound-ids';
-import { gfxIds } from '@engine/world/config/gfx-ids';
-import { loopingEvent } from '@engine/game-server';
-import { TaskExecutor } from '@engine/world/action';
-import { widgetButtonIds } from '../skills/smithing/smelting-constants';
-import { magiconnpcActionHandler, MagicOnNPCActionHook, MagicOnNPCAction } from '../../game-engine/world/action/magic-on-npc.action';
-import { logger } from '@runejs/core';
+import { Player } from '@engine/world/actor';
+import { TaskExecutor, MagicOnNPCActionHook, MagicOnNPCAction } from '@engine/action';
+import { logger } from '@runejs/common';
+import { loopingEvent } from '@engine/plugins';
 
 const buttonIds: number[] = [
     0, // Home Teleport

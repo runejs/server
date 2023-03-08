@@ -1,10 +1,11 @@
-import { findItem, widgets } from '@engine/config';
+import { findItem, widgets } from '@engine/config/config-handler';
 import { SkillName } from '@engine/world/actor/skills';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { randomBetween } from '@engine/util/num';
 import { World } from '@engine/world';
-import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action';
+import { logger } from '@runejs/common';
 
 
 export const action: itemInteractionActionHandler = (details) => {
@@ -31,12 +32,18 @@ export const action: itemInteractionActionHandler = (details) => {
         return;
     }
 
-    if(player.inventory.items[itemSlot].itemId !== itemId){
+    const inventoryItem = player.inventory.items[itemSlot];
+
+    if(!inventoryItem || inventoryItem.itemId !== itemId){
         return;
     }
 
-    if(itemDetails.metadata.consume_effects.replaced_by) {
-        player.inventory.items[itemSlot] = { itemId: findItem(itemDetails.metadata.consume_effects.replaced_by)?.gameId, amount: 1 };
+    const replacementItemDetails = itemDetails.metadata.consume_effects.replaced_by
+        ? findItem(itemDetails.metadata.consume_effects.replaced_by)
+        : null;
+
+    if(replacementItemDetails) {
+        player.inventory.items[itemSlot] = { itemId: replacementItemDetails.gameId, amount: 1 };
     } else {
         player.inventory.items[itemSlot] = null;
     }

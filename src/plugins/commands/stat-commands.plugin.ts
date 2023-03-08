@@ -1,9 +1,9 @@
-import { commandActionHandler } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/action';
 
 
 const setLevelAction: commandActionHandler = ({ player, args }) => {
     const skillId = args?.skillId || null;
-    const level: number = args?.level as number || null;
+    const level: number | null = args?.level as number || null;
 
     if(!skillId || !level) {
         player.sendMessage(`Invalid syntax: Use ::setlevel skill_id skill_level`);

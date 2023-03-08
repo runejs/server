@@ -1,9 +1,9 @@
 import { objectIds } from '@engine/world/config/object-ids';
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
 import { ItemContainer } from '@engine/world/items/item-container';
-import { itemInteractionActionHandler } from '@engine/world/action/item-interaction.action';
+import { itemInteractionActionHandler } from '@engine/action';
 import { fromNote, Item } from '@engine/world/items/item';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 
 export const openDepositBoxInterface: objectInteractionActionHandler = ({ player }) => {
 
@@ -48,11 +48,24 @@ export const depositItem: itemInteractionActionHandler = (details) => {
     }
 
 
-    const playerInventory: ItemContainer = details.player.inventory;
-    const playerBank: ItemContainer = details.player.bank;
-    const slotsWithItem: number[] = playerInventory.findAll(details.itemId);
+    const playerInventory = details.player.inventory;
+    const playerBank = details.player.bank;
+    const slotsWithItem = playerInventory.findAll(details.itemId);
+
     let itemAmount: number = 0;
-    slotsWithItem.forEach((slot) => itemAmount += playerInventory.items[slot].amount);
+    slotsWithItem.forEach((slot) => {
+        const item = playerInventory.items[slot];
+
+        if (!item) {
+            throw new Error(`Container item was not present, for item id ${details.itemId} in inventory, while trying to deposit`);
+        }
+
+        if (item.itemId !== details.itemId) {
+            throw new Error(`Container item id mismatch, for item id ${details.itemId} in inventory, while trying to deposit`);
+        }
+
+        itemAmount += item.amount;
+    });
     if (countToRemove == -1 || countToRemove > itemAmount) {
         countToRemove = itemAmount;
     }
@@ -67,6 +80,11 @@ export const depositItem: itemInteractionActionHandler = (details) => {
     while (countToRemove > 0 && playerInventory.has(details.itemId)) {
         const invIndex = playerInventory.findIndex(details.itemId);
         const invItem = playerInventory.items[invIndex];
+
+        if (!invItem) {
+            throw new Error(`Inventory item was not present, for item id ${details.itemId} in bank, while trying to deposit`);
+        }
+
         if (countToRemove >= invItem.amount) {
             itemToAdd.amount += invItem.amount;
             countToRemove -= invItem.amount;

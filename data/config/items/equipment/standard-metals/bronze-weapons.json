@@ -1,6 +1,21 @@
 {
+    "presets": {
+        "rs:bronze_weapon_base": {
+            "tradable": true,
+            "equippable": true,
+            "equipment_data": {
+                "requirements": {
+                    "skills": {
+                        "defence": 1
+                    }
+                }
+            },
+            "groups": ["bronze_metal", "equipment", "weapon"]
+        }
+    },
     "rs:bronze_dagger": {
         "game_id": 1205,
+        "extends": "rs:bronze_weapon_base",
         "tradable": true,
         "weight": 0.453,
         "equippable": true,
@@ -9,7 +24,7 @@
             "equipment_type": "one_handed",
             "requirements": {
                 "quests": {
-                    "goblin_diplomacy": 20
+                    "tyn:goblin_diplomacy": 20
                 }
             },
             "offensive_bonuses": {
@@ -28,6 +43,7 @@
             "weapon_info": {
                 "style": "dagger"
             }
-        }
+        },
+        "groups": ["main_hand", "dagger"]
     }
 }

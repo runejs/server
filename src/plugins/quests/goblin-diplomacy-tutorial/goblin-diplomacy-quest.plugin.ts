@@ -1,23 +1,24 @@
 import { defaultPlayerTabWidgets, Player } from '@engine/world/actor/player/player';
 import { questDialogueActionFactory, QuestJournalHandler } from '@engine/config/quest-config';
-import { serverConfig, world } from '@engine/game-server';
+import { serverConfig } from '@server/game/game-server';
 import uuidv4 from 'uuid/v4';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { Position } from '@engine/world/position';
 import { WorldInstance } from '@engine/world/instances';
-import { findNpc, widgets } from '@engine/config';
+import { findNpc, widgets } from '@engine/config/config-handler';
 import { updateCombatStyleWidget } from '@plugins/combat/combat-styles.plugin';
 import { Subject } from 'rxjs';
 import { dialogue } from '@engine/world/actor/dialogue';
 import { take } from 'rxjs/operators';
-import { equipmentChangeActionHandler } from '@engine/world/action/equipment-change.action';
-import { buttonActionHandler } from '@engine/world/action/button.action';
-import { tabIndex } from '@engine/world/actor/player/interface-state';
+import { equipmentChangeActionHandler } from '@engine/action';
+import { buttonActionHandler } from '@engine/action';
+import { tabIndex } from '@engine/interface';
 import { runescapeGuideDialogueHandler } from './runescape-guide-dialogue';
 import { harlanDialogueHandler } from './melee-tutor-dialogue';
 import { goblinDiplomacyStageHandler } from './stage-handler';
 import { Quest } from '@engine/world/actor/player/quest';
-import { playerInitActionHandler } from '@engine/world/action/player-init.action';
+import { playerInitActionHandler } from '@engine/action';
+import { activeWorld } from '@engine/world';
 
 
 export const tutorialTabWidgetOrder = [
@@ -34,10 +35,11 @@ export const tutorialTabWidgetOrder = [
 ];
 
 export function showTabWidgetHint(player: Player, tabIndex: number, availableTabs: number, finalProgress: number, helpTitle: string, helpText: string): void {
-    player.metadata.tabClickEvent = {
+    const tabClickEvent = {
         tabIndex,
         event: new Subject<boolean>()
     };
+    player.metadata.tabClickEvent = tabClickEvent;
 
     dialogue([ player ], [
         titled => [ helpTitle, helpText ]
@@ -48,11 +50,11 @@ export function showTabWidgetHint(player: Player, tabIndex: number, availableTab
     unlockAvailableTabs(player, availableTabs);
     player.outgoingPackets.blinkTabIcon(tabIndex);
 
-    player.metadata.tabClickEvent.event.pipe(take(1)).subscribe(async () => {
+    tabClickEvent.event.pipe(take(1)).subscribe(async () => {
         player.setQuestProgress('tyn:goblin_diplomacy', finalProgress);
-        player.metadata.tabClickEvent.event.complete();
+        tabClickEvent.event.complete();
         delete player.metadata.tabClickEvent;
-        await handleTutorial(player);
+        await tutorialHandler(player);
     });
 }
 
@@ -85,7 +87,7 @@ export function npcHint(player: Player, npcKey: string | number): void {
         npcKey = npc.gameId;
     }
 
-    const npc = world.findNpcsById(npcKey as number, player.instance.instanceId)[0] || null;
+    const npc = activeWorld.findNpcsById(npcKey as number, player.instance.instanceId)[0] || null;
 
     if(npc) {
         player.outgoingPackets.showNpcHintIcon(npc);
@@ -95,7 +97,7 @@ export function npcHint(player: Player, npcKey: string | number): void {
 export const startTutorial = async (player: Player): Promise<void> => {
     player.setQuestProgress('tyn:goblin_diplomacy', 0);
 
-    defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
+    defaultPlayerTabWidgets().forEach((widgetId: number, tabIndex: number) => {
         if(widgetId !== -1) {
             player.outgoingPackets.sendTabWidget(tabIndex, widgetId === widgets.logoutTab ? widgetId : null);
         }
@@ -123,7 +125,7 @@ export const startTutorial = async (player: Player): Promise<void> => {
 };
 
 export async function spawnGoblinBoi(player: Player, spawnPoint: 'beginning' | 'end'): Promise<void> {
-    const nearbyGoblins = world.findNpcsByKey('rs:goblin', player.instance.instanceId);
+    const nearbyGoblins = activeWorld.findNpcsByKey('rs:goblin', player.instance.instanceId);
     if(nearbyGoblins && nearbyGoblins.length > 0) {
         // Goblin is already spawned, do nothing
         return;
@@ -133,7 +135,7 @@ export async function spawnGoblinBoi(player: Player, spawnPoint: 'beginning' | '
     if(spawnPoint === 'beginning') {
         //const goblin = await world.spawnNpc('rs:goblin', new Position(3219, 3246), 'SOUTH',
         //    0, player.instance.instanceId);
-        const goblin = await world.spawnNpc('rs:goblin', new Position(3221, 3257), 'SOUTH',
+        const goblin = await activeWorld.spawnNpc('rs:goblin', new Position(3221, 3257), 'SOUTH',
             0, player.instance.instanceId);
 
         goblin.pathfinding.walkTo(new Position(3219, 3246), {
@@ -141,16 +143,16 @@ export async function spawnGoblinBoi(player: Player, spawnPoint: 'beginning' | '
             ignoreDestination: false
         });
     } else {
-        await world.spawnNpc('rs:goblin', new Position(3219, 3246), 'SOUTH',
+        await activeWorld.spawnNpc('rs:goblin', new Position(3219, 3246), 'SOUTH',
             0, player.instance.instanceId);
     }
 }
 
-export async function handleTutorial(player: Player): Promise<void> {
+export async function tutorialHandler(player: Player): Promise<void> {
     const progress = player.getQuest('tyn:goblin_diplomacy').progress;
     const handler = goblinDiplomacyStageHandler[progress];
 
-    defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
+    defaultPlayerTabWidgets().forEach((widgetId: number, tabIndex: number) => {
         if(widgetId !== -1) {
             player.setSidebarWidget(tabIndex, widgetId === widgets.logoutTab ? widgetId : null);
         }
@@ -163,8 +165,8 @@ export async function handleTutorial(player: Player): Promise<void> {
 }
 
 function spawnQuestNpcs(player: Player): void {
-    world.spawnNpc('rs:runescape_guide', new Position(3230, 3238), 'SOUTH', 2, player.instance.instanceId);
-    world.spawnNpc('rs:melee_combat_tutor', new Position(3219, 3238), 'EAST', 1, player.instance.instanceId);
+    activeWorld.spawnNpc('rs:runescape_guide', new Position(3230, 3238), 'SOUTH', 2, player.instance.instanceId);
+    activeWorld.spawnNpc('rs:melee_combat_tutor', new Position(3219, 3238), 'EAST', 1, player.instance.instanceId);
 }
 
 const tutorialInitAction: playerInitActionHandler = async ({ player }) => {
@@ -172,9 +174,9 @@ const tutorialInitAction: playerInitActionHandler = async ({ player }) => {
         player.instance = new WorldInstance(uuidv4());
         player.metadata.blockObjectInteractions = true;
         spawnQuestNpcs(player);
-        await handleTutorial(player);
+        await tutorialHandler(player);
     } else {
-        defaultPlayerTabWidgets.forEach((widgetId: number, tabIndex: number) => {
+        defaultPlayerTabWidgets().forEach((widgetId: number, tabIndex: number) => {
             if(widgetId !== -1) {
                 player.setSidebarWidget(tabIndex, widgetId);
             }
@@ -192,7 +194,7 @@ const trainingSwordEquipAction: equipmentChangeActionHandler = async ({ player, 
         if((itemDetails.key === 'rs:training_sword' && shieldEquipped) ||
             (itemDetails.key === 'rs:training_shield' && swordEquipped)) {
             player.setQuestProgress('tyn:goblin_diplomacy', 90);
-            await handleTutorial(player);
+            await tutorialHandler(player);
         }
     }
 };
@@ -208,29 +210,32 @@ const journalHandler: QuestJournalHandler = {
 };
 
 
+const QUEST_ID = 'tyn:goblin_diplomacy';
+
+const QUEST = new Quest({
+    id: QUEST_ID,
+    questTabId: 28,
+    name: `Goblin Diplomacy`,
+    points: 1,
+    journalHandler,
+    onComplete: {
+        questCompleteWidget: {
+            rewardText: [ 'A training sword & shield' ],
+            itemId: 9703,
+            modelZoom: 200,
+            modelRotationX: 0,
+            modelRotationY: 180
+        }
+    }
+});
+
+
 /**
  * Custom Goblin Diplomacy tutorial quest!
  */
 export default {
     pluginId: 'tyn:goblin_diplomacy_quest',
-    quests: [
-        new Quest({
-            id: 'tyn:goblin_diplomacy',
-            questTabId: 28,
-            name: `Goblin Diplomacy`,
-            points: 1,
-            journalHandler,
-            onComplete: {
-                questCompleteWidget: {
-                    rewardText: [ 'A training sword & shield' ],
-                    itemId: 9703,
-                    modelZoom: 200,
-                    modelRotationX: 0,
-                    modelRotationY: 180
-                }
-            }
-        })
-    ],
+    quests: [ QUEST ],
     hooks: [
         {
             type: 'player_init',
@@ -238,14 +243,14 @@ export default {
         },
         {
             type: 'npc_interaction',
-            handler: questDialogueActionFactory('tyn:goblin_diplomacy', runescapeGuideDialogueHandler),
+            handler: questDialogueActionFactory(QUEST_ID, runescapeGuideDialogueHandler, tutorialHandler),
             npcs: 'rs:runescape_guide',
             options: 'talk-to',
             walkTo: true
         },
         {
             type: 'npc_interaction',
-            handler: questDialogueActionFactory('tyn:goblin_diplomacy', harlanDialogueHandler),
+            handler: questDialogueActionFactory(QUEST_ID, harlanDialogueHandler, tutorialHandler),
             npcs: 'rs:melee_combat_tutor',
             options: 'talk-to',
             walkTo: true

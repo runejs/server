@@ -1,8 +1,9 @@
 import { Position } from '@engine/world/position';
 import { Player } from '@engine/world/actor/player/player';
-import { world } from '@engine/game-server';
 import { World } from '@engine/world';
-import { commandActionHandler } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/action';
+import { activeWorld } from '@engine/world';
+import { Isaac } from '@engine/net';
 
 
 const handler: commandActionHandler = ({ player, args }) => {
@@ -18,9 +19,9 @@ const handler: commandActionHandler = ({ player, args }) => {
     let xOffset: number = 0;
     let yOffset: number = 0;
 
-    const spawnChunk = world.chunkManager.getChunkForWorldPosition(new Position(x, y, 0));
+    const spawnChunk = activeWorld.chunkManager.getChunkForWorldPosition(new Position(x, y, 0));
 
-    const worldSlotsRemaining = world.playerSlotsRemaining() - 1;
+    const worldSlotsRemaining = activeWorld.playerSlotsRemaining() - 1;
     if(worldSlotsRemaining <= 0) {
         player.sendMessage(`Error: The game world is full.`);
         return;
@@ -32,10 +33,12 @@ const handler: commandActionHandler = ({ player, args }) => {
         player.sendMessage(`Warning: There was only room for ${playerSpawnCount}/${playerCount} player spawns.`);
     }
 
+    // TODO (JameskmongeR) what's the difference between this and `generateFakePlayers`
+
     for(let i = 0; i < playerSpawnCount; i++) {
-        const testPlayer = new Player(null, null, null, i,
-            `test${i}`, 'abs', true);
-        world.registerPlayer(testPlayer);
+        // TODO (Jameskmonger) we should be able to create a player without a connection, and without passing nulls in
+        const testPlayer = new Player(null as any, null as any, null as any, i, `test${i}`, 'abs', true);
+        activeWorld.registerPlayer(testPlayer);
         testPlayer.interfaceState.closeAllSlots();
 
         xOffset++;
@@ -46,7 +49,7 @@ const handler: commandActionHandler = ({ player, args }) => {
         }
 
         testPlayer.position = new Position(x + xOffset, y + yOffset, 0);
-        const newChunk = world.chunkManager.getChunkForWorldPosition(testPlayer.position);
+        const newChunk = activeWorld.chunkManager.getChunkForWorldPosition(testPlayer.position);
 
         if(!spawnChunk.equals(newChunk)) {
             spawnChunk.removePlayer(testPlayer);

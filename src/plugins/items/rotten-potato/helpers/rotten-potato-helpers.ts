@@ -1,10 +1,16 @@
-import { findItem, widgets } from '@engine/config';
+import { findItem, widgets } from '@engine/config/config-handler';
 import { ItemDetails } from '@engine/config/item-config';
 import { Rights } from '@engine/world/actor/player/player';
-import { ItemOnItemAction } from '@engine/world/action/item-on-item.action';
-import { WidgetInteractionAction } from '@engine/world/action/widget-interaction.action';
+import { ItemOnItemAction } from '@engine/action/pipe/item-on-item.action';
+import { WidgetInteractionAction } from '@engine/action/pipe/widget-interaction.action';
 
-export const RottenPotatoItem: ItemDetails = findItem('rs:rotten_potato');
+/**
+ * The rotten potato item.
+ *
+ * (Jameskmonger) I have put ! after findItem() because we know the item exists.
+ */
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+export const RottenPotatoItem: ItemDetails = findItem('rs:rotten_potato')!;
 
 
 export const ExecuteIfAdmin = (details: ItemOnItemAction | WidgetInteractionAction, callback) => {

@@ -1,8 +1,8 @@
-import { commandActionHandler } from '@engine/world/action/player-command.action';
+import { commandActionHandler } from '@engine/action';
 import { objectIds } from '@engine/world/config/object-ids';
 import { safeDump } from 'js-yaml';
 import { writeFileSync } from 'fs';
-import { logger } from '@runejs/core';
+import { logger } from '@runejs/common';
 import { LandscapeObject } from '@runejs/filestore';
 
 const spawnSceneryAction: commandActionHandler = ({ player, args }) => {
@@ -48,7 +48,7 @@ const spawnSceneryAction: commandActionHandler = ({ player, args }) => {
 const undoSceneryAction: commandActionHandler = (details) => {
     const { player } = details;
 
-    const o: LandscapeObject = player.metadata.lastSpawnedScenery;
+    const o = player.metadata.lastSpawnedScenery;
 
     if(!o) {
         return;

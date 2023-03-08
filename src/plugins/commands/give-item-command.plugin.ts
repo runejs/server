@@ -1,7 +1,7 @@
-import { commandActionHandler } from '@engine/world/action/player-command.action';
-import { filestore } from '@engine/game-server';
+import { commandActionHandler } from '@engine/action';
+import { filestore } from '@server/game/game-server';
 import { itemIds } from '@engine/world/config/item-ids';
-import { findItem, itemIdMap } from '@engine/config';
+import { findItem, itemIdMap } from '@engine/config/config-handler';
 
 const action: commandActionHandler = (details) => {
     const { player, args } = details;
@@ -14,7 +14,7 @@ const action: commandActionHandler = (details) => {
     }
 
     const itemSearch: string = args.itemSearch as string;
-    let itemId: number;
+    let itemId: number | null = null;
 
     if(itemSearch.match(/^[0-9]+$/)) {
         itemId = parseInt(itemSearch, 10);
@@ -27,7 +27,7 @@ const action: commandActionHandler = (details) => {
         }
     }
 
-    if(isNaN(itemId)) {
+    if(!itemId || isNaN(itemId)) {
         throw new Error(`Item name not found.`);
     }
 

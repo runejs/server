@@ -6,8 +6,8 @@ import {
 import { Position } from '@engine/world/position';
 import { ConstructedChunk, ConstructedRegion } from '@engine/world/map/region';
 import { Player } from '@engine/world/actor/player/player';
-import { world } from '@engine/game-server';
 import { loadHouse } from '@plugins/skills/construction/home-saver';
+import { activeWorld } from '@engine/world';
 
 
 export const openHouse = (player: Player): void => {
@@ -55,7 +55,7 @@ export const openHouse = (player: Player): void => {
                 const templatePosition = room.templatePosition;
 
                 // load all the PoH template maps into memory so that their collision maps are generated
-                world.chunkManager.getChunk(templatePosition);
+                activeWorld.chunkManager.getChunk(templatePosition);
             }
         }
     }
@@ -66,7 +66,7 @@ export const openHouse = (player: Player): void => {
 
 export class House {
 
-    public rooms: Room[][][];
+    public rooms: (Room | null)[][][];
 
     public constructor() {
         this.rooms = new Array(4);
@@ -84,11 +84,12 @@ export class House {
         }
     }
 
-    public copyRooms(rooms: Room[][][]): void {
+    public copyRooms(rooms: (Room | null)[][][]): void {
         for(let level = 0; level < 4; level++) {
             for(let x = 0; x < MAP_SIZE; x++) {
                 for(let y = 0; y < MAP_SIZE; y++) {
                     const existingRoom = rooms[level][x][y] ?? null;
+
                     this.rooms[level][x][y] = existingRoom ? new Room(existingRoom.type, existingRoom.orientation) : null;
                 }
             }

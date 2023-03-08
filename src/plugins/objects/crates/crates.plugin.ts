@@ -1,17 +1,17 @@
-import { findItem, widgets } from '@engine/config';
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { findItem, widgets } from '@engine/config/config-handler';
+import { objectInteractionActionHandler } from '@engine/action';
 import { World } from '@engine/world';
 import { itemIds } from '@engine/world/config/item-ids';
-import { LandscapeObject } from '@runejs/filestore';
 
 export const action: objectInteractionActionHandler = (details) => {
     const veggies = [itemIds.onion, itemIds.grain, itemIds.cabbage];
     details.player.busy = true;
     details.player.playAnimation(827);
-    
-    const random = Math.floor(Math.random() * 3);  
-    const pickedItem = findItem(veggies[random]);
-    
+
+    const random = Math.floor(Math.random() * veggies.length);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const pickedItem = findItem(veggies[random])!;
+
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, details.player.inventory);
 
     setTimeout(() => {

@@ -1,18 +1,19 @@
-import { objectInteractionActionHandler } from '@engine/world/action/object-interaction.action';
+import { objectInteractionActionHandler } from '@engine/action';
 import { dialogueAction, DialogueEmote } from '@engine/world/actor/player/dialogue-action';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { itemIds } from '@engine/world/config/item-ids';
 import { objectIds } from '@engine/world/config/object-ids';
-import { itemOnObjectActionHandler } from '@engine/world/action/item-on-object.action';
+import { itemOnObjectActionHandler } from '@engine/action';
 import { Player } from '@engine/world/actor/player/player';
-import { findItem, findNpc } from '@engine/config';
+import { findItem, findNpc } from '@engine/config/config-handler';
 import { ObjectConfig } from '@runejs/filestore';
 
 
 function milkCow(details: { objectConfig: ObjectConfig, player: Player }): void {
     const { player, objectConfig } = details;
-    const emptyBucketItem = findItem(itemIds.bucket);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const emptyBucketItem = findItem(itemIds.bucket)!;
 
     if (player.hasItemInInventory(itemIds.bucket)) {
         player.playAnimation(animationIds.milkCow);
@@ -21,7 +22,8 @@ function milkCow(details: { objectConfig: ObjectConfig, player: Player }): void 
         player.giveItem(itemIds.bucketOfMilk);
         player.sendMessage(`You milk the ${objectConfig.name} and receive some milk.`);
     } else {
-        const gillieId = findNpc('rs:gillie_groats').gameId;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const gillieId = findNpc('rs:gillie_groats')!.gameId;
         dialogueAction(player)
             .then(async d => d.npc(gillieId, DialogueEmote.LAUGH_1, [`Tee hee! You've never milked a cow before, have you?`]))
             .then(async d => d.player(DialogueEmote.CALM_TALK_1, ['Erm... No. How could you tell?']))

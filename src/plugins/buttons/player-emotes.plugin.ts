@@ -1,7 +1,7 @@
-import { buttonActionHandler } from '@engine/world/action/button.action';
+import { buttonActionHandler } from '@engine/action';
 import { Player } from '@engine/world/actor/player/player';
 import { itemIds } from '@engine/world/config/item-ids';
-import { widgets } from '@engine/config';
+import { widgets } from '@engine/config/config-handler';
 
 interface Emote {
     animationId: number;
@@ -153,13 +153,18 @@ export const handler: buttonActionHandler = (details) => {
     const { player, buttonId } = details;
 
     const emote = emotes[buttonId];
-    
+
     if(emote.name === 'SKILLCAPE') {
-        if (player.getEquippedItem('back')) {
-            if (skillCapeEmotes.some(item => item.itemIds.includes(player.getEquippedItem('back')?.itemId))) {
-                const skillcapeEmote = skillCapeEmotes.filter(item => item.itemIds.includes(player.getEquippedItem('back')?.itemId));
+        const equippedBackItem = player.getEquippedItem('back');
+
+        if (equippedBackItem) {
+            if (skillCapeEmotes.some(item => item.itemIds.includes(equippedBackItem.itemId))) {
+                const skillcapeEmote = skillCapeEmotes.filter(item => item.itemIds.includes(equippedBackItem.itemId));
                 player.playAnimation(skillcapeEmote[0].animationId);
-                player.playGraphics({ id: skillcapeEmote[0].graphicId, delay: 0, height: 0 });
+
+                if (skillcapeEmote[0].graphicId) {
+                    player.playGraphics({ id: skillcapeEmote[0].graphicId, delay: 0, height: 0 });
+                }
             }
         }  else {
             player.sendMessage(`You need to be wearing a skillcape in order to perform that emote.`, true);

@@ -1,4 +1,4 @@
-import { npcInteractionActionHandler } from '@engine/world/action/npc-interaction.action';
+import { npcInteractionActionHandler } from '@engine/action';
 import { dialogue, Emote, goto } from '@engine/world/actor/dialogue';
 
 const millieDialogue: npcInteractionActionHandler = async (details) =>

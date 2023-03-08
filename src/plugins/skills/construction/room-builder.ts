@@ -1,13 +1,14 @@
 import {
     objectInteractionActionHandler
-} from '@engine/world/action/object-interaction.action';
+} from '@engine/action/pipe/object-interaction.action';
 import { openHouse, Room } from '@plugins/skills/construction/house';
 import { MAP_SIZE, roomBuilderButtonMap } from '@plugins/skills/construction/con-constants';
-import { buttonActionHandler } from '@engine/world/action/button.action';
+import { buttonActionHandler } from '@engine/action/pipe/button.action';
 import { getCurrentRoom } from '@plugins/skills/construction/util';
 import { Player } from '@engine/world/actor/player/player';
 import { Coords } from '@engine/world/position';
 import { dialogue, execute, goto } from '@engine/world/actor/dialogue';
+import { logger } from '@runejs/common';
 
 
 const newRoomOriention = (player: Player): number => {
@@ -87,7 +88,12 @@ export const canBuildNewRoom = (player: Player): Coords | null => {
         return null;
     }
 
-    const rooms = player.metadata.customMap.chunks as Room[][][];
+    const playerCustomMap = player.metadata.customMap;
+    if(!playerCustomMap) {
+        logger.error(`Player ${player.username} does not have a custom map.`);
+        return null;
+    }
+    const rooms = playerCustomMap.chunks as Room[][][];
     const existingRoom = rooms[player.position.level][buildX][buildY];
 
     if(existingRoom && existingRoom.type !== 'empty_grass' && existingRoom.type !== 'empty') {
@@ -114,8 +120,14 @@ export const roomBuilderWidgetHandler: buttonActionHandler = async ({ player, bu
         return;
     }
 
+    const playerCustomMap = player.metadata.customMap;
+    if(!playerCustomMap) {
+        logger.error(`Player ${player.username} does not have a custom map.`);
+        return;
+    }
+
     const createdRoom = new Room(chosenRoomType, newRoomOriention(player));
-    player.metadata.customMap.chunks[newRoomCoords.level][newRoomCoords.x][newRoomCoords.y] = createdRoom;
+    playerCustomMap.chunks[newRoomCoords.level][newRoomCoords.x][newRoomCoords.y] = createdRoom;
 
     player.interfaceState.closeAllSlots();
 
