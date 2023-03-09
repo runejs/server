@@ -4,7 +4,7 @@ import { logger } from '@runejs/common';
 import { deepMerge } from '@engine/util/objects';
 
 
-export type WeaponStyle = 'axe' | 'hammer' | 'bow' | 'claws' | 'crossbow' | 'longsword'
+export type WeaponStyle = 'axe' | 'hammer' | 'bow' | 'claws' | 'crossbow' | 'gun' | 'slash_sword'
     | '2h_sword' | 'pickaxe' | 'halberd' | 'polestaff' | 'scythe' | 'spear' | 'mace'
     | 'dagger' | 'magical_staff' | 'darts' | 'unarmed' | 'whip';
 
@@ -14,12 +14,12 @@ export const weaponWidgetIds: Record<WeaponStyle, number> = {
     'bow': 77,
     'claws': 78,
     'crossbow': 79,
-    // @TODO 80
-    'longsword': 81, // also scimitar
+    'gun': 80,
+    'slash_sword': 81,
     '2h_sword': 82,
     'pickaxe': 83,
     'halberd': 84,
-    'polestaff': 85, // Staffs without magical power
+    'polestaff': 85,
     'scythe': 86,
     'spear': 87,
     'mace': 88,
@@ -29,6 +29,8 @@ export const weaponWidgetIds: Record<WeaponStyle, number> = {
     'unarmed': 92,
     'whip': 93
 };
+
+
 
 export type EquipmentSlot = 'head' | 'back' | 'neck' | 'main_hand' | 'off_hand' | 'torso' |
     'legs' | 'hands' | 'feet' | 'ring' | 'quiver' | '2h';
