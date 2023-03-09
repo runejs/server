@@ -55,7 +55,6 @@ const mapSmithablesToFlatArray = (input: Map<string, Map<string, Smithable>>) =>
  * Lookup a smithable from just an item id.
  * @param itemId
  */
-const findSmithableByItemId = (itemId): Smithable => {
 const findSmithableByItemId = (itemId: number) : Smithable | null => {
     return mapSmithablesToFlatArray(smithables).find((smithable) => {
         return smithable.item.itemId === itemId;
