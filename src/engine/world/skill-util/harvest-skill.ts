@@ -15,10 +15,9 @@ import { logger } from '@runejs/common';
  */
 export function canInitiateHarvest(player: Player, target: IHarvestable, skill: Skill): undefined | HarvestTool {
 
-    const targetName: string = findItem(target.itemId).name.toLowerCase();
-
 
     const item = findItem(target.itemId);
+
     if (!item) {
         logger.error(`Could not find item with id ${target.itemId} for harvestable object.`);
         player.sendMessage('Sorry, there was an error. Please contact a developer.');
@@ -26,6 +25,7 @@ export function canInitiateHarvest(player: Player, target: IHarvestable, skill: 
     }
 
     let targetName = item.name.toLowerCase();
+
     switch (skill) {
         case Skill.MINING:
             targetName = targetName.replace(' ore', '');
