@@ -12,6 +12,10 @@ import { ActorWalkToTask } from './actor-walk-to-task';
  * @author jameskmonger
  */
 export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor = Actor> extends ActorWalkToTask<TActor, LandscapeObject> {
+    /*
+     * TODO (jameskmonger) consider exposing this, currently people must always access it through `otherActor`
+     *           or through their own constructor
+     */
     private _landscapeObject: LandscapeObject;
     private _objectPosition: Position;
 
@@ -24,9 +28,6 @@ export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor =
      * TODO (jameskmonger) unit test this
      */
     protected get landscapeObject(): LandscapeObject | null {
-        // TODO (jameskmonger) consider if we want to do these checks rather than delegating to the child task
-        //                      as currently the subclass has to store it in a subclass property if it wants to use it
-        //                      without these checks
         if (!this.atDestination) {
             return null;
         }
@@ -91,11 +92,13 @@ export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor =
             return;
         }
 
+        // stop the task if the object no longer exists
         if (!this._landscapeObject) {
             this.stop();
             return;
         }
 
+        // find the object in the world and validate that it still exists
         const { object: worldObject } = activeWorld.findObjectAtLocation(this.actor, this._landscapeObject.objectId, this._objectPosition);
 
         if (!worldObject) {

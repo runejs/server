@@ -48,6 +48,27 @@ const Axes: HarvestTool[] = [
     { itemId: 6739, level: 61, animation: 2846 }
 ];
 
+const FishingRods: HarvestTool[] = [
+    { itemId: 309, level: 1, animation: 1363 }
+];
+
+/**
+ * Checks the players inventory and equipment for fishing rod
+ * @param player
+ * @return the highest level pickage the player can use, or null if theres none found
+ */
+export function getFishingRod(player: Player): HarvestTool | null {
+    for (let i = FishingRods.length - 1; i >= 0; i--) {
+        if (player.skills.hasLevel(Skill.FISHING, FishingRods[i].level)) {
+            if (player.hasItemOnPerson(FishingRods[i].itemId)) {
+                return FishingRods[i];
+            }
+        }
+    }
+    return null;
+}
+
+
 /**
  * Checks the players inventory and equipment for pickaxe
  * @param player
@@ -63,6 +84,7 @@ export function getBestPickaxe(player: Player): HarvestTool | null {
     }
     return null;
 }
+
 /**
  * Checks the players inventory and equipment for axe
  * @param player

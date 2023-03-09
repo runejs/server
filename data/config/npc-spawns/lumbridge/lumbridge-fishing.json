@@ -1,0 +1,18 @@
+[
+    {
+        "npc": "rs:fishing_spot_bait_a",
+        "spawn_x": 3239,
+        "spawn_y": 3241,
+        "spawn_level": 0,
+        "movement_radius": 0,
+        "face": "WEST"
+    },
+    {
+        "npc": "rs:fishing_spot_bait_a",
+        "spawn_x": 3239,
+        "spawn_y": 3244,
+        "spawn_level": 0,
+        "movement_radius": 0,
+        "face": "WEST"
+    }
+]
