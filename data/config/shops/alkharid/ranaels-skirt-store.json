@@ -1,15 +1,40 @@
 {
-    "rs:ranaels_skirt_store": {
-        "name": "Ranael's Super Skirt Store",
-        "shop_buy_rate": 0.65,
-        "rate_modifier": 0.01,
-        "stock": [
-            [ "rs:bronze_plateskirt", 5 ],
-            [ "rs:iron_plateskirt", 3 ],
-            [ "rs:steel_plateskirt", 2 ],
-            [ "rs:black_plateskirt", 1 ],
-            [ "rs:mithril_plateskirt", 1 ],
-            [ "rs:adamant_plateskirt", 1 ]
-        ]
-    }
+  "rs:ranaels_skirt_store": {
+    "name": "Ranael's Super Skirt Store",
+    "shop_sell_rate": 1.0,
+    "shop_buy_rate": 0.65,
+    "rate_modifier": 0.01,
+    "stock": [
+      {
+        "itemKey": "rs:bronze_plateskirt",
+        "amount": 5,
+        "restock": 100
+      },
+      {
+        "itemKey": "rs:iron_plateskirt",
+        "amount": 3,
+        "restock": 400
+      },
+      {
+        "itemKey": "rs:steel_plateskirt",
+        "amount": 2,
+        "restock": 900
+      },
+      {
+        "itemKey": "rs:black_plateskirt",
+        "amount": 1,
+        "restock": 1200
+      },
+      {
+        "itemKey": "rs:mithril_plateskirt",
+        "amount": 1,
+        "restock": 2000
+      },
+      {
+        "itemKey": "rs:adamant_plateskirt",
+        "amount": 1,
+        "restock": 13000
+      }
+    ]
+  }
 }

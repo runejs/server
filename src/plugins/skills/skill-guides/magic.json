@@ -7,7 +7,7 @@
         "name": "Normal Spells",
         "lines": [
             {
-                "item": "rs:magic_guide",
+                "item": "rs:battle_staff",
                 "text": "Click a spell icon below to see the\\nrequired runes to cast each spell.\\n\\nBy opening the spellbook icon on the side\\n interface, you can see what each spell does\\nby moving your mouse over its icon.",
                 "level": ""
               },
@@ -812,4 +812,3 @@
       }
     ]
   }
-  

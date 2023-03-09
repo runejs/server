@@ -40,7 +40,7 @@
     "rs:iron_spits": {
         "game_id": 7225
     },
-    "rs:oil_lanterns": {
+    "rs:empty_oil_lantern": {
         "game_id": 4535
     },
     "rs:harpie_bug_lanterns": {

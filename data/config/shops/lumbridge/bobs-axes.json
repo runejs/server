@@ -1,16 +1,45 @@
 {
-    "rs:lumbridge_bobs_axes": {
-        "name": "Bob's Brilliant Axes.",
-        "shop_buy_rate": 0.60,
-        "rate_modifier": 0.02,
-        "stock": [
-            [ "rs:bronze_pickaxe", 5 ],
-            [ "rs:bronze_axe", 10 ],
-            [ "rs:iron_axe", 5 ],
-            [ "rs:steel_axe", 3 ],
-            [ "rs:iron_battleaxe", 5 ],
-            [ "rs:steel_battleaxe", 2 ],
-            [ "rs:mithril_battleaxe", 1 ]
-        ]
-    }
+  "rs:lumbridge_bobs_axes": {
+    "name": "Bob's Brilliant Axes.",
+    "shop_sell_rate": 1.0,
+    "shop_buy_rate": 0.60,
+    "rate_modifier": 0.02,
+    "stock": [
+      {
+        "itemKey": "rs:bronze_pickaxe",
+        "amount": 5,
+        "restock": 100
+      },
+      {
+        "itemKey": "rs:bronze_axe",
+        "amount": 10,
+        "restock": 100
+      },
+      {
+        "itemKey": "rs:iron_axe",
+        "amount": 5,
+        "restock": 200
+      },
+      {
+        "itemKey": "rs:steel_axe",
+        "amount": 3,
+        "restock": 400
+      },
+      {
+        "itemKey": "rs:iron_battleaxe",
+        "amount": 5,
+        "restock": 100
+      },
+      {
+        "itemKey": "rs:steel_battleaxe",
+        "amount": 2,
+        "restock": 200
+      },
+      {
+        "itemKey": "rs:mithril_battleaxe",
+        "amount": 1,
+        "restock": 3000
+      }
+    ]
+  }
 }

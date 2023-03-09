@@ -1,7 +1,8 @@
 import { itemInteractionActionHandler } from '@engine/action';
 import { itemIds } from '@engine/world/config/item-ids';
 import { getItemFromContainer } from '@engine/world/items/item-container';
-import { widgets } from '@engine/config/config-handler';
+import { Shop } from '@engine/config/shop-config';
+import { findShop, widgets } from '@engine/config/config-handler';
 
 
 export const handler: itemInteractionActionHandler = (details) => {
@@ -11,8 +12,13 @@ export const handler: itemInteractionActionHandler = (details) => {
         return;
     }
 
-    const openedShop = player.metadata.lastOpenedShop;
-    if(!openedShop) {
+    const openedShopKey = player.metadata.lastOpenedShopKey;
+    if(!openedShopKey) {
+        return;
+    }
+
+    const shop = findShop(openedShopKey);
+    if(!shop) {
         return;
     }
 
@@ -30,7 +36,7 @@ export const handler: itemInteractionActionHandler = (details) => {
         'sell-10': 10
     };
     let sellAmount = sellAmounts[option];
-    const shopContainer = openedShop.container;
+    const shopContainer = shop.container;
     const shopSpaces = shopContainer.items.filter(item => item === null);
 
     const shopItemIndex = shopContainer.items.findIndex(item => item !== null && item.itemId === itemId);
@@ -65,7 +71,7 @@ export const handler: itemInteractionActionHandler = (details) => {
         }
     }
 
-    const itemValue = openedShop.getBuyPrice(itemDetails); // @TODO scale price per item, not per sale
+    const itemValue = shop.getSellToShopPrice(itemDetails); // @TODO scale price per item, not per sale
 
     if(!shopItem) {
         shopContainer.set(shopContainer.getFirstOpenSlot(), { itemId, amount: sellAmount });

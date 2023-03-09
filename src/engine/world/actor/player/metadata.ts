@@ -43,10 +43,8 @@ export type PlayerMetadata = {
 
     /**
      * The player's currently open shop.
-     *
-     * TODO (jameskmonger) This is currently an instance of `Shop`. We shouldn't be storing whole instances of classes in the metadata.
      */
-    lastOpenedShop: any;
+    lastOpenedShopKey: string;
 
     /**
      * A subscription to the player's "widget closed" events.

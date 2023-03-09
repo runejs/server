@@ -1,28 +1,40 @@
 {
   "rs:abyssal_whip": {
     "game_id": 4151,
-    "examine": "A weapon from the abyss.",
+    "examine": "A weapon from the Abyss.",
     "tradable": true,
     "weight": 0.453,
     "equippable": true,
     "equipment_data": {
       "equipment_slot": "main_hand",
-      "equipment_type": "one_handed",
+      "requirements": {
+        "skills": {
+          "attack": 70
+        }
+      },
       "offensive_bonuses": {
         "speed": 4,
         "stab": 0,
         "slash": 82,
         "crush": 0,
-        "magic": 0
+        "magic": 0,
+        "ranged": 0
       },
       "defensive_bonuses": {
-        "magic": 0
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
       },
       "skill_bonuses": {
-        "strength": 82
+        "prayer": 0,
+        "strength": 82,
+        "ranged": 0,
+        "magic": 0
       },
       "weapon_info": {
-        "style": "dagger"
+        "style": "whip"
       }
     }
   },
@@ -30,8 +42,39 @@
     "game_id": 4755,
     "examine": "Verac the Defiled's flail.",
     "tradable": true,
-    "stackable": false,
-    "notable": false,
-    "equippable": true
+    "weight": 2.267,
+    "equippable": true,
+    "equipment_data": {
+      "equipment_slot": "2h",
+      "requirements": {
+        "skills": {
+          "attack": 70
+        }
+      },
+      "offensive_bonuses": {
+        "speed": 5,
+        "stab": 68,
+        "slash": -2,
+        "crush": 82,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defensive_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "skill_bonuses": {
+        "prayer": 6,
+        "strength": 72,
+        "ranged": 0,
+        "magic": 0
+      },
+      "weapon_info": {
+        "style": "mace"
+      }
+    }
   }
 }
