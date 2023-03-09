@@ -1,0 +1,433 @@
+{
+  "rs:black_mask": {
+    "game_id": 8921,
+    "examine": "An inert-seeming cave horror mask.",
+    "tradable": true,
+    "weight": 10,
+    "equippable": true,
+    "equipment_data": {
+      "equipment_slot": "head",
+      "requirements": {
+        "skills": {
+          "defence": 10,
+          "strength": 20,
+          "combat": 40
+        }
+      },
+      "offensive_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": -3,
+        "ranged": -1
+      },
+      "defensive_bonuses": {
+        "stab": 9,
+        "slash": 10,
+        "crush": 8,
+        "magic": -1,
+        "ranged": 9
+      },
+      "skill_bonuses": {
+        "prayer": 0,
+        "strength": 0,
+        "ranged": 0,
+        "magic": 0
+      }
+    },
+    "variations": [
+      {
+        "game_id": 8919,
+        "suffix": "1"
+      },
+      {
+        "game_id": 8917,
+        "suffix": "2"
+      },
+      {
+        "game_id": 8915,
+        "suffix": "3"
+      },
+      {
+        "game_id": 8913,
+        "suffix": "4"
+      },
+      {
+        "game_id": 8911,
+        "suffix": "5"
+      },
+      {
+        "game_id": 8909,
+        "suffix": "6"
+      },
+      {
+        "game_id": 8907,
+        "suffix": "7"
+      },
+      {
+        "game_id": 8905,
+        "suffix": "8"
+      },
+      {
+        "game_id": 8903,
+        "suffix": "9"
+      },
+      {
+        "game_id": 8901,
+        "suffix": "10"
+      }
+    ]
+  },
+  "rs:witchwood_icon": {
+    "game_id": 8923,
+    "examine": "A stick on a string... pure style.",
+    "tradable": false,
+    "weight": 0.007,
+    "equippable": true,
+    "equipment_data": {
+      "equipment_slot": "neck",
+      "requirements": {
+        "skills": {
+          "slayer": 35
+        }
+      },
+      "offensive_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 1,
+        "ranged": 0
+      },
+      "defensive_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "skill_bonuses": {
+        "prayer": 1,
+        "strength": 0,
+        "ranged": 0,
+        "magic": 0
+      }
+    }
+  },
+  "rs:slayer_staff": {
+    "game_id": 4170,
+    "examine": "An old and magical staff.",
+    "tradable": true,
+    "weight": 1.814,
+    "equippable": true,
+    "equipment_data": {
+      "equipment_slot": "main_hand",
+      "requirements": {
+        "skills": {
+          "slayer": 55,
+          "magic": 50
+        }
+      },
+      "offensive_bonuses": {
+        "speed": 4,
+        "stab": 7,
+        "slash": -1,
+        "crush": 25,
+        "magic": 12,
+        "ranged": 0
+      },
+      "defensive_bonuses": {
+        "stab": 2,
+        "slash": 3,
+        "crush": 1,
+        "magic": 10,
+        "ranged": 0
+      },
+      "skill_bonuses": {
+        "prayer": 0,
+        "strength": 35,
+        "ranged": 0,
+        "magic": 0
+      },
+      "weapon_info": {
+        "style": "magical_staff"
+      }
+    }
+  },
+  "rs:nose_peg": {
+    "game_id": 4168,
+    "examine": "Protects me from any bad smells.",
+    "tradable": true,
+    "weight": 0.001,
+    "equippable": true,
+    "equipment_data": {
+      "equipment_slot": "head",
+      "requirements": {
+        "skills": {
+          "slayer": 60
+        }
+      },
+      "offensive_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defensive_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "skill_bonuses": {
+        "prayer": 0,
+        "strength": 0,
+        "ranged": 0,
+        "magic": 0
+      }
+    }
+  },
+  "rs:ear_muffs": {
+    "game_id": 4166,
+    "examine": "These will protect my ears from loud noise.",
+    "tradable": true,
+    "weight": 0.113,
+    "equippable": true,
+    "equipment_data": {
+      "equipment_slot": "head",
+      "requirements": {
+        "skills": {
+          "slayer": 15
+        }
+      },
+      "offensive_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defensive_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "skill_bonuses": {
+        "prayer": 0,
+        "strength": 0,
+        "ranged": 0,
+        "magic": 0
+      }
+    }
+  },
+  "rs:face_mask": {
+    "game_id": 4164,
+    "examine": "Stops me breathing in too much dust.",
+    "tradable": true,
+    "weight": 0.113,
+    "equippable": true,
+    "equipment_data": {
+      "equipment_slot": "head",
+      "requirements": {
+        "skills": {
+          "slayer": 10
+        }
+      },
+      "offensive_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defensive_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "skill_bonuses": {
+        "prayer": 0,
+        "strength": 0,
+        "ranged": 0,
+        "magic": 0
+      }
+    }
+  },
+  "rs:rock_hammer": {
+    "game_id": 4162,
+    "examine": "I can even smash stone with this.",
+    "tradable": true,
+    "weight": 2.267,
+    "equippable": false
+  },
+  "rs:bag_of_salt": {
+    "game_id": 4161,
+    "examine": "A bag of salt.",
+    "tradable": true,
+    "weight": 0,
+    "equippable": false
+  },
+  "rs:broad_arrows": {
+    "game_id": 4160,
+    "examine": "Arrows with a wider than normal tip.",
+    "tradable": false,
+    "weight": 0,
+    "equippable": true,
+    "equipment_data": {
+      "equipment_slot": "quiver",
+      "requirements": {
+        "skills": {
+          "slayer": 55,
+          "ranged": 50
+        }
+      },
+      "offensive_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defensive_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "skill_bonuses": {
+        "prayer": 0,
+        "strength": 0,
+        "ranged": 28,
+        "magic": 0
+      }
+    }
+  },
+  "rs:leaf_bladed_spear": {
+    "game_id": 4158,
+    "examine": "A spear with a leaf-shaped point.",
+    "tradable": false,
+    "weight": 2.267,
+    "equippable": true,
+    "equipment_data": {
+      "equipment_slot": "2h",
+      "requirements": {
+        "skills": {
+          "slayer": 55,
+          "attack": 50
+        }
+      },
+      "offensive_bonuses": {
+        "speed": 5,
+        "stab": 47,
+        "slash": 42,
+        "crush": 36,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defensive_bonuses": {
+        "stab": 1,
+        "slash": 1,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "skill_bonuses": {
+        "prayer": 0,
+        "strength": 50,
+        "ranged": 0,
+        "magic": 0
+      },
+      "weapon_info": {
+        "style": "spear"
+      }
+    }
+  },
+  "rs:mirror_shield": {
+    "game_id": 4156,
+    "examine": "I can just about see things in this shield's reflection.",
+    "tradable": true,
+    "weight": 2.267,
+    "equippable": true,
+    "equipment_data": {
+      "equipment_slot": "off_hand",
+      "requirements": {
+        "skills": {
+          "slayer": 25,
+          "defence": 20
+        }
+      },
+      "offensive_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defensive_bonuses": {
+        "stab": 10,
+        "slash": 15,
+        "crush": 5,
+        "magic": 5,
+        "ranged": 10
+      },
+      "skill_bonuses": {
+        "prayer": 0,
+        "strength": 0,
+        "ranged": 0,
+        "magic": 0
+      }
+    }
+  },
+  "rs:enchanted_gem": {
+    "game_id": 4155,
+    "examine": "I can contact the Slayer Masters with this.",
+    "tradable": false,
+    "weight": 0.002,
+    "equippable": false
+  },
+  "rs:granite_maul": {
+    "game_id": 4153,
+    "examine": "Simplicity is the best weapon.",
+    "tradable": true,
+    "weight": 4.535,
+    "equippable": true,
+    "equipment_data": {
+      "equipment_slot": "2h",
+      "requirements": {
+        "skills": {
+          "attack": 50
+        }
+      },
+      "offensive_bonuses": {
+        "speed": 7,
+        "stab": 0,
+        "slash": 0,
+        "crush": 81,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defensive_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "skill_bonuses": {
+        "prayer": 0,
+        "strength": 79,
+        "ranged": 0,
+        "magic": 0
+      },
+      "weapon_info": {
+        "style": "hammer"
+      }
+    }
+  }
+}

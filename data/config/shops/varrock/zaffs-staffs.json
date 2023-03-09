@@ -1,16 +1,45 @@
 {
-    "rs:zaffs_superior_staffs": {
-        "name": "Zaff's Superior Staffs",
-        "shop_buy_rate": 0.55,
-        "rate_modifier": 0.02,
-        "stock": [
-            [ "rs:battlestaff", 5 ],
-            [ "rs:staff", 5 ],
-            [ "rs:magic_staff", 5 ],
-            [ "rs:staff_of_air", 2 ],
-            [ "rs:staff_of_water", 2 ],
-            [ "rs:staff_of_earth", 2 ],
-            [ "rs:staff_of_fire", 2 ]
-        ]
-    }
+  "rs:zaffs_superior_staffs": {
+    "name": "Zaff's Superior Staffs",
+    "shop_sell_rate": 1.0,
+    "shop_buy_rate": 0.55,
+    "rate_modifier": 0.02,
+    "stock": [
+      {
+        "itemKey": "rs:battlestaff",
+        "amount": 5,
+        "restock": 100
+      },
+      {
+        "itemKey": "rs:staff",
+        "amount": 5,
+        "restock": 100
+      },
+      {
+        "itemKey": "rs:magic_staff",
+        "amount": 5,
+        "restock": 200
+      },
+      {
+        "itemKey": "rs:staff_of_air",
+        "amount": 2,
+        "restock": 1000
+      },
+      {
+        "itemKey": "rs:staff_of_water",
+        "amount": 2,
+        "restock": 1000
+      },
+      {
+        "itemKey": "rs:staff_of_earth",
+        "amount": 2,
+        "restock": 1000
+      },
+      {
+        "itemKey": "rs:staff_of_fire",
+        "amount": 2,
+        "restock": 1000
+      }
+    ]
+  }
 }

@@ -10,13 +10,17 @@ import { activeWorld } from '@engine/world';
 
 class Point {
 
-    private _parent: Point = null;
+    private _parent: Point | null = null;
     private _cost: number = 0;
 
     public constructor(private readonly _x: number, private readonly _y: number) {
     }
 
-    public equals(point: Point): boolean {
+    public equals(point: Point | null): boolean {
+        if (point === null) {
+            return false;
+        }
+
         if(this._cost === point._cost) {
             if(this._parent === null && point._parent !== null) {
                 return false;
@@ -38,11 +42,11 @@ class Point {
         return this._y;
     }
 
-    public get parent(): Point {
+    public get parent(): Point | null {
         return this._parent;
     }
 
-    public set parent(value: Point) {
+    public set parent(value: Point | null) {
         this._parent = value;
     }
 
@@ -104,12 +108,6 @@ export class Pathfinding {
         }
     }
 
-    public async path(destination: Position, searchRadius: number = 8): Promise<Point[]> {
-        const tileMap = await this.createTileMap(searchRadius);
-
-        return null;
-    }
-
     public createTileMap(searchRadius: number = 8): { [key: string]: Tile } {
         const position = this.actor.position;
         const lowestX = position.x - searchRadius;
@@ -117,7 +115,7 @@ export class Pathfinding {
         const highestX = position.x + searchRadius;
         const highestY = position.y + searchRadius;
 
-        const tiles = [];
+        const tiles: Tile[] = [];
         for(let x = lowestX; x < highestX; x++) {
             for(let y = lowestY; y < highestY; y++) {
                 tiles.push(activeWorld.chunkManager.getTile(new Position(x, y, this.actor.position.level)));
@@ -129,7 +127,7 @@ export class Pathfinding {
         );
     }
 
-    public pathTo(destinationX: number, destinationY: number, searchRadius: number = 16): Point[] {
+    public pathTo(destinationX: number, destinationY: number, searchRadius: number = 16): Point[] | null {
         const position = this.actor.position;
         const lowestX = position.x - searchRadius;
         const lowestY = position.y - searchRadius;
@@ -169,11 +167,13 @@ export class Pathfinding {
                 return null;
             }
 
-            this.currentPoint = this.calculateBestPoint();
+            const bestPoint = this.calculateBestPoint();
 
-            if(!this.currentPoint || this.currentPoint.equals(this.points[destinationIndexX][destinationIndexY])) {
+            if(!bestPoint || bestPoint.equals(this.points[destinationIndexX][destinationIndexY])) {
                 break;
             }
+
+            this.currentPoint = bestPoint;
 
             this.openPoints.delete(this.currentPoint);
             this.closedPoints.add(this.currentPoint);
@@ -247,7 +247,7 @@ export class Pathfinding {
 
         // build path
         const path: Point[] = [];
-        let point = destinationPoint;
+        let point: Point | null = destinationPoint;
         let iterations = 0;
 
         do {
@@ -412,8 +412,8 @@ export class Pathfinding {
         return (Math.abs(deltaX) + Math.abs(deltaY)) * 10;
     }
 
-    private calculateBestPoint(): Point {
-        let bestPoint: Point = null;
+    private calculateBestPoint(): Point | null {
+        let bestPoint: Point | null = null;
 
         this.openPoints.forEach(point => {
             if(!bestPoint) {

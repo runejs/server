@@ -107,8 +107,8 @@ export class ActionPipeline {
             .subscribe(async () => this.cancelRunningTasks());
     }
 
-    public static getPipe(action: ActionType): ActionPipeHandler {
-        return ActionPipeline.pipes.get(action);
+    public static getPipe(action: ActionType): ActionPipeHandler | null {
+        return ActionPipeline.pipes.get(action) || null;
     }
 
     public static register(action: ActionType, actionPipeHandlerFn: ActionPipeHandler): void {

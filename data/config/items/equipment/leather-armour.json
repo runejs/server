@@ -1,14 +1,179 @@
 {
+    "rs:leather_cowl": {
+        "game_id": 1167,
+        "examine": "Better than no armour!",
+        "tradable": true,
+        "weight": 0.907,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "head",
+            "requirements": {
+                "skills": {
+                    "ranged": 1,
+                    "defence": 1
+                }
+            },
+            "offensive_bonuses": {
+                "stab": 0,
+                "slash": 0,
+                "crush": 0,
+                "magic": 0,
+                "ranged": 1
+            },
+            "defensive_bonuses": {
+                "stab": 2,
+                "slash": 3,
+                "crush": 4,
+                "magic": 2,
+                "ranged": 3
+            },
+            "skill_bonuses": {
+                "prayer": 0,
+                "strength": 0,
+                "ranged": 0,
+                "magic": 0
+            }
+        }
+    },
+    "rs:leather_body": {
+        "game_id": 1129,
+        "examine": "Better than no armour!",
+        "tradable": true,
+        "weight": 2.721,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "torso",
+            "requirements": {
+                "skills": {
+                    "ranged": 1,
+                    "defence": 1
+                }
+            },
+            "offensive_bonuses": {
+                "stab": 0,
+                "slash": 0,
+                "crush": 0,
+                "magic": -2,
+                "ranged": 2
+            },
+            "defensive_bonuses": {
+                "stab": 8,
+                "slash": 9,
+                "crush": 10,
+                "magic": 4,
+                "ranged": 9
+            },
+            "skill_bonuses": {
+                "prayer": 0,
+                "strength": 0,
+                "ranged": 0,
+                "magic": 0
+            }
+        }
+    },
+    "rs:leather_chaps": {
+        "game_id": 1095,
+        "examine": "Better than no armour!",
+        "tradable": true,
+        "weight": 2.721,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "legs",
+            "requirements": {
+                "skills": {
+                    "ranged": 1,
+                    "defence": 1
+                }
+            },
+            "offensive_bonuses": {
+                "stab": 0,
+                "slash": 0,
+                "crush": 0,
+                "magic": 0,
+                "ranged": 4
+            },
+            "defensive_bonuses": {
+                "stab": 2,
+                "slash": 2,
+                "crush": 1,
+                "magic": 0,
+                "ranged": 0
+            },
+            "skill_bonuses": {
+                "prayer": 0,
+                "strength": 0,
+                "ranged": 0,
+                "magic": 0
+            }
+        }
+    },
+    "rs:leather_vambraces": {
+        "game_id": 1063,
+        "examine": "Better than no armour!",
+        "tradable": true,
+        "weight": 0.226,
+        "equippable": true,
+        "equipment_data": {
+            "equipment_slot": "hands",
+            "requirements": {
+                "skills": {
+                    "defence": 1
+                }
+            },
+            "offensive_bonuses": {
+                "stab": 0,
+                "slash": 0,
+                "crush": 0,
+                "magic": 0,
+                "ranged": 4
+            },
+            "defensive_bonuses": {
+                "stab": 2,
+                "slash": 2,
+                "crush": 1,
+                "magic": 0,
+                "ranged": 0
+            },
+            "skill_bonuses": {
+                "prayer": 0,
+                "strength": 0,
+                "ranged": 0,
+                "magic": 0
+            }
+        }
+    },
     "rs:leather_boots": {
         "game_id": 1061,
+        "examine": "Comfortable leather boots.",
         "tradable": true,
         "weight": 0.34,
         "equippable": true,
         "equipment_data": {
             "equipment_slot": "feet",
+            "requirements": {
+                "skills": {
+                    "defence": 1
+                }
+            },
+            "offensive_bonuses": {
+                "stab": 0,
+                "slash": 0,
+                "crush": 0,
+                "magic": 0,
+                "ranged": 0
+            },
             "defensive_bonuses": {
+                "stab": 0,
                 "slash": 1,
-                "crush": 1
+                "crush": 1,
+                "magic": 0,
+                "ranged": 0
+            },
+            "skill_bonuses": {
+                "prayer": 0,
+                "strength": 0,
+                "ranged": 0,
+                "magic": 0
             }
         }
     }

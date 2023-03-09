@@ -19,6 +19,6 @@ export function parseScenerySpawns(): LandscapeObject[] {
         return scenerySpawns;
     } catch(error) {
         logger.error('Error parsing scenery spawns: ' + error);
-        return null;
+        return [];
     }
 }

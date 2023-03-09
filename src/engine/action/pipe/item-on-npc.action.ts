@@ -53,7 +53,7 @@ export interface ItemOnNpcAction {
  * @param itemContainerId
  */
 const itemOnNpcActionPipe = (player: Player, npc: Npc, position: Position, item: Item,
-    itemWidgetId: number, itemContainerId: number): RunnableHooks<ItemOnNpcAction> => {
+    itemWidgetId: number, itemContainerId: number): RunnableHooks<ItemOnNpcAction> | null => {
     const morphedNpc = player.getMorphedNpcDetails(npc);
 
     // Find all item on npc action plugins that reference this npc and item

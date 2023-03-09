@@ -54,6 +54,10 @@ export interface RegionChangeAction {
 
 /**
  * Creates a RegionChangeAction object from the given inputs.
+ *
+ * TODO (Jameskmonger) I changed this function's return type to `| null` to satisfy TypeScript,
+ *          not sure if this is correct or if the code was just wrong before.
+ *
  * @param player The player.
  * @param originalPosition The player's original position.
  * @param currentPosition The player's current position.
@@ -61,7 +65,7 @@ export interface RegionChangeAction {
  */
 export const regionChangeActionFactory = (player: Player,
     originalPosition: Position, currentPosition: Position,
-    teleporting: boolean = false): RegionChangeAction => {
+    teleporting: boolean = false): RegionChangeAction | null => {
     const regionTypes: RegionType[] = [];
     const originalMapRegionId: number = ((originalPosition.x >> 6) << 8) + (originalPosition.y >> 6);
     const currentMapRegionId: number = ((currentPosition.x >> 6) << 8) + (currentPosition.y >> 6);
@@ -157,7 +161,10 @@ const regionChangeActionPipe = (actionData: RegionChangeAction): void => {
 
     actionList.forEach(async actionHook =>
         new Promise<void>(resolve => {
-            actionHook.handler(actionData);
+            if (actionHook && actionHook.handler) {
+                actionHook.handler(actionData);
+            }
+
             resolve();
         }));
 };

@@ -43,7 +43,7 @@ export const Achievements: { [key: string]: Achievement } = {
 
 export function giveAchievement(achievement: Achievement, player: Player): boolean {
     if(!serverConfig.giveAchievements) {
-        return;
+        return false;
     }
 
     if(hasAchievement(achievement, player)) {

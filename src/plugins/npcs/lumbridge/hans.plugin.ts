@@ -1,3 +1,4 @@
+import { NpcInteractionActionHook } from '@engine/action';
 import { Emote, goto, execute, Achievements, giveAchievement } from '@engine/world/actor';
 import { animationIds } from '@engine/world/config';
 import { dialogue } from '@engine/world/actor/dialogue';
@@ -56,7 +57,7 @@ const handler = async ({ player, npc }) => {
 };
 
 
-module.exports = {
+export default {
     pluginId: 'rs:hans',
     hooks: [
         {
@@ -65,6 +66,6 @@ module.exports = {
             options: 'talk-to',
             walkTo: true,
             handler
-        }
+        } as NpcInteractionActionHook
     ]
 };

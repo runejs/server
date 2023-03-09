@@ -7,7 +7,7 @@ import { activeWorld } from '@engine/world';
 
 const action: commandActionHandler = ({ player, args }) => {
     let npcKey: string | number = args.npcKey;
-    let npcDetails: NpcDetails;
+    let npcDetails: NpcDetails | null = null;
 
     if(typeof npcKey === 'string' && npcKey.match(/^[0-9]+$/)) {
         npcKey = parseInt(npcKey, 10);
@@ -22,6 +22,11 @@ const action: commandActionHandler = ({ player, args }) => {
         }
 
         npcKey = npcDetails.gameId;
+    }
+
+    if (!npcDetails) {
+        player.sendMessage(`NPC ${npcKey} is not yet registered on the server.`);
+        return;
     }
 
     const movementRadius: number = args.movementRadius as number;

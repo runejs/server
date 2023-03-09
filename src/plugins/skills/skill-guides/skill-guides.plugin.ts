@@ -7,6 +7,7 @@ import {
 import { Player } from '@engine/world/actor';
 import { widgets } from '@engine/config';
 import { SkillGuide, SkillSubGuide, loadSkillGuideConfigurations } from './skill-guide-config';
+import { logger } from '@runejs/common';
 
 
 const skillGuidePath = __dirname.replace(/dist/, 'src');
@@ -15,7 +16,12 @@ const sidebarIds = [129, 98, -1, 110, 113, 123, 126, 134, 144, 147, 150, 160, 16
 let guides: SkillGuide[] = [];
 
 function loadGuide(player: Player, guideId: number, subGuideId: number = 0, refreshSidebar: boolean = true): void {
-    const guide: SkillGuide = guides.find(g => g.id === guideId);
+    const guide = guides.find(g => g.id === guideId);
+
+    if (!guide) {
+        logger.error(`Could not find skill guide with id ${guideId}`);
+        return;
+    }
 
     if(refreshSidebar) {
         player.modifyWidget(widgets.skillGuide, { childId: 133, text: (guide.members ? 'Members only skill' : '') });
@@ -89,6 +95,12 @@ export const subGuideHandler: widgetInteractionActionHandler = async (details) =
     }
 
     const guide = guides.find(g => g.id === activeSkillGuide);
+
+    if (!guide) {
+        logger.error(`Could not find skill guide with id ${activeSkillGuide}`);
+        return;
+    }
+
     const subGuideId = sidebarTextIds.indexOf(childId);
 
     if(subGuideId >= guide.sub_guides.length) {
