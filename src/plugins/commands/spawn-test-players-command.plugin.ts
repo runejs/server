@@ -3,6 +3,7 @@ import { Player } from '@engine/world/actor/player/player';
 import { World } from '@engine/world';
 import { commandActionHandler } from '@engine/action';
 import { activeWorld } from '@engine/world';
+import { Isaac } from '@engine/net';
 
 
 const handler: commandActionHandler = ({ player, args }) => {
@@ -32,9 +33,11 @@ const handler: commandActionHandler = ({ player, args }) => {
         player.sendMessage(`Warning: There was only room for ${playerSpawnCount}/${playerCount} player spawns.`);
     }
 
+    // TODO (JameskmongeR) what's the difference between this and `generateFakePlayers`
+
     for(let i = 0; i < playerSpawnCount; i++) {
-        const testPlayer = new Player(null, null, null, i,
-            `test${i}`, 'abs', true);
+        // TODO (Jameskmonger) we should be able to create a player without a connection, and without passing nulls in
+        const testPlayer = new Player(null as any, null as any, null as any, i, `test${i}`, 'abs', true);
         activeWorld.registerPlayer(testPlayer);
         testPlayer.interfaceState.closeAllSlots();
 

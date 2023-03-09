@@ -3,10 +3,12 @@ import { objectInteractionActionHandler, ObjectInteractionAction, ButtonActionHo
 import { buttonActionHandler } from '@engine/action';
 import { Skill } from '@engine/world/actor/skills';
 import { colors } from '@engine/util/colors';
-import { widgets } from '@engine/config/config-handler';
+import { findItem, widgets } from '@engine/config/config-handler';
 import { PlayerQuest } from '@engine/config/quest-config';
 import { widgetButtonIds, widgetItems } from '@plugins/skills/smithing/smelting-constants';
 import { SmeltingTask } from './smelting-task';
+import { Bar } from '@plugins/skills/smithing/smelting-types';
+import { logger } from '@runejs/common';
 
 
 export const openSmeltingInterface: objectInteractionActionHandler = (details) => {
@@ -19,6 +21,7 @@ export const openSmeltingInterface: objectInteractionActionHandler = (details) =
 // We need to tell the widget what the bars actually look like.
 const loadSmeltingInterface = (details: ObjectInteractionAction) => {
     const theKnightsSwordQuest: PlayerQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
+
     // Send the items to the widget.
     widgetItems.forEach((item) => {
         details.player.outgoingPackets.setItemOnWidget(widgets.furnace.widgetId, item.slot.modelId, item.bar.barId, 125);
@@ -27,6 +30,9 @@ const loadSmeltingInterface = (details: ObjectInteractionAction) => {
         } else {
             details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.black });
         }
+
+
+        // TODO (Jameskmonger) I don't think that this logic is correct.. it targets all items, not just those related to the quest.
         // Check if the player has completed 'The Knight's Sword' quest, even if the level is okay.
         if (item.bar.quest !== undefined && (theKnightsSwordQuest == undefined || theKnightsSwordQuest.complete)) {
             details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.red });

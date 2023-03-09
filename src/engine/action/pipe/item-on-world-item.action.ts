@@ -72,9 +72,9 @@ const itemOnWorldItemActionPipe = (
     player: Player,
     usedItem: Item, usedWithItem: WorldItem,
     usedWidgetId: number, usedContainerId: number, usedSlot: number
-): RunnableHooks<ItemOnWorldItemAction> => {
+): RunnableHooks<ItemOnWorldItemAction> | null => {
     if(player.busy) {
-        return;
+        return null;
     }
 
     // Find all item on item action plugins that match this action

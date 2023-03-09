@@ -84,10 +84,10 @@ export class ChunkManager {
             // Map region already registered
             return;
         }
-        this.regionMap.set(key, null);
+        this.regionMap.delete(key);
 
-        let mapFile: MapFile;
-        let landscapeFile: LandscapeFile;
+        let mapFile: MapFile | null = null;
+        let landscapeFile: LandscapeFile | null = null;
 
         try {
             mapFile = filestore.regionStore.getMapFile(mapRegionX, mapRegionY);
@@ -98,6 +98,16 @@ export class ChunkManager {
             landscapeFile = filestore.regionStore.getLandscapeFile(mapRegionX, mapRegionY);
         } catch(error) {
             logger.error(`Error decoding landscape file ${mapRegionX},${mapRegionY}`);
+        }
+
+        if(!mapFile) {
+            logger.error(`No decoded map file ${mapRegionX},${mapRegionY}`);
+            return;
+        }
+
+        if(!landscapeFile) {
+            logger.error(`No decoded landscape file ${mapRegionX},${mapRegionY}`);
+            return;
         }
 
         const region: MapRegion = { mapFile, objects: landscapeFile?.landscapeObjects || [] };
@@ -165,7 +175,9 @@ export class ChunkManager {
 
         const pos = (position as Position);
         if(this.chunkMap.has(pos.key)) {
-            return this.chunkMap.get(pos.key);
+            // using ! here because we know it exists
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            return this.chunkMap.get(pos.key)!;
         } else {
             const chunk = new Chunk(pos);
             this.chunkMap.set(pos.key, chunk);

@@ -29,7 +29,13 @@ export interface PlayerInitAction {
  */
 const playerInitActionPipe = ({ player }: PlayerInitAction): void => {
     const actionHooks = getActionHooks<PlayerInitActionHook>('player_init');
-    actionHooks.forEach(actionHook => actionHook.handler({ player }));
+    actionHooks.forEach(actionHook => {
+        if (!actionHook.handler) {
+            return;
+        }
+
+        actionHook.handler({ player });
+    });
 };
 
 

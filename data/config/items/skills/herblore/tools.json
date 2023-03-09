@@ -1,0 +1,8 @@
+{
+  "rs:pestle_and_mortar" : {
+      "game_id": 233,
+      "examine": "I can grind things for potions in this.",
+      "tradable": true,
+      "weight": 0.056
+  }
+}

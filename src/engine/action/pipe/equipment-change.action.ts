@@ -3,6 +3,7 @@ import { findItem, EquipmentSlot, ItemDetails } from '@engine/config';
 import {
     ActionHook, getActionHooks, numberHookFilter, stringHookFilter, questHookFilter, ActionPipe, RunnableHooks
 } from '@engine/action';
+import { logger } from '@runejs/common';
 
 
 /**
@@ -53,7 +54,7 @@ export interface EquipmentChangeAction {
  * @param slot
  */
 const equipmentChangeActionPipe = (player: Player, itemId: number,
-                                   eventType: EquipmentChangeType, slot: EquipmentSlot): RunnableHooks<EquipmentChangeAction> => {
+                                   eventType: EquipmentChangeType, slot: EquipmentSlot): RunnableHooks<EquipmentChangeAction> | null => {
     let matchingHooks = getActionHooks<EquipmentChangeActionHook>('equipment_change', equipActionHook => {
         if(!questHookFilter(player, equipActionHook)) {
             return false;
@@ -84,12 +85,19 @@ const equipmentChangeActionPipe = (player: Player, itemId: number,
         return null;
     }
 
+    const itemDetails = findItem(itemId);
+
+    if(!itemDetails) {
+        logger.error(`Item ${itemId} not registered on the server [equipment-change action pipe]`);
+        return null;
+    }
+
     return {
         hooks: matchingHooks,
         action: {
             player,
             itemId,
-            itemDetails: findItem(itemId),
+            itemDetails,
             eventType,
             equipmentSlot: slot
         }

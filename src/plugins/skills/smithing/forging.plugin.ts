@@ -12,9 +12,17 @@ import { Position } from '@engine/world/position';
 import { ForgingTask } from './forging-task';
 import { logger } from '@runejs/common';
 
-const mapWidgetItemsToFlatArray = (input) => {
-    const result = [];
-    smithables.forEach((type) => {
+/**
+ * Get the item ids of all the smithable items, as a flat array.
+ *
+ * @param input A two-dimensional map of smithables, keyed by type and then by item id.
+ *              e.g. smithables.get('dagger').get('bronze')
+ * @returns A flat array of item ids, e.g. [ bronze_dagger_id, iron_dagger_id, ...]
+ * @remarks This is used to check if the player has the correct item in their inventory.
+ */
+const mapSmithableItemIdsToFlatArray = (input: Map<string, Map<string, Smithable>>) => {
+    const result: number[] = [];
+    input.forEach((type) => {
         type.forEach((smithable) => {
             result.push(smithable.item.itemId);
         });
@@ -22,8 +30,19 @@ const mapWidgetItemsToFlatArray = (input) => {
     return result;
 };
 
-const mapToFlatArray = (input) => {
-    const results = [];
+/**
+ * Flatten a two-dimensional map of Smithables into an array.
+ *
+ * TODO (Jameskmonger): this should not be done at runtime! At startup would be one thing,
+ *                  but this happens in the `canActivate` method.
+ *
+ * @param input A two-dimensional map of smithables, keyed by type and then by item id.
+ *              e.g. smithables.get('dagger').get('bronze')
+ * @returns A flat array of item ids, e.g. [ bronze_dagger_id, iron_dagger_id, ...]
+ * @remarks This is used to check if the player has the correct item in their inventory.
+ */
+const mapSmithablesToFlatArray = (input: Map<string, Map<string, Smithable>>) => {
+    const results: Smithable[] = [];
     input.forEach((values) => {
         values.forEach((value) => {
             results.push(value);
@@ -37,9 +56,10 @@ const mapToFlatArray = (input) => {
  * @param itemId
  */
 const findSmithableByItemId = (itemId): Smithable => {
-    return mapToFlatArray(smithables).find((smithable) => {
+const findSmithableByItemId = (itemId: number) : Smithable | null => {
+    return mapSmithablesToFlatArray(smithables).find((smithable) => {
         return smithable.item.itemId === itemId;
-    });
+    }) || null;
 };
 
 /**
@@ -108,6 +128,12 @@ const openForgingInterface: itemOnObjectActionHandler = (details) => {
     }
 
     const barLevel = bars.get(item.itemId);
+
+    if (barLevel === undefined) {
+        logger.warn(`Could not find bar level for item id ${item.itemId}`);
+        return;
+    }
+
     const bar = findItem(item.itemId);
 
     if (barLevel === undefined || !bar) {
@@ -127,7 +153,14 @@ const openForgingInterface: itemOnObjectActionHandler = (details) => {
         slot: 'screen'
     });
 
-    widgetItems.get(item.itemId).forEach((items, containerId) => {
+    const barWidgetItems = widgetItems.get(item.itemId);
+
+    if (barWidgetItems === undefined) {
+        logger.warn(`Could not find bar widget items for item id ${item.itemId}`);
+        return;
+    }
+
+    barWidgetItems.forEach((items, containerId) => {
         items.forEach((smithable, index) => {
             player.outgoingPackets.sendUpdateSingleWidgetItem({
                 widgetId: widgets.anvil.widgetId, containerId: containerId
@@ -150,7 +183,7 @@ export default {
         } as ItemOnObjectActionHook,
         {
             type: 'item_interaction',
-            itemIds: [...mapWidgetItemsToFlatArray(smithables)],
+            itemIds: [...mapSmithableItemIdsToFlatArray(smithables)],
             options: ['make', 'make-5', 'make-10'],
             cancelOtherActions: true,
             handler: ({ player, itemId, option }) => {

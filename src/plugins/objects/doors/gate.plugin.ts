@@ -32,6 +32,12 @@ const action: objectInteractionActionHandler = (details) => {
     if((gate as ModifiedLandscapeObject).metadata) {
         const metadata = (gate as ModifiedLandscapeObject).metadata;
 
+        if (!metadata) {
+            logger.error(`Could not find metadata for gate with id ${gate.objectId}`);
+            player.sendMessage('Oops, something went wrong. Please report this to a developer.');
+            return;
+        }
+
         player.instance.toggleGameObjects(metadata.originalMain, metadata.main, true);
         player.instance.toggleGameObjects(metadata.originalSecond, metadata.second, true);
         player.playSound(soundIds.closeGate, 7);
@@ -42,10 +48,18 @@ const action: objectInteractionActionHandler = (details) => {
         let hinge;
         let direction = WNES[gate.orientation];
         let hingeChunk: Chunk;
-        let gateSecondPosition: Position;
+        let gateSecondPosition: Position | null = null;
 
         if(!details) {
             details = gates.find(g => g.secondary === gate.objectId);
+
+            if(!details) {
+                logger.error(`Could not find gate details for gate with id ${gate.objectId} on second pass.`);
+                player.sendMessage('Oops, something went wrong. Please report this to a developer.');
+                return;
+            }
+
+
             secondGate = gate;
             gateSecondPosition = position;
             clickedSecondary = true;
@@ -88,9 +102,18 @@ const action: objectInteractionActionHandler = (details) => {
 
             const pos = new Position(gate.x + deltaX, gate.y + deltaY, gate.level);
             hingeChunk = activeWorld.chunkManager.getChunkForWorldPosition(pos);
-            gate = hingeChunk.getFilestoreLandscapeObject(details.main, pos);
-            direction = WNES[gate.orientation];
-            position = pos;
+
+            const mainGate = hingeChunk.getFilestoreLandscapeObject(details.main, pos);
+
+            if (mainGate) {
+                gate = mainGate;
+                direction = WNES[gate.orientation];
+                position = pos;
+            } else {
+                logger.error('Could not find main gate for secondary gate at ' + gate.x + ',' + gate.y + ',' + gate.level);
+                player.sendMessage('Oops, something went wrong. Please report this to a developer.');
+            }
+
         } else {
             hinge = details.hinge;
         }
@@ -162,6 +185,12 @@ const action: objectInteractionActionHandler = (details) => {
 
         if(!clickedSecondary) {
             gateSecondPosition = new Position(gate.x + deltaX, gate.y + deltaY, gate.level);
+        }
+
+        if (!gateSecondPosition) {
+            logger.error('Improperly handled gate at ' + gate.x + ',' + gate.y + ',' + gate.level);
+            player.sendMessage('Oops, something went wrong. Please report this to a developer.');
+            return;
         }
 
         const gateSecondChunk = activeWorld.chunkManager.getChunkForWorldPosition(gateSecondPosition);

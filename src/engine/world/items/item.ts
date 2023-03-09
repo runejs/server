@@ -14,7 +14,7 @@ function itemInventoryOptions(itemId: number): string[] {
         return [];
     }
 
-    return itemDefinition.widgetOptions;
+    return itemDefinition.widgetOptions || [];
 }
 // TODO: Move to the filestore
 function IsParentWidget(widget: WidgetBase): widget is ParentWidget {
@@ -33,7 +33,7 @@ export const getItemOptions = (itemId: number, widget: { widgetId: number, conta
         return itemInventoryOptions(itemId);
     }
 
-    let optionsWidget: StaticItemWidget;
+    let optionsWidget: StaticItemWidget | null = null;
     if (IsStaticItemWidget(widgetDefinition) && widgetDefinition.options && !widget.containerId) {
         optionsWidget = widgetDefinition;
     }

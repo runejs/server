@@ -78,7 +78,7 @@ export const travelMenuInteract: widgetInteractionActionHandler = (details) => {
             openTravel(details.player, playerWidget.metadata.page+1)
             return;
     }
-    let selectedIndex = undefined;
+    let selectedIndex: number | undefined = undefined;
     if(details.childId >= 101 && details.childId <= 129) {
         selectedIndex = (details.childId - 99)/2 - 1;
     }

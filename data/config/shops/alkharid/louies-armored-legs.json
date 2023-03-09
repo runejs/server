@@ -1,15 +1,40 @@
 {
-    "rs:louies_armored_legs": {
-        "name": "Louie's Armoured Legs Bazaar",
-        "shop_buy_rate": 0.65,
-        "rate_modifier": 0.01,
-        "stock": [
-            [ "rs:bronze_platelegs", 5 ],
-            [ "rs:iron_platelegs", 3 ],
-            [ "rs:steel_platelegs", 2 ],
-            [ "rs:black_platelegs", 1 ],
-            [ "rs:mithril_platelegs", 1 ],
-            [ "rs:adamant_platelegs", 1 ]
-        ]
-    }
+  "rs:louies_armored_legs": {
+    "name": "Louie's Armoured Legs Bazaar",
+    "shop_sell_rate": 1.0,
+    "shop_buy_rate": 0.65,
+    "rate_modifier": 0.01,
+    "stock": [
+      {
+        "itemKey": "rs:bronze_platelegs",
+        "amount": 5,
+        "restock": 100
+      },
+      {
+        "itemKey": "rs:iron_platelegs",
+        "amount": 3,
+        "restock": 400
+      },
+      {
+        "itemKey": "rs:steel_platelegs",
+        "amount": 2,
+        "restock": 900
+      },
+      {
+        "itemKey": "rs:black_platelegs",
+        "amount": 1,
+        "restock": 1200
+      },
+      {
+        "itemKey": "rs:mithril_platelegs",
+        "amount": 1,
+        "restock": 2000
+      },
+      {
+        "itemKey": "rs:adamant_platelegs",
+        "amount": 1,
+        "restock": 13000
+      }
+    ]
+  }
 }

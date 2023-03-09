@@ -8,7 +8,9 @@ const blinkingTabClickPacket = (player: Player, packet: PacketData) => {
     const tabClickEventIndex = player.metadata?.tabClickEvent?.tabIndex || -1;
 
     if(tabClickEventIndex === tabIndex) {
-        player.metadata.tabClickEvent.event.next(true);
+        if (player.metadata.tabClickEvent) {
+            player.metadata.tabClickEvent.event.next(true);
+        }
     }
 };
 

@@ -14,7 +14,7 @@ export interface DataDumpResult {
 function dump<T>(fileName: string, definitions: T[]): DataDumpResult {
     const filePath = join('data/dump', fileName);
 
-    const arr = [];
+    const arr: T[] = [];
     for(let i = 0; i < definitions.length; i++) {
         arr.push(definitions[i]);
     }

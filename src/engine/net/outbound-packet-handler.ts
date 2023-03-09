@@ -1,6 +1,6 @@
 import { Socket } from 'net';
 import { LandscapeObject } from '@runejs/filestore';
-import { ByteBuffer } from '@runejs/common';
+import { ByteBuffer, logger } from '@runejs/common';
 
 import { serverConfig } from '@server/game';
 import { Packet, PacketType } from '@engine/net';
@@ -158,6 +158,11 @@ export class OutboundPacketHandler {
                     packet.put(offset, 'BYTE');
                 }
             } else if(update.type === 'REMOVE') {
+                if (!update.object) {
+                    logger.warn('Tried to remove object that does not exist.');
+                    return;
+                }
+
                 const offset = this.getChunkPositionOffset(update.object.x, update.object.y, chunk);
                 packet.put(143, 'BYTE');
                 packet.put(offset);
@@ -317,7 +322,9 @@ export class OutboundPacketHandler {
 
     public updateWidgetItemModel(widgetId: number, itemId: number, scale?: number): void {
         const packet = new Packet(21);
-        packet.put(scale, 'SHORT');
+
+        // TODO (Jameskmonger) what should the default value of `scale` be?
+        packet.put(scale || 0, 'SHORT');
         packet.put(itemId, 'SHORT', 'LITTLE_ENDIAN');
         packet.put(widgetId, 'SHORT', 'LITTLE_ENDIAN');
 
@@ -357,7 +364,7 @@ export class OutboundPacketHandler {
     }
 
     // @TODO this can support multiple items/slots !!!
-    public sendUpdateSingleWidgetItem(widget: { widgetId: number, containerId: number }, slot: number, item: Item): void {
+    public sendUpdateSingleWidgetItem(widget: { widgetId: number, containerId: number }, slot: number, item: Item | null): void {
         const packet = new Packet(214, PacketType.DYNAMIC_LARGE);
         packet.put(widget.widgetId << 16 | widget.containerId, 'INT');
         packet.put(slot, 'SMART');
@@ -451,10 +458,6 @@ export class OutboundPacketHandler {
     }
 
     public sendTabWidget(tabIndex: SidebarTab, widgetId: number | null): void {
-        if(widgetId < 0) {
-            return;
-        }
-
         const packet = new Packet(140);
         packet.put(widgetId === null || widgetId === -1 ? 65535 : widgetId, 'SHORT');
         packet.put(tabIndex);

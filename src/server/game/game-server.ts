@@ -2,7 +2,7 @@ import { logger } from '@runejs/common';
 import { parseServerConfig, SocketServer } from '@runejs/common/net';
 import { Filestore } from '@runejs/filestore';
 
-import { activateGameWorld } from '@engine/world';
+import { activateGameWorld, World } from '@engine/world';
 import { loadCoreConfigurations, loadGameConfigurations, xteaRegions } from '@engine/config';
 import { loadPackets } from '@engine/net';
 import { watchForChanges, watchSource } from '@engine/util';
@@ -28,26 +28,35 @@ export const openGatewayServer = (host: string, port: number): void => {
         host, port, socket => new GatewayServer(socket));
 };
 
-
-/**
- * Configures the game server, parses the asset file store, initializes the game world,
- * and finally spins up the game server itself.
- */
-export async function launchGameServer(): Promise<void> {
+export async function setupConfig(): Promise<boolean> {
     serverConfig = parseServerConfig<GameServerConfig>();
 
     if(!serverConfig) {
         logger.error('Unable to start server due to missing or invalid server configuration.');
-        return;
+        return false;
     }
 
     await loadCoreConfigurations();
     filestore = new Filestore('cache', { xteas: xteaRegions });
 
     await loadGameConfigurations();
-    await loadPackets();
+    return true;
+}
 
-    const world = await activateGameWorld();
+
+/**
+ * Configures the game server, parses the asset file store, initializes the game world,
+ * and finally spins up the game server itself.
+ */
+export async function launchGameServer(): Promise<void> {
+    const config = await setupConfig();
+    if(!config) {
+        return;
+    }
+    await loadPackets();
+    const world =  await activateGameWorld();
+
+
 
     if(process.argv.indexOf('-fakePlayers') !== -1) {
         world.generateFakePlayers();

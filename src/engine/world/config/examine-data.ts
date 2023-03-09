@@ -19,17 +19,17 @@ export class ExamineCache {
         this.objects = new Map<number, Examine>();
     }
 
-    public getItem (id: number): string {
+    public getItem (id: number): string | null {
         const examine = this.items.get(id);
         return examine ? examine.examine : null;
     }
 
-    public getNpc (id: number): string {
+    public getNpc (id: number): string | null {
         const examine = this.npcs.get(id);
         return examine ? examine.examine : null;
     }
 
-    public getObject (id: number): string {
+    public getObject (id: number): string | null {
         const examine = this.objects.get(id);
         return examine ? examine.examine : null;
     }

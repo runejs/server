@@ -61,7 +61,7 @@ export const directionData: { [key: string]: DirectionData } = {
 };
 export const WNES: Direction[] = ['WEST', 'NORTH', 'EAST', 'SOUTH'];
 
-export const directionFromIndex = (index: number): DirectionData => {
+export const directionFromIndex = (index: number): DirectionData | null => {
     const keys = Object.keys(directionData);
     for (const key of keys) {
         if (directionData[key].index === index) {

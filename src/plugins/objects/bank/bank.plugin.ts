@@ -8,6 +8,7 @@ import { buttonActionHandler } from '@engine/action';
 import { dialogue, Emote, execute } from '@engine/world/actor/dialogue';
 import { widgets } from '@engine/config/config-handler';
 import { Player } from '@engine/world/actor/player/player';
+import { logger } from '@runejs/common';
 
 
 const buttonIds: number[] = [
@@ -79,11 +80,24 @@ export const depositItem: itemInteractionActionHandler = (details) => {
             throw new Error('Unhandled option in banking plugin: ' + details.option);
     }
 
-    const playerInventory: ItemContainer = details.player.inventory;
-    const playerBank: ItemContainer = details.player.bank;
-    const slotsWithItem: number[] = playerInventory.findAll(details.itemId);
-    let itemAmount: number = 0;
-    slotsWithItem.forEach((slot) => itemAmount += playerInventory.items[slot].amount);
+    const playerInventory = details.player.inventory;
+    const playerBank = details.player.bank;
+    const slotsWithItem = playerInventory.findAll(details.itemId);
+
+    let itemAmount = 0;
+    slotsWithItem.forEach((slot) => {
+        const item = playerInventory.items[slot];
+
+        if (!item) {
+            throw new Error(`Container item was not present, for item id ${details.itemId} in inventory, while trying to deposit`);
+        }
+
+        if (item.itemId !== details.itemId) {
+            throw new Error(`Container item id mismatch, for item id ${details.itemId} in inventory, while trying to deposit`);
+        }
+
+        itemAmount += item.amount;
+    });
     if (countToRemove === -1 || countToRemove > itemAmount) {
         countToRemove = itemAmount;
     }
@@ -148,10 +162,17 @@ export const withdrawItem: itemInteractionActionHandler = (details) => {
             throw new Error('Unhandled option in banking plugin: ' + details.option);
     }
 
-    const playerBank: ItemContainer = details.player.bank;
-    const playerInventory: ItemContainer = details.player.inventory;
-    const slotWithItem: number = playerBank.findIndex(details.itemId);
-    const itemAmount: number = playerBank.items[slotWithItem].amount;
+    const playerBank = details.player.bank;
+    const playerInventory = details.player.inventory;
+    const slotWithItem = playerBank.findIndex(details.itemId);
+    const itemInBank = playerBank.items[slotWithItem];
+
+    if (!itemInBank) {
+        logger.error(`Container item was not present, for item id ${details.itemId} in bank, while trying to withdraw`);
+        return;
+    }
+
+    const itemAmount = itemInBank.amount;
     if (countToRemove === -1 || countToRemove > itemAmount) {
         countToRemove = itemAmount;
     }
@@ -203,6 +224,10 @@ export const removeFromContainer = (from: ItemContainer, itemId: number, amount:
     while (removeAmount > 0 && from.has(itemId)) {
         const containerIndex = from.findIndex(itemId);
         const containerItem = from.items[containerIndex];
+
+        if (!containerItem) {
+            throw new Error(`Container item was not present, for item id ${itemId} in bank, while trying to remove`);
+        }
 
         if (removeAmount >= containerItem.amount) {
             resultingAmount += containerItem.amount;

@@ -74,8 +74,8 @@ export class Chunk {
         }
     }
 
-    public getFilestoreLandscapeObject(objectId: number, position: Position): LandscapeObject {
-        return this.filestoreLandscapeObjects.get(`${position.x},${position.y},${objectId}`);
+    public getFilestoreLandscapeObject(objectId: number, position: Position): LandscapeObject | null {
+        return this.filestoreLandscapeObjects.get(`${position.x},${position.y},${objectId}`) || null;
     }
 
     public equals(chunk: Chunk): boolean {
