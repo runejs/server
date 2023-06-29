@@ -364,8 +364,6 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
                     }
                 }
 
-                console.log('npc:', npc);
-
                 dialogueDetails = dialogueAction(npc);
 
                 if (npc === -1) {
