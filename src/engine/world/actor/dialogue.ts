@@ -364,14 +364,15 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
                     }
                 }
 
+                console.log('npc:', npc);
+
                 dialogueDetails = dialogueAction(npc);
+
+                if (npc === -1) {
+                    throw new Error('No npc found for dialogue action.');
+                }
             } else {
                 dialogueDetails = dialogueAction(player);
-            }
-
-            // TODO (Jameskmonger) not sure if this check is needed, added it when getting TypeScript types into strict mode
-            if (npc === -1) {
-                throw new Error('No npc found for dialogue action.');
             }
 
             const emote = dialogueDetails[0] as Emote;
@@ -582,10 +583,10 @@ async function runDialogueAction(player: Player, dialogueAction: string | Dialog
 
             if (dialogueAction.type === 'NPC') {
                 npcId = (dialogueAction as NpcDialogueAction).npcId;
-            }
-            // TODO (Jameskmonger) not sure if this check is needed, added it when getting TypeScript types into strict mode
-            if (npcId === -1) {
-                throw new Error('No npc found for dialogue action.');
+
+                if (npcId === -1) {
+                    throw new Error('No npc found for dialogue action.');
+                }
             }
 
             const actorDialogueAction = dialogueAction as ActorDialogueAction;
