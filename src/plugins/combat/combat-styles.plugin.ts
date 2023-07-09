@@ -13,7 +13,7 @@ export function updateCombatStyle(player: Player, weaponStyle: WeaponStyle, styl
     player.savedMetadata.combatStyle = [ weaponStyle, styleIndex ];
     player.settings.attackStyle = styleIndex;
 
-    const buttonId = combatStyles[weaponStyle][styleIndex]?.button_id;
+    const buttonId = combatStyles[weaponStyle]?.[styleIndex]?.button_id;
     if(buttonId !== undefined) {
         player.outgoingPackets.updateClientConfig(widgetScripts.attackStyle, buttonId);
     }
