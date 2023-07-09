@@ -519,7 +519,7 @@ export class World {
     public playerOnline(player: Player | string): boolean {
         if(typeof player === 'string') {
             player = player.toLowerCase();
-            return this.playerList.findIndex(p => p !== null && p.username.toLowerCase() === player) !== -1;
+            return this.playerList.findIndex(p => Boolean(p) && p.username.toLowerCase() === player) !== -1;
         } else {
             const foundPlayer = this.playerList[player.worldIndex];
             if(!foundPlayer) {
