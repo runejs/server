@@ -352,8 +352,12 @@ export class Pathfinding {
         const globalAdjacency = globalChunk.collisionMap.adjacency;
 
         try {
-            const instancedTileFlags = instancedAdjacency[destinationLocalX][destinationLocalY] === null ? null :
-                instancedAdjacency[destinationLocalX][destinationLocalY] & i;
+            const instancedAdjacencyForTile = instancedAdjacency[destinationLocalX][destinationLocalY];
+
+            const instancedTileFlags = instancedAdjacencyForTile === null ? null : instancedAdjacencyForTile & i;
+
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             const globalTileFlags = globalAdjacency[destinationLocalX][destinationLocalY] & i;
 
             return instancedTileFlags === null ? globalTileFlags === 0 : instancedTileFlags === 0;
