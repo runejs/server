@@ -17,9 +17,9 @@ export class CollisionMap {
     private sizeY: number;
     private _insetX: number;
     private _insetY: number;
-    private _adjacency: number[][];
-    private chunk: Chunk | null;
-    private instance: WorldInstance | null;
+    private _adjacency: (number | null)[][];
+    private chunk: Chunk | undefined;
+    private instance: WorldInstance | undefined;
 
     public constructor(x: number, y: number, heightLevel: number, options?: { chunk?: Chunk, instance?: WorldInstance }) {
         this.heightLevel = heightLevel;
@@ -29,8 +29,8 @@ export class CollisionMap {
         this.sizeY = 8;
         this._insetX = (x + 6) * 8;
         this._insetY = (y + 6) * 8;
-        this.chunk = options?.chunk || null;
-        this.instance = options?.instance || null;
+        this.chunk = options?.chunk;
+        this.instance = options?.instance;
         this._adjacency = new Array(this.sizeX);
         for(let i = 0; i < this.sizeX; i++) {
             this._adjacency[i] = new Array(this.sizeY);
@@ -71,7 +71,7 @@ export class CollisionMap {
     public reset(): void {
         for(let x = 0; x < this.sizeX; x++) {
             for(let y = 0; y < this.sizeY; y++) {
-                this._adjacency[x][y] = 0;
+                this._adjacency[x][y] = this.chunk ? 0 : null;
             }
         }
     }
@@ -358,8 +358,12 @@ export class CollisionMap {
         }
 
         if(mark) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             this._adjacency[x][y] |= 0x200000;
         } else {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             this._adjacency[x][y] &= 0xdfffff;
         }
     }
@@ -395,6 +399,9 @@ export class CollisionMap {
             if(this._adjacency[x][y] === null) {
                 this._adjacency[x][y] = 0;
             }
+
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             this._adjacency[x][y] |= flag;
         }
     }
@@ -422,6 +429,9 @@ export class CollisionMap {
             if(this._adjacency[x][y] === null) {
                 this._adjacency[x][y] = 0;
             }
+
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             this._adjacency[x][y] &= 0xffffff - flag;
         }
     }
@@ -451,7 +461,7 @@ export class CollisionMap {
         return this._insetY;
     }
 
-    public get adjacency(): number[][] {
+    public get adjacency(): (number | null)[][] {
         return this._adjacency;
     }
 }
