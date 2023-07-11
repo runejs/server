@@ -1,16 +1,13 @@
-import { LandscapeObject } from '@runejs/filestore';
-import { ActorLandscapeObjectInteractionTask } from '@engine/task/impl';
-import { Actor, Npc, Player } from '@engine/world/actor';
-import { ObjectInteractionAction } from '../object-interaction.action';
-import { ItemOnObjectAction } from '../item-on-object.action';
+import { Actor, Player } from '@engine/world/actor';
 import { ActionHook } from '@engine/action/hook';
 import { NpcInteractionAction } from '../npc-interaction.action';
 import { ActorActorInteractionTask } from '@engine/task/impl/actor-actor-interaction-task';
+import { ItemOnNpcAction } from '../item-on-npc.action';
 
 /**
  * All actions supported by this plugin task.
  */
-type ActorAction = NpcInteractionAction;
+type ActorAction = NpcInteractionAction | ItemOnNpcAction;
 
 /**
  * An ActionHook for a supported ObjectAction.
