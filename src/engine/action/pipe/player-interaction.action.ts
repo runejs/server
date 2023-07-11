@@ -1,7 +1,7 @@
 import { Player } from '@engine/world/actor';
 import { Position } from '@engine/world';
 import { ActionHook, getActionHooks, stringHookFilter, questHookFilter, RunnableHooks } from '@engine/action';
-import { playerWalkTo } from '@engine/plugins';
+import { WalkToActorPluginTask } from './task/walk-to-actor-plugin-task';
 
 
 /**
@@ -54,6 +54,14 @@ const playerInteractionActionPipe = (player: Player, otherPlayer: Player, positi
 
     if(matchingHooks.length === 0) {
         player.sendMessage(`Unhandled Player interaction: ${option} @ ${position.x},${position.y},${position.level}`);
+        return null;
+    }
+
+    const walkToPlugins = matchingHooks.filter(plugin => plugin.walkTo);
+
+    if (walkToPlugins.length > 0) {
+        player.enqueueBaseTask(new WalkToActorPluginTask(walkToPlugins, player, 'otherPlayer', otherPlayer, {}));
+
         return null;
     }
 
