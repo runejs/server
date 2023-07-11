@@ -125,7 +125,7 @@ export class PlayerSyncTask extends SyncTask<void> {
         if(updateFlags.graphics) {
             mask |= 0x200;
         }
-        if(updateFlags.animation !== undefined) {
+        if(updateFlags.animation !== undefined && updateFlags.animation !== null) {
             mask |= 0x1;
         }
 
@@ -151,7 +151,7 @@ export class PlayerSyncTask extends SyncTask<void> {
             updateMaskData.put(position.y * 2 + 1, 'SHORT', 'LITTLE_ENDIAN');
         }
 
-        if(updateFlags.animation !== undefined) {
+        if(updateFlags.animation !== undefined && updateFlags.animation !== null) {
             const animation = updateFlags.animation;
 
             if(animation === null || animation.id === -1) {

@@ -3,6 +3,7 @@ import { Position, Item } from '@engine/world';
 import {
     ActionHook, getActionHooks, advancedNumberHookFilter, questHookFilter, stringHookFilter, ActionPipe, RunnableHooks
 } from '@engine/action';
+import { WalkToActorPluginTask } from './task/walk-to-actor-plugin-task';
 
 
 /**
@@ -72,6 +73,18 @@ const itemOnNpcActionPipe = (player: Player, npc: Npc, position: Position, item:
         if (morphedNpc) {
             player.outgoingPackets.chatboxMessage(`Note: (id-${morphedNpc.gameId}) is a morphed NPC. The parent NPC is (id-${npc.id}).`);
         }
+        return null;
+    }
+
+    const walkToPlugins = matchingHooks.filter(plugin => plugin.walkTo);
+
+    if (walkToPlugins.length > 0) {
+        player.enqueueBaseTask(new WalkToActorPluginTask(walkToPlugins, player, 'npc', npc, {
+            item,
+            itemWidgetId,
+            itemContainerId
+        }));
+
         return null;
     }
 

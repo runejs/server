@@ -62,8 +62,11 @@ const itemOnItemActionPipe = (player: Player, usedItem: Item, usedSlot: number, 
             const usedWith = usedWithItem.itemId;
 
             return (plugin.items.some(({ item1, item2 }) => {
-                const items = [ item1, item2 ];
-                return items.includes(used) && items.includes(usedWith);
+                if (item2) {
+                    return (item1 === used && item2 === usedWith) || (item1 === usedWith && item2 === used);
+                }
+
+                return item1 === used || item1 === usedWith;
             }));
         }
 

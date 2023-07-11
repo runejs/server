@@ -513,13 +513,13 @@ export class World {
 
     public findPlayer(playerUsername: string): Player | null {
         playerUsername = playerUsername.toLowerCase();
-        return this.playerList?.find(p => p !== null && p.username.toLowerCase() === playerUsername) || null;
+        return this.playerList?.find(p => Boolean(p) && p.username.toLowerCase() === playerUsername) || null;
     }
 
     public playerOnline(player: Player | string): boolean {
         if(typeof player === 'string') {
             player = player.toLowerCase();
-            return this.playerList.findIndex(p => p !== null && p.username.toLowerCase() === player) !== -1;
+            return this.playerList.findIndex(p => Boolean(p) && p.username.toLowerCase() === player) !== -1;
         } else {
             const foundPlayer = this.playerList[player.worldIndex];
             if(!foundPlayer) {

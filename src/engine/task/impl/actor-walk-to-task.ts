@@ -5,6 +5,16 @@ import { TaskStackType, TaskBreakType, TaskStackGroup } from '../types';
 import { ActorTask } from './actor-task';
 
 /**
+ * Possible types of targets for an actor to walk to.
+ */
+type WalkToTargetType = LandscapeObject | Position;
+
+/**
+ * The target can either be a {@link WalkToTargetType} or a function that returns a {@link WalkToTargetType}.
+ */
+type WalkToTarget = WalkToTargetType | (() => WalkToTargetType);
+
+/**
  * This ActorWalkToTask interface allows us to merge with the ActorWalkToTask class
  * and add optional methods to the class.
  *
@@ -12,7 +22,7 @@ import { ActorTask } from './actor-task';
  *
  * @author jameskmonger
  */
-export interface ActorWalkToTask<TActor extends Actor = Actor, TTarget extends LandscapeObject | Position = Position> extends ActorTask<TActor> {
+export interface ActorWalkToTask<TActor extends Actor = Actor, TTarget extends WalkToTarget = Position> extends ActorTask<TActor> {
     /**
      * An optional function that is called when the actor arrives at the destination.
      */
@@ -27,7 +37,7 @@ export interface ActorWalkToTask<TActor extends Actor = Actor, TTarget extends L
  *
  * @author jameskmonger
  */
-export abstract class ActorWalkToTask<TActor extends Actor = Actor, TTarget extends LandscapeObject | Position = Position> extends ActorTask<TActor> {
+export abstract class ActorWalkToTask<TActor extends Actor = Actor, TTarget extends WalkToTarget = Position> extends ActorTask<TActor> {
     private _atDestination: boolean = false;
 
     /**
@@ -39,13 +49,15 @@ export abstract class ActorWalkToTask<TActor extends Actor = Actor, TTarget exte
 
     /**
      * @param actor The actor executing this task.
-     * @param destination The destination position.
+     * @param destination The destination position/object, or a function that returns the destination position/object.
      * @param distance The distance from the destination position that the actor must be within to arrive.
+     * @param walkOnStart Whether to walk to the destination on task start.
      */
     constructor (
         actor: TActor,
         protected readonly destination: TTarget,
         protected readonly distance = 1,
+        walkOnStart = true
     ) {
         super(
             actor,
@@ -59,10 +71,9 @@ export abstract class ActorWalkToTask<TActor extends Actor = Actor, TTarget exte
             }
         );
 
-        if(destination instanceof Position) {
-            this.actor.pathfinding.walkTo(destination, { })
-        } else {
-            this.actor.pathfinding.walkTo(new Position(destination.x, destination.y), { })
+        // TODO (jkm) should this be in constructor? or on first execute?
+        if (walkOnStart) {
+            this.actor.pathfinding.walkTo(this.getTargetPosition(), { });
         }
     }
 
@@ -83,9 +94,11 @@ export abstract class ActorWalkToTask<TActor extends Actor = Actor, TTarget exte
             return;
         }
 
+        const destination = this.getTargetPosition();
+
         // TODO this uses actual distances rather than tile distances
         //      is this correct?
-        const withinDistance = this.actor.position.withinInteractionDistance(this.destination, this.distance)
+        const withinDistance = this.actor.position.withinInteractionDistance(destination, this.distance)
 
         // the WalkToTask itself is complete when the actor has arrived at the destination
         // execution will now continue in the extended class
@@ -106,5 +119,15 @@ export abstract class ActorWalkToTask<TActor extends Actor = Actor, TTarget exte
                 this.onArrive();
             }
         }
+    }
+
+    private getTargetPosition(): Position {
+        const destination: WalkToTargetType = typeof this.destination === 'function' ? this.destination() : this.destination;
+
+        if(destination instanceof Position) {
+            return destination;
+        }
+
+        return new Position(destination.x, destination.y);
     }
 }
