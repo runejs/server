@@ -513,7 +513,7 @@ export class World {
 
     public findPlayer(playerUsername: string): Player | null {
         playerUsername = playerUsername.toLowerCase();
-        return this.playerList?.find(p => p !== null && p.username.toLowerCase() === playerUsername) || null;
+        return this.playerList?.find(p => Boolean(p) && p.username.toLowerCase() === playerUsername) || null;
     }
 
     public playerOnline(player: Player | string): boolean {
