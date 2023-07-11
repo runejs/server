@@ -5,6 +5,7 @@ import {
     ActionHook, getActionHooks, numberHookFilter, stringHookFilter, questHookFilter, ActionPipe, RunnableHooks
 } from '@engine/action';
 import { logger } from '@runejs/common';
+import { WalkToItemPluginTask } from './task/walk-to-item-plugin-task';
 
 
 /**
@@ -36,6 +37,8 @@ export interface SpawnedItemInteractionAction {
     worldItem: WorldItem;
     // Details about the item
     itemDetails: ItemDetails;
+
+    // TODO (jkm) add "option" to the action
 }
 
 
@@ -80,6 +83,14 @@ const spawnedItemInteractionPipe = (player: Player, worldItem: WorldItem, option
 
     if(!itemDetails) {
         logger.error(`Item ${worldItem.itemId} not registered on the server [spawned-item-interaction action pipe]`);
+        return null;
+    }
+
+    const walkToPlugins = matchingHooks.filter(plugin => plugin.walkTo);
+
+    if (walkToPlugins.length > 0) {
+        player.enqueueBaseTask(new WalkToItemPluginTask(walkToPlugins, player, worldItem, itemDetails));
+
         return null;
     }
 

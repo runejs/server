@@ -4,6 +4,7 @@ import { Player } from '@engine/world/actor';
 import {
     ActionHook, getActionHooks, advancedNumberHookFilter, questHookFilter, ActionPipe, RunnableHooks
 } from '@engine/action';
+import { WalkToObjectPluginTask } from './task/walk-to-object-plugin-task';
 
 
 /**
@@ -72,6 +73,14 @@ const objectInteractionActionPipe = (player: Player, landscapeObject: LandscapeO
     if(matchingHooks.length === 0) {
         player.outgoingPackets.chatboxMessage(`Unhandled object interaction: ${option} ${objectConfig.name} ` +
             `(id-${landscapeObject.objectId}) @ ${position.x},${position.y},${position.level}`);
+        return null;
+    }
+
+    const walkToPlugins = matchingHooks.filter(plugin => plugin.walkTo);
+
+    if (walkToPlugins.length > 0) {
+        player.enqueueBaseTask(new WalkToObjectPluginTask(walkToPlugins, player, landscapeObject, { objectConfig, cacheOriginal, option }));
+
         return null;
     }
 
