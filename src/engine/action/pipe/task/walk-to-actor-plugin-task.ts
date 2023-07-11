@@ -3,18 +3,20 @@ import { ActionHook } from '@engine/action/hook';
 import { NpcInteractionAction } from '../npc-interaction.action';
 import { ActorActorInteractionTask } from '@engine/task/impl/actor-actor-interaction-task';
 import { ItemOnNpcAction } from '../item-on-npc.action';
+import { PlayerInteractionAction } from '../player-interaction.action';
+import { ItemOnPlayerAction } from '../item-on-player.action';
 
 /**
  * All actions supported by this plugin task.
  */
-type ActorAction = NpcInteractionAction | ItemOnNpcAction;
+type ActorAction = PlayerInteractionAction | ItemOnPlayerAction | NpcInteractionAction | ItemOnNpcAction;
 
 /**
  * An ActionHook for a supported ObjectAction.
  */
 type ActorActionHook<TAction extends ActorAction> = ActionHook<TAction, (data: TAction) => void>;
 
-type ActorKey = 'npc';
+type ActorKey = 'otherPlayer' | 'npc';
 
 /**
  * The data unique to the action being executed (i.e. excluding shared data)

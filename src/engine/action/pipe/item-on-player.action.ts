@@ -1,9 +1,7 @@
-import { logger } from '@runejs/common';
-
 import { Player } from '@engine/world/actor';
 import { Position, Item } from '@engine/world';
 import { ActionHook, getActionHooks, advancedNumberHookFilter, questHookFilter, ActionPipe } from '@engine/action';
-import { playerWalkTo } from '@engine/plugins';
+import { WalkToActorPluginTask } from './task/walk-to-actor-plugin-task';
 
 
 /**
@@ -77,23 +75,14 @@ const itemOnPlayerActionPipe = (player: Player, otherPlayer: Player, position: P
     const walkToPlugins = interactionActions.filter(plugin => plugin.walkTo);
     const immediateHooks = interactionActions.filter(plugin => !plugin.walkTo);
 
-    // Make sure we walk to the player before running any of the walk-to plugins
-    if(walkToPlugins.length !== 0) {
-        playerWalkTo(player, position)
-            .then(() => {
-                player.face(position);
+    if (walkToPlugins.length > 0) {
+        player.enqueueBaseTask(new WalkToActorPluginTask(walkToPlugins, player, 'otherPlayer', otherPlayer, {
+            item,
+            itemWidgetId,
+            itemContainerId
+        }));
 
-                walkToPlugins.forEach(plugin =>
-                    plugin.handler({
-                        player,
-                        otherPlayer,
-                        position,
-                        item,
-                        itemWidgetId,
-                        itemContainerId
-                    }));
-            })
-            .catch(() => logger.warn(`Unable to complete walk-to action.`));
+        return;
     }
 
     // Immediately run any non-walk-to plugins
