@@ -1,5 +1,5 @@
 import {
-    itemOnObjectActionHandler, ItemOnObjectActionHook, ItemInteractionAction, ItemInteractionActionHook, TaskExecutor
+    itemOnObjectActionHandler, ItemOnObjectActionHook, ItemInteractionActionHook
 } from '@engine/action';
 import { widgets } from '@engine/config/config-handler';
 import { Skill } from '@engine/world/actor/skills';
@@ -9,17 +9,8 @@ import { Smithable } from '@plugins/skills/smithing/forging-types';
 import { Player } from '@engine/world/actor/player/player';
 import { findItem } from '@engine/config/config-handler';
 import { Position } from '@engine/world/position';
+import { ForgingTask } from './forging-task';
 import { logger } from '@runejs/common';
-
-/**
- * The amount of items the player wants to forge.
- */
-let wantedAmount = 0;
-
-/**
- * The amount of items already forged.
- */
-let forgedAmount = 0;
 
 /**
  * Get the item ids of all the smithable items, as a flat array.
@@ -71,20 +62,9 @@ const findSmithableByItemId = (itemId: number) : Smithable | null => {
 };
 
 /**
- * Check if the player is able to perform the action.
- * @param task
+ * Check if the player is able to forge an item.
  */
-const canActivate = (task: TaskExecutor<ItemInteractionAction>): boolean => {
-    const { actor, player, actionData } = task.getDetails();
-
-    if (!player) {
-        logger.warn('Forging plugin task `canActivate` has no player.');
-        return false;
-    }
-
-    const itemId = actionData.itemId;
-    const smithable = findSmithableByItemId(itemId);
-
+const canForge = (player: Player, smithable: Smithable): boolean => {
     // In case the smithable doesn't exist.
     if (!smithable) {
         return false;
@@ -94,8 +74,8 @@ const canActivate = (task: TaskExecutor<ItemInteractionAction>): boolean => {
     if (smithable.level > player.skills.getLevel(Skill.SMITHING)) {
         const item = findItem(smithable.item.itemId);
 
-        if (item === null) {
-            logger.warn(`Could not find item for item id ${smithable.item.itemId}`);
+        if (!item) {
+            logger.error(`Could not find smithable item with id ${smithable.item.itemId}`);
             return false;
         }
 
@@ -105,81 +85,20 @@ const canActivate = (task: TaskExecutor<ItemInteractionAction>): boolean => {
 
     // Check if the player has sufficient materials.
     if (!hasMaterials(player, smithable)) {
-        const bar = findItem(smithable.ingredient.itemId);
+        const ingredient = findItem(smithable.ingredient.itemId);
 
-        if (bar === null) {
-            logger.warn(`Could not find ingredient for item id ${smithable.item.itemId}`);
+        if (!ingredient) {
+            logger.error(`Could not find smithable ingredient with id ${smithable.ingredient.itemId}`);
             return false;
         }
 
-        player.sendMessage(`You don't have enough ${bar.name}s.`, true);
+        player.sendMessage(`You don't have enough ${ingredient.name}s.`, true);
         return false;
     }
 
     player.interfaceState.closeAllSlots();
 
     return true;
-};
-
-/**
- * The actual forging loop.
- * @param task
- * @param taskIteration
- */
-const activate = (task: TaskExecutor<ItemInteractionAction>, taskIteration: number): boolean | undefined => {
-    const { player, actionData } = task.getDetails();
-
-    if (!player) {
-        logger.warn('Forging plugin task `activate` has no player.');
-        return false;
-    }
-
-    const itemId = actionData.itemId;
-    const smithable = findSmithableByItemId(itemId);
-
-    if (!smithable) {
-        logger.warn(`Could not find smithable for item id ${itemId}`);
-        return false;
-    }
-
-    // How many? Quick and dirty.
-    switch (actionData.option) {
-        case 'make'     : wantedAmount = 1; break;
-        case 'make-5'   : wantedAmount = 5; break;
-        case 'make-10'  : wantedAmount = 10; break;
-    }
-
-    for(let m=0; m<wantedAmount; m++) {
-        player.playAnimation(898);
-        if(taskIteration % 4 === 0) {
-            if (!hasMaterials(player, smithable) || wantedAmount === forgedAmount) {
-                return false;
-            }
-
-            // Remove ingredients
-            for (let i=0; i<smithable.ingredient.amount; i++) {
-                player.inventory.removeFirst(smithable.ingredient.itemId);
-            }
-
-            // Add item to inventory
-            player.inventory.add({
-                itemId: smithable.item.itemId, amount: smithable.item.amount
-            });
-
-            player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
-            player.skills.addExp(Skill.SMITHING, smithable.experience);
-
-            forgedAmount++;
-            return true;
-        }
-    }
-
-    // Reset the properties, and strap in for the next batch.
-    if (forgedAmount === wantedAmount) {
-        forgedAmount = 0;
-        wantedAmount = 0;
-        return false;
-    }
 };
 
 /**
@@ -216,11 +135,10 @@ const openForgingInterface: itemOnObjectActionHandler = (details) => {
 
     const bar = findItem(item.itemId);
 
-    if (bar === null) {
-        logger.warn(`Could not find bar for item id ${item.itemId}`);
+    if (barLevel === undefined || !bar) {
+        logger.error(`Could not find bar with id ${item.itemId}`);
         return;
     }
-
 
     if (barLevel > player.skills.getLevel(Skill.SMITHING)) {
         player.sendMessage(`You have to be at least level ${barLevel} to smith ${bar.name}s.`, true);
@@ -267,10 +185,28 @@ export default {
             itemIds: [...mapSmithableItemIdsToFlatArray(smithables)],
             options: ['make', 'make-5', 'make-10'],
             cancelOtherActions: true,
-            task: {
-                canActivate,
-                activate,
-                interval: 1
+            handler: ({ player, itemId, option }) => {
+                const smithable = findSmithableByItemId(itemId);
+
+                if (!smithable) {
+                    logger.error(`Could not find smithable with item id ${itemId}`);
+                    player.sendMessage('Could not find smithable, please tell a dev.');
+                    return;
+                }
+
+                let wantedAmount = 0;
+
+                switch (option) {
+                    case 'make': wantedAmount = 1; break;
+                    case 'make-5': wantedAmount = 5; break;
+                    case 'make-10': wantedAmount = 10; break;
+                }
+
+                if (!canForge(player, smithable)) {
+                    return;
+                }
+
+                player.enqueueTask(ForgingTask, [smithable, wantedAmount]);
             }
         } as ItemInteractionActionHook
     ]
