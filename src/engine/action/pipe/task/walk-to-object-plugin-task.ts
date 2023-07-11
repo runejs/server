@@ -1,15 +1,23 @@
-import { LandscapeObject, ObjectConfig } from '@runejs/filestore';
-import { ActorLandscapeObjectInteractionTask, ActorWorldItemInteractionTask } from '@engine/task/impl';
-import { WorldItem } from '@engine/world';
+import { LandscapeObject } from '@runejs/filestore';
+import { ActorLandscapeObjectInteractionTask } from '@engine/task/impl';
 import { Player } from '@engine/world/actor';
-import { SpawnedItemInteractionHook } from '../spawned-item-interaction.action';
-import { ObjectInteractionAction, ObjectInteractionActionHook } from '../object-interaction.action';
-import { ItemOnObjectAction, ItemOnObjectActionHook } from '../item-on-object.action';
-import { ItemOnItemAction } from '../item-on-item.action';
+import { ObjectInteractionAction } from '../object-interaction.action';
+import { ItemOnObjectAction } from '../item-on-object.action';
 import { ActionHook } from '@engine/action/hook';
 
+/**
+ * All actions supported by this plugin task.
+ */
 type ObjectAction = ObjectInteractionAction | ItemOnObjectAction;
+
+/**
+ * An ActionHook for a supported ObjectAction.
+ */
 type ObjectActionHook<TAction extends ObjectAction> = ActionHook<TAction, (data: TAction) => void>;
+
+/**
+ * The data unique to the action being executed (i.e. excluding shared data)
+ */
 type ObjectActionData<TAction extends ObjectAction> = Omit<TAction, 'player' | 'object' | 'position'>;
 
 /**
