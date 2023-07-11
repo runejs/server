@@ -51,11 +51,13 @@ export abstract class ActorWalkToTask<TActor extends Actor = Actor, TTarget exte
      * @param actor The actor executing this task.
      * @param destination The destination position/object, or a function that returns the destination position/object.
      * @param distance The distance from the destination position that the actor must be within to arrive.
+     * @param walkOnStart Whether to walk to the destination on task start.
      */
     constructor (
         actor: TActor,
         protected readonly destination: TTarget,
         protected readonly distance = 1,
+        walkOnStart = true
     ) {
         super(
             actor,
@@ -69,7 +71,10 @@ export abstract class ActorWalkToTask<TActor extends Actor = Actor, TTarget exte
             }
         );
 
-        this.actor.pathfinding.walkTo(this.getTargetPosition(), { });
+        // TODO (jkm) should this be in constructor? or on first execute?
+        if (walkOnStart) {
+            this.actor.pathfinding.walkTo(this.getTargetPosition(), { });
+        }
     }
 
     /**
