@@ -187,6 +187,13 @@ export default {
             cancelOtherActions: true,
             handler: ({ player, itemId, option }) => {
                 const smithable = findSmithableByItemId(itemId);
+
+                if (!smithable) {
+                    logger.error(`Could not find smithable with item id ${itemId}`);
+                    player.sendMessage('Could not find smithable, please tell a dev.');
+                    return;
+                }
+
                 let wantedAmount = 0;
 
                 switch (option) {

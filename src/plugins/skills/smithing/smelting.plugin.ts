@@ -20,7 +20,7 @@ export const openSmeltingInterface: objectInteractionActionHandler = (details) =
 
 // We need to tell the widget what the bars actually look like.
 const loadSmeltingInterface = (details: ObjectInteractionAction) => {
-    const theKnightsSwordQuest: PlayerQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
+    const theKnightsSwordQuest = details.player.quests.find(quest => quest.questId === 'theKnightsSword');
 
     // Send the items to the widget.
     widgetItems.forEach((item) => {
@@ -34,7 +34,7 @@ const loadSmeltingInterface = (details: ObjectInteractionAction) => {
 
         // TODO (Jameskmonger) I don't think that this logic is correct.. it targets all items, not just those related to the quest.
         // Check if the player has completed 'The Knight's Sword' quest, even if the level is okay.
-        if (item.bar.quest !== undefined && (theKnightsSwordQuest == undefined || theKnightsSwordQuest.complete)) {
+        if (Boolean(item.bar.quest) && (!theKnightsSwordQuest || theKnightsSwordQuest.complete)) {
             details.player.modifyWidget(widgets.furnace.widgetId, { childId: item.slot.titleId, textColor: colors.red });
         }
     });
@@ -55,6 +55,11 @@ export const buttonClicked: buttonActionHandler = (details) => {
     //     details.player.sendMessage(`You need to complete The Knight's Sword quest first.`, true);
     //     return;
     // }
+
+    if (!smeltable) {
+        details.player.sendMessage(`Could not find smeltable for button id ${details.buttonId}. Please tell a dev.`);
+        return;
+    }
 
     details.player.interfaceState.closeAllSlots();
 

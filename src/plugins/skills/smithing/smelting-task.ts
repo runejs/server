@@ -29,15 +29,22 @@ export class SmeltingTask extends ActorTask<Player> {
         }
 
         const bar = this.smeltable.bar;
+        const barItem = findItem(bar.barId);
+
+        if (!barItem) {
+            this.actor.sendMessage(`Could not find item with id ${bar.barId}. Please tell a dev.`);
+            this.stop();
+            return;
+        }
 
         if (!this.hasMaterials()) {
-            this.actor.sendMessage(`You don't have enough ${findItem(bar.barId).name.toLowerCase()}.`, true);
+            this.actor.sendMessage(`You don't have enough ${barItem.name.toLowerCase()}.`, true);
             this.stop();
             return;
         }
 
         if (!this.hasLevel()) {
-            this.actor.sendMessage(`You need a smithing level of ${bar.requiredLevel} to smelt ${findItem(bar.barId).name.toLowerCase()}s.`, true);
+            this.actor.sendMessage(`You need a smithing level of ${bar.requiredLevel} to smelt ${barItem.name.toLowerCase()}s.`, true);
             return;
         }
 
