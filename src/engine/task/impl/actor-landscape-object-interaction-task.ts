@@ -60,12 +60,14 @@ export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor =
     constructor (
         actor: TActor,
         landscapeObject: LandscapeObject,
+        // TODO (jkm) get size/orientation automatically from the object's info
         sizeX: number = 1,
         sizeY: number = 1
     ) {
         super(
             actor,
             landscapeObject,
+            // TODO (jkm) atDestination must take orientation into account
             Math.max(sizeX, sizeY)
         );
 
