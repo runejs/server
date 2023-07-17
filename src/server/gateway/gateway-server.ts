@@ -173,9 +173,9 @@ export class GatewayServer extends SocketServer {
 
         outputBuffer.put(LoginResponseCode.SUCCESS, 'byte');
         outputBuffer.put(player.rights.valueOf(), 'byte');
-        outputBuffer.put(0, 'byte'); // ???
+        outputBuffer.put(0, 'byte'); // account flagged
         outputBuffer.put(player.worldIndex + 1, 'short');
-        outputBuffer.put(0, 'byte'); // ???
+        outputBuffer.put(0, 'byte'); // membership status (for friends list count)
         this.clientSocket.write(outputBuffer);
 
         await player.init();
