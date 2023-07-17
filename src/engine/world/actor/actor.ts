@@ -383,7 +383,9 @@ export abstract class Actor {
     }
 
     public initiateRandomMovement(): void {
-        this.randomMovementInterval = setInterval(() => this.moveSomewhere(), 1000);
+        // this used to use `setInterval` but will need rewriting to be synced with ticks
+        // see https://github.com/runejs/server/issues/417
+        // this.randomMovementInterval = setInterval(() => this.moveSomewhere(), 1000);
     }
 
     public moveSomewhere(): void {

@@ -53,11 +53,14 @@ export const action: itemInteractionActionHandler = (details) => {
 
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, details.player.inventory);
 
+    // this used to use `setTimeout` but will need rewriting to be synced with ticks
+    // see https://github.com/runejs/server/issues/417
+    details.player.sendMessage('[debug] see issue #417');
     // Set a timeout so player cant spam eat
-    player.metadata[clock] = true;
-    setTimeout(() => {
-        player.metadata[clock] = false;
-    }, World.TICK_LENGTH * 3);
+    // player.metadata[clock] = true;
+    // setTimeout(() => {
+    //     player.metadata[clock] = false;
+    // }, World.TICK_LENGTH * 3);
 
     if(itemDetails.metadata.consume_effects.energy) {
         // TODO: Give player run energy

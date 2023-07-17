@@ -17,15 +17,18 @@ const action: objectInteractionActionHandler = (details) => {
         return;
     }
 
-    setTimeout(() => {
-        if (!ore) {
-            details.player.sendMessage('There is current no ore available in this rock.');
-            return;
-        }
-        const oreName = oreItem.name.toLowerCase().replace(' ore', '');
+    // this used to use `setInterval` but will need rewriting to be synced with ticks
+    // see https://github.com/runejs/server/issues/417
+    details.player.sendMessage('[debug] see issue #417');
+    // setTimeout(() => {
+    //     if (!ore) {
+    //         details.player.sendMessage('There is current no ore available in this rock.');
+    //         return;
+    //     }
+    //     const oreName = oreItem.name.toLowerCase().replace(' ore', '');
 
-        details.player.sendMessage(`This rock contains ${oreName}.`);
-    }, World.TICK_LENGTH * 3);
+    //     details.player.sendMessage(`This rock contains ${oreName}.`);
+    // }, World.TICK_LENGTH * 3);
 };
 
 export default {

@@ -14,13 +14,16 @@ export const action: objectInteractionActionHandler = (details) => {
 
     details.player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, details.player.inventory);
 
-    setTimeout(() => {
-        details.player.sendMessage(`You found a ${pickedItem.name.toLowerCase()} chest!.`);
-        details.player.playSound(2581, 7);
-        details.player.instance.hideGameObjectTemporarily(details.object, 60);
-        details.player.giveItem(pickedItem.gameId);
-        details.player.busy = false;
-    }, World.TICK_LENGTH);
+    // this used to use `setInterval` but will need rewriting to be synced with ticks
+    // see https://github.com/runejs/server/issues/417
+    details.player.sendMessage('[debug] see issue #417');
+    // setTimeout(() => {
+    //     details.player.sendMessage(`You found a ${pickedItem.name.toLowerCase()} chest!.`);
+    //     details.player.playSound(2581, 7);
+    //     details.player.instance.hideGameObjectTemporarily(details.object, 60);
+    //     details.player.giveItem(pickedItem.gameId);
+    //     details.player.busy = false;
+    // }, World.TICK_LENGTH);
 };
 
 export default {

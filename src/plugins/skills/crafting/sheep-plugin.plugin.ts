@@ -7,12 +7,15 @@ import { npcInitActionHandler } from '@engine/action';
 
 
 const initAction: npcInitActionHandler = ({ npc }) => {
-    setInterval(() => {
-        if(Math.random() >= 0.66) {
-            npc.say(`Baa!`);
-            npc.playSound(soundIds.sheepBaa, 4);
-        }
-    }, (Math.floor(Math.random() * 20) + 10) * World.TICK_LENGTH);
+    // this used to use `setInterval` but will need rewriting to be synced with ticks
+    // see https://github.com/runejs/server/issues/417
+
+    // setInterval(() => {
+    //     if(Math.random() >= 0.66) {
+    //         npc.say(`Baa!`);
+    //         npc.playSound(soundIds.sheepBaa, 4);
+    //     }
+    // }, (Math.floor(Math.random() * 20) + 10) * World.TICK_LENGTH);
 };
 
 export const shearAction: itemOnNpcActionHandler = ({ player, npc }) => {
@@ -21,23 +24,27 @@ export const shearAction: itemOnNpcActionHandler = ({ player, npc }) => {
     player.playSound(soundIds.shearSheep, 5);
     // set to face position, so it does not look weird when the player walk away
     npc.face(player.position);
-    setTimeout(() => {
-        if(Math.random() >= 0.66) {
-            player.sendMessage('The sheep manages to get away from you!');
-            npc.forceMovement(player.faceDirection, 5);
-        } else {
-            player.sendMessage('You get some wool.');
-            player.giveItem(itemIds.wool);
-            npc.say('Baa!');
-            npc.playSound(soundIds.sheepBaa, 4);
-            npc.transformInto('rs:naked_sheep');
 
-            setTimeout(() => {
-                npc.transformInto('rs:sheep');
-            }, (Math.floor(Math.random() * 20) + 10) * World.TICK_LENGTH);
-        }
-        player.busy = false;
-    }, World.TICK_LENGTH);
+    // this used to use `setInterval` but will need rewriting to be synced with ticks
+    // see https://github.com/runejs/server/issues/417
+    player.sendMessage('[debug] see issue #417');
+    // setTimeout(() => {
+    //     if(Math.random() >= 0.66) {
+    //         player.sendMessage('The sheep manages to get away from you!');
+    //         npc.forceMovement(player.faceDirection, 5);
+    //     } else {
+    //         player.sendMessage('You get some wool.');
+    //         player.giveItem(itemIds.wool);
+    //         npc.say('Baa!');
+    //         npc.playSound(soundIds.sheepBaa, 4);
+    //         npc.transformInto('rs:naked_sheep');
+
+    //         setTimeout(() => {
+    //             npc.transformInto('rs:sheep');
+    //         }, (Math.floor(Math.random() * 20) + 10) * World.TICK_LENGTH);
+    //     }
+    //     player.busy = false;
+    // }, World.TICK_LENGTH);
 };
 
 export default {
