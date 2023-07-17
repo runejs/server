@@ -57,8 +57,11 @@ export const action: objectInteractionActionHandler = (details) => {
         player.playAnimation(up ? 828 : 827);
     }
     player.sendMessage(`You climb ${option.slice(6)} the ${ladderObjectName.toLowerCase()}.`);
-    setTimeout(() => details.player.teleport(newPosition), World.TICK_LENGTH);
 
+    // this used to use `setInterval` but will need rewriting to be synced with ticks
+    // see https://github.com/runejs/server/issues/417
+    details.player.sendMessage('[debug] see issue #417');
+    // setTimeout(() => details.player.teleport(newPosition), World.TICK_LENGTH);
 };
 
 export default {

@@ -182,7 +182,10 @@ const npcIdleAction =  (npc: Npc) => {
 }
 
 const guardInitAction: npcInitActionHandler = ({ npc }) => {
-    setInterval(() => npcIdleAction(npc), (Math.floor(Math.random() * 20) + 10) * World.TICK_LENGTH);
+    // this used to use `setInterval` but will need rewriting to be synced with ticks
+    // see https://github.com/runejs/server/issues/417
+
+    // setInterval(() => npcIdleAction(npc), (Math.floor(Math.random() * 20) + 10) * World.TICK_LENGTH);
 };
 
 
