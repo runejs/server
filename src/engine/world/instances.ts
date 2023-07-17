@@ -526,7 +526,7 @@ export class WorldInstance {
     public removePlayer(player: Player): void {
         this.players.delete(player.username);
 
-        if(this.instanceId !== null && this.players.size === 0) {
+        if(this.instanceId !== activeWorld.globalInstance.instanceId && this.players.size === 0) {
             this.chunkModifications.clear();
             const instancedNpcs = activeWorld.findNpcsByInstance(this.instanceId);
             instancedNpcs?.forEach(npc => activeWorld.deregisterNpc(npc));
