@@ -11,11 +11,10 @@ import { colors } from '@engine/util/colors';
 import { findItem, widgets } from '@engine/config/config-handler';
 import { Fletchable } from '@plugins/skills/fletching/fletching-types';
 import { itemInteractionActionHandler } from '@engine/action';
-import { loopingEvent } from '@engine/plugins';
 
 //fletching stuff goes below this! lets do it!
 
 export default {
     pluginId: 'rs:fletching',
-   
+
 };

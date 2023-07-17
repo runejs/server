@@ -6,8 +6,9 @@ import { Skill } from '@engine/world/actor/skills';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { objectIds } from '@engine/world/config/object-ids';
 import { findItem, widgets } from '@engine/config/config-handler';
-import { loopingEvent } from '@engine/plugins';
 import { logger } from '@runejs/common';
+import { ActorTask } from '@engine/task/impl';
+import { Player } from '@engine/world/actor';
 
 interface Spinnable {
     input: number | number[];
@@ -76,35 +77,72 @@ export const openSpinningInterface: objectInteractionActionHandler = (details) =
     });
 };
 
-const spinProduct: any = (details: ButtonAction, spinnable: Spinnable, count: number) => {
-    let elapsedTicks = 0;
+/**
+ * A task to (repeatedly if needed) spin a product from a spinnable.
+ */
+class SpinProductTask extends ActorTask<Player> {
+    /**
+     * The number of ticks that `execute` has been called inside this task.
+     */
+    private elapsedTicks = 0;
 
-    let created = 0;
+    /**
+     * The number of items that should be spun.
+     */
+    private count: number;
 
-    // As an multiple items can be used for one of the recipes, check if its an array
-    let currentItem: number;
-    let currentItemIndex: number = 0;
-    let isArray = false;
-    if (Array.isArray(spinnable.input)) {
-        isArray = true;
-        currentItem = spinnable.input[0];
-    } else {
-        currentItem = spinnable.input;
+    /**
+     * The number of items that have been spun.
+     */
+    private created = 0;
+
+    /**
+     * The spinnable that is being used.
+     */
+    private spinnable: Spinnable;
+
+    /**
+     * The currently being spun input.
+     */
+    private currentItem: number;
+
+    /**
+     * The index of the current input being spun.
+     */
+    private currentItemIndex = 0;
+
+    constructor(
+        player: Player,
+        spinnable: Spinnable,
+        count: number,
+    ) {
+        super(player);
+        this.spinnable = spinnable;
+        this.count = count;
     }
-    // Create a new tick loop
-    const loop = loopingEvent({ player: details.player });
-    loop.event.subscribe(() => {
-        if (created === count) {
-            loop.cancel();
+
+    public execute(): void {
+        if (this.created === this.count) {
+            this.stop();
             return;
         }
+
+        // As an multiple items can be used for one of the recipes, check if its an array
+        let isArray = false;
+        if (Array.isArray(this.spinnable.input)) {
+            isArray = true;
+            this.currentItem = this.spinnable.input[0];
+        } else {
+            this.currentItem = this.spinnable.input;
+        }
+
         // Check if out of input material
-        if (!details.player.hasItemInInventory(currentItem)) {
+        if (!this.actor.hasItemInInventory(this.currentItem)) {
             let cancel = false;
             if (isArray) {
-                if (currentItemIndex < (<number[]> spinnable.input).length) {
-                    currentItemIndex++;
-                    currentItem = (<number[]> spinnable.input)[currentItemIndex];
+                if (this.currentItemIndex < (<number[]> this.spinnable.input).length) {
+                    this.currentItemIndex++;
+                    this.currentItem = (<number[]> this.spinnable.input)[this.currentItemIndex];
                 } else {
                     cancel = true;
                 }
@@ -112,27 +150,33 @@ const spinProduct: any = (details: ButtonAction, spinnable: Spinnable, count: nu
                 cancel = true;
             }
             if (cancel) {
-                const itemName = findItem(currentItem)?.name || '';
-                details.player.sendMessage(`You don't have any ${itemName.toLowerCase()}.`);
-                loop.cancel();
+                const itemName = findItem(this.currentItem)?.name || '';
+                this.actor.sendMessage(`You don't have any ${itemName.toLowerCase()}.`);
+                this.stop();
                 return;
             }
         }
+
         // Spinning takes 3 ticks for each item
-        if (elapsedTicks % 3 === 0) {
-            details.player.removeFirstItem(currentItem);
-            details.player.giveItem(spinnable.output);
-            details.player.skills.addExp(Skill.CRAFTING, spinnable.experience);
-            created++;
-        }
-        // animation plays once every two items
-        if (elapsedTicks % 6 === 0) {
-            details.player.playAnimation(animationIds.spinSpinningWheel);
-            details.player.outgoingPackets.playSound(soundIds.spinWool, 5);
+        if (this.elapsedTicks % 3 === 0) {
+            this.actor.removeFirstItem(this.currentItem);
+            this.actor.giveItem(this.spinnable.output);
+            this.actor.skills.addExp(Skill.CRAFTING, this.spinnable.experience);
+            this.created++;
         }
 
-        elapsedTicks++;
-    });
+        // animation plays once every two items
+        if (this.elapsedTicks % 6 === 0) {
+            this.actor.playAnimation(animationIds.spinSpinningWheel);
+            this.actor.outgoingPackets.playSound(soundIds.spinWool, 5);
+        }
+
+        this.elapsedTicks++;
+    }
+}
+
+const spinProduct: any = (details: ButtonAction, spinnable: Spinnable, count: number) => {
+    details.player.enqueueTask(SpinProductTask, [spinnable, count]);
 };
 
 export const buttonClicked: buttonActionHandler = (details) => {

@@ -1,6 +1,4 @@
-import { commandActionHandler, PlayerCommandAction } from '@engine/action';
-import { Player } from '@engine/world/actor/player/player';
-import { loopingEvent } from '@engine/plugins';
+import { commandActionHandler, PlayerCommandActionHook } from '@engine/action';
 
 const action: commandActionHandler = (details): void => {
     const { player, args } = details;
@@ -22,14 +20,6 @@ export default {
                 }
             ],
             handler: action
-        },
-        {
-            type: 'player_command',
-            commands: [ 'yeet' ],
-            handler: ({ player }: PlayerCommandAction): void => {
-                loopingEvent({ ticks: 3, player })
-                    .event.asObservable().subscribe(() => (player as Player).playAnimation(866))
-            }
-        }
+        } as PlayerCommandActionHook
     ]
 };
