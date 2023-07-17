@@ -85,8 +85,6 @@ export interface RunnableHooks<T = any> {
     action: T;
     // Matching action hooks
     hooks?: ActionHook[];
-    // If a location is provided, then the actor must first move to that location to run the action
-    actionPosition?: Position;
 }
 
 
@@ -167,18 +165,6 @@ export class ActionPipeline {
             // Some actions are non-cancelling
             if(gentleActions.indexOf(hook.type) === -1) {
                 await this.cancelRunningTasks();
-            }
-
-            if(runnableHooks.actionPosition) {
-                try {
-                    const gameObject = runnableHooks.action['object'] || null;
-                    await this.actor.waitForPathing(
-                        !gameObject ? runnableHooks.actionPosition : (gameObject as LandscapeObject));
-                } catch(error) {
-                    logger.error(`Error pathing to hook target`);
-                    logger.error(error);
-                    return;
-                }
             }
 
             await this.runHook(hook, runnableHooks.action);

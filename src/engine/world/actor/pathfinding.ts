@@ -89,10 +89,6 @@ export class Pathfinding {
 
             const walkingQueue = this.actor.walkingQueue;
 
-            if(this.actor.metadata.walkingTo) {
-                delete this.actor.metadata.walkingTo;
-            }
-
             walkingQueue.clear();
             walkingQueue.valid = true;
 
