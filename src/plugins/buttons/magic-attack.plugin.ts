@@ -1,7 +1,6 @@
 import { Player } from '@engine/world/actor';
 import { TaskExecutor, MagicOnNPCActionHook, MagicOnNPCAction } from '@engine/action';
 import { logger } from '@runejs/common';
-import { loopingEvent } from '@engine/plugins';
 
 const buttonIds: number[] = [
     0, // Home Teleport
@@ -31,13 +30,13 @@ export const activate = (task: TaskExecutor<MagicOnNPCAction>, elapsedTicks: num
     player.walkingQueue.clear();
 
     //npc world index would be -1 for players
-    player.outgoingPackets.sendProjectile(player.position, offsetX, offsetY, 250, 40, 36, 100, npc.worldIndex + 1, 1); 
+    player.outgoingPackets.sendProjectile(player.position, offsetX, offsetY, 250, 40, 36, 100, npc.worldIndex + 1, 1);
     console.info(`${player.username} smites ${npc.name} with ${spells[buttonId]}`);
 };
 
 export default {
     pluginId: 'rs:magic',
-    hooks: 
+    hooks:
         {
             type: 'magic_on_npc',
             widgetId: 192,

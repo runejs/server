@@ -4,8 +4,6 @@ import { soundIds } from '@engine/world/config/sound-ids';
 import { Skill } from '@engine/world/actor/skills';
 import { getBestAxe, HarvestTool } from '@engine/world/config/harvest-tool';
 import { findItem } from '@engine/config/config-handler';
-import { activeWorld } from '@engine/world';
-import { loopingEvent } from '@engine/plugins';
 import { logger } from '@runejs/common';
 
 /**
