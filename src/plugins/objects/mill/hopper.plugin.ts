@@ -12,14 +12,16 @@ export const action: itemOnObjectActionHandler = (details) => {
     details.player.playAnimation(3572);
     details.player.playSound(2576, 5);
 
-    setTimeout(() => {
-        details.player.removeFirstItem(itemIds.grain);
-        details.player.sendMessage(`You put the grain in the hopper. You should now pull the lever nearby to operate`);
-        details.player.sendMessage(`the hopper.`);
-        details.player.savedMetadata['mill-grain'] = 1;
-        details.player.busy = false;
-    }, World.TICK_LENGTH);
-
+    // this used to use `setInterval` but will need rewriting to be synced with ticks
+    // see https://github.com/runejs/server/issues/417
+    details.player.sendMessage('[debug] see issue #417');
+    // setTimeout(() => {
+    //     details.player.removeFirstItem(itemIds.grain);
+    //     details.player.sendMessage(`You put the grain in the hopper. You should now pull the lever nearby to operate`);
+    //     details.player.sendMessage(`the hopper.`);
+    //     details.player.savedMetadata['mill-grain'] = 1;
+    //     details.player.busy = false;
+    // }, World.TICK_LENGTH);
 };
 
 export default {
