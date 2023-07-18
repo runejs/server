@@ -343,8 +343,16 @@ export class Player extends Actor {
         }
 
         playerName = playerName.toLowerCase();
+
+        const index = this.ignoreList.findIndex(ignoredPlayer => ignoredPlayer === playerName);
+
+        if(index !== -1) {
+            return false;
+        }
+
         // @TODO emit event to friend service watcher
-        return this.ignoreList.findIndex(ignoredPlayer => ignoredPlayer === playerName) === -1;
+        this.ignoreList.push(playerName);
+        return true;
     }
 
     public removeIgnoredPlayer(playerName: string): boolean {
