@@ -287,7 +287,7 @@ export class World {
      * @param distance The maximum distance to search for NPCs.
      * @param instanceId The NPC's active instance.
      */
-    public findNearbyNpcsById(position: Position, npcId: number, distance: number, instanceId: string | null = null): Npc[] {
+    public findNearbyNpcsById(position: Position, npcId: number, distance: number, instanceId: string = activeWorld.globalInstance.instanceId): Npc[] {
         return this.npcTree.colliding({
             x: position.x - (distance / 2),
             y: position.y - (distance / 2),
@@ -301,7 +301,7 @@ export class World {
      * @param npcKey The Key of the NPCs to find.
      * @param instanceId The NPC's active instance.
      */
-    public findNpcsByKey(npcKey: string, instanceId: string | null = null): Npc[] {
+    public findNpcsByKey(npcKey: string, instanceId: string = activeWorld.globalInstance.instanceId): Npc[] {
         return this.npcList.filter(npc => npc && npc.key === npcKey && npc.instanceId === instanceId);
     }
 
@@ -310,7 +310,7 @@ export class World {
      * @param npcId The ID of the NPCs to find.
      * @param instanceId The NPC's active instance.
      */
-    public findNpcsById(npcId: number, instanceId: string | null = null): Npc[] {
+    public findNpcsById(npcId: number, instanceId: string = activeWorld.globalInstance.instanceId): Npc[] {
         return this.npcList.filter(npc => npc && npc.id === npcId && npc.instanceId === instanceId);
     }
 
@@ -328,7 +328,7 @@ export class World {
      * @param distance The maximum distance to search for NPCs.
      * @param instanceId The NPC's active instance.
      */
-    public findNearbyNpcs(position: Position, distance: number, instanceId: string | null = null): Npc[] {
+    public findNearbyNpcs(position: Position, distance: number, instanceId: string = activeWorld.globalInstance.instanceId): Npc[] {
         return this.npcTree.colliding({
             x: position.x - (distance / 2),
             y: position.y - (distance / 2),
@@ -397,7 +397,7 @@ export class World {
     }
 
     public async spawnNpc(npcKey: string | number, position: Position, face: Direction,
-                          movementRadius: number = 0, instanceId: string | null = null): Promise<Npc> {
+                          movementRadius: number = 0, instanceId: string = activeWorld.globalInstance.instanceId): Promise<Npc> {
         if(!npcKey) {
             throw new Error('NPC key must be provided.');
         }
@@ -410,6 +410,8 @@ export class World {
         const npc = new Npc(npcData,
             new NpcSpawn(typeof npcData === 'number' ? `unknown_${npcData}` : npcData.key,
                 position, movementRadius, face));
+
+        // TODO (jkm) this function doesn't use the passed in `instanceId`!
 
         await this.registerNpc(npc);
 
