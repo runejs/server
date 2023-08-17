@@ -96,7 +96,6 @@ const spawnedItemInteractionPipe = (player: Player, worldItem: WorldItem, option
 
     return {
         hooks: matchingHooks,
-        actionPosition: worldItem.position,
         action: {
             player,
             worldItem,

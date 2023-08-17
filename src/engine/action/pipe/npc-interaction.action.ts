@@ -85,7 +85,6 @@ const npcInteractionActionPipe = (player: Player, npc: Npc, position: Position, 
     console.log(`WE ARE INTERACTING WITH NPC quests: ${questActions.length} ${matchingHooks.length}`);
     return {
         hooks: matchingHooks,
-        actionPosition: position,
         action: {
             player, npc, position, option
         }

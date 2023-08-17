@@ -86,7 +86,6 @@ const objectInteractionActionPipe = (player: Player, landscapeObject: LandscapeO
 
     return {
         hooks: matchingHooks,
-        actionPosition: position,
         action: {
             player,
             object: landscapeObject,
