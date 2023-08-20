@@ -53,7 +53,6 @@ const prayerActionPipe = (npc:Npc, player: Player, widgetId: number, buttonId: n
 
     return {
         hooks: matchingHooks,
-        actionPosition: player.position,
         action: {
             npc,
             player,
@@ -61,8 +60,8 @@ const prayerActionPipe = (npc:Npc, player: Player, widgetId: number, buttonId: n
             buttonId
         }
     }
-    
-    
+
+
 };
 
 

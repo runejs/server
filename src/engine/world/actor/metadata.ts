@@ -19,13 +19,6 @@ export type ActorMetadata = {
     customMap: ConstructedRegion;
 
     /**
-     * The player's current target position.
-     *
-     * Used within the action pipeline.
-     */
-    walkingTo: Position;
-
-    /**
      * The actor currently being followed by this actor.
      */
     following: Actor;

@@ -53,7 +53,6 @@ const magicOnNpcActionPipe = (npc:Npc, player: Player, widgetId: number, buttonI
 
     return {
         hooks: matchingHooks,
-        actionPosition: player.position,
         action: {
             npc,
             player,
@@ -61,8 +60,8 @@ const magicOnNpcActionPipe = (npc:Npc, player: Player, widgetId: number, buttonI
             buttonId
         }
     }
-    
-    
+
+
 };
 
 

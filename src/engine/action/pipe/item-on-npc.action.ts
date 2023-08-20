@@ -90,7 +90,6 @@ const itemOnNpcActionPipe = (player: Player, npc: Npc, position: Position, item:
 
     return {
         hooks: matchingHooks,
-        actionPosition: position,
         action: {
             player,
             npc,

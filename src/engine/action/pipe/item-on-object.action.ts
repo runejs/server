@@ -101,7 +101,6 @@ const itemOnObjectActionPipe = (player: Player, landscapeObject: LandscapeObject
 
     return {
         hooks: matchingHooks,
-        actionPosition: position,
         action: {
             player,
             object: landscapeObject,

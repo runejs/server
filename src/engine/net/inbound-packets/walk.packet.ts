@@ -19,10 +19,6 @@ const walkPacket = (player: Player, packet: PacketData) => {
 
     player.actionsCancelled.next('manual-movement');
 
-    if(player.metadata.walkingTo) {
-        delete player.metadata.walkingTo;
-    }
-
     walkingQueue.clear();
     walkingQueue.valid = true;
     walkingQueue.add(firstX, firstY);

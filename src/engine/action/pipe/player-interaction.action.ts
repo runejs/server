@@ -67,7 +67,6 @@ const playerInteractionActionPipe = (player: Player, otherPlayer: Player, positi
 
     return {
         hooks: matchingHooks,
-        actionPosition: position,
         action: {
             player,
             otherPlayer,
