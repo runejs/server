@@ -7,7 +7,7 @@ RUN npm ci
 
 COPY src ./src
 COPY tsconfig.json ./
-COPY .babelrc ./
+COPY .swcrc ./
 
 RUN npm run build
 
