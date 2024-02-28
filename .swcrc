@@ -9,8 +9,8 @@
         "target": "es2016",
         "baseUrl": "./src",
         "paths": {
-            "@engine/*": ["./engine/*"]
-            "@plugins/*": ["./plugins/*"]
+            "@engine/*": ["./engine/*"],
+            "@plugins/*": ["./plugins/*"],
             "@server/*": ["./server/*"]
         },
         "parser": {

@@ -18,7 +18,7 @@
         "strictPropertyInitialization": false,
         "baseUrl": ".",
         "allowJs": true,
-        "outDir": "./dist/",
+        "outDir": "./dist",
         "paths": {
             "@engine/*": ["src/engine/*"],
             "@server/*": ["src/server/*"],

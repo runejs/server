@@ -37,7 +37,7 @@ The [RuneScape Java Client #435](https://github.com/runejs/refactored-client-435
 
 Before running these commands, you must:
 
-1. have [NodeJS **version 16 or higher**](https://nodejs.org/en/) installed on your machine
+1. have [NodeJS **version 18 or higher**](https://nodejs.org/en/) installed on your machine
 2. run `npm install` from the root of this project
 
 * `npm run game` Launches the game server by itself without building
