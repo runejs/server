@@ -16,42 +16,6 @@ export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor =
     private _objectPosition: Position;
 
     /**
-     * Gets the {@link LandscapeObject} that this task is interacting with.
-     *
-     * @returns If the object is still present, and the actor is at the destination, the object.
-     *              Otherwise, `null`.
-     *
-     * TODO (jameskmonger) unit test this
-     */
-    protected get landscapeObject(): LandscapeObject | null {
-        // TODO (jameskmonger) consider if we want to do these checks rather than delegating to the child task
-        //                      as currently the subclass has to store it in a subclass property if it wants to use it
-        //                      without these checks
-        if (!this.atDestination) {
-            return null;
-        }
-
-        if (!this._landscapeObject) {
-            return null;
-        }
-
-        return this._landscapeObject;
-    }
-
-    /**
-     * Get the position of this task's landscape object
-     *
-     * @returns The position of this task's landscape object, or null if the landscape object is not present
-     */
-    protected get landscapeObjectPosition(): Position | null {
-        if (!this._landscapeObject) {
-            return null;
-        }
-
-        return this._objectPosition;
-    }
-
-    /**
      * @param actor The actor executing this task.
      * @param landscapeObject The landscape object to interact with.
      * @param sizeX The size of the LandscapeObject in the X direction.
@@ -104,5 +68,41 @@ export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor =
             this.stop();
             return;
         }
+    }
+
+    /**
+     * Gets the {@link LandscapeObject} that this task is interacting with.
+     *
+     * @returns If the object is still present, and the actor is at the destination, the object.
+     *              Otherwise, `null`.
+     *
+     * TODO (jameskmonger) unit test this
+     */
+    protected get landscapeObject(): LandscapeObject | null {
+        // TODO (jameskmonger) consider if we want to do these checks rather than delegating to the child task
+        //                      as currently the subclass has to store it in a subclass property if it wants to use it
+        //                      without these checks
+        if (!this.atDestination) {
+            return null;
+        }
+
+        if (!this._landscapeObject) {
+            return null;
+        }
+
+        return this._landscapeObject;
+    }
+
+    /**
+     * Get the position of this task's landscape object
+     *
+     * @returns The position of this task's landscape object, or null if the landscape object is not present
+     */
+    protected get landscapeObjectPosition(): Position | null {
+        if (!this._landscapeObject) {
+            return null;
+        }
+
+        return this._objectPosition;
     }
 }

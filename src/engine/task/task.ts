@@ -73,13 +73,6 @@ export abstract class Task {
     private _isActive = true;
 
     /**
-     * Is the task active?
-     */
-    public get isActive(): boolean {
-        return this._isActive;
-    }
-
-    /**
      * @param config the configuration options for the task
      *
      * @see TaskConfig for more information on the configuration options
@@ -94,6 +87,16 @@ export abstract class Task {
         this.breakTypes = readConfigValue('breakTypes', config);
         this.repeat = readConfigValue('repeat', config);
     }
+
+    /**
+     * The task's execution logic.
+     *
+     * Ensure that you call `super.execute()` if you override this method!
+     *
+     * TODO (jameskmonger) consider some kind of workaround to enforce a super call
+     *              https://github.com/microsoft/TypeScript/issues/21388#issuecomment-360214959
+     */
+    public abstract execute(): void;
 
     /**
      * Whether this task breaks on the specified {@link TaskBreakType}.
@@ -156,12 +159,9 @@ export abstract class Task {
     }
 
     /**
-     * The task's execution logic.
-     *
-     * Ensure that you call `super.execute()` if you override this method!
-     *
-     * TODO (jameskmonger) consider some kind of workaround to enforce a super call
-     *              https://github.com/microsoft/TypeScript/issues/21388#issuecomment-360214959
+     * Is the task active?
      */
-    public abstract execute(): void;
+    public get isActive(): boolean {
+        return this._isActive;
+    }
 }

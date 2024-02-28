@@ -83,6 +83,8 @@ export abstract class Actor {
         this.clearBonuses();
     }
 
+    public abstract equals(actor: Actor): boolean;
+
     /**
      * Instantiate a task with the Actor instance and a set of arguments.
      *
@@ -463,8 +465,6 @@ export abstract class Actor {
     protected tick() {
         this.scheduler.tick();
     }
-
-    public abstract equals(actor: Actor): boolean;
 
     public get position(): Position {
         return this._position;

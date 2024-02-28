@@ -15,29 +15,6 @@ export abstract class ActorActorInteractionTask<TActor extends Actor = Actor, TO
     private _other: TOtherActor;
 
     /**
-     * Gets the {@link TOtherActor} that this task is interacting with.
-     *
-     * @returns If the other actor is still present, and the actor is at the destination, the other actor.
-     *              Otherwise, `null`.
-     *
-     * TODO (jameskmonger) unit test this
-     */
-    protected get other(): TOtherActor | null {
-        // TODO (jameskmonger) consider if we want to do these checks rather than delegating to the child task
-        //                      as currently the subclass has to store it in a subclass property if it wants to use it
-        //                      without these checks
-        if (!this.atDestination) {
-            return null;
-        }
-
-        if (!this._other) {
-            return null;
-        }
-
-        return this._other;
-    }
-
-    /**
      * @param actor The actor executing this task.
      * @param TOtherActor The other actor to interact with.
      * @param walkOnStart Whether to walk to the other actor on task start.
@@ -84,5 +61,28 @@ export abstract class ActorActorInteractionTask<TActor extends Actor = Actor, TO
 
         // TODO (jkm) check if other actor was removed from world
         // TODO (jkm) check if other actor has moved and repath player if so
+    }
+
+    /**
+     * Gets the {@link TOtherActor} that this task is interacting with.
+     *
+     * @returns If the other actor is still present, and the actor is at the destination, the other actor.
+     *              Otherwise, `null`.
+     *
+     * TODO (jameskmonger) unit test this
+     */
+    protected get other(): TOtherActor | null {
+        // TODO (jameskmonger) consider if we want to do these checks rather than delegating to the child task
+        //                      as currently the subclass has to store it in a subclass property if it wants to use it
+        //                      without these checks
+        if (!this.atDestination) {
+            return null;
+        }
+
+        if (!this._other) {
+            return null;
+        }
+
+        return this._other;
     }
 }
