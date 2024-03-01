@@ -1,8 +1,11 @@
 import { objectInteractionActionHandler } from '@engine/action';
 import { dialogueAction } from '@engine/world/actor/player/dialogue-action';
-import { World } from '@engine/world';
 import { Position } from '@engine/world/position';
 import { logger } from '@runejs/common';
+import { ActorTeleportTask } from '@engine/task/impl/actor-teleport-task';
+import { Task } from '@engine/task';
+import { ActorTask } from '@engine/task/impl';
+import { Actor, Player } from '@engine/world/actor';
 
 
 const planes = { min: 0, max: 3 };
@@ -31,7 +34,15 @@ export const action: objectInteractionActionHandler = (details) => {
                 switch (d.action) {
                     case 1:
                     case 2:
-                        action({ ...details, option: `climb-${(d.action === 1 ? 'up' : 'down')}` });
+                        player.enqueueTask(class LadderTask extends ActorTask {
+                            constructor(actor: Actor) {
+                                super(actor, { repeat: false, immediate: false });
+                            }
+
+                            execute() {
+                                action({ ...details, option: `climb-${(d.action === 1 ? 'up' : 'down')}` });
+                            }
+                        });
                         return;
                 }
             });
@@ -57,11 +68,7 @@ export const action: objectInteractionActionHandler = (details) => {
         player.playAnimation(up ? 828 : 827);
     }
     player.sendMessage(`You climb ${option.slice(6)} the ${ladderObjectName.toLowerCase()}.`);
-
-    // this used to use `setInterval` but will need rewriting to be synced with ticks
-    // see https://github.com/runejs/server/issues/417
-    details.player.sendMessage('[debug] see issue #417');
-    // setTimeout(() => details.player.teleport(newPosition), World.TICK_LENGTH);
+    player.enqueueTask(ActorTeleportTask, [newPosition]);
 };
 
 export default {
