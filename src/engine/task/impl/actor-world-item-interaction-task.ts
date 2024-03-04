@@ -14,29 +14,6 @@ export abstract class ActorWorldItemInteractionTask<TActor extends Actor = Actor
     private _worldItem: WorldItem;
 
     /**
-     * Gets the world item that this task is interacting with.
-     *
-     * @returns If the world item is still present, and the actor is at the destination, the world item.
-     *              Otherwise, `null`.
-     *
-     * TODO (jameskmonger) unit test this
-     */
-    protected get worldItem(): WorldItem | null {
-        // TODO (jameskmonger) consider if we want to do these checks rather than delegating to the child task
-        //                      as currently the subclass has to store it in a subclass property if it wants to use it
-        //                      without these checks
-        if (!this.atDestination) {
-            return null;
-        }
-
-        if (!this._worldItem || this._worldItem.removed) {
-            return null;
-        }
-
-        return this._worldItem;
-    }
-
-    /**
      * @param actor The actor executing this task.
      * @param worldItem The world item to interact with.
      */
@@ -75,5 +52,28 @@ export abstract class ActorWorldItemInteractionTask<TActor extends Actor = Actor
             this.stop();
             return;
         }
+    }
+
+    /**
+     * Gets the world item that this task is interacting with.
+     *
+     * @returns If the world item is still present, and the actor is at the destination, the world item.
+     *              Otherwise, `null`.
+     *
+     * TODO (jameskmonger) unit test this
+     */
+    protected get worldItem(): WorldItem | null {
+        // TODO (jameskmonger) consider if we want to do these checks rather than delegating to the child task
+        //                      as currently the subclass has to store it in a subclass property if it wants to use it
+        //                      without these checks
+        if (!this.atDestination) {
+            return null;
+        }
+
+        if (!this._worldItem || this._worldItem.removed) {
+            return null;
+        }
+
+        return this._worldItem;
     }
 }

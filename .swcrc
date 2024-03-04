@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json.schemastore.org/swcrc",
+    "exclude": "node_modules/",
+    "sourceMaps": true,
+    "module": {
+        "type": "commonjs"
+    },
+    "jsc": {
+        "target": "es2016",
+        "baseUrl": "./src",
+        "paths": {
+            "@engine/*": ["./engine/*"],
+            "@plugins/*": ["./plugins/*"],
+            "@server/*": ["./server/*"]
+        },
+        "parser": {
+            "syntax": "typescript",
+            "tsx": false,
+            "decorators": true,
+            "dynamicImport": false
+        }
+    }
+  }

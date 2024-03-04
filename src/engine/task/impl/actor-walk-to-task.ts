@@ -41,13 +41,6 @@ export abstract class ActorWalkToTask<TActor extends Actor = Actor, TTarget exte
     private _atDestination: boolean = false;
 
     /**
-     * `true` if the actor has arrived at the destination.
-     */
-    protected get atDestination(): boolean {
-        return this._atDestination;
-    }
-
-    /**
      * @param actor The actor executing this task.
      * @param destination The destination position/object, or a function that returns the destination position/object.
      * @param distance The distance from the destination position that the actor must be within to arrive.
@@ -129,5 +122,12 @@ export abstract class ActorWalkToTask<TActor extends Actor = Actor, TTarget exte
         }
 
         return new Position(destination.x, destination.y);
+    }
+
+    /**
+     * `true` if the actor has arrived at the destination.
+     */
+    protected get atDestination(): boolean {
+        return this._atDestination;
     }
 }

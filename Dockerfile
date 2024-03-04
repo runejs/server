@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:20
 WORKDIR /usr/src/app
 COPY package.json ./
 COPY package-lock.json ./
@@ -7,7 +7,7 @@ RUN npm ci
 
 COPY src ./src
 COPY tsconfig.json ./
-COPY .babelrc ./
+COPY .swcrc ./
 
 RUN npm run build
 

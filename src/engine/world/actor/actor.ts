@@ -1,10 +1,8 @@
 import { Subject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 
-import { LandscapeObject } from '@runejs/filestore';
-
 import { DefensiveBonuses, OffensiveBonuses, SkillBonuses } from '@engine/config';
-import { Position, DirectionData, directionFromIndex, WorldInstance, activeWorld } from '@engine/world';
+import { activeWorld, directionFromIndex, Position, WorldInstance } from '@engine/world';
 import { Item, ItemContainer } from '@engine/world/items';
 import { ActionCancelType, ActionPipeline } from '@engine/action';
 
@@ -83,6 +81,8 @@ export abstract class Actor {
         this.clearBonuses();
     }
 
+    public abstract equals(actor: Actor): boolean;
+
     /**
      * Instantiate a task with the Actor instance and a set of arguments.
      *
@@ -129,6 +129,17 @@ export abstract class Actor {
         }
 
         this.scheduler.enqueue(task);
+    }
+
+    /**
+     * Instantly teleports the actor to the specified location.
+     * @param newPosition The actor's new position.
+     */
+    public teleport(newPosition: Position): void {
+        this.walkingQueue.clear();
+        this.metadata['lastPosition'] = this.position.copy();
+        this.position = newPosition;
+        this.metadata.teleporting = true;
     }
 
     public clearBonuses(): void {
@@ -463,8 +474,6 @@ export abstract class Actor {
     protected tick() {
         this.scheduler.tick();
     }
-
-    public abstract equals(actor: Actor): boolean;
 
     public get position(): Position {
         return this._position;
