@@ -333,9 +333,11 @@ export abstract class Actor {
         if (face === null) {
             this.clearFaceActor();
             this.updateFlags.facePosition = null;
+            this.metadata.faceActor = face;
             return;
         }
 
+        console.log(`SETTING FACE ${this.isNpc() ? 'npc' : 'player'}`)
         if (face instanceof Position) {
             this.updateFlags.facePosition = face;
         } else if (face instanceof Actor) {
@@ -357,9 +359,15 @@ export abstract class Actor {
     }
 
     public clearFaceActor(): void {
+        if (this.isNpc()) {
+            console.log(`CLEAR FACE NPC`);
+        }
+        if (this.isPlayer()) {
+            console.log(`CLEAR FACE PLAYER`);
+        }
         if (this.metadata.faceActor) {
             this.updateFlags.faceActor = null;
-            this.metadata.faceActor = undefined;
+            this.metadata.faceActor = null;
         }
     }
 
@@ -398,6 +406,7 @@ export abstract class Actor {
     public giveItem(item: number | Item): boolean {
         return this.inventory.add(item) !== null;
     }
+
     public giveBankItem(item: number | Item): boolean {
         return this.bank.add(item) !== null;
     }
@@ -405,6 +414,7 @@ export abstract class Actor {
     public hasItemInInventory(item: number | Item): boolean {
         return this.inventory.has(item);
     }
+
     public hasItemInBank(item: number | Item): boolean {
         return this.bank.has(item);
     }
@@ -662,6 +672,7 @@ export abstract class Actor {
      * any hostile action against this actor.
      */
     protected targetLock?: TargetLock;
+
     /**
      * Attempts to generate a target lock against the current actor and returns it.
      *

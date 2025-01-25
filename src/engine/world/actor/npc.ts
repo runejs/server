@@ -202,7 +202,9 @@ export class Npc extends Actor {
                 this.attackInProgress.combatTick++;
                 const { combatTick, targetLock, victim } =
                     this.attackInProgress;
-
+                // if(victim.skills.hitpoints.level === 0) {
+                //
+                // }
                 switch (combatTick) {
                     // 0 is absorbed by increment above.
                     case 1:

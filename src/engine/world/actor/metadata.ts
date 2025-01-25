@@ -26,7 +26,7 @@ export type ActorMetadata = {
     /**
      * The actor which the local actor is facing towards.
      */
-    faceActor: Actor;
+    faceActor: Actor | null;
 
     /**
      * Whether a walk action has cleared the actor which the local actor is facing towards.

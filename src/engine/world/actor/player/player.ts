@@ -561,21 +561,25 @@ export class Player extends Actor {
                         this.sendMessage('Oh dear, you are dead!');
                         this.playAnimation(animationIds.death);
                         break;
-                    case 2:
-                    case 3:
-                    case 4:
-                        break;
-                    case 5:
+                    case 10:
+                //     case 3:
+                //     case 4:
+                //         break;
+                //     case 5:
                         this.stopAnimation();
-                        this.teleport(new Position(3224, 3218));
-                        break;
-                    default:
-                        // Reset hitpoints and death tick so we are ready to die again.
                         this.deathTick = 0;
                         this.skills.setHitpoints(
                             this.skills.hitpoints.levelForExp,
                         );
-                        break;
+                        this.teleport(new Position(3224, 3218));
+                //         break;
+                //     default:
+                //         // Reset hitpoints and death tick so we are ready to die again.
+                //         this.deathTick = 0;
+                //         this.skills.setHitpoints(
+                //             this.skills.hitpoints.levelForExp,
+                //         );
+                //         break;
                 }
             }
 

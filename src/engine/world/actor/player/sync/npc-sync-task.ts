@@ -109,11 +109,17 @@ export class NpcSyncTask extends SyncTask<void> {
      * Make sure to keep your client updated so that it can handle it.
      */
     private appendUpdateMaskData(npc: Npc, updateMaskData: ByteBuffer): void {
+        let debug = npc.id === 1;
+
         const updateFlags = npc.updateFlags;
+
+
         if (!updateFlags.updateBlockRequired) {
             return;
         }
-
+        if (debug) {
+            console.log(`${npc.id} is updated!!!!!`, updateFlags.faceActor)
+        }
         let mask = 0;
 
         if (updateFlags.damage !== null) {
@@ -158,6 +164,7 @@ export class NpcSyncTask extends SyncTask<void> {
 
         if (updateFlags.faceActor !== undefined) {
             const actor = updateFlags.faceActor;
+            console.log(`${npc.id} is facing ${actor ? 'an actor' : 'none'}`)
 
             if (actor === null) {
                 // Reset faced actor
