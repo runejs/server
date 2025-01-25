@@ -55,7 +55,6 @@ export class Npc extends Actor {
     private _exists: boolean = true;
     private npcSpawn: NpcSpawn;
     private _initialized: boolean = false;
-    private isDying: boolean = false;
 
     public constructor(
         npcDetails: NpcDetails | number,
@@ -155,8 +154,6 @@ export class Npc extends Actor {
         super.tick();
 
         return new Promise<void>((resolve) => {
-            this.walkingQueue.process();
-
             // Check if we are dead.
             if (this.skills.hitpoints.level === 0) {
                 // We separate calls to kill and processDeath by a tick to allow
@@ -167,9 +164,71 @@ export class Npc extends Actor {
                     this.processDeath();
                     this.isDying = true;
                 }
+
+                // We are dead and shouldn't bother doing anything else.
+                return resolve();
             }
 
-            resolve();
+            if (this.underAttackBy) {
+                const victim = this.underAttackBy;
+
+                // Make sure we aren't already attacking.
+                if (!this.attackInProgress) {
+                    if (this.position.distanceBetween(victim.position) <= 2) {
+                        const targetLock = victim.maybeGetTargetLock(3000);
+                        // Cleared for lift-off
+                        if (targetLock) {
+                            this.attackInProgress = {
+                                combatTick: 0,
+                                targetLock,
+                                victim,
+                            };
+                        }
+                    } else {
+                        this.follow(victim);
+                        // TODO: Retreat
+                    }
+                }
+
+                // Continue
+            }
+
+            if (this.attackInProgress) {
+                this.attackInProgress.combatTick++;
+                const { combatTick, targetLock, victim } =
+                    this.attackInProgress;
+
+                switch (combatTick) {
+                    // 0 is absorbed by increment above.
+                    case 1:
+                        this.follow(victim); // Temporary to keep us close.
+                        this.face(victim, true);
+
+                        this.playAnimation({
+                            id: 309,
+                            delay: 20,
+                        });
+                        break;
+                    case 2:
+                        break;
+                    // biome-ignore lint/suspicious/noFallthroughSwitchClause: Deliberate fall-through
+                    case 3: {
+                        // Calculate hit and apply damage.
+                        const hit = Math.round(Math.random() * 2);
+                        victim.hit(targetLock, this, hit);
+                    }
+                    default:
+                        this.attackInProgress = undefined;
+                        // This is to attempt to ensure we keep attacking
+                        // the same person in multi-combat scenarios.
+                        this.underAttackBy = victim;
+                        break;
+                }
+            }
+
+            this.walkingQueue.process();
+
+            return resolve();
         });
     }
 
@@ -298,31 +357,24 @@ export class Npc extends Actor {
     // whatever Object-Oriented thingy people like.
 
     /**
-     * Set by {@link maybeGetTargetLock} - outside of multi-combat zones a targetLock is needed to execute
-     * any hostile action against this actor.
+     * Set when an NPC's health reaches zero - when true - indicates that the NPC will be
+     * destroyed on the next tick.
      */
-    private targetLock?: TargetLock;
-    /**
-     * Attempts to generate a target lock against the current actor and returns it.
-     *
-     * Will return false if an existing target lock is already in place.
-     *
-     * This might seem over-complicated but we need to validate that both Actors involved in combat
-     * are allowed to participate in the combat before it may begin. For this reason we need to use
-     * a lock to prevent getting into invalid states.
-     *
-     * @param lockTimeout - number - the time in ms in which the lock will expire, set this to the
-     * time it takes for attack to complete.
-     */
-    public maybeGetTargetLock(lockTimeoutMs: number): TargetLock | false {
-        if (this.targetLock?.isValid()) {
-            // Deny if there is an existing, valid target lock.
-            return false;
-        }
+    private isDying: boolean = false;
 
-        this.targetLock = getTargetLock(lockTimeoutMs);
-        return this.targetLock;
-    }
+    /**
+     * Tracks the actor, if any, which most recently hit the NPC.
+     *
+     * Each tick, if {@link attackingActor} is not set - we will attempt to path
+     * towards this Actor to attack them when in range.
+     */
+    private underAttackBy?: Actor;
+    /** State for any attack which is in progress. */
+    private attackInProgress?: {
+        combatTick: number;
+        targetLock: TargetLock;
+        victim: Actor;
+    };
 
     /** Stores a record of hit damage and the player to later determine drops. */
     private playerHits: [username: string, damage: number][] = [];
@@ -336,6 +388,8 @@ export class Npc extends Actor {
                 'A targetLock from maybeGetTargetLock must be provided before hitting this actor.',
             );
         }
+
+        this.underAttackBy = attacker;
 
         const currentHitpoints = this.skills.hitpoints.level;
         let nextHitpoints = currentHitpoints - damage;

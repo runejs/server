@@ -3,7 +3,6 @@ import {
     MagicOnNPCActionHook,
     MagicOnNPCAction,
 } from '@engine/action';
-import { DamageType, Skill } from '@engine/world/actor';
 
 const SPLASH_GFX = 85; // 339
 const CAST_ANIMATION = 711;
@@ -279,9 +278,6 @@ export const activate = (task: TaskExecutor<MagicOnNPCAction>) => {
         task.session.combatTick = 0;
 
         player.face(npc, true, false, true);
-
-        // TODO: This should be handled by an event on the NPC when it is attacked.
-        npc.follow(player);
 
         // Aribtrary delay to allow for turning time.
         player.playAnimation({ id: CAST_ANIMATION, delay: 20 });

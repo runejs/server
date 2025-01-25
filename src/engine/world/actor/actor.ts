@@ -22,10 +22,10 @@ import { Pathfinding } from './pathfinding';
 import { ActorMetadata } from './metadata';
 import { Task, TaskScheduler } from '@engine/task';
 import { logger } from '@runejs/common';
-import { ObjectConfig } from '@runejs/filestore';
 import { QueueableTask } from '@engine/action/pipe/task/queueable-task';
 import type { Player } from './player';
 import type { Npc } from './npc';
+import { getTargetLock, TargetLock } from './combat';
 
 export type ActorType = 'player' | 'npc';
 
@@ -222,7 +222,7 @@ export abstract class Actor {
         };
     }
 
-    public async moveBehind(target: Actor): Promise<boolean> {
+    public moveBehind(target: Actor): boolean {
         if (this.position.level !== target.position.level) {
             return false;
         }
@@ -242,7 +242,7 @@ export abstract class Actor {
             ignoreDestination = false;
         }
 
-        await this.pathfinding.walkTo(desiredPosition, {
+        this.pathfinding.walkTo(desiredPosition, {
             pathingSearchRadius: distance + 2,
             ignoreDestination,
         });
@@ -250,7 +250,7 @@ export abstract class Actor {
         return true;
     }
 
-    public async moveTo(target: Actor): Promise<boolean> {
+    public moveTo(target: Actor): boolean {
         if (this.position.level !== target.position.level) {
             return false;
         }
@@ -263,7 +263,7 @@ export abstract class Actor {
             return false;
         }
 
-        await this.pathfinding.walkTo(target.position, {
+        this.pathfinding.walkTo(target.position, {
             pathingSearchRadius: distance + 2,
             ignoreDestination: true,
         });
@@ -295,9 +295,9 @@ export abstract class Actor {
             });
     }
 
-    public async walkTo(target: Actor): Promise<boolean>;
-    public async walkTo(position: Position): Promise<boolean>;
-    public async walkTo(target: Actor | Position): Promise<boolean> {
+    public walkTo(target: Actor): boolean;
+    public walkTo(position: Position): boolean;
+    public walkTo(target: Actor | Position): boolean {
         const desiredPosition =
             target instanceof Position ? target : target.position;
 
@@ -315,7 +315,7 @@ export abstract class Actor {
             return false;
         }
 
-        await this.pathfinding.walkTo(desiredPosition, {
+        this.pathfinding.walkTo(desiredPosition, {
             pathingSearchRadius: distance + 2,
             ignoreDestination: true,
         });
@@ -655,4 +655,37 @@ export abstract class Actor {
     } {
         return this._bonuses;
     }
+
+    /**
+     * Set by {@link maybeGetTargetLock} - outside of multi-combat zones a targetLock is needed to execute
+     * any hostile action against this actor.
+     */
+    protected targetLock?: TargetLock;
+    /**
+     * Attempts to generate a target lock against the current actor and returns it.
+     *
+     * Will return false if an existing target lock is already in place.
+     *
+     * This might seem over-complicated but we need to validate that both Actors involved in combat
+     * are allowed to participate in the combat before it may begin. For this reason we need to use
+     * a lock to prevent getting into invalid states.
+     *
+     * @param lockTimeout - number - the time in ms in which the lock will expire, set this to the
+     * time it takes for attack to complete.
+     */
+    public maybeGetTargetLock(lockTimeoutMs: number): TargetLock | false {
+        if (this.targetLock?.isValid()) {
+            // Deny if there is an existing, valid target lock.
+            return false;
+        }
+
+        this.targetLock = getTargetLock(lockTimeoutMs);
+        return this.targetLock;
+    }
+
+    public abstract hit(
+        targetLock: TargetLock,
+        attacker: Actor,
+        damage: number,
+    ): void;
 }
