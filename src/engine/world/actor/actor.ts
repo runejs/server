@@ -679,6 +679,11 @@ export abstract class Actor {
             return false;
         }
 
+        if (this.skills.hitpoints.level <= 0) {
+            // Deny if the actor has no hitpoints.
+            return false;
+        }
+
         this.targetLock = getTargetLock(lockTimeoutMs);
         return this.targetLock;
     }

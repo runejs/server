@@ -41,7 +41,12 @@ import {
     activeWorld,
     WorldInstance,
 } from '@engine/world';
-import { PlayerWidget, widgetScripts, itemIds } from '@engine/world/config';
+import {
+    PlayerWidget,
+    widgetScripts,
+    itemIds,
+    animationIds,
+} from '@engine/world/config';
 import {
     ContainerUpdateEvent,
     getItemFromContainer,
@@ -523,6 +528,7 @@ export class Player extends Actor {
         this._nearbyChunks = nearbyChunks;
     }
 
+    private deathTick = 0;
     public async tick(): Promise<void> {
         super.tick();
 
@@ -543,6 +549,33 @@ export class Player extends Actor {
                     }
                 } else {
                     this.outgoingPackets.updateCurrentMapChunk();
+                }
+            }
+
+            // Check if we are dead.
+            if (this.skills.hitpoints.level === 0) {
+                this.deathTick++;
+
+                switch (this.deathTick) {
+                    case 1:
+                        this.sendMessage('Oh dear, you are dead!');
+                        this.playAnimation(animationIds.death);
+                        break;
+                    case 2:
+                    case 3:
+                    case 4:
+                        break;
+                    case 5:
+                        this.stopAnimation();
+                        this.teleport(new Position(3224, 3218));
+                        break;
+                    default:
+                        // Reset hitpoints and death tick so we are ready to die again.
+                        this.deathTick = 0;
+                        this.skills.setHitpoints(
+                            this.skills.hitpoints.levelForExp,
+                        );
+                        break;
                 }
             }
 
