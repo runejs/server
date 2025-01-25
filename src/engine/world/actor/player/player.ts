@@ -553,7 +553,7 @@ export class Player extends Actor {
             }
 
             // Check if we are dead.
-            if (this.skills.hitpoints.level === 0) {
+            if (this.skills.hitpoints.level <= 0) {
                 this.deathTick++;
 
                 switch (this.deathTick) {

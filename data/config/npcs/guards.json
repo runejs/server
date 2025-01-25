@@ -1,5 +1,6 @@
 {
     "rs:guard": {
+        "killable": true,
         "variations": [
             {
                 "suffix": 0,

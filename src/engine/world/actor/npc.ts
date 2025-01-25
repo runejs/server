@@ -172,8 +172,13 @@ export class Npc extends Actor {
             if (this.underAttackBy) {
                 const victim = this.underAttackBy;
 
-                // Make sure we aren't already attacking.
-                if (!this.attackInProgress) {
+                // Don't keep beating a dead horse.
+                if (victim.skills.hitpoints.level === 0) {
+                    this.clearFaceActor();
+                    this.initiateRandomMovement();
+                    this.underAttackBy = undefined;
+                    // Make sure we aren't already attacking.
+                } else if (!this.attackInProgress) {
                     if (this.position.distanceBetween(victim.position) <= 2) {
                         const targetLock = victim.maybeGetTargetLock(3000);
                         // Cleared for lift-off
@@ -185,7 +190,7 @@ export class Npc extends Actor {
                             };
                         }
                     } else {
-                        this.follow(victim);
+                        this.moveTo(victim);
                         // TODO: Retreat
                     }
                 }
@@ -201,7 +206,6 @@ export class Npc extends Actor {
                 switch (combatTick) {
                     // 0 is absorbed by increment above.
                     case 1:
-                        this.follow(victim); // Temporary to keep us close.
                         this.face(victim, true);
 
                         this.playAnimation({
