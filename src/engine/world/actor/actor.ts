@@ -3,6 +3,7 @@ import { filter, take } from 'rxjs/operators';
 
 import {
     DefensiveBonuses,
+    findNpc,
     OffensiveBonuses,
     SkillBonuses,
 } from '@engine/config';
@@ -674,6 +675,19 @@ export abstract class Actor {
      * time it takes for attack to complete.
      */
     public maybeGetTargetLock(lockTimeoutMs: number): TargetLock | false {
+        if (this.isNpc()) {
+            const npcDetails = findNpc(this.id);
+            if (!npcDetails) {
+                console.warn('Unable to find NPC details for NPC ID:', this.id);
+                return false;
+            }
+
+            if (!npcDetails.killable) {
+                // Block target locks against non-killable NPCs
+                return false;
+            }
+        }
+
         if (this.targetLock?.isValid()) {
             // Deny if there is an existing, valid target lock.
             return false;
