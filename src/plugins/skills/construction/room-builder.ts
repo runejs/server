@@ -18,26 +18,26 @@ const newRoomOriention = (player: Player): number => {
     const playerLocalX = player.position.localX;
     const playerLocalY = player.position.localY;
 
-    let deltaX = 0;
-    let deltaY = 0;
+    let _deltaX = 0;
+    let _deltaY = 0;
 
     let orientation = 0;
 
     if (playerLocalX === 7) {
         // build east
-        deltaX = 1;
+        _deltaX = 1;
         orientation = 1;
     } else if (playerLocalX === 0) {
         // build west
-        deltaX = -1;
+        _deltaX = -1;
         orientation = 3;
     } else if (playerLocalY === 7) {
         // build north
-        deltaY = 1;
+        _deltaY = 1;
         orientation = 0;
     } else if (playerLocalY === 0) {
         // build south
-        deltaY = -1;
+        _deltaY = -1;
         orientation = 2;
     }
 
@@ -80,7 +80,7 @@ export const canBuildNewRoom = (player: Player): Coords | null => {
     }
 
     if (buildX === currentRoom.x && buildY === currentRoom.y) {
-        player.sendMessage(`You can not build there.`);
+        player.sendMessage('You can not build there.');
         return null;
     }
 
@@ -131,7 +131,7 @@ export const roomBuilderWidgetHandler: buttonActionHandler = async ({ player, bu
     await dialogue(
         [player],
         [
-            (options, tag_Home) => [
+            (_options, _tag_Home) => [
                 'Rotate Counter-Clockwise',
                 [
                     execute(() => {

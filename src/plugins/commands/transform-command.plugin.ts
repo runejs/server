@@ -3,7 +3,7 @@ import type { PlayerCommandActionHook, commandActionHandler } from '@engine/acti
 const action: commandActionHandler = details => {
     const { player, args } = details;
 
-    player.transformInto(details && details.args ? details.args['npcKey'] : null);
+    player.transformInto(details && args ? args['npcKey'] : null);
 };
 
 export default {

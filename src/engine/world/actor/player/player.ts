@@ -238,14 +238,14 @@ export class Player extends Actor {
             this.outgoingPackets.updateWidgetString(
                 widgets.welcomeScreenChildren.question,
                 1,
-                `Want to help RuneJS improve?\\nSend us a pull request over on Github!`,
+                'Want to help RuneJS improve?\\nSend us a pull request over on Github!',
             );
             this.outgoingPackets.updateWidgetString(
                 widgets.welcomeScreen,
                 13,
                 `You last logged in @red@${loginDaysStr}@bla@ from: @red@${this.lastAddress}`,
             );
-            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 16, `You have @yel@0 unread messages\\nin your message centre.`);
+            this.outgoingPackets.updateWidgetString(widgets.welcomeScreen, 16, 'You have @yel@0 unread messages\\nin your message centre.');
             this.outgoingPackets.updateWidgetString(
                 widgets.welcomeScreen,
                 14,
@@ -259,7 +259,7 @@ export class Player extends Actor {
             this.outgoingPackets.updateWidgetString(
                 widgets.welcomeScreen,
                 17,
-                `\\nYou do not have a Bank PIN.\\nPlease visit a bank if you would like one.`,
+                '\\nYou do not have a Bank PIN.\\nPlease visit a bank if you would like one.',
             );
             this.outgoingPackets.updateWidgetString(
                 widgets.welcomeScreen,
@@ -365,7 +365,7 @@ export class Player extends Actor {
     }
 
     public privateMessageReceived(fromPlayer: Player, messageBytes: number[]): void {
-        this.outgoingPackets.sendPrivateMessage(this.privateMessageIndex++, fromPlayer, messageBytes);
+        this.outgoingPackets.sendPrivateMessage(fromPlayer, messageBytes);
     }
 
     public addFriend(friendName: string): boolean {
@@ -417,9 +417,6 @@ export class Player extends Actor {
         // @TODO emit event to friend service watcher
         this.ignoreList.splice(index, 1);
         return true;
-    }
-    public onNpcKill(npc: Npc) {
-        console.log('killed npc');
     }
     /**
      * Should be fired whenever the player's chunk changes. This will fire off chunk updates for all chunks not
@@ -711,7 +708,7 @@ export class Player extends Actor {
                 messages[i] = messages[i]?.trim() || '';
             }
 
-            return await dialogue([this], [text => (messages as string[]).join(' ')]);
+            return await dialogue([this], [() => (messages as string[]).join(' ')]);
         }
 
         if (showInConsole) {
@@ -1122,7 +1119,7 @@ export class Player extends Actor {
         }
 
         if (!npc) {
-            logger.error(`NPC not found.`);
+            logger.error('NPC not found.');
             return;
         }
 
@@ -1166,7 +1163,7 @@ export class Player extends Actor {
             if (event.slot !== undefined && event.item !== undefined) {
                 this.outgoingPackets.sendUpdateSingleWidgetItem(widgets.inventory, event.slot, event.item);
             } else {
-                logger.error(`Inventory update event was missing slot or item.`, event);
+                logger.error('Inventory update event was missing slot or item.', event);
             }
         }
         this.updateCarryWeight();

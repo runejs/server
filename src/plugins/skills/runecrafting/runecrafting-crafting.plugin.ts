@@ -60,7 +60,7 @@ const craftRune: objectInteractionActionHandler = (details: ObjectInteractionAct
         return;
     }
 
-    player.sendMessage(`You do not have any rune essence to bind.`);
+    player.sendMessage('You do not have any rune essence to bind.');
 };
 
 function getCombinationRuneByAltar(itemId: number, objectId: number): RunecraftingCombinationRune | undefined {
@@ -132,7 +132,7 @@ const craftCombinationRune: itemOnObjectActionHandler = (details: ItemOnObjectAc
         return;
     }
     //
-    player.sendMessage(`You do not have any pure essence to bind.`);
+    player.sendMessage('You do not have any pure essence to bind.');
 };
 
 export default {

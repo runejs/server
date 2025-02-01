@@ -13,7 +13,7 @@ export const handler: buttonActionHandler = details => {
         const songIdForCurrentRegion = findSongIdByRegionId(activeWorld.chunkManager.getRegionIdForWorldPosition(player.position));
 
         if (!songIdForCurrentRegion) {
-            logger.warn(`No song found for current region`);
+            logger.warn('No song found for current region');
             return;
         }
 

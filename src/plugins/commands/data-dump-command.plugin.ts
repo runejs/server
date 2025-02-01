@@ -15,7 +15,7 @@ const action: commandActionHandler = ({ player, args, isConsole }) => {
     const types = Object.keys(functionMap);
 
     if (types.indexOf(dataType) === -1) {
-        player.sendLogMessage(`Invalid data type, please use one of the following:`, isConsole);
+        player.sendLogMessage('Invalid data type, please use one of the following:', isConsole);
         player.sendLogMessage(`[ ${types.join(', ')} ]`, isConsole);
         return;
     }

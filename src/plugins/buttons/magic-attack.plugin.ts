@@ -1,20 +1,13 @@
 import type { TaskExecutor } from '@engine/action/hook/task';
 import type { MagicOnNPCAction, MagicOnNPCActionHook } from '@engine/action/pipe/magic-on-npc.action';
-import type { Player } from '@engine/world/actor/player/player';
-import { logger } from '@runejs/common';
 
 const buttonIds: number[] = [
     0, // Home Teleport
 ];
 
-function attack_target(player: Player, elapsedTicks: number): boolean {
-    logger.info('attacking?');
-    return true;
-}
-
 const spells = ['Wind Strike', 'Confuse', 'Water Strike', 'unknown?', 'Earth Strike'];
-export const activate = (task: TaskExecutor<MagicOnNPCAction>, elapsedTicks: number = 0) => {
-    const { npc, player, widgetId, buttonId } = task.actionData;
+export const activate = (task: TaskExecutor<MagicOnNPCAction>) => {
+    const { npc, player, buttonId } = task.actionData;
 
     const attackerX = player.position.x;
     const attackerY = player.position.y;

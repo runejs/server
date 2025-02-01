@@ -34,7 +34,10 @@
             },
             "correctness": {
                 "recommended": true,
-                "noSwitchDeclarations": "off"
+                "noUnusedFunctionParameters": "error",
+                "noUnusedImports": "error",
+                "noUnusedVariables": "error",
+                "noUnusedPrivateClassMembers": "error"
             },
             "performance": {
                 "recommended": true,
@@ -58,7 +61,6 @@
                 "noInferrableTypes": "off",
                 "noNonNullAssertion": "off",
                 "noParameterAssign": "off",
-                "noUnusedTemplateLiteral": "off",
                 "noUselessElse": "off",
                 "useEnumInitializers": "off",
                 "useImportType": "off",

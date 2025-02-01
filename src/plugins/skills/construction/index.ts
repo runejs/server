@@ -30,7 +30,7 @@ export default {
             type: 'player_command',
             commands: ['savepoh', 'savehouse'],
             handler: ({ player }: PlayerCommandAction): void => {
-                player.sendMessage(`Saving house data...`);
+                player.sendMessage('Saving house data...');
                 saveHouse(player);
             },
         },

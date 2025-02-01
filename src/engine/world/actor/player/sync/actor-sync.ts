@@ -13,7 +13,6 @@ import type { Player } from '../player';
  * Handles the registration of nearby NPCs or Players for the specified player.
  */
 export function registerNewActors(
-    packet: Packet,
     player: Player,
     trackedActors: Actor[],
     nearbyActors: QuadtreeKey[],

@@ -80,7 +80,7 @@ export class World {
 
     public shutdown(): void {
         this.kickAllPlayers();
-        logger.info(`Shutting down world...`);
+        logger.info('Shutting down world...');
     }
 
     /**
@@ -267,11 +267,11 @@ export class World {
             return;
         }
 
-        logger.info(`Kicking all players...`);
+        logger.info('Kicking all players...');
 
         this.playerList.filter(player => player !== null).forEach(player => player.logout());
 
-        logger.info(`Player data save complete, world is now empty.`);
+        logger.info('Player data save complete, world is now empty.');
     }
 
     /**
@@ -282,11 +282,11 @@ export class World {
             return;
         }
 
-        logger.info(`Saving player data...`);
+        logger.info('Saving player data...');
 
         this.playerList.filter(player => player !== null).forEach(player => player.save());
 
-        logger.info(`Player data saved.`);
+        logger.info('Player data saved.');
     }
 
     /**
@@ -299,7 +299,7 @@ export class World {
     public playLocationSound(position: Position, instanceId: string, soundId: number, volume: number, distance: number = 10): void {
         this.findNearbyPlayers(position, distance, instanceId).forEach(player => {
             player.outgoingPackets.updateReferencePosition(position);
-            player.outgoingPackets.playSoundAtPosition(soundId, position.x, position.y, volume);
+            player.outgoingPackets.playSoundAtPosition(soundId, volume);
         });
     }
 
@@ -427,13 +427,7 @@ export class World {
         });
     }
 
-    public async spawnNpc(
-        npcKey: string | number,
-        position: Position,
-        face: Direction,
-        movementRadius: number = 0,
-        instanceId: string = activeWorld.globalInstance.instanceId,
-    ): Promise<Npc> {
+    public async spawnNpc(npcKey: string | number, position: Position, face: Direction, movementRadius: number = 0): Promise<Npc> {
         if (!npcKey) {
             throw new Error('NPC key must be provided.');
         }

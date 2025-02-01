@@ -41,7 +41,7 @@ export async function loadCoreConfigurations(): Promise<void> {
 }
 
 export async function loadGameConfigurations(): Promise<void> {
-    logger.info(`Loading server configurations...`);
+    logger.info('Loading server configurations...');
 
     const { items, itemIds, itemPresets, itemGroups } = await loadItemConfigurations('data/config/items/');
     itemMap = items;

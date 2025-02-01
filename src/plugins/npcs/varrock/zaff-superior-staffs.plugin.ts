@@ -10,9 +10,9 @@ const talkToAction: npcInteractionActionHandler = details => {
     dialogue(
         [player, { npc, key: 'zaff' }],
         [
-            zaff => [Emote.GENERIC, `Would you like to buy or sell some staffs?`],
-            options => [
-                `Yes, please!`,
+            _zaff => [Emote.GENERIC, 'Would you like to buy or sell some staffs?'],
+            _options => [
+                'Yes, please!',
                 [
                     execute(() => {
                         tradeAction(details);
@@ -21,8 +21,8 @@ const talkToAction: npcInteractionActionHandler = details => {
 
                 'Have you any extra stock of battlestaffs I can buy?',
                 [
-                    player => [Emote.GENERIC, 'Have you any extra stock of battlestaffs I can buy?'],
-                    zaff => [Emote.WONDERING, "No, I'm afraid I can't help you."],
+                    _player => [Emote.GENERIC, 'Have you any extra stock of battlestaffs I can buy?'],
+                    _zaff => [Emote.WONDERING, "No, I'm afraid I can't help you."],
                     execute(() => {
                         player.sendMessage(
                             "You must complete the Varrock Achievement Diary before you can access Zaff's extra battlestaff stock.",
@@ -32,9 +32,9 @@ const talkToAction: npcInteractionActionHandler = details => {
 
                 'No, thank you.',
                 [
-                    player => [Emote.GENERIC, 'No, thank you.'],
-                    zaff => [Emote.GENERIC, "Well 'stick' your head in if you change your mind."],
-                    player => [Emote.GENERIC, "Huh, terrible pun! You just can't get the 'staff' these days!"],
+                    _player => [Emote.GENERIC, 'No, thank you.'],
+                    _zaff => [Emote.GENERIC, "Well 'stick' your head in if you change your mind."],
+                    _player => [Emote.GENERIC, "Huh, terrible pun! You just can't get the 'staff' these days!"],
                 ],
             ],
         ],

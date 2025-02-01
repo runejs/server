@@ -5,12 +5,6 @@ import { MusicPlayerMode } from '@engine/world/sound/music';
 
 musicRegions.forEach(song => song.regionIds.forEach(region => musicRegionMap.set(region, song.songId)));
 
-function getByValue(map, searchValue) {
-    for (const [key, value] of map.entries()) {
-        if (value === searchValue) return key;
-    }
-}
-
 const regionChangedHandler = ({ player, currentMapRegionId }): void => {
     const songId = findSongIdByRegionId(currentMapRegionId);
     if (songId == null) {
@@ -24,7 +18,6 @@ const regionChangedHandler = ({ player, currentMapRegionId }): void => {
     }
 
     const songName = musicTrack.songName;
-    // player.sendMessage(`Playing ${songId}:${getByValue(songs, songId)} at region ${currentMapRegionId}`);
     if (!player.musicTracks.includes(songId)) {
         player.musicTracks.push(songId);
         player.sendMessage('You have unlocked a new music track: <col=ef101f>' + songName + '.</col>');

@@ -68,7 +68,7 @@ export const lightFire = (player: Player, position: Position, worldItemLog: Worl
         }
     }
 
-    player.instance.spawnTemporaryGameObject(fireObject, position, fireDurationTicks()).then(() => {
+    player.instance.spawnTemporaryGameObject(fireObject, fireDurationTicks()).then(() => {
         player.instance.spawnWorldItem({ itemId: itemIds.ashes, amount: 1 }, position, { expires: 300 });
     });
 

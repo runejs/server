@@ -21,7 +21,7 @@ export const handler: buttonActionHandler = async ({ player, buttonId }) => {
     const journalHandler = quest.journalHandler[playerStage];
     if (journalHandler === undefined) {
         const questJournalStages = Object.keys(quest.journalHandler);
-        let journalEntry;
+        let _journalEntry;
         for (const stage of questJournalStages) {
             const stageNum = parseInt(stage, 10);
             if (isNaN(stageNum) || playerStage === 'complete') {
@@ -29,7 +29,7 @@ export const handler: buttonActionHandler = async ({ player, buttonId }) => {
             }
 
             if (stageNum <= playerStage) {
-                journalEntry = stage;
+                _journalEntry = stage;
             } else {
                 break;
             }

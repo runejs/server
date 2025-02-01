@@ -48,7 +48,7 @@ export class ItemContainer {
     }
 
     public clear(fireEvent: boolean = true): void {
-        this._items.forEach((item, index) => (this._items[index] = null));
+        this._items.forEach((_, index) => (this._items[index] = null));
 
         if (fireEvent) {
             this._containerUpdated.next({ type: 'CLEAR_ALL' });

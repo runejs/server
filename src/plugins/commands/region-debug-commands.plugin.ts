@@ -16,7 +16,7 @@ const debugMapRegion = (
     player.sendMessage(`Region ${key} - ${activeWorld.chunkManager.getRegionIdForWorldPosition(player.position)}`);
 
     if (!activeWorld.chunkManager.regionMap.has(key)) {
-        player.sendMessage(`Map region not loaded.`);
+        player.sendMessage('Map region not loaded.');
         return;
     }
 
@@ -27,7 +27,7 @@ const debugMapRegion = (
     const region = activeWorld.chunkManager.regionMap.get(key);
 
     if (!region) {
-        player.sendMessage(`Map region not loaded.`);
+        player.sendMessage('Map region not loaded.');
         logger.error(`Map region not loaded. ${key}`);
         return;
     }

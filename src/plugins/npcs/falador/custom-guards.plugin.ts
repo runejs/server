@@ -53,7 +53,7 @@ const dialogueTrees: DialogueNpcTree[][] = [
             b: `Well... It's kind of weird to be saying this, given the nature of my work,`,
         },
         {
-            b: `but I really think you should think twice about this enhancement therapy,`,
+            b: 'but I really think you should think twice about this enhancement therapy,',
         },
         {
             b: `It's all still pretty experimental.`,
@@ -68,17 +68,17 @@ const dialogueTrees: DialogueNpcTree[][] = [
             b: `so let me give a bit of advice for free: Size isn't everything.`,
         },
         {
-            a: `In my world it is. All the guys are getting it done.`,
+            a: 'In my world it is. All the guys are getting it done.',
         },
         {
             b: `Really? I didn't know that. And they are not having any problems?`,
         },
         {
-            b: `I mean... performing their duties so to speak.`,
+            b: 'I mean... performing their duties so to speak.',
         },
         {
             b_anim: 14,
-            a: `On the contrary, Sir. They are real beasts, all of them.`,
+            a: 'On the contrary, Sir. They are real beasts, all of them.',
         },
         {
             a: `Always at it, day and night. Really competing to see who's the biggest.`,
@@ -88,7 +88,7 @@ const dialogueTrees: DialogueNpcTree[][] = [
             b: `Wow. I mean... I don't judge, of course.`,
         },
         {
-            b: `I mean, this one time in military school. I mean, I was pretty drunk, of course...`,
+            b: 'I mean, this one time in military school. I mean, I was pretty drunk, of course...',
         },
         {
             a: `You're losing me, Sir. But can you get me those steroids or not?`,
@@ -98,29 +98,29 @@ const dialogueTrees: DialogueNpcTree[][] = [
         },
         {
             b_anim: 404,
-            b: `Steroids? Oh, steroids! I thought you were talking about something else...`,
+            b: 'Steroids? Oh, steroids! I thought you were talking about something else...',
         },
         {
-            a: `Losing me again, Sir. What did you think I was talking about?`,
+            a: 'Losing me again, Sir. What did you think I was talking about?',
         },
         {
             b: `Oh, nothing... I'll get you the damn steroids, don't worry.`,
         },
         {
-            a: `I mean, I thought I was pretty clear but... `,
+            a: 'I mean, I thought I was pretty clear but... ',
         },
         {
-            a: `Well you seem pretty fixated on guys, though. But you know,`,
+            a: 'Well you seem pretty fixated on guys, though. But you know,',
         },
         {
             a: `that's just fine. This is a medieval world we live in, and as far as I'm concerned,`,
         },
         {
-            a: `who you love is entirely up to you.`,
+            a: 'who you love is entirely up to you.',
         },
         {
             b_anim: 856,
-            b: `Shut up!`,
+            b: 'Shut up!',
         },
     ],
 ];
@@ -181,9 +181,7 @@ const npcIdleAction = (npc: Npc) => {
 };
 
 const guardInitAction: npcInitActionHandler = ({ npc }) => {
-    // this used to use `setInterval` but will need rewriting to be synced with ticks
-    // see https://github.com/runejs/server/issues/417
-    // setInterval(() => npcIdleAction(npc), (Math.floor(Math.random() * 20) + 10) * World.TICK_LENGTH);
+    setInterval(() => npcIdleAction(npc), (Math.floor(Math.random() * 20) + 10) * World.TICK_LENGTH);
 };
 
 export default {

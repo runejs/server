@@ -272,7 +272,7 @@ export class Skills extends SkillShortcuts {
                         this.actor,
                         () => {
                             (this.actor as Player).sendMessage(
-                                `Congratulations, you just advanced a ` + `${achievementDetails.name.toLowerCase()} level.`,
+                                `Congratulations, you just advanced a ${achievementDetails.name.toLowerCase()} level.`,
                             );
                             this.showLevelUpDialogue(skill, finalLevel);
                             return {

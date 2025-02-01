@@ -8,11 +8,6 @@ export enum PrivateChatMode {
 }
 
 export class PrivateMessaging {
-    public static friendAdded(player: Player, friendName: string): void {
-        friendName = friendName.toLowerCase();
-        const friend = activeWorld?.findPlayer(friendName);
-    }
-
     public static friendRemoved(player: Player, friendName: string): void {
         friendName = friendName.toLowerCase();
         const playerPrivateChatMode = player.settings.privateChatMode;

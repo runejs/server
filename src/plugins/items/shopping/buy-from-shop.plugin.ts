@@ -76,7 +76,7 @@ export const handler: itemInteractionActionHandler = details => {
     const inventory = player.inventory;
 
     if (buyItem.stackable) {
-        const inventoryStackSlot = inventory.items.findIndex(item => itemId === itemId);
+        const inventoryStackSlot = inventory.items.findIndex(item => item?.itemId === itemId);
 
         if (inventoryStackSlot === -1) {
             if (inventory.getFirstOpenSlot() === -1) {

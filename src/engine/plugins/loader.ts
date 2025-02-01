@@ -56,7 +56,7 @@ export async function loadPlugins(): Promise<void> {
                 }
             });
     } else {
-        logger.warn(`No action hooks detected - update plugins.`);
+        logger.warn('No action hooks detected - update plugins.');
     }
 
     for (const plugin of plugins) {

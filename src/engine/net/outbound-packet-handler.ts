@@ -57,7 +57,7 @@ export class OutboundPacketHandler {
         this.queue(packet);
     }
 
-    public sendPrivateMessage(chatId: number, sender: Player, message: number[]): void {
+    public sendPrivateMessage(sender: Player, message: number[]): void {
         const packet = new Packet(51, PacketType.DYNAMIC_SMALL);
         packet.put(stringToLong(sender.username.toLowerCase()), 'LONG');
         packet.put(32767, 'SHORT');
@@ -134,14 +134,7 @@ export class OutboundPacketHandler {
         this.queue(packet);
     }
 
-    public playSoundAtPosition(
-        soundId: number,
-        soundX: number,
-        soundY: number,
-        volume: number,
-        radius: number = 5,
-        delay: number = 0,
-    ): void {
+    public playSoundAtPosition(soundId: number, volume: number, radius: number = 5, delay: number = 0): void {
         const packet = new Packet(9);
         const offset = 0;
         packet.put(offset, 'BYTE');

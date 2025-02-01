@@ -51,10 +51,9 @@ describe('shopping', () => {
 
     const shopname = 'rs:test_shop';
     let shop: Shop;
-    let world;
 
     beforeAll(async () => {
-        world = await setupConfig();
+        await setupConfig();
     });
 
     beforeEach(() => {

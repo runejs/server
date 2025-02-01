@@ -5,7 +5,7 @@ const setLevelAction: commandActionHandler = ({ player, args }) => {
     const level: number | null = (args?.level as number) || null;
 
     if (!skillId || !level) {
-        player.sendMessage(`Invalid syntax: Use ::setlevel skill_id skill_level`);
+        player.sendMessage('Invalid syntax: Use ::setlevel skill_id skill_level');
         return;
     }
 

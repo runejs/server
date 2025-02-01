@@ -9,12 +9,12 @@ const talkToBartender: npcInteractionActionHandler = details => {
     dialogue(
         [player, { npc, key: 'bartender' }],
         [
-            bartender => [Emote.HAPPY, 'What can I do yer for?'],
-            options => [
-                `A glass of your finest ale please.`,
+            _bartender => [Emote.HAPPY, 'What can I do yer for?'],
+            _options => [
+                'A glass of your finest ale please.',
                 [
-                    player => [Emote.HAPPY, `A glass of your finest ale please.`],
-                    bartender => [Emote.HAPPY, `No problemo. That'll be 2 coins.`],
+                    _player => [Emote.HAPPY, 'A glass of your finest ale please.'],
+                    _bartender => [Emote.HAPPY, `No problemo. That'll be 2 coins.`],
                     execute(() => {
                         const index = player.inventory.findIndex(itemIds.coins);
                         const hasCoins = player.inventory.has(itemIds.coins);
@@ -22,7 +22,7 @@ const talkToBartender: npcInteractionActionHandler = details => {
                         if (!hasCoins) {
                             dialogue(
                                 [player, { npc, key: 'bartender' }],
-                                [player => [Emote.VERY_SAD, `Oh dear. I don't seem to have enough money.`]],
+                                [_player => [Emote.VERY_SAD, `Oh dear. I don't seem to have enough money.`]],
                             );
                         }
 
@@ -49,38 +49,38 @@ const talkToBartender: npcInteractionActionHandler = details => {
                         }
                     }),
                 ],
-                `Can you recommend where an adventurer might make his fortune?`,
+                'Can you recommend where an adventurer might make his fortune?',
                 [
-                    player => [Emote.WONDERING, `Can you recommend where an adventurer might make his fortune?`],
-                    bartender => [Emote.LAUGH, `Ooh I don't know if I should be giving away information, makes the game too easy.`],
-                    options => [
-                        `Oh ah well...`,
-                        [player => [Emote.WORRIED, `Oh ah well...`]],
-                        `Game? What are you talking about?`,
+                    _player => [Emote.WONDERING, 'Can you recommend where an adventurer might make his fortune?'],
+                    _bartender => [Emote.LAUGH, `Ooh I don't know if I should be giving away information, makes the game too easy.`],
+                    _options => [
+                        'Oh ah well...',
+                        [_player => [Emote.WORRIED, 'Oh ah well...']],
+                        'Game? What are you talking about?',
                         [
-                            player => [Emote.WORRIED, `Game? What are you talking about?`],
-                            bartender => [Emote.GENERIC, `This world around us... is an online game... called Old School RuneScape.`],
-                            player => [Emote.GENERIC, `Nope, still don't understand what you are talking about. What does 'online' mean?`],
-                            bartender => [
+                            _player => [Emote.WORRIED, 'Game? What are you talking about?'],
+                            _bartender => [Emote.GENERIC, 'This world around us... is an online game... called Old School RuneScape.'],
+                            _player => [Emote.GENERIC, `Nope, still don't understand what you are talking about. What does 'online' mean?`],
+                            _bartender => [
                                 Emote.GENERIC,
                                 `It's a sort of connection between magic boxes across the world, big boxes on people's desktops and little ones people can carry. They can talk to each other to play games.`,
                             ],
-                            player => [Emote.GENERIC, `I give up. You're obviously completely mad!`],
+                            _player => [Emote.GENERIC, `I give up. You're obviously completely mad!`],
                         ],
-                        `Just a small clue?`,
+                        'Just a small clue?',
                         [
-                            player => [Emote.WONDERING, `Just a small clue?`],
-                            bartender => [
+                            _player => [Emote.WONDERING, 'Just a small clue?'],
+                            _bartender => [
                                 Emote.VERY_SAD,
                                 `Go and talk to the bartender at the Jolly Boar Inn, he doesn't seem to mind giving away clues.`,
                             ],
                         ],
                     ],
                 ],
-                `Do you know where I can get some good equipment?`,
+                'Do you know where I can get some good equipment?',
                 [
-                    player => [Emote.WONDERING, `Do you know where I can get some good equipment?`],
-                    bartender => [
+                    _player => [Emote.WONDERING, 'Do you know where I can get some good equipment?'],
+                    _bartender => [
                         Emote.HAPPY,
                         `Well, there's the sword shop across the road, or there's also all sorts of shops up around the market.`,
                     ],
@@ -96,12 +96,12 @@ const talkToCook: npcInteractionActionHandler = details => {
     dialogue(
         [player, { npc, key: 'cook' }],
         [
-            cook => [Emote.ANGRY, `What do you want? I'm busy!`],
-            options => [
-                `Can you sell me any food?`,
+            _cook => [Emote.ANGRY, `What do you want? I'm busy!`],
+            _options => [
+                'Can you sell me any food?',
                 [
-                    player => [Emote.WONDERING, `Can you sell me any food?`],
-                    cook => [
+                    _player => [Emote.WONDERING, 'Can you sell me any food?'],
+                    _cook => [
                         Emote.GENERIC,
                         `I suppose I could sell you some cabbage, if you're willing to pay for it. Cabbage is good for you.`,
                     ],
@@ -114,8 +114,8 @@ const talkToCook: npcInteractionActionHandler = details => {
                             dialogue(
                                 [player, { npc, key: 'cook' }],
                                 [
-                                    player => [Emote.VERY_SAD, `Oh, I haven't got any money.`],
-                                    cook => [Emote.ANGRY, `Why are you asking me to sell you food if you haven't got any money? Go away!`],
+                                    _player => [Emote.VERY_SAD, `Oh, I haven't got any money.`],
+                                    _cook => [Emote.ANGRY, `Why are you asking me to sell you food if you haven't got any money? Go away!`],
                                 ],
                             );
                         }
@@ -126,10 +126,10 @@ const talkToCook: npcInteractionActionHandler = details => {
                             dialogue(
                                 [player, { npc, key: 'cook' }],
                                 [
-                                    options => [
+                                    _options => [
                                         `Alright I'll buy a cabbage.`,
                                         [
-                                            player => [Emote.HAPPY, `Alright I'll buy a cabbage.`],
+                                            _player => [Emote.HAPPY, `Alright I'll buy a cabbage.`],
                                             execute(() => {
                                                 // Check inventory.
                                                 if (!player.inventory.hasSpace()) {
@@ -150,15 +150,15 @@ const talkToCook: npcInteractionActionHandler = details => {
                                                 player.inventory.add(itemIds.cabbage);
                                                 player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
                                             }),
-                                            cook => [
+                                            _cook => [
                                                 Emote.HAPPY,
                                                 `It's a deal. Now, make sure you eat it all up. Cabbage is good for you.`,
                                             ],
                                         ],
                                         `No thanks, I don't like cabbage.`,
                                         [
-                                            player => [Emote.GENERIC, `No thanks, I don't like cabbage.`],
-                                            cook => [Emote.SAD, `Bah! People these days only appreciate junk food.`],
+                                            _player => [Emote.GENERIC, `No thanks, I don't like cabbage.`],
+                                            _cook => [Emote.SAD, 'Bah! People these days only appreciate junk food.'],
                                         ],
                                     ],
                                 ],
@@ -166,22 +166,22 @@ const talkToCook: npcInteractionActionHandler = details => {
                         }
                     }),
                 ],
-                `Can you give any free food?`,
+                'Can you give any free food?',
                 [
                     // PLAYER: Can you give any free food?
-                    player => [Emote.GENERIC, `Can you give any free food?`],
-                    cook => [Emote.GENERIC, `Can you give my any free money?`],
-                    player => [Emote.GENERIC, `Why should I give you free money?`],
-                    cook => [Emote.GENERIC, `Why should I give you free food?`],
-                    player => [Emote.GENERIC, `Oh, forget it.`],
+                    _player => [Emote.GENERIC, 'Can you give any free food?'],
+                    _cook => [Emote.GENERIC, 'Can you give my any free money?'],
+                    _player => [Emote.GENERIC, 'Why should I give you free money?'],
+                    _cook => [Emote.GENERIC, 'Why should I give you free food?'],
+                    _player => [Emote.GENERIC, 'Oh, forget it.'],
                 ],
                 `I don't want anything from this horrible kitchen.`,
                 [
-                    player => [Emote.SHOCKED, `I don't want anything from this horrible kitchen.`],
-                    cook => [Emote.ANGRY, `How dare you? I put a lot of effort into cleaning this kitchen.`],
-                    cook => [Emote.ANGRY, `My daily sweat and elbow-grease keep this kitchen clean!`],
-                    player => [Emote.GENERIC, `Ewww!`],
-                    cook => [Emote.SAD, `Oh, just leave me alone.`],
+                    _player => [Emote.SHOCKED, `I don't want anything from this horrible kitchen.`],
+                    _cook => [Emote.ANGRY, 'How dare you? I put a lot of effort into cleaning this kitchen.'],
+                    _cook => [Emote.ANGRY, 'My daily sweat and elbow-grease keep this kitchen clean!'],
+                    _player => [Emote.GENERIC, 'Ewww!'],
+                    _cook => [Emote.SAD, 'Oh, just leave me alone.'],
                 ],
             ],
         ],

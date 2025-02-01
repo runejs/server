@@ -22,7 +22,7 @@ type WalkToTarget = WalkToTargetType | (() => WalkToTargetType);
  *
  * @author jameskmonger
  */
-export interface ActorWalkToTask<TActor extends Actor = Actor, TTarget extends WalkToTarget = Position> extends ActorTask<TActor> {
+export interface ActorWalkToTask<TActor extends Actor = Actor> extends ActorTask<TActor> {
     /**
      * An optional function that is called when the actor arrives at the destination.
      */

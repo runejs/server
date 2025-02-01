@@ -21,18 +21,16 @@ export function openTravel(player: Player, page: number) {
         hidden: widget.metadata.page === 1, // hide prev page button if we are on the first page
     });
 
-    const isLastPage = p => pageCount === page * 2; // 2 "pages" per page
-
     // Next page buttton
     player.modifyWidget(widget.widgetId, {
         childId: 97,
-        hidden: isLastPage(page),
+        hidden: pageCount === page * 2, // 2 "pages" per page
     });
 
     // prev page label
     player.modifyWidget(widget.widgetId, {
         childId: 98,
-        text: widget.metadata.page * 2 - 1 === 1 ? `` : `Page ${widget.metadata.page * 2 - 1} `,
+        text: widget.metadata.page * 2 - 1 === 1 ? '' : `Page ${widget.metadata.page * 2 - 1} `,
     });
 
     // next page label

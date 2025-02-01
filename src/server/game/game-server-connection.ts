@@ -18,7 +18,7 @@ export class GameServerConnection {
     public decodeMessage(buffer?: ByteBuffer): void | Promise<void> {
         if (!this.activeBuffer) {
             if (!buffer) {
-                logger.error(`No buffer provided to decodeMessage.`);
+                logger.error('No buffer provided to decodeMessage.');
                 return;
             } else {
                 this.activeBuffer = buffer;
@@ -109,7 +109,7 @@ export class GameServerConnection {
     }
 
     public connectionDestroyed(): void {
-        logger.info(`Connection destroyed.`);
+        logger.info('Connection destroyed.');
         this.player?.logout();
     }
 

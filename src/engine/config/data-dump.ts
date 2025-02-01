@@ -23,7 +23,7 @@ function dump<T>(fileName: string, definitions: T[]): DataDumpResult {
             successful: true,
             filePath,
         };
-    } catch (error) {
+    } catch (_) {
         logger.error(`Error dumping ${fileName}`);
         return {
             successful: false,

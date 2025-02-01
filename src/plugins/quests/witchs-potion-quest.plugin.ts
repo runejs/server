@@ -25,18 +25,18 @@ const journalHandler: QuestJournalHandler = {
             },
             {
                 itemId: itemIds.witchesPotion.burntMeat,
-                haveText: `<str><col=000000>I have a piece of burnt meat with me,</str>`,
+                haveText: '<str><col=000000>I have a piece of burnt meat with me,</str>',
                 dontHaveText: `<col=800000>A piece of burnt meat<col=000080>, I could thoroughly cook a piece of
         <col=000080>raw beef.`,
             },
             {
                 itemId: itemIds.witchesPotion.onion,
-                haveText: `<str><col=000000>I have an onion with me,</str>`,
-                dontHaveText: `<col=800000>An onion<col=000080>, I could probably find one at a farm.`,
+                haveText: '<str><col=000000>I have an onion with me,</str>',
+                dontHaveText: '<col=800000>An onion<col=000080>, I could probably find one at a farm.',
             },
             {
                 itemId: itemIds.witchesPotion.eyeOfNewt,
-                haveText: `<str><col=000000>I have an eye of newt with me,</str>`,
+                haveText: '<str><col=000000>I have an eye of newt with me,</str>',
                 dontHaveText: `<col=800000>An eye of newt<col=000080>, maybe the <col=800000>Magic shop<col=000080> in <col=800000>Port Sarim<col=000080> would
         <col=000080>sell me this?`,
             },
@@ -44,7 +44,7 @@ const journalHandler: QuestJournalHandler = {
 
         let ingredientsObtained = 0;
         for (const ingredient of questLogIngredientData) {
-            questLog += `\n`;
+            questLog += '\n';
             if (player.hasItemInInventory(ingredient.itemId)) {
                 questLog += ingredient.haveText;
                 ingredientsObtained++;
@@ -54,7 +54,7 @@ const journalHandler: QuestJournalHandler = {
         }
 
         if (ingredientsObtained === 4) {
-            questLog += `\n<col=000080>I should bring these ingredients to <col=800000>Hetty<col=000080>.`;
+            questLog += '\n<col=000080>I should bring these ingredients to <col=800000>Hetty<col=000080>.';
         }
 
         return questLog;
@@ -76,7 +76,7 @@ const drinkThePotionDialogue: npcInteractionActionHandler = details => {
     player.face(npc);
     dialogue(
         [player, { npc, key: 'hetty' }],
-        [hetty => [Emote.ANGRY, `Well are you going to drink the potion or not?`], player => [Emote.GENERIC, `Yes, I will.`]],
+        [_hetty => [Emote.ANGRY, 'Well are you going to drink the potion or not?'], _player => [Emote.GENERIC, 'Yes, I will.']],
     );
 };
 
@@ -88,7 +88,7 @@ const drinkFromCauldron: objectInteractionActionHandler = async details => {
     await dialogue(
         [player],
         [
-            text => `You drink from the cauldron. It tastes horrible!\nYou feel yourself imbued with power.`,
+            () => 'You drink from the cauldron. It tastes horrible!\nYou feel yourself imbued with power.',
             execute(() => {
                 questComplete = true;
             }),
@@ -96,14 +96,14 @@ const drinkFromCauldron: objectInteractionActionHandler = async details => {
     );
 
     if (questComplete) {
-        player.setQuestProgress('rs:witchs_potion', `complete`);
+        player.setQuestProgress('rs:witchs_potion', 'complete');
     }
 };
 
 const attemptToDrinkBeforeAllowed: objectInteractionActionHandler = async details => {
     const { player, object } = details;
     player.face(new Position(object.x, object.y));
-    await dialogue([player], [player => [Emote.GENERIC, `As nice as that looks I think I'll give it a miss for now.`]]);
+    await dialogue([player], [() => [Emote.GENERIC, `As nice as that looks I think I'll give it a miss for now.`]]);
 };
 
 const dialogueIngredientQuestions: npcInteractionActionHandler = details => {
@@ -122,22 +122,22 @@ const dialogueIngredientQuestions: npcInteractionActionHandler = details => {
         },
         {
             itemId: itemIds.witchesPotion.burntMeat,
-            haveText: `I have the burnt meat, `,
+            haveText: 'I have the burnt meat, ',
             dontHaveText: `I don't have any burnt meat, `,
         },
         {
             itemId: itemIds.witchesPotion.onion,
-            haveText: `I have an onion, and `,
+            haveText: 'I have an onion, and ',
             dontHaveText: `I don't have an onion, and `,
         },
         {
             itemId: itemIds.witchesPotion.eyeOfNewt,
-            haveText: `I have the eye of newt, yum!`,
+            haveText: 'I have the eye of newt, yum!',
             dontHaveText: `I don't have an eye of newt.`,
         },
     ];
 
-    let requirementsDialogue = ``;
+    let requirementsDialogue = '';
     for (const ingredient of ingredients) {
         if (player.hasItemInInventory(ingredient.itemId)) {
             requirementsDialogue += ingredient.haveText;
@@ -159,36 +159,36 @@ const dialogueIngredientQuestions: npcInteractionActionHandler = details => {
                     return 'tag_SOME_INGREDIENTS';
                 }
             }),
-            (subtree, tag_ALL_INGREDIENTS) => [
-                hetty => [Emote.HAPPY, `So have you found the things for the potion?`],
-                player => [Emote.HAPPY, `Yes I have everything!`],
-                hetty => [Emote.HAPPY, `Excellent, can I have them then?`],
-                (text, tag_has_ingredients) =>
-                    `You pass the ingredients to Hetty and she puts them all into her cauldron. Hetty closes her eyes and begins to chant. The cauldron bubbles mysteriously.`,
-                player => [Emote.GENERIC, `Well, is it ready?`],
+            (_subtree, _tag_ALL_INGREDIENTS) => [
+                _hetty => [Emote.HAPPY, 'So have you found the things for the potion?'],
+                _player => [Emote.HAPPY, 'Yes I have everything!'],
+                _hetty => [Emote.HAPPY, 'Excellent, can I have them then?'],
+                (_text, _tag_has_ingredients) =>
+                    'You pass the ingredients to Hetty and she puts them all into her cauldron. Hetty closes her eyes and begins to chant. The cauldron bubbles mysteriously.',
+                _player => [Emote.GENERIC, 'Well, is it ready?'],
                 execute(() => {
                     player.removeFirstItem(itemIds.witchesPotion.ratsTail);
                     player.removeFirstItem(itemIds.witchesPotion.onion);
                     player.removeFirstItem(itemIds.witchesPotion.burntMeat);
                     player.removeFirstItem(itemIds.witchesPotion.eyeOfNewt);
-                    player.setQuestProgress(`rs:witchs_potion`, 75);
+                    player.setQuestProgress('rs:witchs_potion', 75);
                 }),
-                hetty => [Emote.HAPPY, `Ok, now drink from the cauldron.`],
+                _hetty => [Emote.HAPPY, 'Ok, now drink from the cauldron.'],
             ],
-            (subtree, tag_NO_INGREDIENTS) => [
-                player => [Emote.HAPPY, `I've been looking for those ingredients.`],
-                hetty => [Emote.HAPPY, `So what have you found so far?`],
-                player => [Emote.GENERIC, `I'm afraid I don't have any of them yet.`],
-                hetty => [
+            (_subtree, _tag_NO_INGREDIENTS) => [
+                _player => [Emote.HAPPY, `I've been looking for those ingredients.`],
+                _hetty => [Emote.HAPPY, 'So what have you found so far?'],
+                _player => [Emote.GENERIC, `I'm afraid I don't have any of them yet.`],
+                _hetty => [
                     Emote.SAD,
                     `Well I can't make the potion without them! Remember... You need an eye of newt, a rat's tail, an onion, and a piece of burnt meat. Off you go dear!`,
                 ],
             ],
-            (subtree, tag_SOME_INGREDIENTS) => [
-                player => [Emote.HAPPY, `I've been looking for those ingredients.`],
-                hetty => [Emote.HAPPY, `So what have you found so far?`],
-                player => [Emote.GENERIC, requirementsDialogue],
-                hetty => [Emote.GENERIC, `Great, but I'll need the other ingredients as well.`],
+            (_subtree, _tag_SOME_INGREDIENTS) => [
+                _player => [Emote.HAPPY, `I've been looking for those ingredients.`],
+                _hetty => [Emote.HAPPY, 'So what have you found so far?'],
+                _player => [Emote.GENERIC, requirementsDialogue],
+                _hetty => [Emote.GENERIC, `Great, but I'll need the other ingredients as well.`],
             ],
         ],
     );
@@ -201,9 +201,9 @@ const afterQuestDialogue: npcInteractionActionHandler = details => {
     dialogue(
         [player, { npc, key: 'hetty' }],
         [
-            hetty => [Emote.HAPPY, `How's your magic coming along?`],
-            player => [Emote.HAPPY, `I'm practicing and slowly getting better.`],
-            hetty => [Emote.HAPPY, `Good, good.`],
+            _hetty => [Emote.HAPPY, `How's your magic coming along?`],
+            _player => [Emote.HAPPY, `I'm practicing and slowly getting better.`],
+            _hetty => [Emote.HAPPY, 'Good, good.'],
         ],
     );
 };
@@ -216,70 +216,70 @@ const startQuestAction: npcInteractionActionHandler = async details => {
     await dialogue(
         [player, { npc, key: 'hetty' }],
         [
-            hetty => [Emote.WONDERING, 'What could you want with an old woman like me?'],
-            options => [
-                `I am in search of a quest.`,
+            _hetty => [Emote.WONDERING, 'What could you want with an old woman like me?'],
+            _options => [
+                'I am in search of a quest.',
                 [
-                    (player, tag_search_of_quest) => [Emote.GENERIC, `I am in search of a quest.`],
-                    hetty => [Emote.HAPPY, `Hmmm... Maybe I can think of something for you.`],
-                    hetty => [Emote.HAPPY, `Would you like to become more proficient in the dark arts?`],
+                    (_player, _tag_search_of_quest) => [Emote.GENERIC, 'I am in search of a quest.'],
+                    _hetty => [Emote.HAPPY, 'Hmmm... Maybe I can think of something for you.'],
+                    _hetty => [Emote.HAPPY, 'Would you like to become more proficient in the dark arts?'],
 
-                    options => [
-                        `Yes, help me become one with my darker side.`,
-                        [player => [Emote.HAPPY, `Yes, help me become one with my darker side.`], goto(`tag_darker_side`)],
-                        `No, I have my principles and honour.`,
+                    _options => [
+                        'Yes, help me become one with my darker side.',
+                        [_player => [Emote.HAPPY, 'Yes, help me become one with my darker side.'], goto('tag_darker_side')],
+                        'No, I have my principles and honour.',
                         [
-                            player => [Emote.GENERIC, `No, I have my principles and honour.`],
-                            hetty => [Emote.SAD, `Suit yourself, but you're missing out.`],
+                            _player => [Emote.GENERIC, 'No, I have my principles and honour.'],
+                            _hetty => [Emote.SAD, `Suit yourself, but you're missing out.`],
                         ],
-                        `What, you mean improve my magic?`,
+                        'What, you mean improve my magic?',
                         [
-                            player => [Emote.SAD, 'What, you mean improve my magic?'],
-                            text => `The witch sighs.`,
-                            hetty => [Emote.GENERIC, 'Yes, improve your magic...'],
-                            hetty => [Emote.SAD, 'Do you have no sense of drama?'],
-                            options => [
+                            _player => [Emote.SAD, 'What, you mean improve my magic?'],
+                            _text => 'The witch sighs.',
+                            _hetty => [Emote.GENERIC, 'Yes, improve your magic...'],
+                            _hetty => [Emote.SAD, 'Do you have no sense of drama?'],
+                            _options => [
                                 `Yes, I'd like to improve my magic.`,
                                 [
-                                    player => [Emote.GENERIC, `Yes, I'd like to improve my magic.`],
-                                    (hetty, tag_darker_side) => [
+                                    _player => [Emote.GENERIC, `Yes, I'd like to improve my magic.`],
+                                    (_hetty, _tag_darker_side) => [
                                         Emote.HAPPY,
                                         `Okay, I'm going to make a potion to help bring out your darker self.`,
                                     ],
-                                    hetty => [Emote.GENERIC, `You will need certain ingredients.`],
-                                    player => [Emote.GENERIC, `What do I need?`],
+                                    _hetty => [Emote.GENERIC, 'You will need certain ingredients.'],
+                                    _player => [Emote.GENERIC, 'What do I need?'],
                                     execute(() => {
                                         beginQuest = true;
                                     }),
-                                    hetty => [
+                                    _hetty => [
                                         Emote.WONDERING,
                                         `You need an eye of newt, a rat's tail, an onion... Oh and a piece of burnt meat.`,
                                     ],
-                                    player => [Emote.HAPPY, `Great, I'll go and get them.`],
+                                    _player => [Emote.HAPPY, `Great, I'll go and get them.`],
                                 ],
                                 `No, I'm not interested.`,
                                 [
-                                    player => [Emote.SAD, `No, I'm not interested.`],
-                                    hetty => [Emote.SAD, `Many aren't to start off with.`],
-                                    text => `The witch smiles mysteriously.`,
-                                    hetty => [Emote.GENERIC, `But I think you'll be drawn back to this place.`],
+                                    _player => [Emote.SAD, `No, I'm not interested.`],
+                                    _hetty => [Emote.SAD, `Many aren't to start off with.`],
+                                    _text => 'The witch smiles mysteriously.',
+                                    _hetty => [Emote.GENERIC, `But I think you'll be drawn back to this place.`],
                                 ],
-                                `Show me the mysteries of the dark arts...`,
-                                [player => [Emote.GENERIC, `Show me the mysteries of the dark arts...`], goto(`tag_darker_side`)],
+                                'Show me the mysteries of the dark arts...',
+                                [_player => [Emote.GENERIC, 'Show me the mysteries of the dark arts...'], goto('tag_darker_side')],
                             ],
                         ],
                     ],
                 ],
                 `I've heard that you are a witch.`,
                 [
-                    player => [Emote.HAPPY, `I've heard that you are a witch.`],
-                    hetty => [Emote.HAPPY, `Yes it does seem to be getting fairly common knowledge.`],
-                    hetty => [Emote.WORRIED, `I fear I may get a visit from the witch hunters of Falador before long.`],
-                    options => [
-                        `I am in search of a quest.`,
+                    _player => [Emote.HAPPY, `I've heard that you are a witch.`],
+                    _hetty => [Emote.HAPPY, 'Yes it does seem to be getting fairly common knowledge.'],
+                    _hetty => [Emote.WORRIED, 'I fear I may get a visit from the witch hunters of Falador before long.'],
+                    _options => [
+                        'I am in search of a quest.',
                         [goto('tag_search_of_quest')],
-                        `Goodbye.`,
-                        [player => [Emote.VERY_SAD, `Goodbye.`]],
+                        'Goodbye.',
+                        [_player => [Emote.VERY_SAD, 'Goodbye.']],
                     ],
                 ],
             ],

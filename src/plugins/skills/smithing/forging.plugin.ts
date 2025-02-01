@@ -123,7 +123,7 @@ const openForgingInterface: itemOnObjectActionHandler = details => {
 
     // The player does not have a hammer.
     if (!player.inventory.has(itemIds.hammer)) {
-        player.sendMessage(`You need a hammer to work the metal with.`, true);
+        player.sendMessage('You need a hammer to work the metal with.', true);
         return;
     }
 

@@ -65,7 +65,7 @@ export const openHouse = (player: Player): void => {
         }
     }
 
-    player.sendMessage(`Welcome home.`);
+    player.sendMessage('Welcome home.');
 };
 
 export class House {

@@ -16,6 +16,7 @@ const walkPacket = (player: Player, packet: PacketData) => {
     const totalSteps = Math.floor((size - 5) / 2);
 
     const firstY = buffer.get('short', 'u', 'le');
+    // biome-ignore lint/correctness/noUnusedVariables: Someone might need this one day I guess.
     const runSteps = buffer.get('byte') === 1; // @TODO forced running
     const firstX = buffer.get('short', 'u', 'le');
 

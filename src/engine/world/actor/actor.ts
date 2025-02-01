@@ -113,7 +113,7 @@ export abstract class Actor {
     public enqueueTask<T1>(taskClass: new (actor: Actor, arg1: T1) => Task, args: [T1]): void;
     public enqueueTask<T>(taskClass: new (actor: Actor, ...args: T[]) => Task, args: T[]): void {
         if (!this.active) {
-            logger.warn(`Attempted to instantiate task for inactive actor`);
+            logger.warn('Attempted to instantiate task for inactive actor');
             return;
         }
 
@@ -133,7 +133,7 @@ export abstract class Actor {
      */
     public enqueueBaseTask(task: Task): void {
         if (!this.active) {
-            logger.warn(`Attempted to enqueue task for  inactive actor`);
+            logger.warn('Attempted to enqueue task for  inactive actor');
             return;
         }
 
@@ -437,7 +437,7 @@ export abstract class Actor {
 
             let valid = true;
 
-            if (!this.withinBounds(px, py)) {
+            if (isNpc(this) && !this.withinBounds(px, py)) {
                 valid = false;
             }
 
@@ -473,7 +473,7 @@ export abstract class Actor {
                 px += movementDirection.deltaX;
                 py += movementDirection.deltaY;
 
-                if (!this.withinBounds(px, py)) {
+                if (isNpc(this) && !this.withinBounds(px, py)) {
                     valid = false;
                 }
             }
@@ -486,10 +486,6 @@ export abstract class Actor {
             this.walkingQueue.valid = true;
             this.walkingQueue.add(px, py);
         }
-    }
-
-    public withinBounds(x: number, y: number): boolean {
-        return true;
     }
 
     /**

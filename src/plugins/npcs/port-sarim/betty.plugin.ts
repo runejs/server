@@ -5,24 +5,23 @@ import { Emote, dialogue, execute } from '@engine/world/actor/dialogue';
 const shopAction: npcInteractionActionHandler = details => findShop('rs:bettys_magic_emporium')?.open(details.player);
 
 const dialogueAction: npcInteractionActionHandler = details => {
-    const { player, npc } = details;
     let openShop = false;
     dialogue(
         [details.player, { npc: details.npc, key: 'betty' }],
         [
-            betty => [Emote.HAPPY, `Welcome to the magic emporium.`],
-            options => [
-                `Can I see your wares?`,
+            _betty => [Emote.HAPPY, 'Welcome to the magic emporium.'],
+            _options => [
+                'Can I see your wares?',
                 [
-                    player => [Emote.HAPPY, `Can I see your wares?`],
+                    _player => [Emote.HAPPY, 'Can I see your wares?'],
                     execute(() => {
                         openShop = true;
                     }),
                 ],
                 `Sorry I'm not into magic.`,
                 [
-                    player => [Emote.GENERIC, `Sorry I'm not into magic.`],
-                    betty => [Emote.HAPPY, `Well, if you see anyone who is into magic, please send them my way.`],
+                    _player => [Emote.GENERIC, `Sorry I'm not into magic.`],
+                    _betty => [Emote.HAPPY, 'Well, if you see anyone who is into magic, please send them my way.'],
                 ],
             ],
         ],

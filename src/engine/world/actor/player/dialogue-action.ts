@@ -146,7 +146,7 @@ export class DialogueAction {
             this.p.outgoingPackets.updateWidgetString(widgetId, textOffset + i, options.lines[i]);
         }
 
-        return new Promise<DialogueAction>((resolve, reject) => {
+        return new Promise<DialogueAction>(resolve => {
             this.p.interfaceState.openWidget(widgetId, {
                 slot: 'chatbox',
             });

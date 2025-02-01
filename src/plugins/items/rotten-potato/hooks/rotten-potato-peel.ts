@@ -47,10 +47,10 @@ const peelPotato: itemInteractionActionHandler = async details => {
     await dialogue(
         [details.player],
         [
-            options => [
-                `Bank menu`,
+            () => [
+                'Bank menu',
                 [execute(() => (chosenOption = DialogueOption.BANK))],
-                `Travel Far!`,
+                'Travel Far!',
                 [execute(() => (chosenOption = DialogueOption.TELEPORT_MENU))],
                 // `Teleport to RARE!`, [
                 //     execute(() => chosenOption = DialogueOption.TELEPORT_TO_RARE_DROP)

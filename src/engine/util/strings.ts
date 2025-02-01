@@ -40,6 +40,7 @@ function getStylingType(tag: string) {
 }
 
 // Thank you to the Apollo team for these values. :)
+// biome-ignore lint/correctness/noUnusedVariables: Someone might want these one day!
 const charWidths = [
     3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 7, 14, 9, 12, 12, 4, 5, 5, 10, 8,
     4, 8, 4, 7, 9, 7, 9, 8, 8, 8, 9, 7, 9, 9, 4, 5, 7, 9, 7, 9, 14, 9, 8, 8, 8, 7, 7, 9, 8, 6, 8, 8, 7, 10, 9, 9, 8, 9, 8, 8, 6, 9, 8, 10,
@@ -71,7 +72,7 @@ export function wrapText(text: string, maxWidth: number, font?: number | string)
                 hidden = true;
                 currentTagIndex = currentLine.length + 1;
                 break;
-            case '>':
+            case '>': {
                 hidden = true;
                 const currentTag = currentLine.substring(currentTagIndex, currentLine.length);
                 currentTagIndex = -1;
@@ -91,6 +92,7 @@ export function wrapText(text: string, maxWidth: number, font?: number | string)
                     }
                 }
                 break;
+            }
             case '@':
                 break;
             case '\n':

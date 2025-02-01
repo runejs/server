@@ -428,7 +428,7 @@ export function getTreeFromHealthy(id: number): IHarvestable {
 
 export function getOreFromDepletedRock(id: number): IHarvestable {
     return Ores.find(ore => {
-        for (const [rock, expired] of ore.objects) {
+        for (const [_, expired] of ore.objects) {
             if (expired === id) {
                 return true;
             }
@@ -451,7 +451,7 @@ export function getAllOreIds(): number[] {
 export function getTreeIds(): number[] {
     const treeIds: number[] = [];
     for (const tree of Trees) {
-        for (const [healthy, expired] of tree.objects) {
+        for (const [healthy] of tree.objects) {
             treeIds.push(healthy);
         }
     }

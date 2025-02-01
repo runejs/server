@@ -48,7 +48,7 @@ export function showTabWidgetHint(
     };
     player.metadata.tabClickEvent = tabClickEvent;
 
-    dialogue([player], [titled => [helpTitle, helpText]], {
+    dialogue([player], [_titled => [helpTitle, helpText]], {
         permanent: true,
     });
 
@@ -111,7 +111,7 @@ export const startTutorial = async (player: Player): Promise<void> => {
     player.inventory.add('rs:coins');
     player.outgoingPackets.sendUpdateAllWidgetItems(widgets.inventory, player.inventory);
 
-    await dialogue([player], [titled => [`Getting Started`, `\nCreate your character!`]], {
+    await dialogue([player], [() => ['Getting Started', '\nCreate your character!']], {
         permanent: true,
     });
 
@@ -133,14 +133,14 @@ export async function spawnGoblinBoi(player: Player, spawnPoint: 'beginning' | '
     if (spawnPoint === 'beginning') {
         //const goblin = await world.spawnNpc('rs:goblin', new Position(3219, 3246), 'SOUTH',
         //    0, player.instance.instanceId);
-        const goblin = await activeWorld.spawnNpc('rs:goblin', new Position(3221, 3257), 'SOUTH', 0, player.instance.instanceId);
+        const goblin = await activeWorld.spawnNpc('rs:goblin', new Position(3221, 3257), 'SOUTH', 0);
 
         goblin.pathfinding.walkTo(new Position(3219, 3246), {
             pathingSearchRadius: 16,
             ignoreDestination: false,
         });
     } else {
-        await activeWorld.spawnNpc('rs:goblin', new Position(3219, 3246), 'SOUTH', 0, player.instance.instanceId);
+        await activeWorld.spawnNpc('rs:goblin', new Position(3219, 3246), 'SOUTH', 0);
     }
 }
 
@@ -160,16 +160,16 @@ export async function tutorialHandler(player: Player): Promise<void> {
     }
 }
 
-function spawnQuestNpcs(player: Player): void {
-    activeWorld.spawnNpc('rs:runescape_guide', new Position(3230, 3238), 'SOUTH', 2, player.instance.instanceId);
-    activeWorld.spawnNpc('rs:melee_combat_tutor', new Position(3219, 3238), 'EAST', 1, player.instance.instanceId);
+function spawnQuestNpcs(): void {
+    activeWorld.spawnNpc('rs:runescape_guide', new Position(3230, 3238), 'SOUTH', 2);
+    activeWorld.spawnNpc('rs:melee_combat_tutor', new Position(3219, 3238), 'EAST', 1);
 }
 
 const tutorialInitAction: playerInitActionHandler = async ({ player }) => {
     if (serverConfig.tutorialEnabled && !player.savedMetadata.tutorialComplete) {
         player.instance = new WorldInstance(v4());
         player.metadata.blockObjectInteractions = true;
-        spawnQuestNpcs(player);
+        spawnQuestNpcs();
         await tutorialHandler(player);
     } else {
         defaultPlayerTabWidgets().forEach((widgetId: number, tabIndex: number) => {
@@ -199,7 +199,7 @@ const createCharacterAction: buttonActionHandler = ({ player }): void => {
 };
 
 const journalHandler: QuestJournalHandler = {
-    0: `stinkyu hoomsn HAHA\n\n\nf1nglewuRt`,
+    0: 'stinkyu hoomsn HAHA\n\n\nf1nglewuRt',
 };
 
 const QUEST_ID = 'tyn:goblin_diplomacy';
@@ -207,7 +207,7 @@ const QUEST_ID = 'tyn:goblin_diplomacy';
 const QUEST = new Quest({
     id: QUEST_ID,
     questTabId: 28,
-    name: `Goblin Diplomacy`,
+    name: 'Goblin Diplomacy',
     points: 1,
     journalHandler,
     onComplete: {

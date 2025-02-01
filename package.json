@@ -21,7 +21,7 @@
         "build:watch": "swc ./src -d dist -w --strip-leading-paths",
         "lint": "biome lint",
         "lint:fin": "biome lint --write --diagnostic-level=error --reporter=summary",
-        "lint:fix": "biome lint --write",
+        "lint:fix": "biome lint --write --unsafe",
         "format": "biome format",
         "format:fin": "biome format --write --reporter=summary",
         "format:fix": "biome format --write",

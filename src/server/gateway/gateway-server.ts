@@ -47,10 +47,10 @@ export class GatewayServer extends SocketServer {
             });
             this.updateServerSocket.on('data', data => this.clientSocket.write(data));
             this.updateServerSocket.on('end', () => {
-                logger.info(`Update server connection closed.`);
+                logger.info('Update server connection closed.');
             });
             this.updateServerSocket.on('error', () => {
-                logger.error(`Update server error.`);
+                logger.error('Update server error.');
             });
             this.updateServerSocket.setNoDelay(true);
             this.updateServerSocket.setKeepAlive(true);
@@ -65,13 +65,13 @@ export class GatewayServer extends SocketServer {
                 this.parseLoginServerResponse(new ByteBuffer(data));
             });
             this.loginServerSocket.on('end', () => {
-                logger.error(`Login server error.`);
+                logger.error('Login server error.');
             });
             this.loginServerSocket.setNoDelay(true);
             this.loginServerSocket.setKeepAlive(true);
             this.loginServerSocket.setTimeout(30000);
         } else {
-            logger.error(`Invalid initial client handshake packet id.`);
+            logger.error('Invalid initial client handshake packet id.');
             return false;
         }
 

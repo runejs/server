@@ -45,7 +45,7 @@ export interface PrayerAction {
  * @param buttonId
  */
 const prayerActionPipe = (npc: Npc, player: Player, widgetId: number, buttonId: number): RunnableHooks<PrayerAction> => {
-    console.info(`You used prayer`);
+    console.info('You used prayer');
 
     // Find all object action plugins that reference this location object
     const matchingHooks = getActionHooks<PrayerActionHook>('button');

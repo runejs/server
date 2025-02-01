@@ -127,7 +127,7 @@ export class Pathfinding {
         const highestY = position.y + searchRadius;
 
         if (destinationX < lowestX || destinationX > highestX || destinationY < lowestY || destinationY > highestY) {
-            throw new Error(`Out of range.`);
+            throw new Error('Out of range.');
         }
 
         const destinationIndexX = destinationX - position.x + searchRadius;
@@ -138,10 +138,10 @@ export class Pathfinding {
         const pointLen = searchRadius * 2;
 
         if (pointLen <= 0) {
-            throw new Error(`Why is your search radius zero?`);
+            throw new Error('Why is your search radius zero?');
         }
 
-        this.points = [...Array(pointLen)].map(e => Array(pointLen));
+        this.points = [...Array(pointLen)].map(() => Array(pointLen));
 
         for (let x = 0; x < pointLen; x++) {
             for (let y = 0; y < pointLen; y++) {
@@ -250,7 +250,7 @@ export class Pathfinding {
             iterations++;
 
             if (iterations > 1000) {
-                throw new Error(`Path iteration overflow, path can not be found.`);
+                throw new Error('Path iteration overflow, path can not be found.');
             }
 
             if (point === null) {
@@ -414,7 +414,7 @@ export class Pathfinding {
             const globalTileFlags = globalAdjacencyForTile === null ? null : globalAdjacencyForTile & i;
 
             return instancedTileFlags === null ? globalTileFlags === 0 : instancedTileFlags === 0;
-        } catch (error) {
+        } catch (_) {
             logger.error(`Unable to calculate movement permission for local coordinates ${destinationLocalX},${destinationLocalY}.`);
             return false;
         }

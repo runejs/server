@@ -17,7 +17,7 @@ const spawnSceneryAction: commandActionHandler = ({ player, args }) => {
     }
 
     if (isNaN(locationObjectId)) {
-        throw new Error(`Location object name not found.`);
+        throw new Error('Location object name not found.');
     }
 
     const objectType = args.objectType as number;

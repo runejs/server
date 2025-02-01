@@ -13,32 +13,32 @@ const journalHandler: QuestJournalHandler = {
     50: player => {
         let questLog =
             `It's the <col=800000>Duke of Lumbridge's</col> birthday and I have to help ` +
-            `his <col=800000>Cook</col> make him a <col=800000>birthday cake.</col> To do this I need to ` +
-            `bring him the following ingredients:\n`;
+            'his <col=800000>Cook</col> make him a <col=800000>birthday cake.</col> To do this I need to ' +
+            'bring him the following ingredients:\n';
 
         const quest = player.getQuest('rs:cooks_assistant');
 
         if (player.hasItemInInventory(itemIds.bucketOfMilk) || quest.metadata.givenMilk) {
-            questLog += `I have found a <col=800000>bucket of milk</col> to give to the cook.\n`;
+            questLog += 'I have found a <col=800000>bucket of milk</col> to give to the cook.\n';
         } else {
             questLog +=
                 `I need to find a <col=800000>bucket of milk.</col> There's a cattle field east ` +
-                `of Lumbridge, I should make sure I take an empty bucket with me.\n`;
+                'of Lumbridge, I should make sure I take an empty bucket with me.\n';
         }
 
         if (player.hasItemInInventory(itemIds.potOfFlour) || quest.metadata.givenFlour) {
-            questLog += `I have found a <col=800000>pot of flour</col> to give to the cook.\n`;
+            questLog += 'I have found a <col=800000>pot of flour</col> to give to the cook.\n';
         } else {
             questLog +=
                 `I need to find a <col=800000>pot of flour.</col> There's a mill found north-` +
-                `west of Lumbridge, I should take an empty pot with me.\n`;
+                'west of Lumbridge, I should take an empty pot with me.\n';
         }
 
         if (player.hasItemInInventory(itemIds.egg) || quest.metadata.givenEgg) {
-            questLog += `I have found an <col=800000>egg</col> to give to the cook.\n`;
+            questLog += 'I have found an <col=800000>egg</col> to give to the cook.\n';
         } else {
             questLog +=
-                `I need to find an <col=800000>egg.</col> The cook normally gets his eggs from ` +
+                'I need to find an <col=800000>egg.</col> The cook normally gets his eggs from ' +
                 `the Groats' farm, found just to the west of the cattle field.`;
         }
 
@@ -47,48 +47,51 @@ const journalHandler: QuestJournalHandler = {
 
     complete:
         `It was the Duke of Lumbridge's birthday, but his cook had ` +
-        `forgotten to buy the ingredients he needed to make him a ` +
-        `cake. I brought the cook an egg, some flour and some milk ` +
-        `and the cook made a delicious looking cake with them.\n\n` +
-        `As a reward he now lets me use his high quality range ` +
-        `which lets me burn things less whenever I wish to cook ` +
-        `there.\n\n` +
-        `<col=ff0000>QUEST COMPLETE!</col>`,
+        'forgotten to buy the ingredients he needed to make him a ' +
+        'cake. I brought the cook an egg, some flour and some milk ' +
+        'and the cook made a delicious looking cake with them.\n\n' +
+        'As a reward he now lets me use his high quality range ' +
+        'which lets me burn things less whenever I wish to cook ' +
+        'there.\n\n' +
+        '<col=ff0000>QUEST COMPLETE!</col>',
 };
 
 function dialogueIngredientQuestions(): Function {
-    return (options, tag_INGREDIENT_QUESTIONS) => [
-        `Where do I find some flour?`,
+    return (_options, _tag_INGREDIENT_QUESTIONS) => [
+        'Where do I find some flour?',
         [
-            player => [Emote.GENERIC, `Where do I find some flour?`],
-            cook => [
+            _player => [Emote.GENERIC, 'Where do I find some flour?'],
+            _cook => [
                 Emote.GENERIC,
-                `There is a Mill fairly close, go North and then West. Mill Lane Mill ` +
-                    `is just off the road to Draynor. I usually get my flour from there.`,
+                'There is a Mill fairly close, go North and then West. Mill Lane Mill ' +
+                    'is just off the road to Draynor. I usually get my flour from there.',
             ],
-            cook => [Emote.HAPPY, `Talk to Millie, she'll help, she's a lovely girl and a fine Miller.`],
+            _cook => [Emote.HAPPY, `Talk to Millie, she'll help, she's a lovely girl and a fine Miller.`],
             goto('tag_INGREDIENT_QUESTIONS'),
         ],
-        `How about milk?`,
+        'How about milk?',
         [
-            player => [Emote.GENERIC, `How about milk?`],
-            cook => [Emote.GENERIC, `There is a cattle field on the other side of the river, just across ` + `the road from Groats' Farm.`],
-            cook => [
+            _player => [Emote.GENERIC, 'How about milk?'],
+            _cook => [
+                Emote.GENERIC,
+                'There is a cattle field on the other side of the river, just across ' + `the road from Groats' Farm.`,
+            ],
+            _cook => [
                 Emote.HAPPY,
-                `Talk to Gillie Groats, she look after the Dairy Cows - ` +
+                'Talk to Gillie Groats, she look after the Dairy Cows - ' +
                     `she'll tell you everything you need to know about milking cows!`,
             ],
             goto('tag_INGREDIENT_QUESTIONS'),
         ],
-        `And eggs? Where are they found?`,
+        'And eggs? Where are they found?',
         [
-            player => [Emote.GENERIC, `And eggs? Where are they found?`],
-            cook => [Emote.GENERIC, `I normally get my eggs from the Groats' farm, on the other side of ` + `the river.`],
-            cook => [Emote.GENERIC, `But any chicken should lay eggs.`],
+            _player => [Emote.GENERIC, 'And eggs? Where are they found?'],
+            _cook => [Emote.GENERIC, `I normally get my eggs from the Groats' farm, on the other side of ` + 'the river.'],
+            _cook => [Emote.GENERIC, 'But any chicken should lay eggs.'],
             goto('tag_INGREDIENT_QUESTIONS'),
         ],
-        `Actually, I know where to find this stuff.`,
-        [player => [Emote.GENERIC, `I've got all the information I need. Thanks.`]],
+        'Actually, I know where to find this stuff.',
+        [_player => [Emote.GENERIC, `I've got all the information I need. Thanks.`]],
     ];
 }
 
@@ -98,87 +101,87 @@ const startQuestAction: npcInteractionActionHandler = details => {
     dialogue(
         [player, { npc, key: 'cook' }],
         [
-            cook => [Emote.WORRIED, `What am I to do?`],
-            options => [
+            _cook => [Emote.WORRIED, 'What am I to do?'],
+            _options => [
                 `What's wrong?`,
                 [],
-                `Can you make me a cake?`,
+                'Can you make me a cake?',
                 [
-                    player => [Emote.HAPPY, `You're a cook, why don't you bake me a cake?`],
-                    cook => [Emote.SAD, `*sniff* Don't talk to me about cakes...`],
+                    _player => [Emote.HAPPY, `You're a cook, why don't you bake me a cake?`],
+                    _cook => [Emote.SAD, `*sniff* Don't talk to me about cakes...`],
                 ],
                 `You don't look very happy.`,
                 [
-                    player => [Emote.WORRIED, `You don't look very happy.`],
-                    cook => [
+                    _player => [Emote.WORRIED, `You don't look very happy.`],
+                    _cook => [
                         Emote.SAD,
-                        `No, I'm not. The world is caving in around me - I am overcome by dark feelings ` + `of impending doom.`,
+                        `No, I'm not. The world is caving in around me - I am overcome by dark feelings ` + 'of impending doom.',
                     ],
-                    options => [
+                    _options => [
                         `What's wrong?`,
                         [],
                         `I'd take the rest of the day off if I were you.`,
                         [
-                            player => [Emote.GENERIC, `I'd take the rest of the day off if I were you.`],
-                            cook => [Emote.WORRIED, `No, that's the worst thing I could do. I'd get in terrible trouble.`],
-                            player => [Emote.SKEPTICAL, `Well maybe you need to take a holiday...`],
-                            cook => [Emote.SAD, `That would be nice, but the Duke doesn't allow holidays for core staff.`],
-                            player => [Emote.LAUGH, `Hmm, why not run away to the sea and start a new life as a Pirate?`],
-                            cook => [
+                            _player => [Emote.GENERIC, `I'd take the rest of the day off if I were you.`],
+                            _cook => [Emote.WORRIED, `No, that's the worst thing I could do. I'd get in terrible trouble.`],
+                            _player => [Emote.SKEPTICAL, 'Well maybe you need to take a holiday...'],
+                            _cook => [Emote.SAD, `That would be nice, but the Duke doesn't allow holidays for core staff.`],
+                            _player => [Emote.LAUGH, 'Hmm, why not run away to the sea and start a new life as a Pirate?'],
+                            _cook => [
                                 Emote.SKEPTICAL,
-                                `My wife gets sea sick, and I have an irrational fear of eyepatches. ` + `I don't see it working myself.`,
+                                'My wife gets sea sick, and I have an irrational fear of eyepatches. ' + `I don't see it working myself.`,
                             ],
-                            player => [Emote.WORRIED, `I'm afraid I've run out of ideas.`],
-                            cook => [Emote.SAD, `I know I'm doomed.`],
+                            _player => [Emote.WORRIED, `I'm afraid I've run out of ideas.`],
+                            _cook => [Emote.SAD, `I know I'm doomed.`],
                         ],
                     ],
                 ],
-                `Nice hat!`,
+                'Nice hat!',
                 [
-                    player => [Emote.HAPPY, `Nice hat!`],
-                    cook => [Emote.SKEPTICAL, `Err thank you. It's a pretty ordinary cooks hat really.`],
-                    player => [Emote.HAPPY, `Still, suits you. The trousers are pretty special too.`],
-                    cook => [Emote.SKEPTICAL, `It's all standard cook's issue uniform...`],
-                    player => [
+                    _player => [Emote.HAPPY, 'Nice hat!'],
+                    _cook => [Emote.SKEPTICAL, `Err thank you. It's a pretty ordinary cooks hat really.`],
+                    _player => [Emote.HAPPY, 'Still, suits you. The trousers are pretty special too.'],
+                    _cook => [Emote.SKEPTICAL, `It's all standard cook's issue uniform...`],
+                    _player => [
                         Emote.POMPOUS,
-                        `The whole hat, apron, striped trousers ensemble - it works. It makes you ` + `look like a real cook.`,
+                        'The whole hat, apron, striped trousers ensemble - it works. It makes you ' + 'look like a real cook.',
                     ],
-                    cook => [
+                    _cook => [
                         Emote.ANGRY,
-                        `I am a real cook! I haven't got time to be chatting about Culinary Fashion. ` + `I am in desperate need of help!`,
+                        `I am a real cook! I haven't got time to be chatting about Culinary Fashion. ` + 'I am in desperate need of help!',
                     ],
                 ],
             ],
-            player => [Emote.HAPPY, `What's wrong?`],
-            cook => [
+            _player => [Emote.HAPPY, `What's wrong?`],
+            _cook => [
                 Emote.WORRIED,
                 `Oh dear, oh dear, oh dear, I'm in a terrible terrible ` +
                     ` mess! It's the Duke's birthday today, and I should be making him a lovely big birthday cake.`,
             ],
-            cook => [
+            _cook => [
                 Emote.WORRIED,
                 `I've forgotten to buy the ingredients. I'll never get ` +
                     `them in time now. He'll sack me! What will I do? I have four children and a goat to ` +
-                    `look after. Would you help me? Please?`,
+                    'look after. Would you help me? Please?',
             ],
-            options => [
+            _options => [
                 `I'm always happy to help a cook in distress.`,
                 [
                     execute(() => {
                         player.setQuestProgress('rs:cooks_assistant', 50);
                     }),
-                    player => [Emote.GENERIC, `Yes, I'll help you.`],
-                    cook => [
+                    _player => [Emote.GENERIC, `Yes, I'll help you.`],
+                    _cook => [
                         Emote.HAPPY,
-                        `Oh thank you, thank you. I need milk, an egg and flour. I'd be very grateful ` + `if you can get them for me.`,
+                        `Oh thank you, thank you. I need milk, an egg and flour. I'd be very grateful ` + 'if you can get them for me.',
                     ],
-                    player => [Emote.GENERIC, `So where do I find these ingredients then?`],
+                    _player => [Emote.GENERIC, 'So where do I find these ingredients then?'],
                     dialogueIngredientQuestions(),
                 ],
                 `I can't right now, maybe later.`,
                 [
-                    player => [Emote.GENERIC, `No, I don't feel like it. Maybe later.`],
-                    cook => [Emote.ANGRY, `Fine. I always knew you Adventurer types were callous beasts. ` + `Go on your merry way!`],
+                    _player => [Emote.GENERIC, `No, I don't feel like it. Maybe later.`],
+                    _cook => [Emote.ANGRY, 'Fine. I always knew you Adventurer types were callous beasts. ' + 'Go on your merry way!'],
                 ],
             ],
         ],
@@ -187,14 +190,14 @@ const startQuestAction: npcInteractionActionHandler = details => {
 
 function youStillNeed(quest: PlayerQuest): DialogueTree {
     return [
-        text =>
-            `You still need to get\n` +
-            `${!quest.metadata.givenMilk ? `A bucket of milk. ` : ``}${!quest.metadata.givenFlour ? `A pot of flour. ` : ``}${!quest.metadata.givenEgg ? `An egg.` : ``}`,
-        options => [
+        _text =>
+            'You still need to get\n' +
+            `${!quest.metadata.givenMilk ? 'A bucket of milk. ' : ''}${!quest.metadata.givenFlour ? 'A pot of flour. ' : ''}${!quest.metadata.givenEgg ? 'An egg.' : ''}`,
+        _options => [
             `I'll get right on it.`,
-            [player => [Emote.GENERIC, `I'll get right on it.`]],
-            `Can you remind me how to find these things again?`,
-            [player => [Emote.GENERIC, `So where do I find these ingredients then?`], dialogueIngredientQuestions()],
+            [_player => [Emote.GENERIC, `I'll get right on it.`]],
+            'Can you remind me how to find these things again?',
+            [_player => [Emote.GENERIC, 'So where do I find these ingredients then?'], dialogueIngredientQuestions()],
         ],
     ];
 }
@@ -202,7 +205,7 @@ function youStillNeed(quest: PlayerQuest): DialogueTree {
 const handInIngredientsAction: npcInteractionActionHandler = async details => {
     const { player, npc } = details;
 
-    const dialogueTree: DialogueTree = [cook => [Emote.GENERIC, `How are you getting on with finding the ingredients?`]];
+    const dialogueTree: DialogueTree = [_cook => [Emote.GENERIC, 'How are you getting on with finding the ingredients?']];
 
     const quest = player.getQuest('rs:cooks_assistant');
 
@@ -223,7 +226,7 @@ const handInIngredientsAction: npcInteractionActionHandler = async details => {
         }
 
         dialogueTree.push(
-            player => [Emote.GENERIC, ingredient.text],
+            _player => [Emote.GENERIC, ingredient.text],
             execute(() => {
                 const quest = player.getQuest('rs:cooks_assistant');
 
@@ -250,28 +253,28 @@ const handInIngredientsAction: npcInteractionActionHandler = async details => {
                 return 'tag_SOME_INGREDIENTS';
             }
         }),
-        (subtree, tag_ALL_INGREDIENTS) => [
-            cook => [Emote.HAPPY, `You've brought me everything I need! I am saved! Thank you!`],
-            player => [Emote.WONDERING, `So do I get to go to the Duke's Party?`],
-            cook => [Emote.SAD, `I'm afraid not, only the big cheeses get to dine with the Duke.`],
-            player => [Emote.GENERIC, `Well, maybe one day I'll be important enough to sit on the Duke's table.`],
-            cook => [Emote.SKEPTICAL, `Maybe, but I won't be holding my breath.`],
+        (_subtree, _tag_ALL_INGREDIENTS) => [
+            _cook => [Emote.HAPPY, `You've brought me everything I need! I am saved! Thank you!`],
+            _player => [Emote.WONDERING, `So do I get to go to the Duke's Party?`],
+            _cook => [Emote.SAD, `I'm afraid not, only the big cheeses get to dine with the Duke.`],
+            _player => [Emote.GENERIC, `Well, maybe one day I'll be important enough to sit on the Duke's table.`],
+            _cook => [Emote.SKEPTICAL, `Maybe, but I won't be holding my breath.`],
             execute(() => {
                 questComplete = true;
             }),
         ],
-        (subtree, tag_NO_INGREDIENTS) => [
-            player => [Emote.GENERIC, `I haven't got any of them yet, I'm still looking.`],
-            cook => [
+        (_subtree, _tag_NO_INGREDIENTS) => [
+            _player => [Emote.GENERIC, `I haven't got any of them yet, I'm still looking.`],
+            _cook => [
                 Emote.SAD,
-                `Please get the ingredients quickly. I'm running out of time! ` + `The Duke will throw me into the streets!`,
+                `Please get the ingredients quickly. I'm running out of time! ` + 'The Duke will throw me into the streets!',
             ],
             ...youStillNeed(quest),
         ],
-        (subtree, tag_SOME_INGREDIENTS) => [
-            cook => [
+        (_subtree, _tag_SOME_INGREDIENTS) => [
+            _cook => [
                 Emote.SAD,
-                `Thanks for the ingredients you have got so far, please get the rest quickly. ` +
+                'Thanks for the ingredients you have got so far, please get the rest quickly. ' +
                     `I'm running out of time! The Duke will throw me into the streets!`,
             ],
             ...youStillNeed(quest),

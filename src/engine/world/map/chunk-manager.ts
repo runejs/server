@@ -91,12 +91,12 @@ export class ChunkManager {
 
         try {
             mapFile = filestore.regionStore.getMapFile(mapRegionX, mapRegionY);
-        } catch (error) {
+        } catch (_) {
             logger.error(`Error decoding map file ${mapRegionX},${mapRegionY}`);
         }
         try {
             landscapeFile = filestore.regionStore.getLandscapeFile(mapRegionX, mapRegionY);
-        } catch (error) {
+        } catch (_) {
             logger.error(`Error decoding landscape file ${mapRegionX},${mapRegionY}`);
         }
 

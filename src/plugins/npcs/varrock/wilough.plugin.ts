@@ -9,12 +9,12 @@ const talkTo: npcInteractionActionHandler = details => {
     dialogue(
         [player, { npc, key: 'wilough' }, { npc: shilop.gameId, key: 'shilop' }],
         [
-            player => [Emote.GENERIC, `Hello again.`],
-            wilough => [Emote.GENERIC, `You think you're tough do you?`],
-            player => [Emote.GENERIC, `Pardon?`],
-            wilough => [Emote.ANGRY, `I can beat anyone up!`],
-            shilop => [Emote.BLANK_STARE, `He can you know!`],
-            player => [Emote.BLANK_STARE, `Really?`],
+            _player => [Emote.GENERIC, 'Hello again.'],
+            _wilough => [Emote.GENERIC, `You think you're tough do you?`],
+            _player => [Emote.GENERIC, 'Pardon?'],
+            _wilough => [Emote.ANGRY, 'I can beat anyone up!'],
+            _shilop => [Emote.BLANK_STARE, 'He can you know!'],
+            _player => [Emote.BLANK_STARE, 'Really?'],
         ],
     );
 };

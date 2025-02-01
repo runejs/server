@@ -21,7 +21,7 @@ const handler: commandActionHandler = ({ player, args }) => {
 
     const worldSlotsRemaining = activeWorld.playerSlotsRemaining() - 1;
     if (worldSlotsRemaining <= 0) {
-        player.sendMessage(`Error: The game world is full.`);
+        player.sendMessage('Error: The game world is full.');
         return;
     }
 

@@ -10,13 +10,13 @@ const talkToAction: npcInteractionActionHandler = details => {
     dialogue(
         [player, { npc, key: 'karim' }],
         [
-            karim => [Emote.HAPPY, `Would you like to buy a nice kebab? Only one gold.`],
-            options => [
+            _karim => [Emote.HAPPY, 'Would you like to buy a nice kebab? Only one gold.'],
+            _options => [
                 `I think i'll give it a miss.`,
-                [player => [Emote.DROWZY, `I think i'll give it a miss.`]],
-                `Yes please.`,
+                [_player => [Emote.DROWZY, `I think i'll give it a miss.`]],
+                'Yes please.',
                 [
-                    player => [Emote.HAPPY, `Yes please.`],
+                    _player => [Emote.HAPPY, 'Yes please.'],
                     execute(() => {
                         const inventory = player.inventory;
                         if (inventory.has(itemIds.coins)) {
@@ -47,8 +47,8 @@ const talkToAction: npcInteractionActionHandler = details => {
                             dialogue(
                                 [player, { npc, key: 'karim' }],
                                 [
-                                    player => [Emote.ANGRY, `Oops, I forgot to bring any money with me.`],
-                                    karim => [Emote.GENERIC, `Come back when you have some.`],
+                                    _player => [Emote.ANGRY, 'Oops, I forgot to bring any money with me.'],
+                                    _karim => [Emote.GENERIC, 'Come back when you have some.'],
                                 ],
                             );
                         }

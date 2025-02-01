@@ -268,8 +268,8 @@ const useBankBoothAction: objectInteractionActionHandler = async details => {
     await dialogue(
         [player, { npc: 'rs:generic_banker', key: 'banker' }],
         [
-            banker => [Emote.HAPPY, `Good day, how can I help you?`],
-            options => [
+            _banker => [Emote.HAPPY, 'Good day, how can I help you?'],
+            _options => [
                 `I'd Like to access my bank account, please.`,
                 [
                     execute(() => {
@@ -282,13 +282,13 @@ const useBankBoothAction: objectInteractionActionHandler = async details => {
                         openPin = true;
                     }),
                 ],
-                `What is this place?`,
+                'What is this place?',
                 [
-                    player => [Emote.WONDERING, `What is this place?`],
-                    banker => [Emote.HAPPY, `This is a branch of the Bank of Gielinor. We have branches in many towns.`],
-                    player => [Emote.WONDERING, `And what do you do?`],
-                    banker => [Emote.GENERIC, `We will look after your items and money for you.`],
-                    banker => [Emote.GENERIC, `Leave your valuables with us if you want to keep them safe.`],
+                    _player => [Emote.WONDERING, 'What is this place?'],
+                    _banker => [Emote.HAPPY, 'This is a branch of the Bank of Gielinor. We have branches in many towns.'],
+                    _player => [Emote.WONDERING, 'And what do you do?'],
+                    _banker => [Emote.GENERIC, 'We will look after your items and money for you.'],
+                    _banker => [Emote.GENERIC, 'Leave your valuables with us if you want to keep them safe.'],
                 ],
             ],
         ],

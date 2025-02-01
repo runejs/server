@@ -1,6 +1,7 @@
 import type { objectInteractionActionHandler } from '@engine/action/pipe/object-interaction.action';
 import { findItem } from '@engine/config/config-handler';
 import { itemIds } from '@engine/world/config/item-ids';
+import { World } from '@engine/world/world';
 import { logger } from '@runejs/common';
 
 export const action: objectInteractionActionHandler = details => {
@@ -36,18 +37,17 @@ export const action: objectInteractionActionHandler = details => {
         return;
     }
 
-    // this used to use `setInterval` but will need rewriting to be synced with ticks
-    // see https://github.com/runejs/server/issues/417
-    details.player.sendMessage('[debug] see issue #417');
-    // setTimeout(() => {
-    //     details.player.sendMessage(`You ${details.option} the ${(details.objectConfig.name || '').toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`);
-    //     details.player.playSound(2581, 7);
-    //     if (details.objectConfig.name !== 'Flax' || Math.floor(Math.random() * 10) === 1) {
-    //         details.player.instance.hideGameObjectTemporarily(details.object, 30);
-    //     }
-    //     details.player.giveItem(pickedItem.gameId);
-    //     details.player.busy = false;
-    // }, World.TICK_LENGTH);
+    setTimeout(() => {
+        details.player.sendMessage(
+            `You ${details.option} the ${(details.objectConfig.name || '').toLowerCase()} and receive ${prefix} ${pickedItem.name.toLowerCase()}.`,
+        );
+        details.player.playSound(2581, 7);
+        if (details.objectConfig.name !== 'Flax' || Math.floor(Math.random() * 10) === 1) {
+            details.player.instance.hideGameObjectTemporarily(details.object, 30);
+        }
+        details.player.giveItem(pickedItem.gameId);
+        details.player.busy = false;
+    }, World.TICK_LENGTH);
 };
 
 export default {

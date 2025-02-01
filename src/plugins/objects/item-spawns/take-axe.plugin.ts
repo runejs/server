@@ -18,12 +18,12 @@ export const action: objectInteractionActionHandler = details => {
     switch (option) {
         case 'take-axe':
             player.playAnimation(827);
-            player.sendMessage(`You take the axe.`);
+            player.sendMessage('You take the axe.');
             player.playSound(2581, 7);
             player.giveItem(itemMappings[details.object.objectId]);
             return;
         default:
-            player.sendMessage(`This has not been implemented.`);
+            player.sendMessage('This has not been implemented.');
             return;
     }
 };

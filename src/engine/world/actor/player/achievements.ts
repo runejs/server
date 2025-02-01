@@ -36,7 +36,7 @@ export const Achievements: { [key: string]: Achievement } = {
         id: 'bury-bones',
         name: 'Grave Digger',
         description: 'Bury the bones of the dead.',
-        longDescription: `Bury the remains of a deceased enemy.`,
+        longDescription: 'Bury the remains of a deceased enemy.',
         series: AchievementSeries.LUMBRIDGE,
     },
 };

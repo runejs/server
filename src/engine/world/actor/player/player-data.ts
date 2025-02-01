@@ -145,7 +145,7 @@ export function savePlayerData(player: Player): boolean {
     try {
         writeFileSync(filePath, JSON.stringify(playerSave, null, 4));
         return true;
-    } catch (error) {
+    } catch (_) {
         logger.error(`Error saving player data for ${player.username}.`);
         return false;
     }
@@ -177,7 +177,7 @@ export function loadPlayerSave(username: string): PlayerSave | null {
             playerSave.position.level = 0;
         }
         return playerSave;
-    } catch (error) {
+    } catch (_) {
         logger.error(`Malformed player save data for ${username}.`);
         return null;
     }

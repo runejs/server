@@ -13,7 +13,7 @@ function flourBin(details: { objectConfig: ObjectConfig; player: Player }): void
         player.sendMessage(
             `The ${(objectConfig.name || '').toLowerCase()} is already empty. You need to place wheat in the hopper upstairs `,
         );
-        player.sendMessage(`first.`);
+        player.sendMessage('first.');
     } else {
         if (player.hasItemInInventory(itemIds.pot)) {
             player.playSound(soundIds.potContentModified, 7);
@@ -21,7 +21,7 @@ function flourBin(details: { objectConfig: ObjectConfig; player: Player }): void
             player.giveItem(itemIds.potOfFlour);
             details.player.savedMetadata['mill-flour'] -= 1;
         } else {
-            player.sendMessage(`You need a pot to hold the flour in.`);
+            player.sendMessage('You need a pot to hold the flour in.');
         }
     }
 

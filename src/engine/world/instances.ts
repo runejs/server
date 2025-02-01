@@ -259,10 +259,9 @@ export class WorldInstance {
     /**
      * Spawns a temporary game object within the game world.
      * @param object The game object to spawn.
-     * @param position The position to spawn the object at.
      * @param despawnTicks The number of game cycles/ticks before the object will de-spawn.
      */
-    public async spawnTemporaryGameObject(object: LandscapeObject, position: Position, despawnTicks: number): Promise<void> {
+    public async spawnTemporaryGameObject(object: LandscapeObject, despawnTicks: number): Promise<void> {
         this.spawnGameObject(object);
         await schedule(despawnTicks);
         this.despawnGameObject(object);
@@ -321,10 +320,9 @@ export class WorldInstance {
     /**
      * Spawn a new game object into the instance.
      * @param object The game object to spawn.
-     * @param reference Whether or not the object being spawned is a reference to an existing object or if it should
      * be sent to the game client for forced rendering. Defaults to false for forced rendering.
      */
-    public spawnGameObject(object: LandscapeObject, reference: boolean = false): void {
+    public spawnGameObject(object: LandscapeObject): void {
         const position = new Position(object.x, object.y, object.level);
 
         const { chunk: instancedChunk, mods } = this.getTileModifications(position);

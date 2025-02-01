@@ -45,7 +45,7 @@ export class NpcSyncTask extends SyncTask<void> {
                 nearbyNpcs,
             ) as Npc[];
 
-            registerNewActors(npcUpdatePacket, this.player, this.player.trackedNpcs, nearbyNpcs, actor => {
+            registerNewActors(this.player, this.player.trackedNpcs, nearbyNpcs, actor => {
                 const newNpc = actor as Npc;
                 const positionOffsetX = newNpc.position.x - this.player.position.x;
                 const positionOffsetY = newNpc.position.y - this.player.position.y;

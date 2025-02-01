@@ -297,8 +297,8 @@ function parseDialogueTree(player: Player, npcParticipants: NpcParticipant[], di
             }
 
             if (isOptions) {
-                const options = (result as any[]).filter((option, index) => index % 2 === 0);
-                const trees = (result as any[]).filter((option, index) => index % 2 !== 0);
+                const options = (result as any[]).filter((_, index) => index % 2 === 0);
+                const trees = (result as any[]).filter((_, index) => index % 2 !== 0);
                 const optionsDialogueAction: OptionsDialogueAction = {
                     options: {},
                     tag: tag || '',
@@ -784,7 +784,7 @@ export async function itemSelectionDialogue(player: Player, type: 'COOKING' | 'M
             widgetId = 309;
         } else {
             if (items.length > 5) {
-                throw new Error(`Too many items provided to the item selection action!`);
+                throw new Error('Too many items provided to the item selection action!');
             }
 
             widgetId = 301 + items.length;

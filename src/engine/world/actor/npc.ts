@@ -125,7 +125,7 @@ export class Npc extends Actor {
 
     //This is useful so that we can tie into things like "spell casts" or events, or traps, etc to finish quests or whatever
     public async processDeath(assailant: Actor, defender: Actor): Promise<void> {
-        return new Promise<void>(resolve => {
+        return new Promise<void>(() => {
             const deathPosition = defender.position;
 
             let deathAnim: number = animationIds.death;

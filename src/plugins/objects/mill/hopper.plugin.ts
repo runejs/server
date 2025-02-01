@@ -3,7 +3,7 @@ import { itemIds } from '@engine/world/config/item-ids';
 
 export const action: itemOnObjectActionHandler = details => {
     if (details.player.savedMetadata['mill-grain'] && details.player.savedMetadata['mill-grain'] === 1) {
-        details.player.sendMessage(`There is already grain in the hopper.`);
+        details.player.sendMessage('There is already grain in the hopper.');
         return;
     }
     details.player.busy = true;

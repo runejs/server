@@ -167,14 +167,14 @@ export const handler: buttonActionHandler = details => {
                 }
             }
         } else {
-            player.sendMessage(`You need to be wearing a skillcape in order to perform that emote.`, true);
+            player.sendMessage('You need to be wearing a skillcape in order to perform that emote.', true);
         }
     } else {
         if (emote.unlockable) {
             const unlockedEmotes: string[] = player.savedMetadata.unlockedEmotes || [];
 
             if (unlockedEmotes.indexOf(emote.name) === -1) {
-                player.sendMessage(`You have not unlocked this emote.`, true);
+                player.sendMessage('You have not unlocked this emote.', true);
                 return;
             }
         }

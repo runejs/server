@@ -69,7 +69,7 @@ export class PlayerSyncTask extends SyncTask<void> {
                 nearbyPlayers,
             ) as Player[];
 
-            registerNewActors(playerUpdatePacket, this.player, this.player.trackedPlayers, nearbyPlayers, actor => {
+            registerNewActors(this.player, this.player.trackedPlayers, nearbyPlayers, actor => {
                 const newPlayer = actor as Player;
                 const positionOffsetX = newPlayer.position.x - this.player.position.x;
                 const positionOffsetY = newPlayer.position.y - this.player.position.y;
