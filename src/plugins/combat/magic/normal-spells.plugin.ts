@@ -2,93 +2,79 @@ import { MagicOnNPCAction } from '@engine/action/pipe/magic-on-npc.action';
 import { ContentPlugin } from '@engine/plugins/plugin.types';
 import { colors } from '@engine/util/colors';
 import { colorText } from '@engine/util/strings';
+import { TargetLock } from '@engine/world/actor/combat';
 import { Npc } from '@engine/world/actor/npc';
 import { Player } from '@engine/world/actor/player/player';
 import { QueueType } from '@engine/world/actor/tick-queue';
+import { World } from '@engine/world/world';
 import { CombatSpell, SPELLS_BY_ID } from '@plugins/combat/magic/config/normal-spells.constants';
+import { logger } from '@runejs/common';
 
 const SPLASH_GFX = 85; // 339
 const CAST_ANIMATION = 711;
 
-async function initMagic(details: MagicOnNPCAction) {
+function initMagic(details: MagicOnNPCAction): Promise<void> {
     const { player, buttonId, npc } = details;
-    console.log(player.delayManager.isDelayed());
-    // console.log('initMagic', details);
-    // throw new Error('This is an error');
     const spell = SPELLS_BY_ID[buttonId];
 
+    // Face and stop moving first - regardless of success.
+    // Not sure if this is correct but it really annoys me when I start walking :D
+    player.face(npc, true, true, true);
+
     if (spell == null) {
-        console.error(`Unhandled spell id: ${buttonId}`);
-        return;
+        return Promise.reject(`Unhandled spell id: ${buttonId}`);
     }
 
     if (player.position.distanceBetween(npc.position) > 10) {
-        // Wait until the player is in range.
-        player.sendMessage('TOO FAR BRUH');
-        return;
+        return Promise.reject('TOO FAR BRUH');
     }
 
     if (player.skills.magic.level < spell.level) {
         player.sendMessage('You do not have a high enough magic level to cast this spell.');
-        return;
+        return Promise.reject('Skill Insufficient');
     }
 
-    const isInstant = !player.tickQueue.globalTimer.isActive();
+    // TODO: Check runes
+    // TODO: Check projectile has a path to the enemy (no walls in the way.)
 
-    // TODO: do we still walk????
-    player.face(npc, true, false, false);
+    // 3000ms (5 ticks) is the attack time for all spells.
+    const targetLock = npc.maybeGetTargetLock(3000);
+    if (!targetLock) {
+        return Promise.reject('Unable to acquire target lock.');
+    }
 
-    // if (!isInstant) {
-    // try {
-    //     console.log("I AM WAITING");
-    //     await player.requestTickDelay(isInstant ? 2 : 2, { type: QueueType.WEAK })
-    //     console.log("I AM DONE");
-    //
-    // } catch (error) {
-    //     console.log(error)
-    // }
-    // // }
-    return castSpell(player, npc, spell);
-
-    // wait for next attack
+    return castSpell(targetLock, player, npc, spell);
 }
 
-const castSpell = async (player: Player, npc: Npc, spell: CombatSpell) => {
-    console.log('I AM CASTING');
+/** Fires the laser! ☄️ */
+const castSpell = async (targetLock: TargetLock, player: Player, npc: Npc, spell: CombatSpell) => {
+    // TODO: Determine if we should splash instead of doing damage.
+    const damage = Math.round(Math.random() * spell.maxHit);
+
     player.playAnimation({ id: CAST_ANIMATION, delay: 20 });
     player.playGraphics({ id: spell.startGfx, delay: 20, height: 100 });
-    // calc damage
-    const damage = Math.round(Math.random() * spell.maxHit);
-    const attackerX = player.position.x;
-    const attackerY = player.position.y;
-    const victimX = npc.position.x;
-    const victimY = npc.position.y;
-    const offsetX = victimY - attackerY;
-    const offsetY = victimX - attackerX;
 
-    //npc world index would be -1 for players
-    player.outgoingPackets.sendProjectile(player.position, offsetX, offsetY, spell.projectileGfx, 43, 31, 80, npc.worldIndex + 1, 65);
-    try {
-        // player.delayManager.applyDelay(4);
-        await player.requestTickDelay(4, { type: QueueType.NORMAL });
+    player.outgoingPackets.sendProjectile(
+        player.position,
+        npc.position.y - player.position.y,
+        npc.position.x - player.position.x,
+        spell.projectileGfx,
+        43,
+        31,
+        80,
+        npc.worldIndex + 1, // Not sure why the worldIndex needs a +1 here.
+        65,
+    );
 
-        player.skills.magic.addExp(spell.baseExperience + damage * 2);
-        player.skills.hitpoints.addExp(damage * 1.33);
-        npc.playGraphics({ id: spell.endGfx, delay: 0, height: 100 });
-        player.sendMessage(colorText(`You hit something for ${damage} damage`, colors.red));
-        npc.hit(player, damage);
-
-        // player.stopAnimation();
-        // await player.requestTickDelay(4, { type: QueueType.NORMAL, useGlobalTimer: true })
-        // return
-    } catch (e) {
-        player.sendMessage(e);
-    }
-
-    // do damage
-    // splat
-
-    // rerun
+    return new Promise<void>(resolve => {
+        setTimeout(() => {
+            player.skills.magic.addExp(spell.baseExperience + damage * 2);
+            player.skills.hitpoints.addExp(damage * 1.33);
+            npc.playGraphics({ id: spell.endGfx, delay: 0, height: 100 });
+            npc.hit(targetLock, player, damage);
+            return resolve();
+        }, World.TICK_LENGTH * 4);
+    });
 };
 
 export default (<ContentPlugin>{
@@ -97,11 +83,7 @@ export default (<ContentPlugin>{
         type: 'magic_on_npc',
         widgetId: 192,
         buttonIds: Object.keys(SPELLS_BY_ID).map(i => Number.parseInt(i)),
-        handler: async details => initMagic(details),
+        handler: details => initMagic(details).catch(error => logger.error(error)),
         walkTo: false,
-        // task: {
-        //     activate,
-        //     interval: 1,
-        // },
     },
 });

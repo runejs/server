@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 import { findItem, findNpc } from '@engine/config/config-handler';
-import type { NpcCombatAnimations, NpcDetails } from '@engine/config/npc-config';
+import type { DropTable, NpcCombatAnimations, NpcDetails } from '@engine/config/npc-config';
 import type { NpcSpawn } from '@engine/config/npc-spawn-config';
 import { activeWorld } from '@engine/world';
 import type { Player } from '@engine/world/actor/player/player';
@@ -17,6 +17,7 @@ import { filestore } from '@server/game/game-server';
 import { v4 } from 'uuid';
 import { Actor } from './actor';
 import type { SkillName } from './skills';
+import { TargetLock } from './combat';
 
 /**
  * Represents a non-player character within the game world.
@@ -40,8 +41,6 @@ export class Npc extends Actor {
         turnRight?: number;
         stand?: number;
     };
-    //ToDo: this should either be calculated by the level or from a config
-    public experienceValue: number = 10;
     public npcEvents: EventEmitter = new EventEmitter();
 
     private _name: string;
@@ -51,6 +50,29 @@ export class Npc extends Actor {
     private _exists: boolean = true;
     private npcSpawn: NpcSpawn;
     private _initialized: boolean = false;
+    /**
+     * Set when an NPC's health reaches zero - when true - indicates that the NPC will be
+     * destroyed on the next tick.
+     */
+    private isDying: boolean = false;
+    /** Stores a record of hit damage and the player to later determine drops. */
+    private playerHits: [username: string, damage: number][] = [];
+    /**
+     * Tracks the actor, if any, which most recently hit the NPC.
+     *
+     * Each tick, if {@link attackingActor} is not set - we will attempt to path
+     * towards this Actor to attack them when in range.
+     */
+    private underAttackBy?: Actor;
+    /** State for any attack which is in progress. */
+    private attackInProgress?: {
+        combatTick: number;
+        targetLock: TargetLock;
+        victim: Actor;
+    };
+
+    /** Starts incrementing once the NPC's health reaches 0. */
+    private deathTick = 0;
 
     public constructor(npcDetails: NpcDetails | number, npcSpawn: NpcSpawn, instance: WorldInstance | null = null) {
         super('npc');
@@ -128,72 +150,105 @@ export class Npc extends Actor {
         this._initialized = true;
     }
 
-    public hit(attacker: Actor, damage: number) {
+    public hit(targetLock: TargetLock, attacker: Actor, damage: number) {
+        if (!this.targetLock || !targetLock.isValid() || this.targetLock.lockId !== targetLock.lockId) {
+            throw new Error('A targetLock from maybeGetTargetLock must be provided before hitting this actor.');
+        }
+
+        // Set the attacker as the most recent actor to attack this NPC.
+        this.underAttackBy = attacker;
+
         const currentHitpoints = this.skills.hitpoints.level;
         let nextHitpoints = currentHitpoints - damage;
         nextHitpoints = nextHitpoints > 0 ? nextHitpoints : 0;
         const finalDamage = nextHitpoints > 0 ? damage : currentHitpoints;
 
         if (finalDamage === 0) {
-            this.updateFlags.addDamage(
-                0,
-                DamageType.NO_DAMAGE,
-                currentHitpoints,
-                this.cacheDetails.skills?.hitpoints || 5, // TODO: Hardcoded to Goblin max health - NPC max health is not available.
-            );
+            this.updateFlags.addDamage(0, DamageType.NO_DAMAGE, currentHitpoints, this.cacheDetails.skills?.hitpoints || 10);
         } else {
             this.skills.setHitpoints(nextHitpoints);
-            this.updateFlags.addDamage(
-                finalDamage,
-                DamageType.DAMAGE,
-                nextHitpoints,
-                this.cacheDetails.skills?.hitpoints || 5, // TODO: Hardcoded to Goblin max health - NPC max health is not available.
-            );
+            this.updateFlags.addDamage(finalDamage, DamageType.DAMAGE, nextHitpoints, this.cacheDetails.skills?.hitpoints || 10);
 
-            // if (attacker.isPlayer()) {
-            //     this.playerHits.push([attacker.username, finalDamage]);
-            // }
+            if (isPlayer(attacker)) {
+                this.playerHits.push([attacker.username, finalDamage]);
+            }
         }
     }
 
-    //This is useful so that we can tie into things like "spell casts" or events, or traps, etc to finish quests or whatever
-    public async processDeath(assailant: Actor, defender: Actor): Promise<void> {
-        return new Promise<void>(resolve => {
-            const deathPosition = defender.position;
+    private processDeath() {
+        // Play the custom death animation if found otherwise use the default.
+        this.playAnimation(this.cacheDetails.combatAnimations?.death || animationIds.death);
 
-            let deathAnim: number = animationIds.death;
-            deathAnim = findNpc((defender as Npc).id).combatAnimations?.death || animationIds.death;
+        // Play the sound of death
+        // TODO: Replace with NPC specific death sound.
+        this.playSound(soundIds.npc.human.maleDeath, 5);
 
-            defender.playAnimation(deathAnim);
-            activeWorld.playLocationSound(deathPosition, defender.instance.instanceId, soundIds.npc.human.maleDeath, 5);
-            const npcDetails = findNpc((defender as Npc).id);
+        // Drop handling - drops are awarded to the player-type damage source
+        // which contributed the most damage to the NPC.
 
-            if (!npcDetails.dropTable) {
+        if (!this.cacheDetails.dropTable) {
+            // Short circuit if this NPC doesn't drop anything.
+            return;
+        }
+
+        if (this.playerHits.length === 0) {
+            // We were killed by something other than a player(s)... mysterious.
+            return;
+        }
+
+        // Determine which player did the most damage.
+        const countMap: { [username: string]: number } = {};
+        let maxCount = 0;
+        let maxUsername = this.playerHits[0][0];
+
+        this.playerHits.forEach(([username, count]) => {
+            countMap[username] = (countMap[username] || 0) + count;
+            if (countMap[username] > maxCount) {
+                maxCount = countMap[username];
+                maxUsername = username;
+            }
+        });
+
+        const dropOwner = activeWorld.findActivePlayerByUsername(maxUsername);
+
+        if (!dropOwner) {
+            logger.warn('NPC drops skipped as receiving player was not found.');
+            return;
+        }
+
+        const deathPosition = this.position;
+        const itemDrops = calculateNpcDropsForPlayer(this.cacheDetails.dropTable, dropOwner);
+
+        itemDrops.forEach(drop => {
+            const droppedItem = findItem(drop.itemKey);
+
+            if (!droppedItem) {
+                logger.error(`Unable to find item with key: ${drop.itemKey}`);
                 return;
             }
 
-            if (isPlayer(assailant)) {
-                const itemDrops = calculateNpcDrops(assailant, npcDetails);
-                itemDrops.forEach(drop => {
-                    const droppedItem = findItem(drop.itemKey);
-
-                    if (!droppedItem) {
-                        logger.error(`Unable to find item with key: ${drop.itemKey}`);
-                        return;
-                    }
-
-                    if (!drop.amount) {
-                        logger.error(`Unable to drop item with key: ${drop.itemKey} - no amount specified`);
-                        return;
-                    }
-
-                    activeWorld.globalInstance.spawnWorldItem({ itemId: droppedItem.gameId, amount: drop.amount }, deathPosition, {
-                        owner: assailant,
-                        expires: 300,
-                    });
-                });
+            if (!drop.amount) {
+                logger.error(`Unable to drop item with key: ${drop.itemKey} - no amount specified`);
+                return;
             }
+
+            activeWorld.globalInstance.spawnWorldItem({ itemId: droppedItem.gameId, amount: drop.amount }, deathPosition, {
+                owner: dropOwner,
+                expires: 300,
+            });
         });
+    }
+
+    private kill(respawn: boolean = true): void {
+        this.destroy();
+
+        activeWorld.chunkManager.getChunkForWorldPosition(this.position).removeNpc(this);
+        clearInterval(this.randomMovementInterval);
+        activeWorld.deregisterNpc(this);
+
+        if (respawn) {
+            activeWorld.scheduleNpcRespawn(new Npc(this.cacheDetails, this.npcSpawn));
+        }
     }
 
     public withinBounds(x: number, y: number): boolean {
@@ -205,25 +260,28 @@ export class Npc extends Actor {
         );
     }
 
-    public kill(respawn: boolean = true): void {
-        this.destroy();
-
-        activeWorld.chunkManager.getChunkForWorldPosition(this.position).removeNpc(this);
-        clearInterval(this.randomMovementInterval);
-        activeWorld.deregisterNpc(this);
-
-        if (respawn) {
-            const npcDetails = findNpc(this.id);
-            activeWorld.scheduleNpcRespawn(new Npc(npcDetails, this.npcSpawn));
-        }
-    }
-
     public async tick(): Promise<void> {
         super.tick();
 
         return new Promise<void>(resolve => {
+            // Check if we are dead.
+            if (this.skills.hitpoints.level <= 0) {
+                // Skip a tick so that the death animation doesn't conflict with the last attack.
+                if (this.deathTick === 1) {
+                    this.processDeath();
+                }
+
+                if (this.deathTick >= 3) {
+                    this.kill();
+                }
+
+                this.deathTick++;
+                // We are dead and shouldn't bother doing anything else.
+                return resolve();
+            }
+
             this.walkingQueue.process();
-            resolve();
+            return resolve();
         });
     }
 
@@ -339,17 +397,13 @@ export class Npc extends Actor {
  * A basic attempt at handling the odds of receiving an item from an NPCs DropTable.
  *
  * This method gets the odds defined in the DropTable, and rolls a random number to see if the odds are met.
- * Also checks whether or not the drop has a quest requirement, and accounts for that.
+ * Also checks whether or not the player has met any quest requirements for the drop.
  *
  * @param player The player receiving the drop.
  * @param npcDetails The NpcDetails of the NPC that contains the DropTable data.
  */
-export function calculateNpcDrops(player: Player, npcDetails: NpcDetails): { itemKey: string; amount?: number }[] {
+export function calculateNpcDropsForPlayer(npcDropTable: DropTable[], player: Player): { itemKey: string; amount?: number }[] {
     const itemDrops: { itemKey: string; amount?: number }[] = [];
-    const npcDropTable = npcDetails.dropTable;
-    if (!npcDropTable) {
-        return itemDrops;
-    }
 
     npcDropTable.forEach(drop => {
         let meetsQuestRequirements = true;
@@ -381,7 +435,6 @@ export function calculateNpcDrops(player: Player, npcDetails: NpcDetails): { ite
  * @param max The largest value to generate to.
  * @param min The smallest value to generate from.
  */
-
 function getRandomInt(max, min = 1): number {
     return Math.floor(Math.random() * max) + min;
 }

@@ -22,6 +22,8 @@ import { isNpc } from './util';
 import { WalkingQueue } from './walking-queue';
 import { RequestTickOptions, TickQueue } from '@engine/world/actor/tick-queue';
 import { DelayManager } from '@engine/world/actor/delay-manager';
+import { findNpc } from '@engine/config/config-handler';
+import { getTargetLock, TargetLock } from './combat';
 
 export type ActorType = 'player' | 'npc';
 
@@ -81,6 +83,12 @@ export abstract class Actor {
 
     private readonly scheduler = new TaskScheduler();
 
+    /**
+     * Set by {@link maybeGetTargetLock} - outside of multi-combat zones a targetLock is needed to execute
+     * any hostile action against this actor.
+     */
+    protected targetLock?: TargetLock;
+
     protected constructor(actorType: ActorType) {
         this.type = actorType;
         this._walkDirection = -1;
@@ -90,6 +98,8 @@ export abstract class Actor {
     }
 
     public abstract equals(actor: Actor): boolean;
+
+    public abstract hit(targetLock: TargetLock, attacker: Actor, damage: number): void;
 
     /**
      * Instantiate a task with the Actor instance and a set of arguments.
@@ -541,6 +551,47 @@ export abstract class Actor {
             ...options,
             ticks,
         });
+    }
+
+    /**
+     * Attempts to generate a target lock against the current actor and returns it.
+     *
+     * Will return false if an existing target lock is already in place.
+     *
+     * This might seem over-complicated but we need to validate that both Actors involved in combat
+     * are allowed to participate in the combat before it may begin. For this reason we need to use
+     * a lock to prevent getting into invalid states.
+     *
+     * @param lockTimeout - number - the time in ms in which the lock will expire, set this to the
+     * time it takes for attack to complete.
+     */
+    public maybeGetTargetLock(lockTimeoutMs: number): TargetLock | false {
+        if (isNpc(this)) {
+            const npcDetails = findNpc(this.key);
+
+            if (npcDetails.skills?.hitpoints == null) {
+                logger.warn(`No hitpoints data for NPC ID: ${this.id}`);
+                return false;
+            }
+
+            if (!npcDetails.killable) {
+                // Block target locks against non-killable NPCs
+                return false;
+            }
+        }
+
+        if (this.targetLock?.isValid()) {
+            // Deny if there is an existing, valid target lock.
+            return false;
+        }
+
+        if (this.skills.hitpoints.level <= 0) {
+            // Deny if the actor has no hitpoints.
+            return false;
+        }
+
+        this.targetLock = getTargetLock(lockTimeoutMs);
+        return this.targetLock;
     }
 
     public get position(): Position {

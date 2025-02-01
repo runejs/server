@@ -53,6 +53,9 @@ import type { PlayerMetadata } from './metadata';
 import type { SendMessageOptions } from './model';
 import { NpcSyncTask } from './sync/npc-sync-task';
 import { PlayerSyncTask } from './sync/player-sync-task';
+import { TargetLock } from '../combat';
+import { DamageType } from '../update-flags';
+import { animationIds } from '@engine/world/config/animation-ids';
 
 export const playerOptions: { option: string; index: number; placement: 'TOP' | 'BOTTOM' }[] = [
     {
@@ -158,6 +161,7 @@ export class Player extends Actor {
     private _nearbyChunks: Chunk[];
     private quadtreeKey: QuadtreeKey | null = null;
     private privateMessageIndex: number = 1;
+    private deathTick = 0;
 
     public constructor(
         socket: Socket,
@@ -418,9 +422,6 @@ export class Player extends Actor {
         this.ignoreList.splice(index, 1);
         return true;
     }
-    public onNpcKill(npc: Npc) {
-        console.log('killed npc');
-    }
     /**
      * Should be fired whenever the player's chunk changes. This will fire off chunk updates for all chunks not
      * already tracked by the player - all the new chunks that are coming into view.
@@ -453,6 +454,27 @@ export class Player extends Actor {
                     }
                 } else {
                     this.outgoingPackets.updateCurrentMapChunk();
+                }
+            }
+
+            // Check if we are dead.
+            if (this.skills.hitpoints.level <= 0) {
+                this.deathTick++;
+
+                if (this.deathTick === 1) {
+                    this.sendMessage('Oh dear, you are dead!');
+                    this.playAnimation(animationIds.death);
+                    this.clearFaceActor();
+                } else if (this.deathTick === 3) {
+                    // Seems we must stop the animations a tick before
+                    // teleporting or the teleport breaks :shrug: doesn't
+                    // look the best but it seems the best we can do for now.
+                    this.stopAnimation();
+                } else if (this.deathTick >= 4) {
+                    // Reset hitpoints and death tick so we are ready to die again.
+                    this.deathTick = 0;
+                    this.skills.setHitpoints(this.skills.hitpoints.levelForExp);
+                    this.teleport(new Position(3224, 3218));
                 }
             }
 
@@ -1362,6 +1384,24 @@ export class Player extends Actor {
 
         if (!this._settings) {
             this._settings = defaultSettings();
+        }
+    }
+
+    public hit(targetLock: TargetLock, attacker: Actor, damage: number) {
+        if (!this.targetLock || !targetLock.isValid() || this.targetLock.lockId !== targetLock.lockId) {
+            throw new Error('A targetLock from maybeGetTargetLock must be provided before hitting this actor.');
+        }
+
+        const currentHitpoints = this.skills.hitpoints.level;
+        let nextHitpoints = currentHitpoints - damage;
+        nextHitpoints = nextHitpoints > 0 ? nextHitpoints : 0;
+        const finalDamage = nextHitpoints > 0 ? damage : currentHitpoints;
+
+        if (finalDamage === 0) {
+            this.updateFlags.addDamage(0, DamageType.NO_DAMAGE, currentHitpoints, this.skills.hitpoints.levelForExp);
+        } else {
+            this.skills.setHitpoints(nextHitpoints);
+            this.updateFlags.addDamage(finalDamage, DamageType.DAMAGE, nextHitpoints, this.skills.hitpoints.levelForExp);
         }
     }
 

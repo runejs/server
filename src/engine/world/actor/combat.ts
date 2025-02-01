@@ -13,3 +13,22 @@ export interface CombatStyle {
 }
 
 export const combatStyles: CombatStyles = combatStylesImport as CombatStyles;
+
+export type TargetLock = {
+    lockId: symbol;
+    isValid(): boolean;
+};
+export function getTargetLock(timeoutMs: number): TargetLock {
+    const createdTime = performance.now();
+    return {
+        lockId: Symbol(),
+        isValid: () => {
+            const now = performance.now();
+
+            if (now - createdTime < timeoutMs) {
+                return true;
+            }
+            return false;
+        },
+    };
+}
