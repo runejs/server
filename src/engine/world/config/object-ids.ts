@@ -4,6 +4,7 @@ export const objectIds = {
     fire: 2732,
     spinningWheel: 2644,
     bankBooth: 2213,
+    bankChest: 4483,
     depositBox: 9398,
     shortCuts: {
         stile: 12982,

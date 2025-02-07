@@ -17,5 +17,8 @@
         "skills": {
             "hitpoints": 1
         }
+    },
+    "rs:dromunds_cat": {
+        "game_id": 2140
     }
 }

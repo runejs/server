@@ -134,7 +134,7 @@ export class ItemContainer {
         for (let i = 0; i < this._size; i++) {
             const inventoryItem = this._items[i];
 
-            if (inventoryItem === null) {
+            if (inventoryItem == null) {
                 continue;
             }
 

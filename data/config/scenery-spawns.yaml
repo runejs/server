@@ -72,3 +72,47 @@
   type: 10
   orientation: 1
   # End lumby castle roof bank construction objects
+  # Test area objects
+- objectId: 1276
+  x: 2711
+  y: 9807
+  level: 0
+  type: 10
+  orientation: 1
+- objectId: 1281
+  x: 2710
+  y: 9809
+  level: 0
+  type: 10
+  orientation: 1
+- objectId: 1308
+  x: 2711
+  y: 9812
+  level: 0
+  type: 10
+  orientation: 1
+- objectId: 1307
+  x: 2711
+  y: 9814
+  level: 0
+  type: 10
+  orientation: 1
+- objectId: 1309
+  x: 2710
+  y: 9816
+  level: 0
+  type: 10
+  orientation: 1
+- objectId: 1306
+  x: 2711
+  y: 9819
+  level: 0
+  type: 10
+  orientation: 1
+- objectId: 4483
+  x: 2713
+  y: 9805
+  level: 0
+  type: 10
+  orientation: 4
+  # End test area

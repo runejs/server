@@ -70,10 +70,6 @@
         "extends": "rs:log",
         "game_id": 1513
     },
-    "rs:magic_pyre_logs": {
-        "extends": "rs:log",
-        "game_id": 1513
-    },
     "rs:bark": {
         "game_id": 3239,
         "examine": "Bark from a hollow tree.",

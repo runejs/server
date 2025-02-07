@@ -303,20 +303,20 @@ export class Skills extends SkillShortcuts {
 
         const skillName = achievementDetails.name.toLowerCase();
 
-        player.modifyWidget(widgetId, {
-            childId: 0,
-            text:
-                `<col=000080>Congratulations, you just advanced ${startsWithVowel(skillName) ? 'an' : 'a'} ` + `${skillName} level.</col>`,
-        });
-        player.modifyWidget(widgetId, {
-            childId: 1,
-            text: `Your ${skillName} level is now ${level}.`,
-        });
+        // player.modifyWidget(widgetId, {
+        //     childId: 0,
+        //     text:
+        //         `<col=000080>Congratulations, you just advanced ${startsWithVowel(skillName) ? 'an' : 'a'} ` + `${skillName} level.</col>`,
+        // });
+        // player.modifyWidget(widgetId, {
+        //     childId: 1,
+        //     text: `Your ${skillName} level is now ${level}.`,
+        // });
 
-        player.interfaceState.openWidget(widgetId, {
-            slot: 'chatbox',
-            multi: true,
-        });
+        // player.interfaceState.openWidget(widgetId, {
+        //     slot: 'chatbox',
+        //     multi: true,
+        // });
 
         player.playGraphics({ id: gfxIds.levelUpFireworks, delay: 0, height: 125 });
         // @TODO sounds
