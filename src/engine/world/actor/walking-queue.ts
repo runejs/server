@@ -1,6 +1,9 @@
 import { regionChangeActionFactory } from '@engine/action/pipe/region-change.action';
 import { activeWorld } from '@engine/world';
+import { Npc } from '@engine/world/actor/npc';
+import { Player } from '@engine/world/actor/player/player';
 import { isNpc, isPlayer } from '@engine/world/actor/util';
+import { Chunk } from '@engine/world/map/chunk';
 import { Subject } from 'rxjs';
 import { Position } from '../position';
 import type { Actor } from './actor';
@@ -140,18 +143,17 @@ export class WalkingQueue {
     }
 
     public process(): void {
-        if (this.actor.busy || this.queue.length === 0 || !this.valid) {
+        if (this.actor.busy || this.queue.length === 0 || !this.valid || this.actor.delayManager.isDelayed()) {
             this.resetDirections();
             return;
         }
 
         const walkPosition = this.queue.shift();
-
         if (!walkPosition) {
             return;
         }
 
-        if (this.actor.metadata.faceActorClearedByWalking === undefined || this.actor.metadata.faceActorClearedByWalking) {
+        if (this.actor.metadata.faceActorClearedByWalking) {
             this.actor.clearFaceActor();
         }
 
@@ -175,69 +177,68 @@ export class WalkingQueue {
 
             let runDir = -1;
 
-            // @TODO npc running
-            if (isPlayer(this.actor)) {
-                if (this.actor.settings.runEnabled && this.queue.length !== 0) {
-                    const runPosition = this.queue.shift();
+            // Process running if enabled and more steps exist
+            if (isPlayer(this.actor) && this.actor.settings.runEnabled && this.queue.length !== 0) {
+                const runPosition = this.queue.shift();
+                if (runPosition && this.actor.pathfinding.canMoveTo(walkPosition, runPosition)) {
+                    const runDiffX = runPosition.x - walkPosition.x;
+                    const runDiffY = runPosition.y - walkPosition.y;
+                    runDir = this.calculateDirection(runDiffX, runDiffY);
 
-                    if (!runPosition) {
-                        return;
-                    }
-
-                    if (this.actor.pathfinding.canMoveTo(walkPosition, runPosition)) {
-                        const runDiffX = runPosition.x - walkPosition.x;
-                        const runDiffY = runPosition.y - walkPosition.y;
-                        runDir = this.calculateDirection(runDiffX, runDiffY);
-
-                        if (runDir != -1) {
-                            this.actor.lastMovementPosition = this.actor.position;
-                            this.actor.position = runPosition;
-                        }
-                    } else {
-                        this.resetDirections();
-                        this.clear();
+                    if (runDir !== -1) {
+                        this.actor.lastMovementPosition = this.actor.position;
+                        this.actor.position = runPosition;
                     }
                 }
             }
 
             this.actor.walkDirection = walkDir;
             this.actor.runDirection = runDir;
-
-            if (runDir !== -1) {
-                this.actor.faceDirection = runDir;
-            } else {
-                this.actor.faceDirection = walkDir;
-            }
+            this.actor.faceDirection = runDir !== -1 ? runDir : walkDir;
 
             const newChunk = activeWorld.chunkManager.getChunkForWorldPosition(this.actor.position);
-
             this.movementEvent.next(this.actor.position);
 
+            this.handleChunkUpdate(oldChunk, newChunk, originalPosition);
+        } else {
+            this.resetDirections();
+            this.clear();
+        }
+    }
+
+    /**
+     * Handles chunk updates and region changes when an actor moves between chunks
+     * @param oldChunk The chunk the actor is moving from
+     * @param newChunk The chunk the actor is moving to
+     * @param originalPosition The actor's original position before movement
+     */
+    private handleChunkUpdate(oldChunk: Chunk, newChunk: Chunk, originalPosition: Position): void {
+        if (!oldChunk.equals(newChunk)) {
             if (isPlayer(this.actor)) {
-                const mapDiffX = this.actor.position.x - lastMapRegionUpdatePosition.chunkX * 8;
-                const mapDiffY = this.actor.position.y - lastMapRegionUpdatePosition.chunkY * 8;
+                // Handle map region updates for players
+                const mapDiffX = this.actor.position.x - this.actor.lastMapRegionUpdatePosition.chunkX * 8;
+                const mapDiffY = this.actor.position.y - this.actor.lastMapRegionUpdatePosition.chunkY * 8;
+
                 if (mapDiffX < 16 || mapDiffX > 87 || mapDiffY < 16 || mapDiffY > 87) {
                     this.actor.updateFlags.mapRegionUpdateRequired = true;
                     this.actor.lastMapRegionUpdatePosition = this.actor.position;
                 }
-            }
 
-            if (!oldChunk.equals(newChunk)) {
-                if (isPlayer(this.actor)) {
-                    this.actor.metadata.updateChunk = { newChunk, oldChunk };
+                // Update chunk references
+                oldChunk.removePlayer(this.actor);
+                newChunk.addPlayer(this.actor);
+                this.actor.metadata.updateChunk = { newChunk, oldChunk };
 
-                    this.actor.actionPipeline.call(
-                        'region_change',
-                        regionChangeActionFactory(this.actor, originalPosition, this.actor.position),
-                    );
-                } else if (isNpc(this.actor)) {
-                    oldChunk.removeNpc(this.actor);
-                    newChunk.addNpc(this.actor);
-                }
+                // Call region change action
+                this.actor.actionPipeline.call(
+                    'region_change',
+                    regionChangeActionFactory(this.actor, originalPosition, this.actor.position),
+                );
+            } else if (isNpc(this.actor)) {
+                // Handle NPC chunk updates
+                oldChunk.removeNpc(this.actor);
+                newChunk.addNpc(this.actor);
             }
-        } else {
-            this.resetDirections();
-            this.clear();
         }
     }
 

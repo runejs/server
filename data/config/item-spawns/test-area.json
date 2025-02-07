@@ -1,0 +1,10 @@
+[
+    {
+        "item": "rs:bronze_axe",
+        "amount": 1,
+        "spawn_x": 2713,
+        "spawn_y": 9807,
+        "instance": "global",
+        "respawn": 25
+    }
+]

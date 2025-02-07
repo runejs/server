@@ -1,7 +1,9 @@
 import { findNpc } from '@engine/config/config-handler';
 import { wrapText } from '@engine/util/strings';
+import { Actor } from '@engine/world/actor/actor';
 import type { Npc } from '@engine/world/actor/npc';
 import { Player } from '@engine/world/actor/player/player';
+import { isPlayer } from '@engine/world/actor/util';
 import { logger } from '@runejs/common';
 import type { ParentWidget, TextWidget } from '@runejs/filestore';
 import { filestore } from '@server/game/game-server';
@@ -683,13 +685,13 @@ export async function dialogue(
     dialogueTree: DialogueTree,
     additionalOptions?: AdditionalOptions,
 ): Promise<boolean> {
-    const player: Player | undefined = participants.find(p => p instanceof Player);
+    const player: Player | undefined = participants.find(p => p instanceof Actor && isPlayer(p));
 
     if (!player) {
         throw new Error('Player instance not provided to dialogue action.');
     }
 
-    let npcParticipants = participants.filter(p => !(p instanceof Player)) as NpcParticipant[];
+    let npcParticipants = participants.filter(p => !(p instanceof Actor && isPlayer(p))) as NpcParticipant[];
     if (!npcParticipants) {
         npcParticipants = [];
     }

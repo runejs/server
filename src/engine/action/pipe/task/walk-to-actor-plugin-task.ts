@@ -61,9 +61,9 @@ export class WalkToActorPluginTask<
     /**
      * Executed every tick to check if the player has arrived yet and calls the plugins if so.
      */
-    public execute(): void {
+    public async execute(): Promise<void> {
         // call super to manage waiting for the movement to complete
-        super.execute();
+        await super.execute();
 
         // check if the player has arrived yet
         const other = this.other;

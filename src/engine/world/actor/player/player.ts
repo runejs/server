@@ -750,13 +750,6 @@ export class Player extends Actor {
         }
     }
 
-    public canMove(): boolean {
-        if (this.metadata?.castingStationarySpell) {
-            return false;
-        }
-        return true;
-    }
-
     public removeFirstItem(item: number | Item): number {
         const slot = this.inventory.removeFirst(item);
 

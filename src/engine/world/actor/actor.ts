@@ -20,6 +20,8 @@ import type { Animation, Graphic } from './update-flags';
 import { UpdateFlags } from './update-flags';
 import { isNpc } from './util';
 import { WalkingQueue } from './walking-queue';
+import { RequestTickOptions, TickQueue } from '@engine/world/actor/tick-queue';
+import { DelayManager } from '@engine/world/actor/delay-manager';
 
 export type ActorType = 'player' | 'npc';
 
@@ -34,6 +36,8 @@ export abstract class Actor {
     public readonly inventory: ItemContainer = new ItemContainer(28);
     public readonly bank: ItemContainer = new ItemContainer(376);
     public readonly actionPipeline = new ActionPipeline(this);
+    public readonly delayManager = new DelayManager(this);
+    public readonly tickQueue: TickQueue = new TickQueue(this);
 
     /**
      * The map of available metadata for this actor.
@@ -201,8 +205,8 @@ export abstract class Actor {
         return true;
     }
 
-    public moveTo(target: Actor): boolean {
-        if (this.position.level !== target.position.level) {
+    public async moveTo(target: Actor): Promise<boolean> {
+        if(this.position.level !== target.position.level) {
             return false;
         }
 
@@ -343,6 +347,7 @@ export abstract class Actor {
     public giveItem(item: number | Item): boolean {
         return this.inventory.add(item) !== null;
     }
+
     public giveBankItem(item: number | Item): boolean {
         return this.bank.add(item) !== null;
     }
@@ -350,6 +355,7 @@ export abstract class Actor {
     public hasItemInInventory(item: number | Item): boolean {
         return this.inventory.has(item);
     }
+
     public hasItemInBank(item: number | Item): boolean {
         return this.bank.has(item);
     }
@@ -359,6 +365,9 @@ export abstract class Actor {
     }
 
     public canMove(): boolean {
+        if (this.delayManager.isDelayed()) {
+            return false;
+        }
         // In the future, there will undoubtedly be various reasons for the
         // actor to not be able to move, but for now we are returning true.
         return true;
@@ -508,10 +517,31 @@ export abstract class Actor {
         this.active = false;
 
         this.scheduler.clear();
+        this.tickQueue.destroy();
     }
 
     protected tick() {
+        // Process delays first
+        this.delayManager.tick();
+
+        // Only process queue if not delayed
+        this.tickQueue.tick();
+
+
+        // Always process scheduler since it may have soft tasks
         this.scheduler.tick();
+    }
+
+    /**
+     * Request a tick delay for an action
+     * @param ticks Number of ticks to wait
+     * @param options Additional options for the tick request
+     */
+    public async requestTickDelay(ticks: number, options: Omit<RequestTickOptions, 'ticks'> = {}): Promise<void> {
+        return this.tickQueue.requestTicks({
+            ...options,
+            ticks,
+        });
     }
 
     public get position(): Position {

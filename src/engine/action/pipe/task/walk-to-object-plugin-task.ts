@@ -3,6 +3,7 @@ import type { ItemOnObjectAction } from '@engine/action/pipe/item-on-object.acti
 import type { ObjectInteractionAction } from '@engine/action/pipe/object-interaction.action';
 import { ActorLandscapeObjectInteractionTask } from '@engine/task/impl/actor-landscape-object-interaction-task';
 import type { Player } from '@engine/world/actor/player/player';
+import { Position } from '@engine/world/position';
 import type { LandscapeObject } from '@runejs/filestore';
 
 /**
@@ -35,38 +36,49 @@ export class WalkToObjectPluginTask<TAction extends ObjectAction> extends ActorL
     private data: ObjectActionData<TAction>;
 
     constructor(plugins: ObjectActionHook<TAction>[], player: Player, landscapeObject: LandscapeObject, data: ObjectActionData<TAction>) {
+        const rendering = data.objectConfig?.rendering;
+        let sizeX = rendering?.sizeX || 1;
+        let sizeY = rendering?.sizeY || 1;
+
+        // Get the object's facing direction (0-3 maps to WNES array) TODO: verify
+        const face = rendering?.face || 0;
+
+        // If facing East or West, swap X and Y dimensions
+        if (face === 0 || face === 2) {
+            // WEST or EAST
+            [sizeX, sizeY] = [sizeY, sizeX];
+        }
         super(
             player,
             landscapeObject,
             // TODO (jkm) handle object size
             // TODO (jkm) pass orientation instead of size
-            1,
-            1,
+            sizeX,
+            sizeY,
         );
-
         this.plugins = plugins;
         this.data = data;
     }
 
-    /**
-     * Executed every tick to check if the player has arrived yet and calls the plugins if so.
-     */
-    public execute(): void {
-        // call super to manage waiting for the movement to complete
-        super.execute();
-
-        // check if the player has arrived yet
+    protected onObjectReached(): void {
         const landscapeObject = this.landscapeObject;
         const landscapeObjectPosition = this.landscapeObjectPosition;
+
         if (!landscapeObject || !landscapeObjectPosition) {
+            this.stop();
             return;
         }
 
-        // call the relevant plugins
+        // Make the actor face the center of the object
+        const objectCenter = new Position(
+            landscapeObjectPosition.x + Math.floor((this.data.objectConfig?.rendering?.sizeX || 1) / 2),
+            landscapeObjectPosition.y + Math.floor((this.data.objectConfig?.rendering?.sizeY || 1) / 2),
+            landscapeObjectPosition.level,
+        );
+        this.actor.face(objectCenter);
+
         this.plugins.forEach(plugin => {
-            if (!plugin || !plugin.handler) {
-                return;
-            }
+            if (!plugin?.handler) return;
 
             const action = {
                 player: this.actor,

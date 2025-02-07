@@ -1,0 +1,9 @@
+[
+    {
+        "npc": "rs:dromunds_cat",
+        "spawn_x": 2712,
+        "spawn_y": 9806,
+        "movement_radius": 0,
+        "face": "SOUTH"
+    }
+]

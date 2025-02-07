@@ -1,7 +1,7 @@
 import { randomBetween } from '@engine/util/num';
 import { objectIds } from '@engine/world/config/object-ids';
 
-interface WeightedItem {
+export interface WeightedItem {
     itemConfigId: string;
     weight: number;
 }
@@ -281,149 +281,12 @@ const Ores: IHarvestable[] = [
     },
 ];
 
-const Trees: IHarvestable[] = [
-    {
-        objects: NORMAL_OBJECTS,
-        items: 'rs:logs',
-        level: 1,
-        experience: 25,
-        respawnLow: 59,
-        respawnHigh: 98,
-        baseChance: 70,
-        break: 100,
-    },
-    {
-        objects: ACHEY_OBJECTS,
-        items: 'rs:achey_logs',
-        level: 1,
-        experience: 25,
-        respawnLow: 59,
-        respawnHigh: 98,
-        baseChance: 70,
-        break: 100,
-    },
-    {
-        objects: OAK_OBJECTS,
-        items: 'rs:oak_logs',
-        level: 15,
-        experience: 37.5,
-        respawnLow: 14,
-        respawnHigh: 14,
-        baseChance: 50,
-        break: 100 / 8,
-    },
-    {
-        objects: WILLOW_OBJECTS,
-        items: 'rs:willow_logs',
-        level: 30,
-        experience: 67.5,
-        respawnLow: 14,
-        respawnHigh: 14,
-        baseChance: 30,
-        break: 100 / 8,
-    },
-    {
-        objects: TEAK_OBJECTS,
-        items: 'rs:teak_logs',
-        level: 35,
-        experience: 85,
-        respawnLow: 15,
-        respawnHigh: 15,
-        baseChance: 0,
-        break: 100 / 8,
-    },
-    {
-        objects: DRAMEN_OBJECTS,
-        items: 'rs:dramen_branch', // You'll need to add this to logs.json
-        level: 36,
-        experience: 0,
-        respawnLow: 0,
-        respawnHigh: 0,
-        baseChance: 100,
-        break: 0,
-    },
-    {
-        objects: MAPLE_OBJECTS,
-        items: 'rs:maple_logs',
-        level: 45,
-        experience: 100,
-        respawnLow: 59,
-        respawnHigh: 59,
-        baseChance: 0,
-        break: 100 / 8,
-    },
-    {
-        objects: HOLLOW_OBJECTS,
-        items: 'rs:bark', // You'll need to add this to logs.json
-        level: 45,
-        experience: 82.5,
-        respawnLow: 43,
-        respawnHigh: 44,
-        baseChance: 0,
-        break: 100 / 8,
-    },
-    {
-        objects: MAHOGANY_OBJECTS,
-        items: 'rs:mahogany_logs',
-        level: 50,
-        experience: 125,
-        respawnLow: 14,
-        respawnHigh: 14,
-        baseChance: -5,
-        break: 100 / 8,
-    },
-    {
-        objects: YEW_OBJECTS,
-        items: 'rs:yew_logs',
-        level: 60,
-        experience: 175,
-        respawnLow: 99,
-        respawnHigh: 99,
-        baseChance: -15,
-        break: 100 / 8,
-    },
-    {
-        objects: MAGIC_OBJECTS,
-        items: 'rs:magic_logs',
-        level: 75,
-        experience: 250,
-        respawnLow: 199,
-        respawnHigh: 199,
-        baseChance: -25,
-        break: 100 / 8,
-    },
-    {
-        objects: DRAMEN_OBJECTS,
-        items: 'rs:dramen_branch',
-        level: 36,
-        experience: 0,
-        respawnLow: 0,
-        respawnHigh: 0,
-        baseChance: 100,
-        break: 0,
-    },
-    {
-        objects: HOLLOW_OBJECTS,
-        items: 'rs:bark',
-        level: 45,
-        experience: 82.5,
-        respawnLow: 43,
-        respawnHigh: 44,
-        baseChance: 0,
-        break: 100 / 8,
-    },
-];
-
 export function getOre(ore: Ore): IHarvestable {
     return Ores[ore];
 }
 
 export function getOreFromRock(id: number): IHarvestable {
     return Ores.find(ore => ore.objects.has(id)) as IHarvestable;
-}
-
-export function getTreeFromHealthy(id: number): IHarvestable {
-    return Trees.find(tree => tree.objects.has(id)) as IHarvestable;
 }
 
 export function getOreFromDepletedRock(id: number): IHarvestable {
@@ -446,14 +309,4 @@ export function getAllOreIds(): number[] {
         }
     }
     return oreIds;
-}
-
-export function getTreeIds(): number[] {
-    const treeIds: number[] = [];
-    for (const tree of Trees) {
-        for (const [healthy, expired] of tree.objects) {
-            treeIds.push(healthy);
-        }
-    }
-    return treeIds;
 }

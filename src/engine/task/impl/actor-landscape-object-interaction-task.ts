@@ -15,7 +15,7 @@ import { ActorWalkToTask } from './actor-walk-to-task';
 export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor = Actor> extends ActorWalkToTask<TActor, LandscapeObject> {
     private _landscapeObject: LandscapeObject;
     private _objectPosition: Position;
-
+    private arriveDelayStarted: boolean = false;
     /**
      * @param actor The actor executing this task.
      * @param landscapeObject The landscape object to interact with.
@@ -45,6 +45,11 @@ export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor =
         this._objectPosition = new Position(landscapeObject.x, landscapeObject.y, landscapeObject.level);
         this._landscapeObject = landscapeObject;
     }
+    /**
+     * Called when the actor has reached the object and arrive delay has finished.
+     * Child classes should implement this to handle their specific object interactions.
+     */
+    protected abstract onObjectReached(): void;
 
     /**
      * Checks for the continued presence of the {@link LandscapeObject} and stops the task if it is no longer present.
@@ -54,10 +59,12 @@ export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor =
     public execute() {
         super.execute();
 
+        // Return if not active or still walking
         if (!this.isActive || !this.atDestination) {
             return;
         }
 
+        // Validate object still exists
         if (!this._landscapeObject) {
             this.stop();
             return;
@@ -69,7 +76,29 @@ export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor =
             this.stop();
             return;
         }
+
+        // Handle arrive delay after reaching object
+        if (!this.arriveDelayStarted) {
+            this.arriveDelayStarted = true;
+
+            // todo: disable arrive delay for now, should be used
+            // to sync animations, but is annoying without special
+            // handling for doors, stairs etc
+            // this.actor.delayManager.applyArriveDelay();
+            return;
+        }
+
+        // Wait for delay to finish
+        if (this.actor.delayManager.isDelayed()) {
+            return;
+        }
+
+        // Now child classes can handle their specific interactions
+        this.onObjectReached();
     }
+
+
+
 
     /**
      * Gets the {@link LandscapeObject} that this task is interacting with.

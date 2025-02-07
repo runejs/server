@@ -1,5 +1,5 @@
-import type { Actor } from '@engine/world/actor/actor';
-import type { Position } from '@engine/world/position';
+import { Task } from '@engine/task/task';
+import { Actor } from '@engine/world/actor/actor';
 import { ActorWalkToTask } from './actor-walk-to-task';
 
 /**
@@ -10,76 +10,34 @@ import { ActorWalkToTask } from './actor-walk-to-task';
  *
  * @author jameskmonger
  */
-export abstract class ActorActorInteractionTask<TActor extends Actor = Actor, TOtherActor extends Actor = Actor> extends ActorWalkToTask<
-    TActor,
-    () => Position
-> {
-    private _other: TOtherActor;
+export class ActorActorInteractionTask<TActor extends Actor, TOther extends Actor> extends Task {
+    protected arrived: boolean = false;
 
-    /**
-     * @param actor The actor executing this task.
-     * @param TOtherActor The other actor to interact with.
-     * @param walkOnStart Whether to walk to the other actor on task start.
-     *                    Defaults to `false` as the client generally inits a walk on interaction.
-     */
-    constructor(actor: TActor, otherActor: TOtherActor, walkOnStart = false) {
-        super(
-            actor,
-            () => otherActor.position,
-            // TODO (jkm) handle other actor size
-            1,
-            walkOnStart,
-        );
+    constructor(
+        protected actor: TActor,
+        protected other: TOther,
+    ) {
+        super();
+    }
 
-        if (!otherActor) {
+    public async execute(): Promise<void> {
+        if (!this.other || !this.other.position) {
             this.stop();
             return;
         }
 
-        this._other = otherActor;
-    }
+        if (!this.arrived) {
+            try {
+                await this.actor.moveTo(this.other);
 
-    /**
-     * Checks for the continued presence of the other actor and stops the task if it is no longer present.
-     *
-     * TODO (jameskmonger) unit test this
-     */
-    public execute() {
-        super.execute();
+                // Apply arrive delay only once we reach the target
+                this.actor.delayManager.applyArriveDelay();
 
-        if (!this.isActive || !this.atDestination) {
-            return;
+                this.arrived = true;
+            } catch (error) {
+                this.stop();
+                return;
+            }
         }
-
-        if (!this._other) {
-            this.stop();
-            return;
-        }
-
-        // TODO (jkm) check if other actor was removed from world
-        // TODO (jkm) check if other actor has moved and repath player if so
-    }
-
-    /**
-     * Gets the {@link TOtherActor} that this task is interacting with.
-     *
-     * @returns If the other actor is still present, and the actor is at the destination, the other actor.
-     *              Otherwise, `null`.
-     *
-     * TODO (jameskmonger) unit test this
-     */
-    protected get other(): TOtherActor | null {
-        // TODO (jameskmonger) consider if we want to do these checks rather than delegating to the child task
-        //                      as currently the subclass has to store it in a subclass property if it wants to use it
-        //                      without these checks
-        if (!this.atDestination) {
-            return null;
-        }
-
-        if (!this._other) {
-            return null;
-        }
-
-        return this._other;
     }
 }

@@ -53,19 +53,23 @@ export const handler: itemInteractionActionHandler = details => {
             inventory.set(itemSlot, { itemId, amount: inventoryItem.amount - sellAmount });
         }
     } else {
-        const foundItems = inventory.items.map((item, i) => (item !== null && item.itemId === itemId ? i : null)).filter(i => i !== null);
-        if (foundItems.length < sellAmount) {
-            sellAmount = foundItems.length;
+        const inventorySlots: number[] = inventory.items
+            // Get all the inventory slots that contain the item we are selling.
+            .map((item, i) => (item !== null && item.itemId === itemId ? i : null))
+            .filter(i => i !== null);
+
+        if (inventorySlots.length < sellAmount) {
+            sellAmount = inventorySlots.length;
         }
 
         for (let i = 0; i < sellAmount; i++) {
-            const item = foundItems[i];
+            const itemSlot = inventorySlots[i];
 
-            if (!item) {
+            if (itemSlot == null) {
                 throw new Error(`Inventory item was not present, for item id ${itemId} in inventory, while trying to sell`);
             }
 
-            inventory.remove(item);
+            inventory.remove(itemSlot);
         }
     }
 

@@ -72,7 +72,7 @@ export class MiningTask extends ActorLandscapeObjectInteractionTask<Player> {
         return itemConfig.key.startsWith('rs:amulet_of_glory:charged_');
     }
 
-    public execute(): void {
+    public onObjectReached(): void {
         const taskIteration = this.elapsedTicks++;
 
         // This will be null if the player is not in range of the object.

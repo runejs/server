@@ -9,18 +9,19 @@ const walkPacket = (player: Player, packet: PacketData) => {
         size -= 14;
     }
 
-    if (!player.canMove()) {
+    // Check if player can move and isn't delayed
+    if (!player.canMove() || player.delayManager.isDelayed()) {
         return;
     }
 
     const totalSteps = Math.floor((size - 5) / 2);
-
     const firstY = buffer.get('short', 'u', 'le');
-    const runSteps = buffer.get('byte') === 1; // @TODO forced running
+    const runSteps = buffer.get('byte') === 1;
     const firstX = buffer.get('short', 'u', 'le');
 
     const walkingQueue = player.walkingQueue;
 
+    // Cancel any weak tasks since movement interrupts them
     player.actionsCancelled.next('manual-movement');
 
     walkingQueue.clear();

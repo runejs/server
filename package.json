@@ -34,7 +34,13 @@
         "type": "git",
         "url": "git+ssh://git@github.com/runejs/server.git"
     },
-    "keywords": ["runejs", "runescape", "typescript", "game server", "game engine"],
+    "keywords": [
+        "runejs",
+        "runescape",
+        "typescript",
+        "game server",
+        "game engine"
+    ],
     "author": "Tynarus",
     "license": "GPL-3.0",
     "bugs": {
@@ -73,5 +79,6 @@
         "ts-node": "^10.9.2",
         "tsconfig-paths": "^4.2.0",
         "typescript": "^5.7.3"
-    }
+    },
+    "packageManager": "yarn@3.5.0+sha256.e4fc5f94867cd0b492fb0a644f14e7b47c4387bc75d46b56e86db6d0f1a6cb97"
 }

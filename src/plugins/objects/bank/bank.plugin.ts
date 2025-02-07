@@ -313,6 +313,13 @@ export default {
         },
         {
             type: 'object_interaction',
+            objectIds: objectIds.bankChest,
+            options: ['use'],
+            walkTo: true,
+            handler: openBankInterface,
+        },
+        {
+            type: 'object_interaction',
             objectIds: objectIds.bankBooth,
             options: ['use-quickly'],
             walkTo: true,

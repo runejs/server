@@ -1,14 +1,16 @@
-import type { ButtonAction, buttonActionHandler } from '@engine/action/pipe/button.action';
-import type { objectInteractionActionHandler } from '@engine/action/pipe/object-interaction.action';
+import { buttonActionHandler } from '@engine/action/pipe/button.action';
+import { objectInteractionActionHandler } from '@engine/action/pipe/object-interaction.action';
 import { findItem, widgets } from '@engine/config/config-handler';
-import { ActorTask } from '@engine/task/impl/actor-task';
-import type { Player } from '@engine/world/actor/player/player';
+import { ContentPlugin } from '@engine/plugins/plugin.types';
+import { Player } from '@engine/world/actor/player/player';
 import { Skill } from '@engine/world/actor/skills';
+import { QueueType } from '@engine/world/actor/tick-queue';
 import { animationIds } from '@engine/world/config/animation-ids';
 import { itemIds } from '@engine/world/config/item-ids';
 import { objectIds } from '@engine/world/config/object-ids';
 import { soundIds } from '@engine/world/config/sound-ids';
 import { logger } from '@runejs/common';
+import { take } from 'rxjs/operators';
 
 interface Spinnable {
     input: number | number[];
@@ -23,8 +25,18 @@ interface SpinnableButton {
     spinnable: Spinnable;
 }
 
-const ballOfWool: Spinnable = { input: itemIds.wool, output: itemIds.ballOfWool, experience: 2.5, requiredLevel: 1 };
-const bowString: Spinnable = { input: itemIds.flax, output: itemIds.bowstring, experience: 15, requiredLevel: 10 };
+const ballOfWool: Spinnable = {
+    input: itemIds.wool,
+    output: itemIds.ballOfWool,
+    experience: 2.5,
+    requiredLevel: 1,
+};
+const bowString: Spinnable = {
+    input: itemIds.flax,
+    output: itemIds.bowstring,
+    experience: 15,
+    requiredLevel: 10,
+};
 const rootsCbowString: Spinnable = {
     input: [itemIds.roots.oak, itemIds.roots.willow, itemIds.roots.maple, itemIds.roots.yew],
     output: itemIds.crossbowString,
@@ -72,111 +84,72 @@ export const openSpinningInterface: objectInteractionActionHandler = details => 
     });
 };
 
-/**
- * A task to (repeatedly if needed) spin a product from a spinnable.
- */
-class SpinProductTask extends ActorTask<Player> {
-    /**
-     * The number of ticks that `execute` has been called inside this task.
-     */
-    private elapsedTicks = 0;
+function processSpin(player: Player, spinnable: Spinnable): boolean {
+    let currentItem: number;
+    let currentItemIndex = 0;
 
-    /**
-     * The number of items that should be spun.
-     */
-    private count: number;
-
-    /**
-     * The number of items that have been spun.
-     */
-    private created = 0;
-
-    /**
-     * The spinnable that is being used.
-     */
-    private spinnable: Spinnable;
-
-    /**
-     * The currently being spun input.
-     */
-    private currentItem: number;
-
-    /**
-     * The index of the current input being spun.
-     */
-    private currentItemIndex = 0;
-
-    constructor(player: Player, spinnable: Spinnable, count: number) {
-        super(player);
-        this.spinnable = spinnable;
-        this.count = count;
+    // Determine current input item
+    if (Array.isArray(spinnable.input)) {
+        currentItem = spinnable.input[currentItemIndex];
+    } else {
+        currentItem = spinnable.input;
     }
 
-    public execute(): void {
-        if (this.created === this.count) {
-            this.stop();
-            return;
-        }
-
-        // As an multiple items can be used for one of the recipes, check if its an array
-        let isArray = false;
-        if (Array.isArray(this.spinnable.input)) {
-            isArray = true;
-            this.currentItem = this.spinnable.input[0];
+    // Check if out of input material
+    if (!player.hasItemInInventory(currentItem)) {
+        if (Array.isArray(spinnable.input) && currentItemIndex < spinnable.input.length - 1) {
+            currentItemIndex++;
+            currentItem = spinnable.input[currentItemIndex];
         } else {
-            this.currentItem = this.spinnable.input;
+            const itemName = findItem(currentItem)?.name || '';
+            player.sendMessage(`You don't have any ${itemName.toLowerCase()}.`);
+            return false;
         }
+    }
 
-        // Check if out of input material
-        if (!this.actor.hasItemInInventory(this.currentItem)) {
-            let cancel = false;
-            if (isArray) {
-                if (this.currentItemIndex < (<number[]>this.spinnable.input).length) {
-                    this.currentItemIndex++;
-                    this.currentItem = (<number[]>this.spinnable.input)[this.currentItemIndex];
-                } else {
-                    cancel = true;
-                }
-            } else {
-                cancel = true;
+    // Process the spinning action
+    player.removeFirstItem(currentItem);
+    player.giveItem(spinnable.output);
+    player.skills.addExp(Skill.CRAFTING, spinnable.experience);
+
+    return true;
+}
+async function spinProduct(player: Player, spinnable: Spinnable, count: number): Promise<void> {
+    // Early exit if count is 0
+    if (count <= 0) {
+        return;
+    }
+
+    try {
+        for (let i = 0; i < count; i++) {
+            // Queue as WEAK task
+            await player.tickQueue.requestTicks({
+                ticks: i === 0 ? 0 : 3, // First action immediate, then 3 tick spacing
+                type: QueueType.WEAK,
+            });
+
+            // Play animation and sound each time
+            player.playAnimation(animationIds.spinSpinningWheel);
+            player.playSound(soundIds.spinWool, 5);
+
+            // Process the spin
+            if (!processSpin(player, spinnable)) {
+                break;
             }
-            if (cancel) {
-                const itemName = findItem(this.currentItem)?.name || '';
-                this.actor.sendMessage(`You don't have any ${itemName.toLowerCase()}.`);
-                this.stop();
-                return;
-            }
         }
-
-        // Spinning takes 3 ticks for each item
-        if (this.elapsedTicks % 3 === 0) {
-            this.actor.removeFirstItem(this.currentItem);
-            this.actor.giveItem(this.spinnable.output);
-            this.actor.skills.addExp(Skill.CRAFTING, this.spinnable.experience);
-            this.created++;
-        }
-
-        // animation plays once every two items
-        if (this.elapsedTicks % 6 === 0) {
-            this.actor.playAnimation(animationIds.spinSpinningWheel);
-            this.actor.outgoingPackets.playSound(soundIds.spinWool, 5);
-        }
-
-        this.elapsedTicks++;
+    } catch (error) {
+        // Queue was interrupted (movement/combat/etc)
+        player.sendMessage(`Spinning interrupted: ${error}`);
     }
 }
 
-const spinProduct: any = (details: ButtonAction, spinnable: Spinnable, count: number) => {
-    details.player.enqueueTask(SpinProductTask, [spinnable, count]);
-};
-
-export const buttonClicked: buttonActionHandler = details => {
+export const buttonClicked: buttonActionHandler = async details => {
     // Check if player might be spawning widget clientside
     if (!details.player.interfaceState.findWidget(459)) {
         return;
     }
-    const product = widgetButtonIds.get(details.buttonId);
 
+    const product = widgetButtonIds.get(details.buttonId);
     if (!product) {
         logger.error(`Unhandled button id ${details.buttonId} for buttonClicked in spinning wheel.`);
         return;
@@ -185,9 +158,9 @@ export const buttonClicked: buttonActionHandler = details => {
     // Close the widget as it is no longer needed
     details.player.interfaceState.closeAllSlots();
 
+    // Check crafting level requirement
     if (!details.player.skills.hasLevel(Skill.CRAFTING, product.spinnable.requiredLevel)) {
         const outputName = findItem(product.spinnable.output)?.name || '';
-
         details.player.sendMessage(
             `You need a crafting level of ${product.spinnable.requiredLevel} to craft ${outputName.toLowerCase()}.`,
             true,
@@ -196,36 +169,42 @@ export const buttonClicked: buttonActionHandler = details => {
     }
 
     if (!product.shouldTakeInput) {
-        // If the player has not chosen make X, we dont need to get input and can just start the crafting
-        spinProduct(details, product.spinnable, product.count);
+        // Start spinning with predefined count using WEAK queue
+        await spinProduct(details.player, product.spinnable, product.count);
     } else {
-        // We should prepare for a number to be sent from the client
-        const numericInputSpinSub = details.player.numericInputEvent.subscribe(number => {
-            actionCancelledSpinSub?.unsubscribe();
-            numericInputSpinSub?.unsubscribe();
-            // When a number is recieved we can start crafting the product
-            spinProduct(details, product.spinnable, number);
-        });
-        // If the player moves or cancels the number input, we do not want to wait for input, as they could be depositing
-        // items into their bank.
-        const actionCancelledSpinSub = details.player.actionsCancelled.subscribe(() => {
-            actionCancelledSpinSub?.unsubscribe();
-            numericInputSpinSub?.unsubscribe();
-        });
-        // Ask the player to enter how many they want to create
-        details.player.outgoingPackets.showNumberInputDialogue();
+        // Handle "Make X" option
+        try {
+            const amount = await new Promise<number>((resolve, reject) => {
+                const numericInputSub = details.player.numericInputEvent.subscribe(number => {
+                    numericInputSub.unsubscribe();
+                    resolve(number);
+                });
+
+                details.player.actionsCancelled.pipe(take(1)).subscribe(() => {
+                    numericInputSub.unsubscribe();
+                    reject('Action cancelled');
+                });
+
+                details.player.outgoingPackets.showNumberInputDialogue();
+            });
+
+            await spinProduct(details.player, product.spinnable, amount);
+        } catch (error) {
+            // Handle cancellation
+            details.player.sendMessage(error);
+        }
     }
 };
 
-export default {
+export default (<ContentPlugin>{
     pluginId: 'rs:spinning_wheel',
     hooks: [
         {
             type: 'object_interaction',
             objectIds: objectIds.spinningWheel,
             options: ['spin'],
-            walkTo: true,
             handler: openSpinningInterface,
+            walkTo: true,
         },
         {
             type: 'button',
@@ -234,4 +213,4 @@ export default {
             handler: buttonClicked,
         },
     ],
-};
+});

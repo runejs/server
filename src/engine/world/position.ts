@@ -50,7 +50,9 @@ export class Position {
     public withinInteractionDistance(target: LandscapeObject | Position, minimumDistance?: number): boolean;
     public withinInteractionDistance(target: LandscapeObject | Position, minimumDistance: number = 1): boolean {
         if (target instanceof Position) {
-            return this.distanceBetween(target) <= minimumDistance;
+            const xDiff = Math.abs(this.x - target.x);
+            const yDiff = Math.abs(this.y - target.y);
+            return xDiff <= minimumDistance && yDiff <= minimumDistance;
         } else {
             const definition = filestore.configStore.objectStore.getObject(target.objectId);
 
@@ -70,18 +72,23 @@ export class Position {
                 height = 1;
             }
 
-            if (width === 1 && height === 1) {
-                return this.distanceBetween(new Position(occupantX, occupantY, target.level)) <= minimumDistance;
-            } else {
-                if (target.orientation === 1 || target.orientation === 3) {
-                    const off = width;
-                    width = height;
-                    height = off;
-                }
+            // Handle orientation
+            if (target.orientation === 1 || target.orientation === 3) {
+                const off = width;
+                width = height;
+                height = off;
+            }
 
-                for (let x = occupantX; x < occupantX + width; x++) {
-                    for (let y = occupantY; y < occupantY + height; y++) {
-                        if (this.distanceBetween(new Position(x, y, target.level)) <= minimumDistance) {
+            // Check if we're adjacent to any part of the object
+            for (let x = occupantX; x < occupantX + width; x++) {
+                for (let y = occupantY; y < occupantY + height; y++) {
+                    const xDiff = Math.abs(this.x - x);
+                    const yDiff = Math.abs(this.y - y);
+
+                    // We're within interaction distance if we're 1 tile away
+                    // but not standing on the object itself
+                    if (xDiff <= minimumDistance && yDiff <= minimumDistance) {
+                        if (!(xDiff === 0 && yDiff === 0)) {
                             return true;
                         }
                     }

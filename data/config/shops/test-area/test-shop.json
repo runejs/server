@@ -1,0 +1,40 @@
+{
+    "rs:test_shop": {
+        "name": "Testing Shop",
+        "shop_sell_rate": 1.0,
+        "shop_buy_rate": 1.0,
+        "rate_modifier": 0.03,
+        "stock": [
+            {
+                "itemKey": "rs:logs",
+                "amount": 100,
+                "restock": 25000
+            },
+            {
+                "itemKey": "rs:oak_logs",
+                "amount": 100,
+                "restock": 25000
+            },
+            {
+                "itemKey": "rs:willow_logs",
+                "amount": 100,
+                "restock": 25000
+            },
+            {
+                "itemKey": "rs:maple_logs",
+                "amount": 100,
+                "restock": 25000
+            },
+            {
+                "itemKey": "rs:yew_logs",
+                "amount": 100,
+                "restock": 25000
+            },
+            {
+                "itemKey": "rs:magic_logs",
+                "amount": 100,
+                "restock": 25000
+            }
+        ]
+    }
+}
