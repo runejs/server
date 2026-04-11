@@ -26,7 +26,7 @@
         "format:fin": "biome format --write --reporter=summary",
         "format:fix": "biome format --write",
         "fin": "npm run typecheck && npm run lint:fin && npm run format:fin && npm run test:fin",
-        "test": "jest  --transformIgnorePatterns",
+        "test": "jest",
         "test:fin": "jest --silent --reporters=\"summary\"",
         "typecheck": "tsc -p ./ --noEmit"
     },
