@@ -3,6 +3,7 @@ import type { Shop, ShopConfiguration } from '@engine/config/shop-config';
 import { shopFactory } from '@engine/config/shop-config';
 import { setupConfig } from '@server/game/game-server';
 
+// @todo fix this by mocking the world instead of spinning it up
 describe('shopping', () => {
     const shopConfig: ShopConfiguration = {
         name: 'Test Shop',
