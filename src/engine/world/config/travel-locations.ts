@@ -35,9 +35,9 @@ export class TravelLocations {
     }
 
     public find(search: string): TravelLocation | null {
-        search = search.toLowerCase().trim();
+        search = search.toLowerCase().trim().replace(/_/g, ' ');
         for (const location of this.locations) {
-            if (location.key.indexOf(search) >= 0) {
+            if (location.key.toLowerCase() === search) {
                 return location;
             }
         }
