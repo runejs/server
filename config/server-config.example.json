@@ -20,5 +20,6 @@
     "giveAchievements": true,
     "checkCredentials": true,
     "tutorialEnabled": false,
-    "adminDropsEnabled": true
+    "adminDropsEnabled": true,
+    "bypassTeleportRequirements": false
 }
