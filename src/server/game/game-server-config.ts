@@ -14,4 +14,5 @@ export interface GameServerConfig {
     checkCredentials: boolean;
     tutorialEnabled: boolean;
     adminDropsEnabled: boolean;
+    bypassTeleportRequirements?: boolean;
 }
