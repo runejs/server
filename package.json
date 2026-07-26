@@ -52,7 +52,7 @@
         "@runejs/filestore": "0.17.0",
         "@runejs/login-server": "2.1.0",
         "@runejs/update-server": "1.4.0",
-        "js-yaml": "^4.1.0",
+        "js-yaml": "^4.3.0",
         "json5": "^2.2.3",
         "lodash": "^4.17.21",
         "quadtree-lib": "^1.0.9",
