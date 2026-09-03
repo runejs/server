@@ -13,6 +13,7 @@ import type { TravelLocation } from '@engine/world/config/travel-locations';
 import type { Item } from '@engine/world/items/item';
 import { Position } from '@engine/world/position';
 import { openHouse } from '@plugins/skills/construction/house';
+import { serverConfig } from '@server/game/game-server';
 
 enum Teleports {
     Home = 591,
@@ -333,7 +334,7 @@ const activate = (task: TaskExecutor<ButtonAction>, elapsedTicks: number = 0) =>
 
                 player.metadata.castingStationarySpell = true;
 
-                if (!expenseMagic(player, MagicCosts[buttonId])) {
+                if (!serverConfig.bypassTeleportRequirements && !expenseMagic(player, MagicCosts[buttonId])) {
                     player.sendMessage(insufficient);
                     completed = true;
                     break;

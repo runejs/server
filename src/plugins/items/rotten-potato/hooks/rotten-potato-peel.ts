@@ -9,7 +9,7 @@ import { openTravel } from '@plugins/items/rotten-potato/helpers/rotten-potato-t
 
 function openBank(player: Player) {
     const interactionActions = getActionHooks<ObjectInteractionActionHook>('object_interaction').filter(plugin =>
-        advancedNumberHookFilter(plugin.objectIds, objectIds.bankBooth, plugin.options, 'use-quickly'),
+        advancedNumberHookFilter(plugin.objectIds, objectIds.bankBooth[0], plugin.options, 'use-quickly'),
     );
     interactionActions.forEach(plugin => {
         if (!plugin.handler) {
@@ -19,7 +19,7 @@ function openBank(player: Player) {
         plugin.handler({
             player: player,
             object: {
-                objectId: objectIds.bankBooth,
+                objectId: objectIds.bankBooth[0],
                 level: player.position.level,
                 x: player.position.x,
                 y: player.position.y,

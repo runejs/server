@@ -275,6 +275,9 @@ export class Player extends Actor {
             this.interfaceState.openWidget(widgets.welcomeScreen, {
                 slot: 'full',
                 containerId: widgets.welcomeScreenChildren.question,
+                // The welcome screen's main button does not trigger the button packet
+                // @todo read this from elsewhere to mark the welcome screen as closed
+                doNotRegister: true,
             });
         }
 

@@ -45,8 +45,9 @@ const handler = async ({ player, npc }) => {
 
     if (dialogueSuccessful) {
         if (sadEnding) {
-            npc.playAnimation(animationIds.cry);
-            npc.say(`Jerk!`);
+            // @todo These appear to be broken, debug
+            // npc.playAnimation(animationIds.cry);
+            // npc.say(`Jerk!`);
             player.sendMessage(`Hans wanders off rather dejectedly.`);
         } else {
             player.sendMessage(`Hans wanders off aimlessly through the courtyard.`);

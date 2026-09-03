@@ -3,7 +3,7 @@ export const objectIds = {
     milkableCow: 8689,
     fire: 2732,
     spinningWheel: 2644,
-    bankBooth: 2213,
+    bankBooth: [2213, 18491],
     bankChest: 4483,
     depositBox: 9398,
     shortCuts: {

@@ -45,6 +45,7 @@ export interface WidgetOptions {
     container?: ItemContainer;
     fakeWidget?: number;
     metadata?: { [key: string]: any };
+    doNotRegister?: boolean;
 }
 
 export class Widget {
@@ -178,7 +179,9 @@ export class InterfaceState {
             this.clearSlots();
         }
 
-        this.widgetSlots[widget.slot] = widget;
+        if (!options.doNotRegister) {
+          this.widgetSlots[widget.slot] = widget;
+        }
         this.showWidget(widget);
         return widget;
     }

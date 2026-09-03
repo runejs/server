@@ -6,7 +6,7 @@ import { objectIds } from '@engine/world/config/object-ids';
 
 const action: commandActionHandler = details => {
     const interactionActions = getActionHooks<ObjectInteractionActionHook>('object_interaction').filter(plugin =>
-        advancedNumberHookFilter(plugin.objectIds, objectIds.bankBooth, plugin.options, 'use-quickly'),
+        advancedNumberHookFilter(plugin.objectIds, objectIds.bankBooth[0], plugin.options, 'use-quickly'),
     );
     interactionActions.forEach(plugin => {
         if (!plugin.handler) {
@@ -16,7 +16,7 @@ const action: commandActionHandler = details => {
         plugin.handler({
             player: details.player,
             object: {
-                objectId: objectIds.bankBooth,
+                objectId: objectIds.bankBooth[0],
                 level: details.player.position.level,
                 x: details.player.position.x,
                 y: details.player.position.y,
