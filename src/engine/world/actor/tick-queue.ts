@@ -72,6 +72,9 @@ export interface TickTask {
     startTick: number;
 
     useGlobalTimer?: boolean;
+
+    /** Set once the task's promise has been rejected, so it can be dropped from the queue */
+    rejected?: boolean;
 }
 
 /**
@@ -157,13 +160,7 @@ export class TickQueue {
         // Handle STRONG tasks entering queue
         if (type === QueueType.STRONG) {
             // Clear weak tasks first
-            this.tasks = this.tasks.filter(task => {
-                if (task.type === QueueType.WEAK) {
-                    task.reject('Strong task present');
-                    return false;
-                }
-                return true;
-            });
+            this.clearWeakTasks('Strong task present');
 
             // Force close modal interfaces
             if (isPlayer(this.actor)) {
@@ -218,15 +215,22 @@ export class TickQueue {
         this.currentTick++;
 
         this.actionTimer.tick();
-        // Check if actor is delayed
-        const isDelayed = this.actor.delayManager.isDelayed();
+
+        // A strong task present at the start of the tick clears any queued weak tasks
+        if (this.hasStrongTask()) {
+            this.clearWeakTasks('Strong task present');
+        }
 
         let processedTasks = 0;
         do {
             processedTasks = 0;
 
-            for (let i = this.tasks.length - 1; i >= 0; i--) {
+            // Tasks are processed in insertion order
+            for (let i = 0; i < this.tasks.length; i++) {
                 const task = this.tasks[i];
+
+                // Re-read the delay each iteration; a resolved task may have delayed the actor
+                const isDelayed = this.actor.delayManager.isDelayed();
 
                 // Only process task if:
                 // 1. It's a SOFT task (these ignore delays)
@@ -240,8 +244,13 @@ export class TickQueue {
 
                         task.resolve();
                         this.tasks.splice(i, 1);
+                        i--;
                         processedTasks++;
                     }
+                } else if (task.rejected) {
+                    // canProcessTask rejected the task; drop it so it is not retried every tick
+                    this.tasks.splice(i, 1);
+                    i--;
                 }
             }
         } while (processedTasks > 0 && this.tasks.length > 0);
@@ -275,10 +284,7 @@ export class TickQueue {
         // For players, handle modal interfaces
         if (isPlayer(this.actor)) {
             // NORMAL tasks skip if modal interface is open
-            if (
-                task.type === QueueType.NORMAL
-                // && this.actor.interfaceState.hasModalOpen() // TODO: implement in player
-            ) {
+            if (task.type === QueueType.NORMAL && this.actor.interfaceState.hasModalOpen()) {
                 return false;
             }
 
@@ -291,6 +297,7 @@ export class TickQueue {
         // Weak tasks interrupted by strong tasks
         if (task.type === QueueType.WEAK && this.hasStrongTask()) {
             task.reject('Strong task present');
+            task.rejected = true;
             return false;
         }
 

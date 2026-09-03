@@ -239,6 +239,16 @@ export class InterfaceState {
         return this.widgetSlots[slot] || null;
     }
 
+    /**
+     * Whether a modal widget is currently open.
+     *
+     * Only the `full` and `screen` slots block interaction; `chatbox` dialogues and
+     * the `tabarea` do not.
+     */
+    public hasModalOpen(): boolean {
+        return this.widgetOpen('full') || this.widgetOpen('screen');
+    }
+
     public closeAllSlots(): void {
         const slots: GameInterfaceSlot[] = Object.keys(this.widgetSlots) as GameInterfaceSlot[];
         slots.forEach(slot => this.closeWidget(slot));
