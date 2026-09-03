@@ -57,9 +57,10 @@ export class DelayManager {
      * @param ticks Number of ticks to delay for
      */
     public applyDelay(ticks: number): void {
-        // Override any current delay
-        this.currentDelay = DelayType.NORMAL;
-        this.delayTicks = ticks;
+        // Override any current delay. A non-positive duration clears the delay outright rather
+        // than leaving a type behind with no ticks, which would block every later arrive delay.
+        this.currentDelay = ticks > 0 ? DelayType.NORMAL : null;
+        this.delayTicks = Math.max(ticks, 0);
         this.delayStartTick = this.actor.tickQueue.currentTick;
     }
 
