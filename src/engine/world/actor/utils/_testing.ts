@@ -1,4 +1,6 @@
 import type { Actor, ActorType } from '@engine/world/actor/actor';
+import { DelayManager } from '@engine/world/actor/delay-manager';
+import { TickQueue } from '@engine/world/actor/tick-queue';
 import { Subject } from 'rxjs';
 
 /**
@@ -44,6 +46,39 @@ export function createMockActor(type: ActorType = 'player') {
  */
 export function flushPromises(): Promise<void> {
     return new Promise(resolve => setImmediate(resolve));
+}
+
+/**
+ * Builds a fake actor wired up with a real TickQueue and a real DelayManager, for testing the
+ * two together rather than in isolation.
+ *
+ * `advance` mirrors `Actor.tick()`, which decrements delays before processing the queue, and then
+ * lets promise callbacks run so a script awaiting a task can queue its next one — which is how the
+ * game loop behaves across ticks.
+ */
+export function createActorHarness(type: ActorType = 'player') {
+    const mock = createMockActor(type);
+    const actor = mock.actor as unknown as { tickQueue: TickQueue; delayManager: DelayManager };
+
+    const tickQueue = new TickQueue(mock.actor);
+    actor.tickQueue = tickQueue;
+    actor.delayManager = new DelayManager(mock.actor);
+
+    const { delayManager } = actor;
+
+    const tick = (): void => {
+        delayManager.tick();
+        tickQueue.tick();
+    };
+
+    const advance = async (ticks = 1): Promise<void> => {
+        for (let i = 0; i < ticks; i++) {
+            tick();
+            await flushPromises();
+        }
+    };
+
+    return { ...mock, tickQueue, delayManager, tick, advance };
 }
 
 /**
