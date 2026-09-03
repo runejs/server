@@ -13,6 +13,7 @@ import { Subject } from 'rxjs';
  */
 export function createMockActor(type: ActorType = 'player') {
     const movementEvent = new Subject<void>();
+    const interfaceClosed = new Subject<void>();
     const isDelayedMock = jest.fn().mockReturnValue(false);
     const closeAllSlotsMock = jest.fn();
     const hasModalOpenMock = jest.fn().mockReturnValue(false);
@@ -27,11 +28,12 @@ export function createMockActor(type: ActorType = 'player') {
                 ? {
                       closeAllSlots: closeAllSlotsMock,
                       hasModalOpen: hasModalOpenMock,
+                      closed: interfaceClosed,
                   }
                 : undefined,
     } as unknown as Actor;
 
-    return { actor, movementEvent, isDelayedMock, closeAllSlotsMock, hasModalOpenMock };
+    return { actor, movementEvent, interfaceClosed, isDelayedMock, closeAllSlotsMock, hasModalOpenMock };
 }
 
 /**

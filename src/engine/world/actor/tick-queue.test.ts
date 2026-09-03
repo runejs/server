@@ -7,12 +7,13 @@ describe('TickQueue', () => {
     let actor: Actor;
     let queue: TickQueue;
     let movementEvent: Subject<void>;
+    let interfaceClosed: Subject<void>;
     let isDelayedMock: jest.Mock;
     let closeAllSlotsMock: jest.Mock;
     let hasModalOpenMock: jest.Mock;
 
     beforeEach(() => {
-        ({ actor, movementEvent, isDelayedMock, closeAllSlotsMock, hasModalOpenMock } = createMockActor('player'));
+        ({ actor, movementEvent, interfaceClosed, isDelayedMock, closeAllSlotsMock, hasModalOpenMock } = createMockActor('player'));
         queue = new TickQueue(actor);
     });
 
@@ -342,20 +343,120 @@ describe('TickQueue', () => {
         });
     });
 
-    // Behaviour specified by docs/queue.md and docs/delays.md that the current implementation
-    // does not yet meet. Documented here so the gap stays visible.
-    describe('unmet specification', () => {
-        // queue.md:57 - a script setting a delay should stop the rest of the queue being processed
-        // that tick. Task continuations run as microtasks, so a delay set by a resolving task
-        // cannot be observed inside the synchronous tick loop.
-        it.todo('should stop processing the queue once a task sets a delay');
+    describe('specification', () => {
+        // "If a strong or soft script is processed, modal interface is forcibly closed prior to it
+        // processing." See docs/queue.md.
+        describe.each([QueueType.STRONG, QueueType.SOFT])('when processing a %s task', type => {
+            it('should close the modal before executing it', async () => {
+                track(queue.requestTicks({ ticks: 0, type }));
+                closeAllSlotsMock.mockClear();
 
-        // queue.md:51 - modal interfaces should close at the start of the processing block when a
-        // strong task is present, not per task as they are processed.
-        it.todo('should close modal interfaces at the start of the processing block');
+                queue.tick();
+                await flushPromises();
+
+                expect(closeAllSlotsMock).toHaveBeenCalled();
+            });
+        });
+
+        // "If any script sets a delay, processing further scripts cannot happen, and all scripts
+        // except for soft thereafter will be skipped." See docs/queue.md.
+        describe('when a delay becomes visible partway through a pass', () => {
+            it('should skip the remaining tasks', async () => {
+                isDelayedMock.mockReturnValueOnce(false).mockReturnValue(true);
+
+                const first = track(queue.requestTicks({ ticks: 0 }));
+                const second = track(queue.requestTicks({ ticks: 0 }));
+
+                queue.tick();
+                await flushPromises();
+
+                expect([first.resolved, second.resolved]).toEqual([true, false]);
+            });
+        });
+
+        // "While timers continue to tick down, they will pause once the timer reaches 0, until the
+        // delay ends. It is unable to execute the script behind the timer itself while a delay
+        // exists." See docs/delays.md.
+        describe('when a global timer task is delayed', () => {
+            it('should not execute until the delay ends', async () => {
+                isDelayedMock.mockReturnValue(true);
+                const task = track(queue.requestTicks({ ticks: 1, useGlobalTimer: true }));
+
+                queue.tick();
+                queue.tick();
+                queue.tick();
+                await flushPromises();
+
+                expect(task.resolved).toBe(false);
+            });
+
+            it('should execute once the delay ends', async () => {
+                isDelayedMock.mockReturnValue(true);
+                const task = track(queue.requestTicks({ ticks: 1, useGlobalTimer: true }));
+
+                queue.tick();
+                isDelayedMock.mockReturnValue(false);
+                queue.tick();
+                await flushPromises();
+
+                expect(task.resolved).toBe(true);
+            });
+        });
+    });
+
+    // Behaviour the OSRS documentation specifies that this implementation does not yet meet.
+    // These are written as it.failing so the gap stays asserted rather than described: each one
+    // starts passing the moment the behaviour is implemented, at which point drop the .failing.
+    describe('unimplemented specification', () => {
+        // "If any script sets a delay, processing further scripts cannot happen." A task delays the
+        // actor from its own continuation, which is how production code would do it. Continuations
+        // run as microtasks, so the delay lands after the synchronous tick loop has finished.
+        // Satisfying this needs the queue moved off promises onto synchronous callbacks.
+        it.failing('should stop processing once a running task sets a delay', async () => {
+            queue.requestTicks({ ticks: 0 }).then(() => isDelayedMock.mockReturnValue(true));
+            const second = track(queue.requestTicks({ ticks: 0 }));
+
+            queue.tick();
+            await flushPromises();
+
+            expect(second.resolved).toBe(false);
+        });
+
+        // "At the start of the processing block, the queue is iterated and checked for any strong
+        // scripts. If a strong script is in the queue, modal interface is closed before the
+        // processing begins." Only the weak clearing half of this is implemented; the modal is
+        // closed per task instead, so a strong task that is not yet due leaves the modal open.
+        it.failing('should close the modal at the start of a pass when a strong task is queued', () => {
+            track(queue.requestTicks({ ticks: 5, type: QueueType.STRONG }));
+            closeAllSlotsMock.mockClear();
+
+            queue.tick();
+
+            expect(closeAllSlotsMock).toHaveBeenCalled();
+        });
+
+        // "In general, it seems like any action which closes an interface also clears all weak
+        // scripts from the queue." Only movement clears weak tasks today; the queue does not watch
+        // interfaceState.closed.
+        it.failing('should clear weak tasks when an interface closes', async () => {
+            const weak = track(queue.requestTicks({ ticks: 5, type: QueueType.WEAK }));
+
+            interfaceClosed.next();
+            await flushPromises();
+
+            expect(weak.rejected).toBe(true);
+        });
 
         // The constructor subscribes to walkingQueue.movementEvent and never unsubscribes, so a
-        // destroyed actor's queue still reacts to its walking queue.
-        it.todo('should unsubscribe from movement events when destroyed');
+        // destroyed queue keeps reacting to its actor's movement.
+        it.failing('should stop reacting to movement once destroyed', async () => {
+            queue.destroy();
+            const weak = track(queue.requestTicks({ ticks: 5, type: QueueType.WEAK }));
+
+            movementEvent.next();
+            await flushPromises();
+
+            expect(weak.rejected).toBe(false);
+        });
     });
 });
