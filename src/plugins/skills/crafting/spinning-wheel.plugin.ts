@@ -85,30 +85,22 @@ export const openSpinningInterface: objectInteractionActionHandler = details => 
 };
 
 function processSpin(player: Player, spinnable: Spinnable): boolean {
-    let currentItem: number;
-    let currentItemIndex = 0;
+    const inputs = Array.isArray(spinnable.input) ? spinnable.input : [spinnable.input];
 
-    // Determine current input item
-    if (Array.isArray(spinnable.input)) {
-        currentItem = spinnable.input[currentItemIndex];
-    } else {
-        currentItem = spinnable.input;
+    // Use the first input the player actually holds
+    const currentItem = inputs.find(input => player.hasItemInInventory(input));
+
+    if (currentItem === undefined) {
+        const itemName = findItem(inputs[0])?.name || '';
+        player.sendMessage(`You don't have any ${itemName.toLowerCase()}.`);
+        return false;
     }
 
-    // Check if out of input material
-    if (!player.hasItemInInventory(currentItem)) {
-        if (Array.isArray(spinnable.input) && currentItemIndex < spinnable.input.length - 1) {
-            currentItemIndex++;
-            currentItem = spinnable.input[currentItemIndex];
-        } else {
-            const itemName = findItem(currentItem)?.name || '';
-            player.sendMessage(`You don't have any ${itemName.toLowerCase()}.`);
-            return false;
-        }
+    // Only award the output once the input has actually been consumed
+    if (player.removeFirstItem(currentItem) === -1) {
+        return false;
     }
 
-    // Process the spinning action
-    player.removeFirstItem(currentItem);
     player.giveItem(spinnable.output);
     player.skills.addExp(Skill.CRAFTING, spinnable.experience);
 
