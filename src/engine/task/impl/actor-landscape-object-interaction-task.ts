@@ -97,9 +97,6 @@ export abstract class ActorLandscapeObjectInteractionTask<TActor extends Actor =
         this.onObjectReached();
     }
 
-
-
-
     /**
      * Gets the {@link LandscapeObject} that this task is interacting with.
      *

@@ -206,7 +206,7 @@ export abstract class Actor {
     }
 
     public async moveTo(target: Actor): Promise<boolean> {
-        if(this.position.level !== target.position.level) {
+        if (this.position.level !== target.position.level) {
             return false;
         }
 
@@ -526,7 +526,6 @@ export abstract class Actor {
 
         // Only process queue if not delayed
         this.tickQueue.tick();
-
 
         // Always process scheduler since it may have soft tasks
         this.scheduler.tick();

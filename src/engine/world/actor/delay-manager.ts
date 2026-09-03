@@ -1,6 +1,5 @@
 import { Actor } from '@engine/world/actor/actor';
 
-
 /**
  * Types of delays that can be applied to actors
  *
@@ -15,7 +14,7 @@ export enum DelayType {
     /**
      * Normal delay that prevents actions for a specified duration
      */
-    NORMAL = 'normal'
+    NORMAL = 'normal',
 }
 
 /**

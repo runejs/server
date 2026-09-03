@@ -213,7 +213,7 @@ export class Npc extends Actor {
      * Whether or not the Npc can currently move.
      */
     public canMove(): boolean {
-        if(!super.canMove()) {
+        if (!super.canMove()) {
             return false;
         }
         if (this.metadata.following) {
